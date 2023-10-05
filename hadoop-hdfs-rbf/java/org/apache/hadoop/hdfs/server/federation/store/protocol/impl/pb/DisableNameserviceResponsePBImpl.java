@@ -14,43 +14,43 @@ import java.io.IOException;
  * {@link DisableNameserviceResponse}.
  */
 public class DisableNameserviceResponsePBImpl
-    extends DisableNameserviceResponse implements PBRecord {
+        extends DisableNameserviceResponse implements PBRecord {
 
-  private FederationProtocolPBTranslator<DisableNameserviceResponseProto,
-      Builder, DisableNameserviceResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(
-              DisableNameserviceResponseProto.class);
+    private FederationProtocolPBTranslator<DisableNameserviceResponseProto,
+            Builder, DisableNameserviceResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(
+                    DisableNameserviceResponseProto.class);
 
-  public DisableNameserviceResponsePBImpl() {
-  }
+    public DisableNameserviceResponsePBImpl() {
+    }
 
-  public DisableNameserviceResponsePBImpl(
-      DisableNameserviceResponseProto proto) {
-    this.translator.setProto(proto);
-  }
+    public DisableNameserviceResponsePBImpl(
+            DisableNameserviceResponseProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public DisableNameserviceResponseProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public DisableNameserviceResponseProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 
-  @Override
-  public boolean getStatus() {
-    return this.translator.getProtoOrBuilder().getStatus();
-  }
+    @Override
+    public boolean getStatus() {
+        return this.translator.getProtoOrBuilder().getStatus();
+    }
 
-  @Override
-  public void setStatus(boolean status) {
-    this.translator.getBuilder().setStatus(status);
-  }
+    @Override
+    public void setStatus(boolean status) {
+        this.translator.getBuilder().setStatus(status);
+    }
 }

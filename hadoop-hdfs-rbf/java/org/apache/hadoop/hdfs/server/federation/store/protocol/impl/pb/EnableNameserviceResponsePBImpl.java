@@ -14,42 +14,42 @@ import java.io.IOException;
  * EnableNameserviceResponse.
  */
 public class EnableNameserviceResponsePBImpl extends EnableNameserviceResponse
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<EnableNameserviceResponseProto,
-      Builder, EnableNameserviceResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(
-              EnableNameserviceResponseProto.class);
+    private FederationProtocolPBTranslator<EnableNameserviceResponseProto,
+            Builder, EnableNameserviceResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(
+                    EnableNameserviceResponseProto.class);
 
-  public EnableNameserviceResponsePBImpl() {
-  }
+    public EnableNameserviceResponsePBImpl() {
+    }
 
-  public EnableNameserviceResponsePBImpl(EnableNameserviceResponseProto proto) {
-    this.translator.setProto(proto);
-  }
+    public EnableNameserviceResponsePBImpl(EnableNameserviceResponseProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public EnableNameserviceResponseProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public EnableNameserviceResponseProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 
-  @Override
-  public boolean getStatus() {
-    return this.translator.getProtoOrBuilder().getStatus();
-  }
+    @Override
+    public boolean getStatus() {
+        return this.translator.getProtoOrBuilder().getStatus();
+    }
 
-  @Override
-  public void setStatus(boolean status) {
-    this.translator.getBuilder().setStatus(status);
-  }
+    @Override
+    public void setStatus(boolean status) {
+        this.translator.getBuilder().setStatus(status);
+    }
 }

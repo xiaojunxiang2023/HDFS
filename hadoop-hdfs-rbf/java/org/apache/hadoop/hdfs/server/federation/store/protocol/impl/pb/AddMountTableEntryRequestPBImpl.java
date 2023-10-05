@@ -16,51 +16,51 @@ import java.io.IOException;
  * AddMountTableEntryRequest.
  */
 public class AddMountTableEntryRequestPBImpl
-    extends AddMountTableEntryRequest implements PBRecord {
+        extends AddMountTableEntryRequest implements PBRecord {
 
-  private FederationProtocolPBTranslator<AddMountTableEntryRequestProto,
-      AddMountTableEntryRequestProto.Builder,
-      AddMountTableEntryRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<AddMountTableEntryRequestProto,
-              AddMountTableEntryRequestProto.Builder,
-              AddMountTableEntryRequestProtoOrBuilder>(
-                  AddMountTableEntryRequestProto.class);
+    private FederationProtocolPBTranslator<AddMountTableEntryRequestProto,
+            AddMountTableEntryRequestProto.Builder,
+            AddMountTableEntryRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<AddMountTableEntryRequestProto,
+                    AddMountTableEntryRequestProto.Builder,
+                    AddMountTableEntryRequestProtoOrBuilder>(
+                    AddMountTableEntryRequestProto.class);
 
-  public AddMountTableEntryRequestPBImpl() {
-  }
-
-  public AddMountTableEntryRequestPBImpl(AddMountTableEntryRequestProto proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public AddMountTableEntryRequestProto getProto() {
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public MountTable getEntry() {
-    MountTableRecordProto entryProto =
-        this.translator.getProtoOrBuilder().getEntry();
-    return new MountTablePBImpl(entryProto);
-  }
-
-  @Override
-  public void setEntry(MountTable mount) {
-    if (mount instanceof MountTablePBImpl) {
-      MountTablePBImpl mountPB = (MountTablePBImpl)mount;
-      MountTableRecordProto mountProto = mountPB.getProto();
-      translator.getBuilder().setEntry(mountProto);
+    public AddMountTableEntryRequestPBImpl() {
     }
-  }
+
+    public AddMountTableEntryRequestPBImpl(AddMountTableEntryRequestProto proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public AddMountTableEntryRequestProto getProto() {
+        return this.translator.build();
+    }
+
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public MountTable getEntry() {
+        MountTableRecordProto entryProto =
+                this.translator.getProtoOrBuilder().getEntry();
+        return new MountTablePBImpl(entryProto);
+    }
+
+    @Override
+    public void setEntry(MountTable mount) {
+        if (mount instanceof MountTablePBImpl) {
+            MountTablePBImpl mountPB = (MountTablePBImpl) mount;
+            MountTableRecordProto mountProto = mountPB.getProto();
+            translator.getBuilder().setEntry(mountProto);
+        }
+    }
 }

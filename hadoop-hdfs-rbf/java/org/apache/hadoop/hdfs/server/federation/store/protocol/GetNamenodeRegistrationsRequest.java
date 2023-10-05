@@ -12,24 +12,24 @@ import java.io.IOException;
  */
 public abstract class GetNamenodeRegistrationsRequest {
 
-  public static GetNamenodeRegistrationsRequest newInstance()
-      throws IOException {
-    return StateStoreSerializer.newRecord(
-        GetNamenodeRegistrationsRequest.class);
-  }
+    public static GetNamenodeRegistrationsRequest newInstance()
+            throws IOException {
+        return StateStoreSerializer.newRecord(
+                GetNamenodeRegistrationsRequest.class);
+    }
 
-  public static GetNamenodeRegistrationsRequest newInstance(
-      MembershipState member) throws IOException {
-    GetNamenodeRegistrationsRequest request = newInstance();
-    request.setPartialMembership(member);
-    return request;
-  }
+    public static GetNamenodeRegistrationsRequest newInstance(
+            MembershipState member) throws IOException {
+        GetNamenodeRegistrationsRequest request = newInstance();
+        request.setPartialMembership(member);
+        return request;
+    }
 
-  @Public
-  @Unstable
-  public abstract MembershipState getPartialMembership();
+    @Public
+    @Unstable
+    public abstract MembershipState getPartialMembership();
 
-  @Public
-  @Unstable
-  public abstract void setPartialMembership(MembershipState member);
+    @Public
+    @Unstable
+    public abstract void setPartialMembership(MembershipState member);
 }

@@ -14,31 +14,31 @@ import java.io.IOException;
  * GetSafeModeRequest.
  */
 public class GetSafeModeRequestPBImpl extends GetSafeModeRequest
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetSafeModeRequestProto,
-      Builder, GetSafeModeRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(GetSafeModeRequestProto.class);
+    private FederationProtocolPBTranslator<GetSafeModeRequestProto,
+            Builder, GetSafeModeRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(GetSafeModeRequestProto.class);
 
-  public GetSafeModeRequestPBImpl() {
-  }
+    public GetSafeModeRequestPBImpl() {
+    }
 
-  public GetSafeModeRequestPBImpl(GetSafeModeRequestProto proto) {
-    this.translator.setProto(proto);
-  }
+    public GetSafeModeRequestPBImpl(GetSafeModeRequestProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public GetSafeModeRequestProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public GetSafeModeRequestProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 }

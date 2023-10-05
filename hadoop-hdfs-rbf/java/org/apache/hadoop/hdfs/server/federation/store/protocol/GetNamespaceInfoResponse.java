@@ -13,23 +13,23 @@ import java.util.Set;
  */
 public abstract class GetNamespaceInfoResponse {
 
-  public static GetNamespaceInfoResponse newInstance() {
-    return StateStoreSerializer.newRecord(GetNamespaceInfoResponse.class);
-  }
+    public static GetNamespaceInfoResponse newInstance() {
+        return StateStoreSerializer.newRecord(GetNamespaceInfoResponse.class);
+    }
 
-  public static GetNamespaceInfoResponse newInstance(
-      Set<FederationNamespaceInfo> namespaces) throws IOException {
-    GetNamespaceInfoResponse response = newInstance();
-    response.setNamespaceInfo(namespaces);
-    return response;
-  }
+    public static GetNamespaceInfoResponse newInstance(
+            Set<FederationNamespaceInfo> namespaces) throws IOException {
+        GetNamespaceInfoResponse response = newInstance();
+        response.setNamespaceInfo(namespaces);
+        return response;
+    }
 
-  @Public
-  @Unstable
-  public abstract Set<FederationNamespaceInfo> getNamespaceInfo();
+    @Public
+    @Unstable
+    public abstract Set<FederationNamespaceInfo> getNamespaceInfo();
 
-  @Public
-  @Unstable
-  public abstract void setNamespaceInfo(
-      Set<FederationNamespaceInfo> namespaceInfo);
+    @Public
+    @Unstable
+    public abstract void setNamespaceInfo(
+            Set<FederationNamespaceInfo> namespaceInfo);
 }

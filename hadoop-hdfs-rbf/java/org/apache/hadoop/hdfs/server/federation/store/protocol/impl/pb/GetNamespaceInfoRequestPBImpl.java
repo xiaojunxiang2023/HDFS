@@ -14,29 +14,29 @@ import java.io.IOException;
  * GetNamespaceInfoRequest.
  */
 public class GetNamespaceInfoRequestPBImpl extends GetNamespaceInfoRequest
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetNamespaceInfoRequestProto,
-      Builder, GetNamespaceInfoRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<GetNamespaceInfoRequestProto,
-              Builder, GetNamespaceInfoRequestProtoOrBuilder>(
-                  GetNamespaceInfoRequestProto.class);
+    private FederationProtocolPBTranslator<GetNamespaceInfoRequestProto,
+            Builder, GetNamespaceInfoRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<GetNamespaceInfoRequestProto,
+                    Builder, GetNamespaceInfoRequestProtoOrBuilder>(
+                    GetNamespaceInfoRequestProto.class);
 
-  public GetNamespaceInfoRequestPBImpl() {
-  }
+    public GetNamespaceInfoRequestPBImpl() {
+    }
 
-  @Override
-  public GetNamespaceInfoRequestProto getProto() {
-    return this.translator.build();
-  }
+    @Override
+    public GetNamespaceInfoRequestProto getProto() {
+        return this.translator.build();
+    }
 
-  @Override
-  public void setProto(Message protocol) {
-    this.translator.setProto(protocol);
-  }
+    @Override
+    public void setProto(Message protocol) {
+        this.translator.setProto(protocol);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 }

@@ -11,24 +11,24 @@ import java.util.Set;
  */
 public abstract class GetDisabledNameservicesResponse {
 
-  public static GetDisabledNameservicesResponse newInstance() {
-    return StateStoreSerializer.newRecord(
-        GetDisabledNameservicesResponse.class);
-  }
+    public static GetDisabledNameservicesResponse newInstance() {
+        return StateStoreSerializer.newRecord(
+                GetDisabledNameservicesResponse.class);
+    }
 
-  public static GetDisabledNameservicesResponse newInstance(
-      Set<String> nsIds) {
-    GetDisabledNameservicesResponse response = newInstance();
-    response.setNameservices(nsIds);
-    return response;
-  }
+    public static GetDisabledNameservicesResponse newInstance(
+            Set<String> nsIds) {
+        GetDisabledNameservicesResponse response = newInstance();
+        response.setNameservices(nsIds);
+        return response;
+    }
 
-  @Public
-  @Unstable
-  public abstract Set<String> getNameservices();
+    @Public
+    @Unstable
+    public abstract Set<String> getNameservices();
 
-  @Public
-  @Unstable
-  public abstract void setNameservices(Set<String> nameservices);
+    @Public
+    @Unstable
+    public abstract void setNameservices(Set<String> nameservices);
 
 }

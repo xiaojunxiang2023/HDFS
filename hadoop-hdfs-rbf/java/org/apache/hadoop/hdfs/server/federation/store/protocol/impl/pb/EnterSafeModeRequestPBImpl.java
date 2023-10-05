@@ -14,31 +14,31 @@ import java.io.IOException;
  * EnterSafeModeRequest.
  */
 public class EnterSafeModeRequestPBImpl extends EnterSafeModeRequest
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<EnterSafeModeRequestProto,
-      Builder, EnterSafeModeRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(EnterSafeModeRequestProto.class);
+    private FederationProtocolPBTranslator<EnterSafeModeRequestProto,
+            Builder, EnterSafeModeRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(EnterSafeModeRequestProto.class);
 
-  public EnterSafeModeRequestPBImpl() {
-  }
+    public EnterSafeModeRequestPBImpl() {
+    }
 
-  public EnterSafeModeRequestPBImpl(EnterSafeModeRequestProto proto) {
-    this.translator.setProto(proto);
-  }
+    public EnterSafeModeRequestPBImpl(EnterSafeModeRequestProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public EnterSafeModeRequestProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public EnterSafeModeRequestProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 }

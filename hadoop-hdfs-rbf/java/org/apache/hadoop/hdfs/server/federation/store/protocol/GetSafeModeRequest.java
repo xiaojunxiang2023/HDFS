@@ -8,7 +8,7 @@ import java.io.IOException;
  * API request for verifying if current Router state is safe mode.
  */
 public abstract class GetSafeModeRequest {
-  public static GetSafeModeRequest newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(GetSafeModeRequest.class);
-  }
+    public static GetSafeModeRequest newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(GetSafeModeRequest.class);
+    }
 }

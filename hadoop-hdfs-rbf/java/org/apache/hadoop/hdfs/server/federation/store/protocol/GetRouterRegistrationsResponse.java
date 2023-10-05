@@ -14,25 +14,25 @@ import java.util.List;
  */
 public abstract class GetRouterRegistrationsResponse {
 
-  public static GetRouterRegistrationsResponse newInstance()
-      throws IOException {
-    return StateStoreSerializer.newRecord(GetRouterRegistrationsResponse.class);
-  }
+    public static GetRouterRegistrationsResponse newInstance()
+            throws IOException {
+        return StateStoreSerializer.newRecord(GetRouterRegistrationsResponse.class);
+    }
 
-  @Public
-  @Unstable
-  public abstract List<RouterState> getRouters() throws IOException;
+    @Public
+    @Unstable
+    public abstract List<RouterState> getRouters() throws IOException;
 
-  @Public
-  @Unstable
-  public abstract void setRouters(List<RouterState> routers)
-      throws IOException;
+    @Public
+    @Unstable
+    public abstract void setRouters(List<RouterState> routers)
+            throws IOException;
 
-  @Public
-  @Unstable
-  public abstract long getTimestamp();
+    @Public
+    @Unstable
+    public abstract long getTimestamp();
 
-  @Public
-  @Unstable
-  public abstract void setTimestamp(long time);
+    @Public
+    @Unstable
+    public abstract void setTimestamp(long time);
 }

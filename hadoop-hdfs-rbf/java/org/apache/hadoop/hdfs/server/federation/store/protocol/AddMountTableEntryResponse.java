@@ -11,15 +11,15 @@ import java.io.IOException;
  */
 public abstract class AddMountTableEntryResponse {
 
-  public static AddMountTableEntryResponse newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(AddMountTableEntryResponse.class);
-  }
+    public static AddMountTableEntryResponse newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(AddMountTableEntryResponse.class);
+    }
 
-  @Public
-  @Unstable
-  public abstract boolean getStatus();
+    @Public
+    @Unstable
+    public abstract boolean getStatus();
 
-  @Public
-  @Unstable
-  public abstract void setStatus(boolean result);
+    @Public
+    @Unstable
+    public abstract void setStatus(boolean result);
 }

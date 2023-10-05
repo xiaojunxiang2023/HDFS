@@ -10,8 +10,8 @@ import java.io.IOException;
  */
 public abstract class GetRouterRegistrationsRequest {
 
-  public static GetRouterRegistrationsRequest newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(GetRouterRegistrationsRequest.class);
-  }
+    public static GetRouterRegistrationsRequest newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(GetRouterRegistrationsRequest.class);
+    }
 
 }

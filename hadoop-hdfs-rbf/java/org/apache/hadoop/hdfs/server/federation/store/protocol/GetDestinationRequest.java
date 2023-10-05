@@ -12,29 +12,29 @@ import java.io.IOException;
  */
 public abstract class GetDestinationRequest {
 
-  public static GetDestinationRequest newInstance()
-      throws IOException {
-    return StateStoreSerializer
-        .newRecord(GetDestinationRequest.class);
-  }
+    public static GetDestinationRequest newInstance()
+            throws IOException {
+        return StateStoreSerializer
+                .newRecord(GetDestinationRequest.class);
+    }
 
-  public static GetDestinationRequest newInstance(String srcPath)
-      throws IOException {
-    GetDestinationRequest request = newInstance();
-    request.setSrcPath(srcPath);
-    return request;
-  }
+    public static GetDestinationRequest newInstance(String srcPath)
+            throws IOException {
+        GetDestinationRequest request = newInstance();
+        request.setSrcPath(srcPath);
+        return request;
+    }
 
-  public static GetDestinationRequest newInstance(Path srcPath)
-      throws IOException {
-    return newInstance(srcPath.toString());
-  }
+    public static GetDestinationRequest newInstance(Path srcPath)
+            throws IOException {
+        return newInstance(srcPath.toString());
+    }
 
-  @Public
-  @Unstable
-  public abstract String getSrcPath();
+    @Public
+    @Unstable
+    public abstract String getSrcPath();
 
-  @Public
-  @Unstable
-  public abstract void setSrcPath(String srcPath);
+    @Public
+    @Unstable
+    public abstract void setSrcPath(String srcPath);
 }

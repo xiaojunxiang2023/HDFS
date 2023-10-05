@@ -20,46 +20,49 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Private
 public class RouterClient implements Closeable {
 
-  private final RouterAdminProtocolTranslatorPB proxy;
-  private final UserGroupInformation ugi;
+    private final RouterAdminProtocolTranslatorPB proxy;
+    private final UserGroupInformation ugi;
 
-  private static RouterAdminProtocolTranslatorPB createRouterProxy(InetSocketAddress address, Configuration conf, UserGroupInformation ugi)
-          throws IOException {
+    private static RouterAdminProtocolTranslatorPB createRouterProxy(InetSocketAddress address, Configuration conf, UserGroupInformation ugi)
+            throws IOException {
 
-    RPC.setProtocolEngine(
-        conf, RouterAdminProtocolPB.class, ProtobufRpcEngine2.class);
+        RPC.setProtocolEngine(
+                conf, RouterAdminProtocolPB.class, ProtobufRpcEngine2.class);
 
-    AtomicBoolean fallbackToSimpleAuth = new AtomicBoolean(false);
-    final long version = RPC.getProtocolVersion(RouterAdminProtocolPB.class);
-    RouterAdminProtocolPB proxy = RPC.getProtocolProxy(
-        RouterAdminProtocolPB.class, version, address, ugi, conf,
-        NetUtils.getDefaultSocketFactory(conf),
-        RPC.getRpcTimeout(conf), null,
-        fallbackToSimpleAuth).getProxy();
+        AtomicBoolean fallbackToSimpleAuth = new AtomicBoolean(false);
+        final long version = RPC.getProtocolVersion(RouterAdminProtocolPB.class);
+        RouterAdminProtocolPB proxy = RPC.getProtocolProxy(
+                RouterAdminProtocolPB.class, version, address, ugi, conf,
+                NetUtils.getDefaultSocketFactory(conf),
+                RPC.getRpcTimeout(conf), null,
+                fallbackToSimpleAuth).getProxy();
 
-    return new RouterAdminProtocolTranslatorPB(proxy);
-  }
+        return new RouterAdminProtocolTranslatorPB(proxy);
+    }
 
-  public RouterClient(InetSocketAddress address, Configuration conf) throws IOException {
-    this.ugi = UserGroupInformation.getCurrentUser();
-    this.proxy = createRouterProxy(address, conf, ugi);
-  }
+    public RouterClient(InetSocketAddress address, Configuration conf) throws IOException {
+        this.ugi = UserGroupInformation.getCurrentUser();
+        this.proxy = createRouterProxy(address, conf, ugi);
+    }
 
-  public MountTableManager getMountTableManager() {
-    return proxy;
-  }
-  public RouterStateManager getRouterStateManager() {
-    return proxy;
-  }
-  public NameserviceManager getNameserviceManager() {
-    return proxy;
-  }
-  public RouterGenericManager getRouterGenericManager() {
-    return proxy;
-  }
+    public MountTableManager getMountTableManager() {
+        return proxy;
+    }
 
-  @Override
-  public synchronized void close() throws IOException {
-    RPC.stopProxy(proxy);
-  }
+    public RouterStateManager getRouterStateManager() {
+        return proxy;
+    }
+
+    public NameserviceManager getNameserviceManager() {
+        return proxy;
+    }
+
+    public RouterGenericManager getRouterGenericManager() {
+        return proxy;
+    }
+
+    @Override
+    public synchronized void close() {
+        RPC.stopProxy(proxy);
+    }
 }

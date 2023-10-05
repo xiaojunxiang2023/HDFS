@@ -14,23 +14,23 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RandomResolver implements OrderedResolver {
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(RandomResolver.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(RandomResolver.class);
 
-  /**
-   * Get a random name space from the path.
-   *
-   * @param path Path ignored by this policy.
-   * @param loc Federated location with multiple destinations.
-   * @return Random name space.
-   */
-  public String getFirstNamespace(final String path, final PathLocation loc) {
-    final Set<String> namespaces = (loc == null) ? null : loc.getNamespaces();
-    if (CollectionUtils.isEmpty(namespaces)) {
-      LOG.error("Cannot get namespaces for {}", loc);
-      return null;
+    /**
+     * Get a random name space from the path.
+     *
+     * @param path Path ignored by this policy.
+     * @param loc Federated location with multiple destinations.
+     * @return Random name space.
+     */
+    public String getFirstNamespace(final String path, final PathLocation loc) {
+        final Set<String> namespaces = (loc == null) ? null : loc.getNamespaces();
+        if (CollectionUtils.isEmpty(namespaces)) {
+            LOG.error("Cannot get namespaces for {}", loc);
+            return null;
+        }
+        final int index = ThreadLocalRandom.current().nextInt(namespaces.size());
+        return Iterables.get(namespaces, index);
     }
-    final int index = ThreadLocalRandom.current().nextInt(namespaces.size());
-    return Iterables.get(namespaces, index);
-  }
 }

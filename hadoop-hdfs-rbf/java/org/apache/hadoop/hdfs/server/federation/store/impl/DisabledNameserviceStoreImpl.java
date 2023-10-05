@@ -17,35 +17,35 @@ import java.util.TreeSet;
 @InterfaceStability.Evolving
 public class DisabledNameserviceStoreImpl extends DisabledNameserviceStore {
 
-  public DisabledNameserviceStoreImpl(StateStoreDriver driver) {
-    super(driver);
-  }
-
-  @Override
-  public boolean disableNameservice(String nsId)
-      throws IOException {
-
-    DisabledNameservice record =
-        DisabledNameservice.newInstance(nsId);
-    return getDriver().put(record, false, false);
-  }
-
-  @Override
-  public boolean enableNameservice(String nsId)
-      throws IOException {
-
-    DisabledNameservice record =
-        DisabledNameservice.newInstance(nsId);
-    return getDriver().remove(record);
-  }
-
-  @Override
-  public Set<String> getDisabledNameservices() throws IOException {
-    Set<String> disabledNameservices = new TreeSet<>();
-    for (DisabledNameservice record : getCachedRecords()) {
-      String nsId = record.getNameserviceId();
-      disabledNameservices.add(nsId);
+    public DisabledNameserviceStoreImpl(StateStoreDriver driver) {
+        super(driver);
     }
-    return disabledNameservices;
-  }
+
+    @Override
+    public boolean disableNameservice(String nsId)
+            throws IOException {
+
+        DisabledNameservice record =
+                DisabledNameservice.newInstance(nsId);
+        return getDriver().put(record, false, false);
+    }
+
+    @Override
+    public boolean enableNameservice(String nsId)
+            throws IOException {
+
+        DisabledNameservice record =
+                DisabledNameservice.newInstance(nsId);
+        return getDriver().remove(record);
+    }
+
+    @Override
+    public Set<String> getDisabledNameservices() throws IOException {
+        Set<String> disabledNameservices = new TreeSet<>();
+        for (DisabledNameservice record : getCachedRecords()) {
+            String nsId = record.getNameserviceId();
+            disabledNameservices.add(nsId);
+        }
+        return disabledNameservices;
+    }
 }

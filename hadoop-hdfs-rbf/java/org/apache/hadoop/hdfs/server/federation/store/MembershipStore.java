@@ -12,31 +12,31 @@ import java.io.IOException;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public abstract class MembershipStore
-    extends CachedRecordStore<MembershipState> {
+        extends CachedRecordStore<MembershipState> {
 
-  protected MembershipStore(StateStoreDriver driver) {
-    super(MembershipState.class, driver, true);
-  }
+    protected MembershipStore(StateStoreDriver driver) {
+        super(MembershipState.class, driver, true);
+    }
 
-  // upsert NameNode的一条 MemberShipState数据到表里
-  public abstract NamenodeHeartbeatResponse namenodeHeartbeat(
-      NamenodeHeartbeatRequest request) throws IOException;
+    // upsert NameNode的一条 MemberShipState数据到表里
+    public abstract NamenodeHeartbeatResponse namenodeHeartbeat(
+            NamenodeHeartbeatRequest request) throws IOException;
 
-  // 获得所有 NameNode的信息
-  public abstract GetNamenodeRegistrationsResponse getNamenodeRegistrations(
-      GetNamenodeRegistrationsRequest request) throws IOException;
+    // 获得所有 NameNode的信息
+    public abstract GetNamenodeRegistrationsResponse getNamenodeRegistrations(
+            GetNamenodeRegistrationsRequest request) throws IOException;
 
-  // 获得过期的 NameNode的信息
-  // ? 过期 何意
-  public abstract GetNamenodeRegistrationsResponse
-      getExpiredNamenodeRegistrations(GetNamenodeRegistrationsRequest request)
-          throws IOException;
+    // 获得过期的 NameNode的信息
+    // ? 过期 何意
+    public abstract GetNamenodeRegistrationsResponse
+    getExpiredNamenodeRegistrations(GetNamenodeRegistrationsRequest request)
+            throws IOException;
 
-  // 获得所有 namespace的信息
-  public abstract GetNamespaceInfoResponse getNamespaceInfo(
-      GetNamespaceInfoRequest request) throws IOException;
+    // 获得所有 namespace的信息
+    public abstract GetNamespaceInfoResponse getNamespaceInfo(
+            GetNamespaceInfoRequest request) throws IOException;
 
-  // 更新 NameNode的信息
-  public abstract UpdateNamenodeRegistrationResponse updateNamenodeRegistration(
-      UpdateNamenodeRegistrationRequest request) throws IOException;
+    // 更新 NameNode的信息
+    public abstract UpdateNamenodeRegistrationResponse updateNamenodeRegistration(
+            UpdateNamenodeRegistrationRequest request) throws IOException;
 }

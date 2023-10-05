@@ -13,24 +13,24 @@ import java.util.List;
  */
 public abstract class GetMountTableEntriesResponse {
 
-  public static GetMountTableEntriesResponse newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(GetMountTableEntriesResponse.class);
-  }
+    public static GetMountTableEntriesResponse newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(GetMountTableEntriesResponse.class);
+    }
 
-  @Public
-  @Unstable
-  public abstract List<MountTable> getEntries() throws IOException;
+    @Public
+    @Unstable
+    public abstract List<MountTable> getEntries() throws IOException;
 
-  @Public
-  @Unstable
-  public abstract void setEntries(List<MountTable> entries)
-      throws IOException;
+    @Public
+    @Unstable
+    public abstract void setEntries(List<MountTable> entries)
+            throws IOException;
 
-  @Public
-  @Unstable
-  public abstract long getTimestamp();
+    @Public
+    @Unstable
+    public abstract long getTimestamp();
 
-  @Public
-  @Unstable
-  public abstract void setTimestamp(long time);
+    @Public
+    @Unstable
+    public abstract void setTimestamp(long time);
 }

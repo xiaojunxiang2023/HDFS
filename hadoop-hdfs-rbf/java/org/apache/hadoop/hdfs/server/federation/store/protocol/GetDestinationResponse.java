@@ -13,30 +13,30 @@ import java.util.Collections;
  */
 public abstract class GetDestinationResponse {
 
-  public static GetDestinationResponse newInstance()
-      throws IOException {
-    return StateStoreSerializer
-        .newRecord(GetDestinationResponse.class);
-  }
+    public static GetDestinationResponse newInstance()
+            throws IOException {
+        return StateStoreSerializer
+                .newRecord(GetDestinationResponse.class);
+    }
 
-  public static GetDestinationResponse newInstance(
-      Collection<String> nsIds) throws IOException {
-    GetDestinationResponse request = newInstance();
-    request.setDestinations(nsIds);
-    return request;
-  }
+    public static GetDestinationResponse newInstance(
+            Collection<String> nsIds) throws IOException {
+        GetDestinationResponse request = newInstance();
+        request.setDestinations(nsIds);
+        return request;
+    }
 
-  @Public
-  @Unstable
-  public abstract Collection<String> getDestinations();
+    @Public
+    @Unstable
+    public abstract Collection<String> getDestinations();
 
-  @Public
-  @Unstable
-  public void setDestination(String nsId) {
-    setDestinations(Collections.singletonList(nsId));
-  }
+    @Public
+    @Unstable
+    public void setDestination(String nsId) {
+        setDestinations(Collections.singletonList(nsId));
+    }
 
-  @Public
-  @Unstable
-  public abstract void setDestinations(Collection<String> nsIds);
+    @Public
+    @Unstable
+    public abstract void setDestinations(Collection<String> nsIds);
 }

@@ -18,69 +18,69 @@ import java.util.List;
  * GetMountTableEntriesResponse.
  */
 public class GetMountTableEntriesResponsePBImpl
-    extends GetMountTableEntriesResponse implements PBRecord {
+        extends GetMountTableEntriesResponse implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetMountTableEntriesResponseProto,
-      GetMountTableEntriesResponseProto.Builder,
-      GetMountTableEntriesResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<GetMountTableEntriesResponseProto,
-              GetMountTableEntriesResponseProto.Builder,
-              GetMountTableEntriesResponseProtoOrBuilder>(
-                  GetMountTableEntriesResponseProto.class);
+    private FederationProtocolPBTranslator<GetMountTableEntriesResponseProto,
+            GetMountTableEntriesResponseProto.Builder,
+            GetMountTableEntriesResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<GetMountTableEntriesResponseProto,
+                    GetMountTableEntriesResponseProto.Builder,
+                    GetMountTableEntriesResponseProtoOrBuilder>(
+                    GetMountTableEntriesResponseProto.class);
 
-  public GetMountTableEntriesResponsePBImpl() {
-  }
-
-  public GetMountTableEntriesResponsePBImpl(
-      GetMountTableEntriesResponseProto proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public GetMountTableEntriesResponseProto getProto() {
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public List<MountTable> getEntries() throws IOException {
-    List<MountTableRecordProto> entries =
-        this.translator.getProtoOrBuilder().getEntriesList();
-    List<MountTable> ret = new ArrayList<MountTable>();
-    for (MountTableRecordProto entry : entries) {
-      MountTable record = new MountTablePBImpl(entry);
-      ret.add(record);
+    public GetMountTableEntriesResponsePBImpl() {
     }
-    return ret;
-  }
 
-  @Override
-  public void setEntries(List<MountTable> records) throws IOException {
-    this.translator.getBuilder().clearEntries();
-    for (MountTable entry : records) {
-      if (entry instanceof MountTablePBImpl) {
-        MountTablePBImpl entryPB = (MountTablePBImpl)entry;
-        this.translator.getBuilder().addEntries(entryPB.getProto());
-      }
+    public GetMountTableEntriesResponsePBImpl(
+            GetMountTableEntriesResponseProto proto) {
+        this.translator.setProto(proto);
     }
-  }
 
-  @Override
-  public long getTimestamp() {
-    return this.translator.getProtoOrBuilder().getTimestamp();
-  }
+    @Override
+    public GetMountTableEntriesResponseProto getProto() {
+        return this.translator.build();
+    }
 
-  @Override
-  public void setTimestamp(long time) {
-    this.translator.getBuilder().setTimestamp(time);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public List<MountTable> getEntries() throws IOException {
+        List<MountTableRecordProto> entries =
+                this.translator.getProtoOrBuilder().getEntriesList();
+        List<MountTable> ret = new ArrayList<MountTable>();
+        for (MountTableRecordProto entry : entries) {
+            MountTable record = new MountTablePBImpl(entry);
+            ret.add(record);
+        }
+        return ret;
+    }
+
+    @Override
+    public void setEntries(List<MountTable> records) throws IOException {
+        this.translator.getBuilder().clearEntries();
+        for (MountTable entry : records) {
+            if (entry instanceof MountTablePBImpl) {
+                MountTablePBImpl entryPB = (MountTablePBImpl) entry;
+                this.translator.getBuilder().addEntries(entryPB.getProto());
+            }
+        }
+    }
+
+    @Override
+    public long getTimestamp() {
+        return this.translator.getProtoOrBuilder().getTimestamp();
+    }
+
+    @Override
+    public void setTimestamp(long time) {
+        this.translator.getBuilder().setTimestamp(time);
+    }
 }

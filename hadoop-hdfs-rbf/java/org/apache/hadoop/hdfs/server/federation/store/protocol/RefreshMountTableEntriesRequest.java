@@ -9,9 +9,9 @@ import java.io.IOException;
  */
 public abstract class RefreshMountTableEntriesRequest {
 
-  public static RefreshMountTableEntriesRequest newInstance()
-      throws IOException {
-    return StateStoreSerializer
-        .newRecord(RefreshMountTableEntriesRequest.class);
-  }
+    public static RefreshMountTableEntriesRequest newInstance()
+            throws IOException {
+        return StateStoreSerializer
+                .newRecord(RefreshMountTableEntriesRequest.class);
+    }
 }

@@ -14,42 +14,42 @@ import java.io.IOException;
  * DisableNameserviceRequest.
  */
 public class DisableNameserviceRequestPBImpl extends DisableNameserviceRequest
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<DisableNameserviceRequestProto,
-      Builder, DisableNameserviceRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(
-              DisableNameserviceRequestProto.class);
+    private FederationProtocolPBTranslator<DisableNameserviceRequestProto,
+            Builder, DisableNameserviceRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(
+                    DisableNameserviceRequestProto.class);
 
-  public DisableNameserviceRequestPBImpl() {
-  }
+    public DisableNameserviceRequestPBImpl() {
+    }
 
-  public DisableNameserviceRequestPBImpl(DisableNameserviceRequestProto proto) {
-    this.translator.setProto(proto);
-  }
+    public DisableNameserviceRequestPBImpl(DisableNameserviceRequestProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public DisableNameserviceRequestProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public DisableNameserviceRequestProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 
-  @Override
-  public String getNameServiceId() {
-    return this.translator.getProtoOrBuilder().getNameServiceId();
-  }
+    @Override
+    public String getNameServiceId() {
+        return this.translator.getProtoOrBuilder().getNameServiceId();
+    }
 
-  @Override
-  public void setNameServiceId(String nsId) {
-    this.translator.getBuilder().setNameServiceId(nsId);
-  }
+    @Override
+    public void setNameServiceId(String nsId) {
+        this.translator.getBuilder().setNameServiceId(nsId);
+    }
 }

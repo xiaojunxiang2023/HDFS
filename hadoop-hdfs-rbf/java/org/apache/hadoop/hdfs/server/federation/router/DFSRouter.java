@@ -14,35 +14,35 @@ import static org.apache.hadoop.util.ExitUtil.terminate;
 // Router服务端的启动类
 public final class DFSRouter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DFSRouter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DFSRouter.class);
 
 
-  private static final String USAGE = "Usage: hdfs dfsrouter";
+    private static final String USAGE = "Usage: hdfs dfsrouter";
 
-  public static final int SHUTDOWN_HOOK_PRIORITY = 30;
+    public static final int SHUTDOWN_HOOK_PRIORITY = 30;
 
 
-  private DFSRouter() {
-  }
-
-  public static void main(String[] argv) {
-    if (DFSUtil.parseHelpArgument(argv, USAGE, System.out, true)) {
-      System.exit(0);
+    private DFSRouter() {
     }
 
-    try {
-      StringUtils.startupShutdownMessage(Router.class, argv, LOG);
-      Router router = new Router();
+    public static void main(String[] argv) {
+        if (DFSUtil.parseHelpArgument(argv, USAGE, System.out, true)) {
+            System.exit(0);
+        }
 
-      ShutdownHookManager.get().addShutdownHook(
-          new CompositeServiceShutdownHook(router), SHUTDOWN_HOOK_PRIORITY);
+        try {
+            StringUtils.startupShutdownMessage(Router.class, argv, LOG);
+            Router router = new Router();
 
-      Configuration conf = new HdfsConfiguration();
-      router.init(conf);
-      router.start();
-    } catch (Throwable e) {
-      LOG.error("Failed to start router", e);
-      terminate(1, e);
+            ShutdownHookManager.get().addShutdownHook(
+                    new CompositeServiceShutdownHook(router), SHUTDOWN_HOOK_PRIORITY);
+
+            Configuration conf = new HdfsConfiguration();
+            router.init(conf);
+            router.start();
+        } catch (Throwable e) {
+            LOG.error("Failed to start router", e);
+            terminate(1, e);
+        }
     }
-  }
 }

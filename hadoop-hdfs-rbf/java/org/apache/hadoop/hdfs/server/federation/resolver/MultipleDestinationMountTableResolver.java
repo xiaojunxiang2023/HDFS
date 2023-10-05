@@ -36,60 +36,60 @@ import java.util.EnumMap;
  */
 public class MultipleDestinationMountTableResolver extends MountTableResolver {
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(MultipleDestinationMountTableResolver.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(MultipleDestinationMountTableResolver.class);
 
 
-  /** Resolvers that use a particular order for multiple destinations. */
-  private EnumMap<DestinationOrder, OrderedResolver> orderedResolvers =
-      new EnumMap<>(DestinationOrder.class);
+    /** Resolvers that use a particular order for multiple destinations. */
+    private EnumMap<DestinationOrder, OrderedResolver> orderedResolvers =
+            new EnumMap<>(DestinationOrder.class);
 
 
-  public MultipleDestinationMountTableResolver(
-      Configuration conf, Router router) {
-    super(conf, router);
+    public MultipleDestinationMountTableResolver(
+            Configuration conf, Router router) {
+        super(conf, router);
 
-    // Initialize the ordered resolvers
-    addResolver(DestinationOrder.HASH, new HashFirstResolver());
-    addResolver(DestinationOrder.LOCAL, new LocalResolver(conf, router));
-    addResolver(DestinationOrder.RANDOM, new RandomResolver());
-    addResolver(DestinationOrder.HASH_ALL, new HashResolver());
-    addResolver(DestinationOrder.SPACE,
-        new AvailableSpaceResolver(conf, router));
-  }
-
-  @Override
-  public PathLocation getDestinationForPath(String path) throws IOException {
-    PathLocation mountTableResult = super.getDestinationForPath(path);
-    if (mountTableResult == null) {
-      LOG.error("The {} cannot find a location for {}",
-          super.getClass().getSimpleName(), path);
-    } else if (mountTableResult.hasMultipleDestinations()) {
-      DestinationOrder order = mountTableResult.getDestinationOrder();
-      OrderedResolver orderedResolver = orderedResolvers.get(order);
-      if (orderedResolver == null) {
-        LOG.error("Cannot find resolver for order {}", order);
-      } else {
-        String firstNamespace =
-            orderedResolver.getFirstNamespace(path, mountTableResult);
-
-        // Change the order of the name spaces according to the policy
-        if (firstNamespace != null) {
-          // This is the entity in the tree, we need to create our own copy
-          mountTableResult = new PathLocation(mountTableResult, firstNamespace);
-          LOG.debug("Ordered locations following {} are {}",
-              order, mountTableResult);
-        } else {
-          LOG.error("Cannot get main namespace for path {} with order {}",
-              path, order);
-        }
-      }
+        // Initialize the ordered resolvers
+        addResolver(DestinationOrder.HASH, new HashFirstResolver());
+        addResolver(DestinationOrder.LOCAL, new LocalResolver(conf, router));
+        addResolver(DestinationOrder.RANDOM, new RandomResolver());
+        addResolver(DestinationOrder.HASH_ALL, new HashResolver());
+        addResolver(DestinationOrder.SPACE,
+                new AvailableSpaceResolver(conf, router));
     }
-    return mountTableResult;
-  }
 
-  @VisibleForTesting
-  public void addResolver(DestinationOrder order, OrderedResolver resolver) {
-    orderedResolvers.put(order, resolver);
-  }
+    @Override
+    public PathLocation getDestinationForPath(String path) throws IOException {
+        PathLocation mountTableResult = super.getDestinationForPath(path);
+        if (mountTableResult == null) {
+            LOG.error("The {} cannot find a location for {}",
+                    super.getClass().getSimpleName(), path);
+        } else if (mountTableResult.hasMultipleDestinations()) {
+            DestinationOrder order = mountTableResult.getDestinationOrder();
+            OrderedResolver orderedResolver = orderedResolvers.get(order);
+            if (orderedResolver == null) {
+                LOG.error("Cannot find resolver for order {}", order);
+            } else {
+                String firstNamespace =
+                        orderedResolver.getFirstNamespace(path, mountTableResult);
+
+                // Change the order of the name spaces according to the policy
+                if (firstNamespace != null) {
+                    // This is the entity in the tree, we need to create our own copy
+                    mountTableResult = new PathLocation(mountTableResult, firstNamespace);
+                    LOG.debug("Ordered locations following {} are {}",
+                            order, mountTableResult);
+                } else {
+                    LOG.error("Cannot get main namespace for path {} with order {}",
+                            path, order);
+                }
+            }
+        }
+        return mountTableResult;
+    }
+
+    @VisibleForTesting
+    public void addResolver(DestinationOrder order, OrderedResolver resolver) {
+        orderedResolvers.put(order, resolver);
+    }
 }

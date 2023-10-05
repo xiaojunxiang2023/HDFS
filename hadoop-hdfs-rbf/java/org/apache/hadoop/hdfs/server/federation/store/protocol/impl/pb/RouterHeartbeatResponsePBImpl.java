@@ -14,39 +14,39 @@ import java.io.IOException;
  * RouterHeartbeatResponse.
  */
 public class RouterHeartbeatResponsePBImpl extends RouterHeartbeatResponse
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<RouterHeartbeatResponseProto, Builder,
-      RouterHeartbeatResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<RouterHeartbeatResponseProto,
-              Builder, RouterHeartbeatResponseProtoOrBuilder>(
-                  RouterHeartbeatResponseProto.class);
+    private FederationProtocolPBTranslator<RouterHeartbeatResponseProto, Builder,
+            RouterHeartbeatResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<RouterHeartbeatResponseProto,
+                    Builder, RouterHeartbeatResponseProtoOrBuilder>(
+                    RouterHeartbeatResponseProto.class);
 
-  public RouterHeartbeatResponsePBImpl() {
-  }
+    public RouterHeartbeatResponsePBImpl() {
+    }
 
-  @Override
-  public RouterHeartbeatResponseProto getProto() {
-    return this.translator.build();
-  }
+    @Override
+    public RouterHeartbeatResponseProto getProto() {
+        return this.translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 
-  @Override
-  public boolean getStatus() {
-    return this.translator.getProtoOrBuilder().getStatus();
-  }
+    @Override
+    public boolean getStatus() {
+        return this.translator.getProtoOrBuilder().getStatus();
+    }
 
-  @Override
-  public void setStatus(boolean result) {
-    this.translator.getBuilder().setStatus(result);
-  }
+    @Override
+    public void setStatus(boolean result) {
+        this.translator.getBuilder().setStatus(result);
+    }
 }

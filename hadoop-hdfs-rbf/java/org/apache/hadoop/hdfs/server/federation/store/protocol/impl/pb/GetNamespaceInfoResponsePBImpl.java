@@ -18,60 +18,60 @@ import java.util.Set;
  * GetNamespaceInfoResponse.
  */
 public class GetNamespaceInfoResponsePBImpl
-    extends GetNamespaceInfoResponse implements PBRecord {
+        extends GetNamespaceInfoResponse implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetNamespaceInfoResponseProto,
-      GetNamespaceInfoResponseProto.Builder,
-      GetNamespaceInfoResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<GetNamespaceInfoResponseProto,
-              GetNamespaceInfoResponseProto.Builder,
-              GetNamespaceInfoResponseProtoOrBuilder>(
-                  GetNamespaceInfoResponseProto.class);
+    private FederationProtocolPBTranslator<GetNamespaceInfoResponseProto,
+            GetNamespaceInfoResponseProto.Builder,
+            GetNamespaceInfoResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<GetNamespaceInfoResponseProto,
+                    GetNamespaceInfoResponseProto.Builder,
+                    GetNamespaceInfoResponseProtoOrBuilder>(
+                    GetNamespaceInfoResponseProto.class);
 
-  public GetNamespaceInfoResponsePBImpl() {
-  }
-
-  @Override
-  public GetNamespaceInfoResponseProto getProto() {
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message protocol) {
-    this.translator.setProto(protocol);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public Set<FederationNamespaceInfo> getNamespaceInfo() {
-
-    Set<FederationNamespaceInfo> ret = new HashSet<FederationNamespaceInfo>();
-    List<FederationNamespaceInfoProto> namespaceList =
-        this.translator.getProtoOrBuilder().getNamespaceInfosList();
-    for (FederationNamespaceInfoProto ns : namespaceList) {
-      FederationNamespaceInfo info = new FederationNamespaceInfo(
-          ns.getBlockPoolId(), ns.getClusterId(), ns.getNameserviceId());
-      ret.add(info);
+    public GetNamespaceInfoResponsePBImpl() {
     }
-    return ret;
-  }
 
-  @Override
-  public void setNamespaceInfo(Set<FederationNamespaceInfo> namespaceInfo) {
-    int index = 0;
-    for (FederationNamespaceInfo item : namespaceInfo) {
-      FederationNamespaceInfoProto.Builder itemBuilder =
-          FederationNamespaceInfoProto.newBuilder();
-      itemBuilder.setClusterId(item.getClusterId());
-      itemBuilder.setBlockPoolId(item.getBlockPoolId());
-      itemBuilder.setNameserviceId(item.getNameserviceId());
-      this.translator.getBuilder().addNamespaceInfos(index,
-          itemBuilder.build());
-      index++;
+    @Override
+    public GetNamespaceInfoResponseProto getProto() {
+        return this.translator.build();
     }
-  }
+
+    @Override
+    public void setProto(Message protocol) {
+        this.translator.setProto(protocol);
+    }
+
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public Set<FederationNamespaceInfo> getNamespaceInfo() {
+
+        Set<FederationNamespaceInfo> ret = new HashSet<FederationNamespaceInfo>();
+        List<FederationNamespaceInfoProto> namespaceList =
+                this.translator.getProtoOrBuilder().getNamespaceInfosList();
+        for (FederationNamespaceInfoProto ns : namespaceList) {
+            FederationNamespaceInfo info = new FederationNamespaceInfo(
+                    ns.getBlockPoolId(), ns.getClusterId(), ns.getNameserviceId());
+            ret.add(info);
+        }
+        return ret;
+    }
+
+    @Override
+    public void setNamespaceInfo(Set<FederationNamespaceInfo> namespaceInfo) {
+        int index = 0;
+        for (FederationNamespaceInfo item : namespaceInfo) {
+            FederationNamespaceInfoProto.Builder itemBuilder =
+                    FederationNamespaceInfoProto.newBuilder();
+            itemBuilder.setClusterId(item.getClusterId());
+            itemBuilder.setBlockPoolId(item.getBlockPoolId());
+            itemBuilder.setNameserviceId(item.getNameserviceId());
+            this.translator.getBuilder().addNamespaceInfos(index,
+                    itemBuilder.build());
+            index++;
+        }
+    }
 }

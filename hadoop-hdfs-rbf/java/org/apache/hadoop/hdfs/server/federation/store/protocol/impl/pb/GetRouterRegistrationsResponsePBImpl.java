@@ -19,66 +19,66 @@ import java.util.List;
  * GetRouterRegistrationsResponse.
  */
 public class GetRouterRegistrationsResponsePBImpl
-    extends GetRouterRegistrationsResponse implements PBRecord {
+        extends GetRouterRegistrationsResponse implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetRouterRegistrationsResponseProto,
-      Builder, GetRouterRegistrationsResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<
-              GetRouterRegistrationsResponseProto, Builder,
-              GetRouterRegistrationsResponseProtoOrBuilder>(
-                  GetRouterRegistrationsResponseProto.class);
+    private FederationProtocolPBTranslator<GetRouterRegistrationsResponseProto,
+            Builder, GetRouterRegistrationsResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<
+                    GetRouterRegistrationsResponseProto, Builder,
+                    GetRouterRegistrationsResponseProtoOrBuilder>(
+                    GetRouterRegistrationsResponseProto.class);
 
-  public GetRouterRegistrationsResponsePBImpl() {
+    public GetRouterRegistrationsResponsePBImpl() {
 
-  }
-
-  @Override
-  public GetRouterRegistrationsResponseProto getProto() {
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public List<RouterState> getRouters() throws IOException {
-
-    List<RouterState> ret = new ArrayList<RouterState>();
-    List<RouterRecordProto> memberships =
-        this.translator.getProtoOrBuilder().getRoutersList();
-    for (RouterRecordProto memberProto : memberships) {
-      RouterState membership = new RouterStatePBImpl(memberProto);
-      ret.add(membership);
     }
-    return ret;
-  }
 
-  @Override
-  public void setRouters(List<RouterState> records) throws IOException {
-
-    this.translator.getBuilder().clearRouters();
-    for (RouterState router : records) {
-      if (router instanceof RouterStatePBImpl) {
-        RouterStatePBImpl routerPB = (RouterStatePBImpl) router;
-        this.translator.getBuilder().addRouters(routerPB.getProto());
-      }
+    @Override
+    public GetRouterRegistrationsResponseProto getProto() {
+        return this.translator.build();
     }
-  }
 
-  @Override
-  public long getTimestamp() {
-    return this.translator.getProtoOrBuilder().getTimestamp();
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void setTimestamp(long time) {
-    this.translator.getBuilder().setTimestamp(time);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public List<RouterState> getRouters() throws IOException {
+
+        List<RouterState> ret = new ArrayList<RouterState>();
+        List<RouterRecordProto> memberships =
+                this.translator.getProtoOrBuilder().getRoutersList();
+        for (RouterRecordProto memberProto : memberships) {
+            RouterState membership = new RouterStatePBImpl(memberProto);
+            ret.add(membership);
+        }
+        return ret;
+    }
+
+    @Override
+    public void setRouters(List<RouterState> records) throws IOException {
+
+        this.translator.getBuilder().clearRouters();
+        for (RouterState router : records) {
+            if (router instanceof RouterStatePBImpl) {
+                RouterStatePBImpl routerPB = (RouterStatePBImpl) router;
+                this.translator.getBuilder().addRouters(routerPB.getProto());
+            }
+        }
+    }
+
+    @Override
+    public long getTimestamp() {
+        return this.translator.getProtoOrBuilder().getTimestamp();
+    }
+
+    @Override
+    public void setTimestamp(long time) {
+        this.translator.getBuilder().setTimestamp(time);
+    }
 }

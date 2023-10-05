@@ -11,24 +11,24 @@ import java.io.IOException;
  */
 public abstract class RefreshSuperUserGroupsConfigurationResponse {
 
-  public static RefreshSuperUserGroupsConfigurationResponse newInstance()
-      throws IOException {
-    return StateStoreSerializer.
-        newRecord(RefreshSuperUserGroupsConfigurationResponse.class);
-  }
+    public static RefreshSuperUserGroupsConfigurationResponse newInstance()
+            throws IOException {
+        return StateStoreSerializer.
+                newRecord(RefreshSuperUserGroupsConfigurationResponse.class);
+    }
 
-  public static RefreshSuperUserGroupsConfigurationResponse
-      newInstance(boolean status) throws IOException {
-    RefreshSuperUserGroupsConfigurationResponse response = newInstance();
-    response.setStatus(status);
-    return response;
-  }
+    public static RefreshSuperUserGroupsConfigurationResponse
+    newInstance(boolean status) throws IOException {
+        RefreshSuperUserGroupsConfigurationResponse response = newInstance();
+        response.setStatus(status);
+        return response;
+    }
 
-  @Public
-  @Unstable
-  public abstract boolean getStatus();
+    @Public
+    @Unstable
+    public abstract boolean getStatus();
 
-  @Public
-  @Unstable
-  public abstract void setStatus(boolean result);
+    @Public
+    @Unstable
+    public abstract void setStatus(boolean result);
 }

@@ -17,30 +17,30 @@ import java.util.List;
 // 打印 DataNode的拓扑信息
 public class RouterNetworkTopologyServlet extends NetworkTopologyServlet {
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
-    final ServletContext context = getServletContext();
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        final ServletContext context = getServletContext();
 
-    String format = parseAcceptHeader(request);
-    if (FORMAT_TEXT.equals(format)) {
-      response.setContentType("text/plain; charset=UTF-8");
-    } else if (FORMAT_JSON.equals(format)) {
-      response.setContentType("application/json; charset=UTF-8");
+        String format = parseAcceptHeader(request);
+        if (FORMAT_TEXT.equals(format)) {
+            response.setContentType("text/plain; charset=UTF-8");
+        } else if (FORMAT_JSON.equals(format)) {
+            response.setContentType("application/json; charset=UTF-8");
+        }
+
+        Router router = RouterHttpServer.getRouterFromContext(context);
+        DatanodeInfo[] datanodeReport = router.getRpcServer().getDatanodeReport(HdfsConstants.DatanodeReportType.ALL);
+        List<Node> datanodeInfos = Arrays.asList(datanodeReport);
+
+        try (PrintStream out = new PrintStream(response.getOutputStream(), false, "UTF-8")) {
+            printTopology(out, datanodeInfos, format);
+        } catch (Throwable t) {
+            String errMsg = "Print network topology failed. " + StringUtils.stringifyException(t);
+            response.sendError(HttpServletResponse.SC_GONE, errMsg);
+            throw new IOException(errMsg);
+        } finally {
+            response.getOutputStream().close();
+        }
     }
-
-    Router router = RouterHttpServer.getRouterFromContext(context);
-    DatanodeInfo[] datanodeReport = router.getRpcServer().getDatanodeReport(HdfsConstants.DatanodeReportType.ALL);
-    List<Node> datanodeInfos = Arrays.asList(datanodeReport);
-
-    try (PrintStream out = new PrintStream(response.getOutputStream(), false, "UTF-8")) {
-      printTopology(out, datanodeInfos, format);
-    } catch (Throwable t) {
-      String errMsg = "Print network topology failed. " + StringUtils.stringifyException(t);
-      response.sendError(HttpServletResponse.SC_GONE, errMsg);
-      throw new IOException(errMsg);
-    } finally {
-      response.getOutputStream().close();
-    }
-  }
 }

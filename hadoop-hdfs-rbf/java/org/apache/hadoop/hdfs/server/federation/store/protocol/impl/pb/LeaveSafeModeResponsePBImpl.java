@@ -14,42 +14,42 @@ import java.io.IOException;
  * LeaveSafeModeResponse.
  */
 public class LeaveSafeModeResponsePBImpl extends LeaveSafeModeResponse
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<LeaveSafeModeResponseProto,
-      Builder, LeaveSafeModeResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(
-              LeaveSafeModeResponseProto.class);
+    private FederationProtocolPBTranslator<LeaveSafeModeResponseProto,
+            Builder, LeaveSafeModeResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(
+                    LeaveSafeModeResponseProto.class);
 
-  public LeaveSafeModeResponsePBImpl() {
-  }
+    public LeaveSafeModeResponsePBImpl() {
+    }
 
-  public LeaveSafeModeResponsePBImpl(LeaveSafeModeResponseProto proto) {
-    this.translator.setProto(proto);
-  }
+    public LeaveSafeModeResponsePBImpl(LeaveSafeModeResponseProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public LeaveSafeModeResponseProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public LeaveSafeModeResponseProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 
-  @Override
-  public boolean getStatus() {
-    return this.translator.getProtoOrBuilder().getStatus();
-  }
+    @Override
+    public boolean getStatus() {
+        return this.translator.getProtoOrBuilder().getStatus();
+    }
 
-  @Override
-  public void setStatus(boolean result) {
-    this.translator.getBuilder().setStatus(result);
-  }
+    @Override
+    public void setStatus(boolean result) {
+        this.translator.getBuilder().setStatus(result);
+    }
 }

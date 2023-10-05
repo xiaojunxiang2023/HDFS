@@ -9,7 +9,7 @@ import java.io.IOException;
  * its state in State Store.
  */
 public abstract class EnterSafeModeRequest {
-  public static EnterSafeModeRequest newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(EnterSafeModeRequest.class);
-  }
+    public static EnterSafeModeRequest newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(EnterSafeModeRequest.class);
+    }
 }

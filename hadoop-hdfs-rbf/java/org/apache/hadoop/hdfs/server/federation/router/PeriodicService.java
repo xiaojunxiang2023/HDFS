@@ -15,105 +15,108 @@ import java.util.concurrent.TimeUnit;
 // 定期执行的 Service
 public abstract class PeriodicService extends AbstractService {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PeriodicService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PeriodicService.class);
 
-  private static final long DEFAULT_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);
+    private static final long DEFAULT_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);
 
-  
-  private long intervalMs;
-  private final String serviceName;
 
-  // scheduler线程池
-  private final ScheduledExecutorService scheduler;
+    private long intervalMs;
+    private final String serviceName;
 
-  // scheduler线程池是否在 Running
-  private volatile boolean isRunning = false;
+    // scheduler线程池
+    private final ScheduledExecutorService scheduler;
 
-  private long runCount;
-  private long errorCount;
-  // 上一次成功执行的时间
-  private long lastRun;
+    // scheduler线程池是否在 Running
+    private volatile boolean isRunning = false;
 
-  public PeriodicService(String name) {
-    this(name, DEFAULT_INTERVAL_MS);
-  }
+    private long runCount;
+    private long errorCount;
+    // 上一次成功执行的时间
+    private long lastRun;
 
-  public PeriodicService(String name, long interval) {
-    super(name);
-    this.serviceName = name;
-    this.intervalMs = interval;
-
-    ThreadFactory threadFactory = new ThreadFactoryBuilder()
-        .setNameFormat(this.getName() + "-%d")
-        .build();
-    this.scheduler = Executors.newScheduledThreadPool(1, threadFactory);
-  }
-
-  protected void setIntervalMs(long interval) {
-    if (getServiceState() == STATE.STARTED) {
-      throw new ServiceStateException("Periodic service already started");
-    } else {
-      this.intervalMs = interval;
+    public PeriodicService(String name) {
+        this(name, DEFAULT_INTERVAL_MS);
     }
-  }
-  protected long getIntervalMs() {
-    return this.intervalMs;
-  }
-  protected long getErrorCount() {
-    return this.errorCount;
-  }
-  protected long getRunCount() {
-    return this.runCount;
-  }
 
-  protected long getLastUpdate() {
-    return this.lastRun;
-  }
+    public PeriodicService(String name, long interval) {
+        super(name);
+        this.serviceName = name;
+        this.intervalMs = interval;
 
-  @Override
-  protected void serviceStart() throws Exception {
-    super.serviceStart();
-    LOG.info("Starting periodic service {}", this.serviceName);
-    startPeriodic();
-  }
-
-  @Override
-  protected void serviceStop() throws Exception {
-    stopPeriodic();
-    LOG.info("Stopping periodic service {}", this.serviceName);
-    super.serviceStop();
-  }
-
-  protected synchronized void stopPeriodic() {
-    if (this.isRunning) {
-      LOG.info("{} is shutting down", this.serviceName);
-      this.isRunning = false;
-      this.scheduler.shutdownNow();
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat(this.getName() + "-%d")
+                .build();
+        this.scheduler = Executors.newScheduledThreadPool(1, threadFactory);
     }
-  }
 
-  protected synchronized void startPeriodic() {
-    stopPeriodic();
-
-    Runnable updateRunnable = () -> {
-      LOG.debug("Running {} update task", serviceName);
-      try {
-        if (!isRunning) {
-          return;
+    protected void setIntervalMs(long interval) {
+        if (getServiceState() == STATE.STARTED) {
+            throw new ServiceStateException("Periodic service already started");
+        } else {
+            this.intervalMs = interval;
         }
-        periodicInvoke();
-        runCount++;
-        lastRun = Time.now();
-      } catch (Exception ex) {
-        errorCount++;
-        LOG.warn(serviceName + " service threw an exception", ex);
-      }
-    };
+    }
 
-    this.isRunning = true;
-    this.scheduler.scheduleWithFixedDelay(updateRunnable, 0, this.intervalMs, TimeUnit.MILLISECONDS);
-  }
+    protected long getIntervalMs() {
+        return this.intervalMs;
+    }
 
-  // 定期性执行的方法
-  protected abstract void periodicInvoke();
+    protected long getErrorCount() {
+        return this.errorCount;
+    }
+
+    protected long getRunCount() {
+        return this.runCount;
+    }
+
+    protected long getLastUpdate() {
+        return this.lastRun;
+    }
+
+    @Override
+    protected void serviceStart() throws Exception {
+        super.serviceStart();
+        LOG.info("Starting periodic service {}", this.serviceName);
+        startPeriodic();
+    }
+
+    @Override
+    protected void serviceStop() throws Exception {
+        stopPeriodic();
+        LOG.info("Stopping periodic service {}", this.serviceName);
+        super.serviceStop();
+    }
+
+    protected synchronized void stopPeriodic() {
+        if (this.isRunning) {
+            LOG.info("{} is shutting down", this.serviceName);
+            this.isRunning = false;
+            this.scheduler.shutdownNow();
+        }
+    }
+
+    protected synchronized void startPeriodic() {
+        stopPeriodic();
+
+        Runnable updateRunnable = () -> {
+            LOG.debug("Running {} update task", serviceName);
+            try {
+                if (!isRunning) {
+                    return;
+                }
+                periodicInvoke();
+                runCount++;
+                lastRun = Time.now();
+            } catch (Exception ex) {
+                errorCount++;
+                LOG.warn(serviceName + " service threw an exception", ex);
+            }
+        };
+
+        this.isRunning = true;
+        this.scheduler.scheduleWithFixedDelay(updateRunnable, 0, this.intervalMs, TimeUnit.MILLISECONDS);
+    }
+
+    // 定期性执行的方法
+    protected abstract void periodicInvoke();
 }

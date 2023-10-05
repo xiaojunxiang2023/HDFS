@@ -16,50 +16,50 @@ import java.util.Collection;
  * GetDestinationResponse.
  */
 public class GetDestinationResponsePBImpl
-    extends GetDestinationResponse implements PBRecord {
+        extends GetDestinationResponse implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetDestinationResponseProto,
-      Builder, GetDestinationResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(
-              GetDestinationResponseProto.class);
+    private FederationProtocolPBTranslator<GetDestinationResponseProto,
+            Builder, GetDestinationResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(
+                    GetDestinationResponseProto.class);
 
-  public GetDestinationResponsePBImpl() {
-  }
-
-  public GetDestinationResponsePBImpl(
-      GetDestinationResponseProto proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public GetDestinationResponseProto getProto() {
-    // if builder is null build() returns null, calling getBuilder() to
-    // instantiate builder
-    this.translator.getBuilder();
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public Collection<String> getDestinations() {
-    return new ArrayList<>(
-        this.translator.getProtoOrBuilder().getDestinationsList());
-  }
-
-  @Override
-  public void setDestinations(Collection<String> nsIds) {
-    this.translator.getBuilder().clearDestinations();
-    for (String nsId : nsIds) {
-      this.translator.getBuilder().addDestinations(nsId);
+    public GetDestinationResponsePBImpl() {
     }
-  }
+
+    public GetDestinationResponsePBImpl(
+            GetDestinationResponseProto proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public GetDestinationResponseProto getProto() {
+        // if builder is null build() returns null, calling getBuilder() to
+        // instantiate builder
+        this.translator.getBuilder();
+        return this.translator.build();
+    }
+
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public Collection<String> getDestinations() {
+        return new ArrayList<>(
+                this.translator.getProtoOrBuilder().getDestinationsList());
+    }
+
+    @Override
+    public void setDestinations(Collection<String> nsIds) {
+        this.translator.getBuilder().clearDestinations();
+        for (String nsId : nsIds) {
+            this.translator.getBuilder().addDestinations(nsId);
+        }
+    }
 }

@@ -11,22 +11,22 @@ import java.io.IOException;
  */
 public abstract class RouterHeartbeatResponse {
 
-  public static RouterHeartbeatResponse newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(RouterHeartbeatResponse.class);
-  }
+    public static RouterHeartbeatResponse newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(RouterHeartbeatResponse.class);
+    }
 
-  public static RouterHeartbeatResponse newInstance(boolean status)
-      throws IOException {
-    RouterHeartbeatResponse response = newInstance();
-    response.setStatus(status);
-    return response;
-  }
+    public static RouterHeartbeatResponse newInstance(boolean status)
+            throws IOException {
+        RouterHeartbeatResponse response = newInstance();
+        response.setStatus(status);
+        return response;
+    }
 
-  @Public
-  @Unstable
-  public abstract boolean getStatus();
+    @Public
+    @Unstable
+    public abstract boolean getStatus();
 
-  @Public
-  @Unstable
-  public abstract void setStatus(boolean result);
+    @Public
+    @Unstable
+    public abstract void setStatus(boolean result);
 }

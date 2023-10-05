@@ -7,12 +7,12 @@ import javax.servlet.ServletContext;
 // 检测 Router是否存活
 public class IsRouterActiveServlet extends IsActiveServlet {
 
-  @Override
-  protected boolean isActive() {
-    final ServletContext context = getServletContext();
-    final Router router = RouterHttpServer.getRouterFromContext(context);
-    final RouterServiceState routerState = router.getRouterState();
+    @Override
+    protected boolean isActive() {
+        final ServletContext context = getServletContext();
+        final Router router = RouterHttpServer.getRouterFromContext(context);
+        final RouterServiceState routerState = router.getRouterState();
 
-    return routerState == RouterServiceState.RUNNING;
-  }
+        return routerState == RouterServiceState.RUNNING;
+    }
 }

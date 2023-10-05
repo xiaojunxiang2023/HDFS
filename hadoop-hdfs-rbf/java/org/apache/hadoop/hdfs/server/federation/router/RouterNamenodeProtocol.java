@@ -17,143 +17,143 @@ import java.util.Map.Entry;
  */
 public class RouterNamenodeProtocol implements NamenodeProtocol {
 
-  /** RPC server to receive client calls. */
-  private final RouterRpcServer rpcServer;
-  /** RPC clients to connect to the Namenodes. */
-  private final RouterRpcClient rpcClient;
+    /** RPC server to receive client calls. */
+    private final RouterRpcServer rpcServer;
+    /** RPC clients to connect to the Namenodes. */
+    private final RouterRpcClient rpcClient;
 
 
-  public RouterNamenodeProtocol(RouterRpcServer server) {
-    this.rpcServer = server;
-    this.rpcClient =  this.rpcServer.getRPCClient();
-  }
+    public RouterNamenodeProtocol(RouterRpcServer server) {
+        this.rpcServer = server;
+        this.rpcClient = this.rpcServer.getRPCClient();
+    }
 
-  @Override
-  public BlocksWithLocations getBlocks(DatanodeInfo datanode, long size,
-      long minBlockSize) throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ);
+    @Override
+    public BlocksWithLocations getBlocks(DatanodeInfo datanode, long size,
+                                         long minBlockSize) throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ);
 
-    // Get the namespace where the datanode is located
-    Map<String, DatanodeStorageReport[]> map =
-        rpcServer.getDatanodeStorageReportMap(DatanodeReportType.ALL);
-    String nsId = null;
-    for (Entry<String, DatanodeStorageReport[]> entry : map.entrySet()) {
-      DatanodeStorageReport[] dns = entry.getValue();
-      for (DatanodeStorageReport dn : dns) {
-        DatanodeInfo dnInfo = dn.getDatanodeInfo();
-        if (dnInfo.getDatanodeUuid().equals(datanode.getDatanodeUuid())) {
-          nsId = entry.getKey();
-          break;
+        // Get the namespace where the datanode is located
+        Map<String, DatanodeStorageReport[]> map =
+                rpcServer.getDatanodeStorageReportMap(DatanodeReportType.ALL);
+        String nsId = null;
+        for (Entry<String, DatanodeStorageReport[]> entry : map.entrySet()) {
+            DatanodeStorageReport[] dns = entry.getValue();
+            for (DatanodeStorageReport dn : dns) {
+                DatanodeInfo dnInfo = dn.getDatanodeInfo();
+                if (dnInfo.getDatanodeUuid().equals(datanode.getDatanodeUuid())) {
+                    nsId = entry.getKey();
+                    break;
+                }
+            }
+            // Break the loop if already found
+            if (nsId != null) {
+                break;
+            }
         }
-      }
-      // Break the loop if already found
-      if (nsId != null) {
-        break;
-      }
+
+        // Forward to the proper namenode
+        if (nsId != null) {
+            RemoteMethod method = new RemoteMethod(
+                    NamenodeProtocol.class, "getBlocks",
+                    new Class<?>[]{DatanodeInfo.class, long.class, long.class},
+                    datanode, size, minBlockSize);
+            return rpcClient.invokeSingle(nsId, method, BlocksWithLocations.class);
+        }
+        return null;
     }
 
-    // Forward to the proper namenode
-    if (nsId != null) {
-      RemoteMethod method = new RemoteMethod(
-          NamenodeProtocol.class, "getBlocks",
-          new Class<?>[] {DatanodeInfo.class, long.class, long.class},
-          datanode, size, minBlockSize);
-      return rpcClient.invokeSingle(nsId, method, BlocksWithLocations.class);
+    @Override
+    public ExportedBlockKeys getBlockKeys() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ);
+
+        RemoteMethod method =
+                new RemoteMethod(NamenodeProtocol.class, "getBlockKeys");
+        return rpcServer.invokeAtAvailableNs(method, ExportedBlockKeys.class);
     }
-    return null;
-  }
 
-  @Override
-  public ExportedBlockKeys getBlockKeys() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ);
+    @Override
+    public long getTransactionID() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ);
 
-    RemoteMethod method =
-        new RemoteMethod(NamenodeProtocol.class, "getBlockKeys");
-    return rpcServer.invokeAtAvailableNs(method, ExportedBlockKeys.class);
-  }
+        RemoteMethod method =
+                new RemoteMethod(NamenodeProtocol.class, "getTransactionID");
+        return rpcServer.invokeAtAvailableNs(method, long.class);
+    }
 
-  @Override
-  public long getTransactionID() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ);
+    @Override
+    public long getMostRecentCheckpointTxId() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ);
 
-    RemoteMethod method =
-        new RemoteMethod(NamenodeProtocol.class, "getTransactionID");
-    return rpcServer.invokeAtAvailableNs(method, long.class);
-  }
+        RemoteMethod method =
+                new RemoteMethod(NamenodeProtocol.class, "getMostRecentCheckpointTxId");
+        return rpcServer.invokeAtAvailableNs(method, long.class);
+    }
 
-  @Override
-  public long getMostRecentCheckpointTxId() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ);
+    @Override
+    public CheckpointSignature rollEditLog() throws IOException {
+        rpcServer.checkOperation(OperationCategory.WRITE, false);
+        return null;
+    }
 
-    RemoteMethod method =
-        new RemoteMethod(NamenodeProtocol.class, "getMostRecentCheckpointTxId");
-    return rpcServer.invokeAtAvailableNs(method, long.class);
-  }
+    @Override
+    public NamespaceInfo versionRequest() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ);
 
-  @Override
-  public CheckpointSignature rollEditLog() throws IOException {
-    rpcServer.checkOperation(OperationCategory.WRITE, false);
-    return null;
-  }
+        RemoteMethod method =
+                new RemoteMethod(NamenodeProtocol.class, "versionRequest");
+        return rpcServer.invokeAtAvailableNs(method, NamespaceInfo.class);
+    }
 
-  @Override
-  public NamespaceInfo versionRequest() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ);
+    @Override
+    public void errorReport(NamenodeRegistration registration, int errorCode,
+                            String msg) throws IOException {
+        rpcServer.checkOperation(OperationCategory.UNCHECKED, false);
+    }
 
-    RemoteMethod method =
-        new RemoteMethod(NamenodeProtocol.class, "versionRequest");
-    return rpcServer.invokeAtAvailableNs(method, NamespaceInfo.class);
-  }
+    @Override
+    public NamenodeRegistration registerSubordinateNamenode(
+            NamenodeRegistration registration) throws IOException {
+        rpcServer.checkOperation(OperationCategory.WRITE, false);
+        return null;
+    }
 
-  @Override
-  public void errorReport(NamenodeRegistration registration, int errorCode,
-      String msg) throws IOException {
-    rpcServer.checkOperation(OperationCategory.UNCHECKED, false);
-  }
+    @Override
+    public NamenodeCommand startCheckpoint(NamenodeRegistration registration)
+            throws IOException {
+        rpcServer.checkOperation(OperationCategory.WRITE, false);
+        return null;
+    }
 
-  @Override
-  public NamenodeRegistration registerSubordinateNamenode(
-      NamenodeRegistration registration) throws IOException {
-    rpcServer.checkOperation(OperationCategory.WRITE, false);
-    return null;
-  }
+    @Override
+    public void endCheckpoint(NamenodeRegistration registration,
+                              CheckpointSignature sig) throws IOException {
+        rpcServer.checkOperation(OperationCategory.WRITE, false);
+    }
 
-  @Override
-  public NamenodeCommand startCheckpoint(NamenodeRegistration registration)
-      throws IOException {
-    rpcServer.checkOperation(OperationCategory.WRITE, false);
-    return null;
-  }
+    @Override
+    public RemoteEditLogManifest getEditLogManifest(long sinceTxId)
+            throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ, false);
+        return null;
+    }
 
-  @Override
-  public void endCheckpoint(NamenodeRegistration registration,
-      CheckpointSignature sig) throws IOException {
-    rpcServer.checkOperation(OperationCategory.WRITE, false);
-  }
+    @Override
+    public boolean isUpgradeFinalized() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ, false);
+        return false;
+    }
 
-  @Override
-  public RemoteEditLogManifest getEditLogManifest(long sinceTxId)
-      throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ, false);
-    return null;
-  }
+    @Override
+    public boolean isRollingUpgrade() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ, false);
+        return false;
+    }
 
-  @Override
-  public boolean isUpgradeFinalized() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ, false);
-    return false;
-  }
-
-  @Override
-  public boolean isRollingUpgrade() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ, false);
-    return false;
-  }
-
-  @Override
-  public Long getNextSPSPath() throws IOException {
-    rpcServer.checkOperation(OperationCategory.READ, false);
-    // not supported
-    return null;
-  }
+    @Override
+    public Long getNextSPSPath() throws IOException {
+        rpcServer.checkOperation(OperationCategory.READ, false);
+        // not supported
+        return null;
+    }
 }

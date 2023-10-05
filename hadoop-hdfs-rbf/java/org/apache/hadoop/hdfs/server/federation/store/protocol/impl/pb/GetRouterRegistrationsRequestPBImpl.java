@@ -14,30 +14,30 @@ import java.io.IOException;
  * GetRouterRegistrationsRequest.
  */
 public class GetRouterRegistrationsRequestPBImpl
-    extends GetRouterRegistrationsRequest implements PBRecord {
+        extends GetRouterRegistrationsRequest implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetRouterRegistrationsRequestProto,
-      Builder, GetRouterRegistrationsRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<
-              GetRouterRegistrationsRequestProto, Builder,
-              GetRouterRegistrationsRequestProtoOrBuilder>(
-                  GetRouterRegistrationsRequestProto.class);
+    private FederationProtocolPBTranslator<GetRouterRegistrationsRequestProto,
+            Builder, GetRouterRegistrationsRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<
+                    GetRouterRegistrationsRequestProto, Builder,
+                    GetRouterRegistrationsRequestProtoOrBuilder>(
+                    GetRouterRegistrationsRequestProto.class);
 
-  public GetRouterRegistrationsRequestPBImpl() {
-  }
+    public GetRouterRegistrationsRequestPBImpl() {
+    }
 
-  @Override
-  public GetRouterRegistrationsRequestProto getProto() {
-    return this.translator.build();
-  }
+    @Override
+    public GetRouterRegistrationsRequestProto getProto() {
+        return this.translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 }

@@ -14,42 +14,42 @@ import java.io.IOException;
  * GetSafeModeResponse.
  */
 public class GetSafeModeResponsePBImpl extends GetSafeModeResponse
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetSafeModeResponseProto,
-      Builder, GetSafeModeResponseProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<>(
-              GetSafeModeResponseProto.class);
+    private FederationProtocolPBTranslator<GetSafeModeResponseProto,
+            Builder, GetSafeModeResponseProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<>(
+                    GetSafeModeResponseProto.class);
 
-  public GetSafeModeResponsePBImpl() {
-  }
+    public GetSafeModeResponsePBImpl() {
+    }
 
-  public GetSafeModeResponsePBImpl(GetSafeModeResponseProto proto) {
-    this.translator.setProto(proto);
-  }
+    public GetSafeModeResponsePBImpl(GetSafeModeResponseProto proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public GetSafeModeResponseProto getProto() {
-    return translator.build();
-  }
+    @Override
+    public GetSafeModeResponseProto getProto() {
+        return translator.build();
+    }
 
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
 
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
 
-  @Override
-  public boolean isInSafeMode() {
-    return this.translator.getProtoOrBuilder().getIsInSafeMode();
-  }
+    @Override
+    public boolean isInSafeMode() {
+        return this.translator.getProtoOrBuilder().getIsInSafeMode();
+    }
 
-  @Override
-  public void setSafeMode(boolean isInSafeMode) {
-    this.translator.getBuilder().setIsInSafeMode(isInSafeMode);
-  }
+    @Override
+    public void setSafeMode(boolean isInSafeMode) {
+        this.translator.getBuilder().setIsInSafeMode(isInSafeMode);
+    }
 }

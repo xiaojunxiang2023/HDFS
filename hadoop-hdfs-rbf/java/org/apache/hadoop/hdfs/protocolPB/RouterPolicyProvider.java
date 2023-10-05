@@ -13,22 +13,22 @@ import java.util.List;
 @InterfaceAudience.Private
 public class RouterPolicyProvider extends HDFSPolicyProvider {
 
-  private static final Service[] RBF_SERVICES = new Service[] {
-      new Service(CommonConfigurationKeys.SECURITY_ROUTER_ADMIN_PROTOCOL_ACL,
-          RouterAdminProtocol.class) };
+    private static final Service[] RBF_SERVICES = new Service[]{
+            new Service(CommonConfigurationKeys.SECURITY_ROUTER_ADMIN_PROTOCOL_ACL,
+                    RouterAdminProtocol.class)};
 
-  private final Service[] services;
+    private final Service[] services;
 
-  public RouterPolicyProvider() {
-    List<Service> list = new ArrayList<>();
-    // 添加 Service
-    list.addAll(Arrays.asList(super.getServices()));
-    list.addAll(Arrays.asList(RBF_SERVICES));
-    services = list.toArray(new Service[list.size()]);
-  }
+    public RouterPolicyProvider() {
+        List<Service> list = new ArrayList<>();
+        // 添加 Service
+        list.addAll(Arrays.asList(super.getServices()));
+        list.addAll(Arrays.asList(RBF_SERVICES));
+        services = list.toArray(new Service[list.size()]);
+    }
 
-  @Override
-  public Service[] getServices() {
-    return Arrays.copyOf(services, services.length);
-  }
+    @Override
+    public Service[] getServices() {
+        return Arrays.copyOf(services, services.length);
+    }
 }

@@ -17,44 +17,44 @@ import java.io.IOException;
  * RouterHeartbeatRequest.
  */
 public class RouterHeartbeatRequestPBImpl extends RouterHeartbeatRequest
-    implements PBRecord {
+        implements PBRecord {
 
-  private FederationProtocolPBTranslator<RouterHeartbeatRequestProto, Builder,
-      RouterHeartbeatRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<RouterHeartbeatRequestProto,
-              Builder, RouterHeartbeatRequestProtoOrBuilder>(
-                  RouterHeartbeatRequestProto.class);
+    private FederationProtocolPBTranslator<RouterHeartbeatRequestProto, Builder,
+            RouterHeartbeatRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<RouterHeartbeatRequestProto,
+                    Builder, RouterHeartbeatRequestProtoOrBuilder>(
+                    RouterHeartbeatRequestProto.class);
 
-  public RouterHeartbeatRequestPBImpl() {
-  }
-
-  @Override
-  public RouterHeartbeatRequestProto getProto() {
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public RouterState getRouter() throws IOException {
-    RouterRecordProto routerProto =
-        this.translator.getProtoOrBuilder().getRouter();
-    return new RouterStatePBImpl(routerProto);
-  }
-
-  @Override
-  public void setRouter(RouterState routerState) {
-    if (routerState instanceof RouterStatePBImpl) {
-      RouterStatePBImpl routerStatePB = (RouterStatePBImpl)routerState;
-      this.translator.getBuilder().setRouter(routerStatePB.getProto());
+    public RouterHeartbeatRequestPBImpl() {
     }
-  }
+
+    @Override
+    public RouterHeartbeatRequestProto getProto() {
+        return this.translator.build();
+    }
+
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public RouterState getRouter() throws IOException {
+        RouterRecordProto routerProto =
+                this.translator.getProtoOrBuilder().getRouter();
+        return new RouterStatePBImpl(routerProto);
+    }
+
+    @Override
+    public void setRouter(RouterState routerState) {
+        if (routerState instanceof RouterStatePBImpl) {
+            RouterStatePBImpl routerStatePB = (RouterStatePBImpl) routerState;
+            this.translator.getBuilder().setRouter(routerStatePB.getProto());
+        }
+    }
 }

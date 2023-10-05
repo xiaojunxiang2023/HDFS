@@ -19,53 +19,53 @@ import java.util.List;
 @InterfaceStability.Evolving
 public class RouterStoreImpl extends RouterStore {
 
-  public RouterStoreImpl(StateStoreDriver driver) {
-    super(driver);
-  }
-
-  @Override
-  public GetRouterRegistrationResponse getRouterRegistration(
-      GetRouterRegistrationRequest request) throws IOException {
-
-    final RouterState partial = RouterState.newInstance();
-    partial.setAddress(request.getRouterId());
-    final Query<RouterState> query = new Query<RouterState>(partial);
-    RouterState record = getDriver().get(getRecordClass(), query);
-    if (record != null) {
-      overrideExpiredRecord(record);
+    public RouterStoreImpl(StateStoreDriver driver) {
+        super(driver);
     }
-    GetRouterRegistrationResponse response =
-        GetRouterRegistrationResponse.newInstance();
-    response.setRouter(record);
-    return response;
-  }
 
-  @Override
-  public GetRouterRegistrationsResponse getRouterRegistrations(
-      GetRouterRegistrationsRequest request) throws IOException {
+    @Override
+    public GetRouterRegistrationResponse getRouterRegistration(
+            GetRouterRegistrationRequest request) throws IOException {
 
-    // Get all values from the cache
-    QueryResult<RouterState> recordsAndTimeStamp =
-        getCachedRecordsAndTimeStamp();
-    List<RouterState> records = recordsAndTimeStamp.getRecords();
-    long timestamp = recordsAndTimeStamp.getTimestamp();
+        final RouterState partial = RouterState.newInstance();
+        partial.setAddress(request.getRouterId());
+        final Query<RouterState> query = new Query<RouterState>(partial);
+        RouterState record = getDriver().get(getRecordClass(), query);
+        if (record != null) {
+            overrideExpiredRecord(record);
+        }
+        GetRouterRegistrationResponse response =
+                GetRouterRegistrationResponse.newInstance();
+        response.setRouter(record);
+        return response;
+    }
 
-    // Generate response
-    GetRouterRegistrationsResponse response =
-        GetRouterRegistrationsResponse.newInstance();
-    response.setRouters(records);
-    response.setTimestamp(timestamp);
-    return response;
-  }
+    @Override
+    public GetRouterRegistrationsResponse getRouterRegistrations(
+            GetRouterRegistrationsRequest request) throws IOException {
 
-  @Override
-  public RouterHeartbeatResponse routerHeartbeat(RouterHeartbeatRequest request)
-      throws IOException {
+        // Get all values from the cache
+        QueryResult<RouterState> recordsAndTimeStamp =
+                getCachedRecordsAndTimeStamp();
+        List<RouterState> records = recordsAndTimeStamp.getRecords();
+        long timestamp = recordsAndTimeStamp.getTimestamp();
 
-    RouterState record = request.getRouter();
-    boolean status = getDriver().put(record, true, false);
-    RouterHeartbeatResponse response =
-        RouterHeartbeatResponse.newInstance(status);
-    return response;
-  }
+        // Generate response
+        GetRouterRegistrationsResponse response =
+                GetRouterRegistrationsResponse.newInstance();
+        response.setRouters(records);
+        response.setTimestamp(timestamp);
+        return response;
+    }
+
+    @Override
+    public RouterHeartbeatResponse routerHeartbeat(RouterHeartbeatRequest request)
+            throws IOException {
+
+        RouterState record = request.getRouter();
+        boolean status = getDriver().put(record, true, false);
+        RouterHeartbeatResponse response =
+                RouterHeartbeatResponse.newInstance(status);
+        return response;
+    }
 }

@@ -39,270 +39,271 @@ import java.util.concurrent.TimeUnit;
 @InterfaceStability.Evolving
 public class StateStoreService extends CompositeService {
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(StateStoreService.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(StateStoreService.class);
 
 
-  private Configuration conf;
-  private String identifier;
-  private StateStoreDriver driver;
+    private Configuration conf;
+    private String identifier;
+    private StateStoreDriver driver;
 
-  // 定期性地检查与 StateStore的连接的 Service 
-  private StateStoreConnectionMonitorService monitorService;
-  // 定期更新缓存的 Service
-  private StateStoreCacheUpdateService cacheUpdater;
-  
-  private StateStoreMetrics metrics;
+    // 定期性地检查与 StateStore的连接的 Service 
+    private StateStoreConnectionMonitorService monitorService;
+    // 定期更新缓存的 Service
+    private StateStoreCacheUpdateService cacheUpdater;
 
-  // Map, 支持的类型： Record.class -> RecordStore(StateStore)
-  private final Map<Class<? extends BaseRecord>, RecordStore<? extends BaseRecord>>
-          recordStores;
+    private StateStoreMetrics metrics;
 
-
-  private long cacheLastUpdateTime;
-  private final List<StateStoreCache> cachesToUpdateInternal;
-  private final List<StateStoreCache> cachesToUpdateExternal;
+    // Map, 支持的类型： Record.class -> RecordStore(StateStore)
+    private final Map<Class<? extends BaseRecord>, RecordStore<? extends BaseRecord>>
+            recordStores;
 
 
-  public StateStoreService() {
-    super(StateStoreService.class.getName());
+    private long cacheLastUpdateTime;
+    private final List<StateStoreCache> cachesToUpdateInternal;
+    private final List<StateStoreCache> cachesToUpdateExternal;
 
-    this.recordStores = new HashMap<>();
-    this.cachesToUpdateInternal = new ArrayList<>();
-    this.cachesToUpdateExternal = new ArrayList<>();
-  }
 
-  // 服务初始化
-  @Override
-  protected void serviceInit(Configuration config) throws Exception {
-    this.conf = config;
+    public StateStoreService() {
+        super(StateStoreService.class.getName());
 
-    // 1、创建 StateStoreDriver
-    Class<? extends StateStoreDriver> driverClass = this.conf.getClass(
-        RBFConfigKeys.FEDERATION_STORE_DRIVER_CLASS,
-        RBFConfigKeys.FEDERATION_STORE_DRIVER_CLASS_DEFAULT,
-        StateStoreDriver.class);
-    this.driver = ReflectionUtils.newInstance(driverClass, this.conf);
-
-    if (this.driver == null) {
-      throw new IOException("Cannot create driver for the State Store");
+        this.recordStores = new HashMap<>();
+        this.cachesToUpdateInternal = new ArrayList<>();
+        this.cachesToUpdateExternal = new ArrayList<>();
     }
 
-    // 添加支持的 RecordStore
-    addRecordStore(MembershipStoreImpl.class);
-    addRecordStore(MountTableStoreImpl.class);
-    addRecordStore(RouterStoreImpl.class);
-    addRecordStore(DisabledNameserviceStoreImpl.class);
+    // 服务初始化
+    @Override
+    protected void serviceInit(Configuration config) throws Exception {
+        this.conf = config;
 
-    // 2、monitorService Service
-    this.monitorService = new StateStoreConnectionMonitorService(this);
-    this.addService(monitorService);
+        // 1、创建 StateStoreDriver
+        Class<? extends StateStoreDriver> driverClass = this.conf.getClass(
+                RBFConfigKeys.FEDERATION_STORE_DRIVER_CLASS,
+                RBFConfigKeys.FEDERATION_STORE_DRIVER_CLASS_DEFAULT,
+                StateStoreDriver.class);
+        this.driver = ReflectionUtils.newInstance(driverClass, this.conf);
 
-    MembershipState.setExpirationMs(conf.getTimeDuration(
-        RBFConfigKeys.FEDERATION_STORE_MEMBERSHIP_EXPIRATION_MS,
-        RBFConfigKeys.FEDERATION_STORE_MEMBERSHIP_EXPIRATION_MS_DEFAULT,
-        TimeUnit.MILLISECONDS));
-    MembershipState.setDeletionMs(conf.getTimeDuration(
-        RBFConfigKeys.FEDERATION_STORE_MEMBERSHIP_EXPIRATION_DELETION_MS,
-        RBFConfigKeys
-            .FEDERATION_STORE_MEMBERSHIP_EXPIRATION_DELETION_MS_DEFAULT,
-        TimeUnit.MILLISECONDS));
-    RouterState.setExpirationMs(conf.getTimeDuration(
-        RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_MS,
-        RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_MS_DEFAULT,
-        TimeUnit.MILLISECONDS));
-    RouterState.setDeletionMs(conf.getTimeDuration(
-        RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_DELETION_MS,
-        RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_DELETION_MS_DEFAULT,
-        TimeUnit.MILLISECONDS));
+        if (this.driver == null) {
+            throw new IOException("Cannot create driver for the State Store");
+        }
 
-    // 3、cacheUpdater Service
-    this.cacheUpdater = new StateStoreCacheUpdateService(this);
-    this.addService(this.cacheUpdater);
+        // 添加支持的 RecordStore
+        addRecordStore(MembershipStoreImpl.class);
+        addRecordStore(MountTableStoreImpl.class);
+        addRecordStore(RouterStoreImpl.class);
+        addRecordStore(DisabledNameserviceStoreImpl.class);
 
-    if (conf.getBoolean(RBFConfigKeys.DFS_ROUTER_METRICS_ENABLE,
-        RBFConfigKeys.DFS_ROUTER_METRICS_ENABLE_DEFAULT)) {
-      this.metrics = StateStoreMetrics.create(conf);
-      try {
-        StandardMBean bean = new StandardMBean(metrics, StateStoreMBean.class);
-        ObjectName registeredObject =
-            MBeans.register("Router", "StateStore", bean);
-        LOG.info("Registered StateStoreMBean: {}", registeredObject);
-      } catch (NotCompliantMBeanException e) {
-        throw new RuntimeException("Bad StateStoreMBean setup", e);
-      } catch (MetricsException e) {
-        LOG.error("Failed to register State Store bean {}", e.getMessage());
-      }
-    } else {
-      LOG.info("State Store metrics not enabled");
-      this.metrics = new NullStateStoreMetrics();
-    }
+        // 2、monitorService Service
+        this.monitorService = new StateStoreConnectionMonitorService(this);
+        this.addService(monitorService);
 
-    super.serviceInit(this.conf);
-  }
+        MembershipState.setExpirationMs(conf.getTimeDuration(
+                RBFConfigKeys.FEDERATION_STORE_MEMBERSHIP_EXPIRATION_MS,
+                RBFConfigKeys.FEDERATION_STORE_MEMBERSHIP_EXPIRATION_MS_DEFAULT,
+                TimeUnit.MILLISECONDS));
+        MembershipState.setDeletionMs(conf.getTimeDuration(
+                RBFConfigKeys.FEDERATION_STORE_MEMBERSHIP_EXPIRATION_DELETION_MS,
+                RBFConfigKeys
+                        .FEDERATION_STORE_MEMBERSHIP_EXPIRATION_DELETION_MS_DEFAULT,
+                TimeUnit.MILLISECONDS));
+        RouterState.setExpirationMs(conf.getTimeDuration(
+                RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_MS,
+                RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_MS_DEFAULT,
+                TimeUnit.MILLISECONDS));
+        RouterState.setDeletionMs(conf.getTimeDuration(
+                RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_DELETION_MS,
+                RBFConfigKeys.FEDERATION_STORE_ROUTER_EXPIRATION_DELETION_MS_DEFAULT,
+                TimeUnit.MILLISECONDS));
 
-  @Override
-  protected void serviceStart() throws Exception {
-    loadDriver();
-    super.serviceStart();
-  }
+        // 3、cacheUpdater Service
+        this.cacheUpdater = new StateStoreCacheUpdateService(this);
+        this.addService(this.cacheUpdater);
 
-  @Override
-  protected void serviceStop() throws Exception {
-    closeDriver();
-    if (metrics != null) {
-      metrics.shutdown();
-      metrics = null;
-    }
-    super.serviceStop();
-  }
-
-  private <T extends RecordStore<?>> void addRecordStore(
-      final Class<T> clazz) {
-
-    assert this.getServiceState() == STATE.INITED : "Cannot add record to the State Store once started";
-
-    T recordStore = RecordStore.newInstance(clazz, this.getDriver());
-    Class<? extends BaseRecord> recordClass = recordStore.getRecordClass();
-    this.recordStores.put(recordClass, recordStore);
-
-    // 订阅缓存自动更新
-    if (recordStore instanceof StateStoreCache) {
-      StateStoreCache cachedRecordStore = (StateStoreCache) recordStore;
-      this.cachesToUpdateInternal.add(cachedRecordStore);
-    }
-  }
-
-  // 根据 RecordStore.class 取得对应的实例
-  public <T extends RecordStore<?>> T getRegisteredRecordStore(
-      final Class<T> recordStoreClass) {
-    for (RecordStore<? extends BaseRecord> recordStore :
-        this.recordStores.values()) {
-      if (recordStoreClass.isInstance(recordStore)) {
-        T recordStoreChecked = (T) recordStore;
-        return recordStoreChecked;
-      }
-    }
-    return null;
-  }
-
-  public Collection<Class<? extends BaseRecord>> getSupportedRecords() {
-    return this.recordStores.keySet();
-  }
-
-  // 加载 Driver
-  public void loadDriver() {
-    synchronized (this.driver) {
-      if (!isDriverReady()) {
-        String driverName = this.driver.getClass().getSimpleName();
-        if (this.driver.init(conf, getIdentifier(), getSupportedRecords(), metrics)) {
-          LOG.info("Connection to the State Store driver {} is open and ready",
-              driverName);
-          this.refreshCaches();
+        if (conf.getBoolean(RBFConfigKeys.DFS_ROUTER_METRICS_ENABLE,
+                RBFConfigKeys.DFS_ROUTER_METRICS_ENABLE_DEFAULT)) {
+            this.metrics = StateStoreMetrics.create(conf);
+            try {
+                StandardMBean bean = new StandardMBean(metrics, StateStoreMBean.class);
+                ObjectName registeredObject =
+                        MBeans.register("Router", "StateStore", bean);
+                LOG.info("Registered StateStoreMBean: {}", registeredObject);
+            } catch (NotCompliantMBeanException e) {
+                throw new RuntimeException("Bad StateStoreMBean setup", e);
+            } catch (MetricsException e) {
+                LOG.error("Failed to register State Store bean {}", e.getMessage());
+            }
         } else {
-          LOG.error("Cannot initialize State Store driver {}", driverName);
+            LOG.info("State Store metrics not enabled");
+            this.metrics = new NullStateStoreMetrics();
         }
-      }
+
+        super.serviceInit(this.conf);
     }
-  }
 
-  public boolean isDriverReady() {
-    return this.driver.isDriverReady();
-  }
-
-  @VisibleForTesting
-  public void closeDriver() throws Exception {
-    if (this.driver != null) {
-      this.driver.close();
+    @Override
+    protected void serviceStart() throws Exception {
+        loadDriver();
+        super.serviceStart();
     }
-  }
 
-  public StateStoreDriver getDriver() {
-    return this.driver;
-  }
-
-  // 获取 StateStore的唯一标识符，一般是 Router地址
-  public String getIdentifier() {
-    return this.identifier;
-  }
-
-  public void setIdentifier(String id) {
-    this.identifier = id;
-  }
-
-  
-  public long getCacheUpdateTime() {
-    return this.cacheLastUpdateTime;
-  }
-  
-  @VisibleForTesting
-  public void stopCacheUpdateService() {
-    if (this.cacheUpdater != null) {
-      this.cacheUpdater.stop();
-      removeService(this.cacheUpdater);
-      this.cacheUpdater = null;
-    }
-  }
-
-  // 注册一个缓存
-  public void registerCacheExternal(StateStoreCache client) {
-    this.cachesToUpdateExternal.add(client);
-  }
-
-  // 从 StateStore 中刷新缓存
-  public void refreshCaches() {
-    refreshCaches(false);
-  }
-
-  public void refreshCaches(boolean force) {
-    boolean success = true;
-    if (isDriverReady()) {
-      List<StateStoreCache> cachesToUpdate = new LinkedList<>();
-      cachesToUpdate.addAll(cachesToUpdateInternal);
-      cachesToUpdate.addAll(cachesToUpdateExternal);
-      for (StateStoreCache cachedStore : cachesToUpdate) {
-        String cacheName = cachedStore.getClass().getSimpleName();
-        boolean result = false;
-        try {
-          result = cachedStore.loadCache(force);
-        } catch (IOException e) {
-          LOG.error("Error updating cache for {}", cacheName, e);
-          result = false;
+    @Override
+    protected void serviceStop() throws Exception {
+        closeDriver();
+        if (metrics != null) {
+            metrics.shutdown();
+            metrics = null;
         }
-        if (!result) {
-          success = false;
-          LOG.error("Cache update failed for cache {}", cacheName);
+        super.serviceStop();
+    }
+
+    private <T extends RecordStore<?>> void addRecordStore(
+            final Class<T> clazz) {
+
+        assert this.getServiceState() == STATE.INITED : "Cannot add record to the State Store once started";
+
+        T recordStore = RecordStore.newInstance(clazz, this.getDriver());
+        Class<? extends BaseRecord> recordClass = recordStore.getRecordClass();
+        this.recordStores.put(recordClass, recordStore);
+
+        // 订阅缓存自动更新
+        if (recordStore instanceof StateStoreCache) {
+            StateStoreCache cachedRecordStore = (StateStoreCache) recordStore;
+            this.cachesToUpdateInternal.add(cachedRecordStore);
         }
-      }
-    } else {
-      success = false;
-      LOG.info("Skipping State Store cache update, driver is not ready.");
     }
-    if (success) {
-      // Uses local time, not driver time.
-      this.cacheLastUpdateTime = Time.now();
-    }
-  }
 
-  // 加载指定类型的 Record
-  public boolean loadCache(final Class<?> clazz) throws IOException {
-    return loadCache(clazz, false);
-  }
-  public boolean loadCache(Class<?> clazz, boolean force) throws IOException {
-    List<StateStoreCache> cachesToUpdate =
-        new LinkedList<StateStoreCache>();
-    cachesToUpdate.addAll(this.cachesToUpdateInternal);
-    cachesToUpdate.addAll(this.cachesToUpdateExternal);
-    for (StateStoreCache cachedStore : cachesToUpdate) {
-      if (clazz.isInstance(cachedStore)) {
-        return cachedStore.loadCache(force);
-      }
+    // 根据 RecordStore.class 取得对应的实例
+    public <T extends RecordStore<?>> T getRegisteredRecordStore(
+            final Class<T> recordStoreClass) {
+        for (RecordStore<? extends BaseRecord> recordStore :
+                this.recordStores.values()) {
+            if (recordStoreClass.isInstance(recordStore)) {
+                T recordStoreChecked = (T) recordStore;
+                return recordStoreChecked;
+            }
+        }
+        return null;
     }
-    throw new IOException("Registered cache was not found for " + clazz);
-  }
 
-  public StateStoreMetrics getMetrics() {
-    return metrics;
-  }
+    public Collection<Class<? extends BaseRecord>> getSupportedRecords() {
+        return this.recordStores.keySet();
+    }
+
+    // 加载 Driver
+    public void loadDriver() {
+        synchronized (this.driver) {
+            if (!isDriverReady()) {
+                String driverName = this.driver.getClass().getSimpleName();
+                if (this.driver.init(conf, getIdentifier(), getSupportedRecords(), metrics)) {
+                    LOG.info("Connection to the State Store driver {} is open and ready",
+                            driverName);
+                    this.refreshCaches();
+                } else {
+                    LOG.error("Cannot initialize State Store driver {}", driverName);
+                }
+            }
+        }
+    }
+
+    public boolean isDriverReady() {
+        return this.driver.isDriverReady();
+    }
+
+    @VisibleForTesting
+    public void closeDriver() throws Exception {
+        if (this.driver != null) {
+            this.driver.close();
+        }
+    }
+
+    public StateStoreDriver getDriver() {
+        return this.driver;
+    }
+
+    // 获取 StateStore的唯一标识符，一般是 Router地址
+    public String getIdentifier() {
+        return this.identifier;
+    }
+
+    public void setIdentifier(String id) {
+        this.identifier = id;
+    }
+
+
+    public long getCacheUpdateTime() {
+        return this.cacheLastUpdateTime;
+    }
+
+    @VisibleForTesting
+    public void stopCacheUpdateService() {
+        if (this.cacheUpdater != null) {
+            this.cacheUpdater.stop();
+            removeService(this.cacheUpdater);
+            this.cacheUpdater = null;
+        }
+    }
+
+    // 注册一个缓存
+    public void registerCacheExternal(StateStoreCache client) {
+        this.cachesToUpdateExternal.add(client);
+    }
+
+    // 从 StateStore 中刷新缓存
+    public void refreshCaches() {
+        refreshCaches(false);
+    }
+
+    public void refreshCaches(boolean force) {
+        boolean success = true;
+        if (isDriverReady()) {
+            List<StateStoreCache> cachesToUpdate = new LinkedList<>();
+            cachesToUpdate.addAll(cachesToUpdateInternal);
+            cachesToUpdate.addAll(cachesToUpdateExternal);
+            for (StateStoreCache cachedStore : cachesToUpdate) {
+                String cacheName = cachedStore.getClass().getSimpleName();
+                boolean result = false;
+                try {
+                    result = cachedStore.loadCache(force);
+                } catch (IOException e) {
+                    LOG.error("Error updating cache for {}", cacheName, e);
+                    result = false;
+                }
+                if (!result) {
+                    success = false;
+                    LOG.error("Cache update failed for cache {}", cacheName);
+                }
+            }
+        } else {
+            success = false;
+            LOG.info("Skipping State Store cache update, driver is not ready.");
+        }
+        if (success) {
+            // Uses local time, not driver time.
+            this.cacheLastUpdateTime = Time.now();
+        }
+    }
+
+    // 加载指定类型的 Record
+    public boolean loadCache(final Class<?> clazz) throws IOException {
+        return loadCache(clazz, false);
+    }
+
+    public boolean loadCache(Class<?> clazz, boolean force) throws IOException {
+        List<StateStoreCache> cachesToUpdate =
+                new LinkedList<StateStoreCache>();
+        cachesToUpdate.addAll(this.cachesToUpdateInternal);
+        cachesToUpdate.addAll(this.cachesToUpdateExternal);
+        for (StateStoreCache cachedStore : cachesToUpdate) {
+            if (clazz.isInstance(cachedStore)) {
+                return cachedStore.loadCache(force);
+            }
+        }
+        throw new IOException("Registered cache was not found for " + clazz);
+    }
+
+    public StateStoreMetrics getMetrics() {
+        return metrics;
+    }
 
 }

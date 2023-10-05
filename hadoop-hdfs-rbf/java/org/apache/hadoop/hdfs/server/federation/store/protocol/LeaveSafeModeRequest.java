@@ -9,7 +9,7 @@ import java.io.IOException;
  * its state in State Store.
  */
 public abstract class LeaveSafeModeRequest {
-  public static LeaveSafeModeRequest newInstance() throws IOException {
-    return StateStoreSerializer.newRecord(LeaveSafeModeRequest.class);
-  }
+    public static LeaveSafeModeRequest newInstance() throws IOException {
+        return StateStoreSerializer.newRecord(LeaveSafeModeRequest.class);
+    }
 }

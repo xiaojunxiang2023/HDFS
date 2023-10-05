@@ -16,54 +16,54 @@ import java.io.IOException;
  * GetNamenodeRegistrationsRequest.
  */
 public class GetNamenodeRegistrationsRequestPBImpl
-    extends GetNamenodeRegistrationsRequest implements PBRecord {
+        extends GetNamenodeRegistrationsRequest implements PBRecord {
 
-  private FederationProtocolPBTranslator<GetNamenodeRegistrationsRequestProto,
-      GetNamenodeRegistrationsRequestProto.Builder,
-      GetNamenodeRegistrationsRequestProtoOrBuilder> translator =
-          new FederationProtocolPBTranslator<
-              GetNamenodeRegistrationsRequestProto,
-              GetNamenodeRegistrationsRequestProto.Builder,
-              GetNamenodeRegistrationsRequestProtoOrBuilder>(
-                  GetNamenodeRegistrationsRequestProto.class);
+    private FederationProtocolPBTranslator<GetNamenodeRegistrationsRequestProto,
+            GetNamenodeRegistrationsRequestProto.Builder,
+            GetNamenodeRegistrationsRequestProtoOrBuilder> translator =
+            new FederationProtocolPBTranslator<
+                    GetNamenodeRegistrationsRequestProto,
+                    GetNamenodeRegistrationsRequestProto.Builder,
+                    GetNamenodeRegistrationsRequestProtoOrBuilder>(
+                    GetNamenodeRegistrationsRequestProto.class);
 
-  public GetNamenodeRegistrationsRequestPBImpl() {
-  }
-
-  public GetNamenodeRegistrationsRequestPBImpl(
-      GetNamenodeRegistrationsRequestProto proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public GetNamenodeRegistrationsRequestProto getProto() {
-    return this.translator.build();
-  }
-
-  @Override
-  public void setProto(Message proto) {
-    this.translator.setProto(proto);
-  }
-
-  @Override
-  public void readInstance(String base64String) throws IOException {
-    this.translator.readInstance(base64String);
-  }
-
-  @Override
-  public MembershipState getPartialMembership() {
-    GetNamenodeRegistrationsRequestProtoOrBuilder proto =
-        this.translator.getProtoOrBuilder();
-    if (!proto.hasMembership()){
-      return null;
+    public GetNamenodeRegistrationsRequestPBImpl() {
     }
-    NamenodeMembershipRecordProto memberProto = proto.getMembership();
-    return new MembershipStatePBImpl(memberProto);
-  }
 
-  @Override
-  public void setPartialMembership(MembershipState member) {
-    MembershipStatePBImpl memberPB = (MembershipStatePBImpl)member;
-    this.translator.getBuilder().setMembership(memberPB.getProto());
-  }
+    public GetNamenodeRegistrationsRequestPBImpl(
+            GetNamenodeRegistrationsRequestProto proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public GetNamenodeRegistrationsRequestProto getProto() {
+        return this.translator.build();
+    }
+
+    @Override
+    public void setProto(Message proto) {
+        this.translator.setProto(proto);
+    }
+
+    @Override
+    public void readInstance(String base64String) throws IOException {
+        this.translator.readInstance(base64String);
+    }
+
+    @Override
+    public MembershipState getPartialMembership() {
+        GetNamenodeRegistrationsRequestProtoOrBuilder proto =
+                this.translator.getProtoOrBuilder();
+        if (!proto.hasMembership()) {
+            return null;
+        }
+        NamenodeMembershipRecordProto memberProto = proto.getMembership();
+        return new MembershipStatePBImpl(memberProto);
+    }
+
+    @Override
+    public void setPartialMembership(MembershipState member) {
+        MembershipStatePBImpl memberPB = (MembershipStatePBImpl) member;
+        this.translator.getBuilder().setMembership(memberPB.getProto());
+    }
 }
