@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 import static org.apache.hadoop.hdfs.server.federation.resolver.FederationNamenodeServiceState.*;
 
-// 相比于 MembershipStats,主要是 联邦相关的信息
+// 相比于 MembershipStats, 主要是 NameNode服务相关的信息 的描述
 public abstract class MembershipState extends BaseRecord
         implements FederationNamenodeContext {
     public static final String ERROR_MSG_NO_NS_SPECIFIED =

@@ -32,41 +32,29 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static org.apache.hadoop.hdfs.DFSUtil.isParentEntry;
 import static org.apache.hadoop.hdfs.server.federation.router.RBFConfigKeys.*;
 
-/**
- * Mount table to map between global paths and remote locations. This allows the
- * {@link org.apache.hadoop.hdfs.server.federation.router.Router Router} to map
- * the global HDFS view to the remote namespaces. This is similar to
- * {@link org.apache.hadoop.fs.viewfs.ViewFs ViewFs}.
- * This is implemented as a tree.
- */
+// 解析器，从 path到 destination
 public class MountTableResolver
         implements FileSubclusterResolver, StateStoreCache {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(MountTableResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MountTableResolver.class);
 
-    /** Reference to Router. */
     private final Router router;
-    /** Reference to the State Store. */
     private final StateStoreService stateStore;
-    /** Interface to the mount table store. */
     private MountTableStore mountTableStore;
 
-    /** If the tree has been initialized. */
     private boolean init = false;
-    /** If the mount table is manually disabled*/
     private boolean disabled = false;
-    /** Path -> Remote HDFS location. */
+
+    // 从 path到 destination（MountTable）
+    // 挂载表 tree, path路径字典序
     private final TreeMap<String, MountTable> tree = new TreeMap<>();
-    /** Path -> Remote location. */
+
+    // 从 path到 destination（PathLocation）  PathLocation = src + MountTable
     private final Cache<String, PathLocation> locationCache;
 
-    /** Default nameservice when no mount matches the math. */
     private String defaultNameService = "";
-    /** If use default nameservice to read and write files. */
     private boolean defaultNSEnable = true;
 
-    /** Synchronization for both the tree and the cache. */
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
@@ -85,8 +73,7 @@ public class MountTableResolver
         this(conf, null, store);
     }
 
-    public MountTableResolver(Configuration conf, Router routerService,
-                              StateStoreService store) {
+    public MountTableResolver(Configuration conf, Router routerService, StateStoreService store) {
         this.router = routerService;
         if (store != null) {
             this.stateStore = store;
@@ -96,13 +83,9 @@ public class MountTableResolver
             this.stateStore = null;
         }
 
-        boolean mountTableCacheEnable = conf.getBoolean(
-                FEDERATION_MOUNT_TABLE_CACHE_ENABLE,
-                FEDERATION_MOUNT_TABLE_CACHE_ENABLE_DEFAULT);
+        boolean mountTableCacheEnable = conf.getBoolean(FEDERATION_MOUNT_TABLE_CACHE_ENABLE, FEDERATION_MOUNT_TABLE_CACHE_ENABLE_DEFAULT);
         if (mountTableCacheEnable) {
-            int maxCacheSize = conf.getInt(
-                    FEDERATION_MOUNT_TABLE_MAX_CACHE_SIZE,
-                    FEDERATION_MOUNT_TABLE_MAX_CACHE_SIZE_DEFAULT);
+            int maxCacheSize = conf.getInt(FEDERATION_MOUNT_TABLE_MAX_CACHE_SIZE, FEDERATION_MOUNT_TABLE_MAX_CACHE_SIZE_DEFAULT);
             this.locationCache = CacheBuilder.newBuilder()
                     .maximumSize(maxCacheSize)
                     .build();
@@ -110,28 +93,19 @@ public class MountTableResolver
             this.locationCache = null;
         }
 
+        // 订阅一个外部缓存，以至于 StateStoreService定期为自己更新缓存
         registerCacheExternal();
         initDefaultNameService(conf);
     }
 
-    /**
-     * Request cache updates from the State Store for this resolver.
-     */
     private void registerCacheExternal() {
         if (this.stateStore != null) {
             this.stateStore.registerCacheExternal(this);
         }
     }
 
-    /**
-     * Nameservice for APIs that cannot be resolved to a specific one.
-     *
-     * @param conf Configuration for this resolver.
-     */
     private void initDefaultNameService(Configuration conf) {
-        this.defaultNSEnable = conf.getBoolean(
-                DFS_ROUTER_DEFAULT_NAMESERVICE_ENABLE,
-                DFS_ROUTER_DEFAULT_NAMESERVICE_ENABLE_DEFAULT);
+        this.defaultNSEnable = conf.getBoolean(DFS_ROUTER_DEFAULT_NAMESERVICE_ENABLE, DFS_ROUTER_DEFAULT_NAMESERVICE_ENABLE_DEFAULT);
 
         if (!this.defaultNSEnable) {
             LOG.warn("Default name service is disabled.");
@@ -148,43 +122,28 @@ public class MountTableResolver
         }
     }
 
-    /**
-     * Get a reference for the Router for this resolver.
-     *
-     * @return Router for this resolver.
-     */
     protected Router getRouter() {
         return this.router;
     }
 
-    /**
-     * Get the mount table store for this resolver.
-     *
-     * @return Mount table store.
-     * @throws IOException If it cannot connect to the State Store.
-     */
     protected MountTableStore getMountTableStore() throws IOException {
         if (this.mountTableStore == null) {
-            this.mountTableStore = this.stateStore.getRegisteredRecordStore(
-                    MountTableStore.class);
+            this.mountTableStore = this.stateStore.getRegisteredRecordStore(MountTableStore.class);
             if (this.mountTableStore == null) {
-                throw new IOException("State Store does not have an interface for " +
-                        MountTableStore.class);
+                throw new IOException("State Store does not have an interface for " + MountTableStore.class);
             }
         }
         return this.mountTableStore;
     }
 
-    /**
-     * Add a mount entry to the table.
-     *
-     * @param entry The mount table record to add from the state store.
-     */
+    // 添加一个挂载点
     public void addEntry(final MountTable entry) {
         writeLock.lock();
         try {
             String srcPath = entry.getSourcePath();
+            // 往 tree里添加数据
             this.tree.put(srcPath, entry);
+            // 删除 Location缓存
             invalidateLocationCache(srcPath);
         } finally {
             writeLock.unlock();
@@ -192,33 +151,23 @@ public class MountTableResolver
         this.init = true;
     }
 
-    /**
-     * Remove a mount table entry.
-     *
-     * @param srcPath Source path for the entry to remove.
-     */
+    // 删除一个挂载点
     public void removeEntry(final String srcPath) {
         writeLock.lock();
         try {
+            // 从 tree里删除数据
             this.tree.remove(srcPath);
+            // 删除 Location缓存
             invalidateLocationCache(srcPath);
         } finally {
             writeLock.unlock();
         }
     }
 
-    /**
-     * Invalidates all cache entries below this path. It requires the write lock.
-     *
-     * @param path Source path.
-     */
+    // 对 map的 key进行遍历，删除 path路径下(自己 以及子目录文件)的所有缓存
     private void invalidateLocationCache(final String path) {
         LOG.debug("Invalidating {} from {}", path, locationCache);
-        if (locationCache == null || locationCache.size() == 0) {
-            return;
-        }
 
-        // Go through the entries and remove the ones from the path to invalidate
         ConcurrentMap<String, PathLocation> map = locationCache.asMap();
         Set<Entry<String, PathLocation>> entries = map.entrySet();
         Iterator<Entry<String, PathLocation>> it = entries.iterator();
@@ -240,19 +189,31 @@ public class MountTableResolver
                 }
             }
         }
-
         LOG.debug("Location cache after invalidation: {}", locationCache);
     }
 
-    /**
-     * Updates the mount path tree with a new set of mount table entries. It also
-     * updates the needed caches.
-     *
-     * @param entries Full set of mount table entries to update.
-     */
+
+    @Override
+    public boolean loadCache(boolean force) {
+        try {
+            // 先更新 MountTableStore的缓存
+            MountTableStore mountTable = this.getMountTableStore();
+            mountTable.loadCache(force);
+
+            GetMountTableEntriesRequest request = GetMountTableEntriesRequest.newInstance("/");
+            GetMountTableEntriesResponse response = mountTable.getMountTableEntries(request);
+            List<MountTable> records = response.getEntries();
+            // 删除 Location缓存，以及 tree
+            refreshEntries(records);
+        } catch (IOException e) {
+            LOG.error("Cannot fetch mount table entries from State Store", e);
+            return false;
+        }
+        return true;
+    }
+
     @VisibleForTesting
     public void refreshEntries(final Collection<MountTable> entries) {
-        // The tree read/write must be atomic
         writeLock.lock();
         try {
             // New entries
@@ -262,23 +223,25 @@ public class MountTableResolver
                 newEntries.put(srcPath, entry);
             }
 
-            // Old entries (reversed to sort from the leaves to the root)
+            // 即旧的获取 tree.values()
             Set<String> oldEntries = new TreeSet<>(Collections.reverseOrder());
             for (MountTable entry : getTreeValues("/")) {
                 String srcPath = entry.getSourcePath();
                 oldEntries.add(srcPath);
             }
 
-            // Entries that need to be removed
+            // 删除节点
             for (String srcPath : oldEntries) {
                 if (!newEntries.containsKey(srcPath)) {
+                    // 从 tree中删除
                     this.tree.remove(srcPath);
+                    // 删除 Location缓存
                     invalidateLocationCache(srcPath);
                     LOG.info("Removed stale mount point {} from resolver", srcPath);
                 }
             }
 
-            // Entries that need to be added
+            // upsert节点
             for (MountTable entry : entries) {
                 String srcPath = entry.getSourcePath();
                 if (!oldEntries.contains(srcPath)) {
@@ -304,33 +267,7 @@ public class MountTableResolver
         this.init = true;
     }
 
-    /**
-     * Replaces the current in-memory cached of the mount table with a new
-     * version fetched from the data store.
-     */
-    @Override
-    public boolean loadCache(boolean force) {
-        try {
-            // Our cache depends on the store, update it first
-            MountTableStore mountTable = this.getMountTableStore();
-            mountTable.loadCache(force);
-
-            GetMountTableEntriesRequest request =
-                    GetMountTableEntriesRequest.newInstance("/");
-            GetMountTableEntriesResponse response =
-                    mountTable.getMountTableEntries(request);
-            List<MountTable> records = response.getEntries();
-            refreshEntries(records);
-        } catch (IOException e) {
-            LOG.error("Cannot fetch mount table entries from State Store", e);
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Clears all data.
-     */
+    // 清空 tree 和 Location缓存
     public void clear() {
         LOG.info("Clearing all mount location caches");
         writeLock.lock();
@@ -344,6 +281,7 @@ public class MountTableResolver
         }
     }
 
+    // 从 Location缓存 中获得 destinations [PathLocation]
     @Override
     public PathLocation getDestinationForPath(final String path)
             throws IOException {
@@ -374,27 +312,19 @@ public class MountTableResolver
         }
     }
 
-    /**
-     * Build the path location to insert into the cache atomically. It must hold
-     * the read lock.
-     * @param str Path to check/insert.
-     * @return New remote location.
-     * @throws IOException If it cannot find the location.
-     */
+    // 把 path包装成 PathLocation
     public PathLocation lookupLocation(final String str) throws IOException {
-        PathLocation ret = null;
+        PathLocation ret;
         final String path = RouterAdmin.normalizeFileSystemPath(str);
         MountTable entry = findDeepest(path);
         if (entry != null) {
             ret = buildLocation(path, entry);
         } else {
-            // Not found, use default location
             if (!defaultNSEnable) {
                 throw new RouterResolveException("Cannot find locations for " + path
                         + ", because the default nameservice is disabled to read or write");
             }
-            RemoteLocation remoteLocation =
-                    new RemoteLocation(defaultNameService, path, path);
+            RemoteLocation remoteLocation = new RemoteLocation(defaultNameService, path, path);
             List<RemoteLocation> locations =
                     Collections.singletonList(remoteLocation);
             ret = new PathLocation(null, locations);
@@ -402,109 +332,9 @@ public class MountTableResolver
         return ret;
     }
 
-    /**
-     * Get the mount table entry for a path.
-     *
-     * @param path Path to look for.
-     * @return Mount table entry the path belongs.
-     * @throws IOException If the State Store could not be reached.
-     */
-    public MountTable getMountPoint(final String path) throws IOException {
-        verifyMountTable();
-        return findDeepest(RouterAdmin.normalizeFileSystemPath(path));
-    }
 
-    @Override
-    public List<String> getMountPoints(final String str) throws IOException {
-        verifyMountTable();
-        final String path = RouterAdmin.normalizeFileSystemPath(str);
-
-        Set<String> children = new TreeSet<>();
-        readLock.lock();
-        try {
-            String from = path;
-            String to = path + Character.MAX_VALUE;
-            SortedMap<String, MountTable> subMap = this.tree.subMap(from, to);
-
-            boolean exists = false;
-            for (String subPath : subMap.keySet()) {
-                String child = subPath;
-
-                // Special case for /
-                if (!path.equals(Path.SEPARATOR)) {
-                    // Get the children
-                    int ini = path.length();
-                    child = subPath.substring(ini);
-                }
-
-                if (child.isEmpty()) {
-                    // This is a mount point but without children
-                    exists = true;
-                } else if (child.startsWith(Path.SEPARATOR)) {
-                    // This is a mount point with children
-                    exists = true;
-                    child = child.substring(1);
-
-                    // We only return immediate children
-                    int fin = child.indexOf(Path.SEPARATOR);
-                    if (fin > -1) {
-                        child = child.substring(0, fin);
-                    }
-                    if (!child.isEmpty()) {
-                        children.add(child);
-                    }
-                }
-            }
-            if (!exists) {
-                return null;
-            }
-            return new LinkedList<>(children);
-        } finally {
-            readLock.unlock();
-        }
-    }
-
-    /**
-     * Get all the mount records at or beneath a given path.
-     * @param path Path to get the mount points from.
-     * @return List of mount table records under the path or null if the path is
-     *         not found.
-     * @throws IOException If it's not connected to the State Store.
-     */
-    public List<MountTable> getMounts(final String path) throws IOException {
-        verifyMountTable();
-        return getTreeValues(RouterAdmin.normalizeFileSystemPath(path), false);
-    }
-
-    /**
-     * Check if the Mount Table is ready to be used.
-     * @throws StateStoreUnavailableException If it cannot connect to the store.
-     */
-    private void verifyMountTable() throws StateStoreUnavailableException {
-        if (!this.init || disabled) {
-            throw new StateStoreUnavailableException("Mount Table not initialized");
-        }
-    }
-
-    @Override
-    public String toString() {
-        readLock.lock();
-        try {
-            return this.tree.toString();
-        } finally {
-            readLock.unlock();
-        }
-    }
-
-    /**
-     * Build a location for this result beneath the discovered mount point.
-     *
-     * @param path Path to build for.
-     * @param entry Mount table entry.
-     * @return PathLocation containing the namespace, local path.
-     */
-    private PathLocation buildLocation(
-            final String path, final MountTable entry) throws IOException {
+    // 把 path和 MountTable封装成一个 PathLocation
+    private PathLocation buildLocation(final String path, final MountTable entry) throws IOException {
         String srcPath = entry.getSourcePath();
         if (!path.startsWith(srcPath)) {
             LOG.error("Cannot build location, {} not a child of {}", path, srcPath);
@@ -526,8 +356,7 @@ public class MountTableResolver
         List<RemoteLocation> locations = new LinkedList<>();
         for (RemoteLocation oneDst : dests) {
             String nsId = oneDst.getNameserviceId();
-            String dest = oneDst.getDest();
-            String newPath = dest;
+            String newPath = oneDst.getDest();
             if (!newPath.endsWith(Path.SEPARATOR) && !remainingPath.isEmpty()) {
                 newPath += Path.SEPARATOR;
             }
@@ -539,21 +368,93 @@ public class MountTableResolver
         return new PathLocation(srcPath, locations, order);
     }
 
+
+    // 得到 path对应的挂载点
+    public MountTable getMountPoint(final String path) throws IOException {
+        verifyMountTable();
+        return findDeepest(RouterAdmin.normalizeFileSystemPath(path));
+    }
+
+    // 获得 path（自己 以及子目录文件的挂载点）
+    @Override
+    public List<String> getMountPoints(final String str) throws IOException {
+        verifyMountTable();
+        final String path = RouterAdmin.normalizeFileSystemPath(str);
+
+        Set<String> children = new TreeSet<>();
+        readLock.lock();
+        try {
+            String to = path + Character.MAX_VALUE;
+            SortedMap<String, MountTable> subMap = this.tree.subMap(path, to);
+
+            boolean exists = false;
+            for (String subPath : subMap.keySet()) {
+                String child = subPath;
+
+                if (!path.equals(Path.SEPARATOR)) {
+                    int ini = path.length();
+                    child = subPath.substring(ini);
+                }
+
+                if (child.isEmpty()) {
+                    exists = true;
+                } else if (child.startsWith(Path.SEPARATOR)) {
+                    exists = true;
+                    child = child.substring(1);
+                    int fin = child.indexOf(Path.SEPARATOR);
+                    if (fin > -1) {
+                        child = child.substring(0, fin);
+                    }
+                    if (!child.isEmpty()) {
+                        children.add(child);
+                    }
+                }
+            }
+            if (!exists) {
+                return null;
+            }
+            return new LinkedList<>(children);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    // 即 tree.values()
+    public List<MountTable> getMounts(final String path) throws IOException {
+        verifyMountTable();
+        return getTreeValues(RouterAdmin.normalizeFileSystemPath(path));
+    }
+
+    private void verifyMountTable() throws StateStoreUnavailableException {
+        if (!this.init || disabled) {
+            throw new StateStoreUnavailableException("Mount Table not initialized");
+        }
+    }
+
+    @Override
+    public String toString() {
+        readLock.lock();
+        try {
+            return this.tree.toString();
+        } finally {
+            readLock.unlock();
+        }
+    }
+
     @Override
     public String getDefaultNamespace() {
         return this.defaultNameService;
     }
 
-    /**
-     * Find the deepest mount point for a path.
-     * @param path Path to look for.
-     * @return Mount table entry.
-     */
+    // 核心方法，寻找挂载点，如果找不到自己那就 看看有没有记录父路径
     private MountTable findDeepest(final String path) {
         readLock.lock();
         try {
+            // 返回小于等于自己的 key（path是字符串，即字典序）
             Entry<String, MountTable> entry = this.tree.floorEntry(path);
+            // 父路径
             while (entry != null && !isParentEntry(path, entry.getKey())) {
+                // 寻找与自己血缘关系最近的
                 entry = this.tree.lowerEntry(entry.getKey());
             }
             if (entry == null) {
@@ -565,46 +466,20 @@ public class MountTableResolver
         }
     }
 
-    /**
-     * Get the mount table entries under a path.
-     * @param path Path to search from.
-     * @return Mount Table entries.
-     */
+    // 获取这个路径对应的所有挂载点
     private List<MountTable> getTreeValues(final String path) {
-        return getTreeValues(path, false);
-    }
-
-    /**
-     * Get the mount table entries under a path.
-     * @param path Path to search from.
-     * @param reverse If the order should be reversed.
-     * @return Mount Table entries.
-     */
-    private List<MountTable> getTreeValues(final String path, boolean reverse) {
         LinkedList<MountTable> ret = new LinkedList<>();
         readLock.lock();
         try {
-            String from = path;
             String to = path + Character.MAX_VALUE;
-            SortedMap<String, MountTable> subMap = this.tree.subMap(from, to);
-            for (MountTable entry : subMap.values()) {
-                if (!reverse) {
-                    ret.add(entry);
-                } else {
-                    ret.addFirst(entry);
-                }
-            }
+            SortedMap<String, MountTable> subMap = this.tree.subMap(path, to);
+            ret.addAll(subMap.values());
         } finally {
             readLock.unlock();
         }
         return ret;
     }
 
-    /**
-     * Get the size of the cache.
-     * @return Size of the cache.
-     * @throws IOException If the cache is not initialized.
-     */
     protected long getCacheSize() throws IOException {
         if (this.locationCache != null) {
             return this.locationCache.size();

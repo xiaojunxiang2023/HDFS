@@ -27,56 +27,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
-/**
- * The local subcluster (where the writer is) should be tried first. The writer
- * is defined from the RPC query received in the RPC server.
- */
 public class LocalResolver extends RouterResolver<String, String> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(LocalResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LocalResolver.class);
 
     public LocalResolver(final Configuration conf, final Router routerService) {
         super(conf, routerService);
     }
 
-    /**
-     * Get the mapping from nodes to subcluster. It gets this mapping from the
-     * subclusters through expensive calls (e.g., RPC) and uses caching to avoid
-     * too many calls. The cache might be updated asynchronously to reduce
-     * latency.
-     *
-     * @return Node IP to Subcluster.
-     */
-    @Override
-    protected Map<String, String> getSubclusterInfo(
-            MembershipStore membershipStore) {
-        Map<String, String> mapping = new HashMap<>();
 
-        Map<String, String> dnSubcluster = getDatanodesSubcluster();
-        if (dnSubcluster != null) {
-            mapping.putAll(dnSubcluster);
-        }
-
-        Map<String, String> nnSubcluster = getNamenodesSubcluster(membershipStore);
-        if (nnSubcluster != null) {
-            mapping.putAll(nnSubcluster);
-        }
-        return mapping;
-    }
-
-    /**
-     * Get the local name space. This relies on the RPC Server to get the address
-     * from the client.
-     *
-     * TODO we only support DN and NN locations, we need to add others like
-     * Resource Managers.
-     *
-     * @param path Path ignored by this policy.
-     * @param loc Federated location with multiple destinations.
-     * @return Local name space. Null if we don't know about this machine.
-     */
+    // 核心方法实现, 获得最优的 ns
+    // 即 getRemoteAddress()，获得的是 remote的客户端地址，相对于客户端来说是本地
     @Override
     protected String chooseFirstNamespace(String path, PathLocation loc) {
         String localSubcluster = null;
@@ -90,8 +51,7 @@ public class LocalResolver extends RouterResolver<String, String> {
                 LOG.error("Cannot get local namespace for {}", clientAddr);
             }
         } else {
-            LOG.error("Cannot get node mapping when resolving {} at {} from {}",
-                    path, loc, clientAddr);
+            LOG.error("Cannot get node mapping when resolving {} at {} from {}", path, loc, clientAddr);
         }
         return localSubcluster;
     }
@@ -101,13 +61,24 @@ public class LocalResolver extends RouterResolver<String, String> {
         return Server.getRemoteAddress();
     }
 
-    /**
-     * Get the Datanode mapping from the subclusters from the Namenodes. This
-     * needs to be done as a privileged action to use the user for the Router and
-     * not the one from the client in the RPC call.
-     *
-     * @return DN IP -> Subcluster.
-     */
+    // 获得一个 Map：ip -> ns
+    // 既有 dn_ip, 也有 nn_ip
+    @Override
+    protected Map<String, String> getSubclusterInfo(
+            MembershipStore membershipStore) {
+        Map<String, String> mapping = new HashMap<>();
+
+        Map<String, String> dnSubCluster = getDatanodesSubcluster();
+        if (dnSubCluster != null) {
+            mapping.putAll(dnSubCluster);
+        }
+
+        Map<String, String> nnSubCluster = getNamenodesSubcluster(membershipStore);
+        mapping.putAll(nnSubCluster);
+        return mapping;
+    }
+
+    // 从 rpcServer.getDatanodeStorageReportMap(...) 获取 dn_ip -> ns
     private Map<String, String> getDatanodesSubcluster() {
 
         final RouterRpcServer rpcServer = getRpcServer();
@@ -118,15 +89,14 @@ public class LocalResolver extends RouterResolver<String, String> {
 
         Map<String, String> ret = new HashMap<>();
         try {
-            // We need to get the DNs as a privileged user
+            // 使用真实用户的身份 去获取 DatanodeStorageReportMap信息
             UserGroupInformation loginUser = UserGroupInformation.getLoginUser();
             Map<String, DatanodeStorageReport[]> dnMap = loginUser.doAs(
                     new PrivilegedAction<Map<String, DatanodeStorageReport[]>>() {
                         @Override
                         public Map<String, DatanodeStorageReport[]> run() {
                             try {
-                                return rpcServer.getDatanodeStorageReportMap(
-                                        DatanodeReportType.ALL);
+                                return rpcServer.getDatanodeStorageReportMap(DatanodeReportType.ALL);
                             } catch (IOException e) {
                                 LOG.error("Cannot get the datanodes from the RPC server", e);
                                 return null;
@@ -148,16 +118,8 @@ public class LocalResolver extends RouterResolver<String, String> {
         return ret;
     }
 
-    /**
-     * Get the Namenode mapping from the subclusters from the Membership store. As
-     * the Routers are usually co-located with Namenodes, we also check for the
-     * local address for this Router here.
-     *
-     * @return NN IP -> Subcluster.
-     */
-    private Map<String, String> getNamenodesSubcluster(
-            MembershipStore membershipStore) {
-        // Manage requests from this hostname (127.0.0.1)
+    // 从 membershipStore.getNamenodeRegistrations(...) 获取 nn_ip -> ns
+    private Map<String, String> getNamenodesSubcluster(MembershipStore membershipStore) {
         String localIp = "127.0.0.1";
         String localHostname = localIp;
         try {
@@ -168,11 +130,9 @@ public class LocalResolver extends RouterResolver<String, String> {
 
         Map<String, String> ret = new HashMap<>();
         try {
-            // Get the values from the store
             GetNamenodeRegistrationsRequest request =
                     GetNamenodeRegistrationsRequest.newInstance();
-            GetNamenodeRegistrationsResponse response =
-                    membershipStore.getNamenodeRegistrations(request);
+            GetNamenodeRegistrationsResponse response = membershipStore.getNamenodeRegistrations(request);
             final List<MembershipState> nns = response.getNamenodeMemberships();
             for (MembershipState nn : nns) {
                 try {

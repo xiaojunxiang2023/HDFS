@@ -9,21 +9,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Order the destinations randomly.
- */
 public class RandomResolver implements OrderedResolver {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(RandomResolver.class);
 
-    /**
-     * Get a random name space from the path.
-     *
-     * @param path Path ignored by this policy.
-     * @param loc Federated location with multiple destinations.
-     * @return Random name space.
-     */
+    // loc里存储了多份 ns，随机取一个返回
     public String getFirstNamespace(final String path, final PathLocation loc) {
         final Set<String> namespaces = (loc == null) ? null : loc.getNamespaces();
         if (CollectionUtils.isEmpty(namespaces)) {

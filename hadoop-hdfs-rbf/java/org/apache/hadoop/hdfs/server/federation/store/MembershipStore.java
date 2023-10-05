@@ -26,8 +26,7 @@ public abstract class MembershipStore
     public abstract GetNamenodeRegistrationsResponse getNamenodeRegistrations(
             GetNamenodeRegistrationsRequest request) throws IOException;
 
-    // 获得过期的 NameNode的信息
-    // ? 过期 何意
+    // 获得缓存过期的 NameNode的信息
     public abstract GetNamenodeRegistrationsResponse
     getExpiredNamenodeRegistrations(GetNamenodeRegistrationsRequest request)
             throws IOException;

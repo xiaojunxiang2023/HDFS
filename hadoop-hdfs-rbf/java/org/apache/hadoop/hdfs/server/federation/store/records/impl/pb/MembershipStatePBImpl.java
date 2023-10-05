@@ -24,9 +24,6 @@ public class MembershipStatePBImpl extends MembershipState implements PBRecord {
                     Builder, NamenodeMembershipRecordProtoOrBuilder>(
                     NamenodeMembershipRecordProto.class);
 
-    public MembershipStatePBImpl() {
-    }
-
     public MembershipStatePBImpl(NamenodeMembershipRecordProto proto) {
         this.translator.setProto(proto);
     }
@@ -254,10 +251,8 @@ public class MembershipStatePBImpl extends MembershipState implements PBRecord {
 
     @Override
     public FederationNamenodeServiceState getState() {
-        FederationNamenodeServiceState ret =
-                FederationNamenodeServiceState.UNAVAILABLE;
-        NamenodeMembershipRecordProtoOrBuilder proto =
-                this.translator.getProtoOrBuilder();
+        FederationNamenodeServiceState ret = FederationNamenodeServiceState.UNAVAILABLE;
+        NamenodeMembershipRecordProtoOrBuilder proto = this.translator.getProtoOrBuilder();
         if (!proto.hasState()) {
             return null;
         }

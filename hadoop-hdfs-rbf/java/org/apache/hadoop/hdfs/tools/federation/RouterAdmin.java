@@ -40,21 +40,23 @@ import java.util.regex.Pattern;
 
 import static org.apache.hadoop.hdfs.server.federation.router.Quota.*;
 
-// RouterAdmin 的 Admin客户端命令
+/*
+    RouterAdmin 的 Admin客户端命令
+    
+    使用的是 RPC客户端是 RouterClient, 仅仅是一些 getXxxManager$createRouterProxy
+        真正是靠 getXxxManager$createRouterProxy去调用 xxxStore(xxxStore也是 xxxManager的之类)
+ */
 @Private
 public class RouterAdmin extends Configured implements Tool {
 
     private static final Logger LOG = LoggerFactory.getLogger(RouterAdmin.class);
     private static final Pattern SLASHES = Pattern.compile("/+");
-    
-    // 使用的是 RPC客户端是 RouterClient, 仅仅是一些 getXxxManager$createRouterProxy
-    // 真正是靠 getXxxManager$createRouterProxy去调用 xxxStore(xxxStore也是 xxxManager的之类)
+
     private RouterClient client;
 
     public static void main(String[] argv) throws Exception {
         Configuration conf = new HdfsConfiguration();
         RouterAdmin admin = new RouterAdmin(conf);
-
         int res = ToolRunner.run(admin, argv);
         System.exit(res);
     }
@@ -1109,5 +1111,5 @@ public class RouterAdmin extends Configured implements Tool {
             return mode;
         }
     }
-    
+
 }

@@ -602,9 +602,7 @@ public class RouterClientProtocol implements ClientProtocol {
             sourceDestinations[i] = location.getDest();
         }
         // Invoke
-        RemoteMethod method = new RemoteMethod("concat",
-                new Class<?>[]{String.class, String[].class},
-                targetDestination.getDest(), sourceDestinations);
+        RemoteMethod method = new RemoteMethod("concat", new Class<?>[]{String.class, String[].class}, targetDestination.getDest(), sourceDestinations);
         rpcClient.invokeSingle(targetDestination, method, Void.class);
     }
 

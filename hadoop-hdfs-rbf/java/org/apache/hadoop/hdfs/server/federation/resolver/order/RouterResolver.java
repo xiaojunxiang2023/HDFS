@@ -15,32 +15,23 @@ import java.util.concurrent.TimeUnit;
 
 import static org.apache.hadoop.util.Time.monotonicNow;
 
-/**
- * The order resolver that depends upon the Router service.
- *
- * @param <K> The key type of subcluster mapping info queried from Router.
- * @param <V> The value type of subcluster mapping info queried from Router.
- */
+// LocalResolver 和 AvailableSpaceResolver 的基类
 public abstract class RouterResolver<K, V> implements OrderedResolver {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RouterResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RouterResolver.class);
 
-    /** Configuration key to set the minimum time to update subcluster info. */
+
+    private final Router router;
+
+    // 一般为: ip -> info(可以是String)
+    private Map<K, V> subclusterMapping = null;
+
+
     public static final String MIN_UPDATE_PERIOD_KEY =
             RBFConfigKeys.FEDERATION_ROUTER_PREFIX + "router-resolver.update-period";
-    /** 10 seconds by default. */
     private static final long MIN_UPDATE_PERIOD_DEFAULT = TimeUnit.SECONDS
             .toMillis(10);
-
-    /** Router service. */
-    private final Router router;
-    /** Minimum update time. */
     private final long minUpdateTime;
-
-    /** K -> T template mapping. */
-    private Map<K, V> subclusterMapping = null;
-    /** Last time the subcluster mapping was updated. */
     private long lastUpdated;
 
     public RouterResolver(final Configuration conf, final Router routerService) {
@@ -49,37 +40,17 @@ public abstract class RouterResolver<K, V> implements OrderedResolver {
         this.router = routerService;
     }
 
+    // 对外提供的方法，得到一个最优的 ns
     @Override
     public String getFirstNamespace(String path, PathLocation loc) {
         updateSubclusterMapping();
         return chooseFirstNamespace(path, loc);
     }
 
-    /**
-     * The implementation for getting desired subcluster mapping info.
-     *
-     * @param membershipStore Membership store the resolver queried from.
-     * @return The map of desired type info.
-     */
-    protected abstract Map<K, V> getSubclusterInfo(
-            MembershipStore membershipStore);
-
-    /**
-     * Choose the first namespace from queried subcluster mapping info.
-     *
-     * @param path Path to check.
-     * @param loc Federated location with multiple destinations.
-     * @return First namespace out of the locations.
-     */
-    protected abstract String chooseFirstNamespace(String path, PathLocation loc);
-
-    /**
-     * Update <NamespaceId, Subcluster Info> mapping info periodically.
-     */
+    // 定期更新挂载表缓存的线程
     private synchronized void updateSubclusterMapping() {
         if (subclusterMapping == null
                 || (monotonicNow() - lastUpdated) > minUpdateTime) {
-            // Fetch the mapping asynchronously
             Thread updater = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -95,7 +66,6 @@ public abstract class RouterResolver<K, V> implements OrderedResolver {
             });
             updater.start();
 
-            // Wait until initialized
             if (subclusterMapping == null) {
                 try {
                     LOG.debug("Wait to get the mapping for the first time");
@@ -107,11 +77,11 @@ public abstract class RouterResolver<K, V> implements OrderedResolver {
         }
     }
 
-    /**
-     * Get the Router RPC server.
-     *
-     * @return Router RPC server. Null if not possible.
-     */
+    protected abstract Map<K, V> getSubclusterInfo(MembershipStore membershipStore);
+
+    protected abstract String chooseFirstNamespace(String path, PathLocation loc);
+
+
     protected RouterRpcServer getRpcServer() {
         if (this.router == null) {
             return null;
@@ -119,11 +89,6 @@ public abstract class RouterResolver<K, V> implements OrderedResolver {
         return router.getRpcServer();
     }
 
-    /**
-     * Get the Membership store.
-     *
-     * @return Membership store.
-     */
     protected MembershipStore getMembershipStore() {
         StateStoreService stateStore = router.getStateStore();
         if (stateStore == null) {
@@ -132,11 +97,6 @@ public abstract class RouterResolver<K, V> implements OrderedResolver {
         return stateStore.getRegisteredRecordStore(MembershipStore.class);
     }
 
-    /**
-     * Get subcluster mapping info.
-     *
-     * @return The map of subcluster info.
-     */
     protected Map<K, V> getSubclusterMapping() {
         return this.subclusterMapping;
     }

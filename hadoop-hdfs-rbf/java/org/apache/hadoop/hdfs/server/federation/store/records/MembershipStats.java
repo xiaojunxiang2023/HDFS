@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-// 相比于 MembershipState,主要是 NameNode状态相关的信息
+// 相比于 MembershipState,主要是对 NameNode元数据相关的信息(可用空间、文件数、可用 DataNode) 的描述
 public abstract class MembershipStats extends BaseRecord {
 
-    public static MembershipStats newInstance() throws IOException {
+    public static MembershipStats newInstance() {
         MembershipStats record =
                 StateStoreSerializer.newRecord(MembershipStats.class);
         record.init();
@@ -90,8 +90,7 @@ public abstract class MembershipStats extends BaseRecord {
 
     @Override
     public SortedMap<String, String> getPrimaryKeys() {
-        SortedMap<String, String> map = new TreeMap<String, String>();
-        return map;
+        return new TreeMap<>();
     }
 
     @Override

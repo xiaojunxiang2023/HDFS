@@ -17,11 +17,14 @@ import org.apache.hadoop.security.token.TokenInfo;
  */
 @InterfaceAudience.Private
 @InterfaceStability.Stable
+@TokenInfo(DelegationTokenSelector.class)
 @KerberosInfo(
         serverPrincipal = RBFConfigKeys.DFS_ROUTER_KERBEROS_PRINCIPAL_KEY)
-@TokenInfo(DelegationTokenSelector.class)
 @ProtocolInfo(protocolName = HdfsConstants.ROUTER_ADMIN_PROTOCOL_NAME,
         protocolVersion = 1)
 public interface RouterAdminProtocolPB extends
         RouterProtocolProtos.RouterAdminProtocolService.BlockingInterface {
 }
+
+
+

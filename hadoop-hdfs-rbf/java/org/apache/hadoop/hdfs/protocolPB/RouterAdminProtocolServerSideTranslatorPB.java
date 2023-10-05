@@ -46,9 +46,6 @@ public class RouterAdminProtocolServerSideTranslatorPB implements
         }
     }
 
-    /**
-     * Remove an entry from the mount table.
-     */
     @Override
     public RemoveMountTableEntryResponseProto removeMountTableEntry(
             RpcController controller, RemoveMountTableEntryRequestProto request)
@@ -66,9 +63,6 @@ public class RouterAdminProtocolServerSideTranslatorPB implements
         }
     }
 
-    /**
-     * Get matching mount table entries.
-     */
     @Override
     public GetMountTableEntriesResponseProto getMountTableEntries(
             RpcController controller, GetMountTableEntriesRequestProto request)
@@ -85,9 +79,6 @@ public class RouterAdminProtocolServerSideTranslatorPB implements
         }
     }
 
-    /**
-     * Update a single mount table entry.
-     */
     @Override
     public UpdateMountTableEntryResponseProto updateMountTableEntry(
             RpcController controller, UpdateMountTableEntryRequestProto request)
@@ -105,9 +96,6 @@ public class RouterAdminProtocolServerSideTranslatorPB implements
         }
     }
 
-    /**
-     * Refresh superuser proxy groups mappings.
-     */
     @Override
     public RefreshSuperUserGroupsConfigurationResponseProto
     refreshSuperUserGroupsConfiguration(

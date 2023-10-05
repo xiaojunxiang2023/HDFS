@@ -2,7 +2,7 @@ package org.apache.hadoop.hdfs.server.federation.resolver;
 
 import org.apache.hadoop.hdfs.server.federation.router.RemoteLocationContext;
 
-// 远程路径（Dest）的描述，可指定namenodeId
+// 远程路径 destinations，对（ns_id + dest）的描述
 public class RemoteLocation extends RemoteLocationContext {
 
     private final String nameserviceId;

@@ -13,49 +13,39 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Order the destinations based on consistent hashing.
- */
 public class HashResolver implements OrderedResolver {
 
-    protected static final Logger LOG =
-            LoggerFactory.getLogger(HashResolver.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(HashResolver.class);
 
 
-    /** Namespace set hash -> Locator. */
+    // hash(ns_id_set) -> 哈希环
     private final Map<Integer, ConsistentHashRing> hashResolverMap;
 
-    /** Patterns for temporary files. */
-    private static final String HEX_PATTERN = "\\p{XDigit}";
-    private static final String UUID_PATTERN = HEX_PATTERN + "{8}-" +
-            HEX_PATTERN + "{4}-" + HEX_PATTERN + "{4}-" + HEX_PATTERN + "{4}-" +
-            HEX_PATTERN + "{12}";
-    private static final String ATTEMPT_PATTERN =
-            "attempt_\\d+_\\d{4}_._\\d{6}_\\d{2}";
-    private static final String[] TEMP_FILE_PATTERNS = {
+    // 临时文件的正则表达式, "或" 连接
+    private static final Pattern TEMP_FILE_PATTERN = Pattern.compile(StringUtils.join("|", new String[]{
             "(.+)\\.COPYING$",
             "(.+)\\._COPYING_.*$",
             "(.+)\\.tmp$",
             "_temp/(.+)$",
-            "_temporary/(.+)\\." + UUID_PATTERN + "$",
-            "(.*)_temporary/\\d/_temporary/" + ATTEMPT_PATTERN + "/(.+)$"};
-    /** Pattern for temporary files (or of the individual patterns). */
-    private static final Pattern TEMP_FILE_PATTERN =
-            Pattern.compile(StringUtils.join("|", TEMP_FILE_PATTERNS));
+            "_temporary/(.+)\\." + "\\p{XDigit}" + "{8}-" +
+                    "\\p{XDigit}" + "{4}-" + "\\p{XDigit}" + "{4}-" + "\\p{XDigit}" + "{4}-" +
+                    "\\p{XDigit}" + "{12}" + "$",
+            "(.*)_temporary/\\d/_temporary/" + "attempt_\\d+_\\d{4}_._\\d{6}_\\d{2}" + "/(.+)$"}));
 
 
     public HashResolver() {
         this.hashResolverMap = new ConcurrentHashMap<>();
     }
 
-    /**
-     * Use the result from consistent hashing locator to prioritize the locations
-     * for a path.
-     *
-     * @param path Path to check.
-     * @param loc Federated location with multiple destinations.
-     * @return First namespace based on hash.
-     */
+    // 根据 ns_id_set获取哈希环
+    private ConsistentHashRing getHashResolver(final Set<String> namespaces) {
+        final int hash = namespaces.hashCode();
+        return this.hashResolverMap.computeIfAbsent(hash, k -> new ConsistentHashRing(namespaces));
+    }
+
+
+    // 核心方法实现, 获得最优的 ns
+    // 即靠 哈希环.getLocation("文件路径{如果是临时文件的话,已对临时文件处理过}")
     @Override
     public String getFirstNamespace(final String path, final PathLocation loc) {
         String finalPath = extractTempFileName(path);
@@ -71,34 +61,15 @@ public class HashResolver implements OrderedResolver {
         return hashedSubcluster;
     }
 
-    /**
-     * Get the cached (if available) or generate a new hash resolver for this
-     * particular set of unique namespace identifiers.
-     *
-     * @param namespaces A set of unique namespace identifiers.
-     * @return A hash resolver configured to consistently resolve paths to
-     *         namespaces using the provided set of namespace identifiers.
-     */
-    private ConsistentHashRing getHashResolver(final Set<String> namespaces) {
-        final int hash = namespaces.hashCode();
-        return this.hashResolverMap.computeIfAbsent(hash,
-                k -> new ConsistentHashRing(namespaces));
-    }
-
-    /**
-     * Some files use a temporary naming pattern. Extract the final name from the
-     * temporary name. For example, files *._COPYING_ will be renamed, so we
-     * remove that chunk.
-     *
-     * @param input Input string.
-     * @return Final file name.
-     */
+    // 获取处理后的值，例如 hosts._COPYING 返回 hosts
     @VisibleForTesting
     public static String extractTempFileName(final String input) {
         StringBuilder sb = new StringBuilder();
         Matcher matcher = TEMP_FILE_PATTERN.matcher(input);
         if (matcher.find()) {
             for (int i = 1; i <= matcher.groupCount(); i++) {
+                // matcher.group() 讲解: https://www.cnblogs.com/jiafuwei/p/6080984.html
+                // 获得正则表达式框中的括号里的值
                 String match = matcher.group(i);
                 if (match != null) {
                     sb.append(match);

@@ -8,17 +8,20 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 // 哈希环，一种负载均衡算法，一致性哈希
+// 但是感觉, 仅仅使用到了取 hash值的随机性而已, 并没有环的思想
 public class ConsistentHashRing {
     private static final String SEPARATOR = "/";
     private static final String VIRTUAL_NODE_FORMAT = "%s" + SEPARATOR + "%d";
 
-    /** Hash ring. */
-    private SortedMap<String, String> ring = new TreeMap<String, String>();
-    /** Entry -> num virtual nodes on ring. */
-    private Map<String, Integer> entryToVirtualNodes =
-            new HashMap<String, Integer>();
 
-    /** Synchronization. */
+    // 虚拟节点初始位置参考 -> 想要添加这样虚拟节点的数量(默认100)
+    private final Map<String, Integer> entryToVirtualNodes = new HashMap<>();
+
+    // str = location/i
+    // hash(str) -> str
+    private final SortedMap<String, String> ring = new TreeMap<>();
+    
+    
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
@@ -29,21 +32,10 @@ public class ConsistentHashRing {
         }
     }
 
-    /**
-     * Add entry to consistent hash ring.
-     *
-     * @param location Node to add to the ring.
-     */
     public void addLocation(String location) {
         addLocation(location, 100);
     }
-
-    /**
-     * Add entry to consistent hash ring.
-     *
-     * @param location Node to add to the ring.
-     * @param numVirtualNodes Number of virtual nodes to add.
-     */
+    
     public void addLocation(String location, int numVirtualNodes) {
         writeLock.lock();
         try {
@@ -58,11 +50,6 @@ public class ConsistentHashRing {
         }
     }
 
-    /**
-     * Remove specified entry from hash ring.
-     *
-     * @param location Node to remove from the ring.
-     */
     public void removeLocation(String location) {
         writeLock.lock();
         try {
@@ -76,13 +63,10 @@ public class ConsistentHashRing {
             writeLock.unlock();
         }
     }
-
-    /**
-     * Return location (owner) of specified item. Owner is the next
-     * entry on the hash ring (with a hash value &gt; hash value of item).
-     * @param item Item to look for.
-     * @return The location of the item.
-     */
+    
+    // 获得下一个该使用的节点位置
+    // 例如传参 3.txt，结果获得了 5.txt
+    // 传参 3.txt/索引 始终返回 3.txt
     public String getLocation(String item) {
         readLock.lock();
         try {
@@ -91,6 +75,7 @@ public class ConsistentHashRing {
             }
             String hash = getHash(item);
             if (!ring.containsKey(hash)) {
+                // tailMap 即只取大于等于形参值 的节点
                 SortedMap<String, String> tailMap = ring.tailMap(hash);
                 hash = tailMap.isEmpty() ? ring.firstKey() : tailMap.firstKey();
             }
@@ -99,6 +84,7 @@ public class ConsistentHashRing {
             if (index >= 0) {
                 return virtualNode.substring(0, index);
             } else {
+                // 这里根本进不来
                 return virtualNode;
             }
         } finally {
@@ -110,10 +96,6 @@ public class ConsistentHashRing {
         return MD5Hash.digest(key).toString();
     }
 
-    /**
-     * Get the locations in the ring.
-     * @return Set of locations in the ring.
-     */
     public Set<String> getLocations() {
         return entryToVirtualNodes.keySet();
     }

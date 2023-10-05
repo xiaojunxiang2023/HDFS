@@ -16,10 +16,11 @@ import java.util.concurrent.CountDownLatch;
 public class MountTableRefresherThread extends Thread {
     private static final Logger LOG = LoggerFactory.getLogger(MountTableRefresherThread.class);
     private boolean success;
+    
     // 目标待更新的 Router
-    private String adminAddress;
+    private final String adminAddress;
     private CountDownLatch countDownLatch;
-    private MountTableManager manager;
+    private final MountTableManager manager;
 
     public MountTableRefresherThread(MountTableManager manager, String adminAddress) {
         this.manager = manager;
@@ -28,8 +29,6 @@ public class MountTableRefresherThread extends Thread {
         setDaemon(true);
     }
 
-    // ?本地 Router，不走 RPC调用；
-    // 远程 Router，走 RPC调用更新缓存
     @Override
     public void run() {
         try {

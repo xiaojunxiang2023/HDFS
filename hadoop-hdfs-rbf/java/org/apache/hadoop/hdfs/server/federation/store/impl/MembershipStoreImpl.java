@@ -85,9 +85,7 @@ public class MembershipStoreImpl
             cacheReadLock.unlock();
         }
 
-        GetNamespaceInfoResponse response =
-                GetNamespaceInfoResponse.newInstance(namespaces);
-        return response;
+        return GetNamespaceInfoResponse.newInstance(namespaces);
     }
 
     @Override
@@ -113,9 +111,7 @@ public class MembershipStoreImpl
         // Sort in ascending update date order
         Collections.sort(ret);
 
-        GetNamenodeRegistrationsResponse response =
-                GetNamenodeRegistrationsResponse.newInstance(ret);
-        return response;
+        return GetNamenodeRegistrationsResponse.newInstance(ret);
     }
 
     @Override
@@ -124,7 +120,7 @@ public class MembershipStoreImpl
 
         MembershipState record = request.getNamenodeMembership();
         String nnId = record.getNamenodeKey();
-        MembershipState existingEntry = null;
+        MembershipState existingEntry;
         cacheReadLock.lock();
         try {
             existingEntry = this.activeRegistrations.get(nnId);
@@ -145,9 +141,7 @@ public class MembershipStoreImpl
 
         boolean status = getDriver().put(record, true, false);
 
-        NamenodeHeartbeatResponse response =
-                NamenodeHeartbeatResponse.newInstance(status);
-        return response;
+        return NamenodeHeartbeatResponse.newInstance(status);
     }
 
     @Override
@@ -173,12 +167,7 @@ public class MembershipStoreImpl
                 } else {
                     // This is a valid NN registration, build a list of all registrations
                     // using the NN id to use for the quorum calculation.
-                    List<MembershipState> nnRegistration =
-                            nnRegistrations.get(nnId);
-                    if (nnRegistration == null) {
-                        nnRegistration = new LinkedList<>();
-                        nnRegistrations.put(nnId, nnRegistration);
-                    }
+                    List<MembershipState> nnRegistration = nnRegistrations.computeIfAbsent(nnId, k -> new LinkedList<>());
                     nnRegistration.add(membership);
                     if (membership.getState()
                             != FederationNamenodeServiceState.UNAVAILABLE) {
@@ -225,9 +214,7 @@ public class MembershipStoreImpl
         } finally {
             cacheWriteLock.unlock();
         }
-        UpdateNamenodeRegistrationResponse response =
-                UpdateNamenodeRegistrationResponse.newInstance(status);
-        return response;
+        return UpdateNamenodeRegistrationResponse.newInstance(status);
     }
 
     /**
@@ -248,12 +235,8 @@ public class MembershipStoreImpl
                 new HashMap<>();
         for (MembershipState record : records) {
             FederationNamenodeServiceState state = record.getState();
-            TreeSet<MembershipState> matchingSet = occurenceMap.get(state);
-            if (matchingSet == null) {
-                // TreeSet orders elements by descending date via comparators
-                matchingSet = new TreeSet<>();
-                occurenceMap.put(state, matchingSet);
-            }
+            TreeSet<MembershipState> matchingSet = occurenceMap.computeIfAbsent(state, k -> new TreeSet<>());
+            // TreeSet orders elements by descending date via comparators
             matchingSet.add(record);
         }
 

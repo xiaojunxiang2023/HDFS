@@ -23,31 +23,25 @@ public interface StateStoreRecordOperations {
 
     // 获取一条匹配的 Record
     @Idempotent
-    <T extends BaseRecord> T get(Class<T> clazz, Query<T> query)
-            throws IOException;
+    <T extends BaseRecord> T get(Class<T> clazz, Query<T> query) throws IOException;
 
     // 获取多条匹配的 Record
     // 是个备用功能，因为在 StateStore不支持过滤的时候才会调用此方法 
     @Idempotent
-    <T extends BaseRecord> List<T> getMultiple(
-            Class<T> clazz, Query<T> query) throws IOException;
+    <T extends BaseRecord> List<T> getMultiple(Class<T> clazz, Query<T> query) throws IOException;
 
     @AtMostOnce
-    <T extends BaseRecord> boolean put(
-            T record, boolean allowUpdate, boolean errorIfExists) throws IOException;
+    <T extends BaseRecord> boolean put(T record, boolean allowUpdate, boolean errorIfExists) throws IOException;
 
     @AtMostOnce
-    <T extends BaseRecord> boolean putAll(
-            List<T> records, boolean allowUpdate, boolean errorIfExists)
-            throws IOException;
+    <T extends BaseRecord> boolean putAll(List<T> records, boolean allowUpdate, boolean errorIfExists) throws IOException;
 
 
     @AtMostOnce
     <T extends BaseRecord> boolean remove(T record) throws IOException;
 
     @AtMostOnce
-    <T extends BaseRecord> int remove(Class<T> clazz, Query<T> query)
-            throws IOException;
+    <T extends BaseRecord> int remove(Class<T> clazz, Query<T> query) throws IOException;
 
     @AtMostOnce
     <T extends BaseRecord> boolean removeAll(Class<T> clazz) throws IOException;

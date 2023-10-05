@@ -2,7 +2,7 @@ package org.apache.hadoop.hdfs.server.federation.router;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-// 对应一个 namespace
+// 对应一个 ns，   src路径、ns_id://dest路径   
 public abstract class RemoteLocationContext
         implements Comparable<RemoteLocationContext> {
 

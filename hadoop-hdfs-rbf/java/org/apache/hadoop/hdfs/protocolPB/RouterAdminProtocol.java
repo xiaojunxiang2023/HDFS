@@ -8,7 +8,7 @@ import org.apache.hadoop.hdfs.server.federation.router.NameserviceManager;
 import org.apache.hadoop.hdfs.server.federation.router.RouterStateManager;
 import org.apache.hadoop.ipc.GenericRefreshProtocol;
 
-// RouterAdmin 和 RouterServer 的通信
+// RouterAdmin 和 RouterServer的通信协议
 @InterfaceAudience.Private
 @InterfaceStability.Stable
 public interface RouterAdminProtocol extends MountTableManager,

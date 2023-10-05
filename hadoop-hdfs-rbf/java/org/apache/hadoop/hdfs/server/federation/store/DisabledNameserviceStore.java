@@ -8,7 +8,7 @@ import org.apache.hadoop.hdfs.server.federation.store.records.DisabledNameservic
 import java.io.IOException;
 import java.util.Set;
 
-// 对 DisabledNameserviceStore(DisabledNameservice) 的管理
+// 对 DisabledNameservice的管理（禁用 和 启用）
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public abstract class DisabledNameserviceStore
@@ -18,12 +18,9 @@ public abstract class DisabledNameserviceStore
         super(DisabledNameservice.class, driver);
     }
 
-    // disable一个 nameservice
     public abstract boolean disableNameservice(String nsId) throws IOException;
 
-    // enable一个 nameservice
     public abstract boolean enableNameservice(String nsId) throws IOException;
 
-    // 获得所有被 disable的 nameservice
     public abstract Set<String> getDisabledNameservices() throws IOException;
 }

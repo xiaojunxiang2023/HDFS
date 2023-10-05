@@ -6,32 +6,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-/**
- * A map of the properties and target destinations (name space + path) for
- * a path in the global/federated name space.
- * This data is generated from the @see MountTable records.
- */
 public class PathLocation {
 
     private static final Logger LOG = LoggerFactory.getLogger(PathLocation.class);
 
-
-    /** Source path in global namespace. */
+    // src路径
     private final String sourcePath;
-
-    /** Remote paths in the target name spaces. */
+    // 多个远程路径
     private final List<RemoteLocation> destinations;
-    /** Order for the destinations. */
+
+    // 负载均衡策略
     private final DestinationOrder destOrder;
 
 
-    /**
-     * Create a new PathLocation.
-     *
-     * @param source Source path in the global name space.
-     * @param dest Destinations of the mount table entry.
-     * @param order Order of the locations.
-     */
+    // 构造方法
     public PathLocation(
             String source, List<RemoteLocation> dest, DestinationOrder order) {
         this.sourcePath = source;
@@ -39,50 +27,24 @@ public class PathLocation {
         this.destOrder = order;
     }
 
-    /**
-     * Create a new PathLocation with default HASH order.
-     *
-     * @param source Source path in the global name space.
-     * @param dest Destinations of the mount table entry.
-     */
     public PathLocation(String source, List<RemoteLocation> dest) {
         this(source, dest, DestinationOrder.HASH);
     }
 
-    /**
-     * Create a path location from another path.
-     *
-     * @param other Other path location to copy from.
-     */
     public PathLocation(final PathLocation other) {
         this.sourcePath = other.sourcePath;
         this.destinations = Collections.unmodifiableList(other.destinations);
         this.destOrder = other.destOrder;
     }
 
-    /**
-     * Create a path location from another path with the destinations sorted.
-     *
-     * @param other Other path location to copy from.
-     * @param firstNsId Identifier of the namespace to place first.
-     */
+    // 将字段的 ns_id放在最前面
     public PathLocation(PathLocation other, String firstNsId) {
         this.sourcePath = other.sourcePath;
         this.destOrder = other.destOrder;
         this.destinations = orderedNamespaces(other.destinations, firstNsId);
     }
 
-    /**
-     * Prioritize a location/destination by its name space/nameserviceId.
-     * This destination might be used by other threads, so the source is not
-     * modifiable.
-     *
-     * @param original List of destinations to order.
-     * @param nsId The name space/nameserviceID to prioritize.
-     * @return Prioritized list of detinations that cannot be modified.
-     */
-    private static List<RemoteLocation> orderedNamespaces(
-            final List<RemoteLocation> original, final String nsId) {
+    private static List<RemoteLocation> orderedNamespaces(final List<RemoteLocation> original, final String nsId) {
         if (original.size() <= 1) {
             return original;
         }
@@ -105,20 +67,10 @@ public class PathLocation {
         return Collections.unmodifiableList(newDestinations);
     }
 
-    /**
-     * Get the source path in the global namespace for this path location.
-     *
-     * @return The path in the global namespace.
-     */
     public String getSourcePath() {
         return this.sourcePath;
     }
 
-    /**
-     * Get the subclusters defined for the destinations.
-     *
-     * @return Set containing the subclusters.
-     */
     public Set<String> getNamespaces() {
         Set<String> namespaces = new HashSet<>();
         List<RemoteLocation> locations = this.getDestinations();
@@ -138,7 +90,7 @@ public class PathLocation {
             if (sb.length() > 0) {
                 sb.append(",");
             }
-            sb.append(nsId + "->" + path);
+            sb.append(nsId).append("->").append(path);
         }
         if (this.destinations.size() > 1) {
             sb.append(" [")
@@ -148,39 +100,19 @@ public class PathLocation {
         return sb.toString();
     }
 
-    /**
-     * Check if this location supports multiple clusters/paths.
-     *
-     * @return If it has multiple destinations.
-     */
     public boolean hasMultipleDestinations() {
         return this.destinations.size() > 1;
     }
 
-    /**
-     * Get the list of locations found in the mount table.
-     * The first result is the highest priority path.
-     *
-     * @return List of remote locations.
-     */
     public List<RemoteLocation> getDestinations() {
         return Collections.unmodifiableList(this.destinations);
     }
 
-    /**
-     * Get the order for the destinations.
-     *
-     * @return Order for the destinations.
-     */
     public DestinationOrder getDestinationOrder() {
         return this.destOrder;
     }
-
-    /**
-     * Get the default or highest priority location.
-     *
-     * @return The default location.
-     */
+    
+    // 即 destinations[0]
     public RemoteLocation getDefaultLocation() {
         if (destinations.isEmpty() || destinations.get(0).getDest() == null) {
             throw new UnsupportedOperationException(

@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.federation.resolver;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.federation.store.*;
 import org.apache.hadoop.hdfs.server.federation.store.protocol.*;
 import org.apache.hadoop.hdfs.server.federation.store.records.MembershipState;
@@ -17,44 +16,49 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.hadoop.hdfs.server.federation.resolver.FederationNamenodeServiceState.*;
 
-/**
- * Implements a cached lookup of the most recently active namenode for a
- * particular nameservice. Relies on the {@link StateStoreService} to
- * discover available nameservices and namenodes.
- */
-public class MembershipNamenodeResolver
-        implements ActiveNamenodeResolver, StateStoreCache {
+public class MembershipNamenodeResolver implements ActiveNamenodeResolver, StateStoreCache {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(MembershipNamenodeResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MembershipNamenodeResolver.class);
 
-    /** Reference to the State Store. */
     private final StateStoreService stateStore;
-    /** Membership State Store interface. */
     private MembershipStore membershipInterface;
-    /** Disabled Nameservice State Store interface. */
     private DisabledNameserviceStore disabledNameserviceInterface;
 
-    /** Parent router ID. */
     private String routerId;
 
-    /** Cached lookup of NN for nameservice. Invalidated on cache refresh. */
-    private Map<String, List<? extends FederationNamenodeContext>> cacheNS;
-    /** Cached lookup of NN for block pool. Invalidated on cache refresh. */
-    private Map<String, List<? extends FederationNamenodeContext>> cacheBP;
+    // 缓存：ns_id -> namenode详细服务信息
+    private final Map<String, List<? extends FederationNamenodeContext>> cacheNS;
+    // 缓存：ns_id -> bp信息
+    private final Map<String, List<? extends FederationNamenodeContext>> cacheBP;
 
 
-    public MembershipNamenodeResolver(
-            Configuration conf, StateStoreService store) throws IOException {
+    public MembershipNamenodeResolver(StateStoreService store) {
         this.stateStore = store;
-
         this.cacheNS = new ConcurrentHashMap<>();
         this.cacheBP = new ConcurrentHashMap<>();
-
         if (this.stateStore != null) {
-            // Request cache updates from the state store
+            // 订阅外部缓存
             this.stateStore.registerCacheExternal(this);
         }
+    }
+
+    @Override
+    public boolean loadCache(boolean force) {
+        try {
+            // 先更新 MembershipStore
+            MembershipStore membership = getMembershipStore();
+            membership.loadCache(force);
+            DisabledNameserviceStore disabled = getDisabledNameserviceStore();
+            // 再更新 DisabledNameserviceStore
+            disabled.loadCache(force);
+        } catch (IOException e) {
+            LOG.error("Cannot update membership from the State Store", e);
+        }
+
+        // 再清空自己的缓存
+        cacheBP.clear();
+        cacheNS.clear();
+        return true;
     }
 
     private synchronized MembershipStore getMembershipStore() throws IOException {
@@ -67,8 +71,7 @@ public class MembershipNamenodeResolver
     private synchronized DisabledNameserviceStore getDisabledNameserviceStore()
             throws IOException {
         if (this.disabledNameserviceInterface == null) {
-            this.disabledNameserviceInterface =
-                    getStoreInterface(DisabledNameserviceStore.class);
+            this.disabledNameserviceInterface = getStoreInterface(DisabledNameserviceStore.class);
         }
         return this.disabledNameserviceInterface;
     }
@@ -77,60 +80,34 @@ public class MembershipNamenodeResolver
             throws IOException {
         T store = this.stateStore.getRegisteredRecordStore(clazz);
         if (store == null) {
-            throw new IOException("State Store does not have an interface for " +
-                    clazz.getSimpleName());
+            throw new IOException("State Store does not have an interface for " + clazz.getSimpleName());
         }
         return store;
     }
 
-    @Override
-    public boolean loadCache(boolean force) {
-        // Our cache depends on the store, update it first
-        try {
-            MembershipStore membership = getMembershipStore();
-            membership.loadCache(force);
-            DisabledNameserviceStore disabled = getDisabledNameserviceStore();
-            disabled.loadCache(force);
-        } catch (IOException e) {
-            LOG.error("Cannot update membership from the State Store", e);
-        }
-
-        // Force refresh of active NN cache
-        cacheBP.clear();
-        cacheNS.clear();
-        return true;
-    }
 
     @Override
-    public void updateActiveNamenode(
-            final String nsId, final InetSocketAddress address) throws IOException {
-
-        // Called when we have an RPC miss and successful hit on an alternate NN.
-        // Temporarily update our cache, it will be overwritten on the next update.
+    public void updateActiveNamenode(final String nsId, final InetSocketAddress address) throws IOException {
         try {
             MembershipState partial = MembershipState.newInstance();
             String rpcAddress = address.getHostName() + ":" + address.getPort();
             partial.setRpcAddress(rpcAddress);
             partial.setNameserviceId(nsId);
 
-            GetNamenodeRegistrationsRequest request =
-                    GetNamenodeRegistrationsRequest.newInstance(partial);
+            GetNamenodeRegistrationsRequest request = GetNamenodeRegistrationsRequest.newInstance(partial);
 
             MembershipStore membership = getMembershipStore();
-            GetNamenodeRegistrationsResponse response =
-                    membership.getNamenodeRegistrations(request);
+            GetNamenodeRegistrationsResponse response = membership.getNamenodeRegistrations(request);
             List<MembershipState> records = response.getNamenodeMemberships();
 
             if (records != null && records.size() == 1) {
                 MembershipState record = records.get(0);
-                UpdateNamenodeRegistrationRequest updateRequest =
-                        UpdateNamenodeRegistrationRequest.newInstance(
-                                record.getNameserviceId(), record.getNamenodeId(), ACTIVE);
+                UpdateNamenodeRegistrationRequest updateRequest = UpdateNamenodeRegistrationRequest.newInstance(
+                        record.getNameserviceId(), record.getNamenodeId(), ACTIVE);
                 membership.updateNamenodeRegistration(updateRequest);
 
                 cacheNS.remove(nsId);
-                // Invalidating the full cacheBp since getting the blockpool id from
-                // namespace id is quite costly.
+                // 直接 clear，因为根据 ns_id去获取对应的 bp_id的开销很大
                 cacheBP.clear();
             }
         } catch (StateStoreUnavailableException e) {
@@ -139,35 +116,32 @@ public class MembershipNamenodeResolver
     }
 
     @Override
-    public List<? extends FederationNamenodeContext> getNamenodesForNameserviceId(
-            final String nsId) throws IOException {
+    public List<? extends FederationNamenodeContext> getNamenodesForNameserviceId(final String nsId) throws IOException {
 
         List<? extends FederationNamenodeContext> ret = cacheNS.get(nsId);
+        // 缓存里有值的话，直接返回
         if (ret != null) {
             return ret;
         }
 
-        // Not cached, generate the value
         final List<MembershipState> result;
         try {
             MembershipState partial = MembershipState.newInstance();
             partial.setNameserviceId(nsId);
-            GetNamenodeRegistrationsRequest request =
-                    GetNamenodeRegistrationsRequest.newInstance(partial);
-            result = getRecentRegistrationForQuery(request, true, false);
+            GetNamenodeRegistrationsRequest request = GetNamenodeRegistrationsRequest.newInstance(partial);
+            result = getRecentRegistrationForQuery(request);
         } catch (StateStoreUnavailableException e) {
             LOG.error("Cannot get active NN for {}, State Store unavailable", nsId);
             return null;
         }
-        if (result == null || result.isEmpty()) {
+        if (result.isEmpty()) {
             LOG.error("Cannot locate eligible NNs for {}", nsId);
             return null;
         }
 
-        // Mark disabled name services
+        // 标记 disable信息
         try {
-            Set<String> disabled =
-                    getDisabledNameserviceStore().getDisabledNameservices();
+            Set<String> disabled = getDisabledNameserviceStore().getDisabledNameservices();
             if (disabled == null) {
                 LOG.error("Cannot get disabled name services");
             } else {
@@ -181,29 +155,29 @@ public class MembershipNamenodeResolver
             LOG.error("Cannot get disabled name services, State Store unavailable");
         }
 
-        // Cache the response
         ret = Collections.unmodifiableList(result);
+        // 这是自己新造出来的，放到缓存里保留【ns_id，namenode排序列表】
         cacheNS.put(nsId, result);
         return ret;
     }
 
+
     @Override
-    public List<? extends FederationNamenodeContext> getNamenodesForBlockPoolId(
-            final String bpId) throws IOException {
+    public List<? extends FederationNamenodeContext> getNamenodesForBlockPoolId(final String bpId) throws IOException {
 
         List<? extends FederationNamenodeContext> ret = cacheBP.get(bpId);
         if (ret == null) {
             try {
+                // 缓存里没值，则自己造
                 MembershipState partial = MembershipState.newInstance();
                 partial.setBlockPoolId(bpId);
-                GetNamenodeRegistrationsRequest request =
-                        GetNamenodeRegistrationsRequest.newInstance(partial);
+                GetNamenodeRegistrationsRequest request = GetNamenodeRegistrationsRequest.newInstance(partial);
 
-                final List<MembershipState> result =
-                        getRecentRegistrationForQuery(request, true, false);
-                if (result == null || result.isEmpty()) {
+                final List<MembershipState> result = getRecentRegistrationForQuery(request);
+                if (result.isEmpty()) {
                     LOG.error("Cannot locate eligible NNs for {}", bpId);
                 } else {
+                    // 这是自己新造出来的，放到缓存里保留【bp_id，namenode排序列表】
                     cacheBP.put(bpId, result);
                     ret = result;
                 }
@@ -218,9 +192,34 @@ public class MembershipNamenodeResolver
         return Collections.unmodifiableList(ret);
     }
 
+    // 获得最近更新的 namenode列表, 列表按状态优先级排序
+    private List<MembershipState> getRecentRegistrationForQuery(GetNamenodeRegistrationsRequest request) throws IOException {
+
+        MembershipStore membershipStore = getMembershipStore();
+        // 获取所有的 namenode，即使是同一份namenode 但在不同的 router中，要返回多份
+        GetNamenodeRegistrationsResponse response = membershipStore.getNamenodeRegistrations(request);
+
+        List<MembershipState> memberships = response.getNamenodeMemberships();
+        Iterator<MembershipState> iterator = memberships.iterator();
+        while (iterator.hasNext()) {
+            MembershipState membership = iterator.next();
+            if (membership.getState() == EXPIRED) {
+                iterator.remove();
+            } else {
+                membership.getState();
+            }
+        }
+
+        List<MembershipState> priorityList = new ArrayList<>(memberships);
+        priorityList.sort(new NamenodePriorityComparator());
+
+        LOG.debug("Selected most recent NN {} for query", priorityList);
+        return priorityList;
+    }
+
+    // 发送一次 NameNode心跳
     @Override
-    public boolean registerNamenode(NamenodeStatusReport report)
-            throws IOException {
+    public boolean registerNamenode(NamenodeStatusReport report) throws IOException {
 
         if (this.routerId == null) {
             LOG.warn("Cannot register namenode, router ID is not known {}", report);
@@ -235,6 +234,10 @@ public class MembershipNamenodeResolver
                 report.getWebScheme(), report.getWebAddress(), report.getState(),
                 report.getSafemode());
 
+        // 由 namenodeStatusReport提取成 membershipStats,
+
+        // 再 membershipState.setStats(membershipStats);
+        // namenodeHeartbeatRequest.setNamenodeMembership(membershipState);
         if (report.statsValid()) {
             MembershipStats stats = MembershipStats.newInstance();
             stats.setNumOfFiles(report.getNumFiles());
@@ -266,7 +269,6 @@ public class MembershipNamenodeResolver
         }
 
         if (report.getState() != UNAVAILABLE) {
-            // Set/update our last contact time
             record.setLastContact(Time.now());
         }
 
@@ -275,14 +277,13 @@ public class MembershipNamenodeResolver
         return getMembershipStore().namenodeHeartbeat(request).getResult();
     }
 
+    // 获得所有启用的 ns
     @Override
     public Set<FederationNamespaceInfo> getNamespaces() throws IOException {
         GetNamespaceInfoRequest request = GetNamespaceInfoRequest.newInstance();
-        GetNamespaceInfoResponse response =
-                getMembershipStore().getNamespaceInfo(request);
+        GetNamespaceInfoResponse response = getMembershipStore().getNamespaceInfo(request);
         Set<FederationNamespaceInfo> nss = response.getNamespaceInfo();
 
-        // Filter disabled namespaces
         Set<FederationNamespaceInfo> ret = new TreeSet<>();
         Set<String> disabled = getDisabledNamespaces();
         for (FederationNamespaceInfo ns : nss) {
@@ -290,7 +291,6 @@ public class MembershipNamenodeResolver
                 ret.add(ns);
             }
         }
-
         return ret;
     }
 
@@ -298,52 +298,6 @@ public class MembershipNamenodeResolver
     public Set<String> getDisabledNamespaces() throws IOException {
         DisabledNameserviceStore store = getDisabledNameserviceStore();
         return store.getDisabledNameservices();
-    }
-
-    /**
-     * Picks the most relevant record registration that matches the query. Return
-     * registrations matching the query in this preference: 1) Most recently
-     * updated ACTIVE registration 2) Most recently updated STANDBY registration
-     * (if showStandby) 3) Most recently updated UNAVAILABLE registration (if
-     * showUnavailable). EXPIRED registrations are ignored.
-     *
-     * @param request The select query for NN registrations.
-     * @param addUnavailable include UNAVAILABLE registrations.
-     * @param addExpired include EXPIRED registrations.
-     * @return List of memberships or null if no registrations that
-     *         both match the query AND the selected states.
-     * @throws IOException
-     */
-    private List<MembershipState> getRecentRegistrationForQuery(
-            GetNamenodeRegistrationsRequest request, boolean addUnavailable,
-            boolean addExpired) throws IOException {
-
-        // Retrieve a list of all registrations that match this query.
-        // This may include all NN records for a namespace/blockpool, including
-        // duplicate records for the same NN from different routers.
-        MembershipStore membershipStore = getMembershipStore();
-        GetNamenodeRegistrationsResponse response =
-                membershipStore.getNamenodeRegistrations(request);
-
-        List<MembershipState> memberships = response.getNamenodeMemberships();
-        if (!addExpired || !addUnavailable) {
-            Iterator<MembershipState> iterator = memberships.iterator();
-            while (iterator.hasNext()) {
-                MembershipState membership = iterator.next();
-                if (membership.getState() == EXPIRED && !addExpired) {
-                    iterator.remove();
-                } else if (membership.getState() == UNAVAILABLE && !addUnavailable) {
-                    iterator.remove();
-                }
-            }
-        }
-
-        List<MembershipState> priorityList = new ArrayList<>();
-        priorityList.addAll(memberships);
-        Collections.sort(priorityList, new NamenodePriorityComparator());
-
-        LOG.debug("Selected most recent NN {} for query", priorityList);
-        return priorityList;
     }
 
     @Override

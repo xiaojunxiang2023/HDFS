@@ -17,57 +17,55 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * Order the destinations based on available space. This resolver uses a
- * higher probability (instead of "always") to choose the cluster with higher
- * available space.
- */
+// 注意，这是个概率值(权重，即 preference的值)，并不是绝对地以空间大小来排序
+// 
 public class AvailableSpaceResolver
         extends RouterResolver<String, SubclusterAvailableSpace> {
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger(AvailableSpaceResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AvailableSpaceResolver.class);
 
-    /** Increases chance of files on subcluster with more available space. */
+    // 一个阈值参数，值不超过多少才算 状态良好。
+    // 默认为 60%
+    // 同时相当于比较器的权重概率值
     public static final String BALANCER_PREFERENCE_KEY =
             RBFConfigKeys.FEDERATION_ROUTER_PREFIX
                     + "available-space-resolver.balanced-space-preference-fraction";
     public static final float BALANCER_PREFERENCE_DEFAULT = 0.6f;
 
-    /** Random instance used in the subcluster comparison. */
     private static final Random RAND = new Random();
 
-    /** Customized comparator for SubclusterAvailableSpace. */
-    private SubclusterSpaceComparator comparator;
+    private final SubclusterSpaceComparator comparator;
 
     public AvailableSpaceResolver(final Configuration conf,
                                   final Router routerService) {
         super(conf, routerService);
         float balancedPreference = conf.getFloat(BALANCER_PREFERENCE_KEY,
                 BALANCER_PREFERENCE_DEFAULT);
+        // 阈值设得太苛刻了
         if (balancedPreference < 0.5) {
             LOG.warn("The balancer preference value is less than 0.5. That means more"
                     + " files will be allocated in cluster with lower available space.");
         }
-
         this.comparator = new SubclusterSpaceComparator(balancedPreference);
     }
 
-    /**
-     * Get the mapping from NamespaceId to subcluster space info. It gets this
-     * mapping from the subclusters through expensive calls (e.g., RPC) and uses
-     * caching to avoid too many calls. The cache might be updated asynchronously
-     * to reduce latency.
-     *
-     * @return NamespaceId to {@link SubclusterAvailableSpace}.
-     */
+    // 核心方法实现, 获得最优的 ns
+    // 即取 subclusterList.sort(comparator);
     @Override
-    protected Map<String, SubclusterAvailableSpace> getSubclusterInfo(
-            MembershipStore membershipStore) {
+    protected String chooseFirstNamespace(String path, PathLocation loc) {
+        Map<String, SubclusterAvailableSpace> subclusterInfo = getSubclusterMapping();
+        List<SubclusterAvailableSpace> subclusterList = new LinkedList<>(subclusterInfo.values());
+        subclusterList.sort(comparator);
+
+        return subclusterList.size() > 0 ? subclusterList.get(0).getNameserviceId() : null;
+    }
+
+    // id -> SubclusterAvailableSpace[ns, availableSpace]
+    @Override
+    protected Map<String, SubclusterAvailableSpace> getSubclusterInfo(MembershipStore membershipStore) {
         Map<String, SubclusterAvailableSpace> mapping = new HashMap<>();
         try {
-            // Get the Namenode's available space info from the subclusters
-            // from the Membership store.
+            // 从 membershipStore获取 availableSpace
             GetNamenodeRegistrationsRequest request = GetNamenodeRegistrationsRequest
                     .newInstance();
             GetNamenodeRegistrationsResponse response = membershipStore
@@ -88,21 +86,7 @@ public class AvailableSpaceResolver
         return mapping;
     }
 
-    @Override
-    protected String chooseFirstNamespace(String path, PathLocation loc) {
-        Map<String, SubclusterAvailableSpace> subclusterInfo =
-                getSubclusterMapping();
-        List<SubclusterAvailableSpace> subclusterList = new LinkedList<>(
-                subclusterInfo.values());
-        Collections.sort(subclusterList, comparator);
 
-        return subclusterList.size() > 0 ? subclusterList.get(0).getNameserviceId()
-                : null;
-    }
-
-    /**
-     * Inner class that stores cluster available space info.
-     */
     static class SubclusterAvailableSpace {
         private final String nsId;
         private final long availableSpace;
@@ -121,19 +105,13 @@ public class AvailableSpaceResolver
         }
     }
 
-    /**
-     * Customized comparator for SubclusterAvailableSpace. If more available
-     * space the one cluster has, the higher priority it will have. But this
-     * is not absolute, there is a balanced preference to make this use a higher
-     * probability (instead of "always") to compare by this way.
-     */
+    // 比较器
     static final class SubclusterSpaceComparator
             implements Comparator<SubclusterAvailableSpace>, Serializable {
-        private int balancedPreference;
+        private final int balancedPreference;
 
         SubclusterSpaceComparator(float balancedPreference) {
-            Preconditions.checkArgument(
-                    balancedPreference <= 1 && balancedPreference >= 0,
+            Preconditions.checkArgument(balancedPreference <= 1 && balancedPreference >= 0,
                     "The balancer preference value should be in the range 0.0 - 1.0");
 
             this.balancedPreference = (int) (100 * balancedPreference);
@@ -142,8 +120,7 @@ public class AvailableSpaceResolver
         @Override
         public int compare(SubclusterAvailableSpace cluster1,
                            SubclusterAvailableSpace cluster2) {
-            int ret = cluster1.getAvailableSpace() > cluster2.getAvailableSpace() ? -1
-                    : 1;
+            int ret = cluster1.getAvailableSpace() > cluster2.getAvailableSpace() ? -1 : 1;
 
             if (ret < 0) {
                 return (RAND.nextInt(100) < balancedPreference) ? -1 : 1;

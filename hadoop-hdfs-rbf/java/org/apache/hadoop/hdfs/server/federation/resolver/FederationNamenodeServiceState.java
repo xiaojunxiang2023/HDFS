@@ -6,11 +6,12 @@ public enum FederationNamenodeServiceState {
     ACTIVE,
     OBSERVER,
     STANDBY,
+    
     UNAVAILABLE,
     EXPIRED,
     DISABLED;
 
-    // 根据 HAServiceState 得到 FederationNamenodeServiceState
+    // 根据 HAServiceState得到 FederationNamenodeServiceState
     public static FederationNamenodeServiceState getState(HAServiceState state) {
         switch (state) {
             case ACTIVE:
@@ -19,6 +20,7 @@ public enum FederationNamenodeServiceState {
                 return FederationNamenodeServiceState.OBSERVER;
             case STANDBY:
                 return FederationNamenodeServiceState.STANDBY;
+                
             case INITIALIZING:
                 return FederationNamenodeServiceState.UNAVAILABLE;
             case STOPPING:

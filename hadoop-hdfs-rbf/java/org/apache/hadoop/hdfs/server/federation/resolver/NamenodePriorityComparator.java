@@ -3,17 +3,7 @@ package org.apache.hadoop.hdfs.server.federation.resolver;
 import java.io.Serializable;
 import java.util.Comparator;
 
-/**
- * Compares NNs in the same namespace and prioritizes by their status. The
- * priorities are:
- * <ul>
- * <li>ACTIVE
- * <li>STANDBY
- * <li>UNAVAILABLE
- * </ul>
- * When two NNs have the same state, the last modification date is the tie
- * breaker, newest has priority. Expired NNs are excluded.
- */
+// 比较器，根据 Active、StandBy 等状态去比较，如果相同的话就比最近更新时间
 public class NamenodePriorityComparator
         implements Comparator<FederationNamenodeContext>, Serializable {
 
@@ -34,13 +24,6 @@ public class NamenodePriorityComparator
         }
     }
 
-    /**
-     * Compare the modification dates.
-     *
-     * @param o1 Context 1.
-     * @param o2 Context 2.
-     * @return Comparison between dates.
-     */
     private int compareModDates(FederationNamenodeContext o1,
                                 FederationNamenodeContext o2) {
         // Reverse sort, lowest position is highest priority.

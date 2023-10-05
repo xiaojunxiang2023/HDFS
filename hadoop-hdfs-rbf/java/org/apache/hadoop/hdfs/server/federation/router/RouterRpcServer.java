@@ -1570,20 +1570,12 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return this.clientProto;
     }
 
-    /**
-     * Get RPC metrics info.
-     * @return The instance of FederationRPCMetrics.
-     */
     public FederationRPCMetrics getRPCMetrics() {
         return this.rpcMonitor.getRPCMetrics();
     }
 
-    /**
-     * Check if a path should be in all subclusters.
-     *
-     * @param path Path to check.
-     * @return If a path should be in all subclusters.
-     */
+    // 检查 path是否属于所有的子集群，
+    //   当能在挂载表中查到 && 负载均衡策略设置为(SPACE, RANDOM, HASH_ALL) 时 才返回 true
     boolean isPathAll(final String path) {
         if (subclusterResolver instanceof MountTableResolver) {
             try {

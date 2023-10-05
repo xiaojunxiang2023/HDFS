@@ -44,8 +44,8 @@ public abstract class CachedRecordStore<R extends BaseRecord>
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
 
-    // 加载缓存时 是否覆盖过期的值
-    private boolean override = false;
+    // 是否调用 overrideExpiredRecords，即检查此数据过期的话，同时也把 ZNode里的值删掉
+    private final boolean override;
 
 
     protected CachedRecordStore(Class<R> clazz, StateStoreDriver driver) {
@@ -72,7 +72,7 @@ public abstract class CachedRecordStore<R extends BaseRecord>
     public boolean loadCache(boolean force) throws IOException {
         if (force || isUpdateTime()) {
             List<R> newRecords = null;
-            long t = -1;
+            long t;
             try {
                 // 从 StateStoreDriver中获取数据
                 QueryResult<R> result = getDriver().get(getRecordClass());
@@ -118,23 +118,20 @@ public abstract class CachedRecordStore<R extends BaseRecord>
         return Time.monotonicNow() - lastUpdate > MIN_UPDATE_MS;
     }
 
-    /**
-     * 过期数据：
-     *  更新 StateSore中的数据
-     *  删除 StateSore和缓存中的数据
-     */
+    // loadCache时，if.override 才会调用 overrideExpiredRecords
+    // 对于 QueryResult(Record列表), 判断数据是否过期:
+    // 1、如果过期了，则先删除 ZNode，后删缓存
+    // 2、如果没过期，则将缓存中的数据强制刷新到 ZNode
     public void overrideExpiredRecords(QueryResult<R> query) throws IOException {
+
         // 待更新的数据，更新 StateSore中的这些数据
-        // ?【从 StateStore 中取得数据又进行更新到 StateStore？且为什么不更新缓存中的这些数据？判断过期后更新是什么意思，跟谁比较看出更新了？】
         List<R> commitRecords = new ArrayList<>();
-        // 待删除的数据，StateSore 和 缓存中 都进行删除
+
+        // 待删除的数据
         List<R> deleteRecords = new ArrayList<>();
+        // newRecords.removeAll(deleteRecords)
         List<R> newRecords = query.getRecords();
         long currentDriverTime = query.getTimestamp();
-        if (newRecords == null || currentDriverTime <= 0) {
-            LOG.error("Cannot check overrides for record");
-            return;
-        }
 
         for (R record : newRecords) {
             if (record.shouldBeDeleted(currentDriverTime)) {
@@ -159,7 +156,7 @@ public abstract class CachedRecordStore<R extends BaseRecord>
         }
     }
 
-    // 更新缓存中某个 record的值
+    // 针对的是某个数据
     public void overrideExpiredRecord(R record) throws IOException {
         List<R> newRecords = new ArrayList<>();
         newRecords.add(record);

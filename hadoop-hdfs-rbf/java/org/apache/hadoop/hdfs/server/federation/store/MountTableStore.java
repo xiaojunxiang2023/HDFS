@@ -10,8 +10,7 @@ import org.apache.hadoop.hdfs.server.federation.store.records.MountTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// 对 MountTable(挂载表相关的信息) 的一些管理（非增删改查）
-
+// 对 MountTable(挂载表相关的信息) 的一些管理
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public abstract class MountTableStore extends CachedRecordStore<MountTable>

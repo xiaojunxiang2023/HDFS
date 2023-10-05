@@ -33,7 +33,6 @@ public class MountTableRefresherService extends AbstractService {
 
     // 本地的 router
     private final Router router;
-    private MountTableStore mountTableStore;
     private String localAdminAddress;
     private long cacheUpdateTimeout;
 
@@ -50,8 +49,8 @@ public class MountTableRefresherService extends AbstractService {
     @Override
     protected void serviceInit(Configuration conf) throws Exception {
         super.serviceInit(conf);
-        this.mountTableStore = getMountTableStore();
-        this.mountTableStore.setRefreshService(this);
+        MountTableStore mountTableStore = getMountTableStore();
+        mountTableStore.setRefreshService(this);
         this.localAdminAddress = StateStoreUtils.getHostPortString(router.getAdminServerAddress());
         this.cacheUpdateTimeout = conf.getTimeDuration(
                 RBFConfigKeys.MOUNT_TABLE_CACHE_UPDATE_TIMEOUT,
@@ -91,11 +90,7 @@ public class MountTableRefresherService extends AbstractService {
 
     @VisibleForTesting
     protected void closeRouterClient(RouterClient client) {
-        try {
-            client.close();
-        } catch (IOException e) {
-            LOG.error("Error while closing RouterClient", e);
-        }
+        client.close();
     }
 
     // 创建一个 RouterClient并且缓存起来

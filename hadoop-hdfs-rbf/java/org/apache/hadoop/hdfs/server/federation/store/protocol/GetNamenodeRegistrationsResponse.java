@@ -28,8 +28,7 @@ public abstract class GetNamenodeRegistrationsResponse {
 
     @Public
     @Unstable
-    public abstract List<MembershipState> getNamenodeMemberships()
-            throws IOException;
+    public abstract List<MembershipState> getNamenodeMemberships() throws IOException;
 
     @Public
     @Unstable

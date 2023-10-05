@@ -153,7 +153,7 @@ public abstract class MountTable extends BaseRecord {
 
     public abstract void setDestOrder(DestinationOrder order);
 
-    // ? 设置挂载点是否支持失败的 Destination
+    // 当目标 Destination失败时, 是否可以容错降级到其他的 Destination
     public abstract boolean isFaultTolerant();
 
     public abstract void setFaultTolerant(boolean faultTolerant);
@@ -274,6 +274,8 @@ public abstract class MountTable extends BaseRecord {
             }
         }
         if (isFaultTolerant()) {
+            // 如果设置了支持容错的话，
+            // 必须得 getDestinations().size() >= 2 && 负载均衡策略属于(SPACE, RANDOM, HASH_ALL)
             if (getDestinations().size() < 2) {
                 throw new IllegalArgumentException(
                         ERROR_MSG_FAULT_TOLERANT_MULTI_DEST + this);

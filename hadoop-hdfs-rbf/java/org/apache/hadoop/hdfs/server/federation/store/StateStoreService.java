@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-// 1、能动态注册 RecordStore 【Record是一个记录，RecordStore持有 Record.class和其 Driver, 
-//    RecordStore- 有对 Record的基本管理能力（非增删改查），还继承了对缓存的操作】
-// 2、用来初始化 Driver【用来增删改查 Record】，
+// 1、RecordStore [MembershipStoreImpl，MountTableStoreImpl] 有对 Record基本的管理能力
+//      底层持有 Driver的引用，调用 Driver去增删改查 ZNode。
+// 2、StateStoreService (state store) 对 Driver进行初始化，和注册 RecordStore
 // 3、和持有 monitorService 与 cacheUpdater 这两个 Service 【用来定期操作 Driver】
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
@@ -54,9 +54,8 @@ public class StateStoreService extends CompositeService {
 
     private StateStoreMetrics metrics;
 
-    // Map, 支持的类型： Record.class -> RecordStore(StateStore)
-    private final Map<Class<? extends BaseRecord>, RecordStore<? extends BaseRecord>>
-            recordStores;
+    // Map, 支持的类型： Record.class -> RecordStore
+    private final Map<Class<? extends BaseRecord>, RecordStore<? extends BaseRecord>> recordStores;
 
 
     private long cacheLastUpdateTime;
@@ -157,8 +156,7 @@ public class StateStoreService extends CompositeService {
         super.serviceStop();
     }
 
-    private <T extends RecordStore<?>> void addRecordStore(
-            final Class<T> clazz) {
+    private <T extends RecordStore<?>> void addRecordStore(final Class<T> clazz) {
 
         assert this.getServiceState() == STATE.INITED : "Cannot add record to the State Store once started";
 
@@ -166,7 +164,7 @@ public class StateStoreService extends CompositeService {
         Class<? extends BaseRecord> recordClass = recordStore.getRecordClass();
         this.recordStores.put(recordClass, recordStore);
 
-        // 订阅缓存自动更新
+        // 订阅内部缓存 以致于可以被定期更新
         if (recordStore instanceof StateStoreCache) {
             StateStoreCache cachedRecordStore = (StateStoreCache) recordStore;
             this.cachesToUpdateInternal.add(cachedRecordStore);
@@ -176,11 +174,9 @@ public class StateStoreService extends CompositeService {
     // 根据 RecordStore.class 取得对应的实例
     public <T extends RecordStore<?>> T getRegisteredRecordStore(
             final Class<T> recordStoreClass) {
-        for (RecordStore<? extends BaseRecord> recordStore :
-                this.recordStores.values()) {
+        for (RecordStore<? extends BaseRecord> recordStore : this.recordStores.values()) {
             if (recordStoreClass.isInstance(recordStore)) {
-                T recordStoreChecked = (T) recordStore;
-                return recordStoreChecked;
+                return (T) recordStore;
             }
         }
         return null;
@@ -244,7 +240,7 @@ public class StateStoreService extends CompositeService {
         }
     }
 
-    // 注册一个缓存
+    // 注册一个外部缓存, Resolve会使用这个进行订阅
     public void registerCacheExternal(StateStoreCache client) {
         this.cachesToUpdateExternal.add(client);
     }

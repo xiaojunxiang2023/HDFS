@@ -16,12 +16,6 @@ import java.io.Closeable;
 import java.io.IOException;
 
 // 客户端的数据转换器（适配器）
-
-/**
- * ? 为什么又是和 NN 的通信 This class forwards NN's ClientProtocol calls as RPC calls to the NN server
- * while translating from the parameter types used in ClientProtocol to the
- * new PB types.
- */
 @InterfaceAudience.Private
 @InterfaceStability.Stable
 public class RouterAdminProtocolTranslatorPB
