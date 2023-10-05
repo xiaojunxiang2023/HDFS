@@ -1,0 +1,32 @@
+<configuration>
+
+    <!-- 指明MR在哪里运行 -->
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+    <!-- 历史服务器端地址 -->
+    <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value>localhost:10020</value>
+    </property>
+    <!-- 历史服务器web端地址 -->
+    <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>localhost:19888</value>
+    </property>
+
+    <property>
+        <name>mapreduce.application.framework.path</name>
+        <value>/mapreduce/mapreduce.tar.gz#mr-framework</value>
+    </property>
+
+
+    <property>
+        <name>mapreduce.application.classpath</name>
+        <value>
+            $PWD/mr-framework/hadoop/share/hadoop/mapreduce/*:$PWD/mr-framework/hadoop/share/hadoop/mapreduce/lib/*:$PWD/mr-framework/hadoop/share/hadoop/common/*:$PWD/mr-framework/hadoop/share/hadoop/common/lib/*:$PWD/mr-framework/hadoop/share/hadoop/yarn/*:$PWD/mr-framework/hadoop/share/hadoop/yarn/lib/*:$PWD/mr-framework/hadoop/share/hadoop/hdfs/*:$PWD/mr-framework/hadoop/share/hadoop/hdfs/lib/*:$PWD/mr-framework/hadoop/share/hadoop/tools/lib/*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\etc\hadoop:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\common:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\common\lib\*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\common\*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\hdfs:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\hdfs\lib\*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\hdfs\*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\yarn\lib\*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\yarn\*:F:\JavaEE_SOFT\hadoop-3.3.4-ks-ec-3.1.2\share\hadoop\mapreduce\*
+        </value>
+    </property>
+
+</configuration>
