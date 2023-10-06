@@ -42,16 +42,11 @@ public abstract class StateStoreBaseImpl extends StateStoreDriver {
             Class<T> clazz, Query<T> query) throws IOException {
         QueryResult<T> result = get(clazz);
         List<T> records = result.getRecords();
-        List<T> ret = filterMultiple(query, records);
-        if (ret == null) {
-            throw new IOException("Cannot fetch records from the store");
-        }
-        return ret;
+        return filterMultiple(query, records);
     }
 
     @Override
-    public <T extends BaseRecord> boolean put(
-            T record, boolean allowUpdate, boolean errorIfExists) throws IOException {
+    public <T extends BaseRecord> boolean put(T record, boolean allowUpdate, boolean errorIfExists) throws IOException {
         List<T> singletonList = new ArrayList<>();
         singletonList.add(record);
         return putAll(singletonList, allowUpdate, errorIfExists);

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.apache.hadoop.util.ExitUtil.terminate;
 
-// Router服务端的启动类
+// 没啥逻辑，其实是靠调用 Router类
 public final class DFSRouter {
 
     private static final Logger LOG = LoggerFactory.getLogger(DFSRouter.class);
@@ -34,8 +34,7 @@ public final class DFSRouter {
             StringUtils.startupShutdownMessage(Router.class, argv, LOG);
             Router router = new Router();
 
-            ShutdownHookManager.get().addShutdownHook(
-                    new CompositeServiceShutdownHook(router), SHUTDOWN_HOOK_PRIORITY);
+            ShutdownHookManager.get().addShutdownHook(new CompositeServiceShutdownHook(router), SHUTDOWN_HOOK_PRIORITY);
 
             Configuration conf = new HdfsConfiguration();
             router.init(conf);
@@ -45,4 +44,5 @@ public final class DFSRouter {
             terminate(1, e);
         }
     }
+    
 }

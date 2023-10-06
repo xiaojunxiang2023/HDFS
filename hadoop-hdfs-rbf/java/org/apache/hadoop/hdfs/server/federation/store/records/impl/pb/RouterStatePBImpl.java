@@ -13,18 +13,11 @@ import org.apache.hadoop.thirdparty.protobuf.Message;
 
 import java.io.IOException;
 
-/**
- * Protobuf implementation of the RouterState record.
- */
 public class RouterStatePBImpl extends RouterState implements PBRecord {
 
+    // 很多数据都存放在 translator.builder中
     private FederationProtocolPBTranslator<RouterRecordProto, Builder,
-            RouterRecordProtoOrBuilder> translator =
-            new FederationProtocolPBTranslator<RouterRecordProto, Builder,
-                    RouterRecordProtoOrBuilder>(RouterRecordProto.class);
-
-    public RouterStatePBImpl() {
-    }
+            RouterRecordProtoOrBuilder> translator = new FederationProtocolPBTranslator<>(RouterRecordProto.class);
 
     public RouterStatePBImpl(RouterRecordProto proto) {
         this.translator.setProto(proto);

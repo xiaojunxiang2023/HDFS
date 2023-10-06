@@ -77,13 +77,10 @@ public class RouterSecurityManager {
     // 没开启安全认证，或者开启了 KERBEROS、KERBEROS_SSL、CERTIFICATE的安全认证 才支持 DelegationToken
     private boolean isAllowedDelegationTokenOp() throws IOException {
         AuthenticationMethod authMethod = getConnectionAuthenticationMethod();
-        if (UserGroupInformation.isSecurityEnabled()
+        return UserGroupInformation.isSecurityEnabled()
                 && (authMethod != AuthenticationMethod.KERBEROS)
                 && (authMethod != AuthenticationMethod.KERBEROS_SSL)
-                && (authMethod != AuthenticationMethod.CERTIFICATE)) {
-            return false;
-        }
-        return true;
+                && (authMethod != AuthenticationMethod.CERTIFICATE);
     }
 
 
@@ -95,7 +92,7 @@ public class RouterSecurityManager {
         String tokenId = "";
         Token<DelegationTokenIdentifier> token;
         try {
-            if (!isAllowedDelegationTokenOp()) {
+            if (isAllowedDelegationTokenOp()) {
                 throw new IOException("Delegation Token can be issued only with kerberos or web authentication");
             }
             if (dtSecretManager == null || !dtSecretManager.isRunning()) {
@@ -127,7 +124,7 @@ public class RouterSecurityManager {
         String tokenId = "";
         long expiryTime;
         try {
-            if (!isAllowedDelegationTokenOp()) {
+            if (isAllowedDelegationTokenOp()) {
                 throw new IOException(
                         "Delegation Token can be renewed only " +
                                 "with kerberos or web authentication");

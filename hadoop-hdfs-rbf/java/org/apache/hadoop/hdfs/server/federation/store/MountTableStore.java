@@ -18,8 +18,9 @@ public abstract class MountTableStore extends CachedRecordStore<MountTable>
     private static final Logger LOG =
             LoggerFactory.getLogger(MountTableStore.class);
 
-    // 挂载表Service 和 quotaManager
+    // 事件驱动刷新缓存 Service
     private MountTableRefresherService refreshService;
+    // quotaManager
     private RouterQuotaManager quotaManager;
 
     public MountTableStore(StateStoreDriver driver) {

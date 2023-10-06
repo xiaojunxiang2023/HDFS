@@ -17,15 +17,15 @@ public abstract class RouterStore extends CachedRecordStore<RouterState> {
         super(RouterState.class, driver, true);
     }
 
-    // 获取当前 Router的信息
+    // 获取当前 Router
     public abstract GetRouterRegistrationResponse getRouterRegistration(
             GetRouterRegistrationRequest request) throws IOException;
 
-    // 获取所有 Router的信息
+    // 获取所有 Router
     public abstract GetRouterRegistrationsResponse getRouterRegistrations(
             GetRouterRegistrationsRequest request) throws IOException;
 
-    // 心跳更新 Router的数据
+    // 心跳更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
     public abstract RouterHeartbeatResponse routerHeartbeat(
             RouterHeartbeatRequest request) throws IOException;
 }

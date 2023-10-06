@@ -33,7 +33,6 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.ProxyUsers;
 import org.apache.hadoop.service.AbstractService;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 import org.slf4j.Logger;
@@ -47,69 +46,58 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_PERMISSIONS_ENABLED_DEFAULT;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_PERMISSIONS_ENABLED_KEY;
 
-/**
- * This class is responsible for handling all of the Admin calls to the HDFS
- * router. It is created, started, and stopped by {@link Router}.
- */
 public class RouterAdminServer extends AbstractService
         implements RouterAdminProtocol, RefreshCallQueueProtocol {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RouterAdminServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RouterAdminServer.class);
 
     private Configuration conf;
 
     private final Router router;
 
     private MountTableStore mountTableStore;
-
     private DisabledNameserviceStore disabledStore;
 
-    /** The Admin server that listens to requests from clients. */
+    // RPCServer 服务端代理
     private final Server adminServer;
     private final InetSocketAddress adminAddress;
 
-    /**
-     * Permission related info used for constructing new router permission
-     * checker instance.
-     */
     private static String routerOwner;
     private static String superGroup;
     private static boolean isPermissionEnabled;
-    private boolean iStateStoreCache;
 
-    public RouterAdminServer(Configuration conf, Router router)
-            throws IOException {
+    private final boolean iStateStoreCache;
+
+    // 初始化配置, 创建 RPCServer, 添加协议映射
+    public RouterAdminServer(Configuration conf, Router router) throws IOException {
         super(RouterAdminServer.class.getName());
 
         this.conf = conf;
         this.router = router;
-
         int handlerCount = this.conf.getInt(
                 RBFConfigKeys.DFS_ROUTER_ADMIN_HANDLER_COUNT_KEY,
                 RBFConfigKeys.DFS_ROUTER_ADMIN_HANDLER_COUNT_DEFAULT);
 
         RPC.setProtocolEngine(this.conf, RouterAdminProtocolPB.class,
                 ProtobufRpcEngine2.class);
-
         RouterAdminProtocolServerSideTranslatorPB routerAdminProtocolTranslator =
                 new RouterAdminProtocolServerSideTranslatorPB(this);
         BlockingService clientNNPbService = RouterAdminProtocolService.
                 newReflectiveBlockingService(routerAdminProtocolTranslator);
-
         InetSocketAddress confRpcAddress = conf.getSocketAddr(
                 RBFConfigKeys.DFS_ROUTER_ADMIN_BIND_HOST_KEY,
                 RBFConfigKeys.DFS_ROUTER_ADMIN_ADDRESS_KEY,
                 RBFConfigKeys.DFS_ROUTER_ADMIN_ADDRESS_DEFAULT,
                 RBFConfigKeys.DFS_ROUTER_ADMIN_PORT_DEFAULT);
-
         String bindHost = conf.get(
                 RBFConfigKeys.DFS_ROUTER_ADMIN_BIND_HOST_KEY,
                 confRpcAddress.getHostName());
         LOG.info("Admin server binding to {}:{}",
                 bindHost, confRpcAddress.getPort());
 
+        // 初始化权限设置
         initializePermissionSettings(this.conf);
+
         this.adminServer = new RPC.Builder(this.conf)
                 .setProtocol(RouterAdminProtocolPB.class)
                 .setInstance(clientNNPbService)
@@ -119,43 +107,31 @@ public class RouterAdminServer extends AbstractService
                 .setVerbose(false)
                 .build();
 
-        // Set service-level authorization security policy
+        // hadoop.security.authorization为true，则刷新下 协议客户端ACL
         if (conf.getBoolean(HADOOP_SECURITY_AUTHORIZATION, false)) {
             this.adminServer.refreshServiceAcl(conf, new RouterPolicyProvider());
         }
 
-        // The RPC-server port can be ephemeral... ensure we have the correct info
         InetSocketAddress listenAddress = this.adminServer.getListenerAddress();
-        this.adminAddress = new InetSocketAddress(
-                confRpcAddress.getHostName(), listenAddress.getPort());
+        this.adminAddress = new InetSocketAddress(confRpcAddress.getHostName(), listenAddress.getPort());
         router.setAdminServerAddress(this.adminAddress);
-        iStateStoreCache =
-                router.getSubclusterResolver() instanceof StateStoreCache;
+        iStateStoreCache = router.getSubclusterResolver() instanceof StateStoreCache;
 
-        GenericRefreshProtocolServerSideTranslatorPB genericRefreshXlator =
-                new GenericRefreshProtocolServerSideTranslatorPB(this);
-        BlockingService genericRefreshService =
-                GenericRefreshProtocolProtos.GenericRefreshProtocolService.
-                        newReflectiveBlockingService(genericRefreshXlator);
+
+        // 添加 GenericRefreshProtocolPB(刷新 Router参数)、RefreshCallQueueProtocolPB(刷新 CallQueue)协议的映射
+        GenericRefreshProtocolServerSideTranslatorPB genericRefreshXlator = new GenericRefreshProtocolServerSideTranslatorPB(this);
+        BlockingService genericRefreshService = GenericRefreshProtocolProtos
+                .GenericRefreshProtocolService.newReflectiveBlockingService(genericRefreshXlator);
 
         RefreshCallQueueProtocolServerSideTranslatorPB refreshCallQueueXlator =
                 new RefreshCallQueueProtocolServerSideTranslatorPB(this);
-        BlockingService refreshCallQueueService =
-                RefreshCallQueueProtocolProtos.RefreshCallQueueProtocolService.
-                        newReflectiveBlockingService(refreshCallQueueXlator);
+        BlockingService refreshCallQueueService = RefreshCallQueueProtocolProtos
+                .RefreshCallQueueProtocolService.newReflectiveBlockingService(refreshCallQueueXlator);
 
-        DFSUtil.addPBProtocol(conf, GenericRefreshProtocolPB.class,
-                genericRefreshService, adminServer);
-        DFSUtil.addPBProtocol(conf, RefreshCallQueueProtocolPB.class,
-                refreshCallQueueService, adminServer);
+        DFSUtil.addPBProtocol(conf, GenericRefreshProtocolPB.class, genericRefreshService, adminServer);
+        DFSUtil.addPBProtocol(conf, RefreshCallQueueProtocolPB.class, refreshCallQueueService, adminServer);
     }
 
-    /**
-     * Initialize permission related settings.
-     *
-     * @param routerConf
-     * @throws IOException
-     */
     private static void initializePermissionSettings(Configuration routerConf)
             throws IOException {
         routerOwner = UserGroupInformation.getCurrentUser().getShortUserName();
@@ -164,51 +140,6 @@ public class RouterAdminServer extends AbstractService
                 DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_DEFAULT);
         isPermissionEnabled = routerConf.getBoolean(DFS_PERMISSIONS_ENABLED_KEY,
                 DFS_PERMISSIONS_ENABLED_DEFAULT);
-    }
-
-    /** Allow access to the client RPC server for testing. */
-    @VisibleForTesting
-    Server getAdminServer() {
-        return this.adminServer;
-    }
-
-    private MountTableStore getMountTableStore() throws IOException {
-        if (this.mountTableStore == null) {
-            this.mountTableStore = router.getStateStore().getRegisteredRecordStore(
-                    MountTableStore.class);
-            if (this.mountTableStore == null) {
-                throw new IOException("Mount table state store is not available.");
-            }
-        }
-        return this.mountTableStore;
-    }
-
-    private DisabledNameserviceStore getDisabledNameserviceStore()
-            throws IOException {
-        if (this.disabledStore == null) {
-            this.disabledStore = router.getStateStore().getRegisteredRecordStore(
-                    DisabledNameserviceStore.class);
-            if (this.disabledStore == null) {
-                throw new IOException(
-                        "Disabled Nameservice state store is not available.");
-            }
-        }
-        return this.disabledStore;
-    }
-
-    /**
-     * Get the RPC address of the admin service.
-     * @return Administration service RPC address.
-     */
-    public InetSocketAddress getRpcAddress() {
-        return this.adminAddress;
-    }
-
-    void checkSuperuserPrivilege() throws AccessControlException {
-        RouterPermissionChecker pc = RouterAdminServer.getPermissionChecker();
-        if (pc != null) {
-            pc.checkSuperuserPrivilege();
-        }
     }
 
     @Override
@@ -231,15 +162,59 @@ public class RouterAdminServer extends AbstractService
         super.serviceStop();
     }
 
+    /*
+        挂载表相关, 靠 MountTableStore增删改查刷 挂载点
+     */
     @Override
-    public AddMountTableEntryResponse addMountTableEntry(
-            AddMountTableEntryRequest request) throws IOException {
-        return getMountTableStore().addMountTableEntry(request);
+    public GetMountTableEntriesResponse getMountTableEntries(GetMountTableEntriesRequest request)
+            throws IOException {
+        return getMountTableStore().getMountTableEntries(request);
     }
 
     @Override
-    public UpdateMountTableEntryResponse updateMountTableEntry(
-            UpdateMountTableEntryRequest request) throws IOException {
+    public AddMountTableEntryResponse addMountTableEntry(AddMountTableEntryRequest request)
+            throws IOException {
+        return getMountTableStore().addMountTableEntry(request);
+    }
+
+    // 删除挂载点前，还 刷新挂载表缓存 和 重新初始化Quota [nsQuota 和 spQuata都重置为初始值，storageType重置为null]
+    @Override
+    public RemoveMountTableEntryResponse removeMountTableEntry(RemoveMountTableEntryRequest request)
+            throws IOException {
+        try {
+            synchronizeQuota(request.getSrcPath(), HdfsConstants.QUOTA_RESET,
+                    HdfsConstants.QUOTA_RESET, null);
+        } catch (Exception e) {
+            LOG.warn("Unable to clear quota at the destinations for {}: {}",
+                    request.getSrcPath(), e.getMessage());
+        }
+        return getMountTableStore().removeMountTableEntry(request);
+    }
+
+
+    // 刷新挂载表缓存 和 更新Quota
+    private void synchronizeQuota(String path, long nsQuota, long ssQuota,
+                                  StorageType type) throws IOException {
+        if (isQuotaSyncRequired(nsQuota, ssQuota)) {
+            if (iStateStoreCache) {
+                ((StateStoreCache) this.router.getSubclusterResolver()).loadCache(true);
+            }
+            Quota routerQuota = this.router.getRpcServer().getQuotaModule();
+            routerQuota.setQuota(path, nsQuota, ssQuota, type, false);
+        }
+    }
+
+    private boolean isQuotaSyncRequired(long nsQuota, long ssQuota) {
+        if (router.isQuotaEnabled()) {
+            return nsQuota != HdfsConstants.QUOTA_DONT_SET || ssQuota != HdfsConstants.QUOTA_DONT_SET;
+        }
+        return false;
+    }
+
+    // 更新挂载点后，还判断这个挂载点的 Destinations是否有更新，有的话就更新 Quota
+    @Override
+    public UpdateMountTableEntryResponse updateMountTableEntry(UpdateMountTableEntryRequest request)
+            throws IOException {
         MountTable updateEntry = request.getEntry();
         MountTable oldEntry = null;
         if (this.router.getSubclusterResolver() instanceof MountTableResolver) {
@@ -247,17 +222,18 @@ public class RouterAdminServer extends AbstractService
                     (MountTableResolver) this.router.getSubclusterResolver();
             oldEntry = mResolver.getMountPoint(updateEntry.getSourcePath());
         }
-        UpdateMountTableEntryResponse response = getMountTableStore()
-                .updateMountTableEntry(request);
+        UpdateMountTableEntryResponse response = getMountTableStore().updateMountTableEntry(request);
         try {
             if (updateEntry != null && router.isQuotaEnabled()) {
-                // update quota.
+                // 更新 Quota值（属于变更节点的情况，但是又没考虑 storageType）
                 if (isQuotaUpdated(request, oldEntry)) {
                     synchronizeQuota(updateEntry.getSourcePath(),
                             updateEntry.getQuota().getQuota(),
                             updateEntry.getQuota().getSpaceQuota(), null);
                 }
-                // update storage type quota.
+
+                // 考虑新增节点情况， 
+                // 同时考虑变更节点的 storageType
                 RouterQuotaUsage newQuota = request.getEntry().getQuota();
                 boolean locationsChanged = oldEntry == null ||
                         !oldEntry.getDestinations().equals(updateEntry.getDestinations());
@@ -270,112 +246,52 @@ public class RouterAdminServer extends AbstractService
                 }
             }
         } catch (Exception e) {
-            // Ignore exception, if any while reseting quota. Specifically to handle
-            // if the actual destination doesn't exist.
-            LOG.warn("Unable to reset quota at the destinations for {}: {}",
-                    request.getEntry(), e.getMessage());
+            LOG.warn("Unable to reset quota at the destinations for {}: {}", request.getEntry(), e.getMessage());
         }
         return response;
     }
 
-    /**
-     * Checks whether quota needs to be synchronized with namespace or not. Quota
-     * needs to be synchronized either if there is change in mount entry quota or
-     * there is change in remote destinations.
-     * @param request the update request.
-     * @param oldEntry the mount entry before getting updated.
-     * @return true if quota needs to be updated.
-     * @throws IOException
-     */
     private boolean isQuotaUpdated(UpdateMountTableEntryRequest request,
                                    MountTable oldEntry) throws IOException {
         if (oldEntry != null) {
             MountTable updateEntry = request.getEntry();
-            // If locations are changed, the new destinations need to be in sync with
-            // the mount quota.
             if (!oldEntry.getDestinations().equals(updateEntry.getDestinations())) {
                 return true;
             }
-            // Previous quota.
+
+            // 旧的 quota
             RouterQuotaUsage preQuota = oldEntry.getQuota();
             long nsQuota = preQuota.getQuota();
             long ssQuota = preQuota.getSpaceQuota();
-            // New quota
+
+            // 新的 quota
             RouterQuotaUsage mountQuota = updateEntry.getQuota();
-            // If there is change in quota, the new quota needs to be synchronized.
-            if (nsQuota != mountQuota.getQuota()
-                    || ssQuota != mountQuota.getSpaceQuota()) {
-                return true;
-            }
-            return false;
+            return nsQuota != mountQuota.getQuota() || ssQuota != mountQuota.getSpaceQuota();
         } else {
-            // If old entry is not available, sync quota always, since we can't
-            // conclude no change in quota.
             return true;
         }
     }
 
-    /**
-     * Synchronize the quota value across mount table and subclusters.
-     * @param path Source path in given mount table.
-     * @param nsQuota Name quota definition in given mount table.
-     * @param ssQuota Space quota definition in given mount table.
-     * @param type Storage type of quota. Null if it's not a storage type quota.
-     * @throws IOException
-     */
-    private void synchronizeQuota(String path, long nsQuota, long ssQuota,
-                                  StorageType type) throws IOException {
-        if (isQuotaSyncRequired(nsQuota, ssQuota)) {
-            if (iStateStoreCache) {
-                ((StateStoreCache) this.router.getSubclusterResolver()).loadCache(true);
-            }
-            Quota routerQuota = this.router.getRpcServer().getQuotaModule();
-            routerQuota.setQuota(path, nsQuota, ssQuota, type, false);
-        }
-    }
-
-    /**
-     * Checks if quota needs to be synchronized or not.
-     * @param nsQuota namespace quota to be set.
-     * @param ssQuota space quota to be set.
-     * @return true if the quota needs to be synchronized.
-     */
-    private boolean isQuotaSyncRequired(long nsQuota, long ssQuota) {
-        // Check if quota is enabled for router or not.
-        if (router.isQuotaEnabled()) {
-            if ((nsQuota != HdfsConstants.QUOTA_DONT_SET
-                    || ssQuota != HdfsConstants.QUOTA_DONT_SET)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
-    public RemoveMountTableEntryResponse removeMountTableEntry(
-            RemoveMountTableEntryRequest request) throws IOException {
-        // clear sub-cluster's quota definition
-        try {
-            synchronizeQuota(request.getSrcPath(), HdfsConstants.QUOTA_RESET,
-                    HdfsConstants.QUOTA_RESET, null);
-        } catch (Exception e) {
-            // Ignore exception, if any while reseting quota. Specifically to handle
-            // if the actual destination doesn't exist.
-            LOG.warn("Unable to clear quota at the destinations for {}: {}",
-                    request.getSrcPath(), e.getMessage());
-        }
-        return getMountTableStore().removeMountTableEntry(request);
-    }
-
-    @Override
-    public GetMountTableEntriesResponse getMountTableEntries(
-            GetMountTableEntriesRequest request) throws IOException {
-        return getMountTableStore().getMountTableEntries(request);
-    }
-
-    @Override
-    public EnterSafeModeResponse enterSafeMode(EnterSafeModeRequest request)
+    public RefreshMountTableEntriesResponse refreshMountTableEntries(RefreshMountTableEntriesRequest request)
             throws IOException {
+        if (iStateStoreCache) {  // 只是判断是不是缓存类型，一般都是
+            boolean result = ((StateStoreCache) this.router.getSubclusterResolver()).loadCache(true);
+            RefreshMountTableEntriesResponse response = RefreshMountTableEntriesResponse.newInstance();
+            response.setResult(result);
+            return response;
+        } else {
+            return getMountTableStore().refreshMountTableEntries(request);
+        }
+    }
+
+
+    /*
+        safemode相关，靠 RouterSafemodeService来实现
+     */
+    @Override
+    public EnterSafeModeResponse enterSafeMode(EnterSafeModeRequest request) throws IOException {
+        // 检查是不是超级用户权限
         checkSuperuserPrivilege();
         boolean success = false;
         RouterSafemodeService safeModeService = this.router.getSafemodeService();
@@ -394,9 +310,24 @@ public class RouterAdminServer extends AbstractService
         return EnterSafeModeResponse.newInstance(success);
     }
 
+    void checkSuperuserPrivilege() throws AccessControlException {
+        RouterPermissionChecker pc = RouterAdminServer.getPermissionChecker();
+        if (pc != null) {
+            pc.checkSuperuserPrivilege();
+        }
+    }
+
+    // 是否为合法的 safemode
+    private boolean verifySafeMode(boolean isInSafeMode) {
+        Preconditions.checkNotNull(this.router.getSafemodeService());
+        boolean serverInSafeMode = this.router.getSafemodeService().isInSafeMode();
+        RouterServiceState currentState = this.router.getRouterState();
+        return (isInSafeMode && currentState == RouterServiceState.SAFEMODE && serverInSafeMode)
+                || (!isInSafeMode && currentState != RouterServiceState.SAFEMODE && !serverInSafeMode);
+    }
+
     @Override
-    public LeaveSafeModeResponse leaveSafeMode(LeaveSafeModeRequest request)
-            throws IOException {
+    public LeaveSafeModeResponse leaveSafeMode(LeaveSafeModeRequest request) throws IOException {
         checkSuperuserPrivilege();
         boolean success = false;
         RouterSafemodeService safeModeService = this.router.getSafemodeService();
@@ -414,8 +345,7 @@ public class RouterAdminServer extends AbstractService
     }
 
     @Override
-    public GetSafeModeResponse getSafeMode(GetSafeModeRequest request)
-            throws IOException {
+    public GetSafeModeResponse getSafeMode(GetSafeModeRequest request) throws IOException {
         boolean isInSafeMode = false;
         RouterSafemodeService safeModeService = this.router.getSafemodeService();
         if (safeModeService != null) {
@@ -425,48 +355,33 @@ public class RouterAdminServer extends AbstractService
         return GetSafeModeResponse.newInstance(isInSafeMode);
     }
 
-    @Override
-    public RefreshMountTableEntriesResponse refreshMountTableEntries(
-            RefreshMountTableEntriesRequest request) throws IOException {
-        if (iStateStoreCache) {
-            /*
-             * MountTableResolver updates MountTableStore cache also. Expecting other
-             * SubclusterResolver implementations to update MountTableStore cache also
-             * apart from updating its cache.
-             */
-            boolean result = ((StateStoreCache) this.router.getSubclusterResolver())
-                    .loadCache(true);
-            RefreshMountTableEntriesResponse response =
-                    RefreshMountTableEntriesResponse.newInstance();
-            response.setResult(result);
-            return response;
-        } else {
-            return getMountTableStore().refreshMountTableEntries(request);
-        }
-    }
 
+    /*
+        getDestination相关
+     */
     @Override
-    public GetDestinationResponse getDestination(
-            GetDestinationRequest request) throws IOException {
+    public GetDestinationResponse getDestination(GetDestinationRequest request) throws IOException {
         final String src = request.getSrcPath();
         final List<String> nsIds = new ArrayList<>();
         RouterRpcServer rpcServer = this.router.getRpcServer();
+
+        // 通过 getLocationsForPath底层调用 subclusterResolver就已经得到返回值了，
+        // 但是还要多一步 getFileInfo的校验
         List<RemoteLocation> locations = rpcServer.getLocationsForPath(src, false);
         RouterRpcClient rpcClient = rpcServer.getRPCClient();
+        
         RemoteMethod method = new RemoteMethod("getFileInfo",
                 new Class<?>[]{String.class}, new RemoteParam());
         try {
-            Map<RemoteLocation, HdfsFileStatus> responses =
-                    rpcClient.invokeConcurrent(
-                            locations, method, false, false, HdfsFileStatus.class);
+            Map<RemoteLocation, HdfsFileStatus> responses = rpcClient.invokeConcurrent(
+                    locations, method, false, false, HdfsFileStatus.class);
             for (RemoteLocation location : locations) {
                 if (responses.get(location) != null) {
                     nsIds.add(location.getNameserviceId());
                 }
             }
         } catch (IOException ioe) {
-            LOG.error("Cannot get location for {}: {}",
-                    src, ioe.getMessage());
+            LOG.error("Cannot get location for {}: {}", src, ioe.getMessage());
         }
         if (nsIds.isEmpty() && !locations.isEmpty()) {
             String nsId = locations.get(0).getNameserviceId();
@@ -475,25 +390,13 @@ public class RouterAdminServer extends AbstractService
         return GetDestinationResponse.newInstance(nsIds);
     }
 
-    /**
-     * Verify if Router set safe mode state correctly.
-     * @param isInSafeMode Expected state to be set.
-     * @return
+
+    /*
+       禁用 ns相关, 靠的是 DisabledNameserviceStore
      */
-    private boolean verifySafeMode(boolean isInSafeMode) {
-        Preconditions.checkNotNull(this.router.getSafemodeService());
-        boolean serverInSafeMode = this.router.getSafemodeService().isInSafeMode();
-        RouterServiceState currentState = this.router.getRouterState();
-
-        return (isInSafeMode && currentState == RouterServiceState.SAFEMODE
-                && serverInSafeMode)
-                || (!isInSafeMode && currentState != RouterServiceState.SAFEMODE
-                && !serverInSafeMode);
-    }
-
     @Override
-    public DisableNameserviceResponse disableNameservice(
-            DisableNameserviceRequest request) throws IOException {
+    public DisableNameserviceResponse disableNameservice(DisableNameserviceRequest request)
+            throws IOException {
         checkSuperuserPrivilege();
 
         String nsId = request.getNameServiceId();
@@ -525,8 +428,8 @@ public class RouterAdminServer extends AbstractService
     }
 
     @Override
-    public EnableNameserviceResponse enableNameservice(
-            EnableNameserviceRequest request) throws IOException {
+    public EnableNameserviceResponse enableNameservice(EnableNameserviceRequest request)
+            throws IOException {
         checkSuperuserPrivilege();
 
         String nsId = request.getNameServiceId();
@@ -549,19 +452,77 @@ public class RouterAdminServer extends AbstractService
     @Override
     public GetDisabledNameservicesResponse getDisabledNameservices(
             GetDisabledNameservicesRequest request) throws IOException {
-        Set<String> nsIds =
-                getDisabledNameserviceStore().getDisabledNameservices();
+        Set<String> nsIds = getDisabledNameserviceStore().getDisabledNameservices();
         return GetDisabledNameservicesResponse.newInstance(nsIds);
     }
 
-    /**
-     * Get a new permission checker used for making mount table access
-     * control. This method will be invoked during each RPC call in router
-     * admin server.
-     *
-     * @return Router permission checker.
-     * @throws AccessControlException If the user is not authorized.
+
+    /*
+        -refreshRouterArgs的实现，刷新 Router参数 
      */
+    @Override // GenericRefreshProtocol
+    public Collection<RefreshResponse> refresh(String identifier, String[] args) {
+        //  ? 底层怎么实现的
+        return RefreshRegistry.defaultRegistry().dispatch(identifier, args);
+    }
+
+    /*
+        刷新超级用户的配置
+     */
+    @Override // RouterGenericManager
+    public boolean refreshSuperUserGroupsConfiguration() {
+        ProxyUsers.refreshSuperUserGroupsConfiguration();
+        return true;
+    }
+
+    /*
+        刷新 CallQueue，靠 RPCServer来实现
+     */
+    @Override // RefreshCallQueueProtocol
+    public void refreshCallQueue() {
+        LOG.info("Refreshing call queue.");
+        Configuration configuration = new Configuration();
+        router.getRpcServer().getServer().refreshCallQueue(configuration);
+    }
+    
+    
+    
+    /*
+        get/set 方法
+     */
+
+    Server getAdminServer() {
+        return this.adminServer;
+    }
+
+    private MountTableStore getMountTableStore() throws IOException {
+        if (this.mountTableStore == null) {
+            this.mountTableStore = router.getStateStore()
+                    .getRegisteredRecordStore(MountTableStore.class);
+            if (this.mountTableStore == null) {
+                throw new IOException("Mount table state store is not available.");
+            }
+        }
+        return this.mountTableStore;
+    }
+
+
+    private DisabledNameserviceStore getDisabledNameserviceStore() throws IOException {
+        if (this.disabledStore == null) {
+            this.disabledStore = router.getStateStore()
+                    .getRegisteredRecordStore(DisabledNameserviceStore.class);
+            if (this.disabledStore == null) {
+                throw new IOException("Disabled Nameservice state store is not available.");
+            }
+        }
+        return this.disabledStore;
+    }
+
+
+    public InetSocketAddress getRpcAddress() {
+        return this.adminAddress;
+    }
+
     public static RouterPermissionChecker getPermissionChecker()
             throws AccessControlException {
         if (!isPermissionEnabled) {
@@ -576,41 +537,12 @@ public class RouterAdminServer extends AbstractService
         }
     }
 
-    /**
-     * Get super user name.
-     *
-     * @return String super user name.
-     */
     public static String getSuperUser() {
         return routerOwner;
     }
 
-    /**
-     * Get super group name.
-     *
-     * @return String super group name.
-     */
     public static String getSuperGroup() {
         return superGroup;
     }
 
-    @Override // GenericRefreshProtocol
-    public Collection<RefreshResponse> refresh(String identifier, String[] args) {
-        // Let the registry handle as needed
-        return RefreshRegistry.defaultRegistry().dispatch(identifier, args);
-    }
-
-    @Override // RouterGenericManager
-    public boolean refreshSuperUserGroupsConfiguration() throws IOException {
-        ProxyUsers.refreshSuperUserGroupsConfiguration();
-        return true;
-    }
-
-    @Override // RefreshCallQueueProtocol
-    public void refreshCallQueue() throws IOException {
-        LOG.info("Refreshing call queue.");
-
-        Configuration configuration = new Configuration();
-        router.getRpcServer().getServer().refreshCallQueue(configuration);
-    }
 }

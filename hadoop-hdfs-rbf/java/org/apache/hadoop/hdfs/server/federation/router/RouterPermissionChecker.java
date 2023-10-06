@@ -95,7 +95,6 @@ public class RouterPermissionChecker extends FSPermissionChecker {
         }
 
         // 不是超级用户
-        throw new AccessControlException(
-                ugi.getUserName() + " is not a super user");
+        throw new AccessControlException(ugi.getUserName() + " is not a super user");
     }
 }

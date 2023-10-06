@@ -71,7 +71,7 @@ public abstract class CachedRecordStore<R extends BaseRecord>
     @Override
     public boolean loadCache(boolean force) throws IOException {
         if (force || isUpdateTime()) {
-            List<R> newRecords = null;
+            List<R> newRecords;
             long t;
             try {
                 // 从 StateStoreDriver中获取数据
@@ -79,7 +79,6 @@ public abstract class CachedRecordStore<R extends BaseRecord>
                 newRecords = result.getRecords();
                 t = result.getTimestamp();
 
-                // If we have any expired record, update the State Store
                 if (this.override) {
                     overrideExpiredRecords(result);
                 }

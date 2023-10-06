@@ -217,7 +217,8 @@ public class MembershipNamenodeResolver implements ActiveNamenodeResolver, State
         return priorityList;
     }
 
-    // 发送一次 NameNode心跳
+    // 发送 NameNode心跳, 
+    // 靠 getMembershipStore().namenodeHeartbeat(request) 底层调用 upsert ZNode
     @Override
     public boolean registerNamenode(NamenodeStatusReport report) throws IOException {
 

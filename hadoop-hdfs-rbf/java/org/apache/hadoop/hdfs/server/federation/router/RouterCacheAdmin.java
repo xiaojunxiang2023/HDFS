@@ -15,18 +15,11 @@ import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * Module that implements all the RPC calls in
- * {@link org.apache.hadoop.hdfs.protocol.ClientProtocol} related to Cache Admin
- * in the {@link RouterRpcServer}.
- */
+// 缓存管理相关的向 NameNode RPC调用
 public class RouterCacheAdmin {
 
-    /** RPC server to receive client calls. */
     private final RouterRpcServer rpcServer;
-    /** RPC clients to connect to the Namenodes. */
     private final RouterRpcClient rpcClient;
-    /** Interface to identify the active NN for a nameservice or blockpool ID. */
     private final ActiveNamenodeResolver namenodeResolver;
 
     public RouterCacheAdmin(RouterRpcServer server) {
@@ -142,9 +135,8 @@ public class RouterCacheAdmin {
     private Map<RemoteLocation, CacheDirectiveInfo> getRemoteMap(
             CacheDirectiveInfo path, final List<RemoteLocation> locations) {
         final Map<RemoteLocation, CacheDirectiveInfo> dstMap = new HashMap<>();
-        Iterator<RemoteLocation> iterator = locations.iterator();
-        while (iterator.hasNext()) {
-            dstMap.put(iterator.next(), path);
+        for (RemoteLocation location : locations) {
+            dstMap.put(location, path);
         }
         return dstMap;
     }

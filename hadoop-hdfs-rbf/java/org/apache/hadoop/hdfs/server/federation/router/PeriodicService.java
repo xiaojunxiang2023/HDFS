@@ -12,7 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-// 定期执行的 Service
+// 定期执行的 Service，有一个 scheduler线程池
 public abstract class PeriodicService extends AbstractService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PeriodicService.class);

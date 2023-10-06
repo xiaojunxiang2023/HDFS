@@ -69,14 +69,7 @@ import java.util.Map.Entry;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTHORIZATION;
 import static org.apache.hadoop.hdfs.server.federation.router.RBFConfigKeys.*;
 
-/**
- * This class is responsible for handling all of the RPC calls to the It is
- * created, started, and stopped by {@link Router}. It implements the
- * {@link ClientProtocol} to mimic a
- * {@link org.apache.hadoop.hdfs.server.namenode.NameNode NameNode} and proxies
- * the requests to the active
- * {@link org.apache.hadoop.hdfs.server.namenode.NameNode NameNode}.
- */
+// 接收 DFSClient发送来的请求，再转派给 RouterRpcClient
 public class RouterRpcServer extends AbstractService implements ClientProtocol,
         NamenodeProtocol, RefreshUserMappingsProtocol, GetUserMappingsProtocol {
 
@@ -101,9 +94,6 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     /** Monitor metrics for the RPC calls. */
     private final RouterRpcMonitor rpcMonitor;
 
-    /** If we use authentication for the connections. */
-    private final boolean serviceAuthEnabled;
-
 
     /** Interface to identify the active NN for a nameservice or blockpool ID. */
     private final ActiveNamenodeResolver namenodeResolver;
@@ -117,14 +107,15 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     // Modules implementing groups of RPC calls
     /** Router Quota calls. */
     private final Quota quotaCall;
-    /** NamenodeProtocol calls. */
+
+    // secondaryNN的协议, 用来获取 NameNode信息
     private final RouterNamenodeProtocol nnProto;
     /** ClientProtocol calls. */
     private final RouterClientProtocol clientProto;
     /** Other protocol calls. */
     private final RouterUserProtocol routerProto;
     /** Router security manager to handle token operations. */
-    private RouterSecurityManager securityManager = null;
+    private RouterSecurityManager securityManager;
     /** Super user credentials that a thread may use. */
     private static final ThreadLocal<UserGroupInformation> CUR_USER =
             new ThreadLocal<>();
@@ -223,9 +214,9 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 getUserMappingService, this.rpcServer);
 
         // Set service-level authorization security policy
-        this.serviceAuthEnabled = conf.getBoolean(
+        boolean serviceAuthEnabled = conf.getBoolean(
                 HADOOP_SECURITY_AUTHORIZATION, false);
-        if (this.serviceAuthEnabled) {
+        if (serviceAuthEnabled) {
             rpcServer.refreshServiceAcl(conf, new RouterPolicyProvider());
         }
 
@@ -457,8 +448,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
      */
     static String getMethodName() {
         final StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-        String methodName = stack[3].getMethodName();
-        return methodName;
+        return stack[3].getMethodName();
     }
 
     /**
@@ -558,7 +548,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         RemoteLocation createLocation = locations.get(0);
         if (locations.size() > 1) {
             try {
-                RemoteLocation existingLocation = getExistingLocation(src, locations);
+                RemoteLocation existingLocation = getExistingLocation(locations);
                 // Forward to the existing location and let the NN handle the error
                 if (existingLocation != null) {
                     LOG.debug("{} already exists in {}.", src, existingLocation);
@@ -573,13 +563,11 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
 
     /**
      * Gets the remote location where the file exists.
-     * @param src the name of file.
      * @param locations all the remote locations.
      * @return the remote location of the file if it exists, else null.
      * @throws IOException in case of any exception.
      */
-    private RemoteLocation getExistingLocation(String src,
-                                               List<RemoteLocation> locations) throws IOException {
+    private RemoteLocation getExistingLocation(List<RemoteLocation> locations) throws IOException {
         RemoteMethod method = new RemoteMethod("getFileInfo",
                 new Class<?>[]{String.class}, new RemoteParam());
         Map<RemoteLocation, HdfsFileStatus> results = rpcClient.invokeConcurrent(
@@ -743,8 +731,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
 
     @Override
     public BatchedDirectoryListing getBatchedListing(
-            String[] srcs, byte[] startAfter, boolean needLocation)
-            throws IOException {
+            String[] srcs, byte[] startAfter, boolean needLocation) {
         throw new UnsupportedOperationException();
     }
 
@@ -788,8 +775,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
      * @return List of datanodes.
      * @throws IOException If it cannot get the report.
      */
-    public DatanodeInfo[] getDatanodeReport(
-            DatanodeReportType type, boolean requireResponse, long timeOutMs)
+    public DatanodeInfo[] getDatanodeReport(DatanodeReportType type, boolean requireResponse, long timeOutMs)
             throws IOException {
         checkOperation(OperationCategory.UNCHECKED);
 
@@ -1240,8 +1226,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     }
 
     @Override // ClientProtocol
-    public HAServiceProtocol.HAServiceState getHAServiceState()
-            throws IOException {
+    public HAServiceProtocol.HAServiceState getHAServiceState() {
         return clientProto.getHAServiceState();
     }
 

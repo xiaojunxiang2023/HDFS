@@ -17,8 +17,8 @@ import java.security.PrivilegedExceptionAction;
 import java.util.Map;
 
 
-// fsck, 其实转给了 NameNode
-// 底层调用了 RouterFsck
+// /fsck 
+// 底层调用了 RouterFsck, 底层又请求 NameNode
 @InterfaceAudience.Private
 public class RouterFsckServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -47,7 +47,6 @@ public class RouterFsckServlet extends HttpServlet {
             response.sendError(HttpURLConnection.HTTP_BAD_REQUEST, e.getMessage());
         }
     }
-
 
     protected UserGroupInformation getUGI(HttpServletRequest request,
                                           Configuration conf) throws IOException {

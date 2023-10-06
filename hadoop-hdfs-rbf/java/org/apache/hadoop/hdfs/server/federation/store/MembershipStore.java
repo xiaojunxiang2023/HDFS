@@ -18,7 +18,7 @@ public abstract class MembershipStore
         super(MembershipState.class, driver, true);
     }
 
-    // upsert NameNode的一条 MemberShipState数据到表里
+    // upsert ZNode中 NameNode的一条 MemberShipState数据
     public abstract NamenodeHeartbeatResponse namenodeHeartbeat(
             NamenodeHeartbeatRequest request) throws IOException;
 

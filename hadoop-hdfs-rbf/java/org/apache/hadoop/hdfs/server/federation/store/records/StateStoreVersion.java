@@ -5,7 +5,7 @@ import org.apache.hadoop.hdfs.server.federation.store.driver.StateStoreSerialize
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-// Membership 和 MountTable 的版本信息
+// MembershipStore 和 MountTableStore 的版本信息，版本即最后一次更新的时间戳
 public abstract class StateStoreVersion extends BaseRecord {
 
     public static StateStoreVersion newInstance() {

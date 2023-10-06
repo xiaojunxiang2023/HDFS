@@ -36,7 +36,7 @@ import java.util.Random;
 
 import static org.apache.hadoop.util.StringUtils.getTrimmedStringCollection;
 
-// 拓展自NamenodeWebHdfsMethods
+// 拓展自 NamenodeWebHdfsMethods
 @Path("")
 @ResourceFilters(ParamFilter.class)
 public class RouterWebHdfsMethods extends NamenodeWebHdfsMethods {
@@ -306,14 +306,13 @@ public class RouterWebHdfsMethods extends NamenodeWebHdfsMethods {
         }
     }
 
-    // CASE CREATE创建文件，重定向到 DataNode
+    // Case CREATE创建文件，重定向到 DataNode
     private URI redirectURI(final Router router, final UserGroupInformation ugi,
                             final DelegationParam delegation, final UserParam username,
                             final DoAsParam doAsUser, final String path, final HttpOpParam.Op op,
                             final long openOffset, final String excludeDatanodes,
                             final Param<?, ?>... parameters) throws URISyntaxException, IOException {
-        final DatanodeInfo dn =
-                chooseDatanode(router, path, op, openOffset, excludeDatanodes);
+        final DatanodeInfo dn = chooseDatanode(router, path, op, openOffset, excludeDatanodes);
 
         if (dn == null) {
             throw new IOException("Failed to find datanode, suggest to check cluster"

@@ -21,7 +21,7 @@ public interface ActiveNamenodeResolver {
     // 同理，用的是 bp_id
     List<? extends FederationNamenodeContext> getNamenodesForBlockPoolId(String blockPoolId) throws IOException;
 
-    // 心跳
+    // 发送心跳
     boolean registerNamenode(NamenodeStatusReport report) throws IOException;
 
     // 获得所有启用的 ns

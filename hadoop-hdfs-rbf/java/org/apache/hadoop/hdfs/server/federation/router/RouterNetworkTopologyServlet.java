@@ -14,7 +14,9 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+// /topology
 // 打印 DataNode的拓扑信息
+// 靠 router.getRpcServer().getDatanodeReport()，底层又请求 NameNode
 public class RouterNetworkTopologyServlet extends NetworkTopologyServlet {
 
     @Override

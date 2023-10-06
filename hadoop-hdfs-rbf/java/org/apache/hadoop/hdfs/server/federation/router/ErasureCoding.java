@@ -11,14 +11,11 @@ import java.util.*;
 
 import static org.apache.hadoop.hdfs.server.federation.router.RouterRpcServer.merge;
 
-// Erasure Coding 相关的 RPC调用
+// Erasure Coding相关的向 NameNode RPC调用
 public class ErasureCoding {
 
-    /** RPC server to receive client calls. */
     private final RouterRpcServer rpcServer;
-    /** RPC clients to connect to the Namenodes. */
     private final RouterRpcClient rpcClient;
-    /** Interface to identify the active NN for a nameservice or blockpool ID. */
     private final ActiveNamenodeResolver namenodeResolver;
 
 
@@ -51,10 +48,9 @@ public class ErasureCoding {
                         nss, method, true, false, Map.class);
 
         Map<String, String> ret = new HashMap<>();
-        Object obj = retCodecs;
         @SuppressWarnings("unchecked")
         Map<FederationNamespaceInfo, Map<String, String>> results =
-                (Map<FederationNamespaceInfo, Map<String, String>>) obj;
+                (Map<FederationNamespaceInfo, Map<String, String>>) (Object) retCodecs;
         Collection<Map<String, String>> allCodecs = results.values();
         for (Map<String, String> codecs : allCodecs) {
             ret.putAll(codecs);

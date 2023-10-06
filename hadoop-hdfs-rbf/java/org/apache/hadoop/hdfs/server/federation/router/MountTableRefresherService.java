@@ -22,10 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-// 当 MountTableStore的挂载表节点发生变化时，便会调用这个类进行刷新缓存，
-// 如果是在本地就直接调用 loadCache，反之则 RPC调用 involved
+/*
+   当 MountTableStore的挂载点发生变化时，便会调用这个类进行刷新缓存，
+   会遍历对每个 Router进程都做刷新操作：   ? 什么逻辑,本机的话还复杂些, 且本质上都是调用 MountTableStore.loadCache(),哪里体现本地和远程了区别了?
+       如果此 Router恰好位于本机，则使用 RouterAdminServer作为 MountTableManager传参给 MountTableRefresherThread
+          这样的话，refresh()时就是 RouterAdminServer.refreshMountTableEntries()，会调用 MountTableResolver.loadCache(), 
+          进一步调用 MountTableStore.loadCache()
+       否则就是 MountTableStoreImpl.refreshMountTableEntries() 即也进一步调用 MountTableStore.loadCache()
+ */
 
-// 为了提升性能，每个 refreshed都分配了一个线程（MountTableRefresherThread），并且所有的连接（RouterClient）都被缓存了
+/*
+   不是自己的定期服务，而是事件驱动(增、删、改 了挂载点的事件)
+ */
+
+/*
+   为了提升性能，每个 Router都被分配了一个 MountTableRefresherThread线程，且被缓存起来
+   内部有个 ScheduledExecutorService，但是是定期清理内部缓存：(host:port -> RouterClient) 
+ */
 public class MountTableRefresherService extends AbstractService {
     private static final String ROUTER_CONNECT_ERROR_MSG =
             "Router {} connection failed. Mount table cache will not refresh.";
@@ -36,9 +49,9 @@ public class MountTableRefresherService extends AbstractService {
     private String localAdminAddress;
     private long cacheUpdateTimeout;
 
-    // 缓存：host:port -> RouterClient
+    // 内部 RouterClient缓存：host:port -> RouterClient
     private LoadingCache<String, RouterClient> routerClientsCache;
-
+    // 内部缓存的定期清理
     private ScheduledExecutorService clientCacheCleanerScheduler;
 
     public MountTableRefresherService(Router router) {
@@ -56,6 +69,8 @@ public class MountTableRefresherService extends AbstractService {
                 RBFConfigKeys.MOUNT_TABLE_CACHE_UPDATE_TIMEOUT,
                 RBFConfigKeys.MOUNT_TABLE_CACHE_UPDATE_TIMEOUT_DEFAULT,
                 TimeUnit.MILLISECONDS);
+
+        // 创建 RouterClient缓存
         long routerClientMaxLiveTime = conf.getTimeDuration(
                 RBFConfigKeys.MOUNT_TABLE_CACHE_UPDATE_CLIENT_MAX_TIME,
                 RBFConfigKeys.MOUNT_TABLE_CACHE_UPDATE_CLIENT_MAX_TIME_DEFAULT,
@@ -64,8 +79,10 @@ public class MountTableRefresherService extends AbstractService {
                 .expireAfterWrite(routerClientMaxLiveTime, TimeUnit.MILLISECONDS)
                 .removalListener(getClientRemover()).build(getClientCreator());
 
+///////////////////////////////// 定期清理缓存的逻辑   ////////////////////////////////////    
         initClientCacheCleaner(routerClientMaxLiveTime);
     }
+
 
     private void initClientCacheCleaner(long routerClientMaxLiveTime) {
         clientCacheCleanerScheduler =
@@ -93,7 +110,10 @@ public class MountTableRefresherService extends AbstractService {
         client.close();
     }
 
-    // 创建一个 RouterClient并且缓存起来
+///////////////////////////////// 定期清理缓存的逻辑   ////////////////////////////////////    
+
+
+    // 创建一个 RouterClient，并被缓存包装，即放到缓存里
     private CacheLoader<String, RouterClient> getClientCreator() {
         return new CacheLoader<String, RouterClient>() {
             public RouterClient load(String adminAddress) throws IOException {
@@ -115,6 +135,7 @@ public class MountTableRefresherService extends AbstractService {
         });
     }
 
+
     @Override
     protected void serviceStart() throws Exception {
         super.serviceStart();
@@ -124,7 +145,6 @@ public class MountTableRefresherService extends AbstractService {
     protected void serviceStop() throws Exception {
         super.serviceStop();
         clientCacheCleanerScheduler.shutdown();
-        // remove and close all admin clients
         routerClientsCache.invalidateAll();
     }
 
@@ -136,10 +156,12 @@ public class MountTableRefresherService extends AbstractService {
         return mountTblStore;
     }
 
+    // 核心方法，这次刷新的是 挂载表缓存 + 内部 RouterClient的缓存
     public void refresh() throws StateStoreUnavailableException {
         RouterStore routerStore = router.getRouterStateManager();
 
         try {
+            // 刷新 router的缓存
             routerStore.loadCache(true);
         } catch (IOException e) {
             LOG.warn("RouterStore load cache failed,", e);
@@ -147,6 +169,8 @@ public class MountTableRefresherService extends AbstractService {
 
         List<RouterState> cachedRecords = routerStore.getCachedRecords();
         List<MountTableRefresherThread> refreshThreads = new ArrayList<>();
+
+        // 遍历 routerStore里取出来的所有 Router
         for (RouterState routerState : cachedRecords) {
             // adminAddress相当于 router的地址
             String adminAddress = routerState.getAdminAddress();
@@ -154,15 +178,16 @@ public class MountTableRefresherService extends AbstractService {
                 continue;
             }
 
+            // 严重问题, 一直在 new MountTableRefresherThread, 线程刷新完一次缓存就被销毁了
             if (routerState.getStatus() != RouterServiceState.RUNNING) {
+                // Router不处于 RUNNING了，则删除内部缓存中的该 RouterClient
                 LOG.info("Router {} is not running. Mount table cache will not refresh.", routerState.getAddress());
-                // remove if RouterClient is cached.
                 removeFromCache(adminAddress);
             } else if (isLocalAdmin(adminAddress)) {
-                // local的，不需要 RPC调用，不需要 RouterClient
                 refreshThreads.add(getLocalRefresher(adminAddress));
             } else {
                 try {
+                    // 从 Router获取 mountTableManager，进行刷新挂载表
                     RouterClient client = routerClientsCache.get(adminAddress);
                     refreshThreads.add(new MountTableRefresherThread(client.getMountTableManager(), adminAddress));
                 } catch (ExecutionException execExcep) {
@@ -175,9 +200,9 @@ public class MountTableRefresherService extends AbstractService {
         }
     }
 
-    // 获得一个本地的 MountTableRefresherThread
     @VisibleForTesting
     protected MountTableRefresherThread getLocalRefresher(String adminAddress) {
+        // RouterAdminServer是 MountTableManager的后代
         return new MountTableRefresherThread(router.getAdminServer(), adminAddress);
     }
 

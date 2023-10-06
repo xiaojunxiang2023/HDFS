@@ -41,67 +41,33 @@ import java.util.regex.Pattern;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IPC_CLIENT_CONNECT_MAX_RETRIES_ON_SOCKET_TIMEOUTS_KEY;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IPC_CLIENT_CONNECT_TIMEOUT_KEY;
 
-/**
- * A client proxy for Router to NN communication using the NN ClientProtocol.
- * <p>
- * Provides routers to invoke remote ClientProtocol methods and handle
- * retries/failover.
- * <ul>
- * <li>invokeSingle Make a single request to a single namespace
- * <li>invokeSequential Make a sequential series of requests to multiple
- * ordered namespaces until a condition is met.
- * <li>invokeConcurrent Make concurrent requests to multiple namespaces and
- * return all of the results.
- * </ul>
- * Also maintains a cached pool of connections to NNs. Connections are managed
- * by the ConnectionManager and are unique to each user + NN. The size of the
- * connection pool can be configured. Larger pools allow for more simultaneous
- * requests to a single NN from a single user.
- */
+// Router转发客户端请求给 NameNode
 public class RouterRpcClient {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RouterRpcClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RouterRpcClient.class);
 
 
-    /** Router using this RPC client. */
     private final Router router;
-
-    /** Interface to identify the active NN for a nameservice or blockpool ID. */
     private final ActiveNamenodeResolver namenodeResolver;
-
-    /** Connection pool to the Namenodes per user for performance. */
     private final ConnectionManager connectionManager;
-    /** Service to run asynchronous calls. */
+
+    // 异步发送请求 
     private final ThreadPoolExecutor executorService;
-    /** Retry policy for router -> NN communication. */
+
     private final RetryPolicy retryPolicy;
-    /** Optional perf monitor. */
     private final RouterRpcMonitor rpcMonitor;
 
-    /** Pattern to parse a stack trace line. */
     private static final Pattern STACK_TRACE_PATTERN =
             Pattern.compile("\\tat (.*)\\.(.*)\\((.*):(\\d*)\\)");
 
-
-    /**
-     * Create a router RPC client to manage remote procedure calls to NNs.
-     *
-     * @param conf Hdfs Configuation.
-     * @param router A router using this RPC client.
-     * @param resolver A NN resolver to determine the currently active NN in HA.
-     * @param monitor Optional performance monitor.
-     */
+    // 没啥，一堆属性的初始化
     public RouterRpcClient(Configuration conf, Router router,
                            ActiveNamenodeResolver resolver, RouterRpcMonitor monitor) {
         this.router = router;
-
         this.namenodeResolver = resolver;
-
         Configuration clientConf = getClientConfiguration(conf);
         this.connectionManager = new ConnectionManager(clientConf);
         this.connectionManager.start();
-
         int numThreads = conf.getInt(
                 RBFConfigKeys.DFS_ROUTER_CLIENT_THREADS_SIZE,
                 RBFConfigKeys.DFS_ROUTER_CLIENT_THREADS_SIZE_DEFAULT);
@@ -118,9 +84,7 @@ public class RouterRpcClient {
         }
         this.executorService = new ThreadPoolExecutor(numThreads, numThreads,
                 0L, TimeUnit.MILLISECONDS, workQueue, threadFactory);
-
         this.rpcMonitor = monitor;
-
         int maxFailoverAttempts = conf.getInt(
                 HdfsClientConfigKeys.Failover.MAX_ATTEMPTS_KEY,
                 HdfsClientConfigKeys.Failover.MAX_ATTEMPTS_DEFAULT);
@@ -138,12 +102,7 @@ public class RouterRpcClient {
                 failoverSleepBaseMillis, failoverSleepMaxMillis);
     }
 
-    /**
-     * Get the configuration for the RPC client. It takes the Router
-     * configuration and transforms it into regular RPC Client configuration.
-     * @param conf Input configuration.
-     * @return Configuration for the RPC client.
-     */
+    // 提取出客户端相关的配置
     private Configuration getClientConfiguration(final Configuration conf) {
         Configuration clientConf = new Configuration(conf);
         int maxRetries = conf.getInt(
@@ -163,17 +122,7 @@ public class RouterRpcClient {
         return clientConf;
     }
 
-    /**
-     * Get the active namenode resolver used by this client.
-     * @return Active namenode resolver.
-     */
-    public ActiveNamenodeResolver getNamenodeResolver() {
-        return this.namenodeResolver;
-    }
 
-    /**
-     * Shutdown the client.
-     */
     public void shutdown() {
         if (this.connectionManager != null) {
             this.connectionManager.close();
@@ -183,64 +132,6 @@ public class RouterRpcClient {
         }
     }
 
-    /**
-     * Total number of available sockets between the router and NNs.
-     *
-     * @return Number of namenode clients.
-     */
-    public int getNumConnections() {
-        return this.connectionManager.getNumConnections();
-    }
-
-    /**
-     * Total number of available sockets between the router and NNs.
-     *
-     * @return Number of namenode clients.
-     */
-    public int getNumActiveConnections() {
-        return this.connectionManager.getNumActiveConnections();
-    }
-
-    /**
-     * Total number of open connection pools to a NN. Each connection pool.
-     * represents one user + one NN.
-     *
-     * @return Number of connection pools.
-     */
-    public int getNumConnectionPools() {
-        return this.connectionManager.getNumConnectionPools();
-    }
-
-    /**
-     * Number of connections between the router and NNs being created sockets.
-     *
-     * @return Number of connections waiting to be created.
-     */
-    public int getNumCreatingConnections() {
-        return this.connectionManager.getNumCreatingConnections();
-    }
-
-    /**
-     * JSON representation of the connection pool.
-     *
-     * @return String representation of the JSON.
-     */
-    public String getJSON() {
-        return this.connectionManager.getJSON();
-    }
-
-    /**
-     * JSON representation of the async caller thread pool.
-     *
-     * @return String representation of the JSON.
-     */
-    public String getAsyncCallerPoolJson() {
-        final Map<String, Integer> info = new LinkedHashMap<>();
-        info.put("active", executorService.getActiveCount());
-        info.put("total", executorService.getPoolSize());
-        info.put("max", executorService.getMaximumPoolSize());
-        return JSON.toString(info);
-    }
 
     /**
      * Get ClientProtocol proxy client for a NameNode. Each combination of user +
@@ -368,7 +259,7 @@ public class RouterRpcClient {
                     + router.getRouterId());
         }
 
-        Object ret = null;
+        Object ret;
         if (rpcMonitor != null) {
             rpcMonitor.proxyOp();
         }
@@ -502,10 +393,7 @@ public class RouterRpcClient {
                           final Object obj, final Object... params) throws IOException {
         try {
             return method.invoke(obj, params);
-        } catch (IllegalAccessException e) {
-            LOG.error("Unexpected exception while proxying API", e);
-            return null;
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             LOG.error("Unexpected exception while proxying API", e);
             return null;
         } catch (InvocationTargetException e) {
@@ -540,49 +428,6 @@ public class RouterRpcClient {
         }
     }
 
-    /**
-     * Check if the exception comes from an unavailable subcluster.
-     * @param ioe IOException to check.
-     * @return If the exception comes from an unavailable subcluster.
-     */
-    public static boolean isUnavailableException(IOException ioe) {
-        if (ioe instanceof ConnectTimeoutException ||
-                ioe instanceof EOFException ||
-                ioe instanceof SocketException ||
-                ioe instanceof StandbyException) {
-            return true;
-        }
-        if (ioe instanceof RetriableException) {
-            Throwable cause = ioe.getCause();
-            if (cause instanceof NoNamenodesAvailableException) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check if the cluster of given nameservice id is available.
-     * @param nsId nameservice ID.
-     * @return
-     * @throws IOException
-     */
-    private boolean isClusterUnAvailable(String nsId) throws IOException {
-        List<? extends FederationNamenodeContext> nnState = this.namenodeResolver
-                .getNamenodesForNameserviceId(nsId);
-
-        if (nnState != null) {
-            for (FederationNamenodeContext nnContext : nnState) {
-                // Once we find one NN is in active state, we assume this
-                // cluster is available.
-                if (nnContext.getState() == FederationNamenodeServiceState.ACTIVE) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 
     /**
      * Get a clean copy of the exception. Sometimes the exceptions returned by the
@@ -592,7 +437,7 @@ public class RouterRpcClient {
      * @return Copy of the original exception with a clean message.
      */
     private static IOException getCleanException(IOException ioe) {
-        IOException ret = null;
+        IOException ret;
 
         String msg = ioe.getMessage();
         Throwable cause = ioe.getCause();
@@ -619,7 +464,7 @@ public class RouterRpcClient {
                     elements.add(element);
                 }
             }
-            stackTrace = elements.toArray(new StackTraceElement[elements.size()]);
+            stackTrace = elements.toArray(new StackTraceElement[0]);
         }
 
         // Create the new output exception
@@ -639,10 +484,8 @@ public class RouterRpcClient {
                 ret = ioe;
             }
         }
-        if (ret != null) {
-            ret.initCause(cause);
-            ret.setStackTrace(stackTrace);
-        }
+        ret.initCause(cause);
+        ret.setStackTrace(stackTrace);
 
         return ret;
     }
@@ -860,8 +703,7 @@ public class RouterRpcClient {
         if (!thrownExceptions.isEmpty()) {
             // An unavailable subcluster may be the actual cause
             // We cannot surface other exceptions (e.g., FileNotFoundException)
-            for (int i = 0; i < thrownExceptions.size(); i++) {
-                IOException ioe = thrownExceptions.get(i);
+            for (IOException ioe : thrownExceptions) {
                 if (isUnavailableException(ioe)) {
                     throw ioe;
                 }
@@ -941,41 +783,6 @@ public class RouterRpcClient {
         return newMsg;
     }
 
-    /**
-     * Checks if a result matches the required result class.
-     *
-     * @param expectedClass Required result class, null to skip the check.
-     * @param clazz The result to check.
-     * @return True if the result is an instance of the required class or if the
-     *         expected class is null.
-     */
-    private static boolean isExpectedClass(Class<?> expectedClass, Object clazz) {
-        if (expectedClass == null) {
-            return true;
-        } else if (clazz == null) {
-            return false;
-        } else {
-            return expectedClass.isInstance(clazz);
-        }
-    }
-
-    /**
-     * Checks if a result matches the expected value.
-     *
-     * @param expectedValue The expected value, null to skip the check.
-     * @param value The result to check.
-     * @return True if the result is equals to the expected value or if the
-     *         expected value is null.
-     */
-    private static boolean isExpectedValue(Object expectedValue, Object value) {
-        if (expectedValue == null) {
-            return true;
-        } else if (value == null) {
-            return false;
-        } else {
-            return value.equals(expectedValue);
-        }
-    }
 
     /**
      * Invoke method in all locations and return success if any succeeds.
@@ -1226,7 +1033,7 @@ public class RouterRpcClient {
         }
 
         try {
-            List<Future<Object>> futures = null;
+            List<Future<Object>> futures;
             if (timeOutMs > 0) {
                 futures = executorService.invokeAll(
                         callables, timeOutMs, TimeUnit.MILLISECONDS);
@@ -1253,7 +1060,7 @@ public class RouterRpcClient {
                             m.getName(), location, cause.getMessage());
 
                     // Convert into IOException if needed
-                    IOException ioe = null;
+                    IOException ioe;
                     if (cause instanceof IOException) {
                         ioe = (IOException) cause;
                     } else {
@@ -1284,14 +1091,90 @@ public class RouterRpcClient {
         }
     }
 
-    /**
-     * Get a prioritized list of NNs that share the same nameservice ID (in the
-     * same namespace). NNs that are reported as ACTIVE will be first in the list.
-     *
-     * @param nsId The nameservice ID for the namespace.
-     * @return A prioritized list of NNs to use for communication.
-     * @throws IOException If a NN cannot be located for the nameservice ID.
-     */
+    public ActiveNamenodeResolver getNamenodeResolver() {
+        return this.namenodeResolver;
+    }
+
+
+    public int getNumConnections() {
+        return this.connectionManager.getNumConnections();
+    }
+
+    public int getNumActiveConnections() {
+        return this.connectionManager.getNumActiveConnections();
+    }
+
+    public int getNumConnectionPools() {
+        return this.connectionManager.getNumConnectionPools();
+    }
+
+    public int getNumCreatingConnections() {
+        return this.connectionManager.getNumCreatingConnections();
+    }
+
+    public String getJSON() {
+        return this.connectionManager.getJSON();
+    }
+
+    public String getAsyncCallerPoolJson() {
+        final Map<String, Integer> info = new LinkedHashMap<>();
+        info.put("active", executorService.getActiveCount());
+        info.put("total", executorService.getPoolSize());
+        info.put("max", executorService.getMaximumPoolSize());
+        return JSON.toString(info);
+    }
+
+    public static boolean isUnavailableException(IOException ioe) {
+        if (ioe instanceof ConnectTimeoutException ||
+                ioe instanceof EOFException ||
+                ioe instanceof SocketException ||
+                ioe instanceof StandbyException) {
+            return true;
+        }
+        if (ioe instanceof RetriableException) {
+            Throwable cause = ioe.getCause();
+            return cause instanceof NoNamenodesAvailableException;
+        }
+        return false;
+    }
+
+    private boolean isClusterUnAvailable(String nsId) throws IOException {
+        List<? extends FederationNamenodeContext> nnState = this.namenodeResolver
+                .getNamenodesForNameserviceId(nsId);
+
+        if (nnState != null) {
+            for (FederationNamenodeContext nnContext : nnState) {
+                // Once we find one NN is in active state, we assume this
+                // cluster is available.
+                if (nnContext.getState() == FederationNamenodeServiceState.ACTIVE) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean isExpectedClass(Class<?> expectedClass, Object clazz) {
+        if (expectedClass == null) {
+            return true;
+        } else if (clazz == null) {
+            return false;
+        } else {
+            return expectedClass.isInstance(clazz);
+        }
+    }
+
+    private static boolean isExpectedValue(Object expectedValue, Object value) {
+        if (expectedValue == null) {
+            return true;
+        } else if (value == null) {
+            return false;
+        } else {
+            return value.equals(expectedValue);
+        }
+    }
+
     private List<? extends FederationNamenodeContext> getNamenodesForNameservice(
             final String nsId) throws IOException {
 
@@ -1305,14 +1188,6 @@ public class RouterRpcClient {
         return namenodes;
     }
 
-    /**
-     * Get a prioritized list of NNs that share the same block pool ID (in the
-     * same namespace). NNs that are reported as ACTIVE will be first in the list.
-     *
-     * @param bpId The blockpool ID for the namespace.
-     * @return A prioritized list of NNs to use for communication.
-     * @throws IOException If a NN cannot be located for the block pool ID.
-     */
     private List<? extends FederationNamenodeContext> getNamenodesForBlockPoolId(
             final String bpId) throws IOException {
 
@@ -1326,13 +1201,7 @@ public class RouterRpcClient {
         return namenodes;
     }
 
-    /**
-     * Get the nameservice identifier for a block pool.
-     *
-     * @param bpId Identifier of the block pool.
-     * @return Nameservice identifier.
-     * @throws IOException If a NN cannot be located for the block pool ID.
-     */
+
     private String getNameserviceForBlockPoolId(final String bpId)
             throws IOException {
         List<? extends FederationNamenodeContext> namenodes =
@@ -1340,4 +1209,5 @@ public class RouterRpcClient {
         FederationNamenodeContext namenode = namenodes.get(0);
         return namenode.getNameserviceId();
     }
+
 }

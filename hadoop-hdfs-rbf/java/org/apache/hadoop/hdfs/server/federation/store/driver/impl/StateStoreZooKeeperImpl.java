@@ -161,14 +161,13 @@ public class StateStoreZooKeeperImpl extends StateStoreSerializableImpl {
     }
 
     @Override
-    public <T extends BaseRecord> boolean putAll(
-            List<T> records, boolean update, boolean error) throws IOException {
+    public <T extends BaseRecord> boolean putAll(List<T> records, boolean update, boolean error) throws IOException {
         verifyDriverReady();
         if (records.isEmpty()) {
             return true;
         }
 
-        // All records should be the same
+        // 从集合里其中一个元素，获取 recordClass信息
         T record0 = records.get(0);
         Class<? extends BaseRecord> recordClass = record0.getClass();
         String znode = getZNodeForClass(recordClass);

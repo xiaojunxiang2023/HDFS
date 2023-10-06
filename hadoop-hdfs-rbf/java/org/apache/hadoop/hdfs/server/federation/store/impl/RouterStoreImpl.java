@@ -58,14 +58,12 @@ public class RouterStoreImpl extends RouterStore {
         return response;
     }
 
+    // 对 ZNode进行写数据, 更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
     @Override
     public RouterHeartbeatResponse routerHeartbeat(RouterHeartbeatRequest request)
             throws IOException {
-
         RouterState record = request.getRouter();
         boolean status = getDriver().put(record, true, false);
-        RouterHeartbeatResponse response =
-                RouterHeartbeatResponse.newInstance(status);
-        return response;
+        return RouterHeartbeatResponse.newInstance(status);
     }
 }

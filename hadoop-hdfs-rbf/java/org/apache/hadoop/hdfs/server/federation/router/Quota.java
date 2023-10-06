@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 
 import static org.apache.hadoop.hdfs.DFSUtil.isParentEntry;
 
+// Quota相关的向 NameNode RPC调用
 public class Quota {
     private static final Logger LOG = LoggerFactory.getLogger(Quota.class);
 

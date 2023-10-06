@@ -34,6 +34,7 @@ public final class FederationUtil {
     private FederationUtil() {
     }
 
+    // 获得 jmx
     public static JSONArray getJmx(String beanQuery, String webAddress,
                                    URLConnectionFactory connectionFactory, String scheme) {
         JSONArray ret = null;
@@ -89,13 +90,45 @@ public final class FederationUtil {
         return ret;
     }
 
+    // 获得 version
     public static String getVersion() {
         return VersionInfo.getVersion();
     }
 
+    // 获得编译信息
     public static String getCompileInfo() {
         return VersionInfo.getDate() + " by " + VersionInfo.getUser() + " from "
                 + VersionInfo.getBranch();
+    }
+
+    // 获得 挂载表解析器
+    public static FileSubclusterResolver newFileSubclusterResolver(
+            Configuration conf, Router router) {
+        Class<? extends FileSubclusterResolver> clazz = conf.getClass(
+                RBFConfigKeys.FEDERATION_FILE_RESOLVER_CLIENT_CLASS,
+                RBFConfigKeys.FEDERATION_FILE_RESOLVER_CLIENT_CLASS_DEFAULT,
+                FileSubclusterResolver.class);
+        return newInstance(conf, router, Router.class, clazz);
+    }
+
+    public static ActiveNamenodeResolver newActiveNamenodeResolver(
+            Configuration conf, StateStoreService stateStore) {
+        Class<? extends ActiveNamenodeResolver> clazz = conf.getClass(
+                RBFConfigKeys.FEDERATION_NAMENODE_RESOLVER_CLIENT_CLASS,
+                RBFConfigKeys.FEDERATION_NAMENODE_RESOLVER_CLIENT_CLASS_DEFAULT,
+                ActiveNamenodeResolver.class);
+        return newInstance(conf, stateStore, StateStoreService.class, clazz);
+    }
+
+    // 创建一个 DelegationToken管理器
+    public static AbstractDelegationTokenSecretManager<DelegationTokenIdentifier>
+    newSecretManager(Configuration conf) {
+        Class<? extends AbstractDelegationTokenSecretManager> clazz =
+                conf.getClass(
+                        RBFConfigKeys.DFS_ROUTER_DELEGATION_TOKEN_DRIVER_CLASS,
+                        RBFConfigKeys.DFS_ROUTER_DELEGATION_TOKEN_DRIVER_CLASS_DEFAULT,
+                        AbstractDelegationTokenSecretManager.class);
+        return newInstance(conf, null, null, clazz);
     }
 
     private static <T, R> T newInstance(final Configuration conf,
@@ -119,40 +152,10 @@ public final class FederationUtil {
         }
     }
 
-    public static FileSubclusterResolver newFileSubclusterResolver(
-            Configuration conf, Router router) {
-        Class<? extends FileSubclusterResolver> clazz = conf.getClass(
-                RBFConfigKeys.FEDERATION_FILE_RESOLVER_CLIENT_CLASS,
-                RBFConfigKeys.FEDERATION_FILE_RESOLVER_CLIENT_CLASS_DEFAULT,
-                FileSubclusterResolver.class);
-        return newInstance(conf, router, Router.class, clazz);
-    }
-
-    public static ActiveNamenodeResolver newActiveNamenodeResolver(
-            Configuration conf, StateStoreService stateStore) {
-        Class<? extends ActiveNamenodeResolver> clazz = conf.getClass(
-                RBFConfigKeys.FEDERATION_NAMENODE_RESOLVER_CLIENT_CLASS,
-                RBFConfigKeys.FEDERATION_NAMENODE_RESOLVER_CLIENT_CLASS_DEFAULT,
-                ActiveNamenodeResolver.class);
-        return newInstance(conf, stateStore, StateStoreService.class, clazz);
-    }
-
-    public static AbstractDelegationTokenSecretManager<DelegationTokenIdentifier>
-    newSecretManager(Configuration conf) {
-        Class<? extends AbstractDelegationTokenSecretManager> clazz =
-                conf.getClass(
-                        RBFConfigKeys.DFS_ROUTER_DELEGATION_TOKEN_DRIVER_CLASS,
-                        RBFConfigKeys.DFS_ROUTER_DELEGATION_TOKEN_DRIVER_CLASS_DEFAULT,
-                        AbstractDelegationTokenSecretManager.class);
-        return newInstance(conf, null, null, clazz);
-    }
-
-    // 给 HdfsFileStatus设置 children
-    public static HdfsFileStatus updateMountPointStatus(HdfsFileStatus dirStatus,
-                                                        int children) {
-        EnumSet<HdfsFileStatus.Flags> flags =
-                DFSUtil.getFlags(dirStatus.isEncrypted(), dirStatus.isErasureCoded(),
-                        dirStatus.isSnapshotEnabled(), dirStatus.hasAcl());
+    // 给 hdfsFileStatus设置 children字段
+    public static HdfsFileStatus updateMountPointStatus(HdfsFileStatus dirStatus, int children) {
+        EnumSet<HdfsFileStatus.Flags> flags = DFSUtil.getFlags(dirStatus.isEncrypted(), dirStatus.isErasureCoded(),
+                dirStatus.isSnapshotEnabled(), dirStatus.hasAcl());
         EnumSet.noneOf(HdfsFileStatus.Flags.class);
         return new HdfsFileStatus.Builder().atime(dirStatus.getAccessTime())
                 .blocksize(dirStatus.getBlockSize()).children(children)

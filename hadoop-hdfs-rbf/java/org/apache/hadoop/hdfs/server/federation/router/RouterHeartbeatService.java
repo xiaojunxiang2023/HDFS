@@ -15,66 +15,68 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Service to periodically update the Router current state in the State Store.
- */
+// 定期发送心跳，即更新 Router基本信息 
+// [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
 public class RouterHeartbeatService extends PeriodicService {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RouterHeartbeatService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RouterHeartbeatService.class);
 
-    /** Router we are hearbeating. */
     private final Router router;
 
-    /**
-     * Create a new Router heartbeat service.
-     *
-     * @param router Router to heartbeat.
-     */
     public RouterHeartbeatService(Router router) {
         super(RouterHeartbeatService.class.getSimpleName());
         this.router = router;
     }
 
-    /**
-     * Trigger the update of the Router state asynchronously.
-     */
+    // 服务初始化，设置定期性执行的时间间隔
+    @Override
+    protected void serviceInit(Configuration conf) throws Exception {
+        long interval = conf.getTimeDuration(
+                RBFConfigKeys.DFS_ROUTER_HEARTBEAT_STATE_INTERVAL_MS,
+                RBFConfigKeys.DFS_ROUTER_HEARTBEAT_STATE_INTERVAL_MS_DEFAULT,
+                TimeUnit.MILLISECONDS);
+        this.setIntervalMs(interval);
+
+        super.serviceInit(conf);
+    }
+
+    // 定期性调用 
+    @Override
+    public void periodicInvoke() {
+        updateStateStore();
+    }
+
+    // 新起一个线程用来异步更新 Router的状态
     protected void updateStateAsync() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateStateStore();
-            }
-        }, "Router Heartbeat Async");
+        Thread thread = new Thread(() -> RouterHeartbeatService.this.updateStateStore(), "Router Heartbeat Async");
         thread.setDaemon(true);
         thread.start();
     }
 
-    /**
-     * Update the state of the Router in the State Store.
-     */
+
+    // 被 periodicInvoke()定期性调用, 和 updateStateAsync() 异步调用
+    // 更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
     @VisibleForTesting
     synchronized void updateStateStore() {
         String routerId = router.getRouterId();
-        if (routerId == null) {
-            LOG.error("Cannot heartbeat for router: unknown router id");
-            return;
-        }
         if (isStoreAvailable()) {
             RouterStore routerStore = router.getRouterStateManager();
             try {
-                RouterState record = RouterState.newInstance(
-                        routerId, router.getStartTime(), router.getRouterState());
+                RouterState record = RouterState.newInstance(routerId, router.getStartTime(), router.getRouterState());
+
                 StateStoreVersion stateStoreVersion = StateStoreVersion.newInstance(
                         getStateStoreVersion(MembershipStore.class),
                         getStateStoreVersion(MountTableStore.class));
+
+                // 从 Router里取的 routerState，包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress
+                // 再 request = RouterHeartbeatRequest.newInstance(routerState)
                 record.setStateStoreVersion(stateStoreVersion);
-                // if admin server not started then hostPort will be empty
-                String hostPort =
-                        StateStoreUtils.getHostPortString(router.getAdminServerAddress());
+                String hostPort = StateStoreUtils.getHostPortString(router.getAdminServerAddress());
                 record.setAdminAddress(hostPort);
-                RouterHeartbeatRequest request =
-                        RouterHeartbeatRequest.newInstance(record);
+
+                RouterHeartbeatRequest request = RouterHeartbeatRequest.newInstance(record);
+                // 核心点： 发送心跳, 即对 ZNode进行写数据
+                // 即将缓存里的数据（(MembershipStore + MountTableStore)）和 adminAddress 更新到 ZNode
                 RouterHeartbeatResponse response = routerStore.routerHeartbeat(request);
                 if (!response.getStatus()) {
                     LOG.warn("Cannot heartbeat router {}", routerId);
@@ -89,22 +91,15 @@ public class RouterHeartbeatService extends PeriodicService {
         }
     }
 
-    /**
-     * Get the version of the data in the State Store.
-     *
-     * @param clazz Class in the State Store.
-     * @return Version of the data.
-     */
-    private <R extends BaseRecord, S extends RecordStore<R>>
-    long getStateStoreVersion(final Class<S> clazz) {
+    // 获得 MembershipStore 和 MountTableStore的 lastUpdateTime
+    private <R extends BaseRecord, S extends RecordStore<R>> long getStateStoreVersion(final Class<S> clazz) {
         long version = -1;
         try {
             StateStoreService stateStore = router.getStateStore();
             S recordStore = stateStore.getRegisteredRecordStore(clazz);
             if (recordStore != null) {
                 if (recordStore instanceof CachedRecordStore) {
-                    CachedRecordStore<R> cachedRecordStore =
-                            (CachedRecordStore<R>) recordStore;
+                    CachedRecordStore<R> cachedRecordStore = (CachedRecordStore<R>) recordStore;
                     List<R> records = cachedRecordStore.getCachedRecords();
                     for (BaseRecord record : records) {
                         if (record.getDateModified() > version) {
@@ -119,23 +114,7 @@ public class RouterHeartbeatService extends PeriodicService {
         return version;
     }
 
-    @Override
-    protected void serviceInit(Configuration conf) throws Exception {
-
-        long interval = conf.getTimeDuration(
-                RBFConfigKeys.DFS_ROUTER_HEARTBEAT_STATE_INTERVAL_MS,
-                RBFConfigKeys.DFS_ROUTER_HEARTBEAT_STATE_INTERVAL_MS_DEFAULT,
-                TimeUnit.MILLISECONDS);
-        this.setIntervalMs(interval);
-
-        super.serviceInit(conf);
-    }
-
-    @Override
-    public void periodicInvoke() {
-        updateStateStore();
-    }
-
+    // 检查 Router是否正常  (并不会去管安全模式)
     private boolean isStoreAvailable() {
         if (router.getRouterStateManager() == null) {
             return false;

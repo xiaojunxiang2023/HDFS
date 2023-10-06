@@ -129,8 +129,7 @@ public class MountTableStoreImpl extends MountTableStore {
                 }
                 // If quota manager is not null, update quota usage from quota cache.
                 if (this.getQuotaManager() != null) {
-                    RouterQuotaUsage quota =
-                            this.getQuotaManager().getQuotaUsage(record.getSourcePath());
+                    RouterQuotaUsage quota = this.getQuotaManager().getQuotaUsage(record.getSourcePath());
                     if (quota != null) {
                         RouterQuotaUsage oldquota = record.getQuota();
                         RouterQuotaUsage.Builder builder = new RouterQuotaUsage.Builder()
@@ -156,20 +155,19 @@ public class MountTableStoreImpl extends MountTableStore {
     }
 
     @Override
-    public RefreshMountTableEntriesResponse refreshMountTableEntries(
-            RefreshMountTableEntriesRequest request) throws IOException {
+    public RefreshMountTableEntriesResponse refreshMountTableEntries(RefreshMountTableEntriesRequest request) throws IOException {
         // Because this refresh is done through admin API, it should always be force
         // refresh.
         boolean result = loadCache(true);
-        RefreshMountTableEntriesResponse response =
-                RefreshMountTableEntriesResponse.newInstance();
+
+        RefreshMountTableEntriesResponse response = RefreshMountTableEntriesResponse.newInstance();
         response.setResult(result);
         return response;
     }
 
     @Override
     public GetDestinationResponse getDestination(
-            GetDestinationRequest request) throws IOException {
+            GetDestinationRequest request) {
         throw new UnsupportedOperationException("Requires the RouterRpcServer");
     }
 }

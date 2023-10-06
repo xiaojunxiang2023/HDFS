@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 // 更新 Router的挂载表缓存
-// 并不是一个定期性线程，只是被起一个线程做 refresh
+// 并不是一个定期性服务, 刷新完缓存就销毁线程
 public class MountTableRefresherThread extends Thread {
     private static final Logger LOG = LoggerFactory.getLogger(MountTableRefresherThread.class);
     private boolean success;

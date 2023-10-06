@@ -150,7 +150,6 @@ public class RouterClientProtocol implements ClientProtocol {
             throws IOException {
         rpcServer.checkOperation(NameNode.OperationCategory.WRITE, true);
         this.securityManager.cancelDelegationToken(token);
-        return;
     }
 
     @Override
@@ -836,7 +835,7 @@ public class RouterClientProtocol implements ClientProtocol {
             if (children != null && !children.isEmpty()) {
                 Map<String, Long> dates = getMountPointDates(src);
                 long date = 0;
-                if (dates != null && dates.containsKey(src)) {
+                if (dates.containsKey(src)) {
                     date = dates.get(src);
                 }
                 ret = getMountPointStatus(src, children.size(), date);
@@ -1594,8 +1593,7 @@ public class RouterClientProtocol implements ClientProtocol {
             String bpId = entry.getKey();
             List<LocatedBlock> bpBlocks = entry.getValue();
 
-            LocatedBlock[] bpBlocksArray =
-                    bpBlocks.toArray(new LocatedBlock[bpBlocks.size()]);
+            LocatedBlock[] bpBlocksArray = bpBlocks.toArray(new LocatedBlock[0]);
             RemoteMethod method = new RemoteMethod("reportBadBlocks",
                     new Class<?>[]{LocatedBlock[].class},
                     new Object[]{bpBlocksArray});

@@ -4,6 +4,7 @@ import org.apache.hadoop.http.IsActiveServlet;
 
 import javax.servlet.ServletContext;
 
+// /isActive
 // 检测 Router是否存活
 public class IsRouterActiveServlet extends IsActiveServlet {
 

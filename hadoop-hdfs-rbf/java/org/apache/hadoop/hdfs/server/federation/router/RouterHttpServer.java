@@ -54,7 +54,6 @@ public class RouterHttpServer extends AbstractService {
 
     @Override
     protected void serviceStart() throws Exception {
-        // Build and start server
         String webApp = "router";
         HttpServer2.Builder builder = DFSUtil.httpServerTemplateForNNAndJN(
                 this.conf, this.httpAddress, this.httpsAddress, webApp,
@@ -70,7 +69,7 @@ public class RouterHttpServer extends AbstractService {
 
         this.httpServer.setAttribute(NAMENODE_ATTRIBUTE_KEY, this.router);
         this.httpServer.setAttribute(JspHelper.CURRENT_CONF, this.conf);
-        setupServlets(this.httpServer, this.conf);
+        setupServlets(this.httpServer);
 
         this.httpServer.start();
 
@@ -91,8 +90,8 @@ public class RouterHttpServer extends AbstractService {
         super.serviceStop();
     }
 
-    private static void setupServlets(
-            HttpServer2 httpServer, Configuration conf) {
+    // 添加 Servlet处理类
+    private static void setupServlets(HttpServer2 httpServer) {
         httpServer.addInternalServlet(IsRouterActiveServlet.SERVLET_NAME,
                 IsRouterActiveServlet.PATH_SPEC,
                 IsRouterActiveServlet.class);

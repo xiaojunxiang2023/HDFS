@@ -56,8 +56,8 @@ public class StateStoreService extends CompositeService {
 
     // Map, 支持的类型： Record.class -> RecordStore
     private final Map<Class<? extends BaseRecord>, RecordStore<? extends BaseRecord>> recordStores;
-
-
+    
+    // refreshCaches() 调用，为之更新 lastUpdateTime
     private long cacheLastUpdateTime;
     private final List<StateStoreCache> cachesToUpdateInternal;
     private final List<StateStoreCache> cachesToUpdateExternal;
@@ -263,7 +263,6 @@ public class StateStoreService extends CompositeService {
                     result = cachedStore.loadCache(force);
                 } catch (IOException e) {
                     LOG.error("Error updating cache for {}", cacheName, e);
-                    result = false;
                 }
                 if (!result) {
                     success = false;
@@ -275,7 +274,7 @@ public class StateStoreService extends CompositeService {
             LOG.info("Skipping State Store cache update, driver is not ready.");
         }
         if (success) {
-            // Uses local time, not driver time.
+            // 用的是自己的时间戳，不是 Driver的时间
             this.cacheLastUpdateTime = Time.now();
         }
     }
