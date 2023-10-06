@@ -73,65 +73,42 @@ import static org.apache.hadoop.hdfs.server.federation.router.RBFConfigKeys.*;
 public class RouterRpcServer extends AbstractService implements ClientProtocol,
         NamenodeProtocol, RefreshUserMappingsProtocol, GetUserMappingsProtocol {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RouterRpcServer.class);
-
-
-    /** Configuration for the RPC server. */
+    private static final Logger LOG = LoggerFactory.getLogger(RouterRpcServer.class);
     private Configuration conf;
 
-    /** Router using this RPC server. */
     private final Router router;
-
-    /** The RPC server that listens to requests from clients. */
     private final Server rpcServer;
-    /** The address for this RPC server. */
     private final InetSocketAddress rpcAddress;
 
-    /** RPC clients to connect to the Namenodes. */
     private final RouterRpcClient rpcClient;
 
-    /** Monitor metrics for the RPC calls. */
-    private final RouterRpcMonitor rpcMonitor;
-
-
-    /** Interface to identify the active NN for a nameservice or blockpool ID. */
     private final ActiveNamenodeResolver namenodeResolver;
-
-    /** Interface to map global name space to HDFS subcluster name spaces. */
     private final FileSubclusterResolver subclusterResolver;
 
-    /** Category of the operation that a thread is executing. */
-    private final ThreadLocal<OperationCategory> opCategory = new ThreadLocal<>();
 
-    // Modules implementing groups of RPC calls
-    /** Router Quota calls. */
-    private final Quota quotaCall;
-
+    /*
+        客户端
+     */
+    private final RouterClientProtocol clientProto;
     // secondaryNN的协议, 用来获取 NameNode信息
     private final RouterNamenodeProtocol nnProto;
-    /** ClientProtocol calls. */
-    private final RouterClientProtocol clientProto;
-    /** Other protocol calls. */
     private final RouterUserProtocol routerProto;
-    /** Router security manager to handle token operations. */
-    private RouterSecurityManager securityManager;
-    /** Super user credentials that a thread may use. */
-    private static final ThreadLocal<UserGroupInformation> CUR_USER =
-            new ThreadLocal<>();
+    // 使用 Quota向 NameNode发起 RPC调用
+    private final Quota quotaCall;
 
-    /**
-     * Construct a router RPC server.
-     *
-     * @param configuration HDFS Configuration.
-     * @param router A router using this RPC server.
-     * @param nnResolver The NN resolver instance to determine active NNs in HA.
-     * @param fileResolver File resolver to resolve file paths to subclusters.
-     * @throws IOException If the RPC server could not be created.
-     */
-    public RouterRpcServer(Configuration configuration, Router router,
-                           ActiveNamenodeResolver nnResolver, FileSubclusterResolver fileResolver)
-            throws IOException {
+    private RouterSecurityManager securityManager;
+
+    // 保存 superUser的凭证
+    private static final ThreadLocal<UserGroupInformation> CUR_USER = new ThreadLocal<>();
+
+    // 操作，如 READ、WRITE、CHECKPOINT
+    private final ThreadLocal<OperationCategory> opCategory = new ThreadLocal<>();
+
+    private final RouterRpcMonitor rpcMonitor;
+
+    // 普通地 给属性赋值
+    public RouterRpcServer(Configuration configuration, Router router, ActiveNamenodeResolver nnResolver,
+                           FileSubclusterResolver fileResolver) throws IOException {
         super(RouterRpcServer.class.getName());
 
         this.conf = configuration;
@@ -139,7 +116,6 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         this.namenodeResolver = nnResolver;
         this.subclusterResolver = fileResolver;
 
-        // RPC server settings
         int handlerCount = this.conf.getInt(DFS_ROUTER_HANDLER_COUNT_KEY,
                 DFS_ROUTER_HANDLER_COUNT_DEFAULT);
 
@@ -149,7 +125,6 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         int handlerQueueSize = this.conf.getInt(DFS_ROUTER_HANDLER_QUEUE_SIZE_KEY,
                 DFS_ROUTER_HANDLER_QUEUE_SIZE_DEFAULT);
 
-        // Override Hadoop Common IPC setting
         int readerQueueSize = this.conf.getInt(DFS_ROUTER_READER_QUEUE_SIZE_KEY,
                 DFS_ROUTER_READER_QUEUE_SIZE_DEFAULT);
         this.conf.setInt(
@@ -213,14 +188,14 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         DFSUtil.addPBProtocol(conf, GetUserMappingsProtocolPB.class,
                 getUserMappingService, this.rpcServer);
 
-        // Set service-level authorization security policy
+        // 是否开启了安全认证，如果开启了那就刷新下 协议客户端的 ACL
         boolean serviceAuthEnabled = conf.getBoolean(
                 HADOOP_SECURITY_AUTHORIZATION, false);
         if (serviceAuthEnabled) {
             rpcServer.refreshServiceAcl(conf, new RouterPolicyProvider());
         }
 
-        // We don't want the server to log the full stack trace for some exceptions
+        // 不要记录这些 异常的堆栈
         this.rpcServer.addTerseExceptions(
                 RemoteException.class,
                 SafeModeException.class,
@@ -232,18 +207,14 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 IOException.class,
                 ConnectException.class,
                 RetriableException.class);
+        // 不记录这个异常
+        this.rpcServer.addSuppressedLoggingExceptions(StandbyException.class);
 
-        this.rpcServer.addSuppressedLoggingExceptions(
-                StandbyException.class);
-
-        // The RPC-server port can be ephemeral... ensure we have the correct info
         InetSocketAddress listenAddress = this.rpcServer.getListenerAddress();
-        this.rpcAddress = new InetSocketAddress(
-                confRpcAddress.getHostName(), listenAddress.getPort());
+        this.rpcAddress = new InetSocketAddress(confRpcAddress.getHostName(), listenAddress.getPort());
 
         if (conf.getBoolean(RBFConfigKeys.DFS_ROUTER_METRICS_ENABLE,
                 RBFConfigKeys.DFS_ROUTER_METRICS_ENABLE_DEFAULT)) {
-            // Create metrics monitor
             Class<? extends RouterRpcMonitor> rpcMonitorClass = this.conf.getClass(
                     RBFConfigKeys.DFS_ROUTER_METRICS_CLASS,
                     RBFConfigKeys.DFS_ROUTER_METRICS_CLASS_DEFAULT,
@@ -253,11 +224,9 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
             this.rpcMonitor = null;
         }
 
-        // Create the client
         this.rpcClient = new RouterRpcClient(this.conf, this.router,
                 this.namenodeResolver, this.rpcMonitor);
 
-        // Initialize modules
         this.quotaCall = new Quota(this.router, this);
         this.nnProto = new RouterNamenodeProtocol(this);
         this.clientProto = new RouterClientProtocol(conf, this);
@@ -267,13 +236,11 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     @Override
     protected void serviceInit(Configuration configuration) throws Exception {
         this.conf = configuration;
-
         if (this.rpcMonitor == null) {
             LOG.info("Do not start Router RPC metrics");
         } else {
             this.rpcMonitor.init(this.conf, this, this.router.getStateStore());
         }
-
         super.serviceInit(configuration);
     }
 
@@ -300,83 +267,8 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         super.serviceStop();
     }
 
-    /**
-     * Get the RPC security manager.
-     *
-     * @return RPC security manager.
-     */
-    public RouterSecurityManager getRouterSecurityManager() {
-        return this.securityManager;
-    }
 
-    /**
-     * Get the RPC client to the Namenode.
-     *
-     * @return RPC clients to the Namenodes.
-     */
-    public RouterRpcClient getRPCClient() {
-        return rpcClient;
-    }
-
-    /**
-     * Get the subcluster resolver.
-     *
-     * @return Subcluster resolver.
-     */
-    public FileSubclusterResolver getSubclusterResolver() {
-        return subclusterResolver;
-    }
-
-    /**
-     * Get the active namenode resolver
-     *
-     * @return Active namenode resolver.
-     */
-    public ActiveNamenodeResolver getNamenodeResolver() {
-        return namenodeResolver;
-    }
-
-    /**
-     * Get the RPC monitor and metrics.
-     *
-     * @return RPC monitor and metrics.
-     */
-    public RouterRpcMonitor getRPCMonitor() {
-        return rpcMonitor;
-    }
-
-    /**
-     * Allow access to the client RPC server for testing.
-     *
-     * @return The RPC server.
-     */
-    @VisibleForTesting
-    public Server getServer() {
-        return rpcServer;
-    }
-
-    /**
-     * Get the RPC address of the service.
-     *
-     * @return RPC service address.
-     */
-    public InetSocketAddress getRpcAddress() {
-        return rpcAddress;
-    }
-
-    /**
-     * Check if the Router is in safe mode. We should only see READ, WRITE, and
-     * UNCHECKED. It includes a default handler when we haven't implemented an
-     * operation. If not supported, it always throws an exception reporting the
-     * operation.
-     *
-     * @param op Category of the operation to check.
-     * @param supported If the operation is supported or not. If not, it will
-     *                  throw an UnsupportedOperationException.
-     * @throws SafeModeException If the Router is in safe mode and cannot serve
-     *                           client requests.
-     * @throws UnsupportedOperationException If the operation is not supported.
-     */
+    // 检查操作是否合规
     void checkOperation(OperationCategory op, boolean supported)
             throws StandbyException, UnsupportedOperationException {
         checkOperation(op);
@@ -391,34 +283,26 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         }
     }
 
-    // 检查操作是否可以被允许，如果处于 SafeMode则不允许
     void checkOperation(OperationCategory op)
             throws StandbyException {
-        // Log the function we are currently calling.
         if (rpcMonitor != null) {
             rpcMonitor.startOp();
         }
-        // Log the function we are currently calling.
         if (LOG.isDebugEnabled()) {
             String methodName = getMethodName();
             LOG.debug("Proxying operation: {}", methodName);
         }
 
-        // Store the category of the operation category for this thread
         opCategory.set(op);
 
-        // We allow unchecked and read operations to try, fail later
+        // 如果是 UNCHECKED或 READ的话，直接正常返回
+        // 否则的话，还得检查下是否处于 safemode [Router]
         if (op == OperationCategory.UNCHECKED || op == OperationCategory.READ) {
             return;
         }
         checkSafeMode();
     }
 
-    /**
-     * Check if the Router is in safe mode.
-     * @throws StandbyException If the Router is in safe mode and cannot serve
-     *                          client requests.
-     */
     private void checkSafeMode() throws StandbyException {
         if (isSafeMode()) {
             // Throw standby exception, router is not available
@@ -431,41 +315,16 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         }
     }
 
-    /**
-     * Return true if the Router is in safe mode.
-     *
-     * @return true if the Router is in safe mode.
-     */
-    boolean isSafeMode() {
-        RouterSafemodeService safemodeService = router.getSafemodeService();
-        return (safemodeService != null && safemodeService.isInSafeMode());
-    }
 
-    /**
-     * Get the name of the method that is calling this function.
-     *
-     * @return Name of the method calling this function.
-     */
-    static String getMethodName() {
-        final StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-        return stack[3].getMethodName();
-    }
-
-    /**
-     * Invokes the method at default namespace, if default namespace is not
-     * available then at the first available namespace.
-     * @param <T> expected return type.
-     * @param method the remote method.
-     * @return the response received after invoking method.
-     * @throws IOException
-     */
+    // 优先使用默认的 ns进行调用
+    // clazz是返回值类型
     <T> T invokeAtAvailableNs(RemoteMethod method, Class<T> clazz)
             throws IOException {
         String nsId = subclusterResolver.getDefaultNamespace();
         if (!nsId.isEmpty()) {
             return rpcClient.invokeSingle(nsId, method, clazz);
         }
-        // If default Ns is not present return result from first namespace.
+
         Set<FederationNamespaceInfo> nss = namenodeResolver.getNamespaces();
         if (nss.isEmpty()) {
             throw new IOException("No namespace available.");
@@ -474,36 +333,48 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return rpcClient.invokeSingle(nsId, method, clazz);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 获得 DelegationToken
     public Token<DelegationTokenIdentifier> getDelegationToken(Text renewer)
             throws IOException {
         return clientProto.getDelegationToken(renewer);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，renewDelegationToken
     public long renewDelegationToken(Token<DelegationTokenIdentifier> token)
             throws IOException {
         return clientProto.renewDelegationToken(token);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，销毁DelegationToken
     public void cancelDelegationToken(Token<DelegationTokenIdentifier> token)
             throws IOException {
         clientProto.cancelDelegationToken(token);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，获取 src文件在某一段范围内的 blocks信息
+    /*
+        其中一条 LocatedBlock：{
+        BP-199617693-10.69.75.246-1693976594441:blk_1073749630_8825;
+        getBlockSize()=793; corrupt=false; offset=0;
+        locs=[
+            DatanodeInfoWithStorage[10.5.5.171:50010,DS-674b3994-e6ea-4919-8ade-c6af85798c8b,DISK],
+            DatanodeInfoWithStorage[10.5.5.217:50010,DS-78b1dc74-d647-42bb-a524-478acd941fb7,DISK],
+            DatanodeInfoWithStorage[10.5.5.20:50010,DS-6fcae861-65b3-4b71-962e-2b7f04faa8ba,DISK]
+        ];
+        cachedLocs=[]
+        }
+     */
     public LocatedBlocks getBlockLocations(String src, final long offset,
                                            final long length) throws IOException {
         return clientProto.getBlockLocations(src, offset, length);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，获得服务端的配置值
     public FsServerDefaults getServerDefaults() throws IOException {
         return clientProto.getServerDefaults();
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，创建一个文件
     public HdfsFileStatus create(String src, FsPermission masked,
                                  String clientName, EnumSetWritable<CreateFlag> flag,
                                  boolean createParent, short replication, long blockSize,
@@ -515,32 +386,17 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     }
 
 
-    /**
-     * Get the location to create a file. It checks if the file already existed
-     * in one of the locations.
-     *
-     * @param src Path of the file to check.
-     * @return The remote location for this file.
-     * @throws IOException If the file has no creation location.
-     */
+    // 获取一个文件的 RemoteLocation信息
     RemoteLocation getCreateLocation(final String src) throws IOException {
+        // 从挂载表解析器里可以获得一堆 RemoteLocation，
+        // 但是还是要再向 namenode getFileInfo校验下，并返回任意一条实际存在的 RemoteLocation即可
+        // 但是，RemoteLocation size＞1时才校验，不然则直接返回  为什么?
         final List<RemoteLocation> locations = getLocationsForPath(src, true);
         return getCreateLocation(src, locations);
     }
 
-    /**
-     * Get the location to create a file. It checks if the file already existed
-     * in one of the locations.
-     *
-     * @param src Path of the file to check.
-     * @param locations Prefetched locations for the file.
-     * @return The remote location for this file.
-     * @throws IOException If the file has no creation location.
-     */
-    RemoteLocation getCreateLocation(
-            final String src, final List<RemoteLocation> locations)
+    RemoteLocation getCreateLocation(final String src, final List<RemoteLocation> locations)
             throws IOException {
-
         if (locations == null || locations.isEmpty()) {
             throw new IOException("Cannot get locations to create " + src);
         }
@@ -549,24 +405,17 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         if (locations.size() > 1) {
             try {
                 RemoteLocation existingLocation = getExistingLocation(locations);
-                // Forward to the existing location and let the NN handle the error
                 if (existingLocation != null) {
                     LOG.debug("{} already exists in {}.", src, existingLocation);
                     createLocation = existingLocation;
                 }
-            } catch (FileNotFoundException fne) {
-                // Ignore if the file is not found
+            } catch (FileNotFoundException ignored) {
             }
         }
         return createLocation;
     }
 
-    /**
-     * Gets the remote location where the file exists.
-     * @param locations all the remote locations.
-     * @return the remote location of the file if it exists, else null.
-     * @throws IOException in case of any exception.
-     */
+    // 向 namenode发起 getFileInfo请求
     private RemoteLocation getExistingLocation(List<RemoteLocation> locations) throws IOException {
         RemoteMethod method = new RemoteMethod("getFileInfo",
                 new Class<?>[]{String.class}, new RemoteParam());
@@ -580,52 +429,54 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return null;
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，append追加数据
+    // ? 为什么返回的是 LastBlockWithStatus? 这个和 Router没关系，是 ClienProtol的事
+    // 难道靠 LastBlockWithStatus来写数据？
     public LastBlockWithStatus append(String src, final String clientName,
                                       final EnumSetWritable<CreateFlag> flag) throws IOException {
         return clientProto.append(src, clientName, flag);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，恢复租约
     public boolean recoverLease(String src, String clientName)
             throws IOException {
         return clientProto.recoverLease(src, clientName);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，设置某个文件的副本数
     public boolean setReplication(String src, short replication)
             throws IOException {
         return clientProto.setReplication(src, replication);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，设置某个文件的存储策略 (冷存储 还是 热存储)
     public void setStoragePolicy(String src, String policyName)
             throws IOException {
         clientProto.setStoragePolicy(src, policyName);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 获得全部的存储策略
+    // BlockStoragePolicy{COLD:2, storageTypes=[ARCHIVE], creationFallbacks=[], replicationFallbacks=[]},
+    // BlockStoragePolicy{WARM:5, storageTypes=[DISK, ARCHIVE], creationFallbacks=[DISK, ARCHIVE], replicationFallbacks=[DISK, ARCHIVE]},
+    // BlockStoragePolicy{HOT:7, storageTypes=[DISK], creationFallbacks=[], replicationFallbacks=[ARCHIVE]} ...
     public BlockStoragePolicy[] getStoragePolicies() throws IOException {
         return clientProto.getStoragePolicies();
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 给某个文件设置权限
     public void setPermission(String src, FsPermission permissions)
             throws IOException {
         clientProto.setPermission(src, permissions);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 给某个文件设置所有者
     public void setOwner(String src, String username, String groupname)
             throws IOException {
         clientProto.setOwner(src, username, groupname);
     }
 
-    /**
-     * Excluded and favored nodes are not verified and will be ignored by
-     * placement policy if they are not in the same nameservice as the file.
-     */
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 为这个文件新申请一个 block
+    // 且 Excluded && favored 的节点会被无视 为啥?
     public LocatedBlock addBlock(String src, String clientName,
                                  ExtendedBlock previous, DatanodeInfo[] excludedNodes, long fileId,
                                  String[] favoredNodes, EnumSet<AddBlockFlag> addBlockFlags)
@@ -634,11 +485,9 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 fileId, favoredNodes, addBlockFlags);
     }
 
-    /**
-     * Excluded nodes are not verified and will be ignored by placement if they
-     * are not in the same nameservice as the file.
-     */
-    @Override // ClientProtocol
+    @Override // ClientProtocol，getAdditionalDatanode，
+    // 且 DfsClient里没有这个接口 ?
+    // Excluded的节点会被无视 为啥?
     public LocatedBlock getAdditionalDatanode(final String src, final long fileId,
                                               final ExtendedBlock blk, final DatanodeInfo[] existings,
                                               final String[] existingStorageIDs, final DatanodeInfo[] excludes,
@@ -648,29 +497,27 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 existingStorageIDs, excludes, numAdditionalNodes, clientName);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 放弃一个 Block
     public void abandonBlock(ExtendedBlock b, long fileId, String src,
                              String holder) throws IOException {
         clientProto.abandonBlock(b, fileId, src, holder);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, 完成这个 Block
     public boolean complete(String src, String clientName, ExtendedBlock last,
                             long fileId) throws IOException {
         return clientProto.complete(src, clientName, last, fileId);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，更新 Block的戳
     public LocatedBlock updateBlockForPipeline(
             ExtendedBlock block, String clientName) throws IOException {
         return clientProto.updateBlockForPipeline(block, clientName);
     }
 
-    /**
-     * Datanode are not verified to be in the same nameservice as the old block.
-     * TODO This may require validation.
-     */
-    @Override // ClientProtocol
+    // 将 newBlock的一些属性赋值给 oldBlock
+    // 还将 newStorageIDs赋值给 oldBlock
+    @Override // ClientProtocol，更新 Block信息以及 Block所处的数据流管道
     public void updatePipeline(String clientName, ExtendedBlock oldBlock,
                                ExtendedBlock newBlock, DatanodeID[] newNodes, String[] newStorageIDs)
             throws IOException {
@@ -678,52 +525,52 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 newStorageIDs);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol, getPreferredBlockSize 获得指定文件的块实际大小
     public long getPreferredBlockSize(String src) throws IOException {
         return clientProto.getPreferredBlockSize(src);
     }
 
     @Deprecated
-    @Override // ClientProtocol
+    @Override // ClientProtocol，rename改名
     public boolean rename(final String src, final String dst)
             throws IOException {
         return clientProto.rename(src, dst);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，rename2还增加了 options选项, 如已存在的话是否进行覆盖
     public void rename2(final String src, final String dst,
                         final Options.Rename... options) throws IOException {
         clientProto.rename2(src, dst, options);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，连接文件
     public void concat(String trg, String[] src) throws IOException {
         clientProto.concat(trg, src);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，截取文件
     public boolean truncate(String src, long newLength, String clientName)
             throws IOException {
         return clientProto.truncate(src, newLength, clientName);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，删除文件
     public boolean delete(String src, boolean recursive) throws IOException {
         return clientProto.delete(src, recursive);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，创建目录
     public boolean mkdirs(String src, FsPermission masked, boolean createParent)
             throws IOException {
         return clientProto.mkdirs(src, masked, createParent);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，续租
     public void renewLease(String clientName) throws IOException {
         clientProto.renewLease(clientName);
     }
 
-    @Override // ClientProtocol
+    @Override // ClientProtocol，listPaths
     public DirectoryListing getListing(String src, byte[] startAfter,
                                        boolean needLocation) throws IOException {
         return clientProto.getListing(src, startAfter, needLocation);
@@ -767,14 +614,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return clientProto.getDatanodeReport(type);
     }
 
-    /**
-     * Get the datanode report with a timeout.
-     * @param type Type of the datanode.
-     * @param requireResponse If we require all the namespaces to report.
-     * @param timeOutMs Time out for the reply in milliseconds.
-     * @return List of datanodes.
-     * @throws IOException If it cannot get the report.
-     */
+    // ClientProtocol.getDatanodeReport()，获得指定存活类型的 DataNode
     public DatanodeInfo[] getDatanodeReport(DatanodeReportType type, boolean requireResponse, long timeOutMs)
             throws IOException {
         checkOperation(OperationCategory.UNCHECKED);
@@ -816,13 +656,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return clientProto.getDatanodeStorageReport(type);
     }
 
-    /**
-     * Get the list of datanodes per subcluster.
-     *
-     * @param type Type of the datanodes to get.
-     * @return nsId to datanode list.
-     * @throws IOException If the method cannot be invoked remotely.
-     */
+    // ns_id -> 所有的DataNode信息
     public Map<String, DatanodeStorageReport[]> getDatanodeStorageReportMap(
             DatanodeReportType type) throws IOException {
 
@@ -1322,25 +1156,16 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return nnProto.getNextSPSPath();
     }
 
-    /**
-     * Locate the location with the matching block pool id.
-     *
-     * @param path Path to check.
-     * @param failIfLocked Fail the request if locked (top mount point).
-     * @param blockPoolId The block pool ID of the namespace to search for.
-     * @return Prioritized list of locations in the federated cluster.
-     * @throws IOException if the location for this path cannot be determined.
-     */
-    protected RemoteLocation getLocationForPath(
-            String path, boolean failIfLocked, String blockPoolId)
+    // 根据 path 和 bp_id 获取一个可用的 RemoteLocation
+    //    其实是先直接获得了 RemoteLocations，然后根据 bp_id找出对应的 ns
+    //    然后再遍历所有的 RemoteLocations，只要有一个 RemoteLocation的 ns满足，则直接 return
+    protected RemoteLocation getLocationForPath(String path, String blockPoolId)
             throws IOException {
 
-        final List<RemoteLocation> locations =
-                getLocationsForPath(path, failIfLocked);
+        final List<RemoteLocation> locations = getLocationsForPath(path, true);
 
         String nameserviceId = null;
-        Set<FederationNamespaceInfo> namespaces =
-                this.namenodeResolver.getNamespaces();
+        Set<FederationNamespaceInfo> namespaces = this.namenodeResolver.getNamespaces();
         for (FederationNamespaceInfo namespace : namespaces) {
             if (namespace.getBlockPoolId().equals(blockPoolId)) {
                 nameserviceId = namespace.getNameserviceId();
@@ -1354,41 +1179,21 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 }
             }
         }
-        throw new IOException(
-                "Cannot locate a nameservice for block pool " + blockPoolId);
+        throw new IOException("Cannot locate a nameservice for block pool " + blockPoolId);
     }
 
-    /**
-     * Get the possible locations of a path in the federated cluster.
-     * During the get operation, it will do the quota verification.
-     *
-     * @param path Path to check.
-     * @param failIfLocked Fail the request if locked (top mount point).
-     * @return Prioritized list of locations in the federated cluster.
-     * @throws IOException If the location for this path cannot be determined.
-     */
+    // 根据 path获得所有 RemoteLocations
     protected List<RemoteLocation> getLocationsForPath(String path,
                                                        boolean failIfLocked) throws IOException {
         return getLocationsForPath(path, failIfLocked, true);
     }
 
-    /**
-     * Get the possible locations of a path in the federated cluster.
-     *
-     * @param path Path to check.
-     * @param failIfLocked Fail the request if there is any mount point under
-     *                     the path.
-     * @param needQuotaVerify If need to do the quota verification.
-     * @return Prioritized list of locations in the federated cluster.
-     * @throws IOException If the location for this path cannot be determined.
-     */
+    // failIfLocked时，如果该 path存在孩子挂载点，则认为失败
     protected List<RemoteLocation> getLocationsForPath(String path,
                                                        boolean failIfLocked, boolean needQuotaVerify) throws IOException {
         try {
             if (failIfLocked) {
-                // check if there is any mount point under the path
-                final List<String> mountPoints =
-                        this.subclusterResolver.getMountPoints(path);
+                final List<String> mountPoints = this.subclusterResolver.getMountPoints(path);
                 if (mountPoints != null) {
                     StringBuilder sb = new StringBuilder();
                     sb.append("The operation is not allowed because ");
@@ -1406,17 +1211,15 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 }
             }
 
-            // Check the location for this path
-            final PathLocation location =
-                    this.subclusterResolver.getDestinationForPath(path);
+            // 这里已经取得了所有的 RemoteLocations, 下面再按禁用 ns过滤一遍
+            final PathLocation location = this.subclusterResolver.getDestinationForPath(path);
             if (location == null) {
                 throw new IOException("Cannot find locations for " + path + " in " +
                         this.subclusterResolver.getClass().getSimpleName());
             }
 
-            // We may block some write operations
             if (opCategory.get() == OperationCategory.WRITE) {
-                // Check if the path is in a read only mount point
+                // 检查是否为 "只读"挂载点
                 if (isPathReadOnly(path)) {
                     if (this.rpcMonitor != null) {
                         this.rpcMonitor.routerFailureReadOnly();
@@ -1424,10 +1227,9 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                     throw new IOException(path + " is in a read only mount point");
                 }
 
-                // Check quota
+                // 检查 Quota
                 if (this.router.isQuotaEnabled() && needQuotaVerify) {
-                    RouterQuotaUsage quotaUsage = this.router.getQuotaManager()
-                            .getQuotaUsage(path);
+                    RouterQuotaUsage quotaUsage = this.router.getQuotaManager().getQuotaUsage(path);
                     if (quotaUsage != null) {
                         quotaUsage.verifyNamespaceQuota();
                         quotaUsage.verifyStoragespaceQuota();
@@ -1436,7 +1238,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 }
             }
 
-            // Filter disabled subclusters
+            // 过滤掉那些被禁用的 ns
             Set<String> disabled = namenodeResolver.getDisabledNamespaces();
             List<RemoteLocation> locs = new ArrayList<>();
             for (RemoteLocation loc : location.getDestinations()) {
@@ -1456,12 +1258,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         }
     }
 
-    /**
-     * Check if a path is in a read only mount point.
-     *
-     * @param path Path to check.
-     * @return If the path is in a read only mount point.
-     */
+    // 检查这个文件的挂载点是否为 "只读"
     private boolean isPathReadOnly(final String path) {
         if (subclusterResolver instanceof MountTableResolver) {
             try {
@@ -1477,40 +1274,15 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return false;
     }
 
-    /**
-     * Get the user that is invoking this operation.
-     *
-     * @return Remote user group information.
-     * @throws IOException If we cannot get the user information.
-     */
+    // CUR_USER -> Server.getRemoteUser() -> UserGroupInformation.getCurrentUser() 的降级顺序
     public static UserGroupInformation getRemoteUser() throws IOException {
         UserGroupInformation ugi = CUR_USER.get();
         ugi = (ugi != null) ? ugi : Server.getRemoteUser();
         return (ugi != null) ? ugi : UserGroupInformation.getCurrentUser();
     }
 
-    /**
-     * Set super user credentials if needed.
-     */
-    static void setCurrentUser(UserGroupInformation ugi) {
-        CUR_USER.set(ugi);
-    }
 
-    /**
-     * Reset to discard super user credentials.
-     */
-    static void resetCurrentUser() {
-        CUR_USER.set(null);
-    }
-
-    /**
-     * Merge the outputs from multiple namespaces.
-     *
-     * @param <T> The type of the objects to merge.
-     * @param map Namespace to Output array.
-     * @param clazz Class of the values.
-     * @return Array with the outputs.
-     */
+    // 即获得 map.values()
     static <T> T[] merge(Map<FederationNamespaceInfo, T[]> map, Class<T> clazz) {
 
         // Put all results into a set to avoid repeats
@@ -1520,43 +1292,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
                 ret.addAll(Arrays.asList(values));
             }
         }
-
         return toArray(ret, clazz);
-    }
-
-    /**
-     * Convert a set of values into an array.
-     * @param <T> The type of the return objects.
-     * @param set Input set.
-     * @param clazz Class of the values.
-     * @return Array with the values in set.
-     */
-    static <T> T[] toArray(Collection<T> set, Class<T> clazz) {
-        @SuppressWarnings("unchecked")
-        T[] combinedData = (T[]) Array.newInstance(clazz, set.size());
-        combinedData = set.toArray(combinedData);
-        return combinedData;
-    }
-
-    /**
-     * Get quota module implementation.
-     * @return Quota module implementation
-     */
-    public Quota getQuotaModule() {
-        return this.quotaCall;
-    }
-
-    /**
-     * Get ClientProtocol module implementation.
-     * @return ClientProtocol implementation
-     */
-    @VisibleForTesting
-    public RouterClientProtocol getClientProtocolModule() {
-        return this.clientProto;
-    }
-
-    public FederationRPCMetrics getRPCMetrics() {
-        return this.rpcMonitor.getRPCMetrics();
     }
 
     // 检查 path是否属于所有的子集群，
@@ -1576,12 +1312,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return false;
     }
 
-    /**
-     * Check if a path supports failed subclusters.
-     *
-     * @param path Path to check.
-     * @return If a path should support failed subclusters.
-     */
+    // 判断这个挂载点是否支持容错，降级到其他 ns
     boolean isPathFaultTolerant(final String path) {
         if (subclusterResolver instanceof MountTableResolver) {
             try {
@@ -1597,21 +1328,12 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
         return false;
     }
 
-    /**
-     * Check if call needs to be invoked to all the locations. The call is
-     * supposed to be invoked in all the locations in case the order of the mount
-     * entry is amongst HASH_ALL, RANDOM or SPACE or if the source is itself a
-     * mount entry.
-     * @param path The path on which the operation need to be invoked.
-     * @return true if the call is supposed to invoked on all locations.
-     * @throws IOException
-     */
+    // 是否应该在所有 RemoteLocations中调用
     boolean isInvokeConcurrent(final String path) throws IOException {
         if (subclusterResolver instanceof MountTableResolver) {
-            MountTableResolver mountTableResolver =
-                    (MountTableResolver) subclusterResolver;
+            MountTableResolver mountTableResolver = (MountTableResolver) subclusterResolver;
             List<String> mountPoints = mountTableResolver.getMountPoints(path);
-            // If this is a mount point, we need to invoke everywhere.
+            // 存在 path孩子挂载点 就返回true
             if (mountPoints != null) {
                 return true;
             }
@@ -1634,4 +1356,64 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     public String[] getGroupsForUser(String user) throws IOException {
         return routerProto.getGroupsForUser(user);
     }
+
+
+    /*
+        get/set/简单 方法
+     */
+
+    public RouterSecurityManager getRouterSecurityManager() {
+        return this.securityManager;
+    }
+
+    public RouterRpcClient getRPCClient() {
+        return rpcClient;
+    }
+
+    public ActiveNamenodeResolver getNamenodeResolver() {
+        return namenodeResolver;
+    }
+
+    public FileSubclusterResolver getSubclusterResolver() {
+        return subclusterResolver;
+    }
+
+    @VisibleForTesting
+    public Server getServer() {
+        return rpcServer;
+    }
+
+    public InetSocketAddress getRpcAddress() {
+        return rpcAddress;
+    }
+
+    boolean isSafeMode() {
+        RouterSafemodeService safemodeService = router.getSafemodeService();
+        return (safemodeService != null && safemodeService.isInSafeMode());
+    }
+
+    static String getMethodName() {
+        final StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+        return stack[3].getMethodName();
+    }
+
+    static void setCurrentUser(UserGroupInformation ugi) {
+        CUR_USER.set(ugi);
+    }
+
+    static void resetCurrentUser() {
+        CUR_USER.set(null);
+    }
+
+    static <T> T[] toArray(Collection<T> set, Class<T> clazz) {
+        @SuppressWarnings("unchecked")
+        T[] combinedData = (T[]) Array.newInstance(clazz, set.size());
+        combinedData = set.toArray(combinedData);
+        return combinedData;
+    }
+
+    public Quota getQuotaModule() {
+        return this.quotaCall;
+    }
+
 }

@@ -11,15 +11,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-/**
- * Module that implements all the RPC calls in {@link NamenodeProtocol} in the
- * {@link RouterRpcServer}.
- */
+// 获取 NameNode的元数据信息
 public class RouterNamenodeProtocol implements NamenodeProtocol {
 
-    /** RPC server to receive client calls. */
     private final RouterRpcServer rpcServer;
-    /** RPC clients to connect to the Namenodes. */
     private final RouterRpcClient rpcClient;
 
 
@@ -28,12 +23,14 @@ public class RouterNamenodeProtocol implements NamenodeProtocol {
         this.rpcClient = this.rpcServer.getRPCClient();
     }
 
+    // 获取这个 datanode下的所有 block列表
     @Override
     public BlocksWithLocations getBlocks(DatanodeInfo datanode, long size,
                                          long minBlockSize) throws IOException {
         rpcServer.checkOperation(OperationCategory.READ);
 
-        // Get the namespace where the datanode is located
+        // 获得所有的 DataNode，看看哪个 DataNode为目标 datanode，取其 ns_id
+        // 再按 getBlocks(ns_id,datanode) 去远程访问 namenode
         Map<String, DatanodeStorageReport[]> map =
                 rpcServer.getDatanodeStorageReportMap(DatanodeReportType.ALL);
         String nsId = null;
@@ -46,13 +43,11 @@ public class RouterNamenodeProtocol implements NamenodeProtocol {
                     break;
                 }
             }
-            // Break the loop if already found
             if (nsId != null) {
                 break;
             }
         }
 
-        // Forward to the proper namenode
         if (nsId != null) {
             RemoteMethod method = new RemoteMethod(
                     NamenodeProtocol.class, "getBlocks",

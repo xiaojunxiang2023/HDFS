@@ -592,12 +592,12 @@ public class RouterClientProtocol implements ClientProtocol {
 
         // Find locations in the matching namespace.
         final RemoteLocation targetDestination =
-                rpcServer.getLocationForPath(trg, true, targetBlockPoolId);
+                rpcServer.getLocationForPath(trg, targetBlockPoolId);
         String[] sourceDestinations = new String[src.length];
         for (int i = 0; i < src.length; i++) {
             String sourceFile = src[i];
             RemoteLocation location =
-                    rpcServer.getLocationForPath(sourceFile, true, targetBlockPoolId);
+                    rpcServer.getLocationForPath(sourceFile, targetBlockPoolId);
             sourceDestinations[i] = location.getDest();
         }
         // Invoke
@@ -2010,7 +2010,7 @@ public class RouterClientProtocol implements ClientProtocol {
         } else {
             srcPath = path + Path.SEPARATOR + child;
         }
-        Long modTime = 0L;
+        long modTime = 0L;
         try {
             // Get mount table entry for the srcPath
             MountTable entry = mountTable.getMountPoint(srcPath);

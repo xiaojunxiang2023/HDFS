@@ -42,6 +42,9 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IPC_CLIENT_CONN
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IPC_CLIENT_CONNECT_TIMEOUT_KEY;
 
 // Router转发客户端请求给 NameNode
+
+// 并没有实现客户端协议，而是有个 connectionManager，从中取客户端代理
+// 创建一个连接时会传参进去一个协议，根据这个协议造的客户端代理对象
 public class RouterRpcClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(RouterRpcClient.class);
@@ -51,7 +54,7 @@ public class RouterRpcClient {
     private final ActiveNamenodeResolver namenodeResolver;
     private final ConnectionManager connectionManager;
 
-    // 异步发送请求 
+    // 异步发送请求
     private final ThreadPoolExecutor executorService;
 
     private final RetryPolicy retryPolicy;
@@ -499,13 +502,12 @@ public class RouterRpcClient {
      *
      * @param block Block used to determine appropriate nameservice.
      * @param method The remote method and parameters to invoke.
-     * @return The result of invoking the method.
      * @throws IOException If the invoke generated an error.
      */
-    public Object invokeSingle(final ExtendedBlock block, RemoteMethod method)
+    public void invokeSingle(final ExtendedBlock block, RemoteMethod method)
             throws IOException {
         String bpId = block.getBlockPoolId();
-        return invokeSingleBlockPool(bpId, method);
+        invokeSingleBlockPool(bpId, method);
     }
 
     /**
@@ -1090,6 +1092,10 @@ public class RouterRpcClient {
                     "Unexpected error while invoking API " + ex.getMessage(), ex);
         }
     }
+
+    /*
+        get/set/简单判端 的方法
+     */
 
     public ActiveNamenodeResolver getNamenodeResolver() {
         return this.namenodeResolver;

@@ -21,7 +21,6 @@ public class RouterStoragePolicy {
     public void setStoragePolicy(String src, String policyName)
             throws IOException {
         rpcServer.checkOperation(NameNode.OperationCategory.WRITE);
-
         List<RemoteLocation> locations =
                 rpcServer.getLocationsForPath(src, false, false);
         RemoteMethod method = new RemoteMethod("setStoragePolicy",
