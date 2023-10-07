@@ -375,7 +375,7 @@ public class MountTableResolver
         return findDeepest(RouterAdmin.normalizeFileSystemPath(path));
     }
 
-    // 获得 path（自己 以及子目录文件的挂载点）
+    // 获得 path孩子 的挂载点s
     @Override
     public List<String> getMountPoints(final String str) throws IOException {
         verifyMountTable();

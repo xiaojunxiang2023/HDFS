@@ -37,9 +37,6 @@ public class MountTablePBImpl extends MountTable implements PBRecord {
             new FederationProtocolPBTranslator<MountTableRecordProto, Builder,
                     MountTableRecordProtoOrBuilder>(MountTableRecordProto.class);
 
-    public MountTablePBImpl() {
-    }
-
     public MountTablePBImpl(MountTableRecordProto proto) {
         this.setProto(proto);
     }
