@@ -12,7 +12,16 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop:hadoop-auth:3.3.4-ks-ec-3.1.2" level="project" />
+    <orderEntry type="module" module-name="hadoop-auth" scope="PROVIDED" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.sun:tools:1.4.2">
+        <CLASSES>
+          <root url="jar://C:/software/jdk8/lib/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpcore:4.4.13" level="project" />
@@ -36,7 +45,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.kerby:kerb-server:1.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.kerby:kerb-identity:1.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.kerby:kerby-xdr:1.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop:hadoop-common:3.3.4-ks-ec-3.1.2" level="project" />
+    <orderEntry type="module" module-name="hadoop-common" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop.thirdparty:hadoop-shaded-protobuf_3_7:1.1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.guava:guava:27.0-jre" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.guava:failureaccess:1.0" level="project" />
@@ -82,7 +91,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.woodstox:stax2-api:4.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.woodstox:woodstox-core:5.3.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: dnsjava:dnsjava:2.1.7" level="project" />
-    <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
     <orderEntry type="module" module-name="hadoop-hdfs-client" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.squareup.okhttp3:okhttp:4.9.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.squareup.okio:okio:2.8.0" level="project" />
@@ -169,16 +178,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.curator:curator-test:4.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.12.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.lz4:lz4-java:1.7.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-client-api:3.3.4-ks-ec-3.1.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop:hadoop-annotations:3.3.4-ks-ec-3.1.2" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: jdk.tools:jdk.tools:1.8">
-        <CLASSES>
-          <root url="jar://C:/software/jdk8/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
   </component>
 </module>

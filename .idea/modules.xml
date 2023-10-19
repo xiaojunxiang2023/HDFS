@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HDFS.iml" filepath="$PROJECT_DIR$/HDFS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hadoop-auth/hadoop-auth.iml" filepath="$PROJECT_DIR$/hadoop-auth/hadoop-auth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hadoop-common/hadoop-common.iml" filepath="$PROJECT_DIR$/hadoop-common/hadoop-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/hadoop-hdfs/hadoop-hdfs.iml" filepath="$PROJECT_DIR$/hadoop-hdfs/hadoop-hdfs.iml" />
       <module fileurl="file://$PROJECT_DIR$/hadoop-hdfs-client/hadoop-hdfs-client.iml" filepath="$PROJECT_DIR$/hadoop-hdfs-client/hadoop-hdfs-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/hadoop-hdfs-rbf/hadoop-hdfs-rbf.iml" filepath="$PROJECT_DIR$/hadoop-hdfs-rbf/hadoop-hdfs-rbf.iml" />

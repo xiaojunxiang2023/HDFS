@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -22,56 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd8eec76-ecae-4dc1-92f3-cc9cb7811228" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/ClientDatanodeProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/ClientNamenodeProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/ReconfigurationProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/acl.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/datatransfer.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/encryption.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/erasurecoding.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/hdfs.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/inotify.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/AclProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/ClientDatanodeProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/ClientNamenodeProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/DataTransferProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/EncryptionZonesProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/ErasureCodingProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/HdfsProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/InotifyProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/ReconfigurationProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/org/apache/hadoop/hdfs/protocol/proto/XAttrProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/proto/xattr.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-rbf/proto/FederationProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-rbf/proto/RouterProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-rbf/proto/org/apache/hadoop/hdfs/federation/protocol/proto/HdfsServerFederationProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-rbf/proto/org/apache/hadoop/hdfs/protocol/proto/RouterProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/AliasMapProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/DatanodeLifelineProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/DatanodeProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/HAZKInfo.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/HdfsServer.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/InterDatanodeProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/InterQJournalProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/JournalProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/NamenodeProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/QJournalProtocol.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/editlog.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/fsimage.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/AliasMapProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/DatanodeLifelineProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/DatanodeProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/EditLogProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/HdfsServerProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/InterDatanodeProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/JournalProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/protocol/proto/NamenodeProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/qjournal/protocol/InterQJournalProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/qjournal/protocol/QJournalProtocolProtos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/server/namenode/FsImageProto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/proto/org/apache/hadoop/hdfs/server/namenode/ha/proto/HAZKInfoProtos.java" beforeDir="false" />
-    </list>
+    <list default="true" id="fd8eec76-ecae-4dc1-92f3-cc9cb7811228" name="Default Changelist" comment="整合 Hadoop-Common" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,6 +32,7 @@
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_ON_COMMIT_AND_PUSH" value="false" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -111,7 +60,8 @@
   <component name="PropertiesComponent">
     <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="F:/JavaEE_DOM/SOURCE_CODE/Java_Code/Code-Gernerator" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-common/3.3.4-ks-ec-3.1.2/hadoop-common-3.3.4-ks-ec-3.1.2.jar!/" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -171,7 +121,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="fd8eec76-ecae-4dc1-92f3-cc9cb7811228" name="Default Changelist" comment="" />
@@ -179,8 +129,28 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1696395648807</updated>
+      <workItem from="1697429513491" duration="10000" />
+      <workItem from="1697512673767" duration="651000" />
+      <workItem from="1697549370076" duration="6000" />
+      <workItem from="1697606510570" duration="691000" />
+      <workItem from="1697687313378" duration="1181000" />
+      <workItem from="1697688614999" duration="562000" />
+      <workItem from="1697689187398" duration="191000" />
+      <workItem from="1697690272747" duration="1276000" />
+      <workItem from="1697691641000" duration="682000" />
     </task>
+    <task id="LOCAL-00001" summary="整合 Hadoop-Common">
+      <created>1697692133256</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1697692133256</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -197,31 +167,85 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="整合 Hadoop-Common" />
+    <option name="LAST_COMMIT_MESSAGE" value="整合 Hadoop-Common" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="493" y="188" key="FileChooserDialogImpl" timestamp="1696395816824">
+    <state x="476" y="304" key="DetectedRootsChooserDialog" timestamp="1697013116179">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
-    <state x="493" y="188" key="FileChooserDialogImpl/0.0.1422.859@0.0.1422.859" timestamp="1696395816824" />
-    <state width="1382" height="315" key="GridCell.Tab.0.bottom" timestamp="1696475714879">
+    <state x="476" y="304" key="DetectedRootsChooserDialog/0.0.1422.859@0.0.1422.859" timestamp="1697013116179" />
+    <state x="493" y="188" key="FileChooserDialogImpl" timestamp="1697013115123">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
-    <state width="1382" height="315" key="GridCell.Tab.0.bottom/0.0.1422.859@0.0.1422.859" timestamp="1696475714879" />
-    <state width="1382" height="315" key="GridCell.Tab.0.center" timestamp="1696475714879">
+    <state x="493" y="188" key="FileChooserDialogImpl/0.0.1422.859@0.0.1422.859" timestamp="1697013115123" />
+    <state width="1382" height="228" key="GridCell.Tab.0.bottom" timestamp="1697021890239">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
-    <state width="1382" height="315" key="GridCell.Tab.0.center/0.0.1422.859@0.0.1422.859" timestamp="1696475714879" />
-    <state width="1382" height="315" key="GridCell.Tab.0.left" timestamp="1696475714879">
+    <state width="1382" height="228" key="GridCell.Tab.0.bottom/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
+    <state width="1382" height="228" key="GridCell.Tab.0.center" timestamp="1697021890239">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
-    <state width="1382" height="315" key="GridCell.Tab.0.left/0.0.1422.859@0.0.1422.859" timestamp="1696475714879" />
-    <state width="1382" height="315" key="GridCell.Tab.0.right" timestamp="1696475714879">
+    <state width="1382" height="228" key="GridCell.Tab.0.center/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
+    <state width="1382" height="228" key="GridCell.Tab.0.left" timestamp="1697021890239">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
-    <state width="1382" height="315" key="GridCell.Tab.0.right/0.0.1422.859@0.0.1422.859" timestamp="1696475714879" />
+    <state width="1382" height="228" key="GridCell.Tab.0.left/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
+    <state width="1382" height="228" key="GridCell.Tab.0.right" timestamp="1697021890239">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state width="1382" height="228" key="GridCell.Tab.0.right/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
+    <state width="1382" height="279" key="GridCell.Tab.1.bottom" timestamp="1697021890232">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state width="1382" height="279" key="GridCell.Tab.1.bottom/0.0.1422.859@0.0.1422.859" timestamp="1697021890232" />
+    <state width="1382" height="279" key="GridCell.Tab.1.center" timestamp="1697021890228">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state width="1382" height="279" key="GridCell.Tab.1.center/0.0.1422.859@0.0.1422.859" timestamp="1697021890228" />
+    <state width="1382" height="279" key="GridCell.Tab.1.left" timestamp="1697021890227">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state width="1382" height="279" key="GridCell.Tab.1.left/0.0.1422.859@0.0.1422.859" timestamp="1697021890227" />
+    <state width="1382" height="279" key="GridCell.Tab.1.right" timestamp="1697021890231">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state width="1382" height="279" key="GridCell.Tab.1.right/0.0.1422.859@0.0.1422.859" timestamp="1697021890231" />
     <state x="193" y="7" key="SettingsEditor" timestamp="1696397561073">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
     <state x="193" y="7" key="SettingsEditor/0.0.1422.859@0.0.1422.859" timestamp="1696397561073" />
+    <state x="435" y="172" width="546" height="524" key="StructurePopup" timestamp="1697687772398">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state x="435" y="172" width="546" height="524" key="StructurePopup/0.0.1422.859@0.0.1422.859" timestamp="1697687772398" />
+    <state x="305" y="166" key="Vcs.Push.Dialog.v2" timestamp="1697692136039">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state x="305" y="166" key="Vcs.Push.Dialog.v2/0.0.1422.859@0.0.1422.859" timestamp="1697692136039" />
+    <state x="409" y="180" width="686" height="600" key="find.popup" timestamp="1697692086558">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state x="409" y="180" width="686" height="600" key="find.popup/0.0.1422.859@0.0.1422.859" timestamp="1697692086558" />
+    <state x="374" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1697691546010">
+      <screen x="0" y="0" width="1422" height="859" />
+    </state>
+    <state x="374" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1422.859@0.0.1422.859" timestamp="1697691546010" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-hdfs/java/org/apache/hadoop/hdfs/server/namenode/FSEditLogLoader.java</url>
+          <line>1043</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="dnConf.getVolFailuresTolerated()" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
