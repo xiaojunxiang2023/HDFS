@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 
+import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
 import org.apache.hadoop.security.AuthenticationFilterInitializer;
-import org.apache.hadoop.security.authentication.server.PseudoAuthenticationHandler;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;

@@ -84,7 +84,7 @@ import javax.net.SocketFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.HadoopIllegalArgumentException;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurableBase;
@@ -189,7 +189,6 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.tracing.TraceUtils;
 import org.apache.hadoop.util.Daemon;
-import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.JvmPauseMonitor;
 import org.apache.hadoop.util.ServicePlugin;
@@ -213,37 +212,7 @@ import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**********************************************************
- * DataNode is a class (and program) that stores a set of
- * blocks for a DFS deployment.  A single deployment can
- * have one or many DataNodes.  Each DataNode communicates
- * regularly with a single NameNode.  It also communicates
- * with client code and other DataNodes from time to time.
- *
- * DataNodes store a series of named blocks.  The DataNode
- * allows client code to read these blocks, or to write new
- * block data.  The DataNode may also, in response to instructions
- * from its NameNode, delete blocks or copy blocks to/from other
- * DataNodes.
- *
- * The DataNode maintains just one critical table:
- *   block{@literal ->} stream of bytes (of BLOCK_SIZE or less)
- *
- * This info is stored on a local disk.  The DataNode
- * reports the table's contents to the NameNode upon startup
- * and every so often afterwards.
- *
- * DataNodes spend their lives in an endless loop of asking
- * the NameNode for something to do.  A NameNode cannot connect
- * to a DataNode directly; a NameNode simply returns values from
- * functions invoked by a DataNode.
- *
- * DataNodes maintain an open server socket so that client code 
- * or other DataNodes can read/write data.  The host/port for
- * this server is reported to the NameNode, which then sends that
- * information to clients or other DataNodes that might be interested.
- *
- **********************************************************/
+// 实现了 InterDatanodeProtocol、ClientDatanodeProtocol、ReconfigurationProtocol 接口
 @InterfaceAudience.Private
 public class DataNode extends ReconfigurableBase
     implements InterDatanodeProtocol, ClientDatanodeProtocol,
@@ -278,11 +247,13 @@ public class DataNode extends ReconfigurableBase
       "  and rolling upgrades.";
 
   static final int CURRENT_BLOCK_FORMAT_VERSION = 1;
+  
+  // 最大坏盘容忍度
   public static final int MAX_VOLUME_FAILURE_TOLERATED_LIMIT = -1;
   public static final String MAX_VOLUME_FAILURES_TOLERATED_MSG =
       "should be greater than or equal to -1";
 
-  /** A list of property that are reconfigurable at runtime. */
+  // 可以动态刷新生效的配置
   private static final List<String> RECONFIGURABLE_PROPERTIES =
       Collections.unmodifiableList(
           Arrays.asList(
@@ -295,32 +266,33 @@ public class DataNode extends ReconfigurableBase
   private final FileIoProvider fileIoProvider;
 
   private static final String NETWORK_ERRORS = "networkErrors";
-
-  /**
-   * Use {@link NetUtils#createSocketAddr(String)} instead.
-   */
-  @Deprecated
-  public static InetSocketAddress createSocketAddr(String target) {
-    return NetUtils.createSocketAddr(target);
-  }
   
+  // volatile
+  // 结合 while控制 DataNode的运行
   volatile boolean shouldRun = true;
   volatile boolean shutdownForUpgrade = false;
   private boolean shutdownInProgress = false;
+  
+  // 核心服务 BlockPoolManager
   private BlockPoolManager blockPoolManager;
   volatile FsDatasetSpi<? extends FsVolumeSpi> data = null;
   private String clusterId = null;
 
   final AtomicInteger xmitsInProgress = new AtomicInteger();
+  
+  // 核心线程 dataXceiverServer
   Daemon dataXceiverServer = null;
   DataXceiverServer xserver = null;
   Daemon localDataXceiverServer = null;
+  
   ShortCircuitRegistry shortCircuitRegistry = null;
   ThreadGroup threadGroup = null;
   private DNConf dnConf;
   private volatile boolean heartbeatsDisabledForTests = false;
   private volatile boolean ibrDisabledForTests = false;
   private volatile boolean cacheReportsDisabledForTests = false;
+  
+  // 代表着一个 DataNode的存储
   private DataStorage storage = null;
 
   private DatanodeHttpServer httpServer = null;
@@ -343,19 +315,22 @@ public class DataNode extends ReconfigurableBase
   BlockPoolTokenSecretManager blockPoolTokenSecretManager;
   private boolean hasAnyBlockPoolRegistered = false;
   
+  /*
+   * 核心 Scanner：BlockScanner、DirectoryScanner
+   */
   private  BlockScanner blockScanner;
   private DirectoryScanner directoryScanner = null;
   
   /** Activated plug-ins. */
   private List<ServicePlugin> plugins;
   
-  // For InterDataNodeProtocol
+  // InterDataNodeProtocol, DataNode之间的通信
   public RPC.Server ipcServer;
 
   private JvmPauseMonitor pauseMonitor;
 
   private SecureResources secureResources = null;
-  // dataDirs must be accessed while holding the DataNode lock.
+  
   private List<StorageLocation> dataDirs;
   private final String confVersion;
   private final long maxNumberOfBlocksToLog;
@@ -363,28 +338,35 @@ public class DataNode extends ReconfigurableBase
 
   private final List<String> usersWithLocalPathAccess;
   private final boolean connectToDnViaHostname;
+  // ReadaheadPool
   ReadaheadPool readaheadPool;
   SaslDataTransferClient saslClient;
   SaslDataTransferServer saslServer;
   private ObjectName dataNodeInfoBeanName;
-  // Test verification only
   private volatile long lastDiskErrorCheck;
   private String supergroup;
   private boolean isPermissionEnabled;
   private String dnUserName = null;
+  
+  /*
+   * BlockRecoveryWorker、ErasureCodingWorker
+   */
   private BlockRecoveryWorker blockRecoveryWorker;
   private ErasureCodingWorker ecWorker;
   private final Tracer tracer;
-  private static final int NUM_CORES = Runtime.getRuntime()
-      .availableProcessors();
+  
+  // 获取可分配给当前 JVM进程的 cpu核数
+  private static final int NUM_CORES = Runtime.getRuntime().availableProcessors();
   private static final double CONGESTION_RATIO = 1.5;
+  // DiskBalancer
   private DiskBalancer diskBalancer;
-
+  // ExecutorService
   private final ExecutorService xferService;
 
-  @Nullable
+  /*
+   * StorageLocationChecker、DatasetVolumeChecker
+   */
   private final StorageLocationChecker storageLocationChecker;
-
   private final DatasetVolumeChecker volumeChecker;
 
   private final SocketFactory socketFactory;
@@ -401,34 +383,8 @@ public class DataNode extends ReconfigurableBase
 
   private long startTime = 0;
 
-  /**
-   * Creates a dummy DataNode for testing purpose.
-   */
-  @VisibleForTesting
-  @InterfaceAudience.LimitedPrivate("HDFS")
-  DataNode(final Configuration conf) throws DiskErrorException {
-    super(conf);
-    this.tracer = createTracer(conf);
-    this.fileIoProvider = new FileIoProvider(conf, this);
-    this.fileDescriptorPassingDisabledReason = null;
-    this.maxNumberOfBlocksToLog = 0;
-    this.confVersion = null;
-    this.usersWithLocalPathAccess = null;
-    this.connectToDnViaHostname = false;
-    this.blockScanner = new BlockScanner(this, this.getConf());
-    this.pipelineSupportECN = false;
-    this.socketFactory = NetUtils.getDefaultSocketFactory(conf);
-    this.dnConf = new DNConf(this);
-    initOOBTimeout();
-    storageLocationChecker = null;
-    volumeChecker = new DatasetVolumeChecker(conf, new Timer());
-    this.xferService =
-        HadoopExecutors.newCachedThreadPool(new Daemon.DaemonFactory());
-  }
-
-  /**
-   * Create the DataNode given a configuration, an array of dataDirs,
-   * and a namenode proxy.
+  /*
+   * 初始化配置、创建dataDirs、创建 namenode代理、校验短路读是否合理
    */
   DataNode(final Configuration conf,
            final List<StorageLocation> dataDirs,
@@ -465,18 +421,21 @@ public class DataNode extends ReconfigurableBase
     this.xferService =
         HadoopExecutors.newCachedThreadPool(new Daemon.DaemonFactory());
 
-    // Determine whether we should try to pass file descriptors to clients.
+    // 检查是否开启了短路读，以及文件描述符是否可用
     if (conf.getBoolean(HdfsClientConfigKeys.Read.ShortCircuit.KEY,
               HdfsClientConfigKeys.Read.ShortCircuit.DEFAULT)) {
       String reason = DomainSocket.getLoadingFailureReason();
       if (reason != null) {
+        // 开启了短路读，但是文件描述符不可用
         LOG.warn("File descriptor passing is disabled because {}", reason);
         this.fileDescriptorPassingDisabledReason = reason;
       } else {
+        // 开启了短路读，且文件描述符可用
         LOG.info("File descriptor passing is enabled.");
         this.fileDescriptorPassingDisabledReason = null;
       }
     } else {
+      // 没有开启短路读
       this.fileDescriptorPassingDisabledReason =
           "File descriptor passing was not configured.";
       LOG.debug(this.fileDescriptorPassingDisabledReason);
@@ -487,6 +446,7 @@ public class DataNode extends ReconfigurableBase
     try {
       hostName = getHostName(conf);
       LOG.info("Configured hostname is {}", hostName);
+      // ※ 启动DataNode里的一些线程
       startDataNode(dataDirs, resources);
     } catch (IOException ie) {
       shutdown();
@@ -516,9 +476,6 @@ public class DataNode extends ReconfigurableBase
     return new HdfsConfiguration();
   }
 
-  /**
-   * {@inheritDoc }.
-   */
   @Override
   public String reconfigurePropertyImpl(String property, String newVal)
       throws ReconfigurationException {
@@ -600,22 +557,12 @@ public class DataNode extends ReconfigurableBase
         property, newVal, getConf().get(property));
   }
 
-  /**
-   * Get a list of the keys of the re-configurable properties in configuration.
-   */
-  @Override // Reconfigurable
+  @Override  
   public Collection<String> getReconfigurableProperties() {
     return RECONFIGURABLE_PROPERTIES;
   }
 
-  /**
-   * The ECN bit for the DataNode. The DataNode should return:
-   * <ul>
-   *   <li>ECN.DISABLED when ECN is disabled.</li>
-   *   <li>ECN.SUPPORTED when ECN is enabled but the DN still has capacity.</li>
-   *   <li>ECN.CONGESTED when ECN is enabled and the DN is congested.</li>
-   * </ul>
-   */
+  // 获取 ECN状态
   public PipelineAck.ECN getECN() {
     if (!pipelineSupportECN) {
       return PipelineAck.ECN.DISABLED;
@@ -630,16 +577,13 @@ public class DataNode extends ReconfigurableBase
     return fileIoProvider;
   }
 
-  /**
-   * Contains the StorageLocations for changed data volumes.
-   */
   @VisibleForTesting
   static class ChangedVolumes {
-    /** The storage locations of the newly added volumes. */
+    // 新增的 data.dir
     List<StorageLocation> newLocations = Lists.newArrayList();
-    /** The storage locations of the volumes that are removed. */
+    // 删除的 data.dir
     List<StorageLocation> deactivateLocations = Lists.newArrayList();
-    /** The unchanged locations that existed in the old configuration. */
+    // 不变的 data.dir
     List<StorageLocation> unchangedLocations = Lists.newArrayList();
   }
 
@@ -1099,8 +1043,7 @@ public class DataNode extends ReconfigurableBase
    * @param  data - FSDataSet
    * @param conf - Config
    */
-  private void initDiskBalancer(FsDatasetSpi data,
-                                             Configuration conf) {
+  private void initDiskBalancer(FsDatasetSpi data, Configuration conf) {
     if (this.diskBalancer != null) {
       return;
     }
@@ -1331,27 +1274,20 @@ public class DataNode extends ReconfigurableBase
     return this.cacheReportsDisabledForTests;
   }
 
-  /**
-   * This method starts the data node with the specified conf.
-   * 
-   * If conf's DFS_DATANODE_FSDATASET_FACTORY_KEY property is set
-   * then a simulated storage based data node is created.
-   * 
-   * @param dataDirectories - only for a non-simulated storage data node
-   * @throws IOException
-   */
+  // 启动 DataNode里的一些线程
   void startDataNode(List<StorageLocation> dataDirectories,
                      SecureResources resources
                      ) throws IOException {
 
-    // settings global for all BPs in the Data Node
     this.secureResources = resources;
     synchronized (this) {
       this.dataDirs = dataDirectories;
     }
     this.dnConf = new DNConf(this);
+    
+    // 检查安全认证配置是否合理
     checkSecureConfig(dnConf, getConf(), resources);
-
+    
     if (dnConf.maxLockedMemory > 0) {
       if (!NativeIO.POSIX.getCacheManipulator().verifyCanMlock()) {
         throw new RuntimeException(String.format(
@@ -1359,23 +1295,18 @@ public class DataNode extends ReconfigurableBase
             " size (%s) is greater than zero and native code is not available.",
             DFS_DATANODE_MAX_LOCKED_MEMORY_KEY));
       }
-      if (Path.WINDOWS) {
-        NativeIO.Windows.extendWorkingSetSize(dnConf.maxLockedMemory);
-      } else {
-        long ulimit = NativeIO.POSIX.getCacheManipulator().getMemlockLimit();
-        if (dnConf.maxLockedMemory > ulimit) {
-          throw new RuntimeException(String.format(
-            "Cannot start datanode because the configured max locked memory" +
-            " size (%s) of %d bytes is more than the datanode's available" +
-            " RLIMIT_MEMLOCK ulimit of %d bytes.",
-            DFS_DATANODE_MAX_LOCKED_MEMORY_KEY,
-            dnConf.maxLockedMemory,
-            ulimit));
-        }
+      long ulimit = NativeIO.POSIX.getCacheManipulator().getMemlockLimit();
+      if (dnConf.maxLockedMemory > ulimit) {
+        throw new RuntimeException(String.format(
+          "Cannot start datanode because the configured max locked memory" +
+          " size (%s) of %d bytes is more than the datanode's available" +
+          " RLIMIT_MEMLOCK ulimit of %d bytes.",
+          DFS_DATANODE_MAX_LOCKED_MEMORY_KEY,
+          dnConf.maxLockedMemory,
+          ulimit));
       }
     }
-    LOG.info("Starting DataNode with maxLockedMemory = {}",
-        dnConf.maxLockedMemory);
+    LOG.info("Starting DataNode with maxLockedMemory = {}", dnConf.maxLockedMemory);
 
     int volFailuresTolerated = dnConf.getVolFailuresTolerated();
     int volsConfigured = dnConf.getVolsConfigured();
@@ -1417,8 +1348,6 @@ public class DataNode extends ReconfigurableBase
     blockPoolManager = new BlockPoolManager(this);
     blockPoolManager.refreshNamenodes(getConf());
 
-    // Create the ReadaheadPool from the DataNode context so we can
-    // exit without having to explicitly shutdown its thread pool.
     readaheadPool = ReadaheadPool.getInstance();
     saslClient = new SaslDataTransferClient(dnConf.getConf(),
         dnConf.saslPropsResolver, dnConf.trustedChannelResolver);
@@ -1431,35 +1360,16 @@ public class DataNode extends ReconfigurableBase
     }
   }
 
-  /**
-   * Checks if the DataNode has a secure configuration if security is enabled.
-   * There are 2 possible configurations that are considered secure:
-   * 1. The server has bound to privileged ports for RPC and HTTP via
-   *   SecureDataNodeStarter.
-   * 2. The configuration enables SASL on DataTransferProtocol and HTTPS (no
-   *   plain HTTP) for the HTTP server.  The SASL handshake guarantees
-   *   authentication of the RPC server before a client transmits a secret, such
-   *   as a block access token.  Similarly, SSL guarantees authentication of the
-   *   HTTP server before a client transmits a secret, such as a delegation
-   *   token.
-   * It is not possible to run with both privileged ports and SASL on
-   * DataTransferProtocol.  For backwards-compatibility, the connection logic
-   * must check if the target port is a privileged port, and if so, skip the
-   * SASL handshake.
-   *
-   * @param dnConf DNConf to check
-   * @param conf Configuration to check
-   * @param resources SecuredResources obtained for DataNode
-   * @throws RuntimeException if security enabled, but configuration is insecure
-   */
   private static void checkSecureConfig(DNConf dnConf, Configuration conf,
       SecureResources resources) throws RuntimeException {
+    // 如果开启了 Kerberos，直接正常退出。
     if (!UserGroupInformation.isSecurityEnabled()) {
       return;
     }
 
-    // Abort out of inconsistent state if Kerberos is enabled
-    // but block access tokens are not enabled.
+    /*
+     * 下面是在校验 Kerbeors场景，是否一些配置不合理 
+     */
     boolean isEnabled = conf.getBoolean(
         DFSConfigKeys.DFS_BLOCK_ACCESS_TOKEN_ENABLE_KEY,
         DFSConfigKeys.DFS_BLOCK_ACCESS_TOKEN_ENABLE_DEFAULT);
@@ -1481,15 +1391,10 @@ public class DataNode extends ReconfigurableBase
       final boolean rpcSecured = resources.isRpcPortPrivileged()
           || resources.isSaslEnabled();
 
-      // Allow secure DataNode to startup if:
-      // 1. Http is secure.
-      // 2. Rpc is secure
       if (rpcSecured && httpSecured) {
         return;
       }
     } else {
-      // Handle cases when SecureDataNodeStarter#getSecureResources is not
-      // invoked
       SaslPropertiesResolver saslPropsResolver = dnConf.getSaslPropsResolver();
       if (saslPropsResolver != null &&
           DFSUtil.getHttpPolicy(conf) == HttpConfig.Policy.HTTPS_ONLY) {
@@ -1680,8 +1585,7 @@ public class DataNode extends ReconfigurableBase
    * @param e this exception is a container for all IOException objects caught
    *          in FsVolumeList#addBlockPool.
    */
-  private void handleAddBlockPoolError(AddBlockPoolException e)
-      throws IOException {
+  private void handleAddBlockPoolError(AddBlockPoolException e) {
     Map<FsVolumeSpi, IOException> unhealthyDataDirs =
         e.getFailingVolumes();
     if (unhealthyDataDirs != null && !unhealthyDataDirs.isEmpty()) {
@@ -2671,32 +2575,9 @@ public class DataNode extends ReconfigurableBase
     startPlugins(getConf());
   }
 
-  /**
-   * A data node is considered to be up if one of the bp services is up
-   */
-  public boolean isDatanodeUp() {
-    for (BPOfferService bp : blockPoolManager.getAllNamenodeThreads()) {
-      if (bp.isAlive()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /** Instantiate a single datanode object. This must be run by invoking
-   *  {@link DataNode#runDatanodeDaemon()} subsequently. 
-   */
-  public static DataNode instantiateDataNode(String args[],
-                                      Configuration conf) throws IOException {
-    return instantiateDataNode(args, conf, null);
-  }
-  
-  /** Instantiate a single datanode object, along with its secure resources. 
-   * This must be run by invoking{@link DataNode#runDatanodeDaemon()} 
-   * subsequently. 
-   */
-  public static DataNode instantiateDataNode(String args [], Configuration conf,
-      SecureResources resources) throws IOException {
+  // 创建一个 DataNode实例
+  public static DataNode instantiateDataNode(String[] args, Configuration conf,
+                                             SecureResources resources) throws IOException {
     if (conf == null)
       conf = new HdfsConfiguration();
     
@@ -2720,8 +2601,7 @@ public class DataNode extends ReconfigurableBase
   public static List<StorageLocation> getStorageLocations(Configuration conf) {
     Collection<String> rawLocations =
         conf.getTrimmedStringCollection(DFS_DATANODE_DATA_DIR_KEY);
-    List<StorageLocation> locations =
-        new ArrayList<StorageLocation>(rawLocations.size());
+    List<StorageLocation> locations = new ArrayList<>(rawLocations.size());
 
     for(String locationString : rawLocations) {
       final StorageLocation location;
@@ -2783,18 +2663,7 @@ public class DataNode extends ReconfigurableBase
     }
   }
 
-  /**
-   * Make an instance of DataNode after ensuring that at least one of the
-   * given data directories (and their parent directories, if necessary)
-   * can be created.
-   * @param dataDirs List of directories, where the new DataNode instance should
-   * keep its files.
-   * @param conf Configuration instance to use.
-   * @param resources Secure resources needed to run under Kerberos
-   * @return DataNode instance for given list of data dirs and conf, or null if
-   * no directory from this directory list can be created.
-   * @throws IOException
-   */
+  // 创建 storageLocationChecker，并检查至少得有一个 data.dir可用
   static DataNode makeInstance(Collection<StorageLocation> dataDirs,
       Configuration conf, SecureResources resources) throws IOException {
     List<StorageLocation> locations;
@@ -2898,12 +2767,14 @@ public class DataNode extends ReconfigurableBase
     return blockPoolTokenSecretManager;
   }
 
-  public static void secureMain(String args[], SecureResources resources) {
+  public static void secureMain(String[] args, SecureResources resources) {
     int errorCode = 0;
     try {
       StringUtils.startupShutdownMessage(DataNode.class, args, LOG);
+      // 创建一个 DataNode并启动
       DataNode datanode = createDataNode(args, null, resources);
       if (datanode != null) {
+        // 启动一些 BlockManager里的线程
         datanode.join();
       } else {
         errorCode = 1;
@@ -2912,10 +2783,6 @@ public class DataNode extends ReconfigurableBase
       LOG.error("Exception in secureMain", e);
       terminate(1, e);
     } finally {
-      // We need to terminate the process here because either shutdown was called
-      // or some disk related conditions like volumes tolerated or volumes required
-      // condition was not met. Also, In secure mode, control will go to Jsvc
-      // and Datanode process hangs if it does not exit.
       LOG.warn("Exiting Datanode");
       terminate(errorCode);
     }
@@ -2925,7 +2792,8 @@ public class DataNode extends ReconfigurableBase
     if (DFSUtil.parseHelpArgument(args, DataNode.USAGE, System.out, true)) {
       System.exit(0);
     }
-
+    
+    // ※ secureMain
     secureMain(args, null);
   }
 

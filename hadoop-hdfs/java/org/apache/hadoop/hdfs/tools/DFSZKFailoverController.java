@@ -1,6 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
-import org.apache.hadoop.HadoopIllegalArgumentException;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.HAServiceTarget;

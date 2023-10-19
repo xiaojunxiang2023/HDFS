@@ -2,7 +2,7 @@ package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.HadoopIllegalArgumentException;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 /**
  * A response of add an ErasureCoding policy.

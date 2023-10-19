@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.web;
 
+import org.apache.hadoop.filter.AuthenticationFilter;
+import org.apache.hadoop.filter.ProxyUserAuthenticationFilter;
 import org.apache.hadoop.hdfs.web.resources.DelegationParam;
-import org.apache.hadoop.security.authentication.server.AuthenticationFilter;
-import org.apache.hadoop.security.authentication.server.ProxyUserAuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

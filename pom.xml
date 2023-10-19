@@ -6,27 +6,21 @@
 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.hadoop</groupId>
-    <artifactId>HadoopMain</artifactId>
+    <artifactId>HDFS</artifactId>
     <version>3.3.4-ks-ec-3.1.2</version>
     <packaging>pom</packaging>
 
     <modules>
+        <module>hadoop-auth</module>
+        <module>hadoop-common</module>
         <module>hadoop-hdfs</module>
         <module>hadoop-hdfs-client</module>
-        <module>hadoop-hdfs-rbf</module>
     </modules>
 
     <properties>
         <!-- required as child projects with different version can't use ${project.version} -->
         <hadoop.version>3.3.4-ks-ec-3.1.2</hadoop.version>
         <kde.sub.version>3.1.9</kde.sub.version>
-
-        <distMgmtSnapshotsId>apache.snapshots.https</distMgmtSnapshotsId>
-        <distMgmtSnapshotsName>Apache Development Snapshot Repository</distMgmtSnapshotsName>
-        <distMgmtSnapshotsUrl>https://repository.apache.org/content/repositories/snapshots</distMgmtSnapshotsUrl>
-        <distMgmtStagingId>apache.staging.https</distMgmtStagingId>
-        <distMgmtStagingName>Apache Release Distribution Repository</distMgmtStagingName>
-        <distMgmtStagingUrl>https://repository.apache.org/service/local/staging/deploy/maven2</distMgmtStagingUrl>
 
         <!-- platform encoding override -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

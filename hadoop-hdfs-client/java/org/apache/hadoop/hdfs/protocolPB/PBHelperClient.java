@@ -1509,7 +1509,7 @@ public class PBHelperClient {
   }
 
   public static CacheDirectiveInfo.Expiration convert(
-      CacheDirectiveInfoExpirationProto proto) {
+          CacheDirectiveInfoExpirationProto proto) {
     if (proto.getIsRelative()) {
       return CacheDirectiveInfo.Expiration.newRelative(proto.getMillis());
     }

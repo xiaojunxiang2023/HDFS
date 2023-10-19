@@ -1,5 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -12,7 +13,6 @@ import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.server.namenode.NamenodeFsck;
 import org.apache.hadoop.hdfs.web.URLConnectionFactory;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.security.authentication.client.AuthenticationException;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -33,12 +33,12 @@ import java.security.PrivilegedExceptionAction;
  * In this case the tool can perform one of the following actions:
  *  <ul>
  *      <li>move corrupted files to /lost+found directory on DFS
- *      ({@link org.apache.hadoop.hdfs.server.namenode.NamenodeFsck#doMove}).
+ *      ( ).
  *      Remaining data blocks are saved as a
  *      block chains, representing longest consecutive series of valid blocks.
  *      </li>
  *      <li>delete corrupted files
- *      ({@link org.apache.hadoop.hdfs.server.namenode.NamenodeFsck#doDelete})
+ *      ( )
  *      </li>
  *  </ul>
  *  </li>

@@ -1,6 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
-import org.apache.hadoop.HadoopIllegalArgumentException;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.datanode.ReplicaInfo;
 import org.apache.hadoop.util.AutoCloseableLock;
