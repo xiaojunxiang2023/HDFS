@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
 /**
@@ -9,7 +7,6 @@ import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
  * This decoder can be used to isolate the performance issue to HDFS side logic
  * instead of codec, and is intended for test only.
  */
-@InterfaceAudience.Private
 public class DummyRawDecoder extends RawErasureDecoder {
 
   public DummyRawDecoder(ErasureCoderOptions coderOptions) {

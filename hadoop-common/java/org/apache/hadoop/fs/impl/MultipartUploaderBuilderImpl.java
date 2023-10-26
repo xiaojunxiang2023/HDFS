@@ -3,9 +3,6 @@ package org.apache.hadoop.fs.impl;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CreateFlag;
 import org.apache.hadoop.fs.FileContext;
 import org.apache.hadoop.fs.FileSystem;
@@ -23,8 +20,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
 /**
  * Builder for {@link MultipartUploader} implementations.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class MultipartUploaderBuilderImpl
     <S extends MultipartUploader, B extends MultipartUploaderBuilder<S, B>>
     extends AbstractFSBuilderImpl<S, B>

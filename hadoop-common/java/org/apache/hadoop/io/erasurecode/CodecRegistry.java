@@ -1,7 +1,6 @@
 package org.apache.hadoop.io.erasurecode;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.rawcoder.NativeRSRawErasureCoderFactory;
 import org.apache.hadoop.io.erasurecode.rawcoder.NativeXORRawErasureCoderFactory;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureCoderFactory;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
  * {@link CodecRegistry} maps codec names to coder factories. All coder
  * factories are dynamically identified and loaded using ServiceLoader.
  */
-@InterfaceAudience.Private
 public final class CodecRegistry {
 
   private static final Logger LOG =

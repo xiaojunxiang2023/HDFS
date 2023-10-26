@@ -1,8 +1,6 @@
 package org.apache.hadoop.security;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
@@ -15,8 +13,6 @@ import java.util.stream.Collectors;
  * This class uses {@link LdapGroupsMapping} for group lookup and applies the
  * rule configured on the group names.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
-@InterfaceStability.Evolving
 public class RuleBasedLdapGroupsMapping extends LdapGroupsMapping {
 
   public static final String CONVERSION_RULE_KEY = LDAP_CONFIG_PREFIX +

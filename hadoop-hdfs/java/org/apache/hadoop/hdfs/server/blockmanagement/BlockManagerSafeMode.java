@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs.BlockReportReplica;
@@ -49,8 +46,6 @@ import static org.apache.hadoop.util.Time.monotonicNow;
  * until the safe blocks ratio reaches the {@link #threshold} and enough live
  * data node registered.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 class BlockManagerSafeMode {
   enum BMSafeModeStatus {
     PENDING_THRESHOLD, /** Pending on more safe blocks or live datanode. */

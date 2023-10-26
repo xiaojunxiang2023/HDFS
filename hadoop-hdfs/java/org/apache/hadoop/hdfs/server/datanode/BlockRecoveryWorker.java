@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.datanode;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -36,7 +35,6 @@ import static org.apache.hadoop.hdfs.util.StripedBlockUtil.getInternalBlockLengt
 /**
  * This class handles the block recovery work commands.
  */
-@InterfaceAudience.Private
 public class BlockRecoveryWorker {
   public static final Logger LOG = DataNode.LOG;
 

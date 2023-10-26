@@ -8,9 +8,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.ipc.StandbyException;
 
@@ -19,14 +16,11 @@ import org.apache.hadoop.ipc.StandbyException;
  * The server-side secret manager for each token type.
  * @param <T> The type of the token identifier
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class SecretManager<T extends TokenIdentifier> {
   /**
    * The token was invalid and the message explains why.
    */
   @SuppressWarnings("serial")
-  @InterfaceStability.Evolving
   public static class InvalidToken extends IOException {
     public InvalidToken(String msg) { 
       super(msg);

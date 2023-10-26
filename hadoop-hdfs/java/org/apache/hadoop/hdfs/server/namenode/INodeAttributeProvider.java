@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -12,9 +10,6 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.Arrays;
-
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class INodeAttributeProvider {
 
   public static class AuthorizationContext {

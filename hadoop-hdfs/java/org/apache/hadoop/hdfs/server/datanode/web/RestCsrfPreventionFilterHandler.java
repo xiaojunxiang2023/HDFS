@@ -8,7 +8,6 @@ import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.util.ReferenceCountUtil;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.http.RestCsrfPreventionFilter;
 import org.apache.hadoop.security.http.RestCsrfPreventionFilter.HttpInteraction;
@@ -31,7 +30,6 @@ import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_RES
  * the request to the next handler in the Netty pipeline.  Otherwise, this
  * handler drops the request and immediately sends an HTTP 400 response.
  */
-@InterfaceAudience.Private
 @Sharable
 final class RestCsrfPreventionFilterHandler
         extends SimpleChannelInboundHandler<HttpRequest> {

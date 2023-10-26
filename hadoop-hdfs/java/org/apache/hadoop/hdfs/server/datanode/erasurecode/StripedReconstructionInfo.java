@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
@@ -9,7 +7,6 @@ import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 /**
  * Stores striped block info that can be used for block reconstruction.
  */
-@InterfaceAudience.Private
 public class StripedReconstructionInfo {
 
   private final ExtendedBlock blockGroup;

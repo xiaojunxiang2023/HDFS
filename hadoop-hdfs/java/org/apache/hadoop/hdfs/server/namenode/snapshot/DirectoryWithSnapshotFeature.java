@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
 import org.apache.hadoop.hdfs.server.namenode.*;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.SnapshotFSImageFormat.ReferenceMap;
@@ -22,7 +21,6 @@ import static org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot.NO_SNAPSH
  * directory. In particular, it contains a directory diff list recording changes
  * made to the directory and its children for each snapshot.
  */
-@InterfaceAudience.Private
 public class DirectoryWithSnapshotFeature implements INode.Feature {
   /**
    * The difference between the current state and a previous snapshot

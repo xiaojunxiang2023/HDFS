@@ -12,8 +12,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.XAttrSetFlag;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
@@ -104,9 +102,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import static org.apache.hadoop.log.LogThrottlingHelper.LogAction;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FSEditLogLoader {
   static final Logger LOG =
       LoggerFactory.getLogger(FSEditLogLoader.class.getName());

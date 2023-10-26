@@ -33,8 +33,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.GlobalStorageStatistics.StorageStatisticsProvider;
@@ -152,8 +150,6 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  *
  *****************************************************************/
 @SuppressWarnings("DeprecatedIsStillUsed")
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class FileSystem extends Configured
     implements Closeable, DelegationTokenIssuer, PathCapabilities {
   public static final String FS_DEFAULT_NAME_KEY =
@@ -165,7 +161,6 @@ public abstract class FileSystem extends Configured
    * This log is widely used in the org.apache.hadoop.fs code and tests,
    * so must be considered something to only be changed with care.
    */
-  @InterfaceAudience.Private
   public static final Log LOG = LogFactory.getLog(FileSystem.class);
 
   /**
@@ -429,8 +424,6 @@ public abstract class FileSystem extends Configured
    *         if the filesystem does not implement tokens
    * @see SecurityUtil#buildDTServiceName(URI, int)
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   @Override
   public String getCanonicalServiceName() {
     return (getChildFileSystems() == null)
@@ -660,7 +653,6 @@ public abstract class FileSystem extends Configured
    * @return a new delegation token or null if the FS does not support tokens.
    * @throws IOException on any problem obtaining a token
    */
-  @InterfaceAudience.Private()
   @Override
   public Token<?> getDelegationToken(String renewer) throws IOException {
     return null;
@@ -675,13 +667,10 @@ public abstract class FileSystem extends Configured
    * @return FileSystems that are direct children of this FileSystem,
    *         or null for "no children"
    */
-  @InterfaceAudience.LimitedPrivate({ "HDFS" })
   @VisibleForTesting
   public FileSystem[] getChildFileSystems() {
     return null;
   }
-
-  @InterfaceAudience.Private
   @Override
   public DelegationTokenIssuer[] getAdditionalTokenIssuers()
       throws IOException {
@@ -1891,7 +1880,6 @@ public abstract class FileSystem extends Configured
    * {@link FileSystem#listStatusBatch(Path, byte[])} to implement iterative
    * listing.
    */
-  @InterfaceAudience.Private
   public static class DirectoryEntries {
     private final FileStatus[] entries;
     private final byte[] token;
@@ -1934,7 +1922,6 @@ public abstract class FileSystem extends Configured
    * @throws FileNotFoundException
    * @throws IOException
    */
-  @InterfaceAudience.Private
   protected DirectoryEntries listStatusBatch(Path f, byte[] token) throws
       FileNotFoundException, IOException {
     // The default implementation returns the entire listing as a single batch.
@@ -2705,7 +2692,6 @@ public abstract class FileSystem extends Configured
    * @throws FileNotFoundException if the path does not exist
    * @throws IOException see specific implementation
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "Hive"})
   public void access(Path path, FsAction mode) throws AccessControlException,
       FileNotFoundException, IOException {
     checkAccessPermissions(this.getFileStatus(path), mode);
@@ -2720,7 +2706,6 @@ public abstract class FileSystem extends Configured
    * @throws AccessControlException if access is denied
    * @throws IOException for any error
    */
-  @InterfaceAudience.Private
   static void checkAccessPermissions(FileStatus stat, FsAction mode)
       throws AccessControlException, IOException {
     FsPermission perm = stat.getPermission();
@@ -4468,7 +4453,6 @@ public abstract class FileSystem extends Configured
    * @param path path to create
    * @return a builder.
    */
-  @InterfaceStability.Unstable
   protected static FSDataOutputStreamBuilder createDataOutputStreamBuilder(
       @Nonnull final FileSystem fileSystem,
       @Nonnull final Path path) {
@@ -4559,7 +4543,6 @@ public abstract class FileSystem extends Configured
    * @throws IOException if some early checks cause IO failures.
    * @throws UnsupportedOperationException if support is checked early.
    */
-  @InterfaceStability.Unstable
   public FutureDataInputStreamBuilder openFile(Path path)
       throws IOException, UnsupportedOperationException {
     return createDataInputStreamBuilder(this, path).getThisBuilder();
@@ -4578,7 +4561,6 @@ public abstract class FileSystem extends Configured
    * @throws IOException if some early checks cause IO failures.
    * @throws UnsupportedOperationException if support is checked early.
    */
-  @InterfaceStability.Unstable
   public FutureDataInputStreamBuilder openFile(PathHandle pathHandle)
       throws IOException, UnsupportedOperationException {
     return createDataInputStreamBuilder(this, pathHandle)
@@ -4675,8 +4657,6 @@ public abstract class FileSystem extends Configured
    * @param path path to read
    * @return a builder.
    */
-  @InterfaceAudience.LimitedPrivate("Filesystems")
-  @InterfaceStability.Unstable
   protected static FSDataInputStreamBuilder createDataInputStreamBuilder(
       @Nonnull final FileSystem fileSystem,
       @Nonnull final Path path) {
@@ -4690,8 +4670,6 @@ public abstract class FileSystem extends Configured
    * @param pathHandle path handle of file to open.
    * @return a builder.
    */
-  @InterfaceAudience.LimitedPrivate("Filesystems")
-  @InterfaceStability.Unstable
   protected static FSDataInputStreamBuilder createDataInputStreamBuilder(
       @Nonnull final FileSystem fileSystem,
       @Nonnull final PathHandle pathHandle) {
@@ -4765,7 +4743,6 @@ public abstract class FileSystem extends Configured
    * @throws IOException if some early checks cause IO failures.
    * @throws UnsupportedOperationException if support is checked early.
    */
-  @InterfaceStability.Unstable
   public MultipartUploaderBuilder createMultipartUploader(Path basePath)
       throws IOException {
     methodNotSupported();

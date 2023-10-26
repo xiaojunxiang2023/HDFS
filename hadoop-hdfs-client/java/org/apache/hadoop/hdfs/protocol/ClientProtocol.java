@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedEntries;
 import org.apache.hadoop.fs.PathIsNotEmptyDirectoryException;
@@ -51,8 +48,6 @@ import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_KE
  * namespace, as well as open/close file streams, etc.
  *
  **********************************************************************/
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 @KerberosInfo(
     serverPrincipal = DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY)
 @TokenInfo(DelegationTokenSelector.class)

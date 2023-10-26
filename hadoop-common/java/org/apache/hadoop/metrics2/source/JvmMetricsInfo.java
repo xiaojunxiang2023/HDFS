@@ -1,6 +1,4 @@
 package org.apache.hadoop.metrics2.source;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsInfo;
 
 import java.util.StringJoiner;
@@ -8,7 +6,6 @@ import java.util.StringJoiner;
 /**
  * JVM and logging related metrics info instances
  */
-@InterfaceAudience.Private
 public enum JvmMetricsInfo implements MetricsInfo {
   JvmMetrics("JVM related metrics etc."), // record info
   // metrics

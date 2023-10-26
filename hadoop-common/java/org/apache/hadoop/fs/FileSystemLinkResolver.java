@@ -2,17 +2,12 @@ package org.apache.hadoop.fs;
 
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * FileSystem-specific class used to operate on and resolve symlinks in a path.
  * Operation can potentially span multiple {@link FileSystem}s.
  * 
  * @see FSLinkResolver
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class FileSystemLinkResolver<T> {
 
   /**

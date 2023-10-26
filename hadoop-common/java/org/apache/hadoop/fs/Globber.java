@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.DurationInfo;
 
 import org.apache.hadoop.tracing.TraceScope;
@@ -23,8 +20,6 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
  * up for object stores within the {@code hadoop-*} codebase ONLY.
  * It could be expanded for external store implementations in future.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class Globber {
   public static final Logger LOG =
       LoggerFactory.getLogger(Globber.class.getName());
@@ -400,7 +395,6 @@ public class Globber {
   /**
    * Builder for Globber instances.
    */
-  @InterfaceAudience.Private
   public static class GlobBuilder {
 
     private final FileSystem fs;

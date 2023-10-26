@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.net.URI;
  * hdfs://nn1.example.com/my/creds.bcfks bcfks://file/home/larry/creds.bcfks
  * {@literal ->} file:///home/user1/creds.bcfks
  */
-@InterfaceAudience.Private
 public final class BouncyCastleFipsKeyStoreProvider extends KeyStoreProvider {
   public static final String SCHEME_NAME = "bcfks";
   public static final String KEYSTORE_TYPE = "bcfks";

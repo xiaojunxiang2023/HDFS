@@ -1,15 +1,10 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * This is the JMX management interface for NameNode status information.
  * End users shouldn't be implementing these interfaces, and instead
  * access this information through the JMX APIs. *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public interface NameNodeStatusMXBean {
 
   /**

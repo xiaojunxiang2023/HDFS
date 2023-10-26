@@ -11,7 +11,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
@@ -42,7 +41,6 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFact
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@InterfaceAudience.LimitedPrivate("HDFS")
 public abstract class ZKFailoverController {
 
   static final Logger LOG = LoggerFactory.getLogger(ZKFailoverController.class);

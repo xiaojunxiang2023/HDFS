@@ -14,9 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */package org.apache.hadoop.hdfs.protocolPB;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos;
 import org.apache.hadoop.ipc.ProtocolInfo;
@@ -32,8 +29,6 @@ import org.apache.hadoop.security.KerberosInfo;
     protocolVersion = 1)
 @KerberosInfo(
     serverPrincipal = DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY)
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface AliasMapProtocolPB extends
     AliasMapProtocolProtos.AliasMapProtocolService.BlockingInterface {
 }

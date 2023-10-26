@@ -4,9 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FileSystem;
@@ -24,8 +21,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SHELL_SA
 /**
  * Classes that delete paths.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 class Delete {
   public static void registerCommands(CommandFactory factory) {

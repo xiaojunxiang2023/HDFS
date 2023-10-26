@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.util.*;
 
 /**
@@ -10,7 +8,6 @@ import java.util.*;
  *
  * @param <E> The type of the list elements.
  */
-@InterfaceAudience.Private
 public interface ReadOnlyList<E> extends Iterable<E> {
     /**
      * Is this an empty list?

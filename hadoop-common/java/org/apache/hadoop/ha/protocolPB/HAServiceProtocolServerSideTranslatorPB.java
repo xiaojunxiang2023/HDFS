@@ -1,9 +1,6 @@
 package org.apache.hadoop.ha.protocolPB;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
 import org.apache.hadoop.ha.HAServiceProtocol.RequestSource;
@@ -35,8 +32,6 @@ import org.slf4j.LoggerFactory;
  * to the native data types used inside the NN as specified in the generic
  * ClientProtocol.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class HAServiceProtocolServerSideTranslatorPB implements
     HAServiceProtocolPB {
   private final HAServiceProtocol server;

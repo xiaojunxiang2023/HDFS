@@ -2,8 +2,6 @@ package org.apache.hadoop.net;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -26,8 +24,7 @@ import java.util.function.Consumer;
  * or racks.  
  * 
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class NetworkTopology {
   public final static String DEFAULT_RACK = "/default-rack";
   public static final Logger LOG =

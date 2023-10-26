@@ -7,8 +7,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.hadoop.util.*;
 import org.apache.hadoop.util.DiskChecker.DiskErrorException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +42,7 @@ import org.slf4j.LoggerFactory;
  * actually points to the configured directory on the Disk which will be the
  * parent for all file write/read allocations.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class LocalDirAllocator {
   
   //A Map from the config item names like "mapred.local.dir"
@@ -211,7 +208,7 @@ public class LocalDirAllocator {
    * @param contextCfgItemName
    */
   @Deprecated
-  @InterfaceAudience.LimitedPrivate({"MapReduce"})
+  // 仅 MapReduce可见
   public static void removeContext(String contextCfgItemName) {
     synchronized (contexts) {
       contexts.remove(contextCfgItemName);

@@ -1,7 +1,4 @@
 package org.apache.hadoop.net;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -13,8 +10,6 @@ import java.net.URI;
  * It can either create the default resolver for the whole resolving for
  * hadoop or create individual resolver per nameservice or yarn.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public final class DomainNameResolverFactory {
 
   private DomainNameResolverFactory() {

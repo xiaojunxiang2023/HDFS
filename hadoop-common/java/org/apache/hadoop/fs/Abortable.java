@@ -2,16 +2,11 @@ package org.apache.hadoop.fs;
 
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  *  Abort data being written to  a stream, so that close() does
  *  not write the data. It is implemented by output streams in
  *  some object stores, and passed through {@link FSDataOutputStream}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface Abortable {
 
   /**

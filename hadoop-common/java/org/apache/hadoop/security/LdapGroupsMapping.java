@@ -43,8 +43,6 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.hadoop.classification.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Iterators;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.slf4j.Logger;
@@ -77,8 +75,7 @@ import org.slf4j.LoggerFactory;
  * the user must be an explicit member in LDAP.  Otherwise, it will traverse the
  * group hierarchy n levels up.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class LdapGroupsMapping
     implements GroupMappingServiceProvider, Configurable {
   
@@ -966,7 +963,6 @@ public class LdapGroupsMapping
    * <p>
    * This is public only to be accessible by the Java naming services.
    */
-  @InterfaceAudience.Private
   public static class LdapSslSocketFactory extends SocketFactory {
 
     /** Cached value lazy-loaded by {@link #getDefault()}. */

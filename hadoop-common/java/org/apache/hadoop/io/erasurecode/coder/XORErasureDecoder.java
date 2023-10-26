@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.coder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.CodecUtil;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECBlockGroup;
@@ -13,7 +11,6 @@ import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
  *
  * It implements {@link ErasureCoder}.
  */
-@InterfaceAudience.Private
 public class XORErasureDecoder extends ErasureDecoder {
 
   public XORErasureDecoder(ErasureCoderOptions options) {

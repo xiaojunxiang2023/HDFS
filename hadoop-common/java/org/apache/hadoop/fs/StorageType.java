@@ -3,17 +3,12 @@ package org.apache.hadoop.fs;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringUtils;
 
 /**
  * Defines the types of supported storage media. The default storage
  * medium is assumed to be DISK.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public enum StorageType {
   // sorted by the speed of the storage types, from fast to slow
   RAM_DISK(true),

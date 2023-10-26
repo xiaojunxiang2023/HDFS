@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * This is a wrapper class.  It wraps a Writable implementation around
@@ -19,8 +17,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * This is a wrapper class only; it does not make a copy of the 
  * underlying array.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class ArrayPrimitiveWritable implements Writable {
   
   //componentType is determined from the component type of the value array 

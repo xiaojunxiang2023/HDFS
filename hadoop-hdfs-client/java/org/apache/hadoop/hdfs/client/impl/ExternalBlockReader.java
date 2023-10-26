@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.client.impl;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.hdfs.BlockReader;
 import org.apache.hadoop.hdfs.ReplicaAccessor;
@@ -15,7 +13,6 @@ import org.apache.hadoop.util.DataChecksum;
  * An ExternalBlockReader uses pluggable ReplicaAccessor objects to read from
  * replicas.
  */
-@InterfaceAudience.Private
 public final class ExternalBlockReader implements BlockReader {
   private final ReplicaAccessor accessor;
   private final long visibleLength;

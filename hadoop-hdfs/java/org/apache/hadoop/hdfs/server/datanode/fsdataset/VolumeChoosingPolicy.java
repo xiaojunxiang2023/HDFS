@@ -1,14 +1,11 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.IOException;
 import java.util.List;
 
 /**
  * This interface specifies the policy for choosing volumes to store replicas.
  */
-@InterfaceAudience.Private
 public interface VolumeChoosingPolicy<V extends FsVolumeSpi> {
 
     /**

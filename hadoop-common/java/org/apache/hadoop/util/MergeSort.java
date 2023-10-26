@@ -1,14 +1,10 @@
 package org.apache.hadoop.util;
 
 import java.util.Comparator;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.IntWritable;
 
 /** An implementation of the core algorithm of MergeSort. */
-@InterfaceAudience.LimitedPrivate({"MapReduce"})
-@InterfaceStability.Unstable
+// 仅 MapReduce可见
 public class MergeSort {
   //Reusable IntWritables
   IntWritable I = new IntWritable(0);

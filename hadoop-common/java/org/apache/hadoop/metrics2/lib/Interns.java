@@ -1,7 +1,4 @@
 package org.apache.hadoop.metrics2.lib;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsTag;
 import org.slf4j.Logger;
@@ -13,8 +10,6 @@ import java.util.Map;
 /**
  * Helpers to create interned metrics info.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class Interns {
   private static final Logger LOG = LoggerFactory.getLogger(Interns.class);
 

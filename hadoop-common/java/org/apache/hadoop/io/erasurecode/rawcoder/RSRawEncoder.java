@@ -1,7 +1,6 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.DumpUtil;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
@@ -12,7 +11,6 @@ import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
  * when possible. This new Java coder is about 5X faster than the one originated
  * from HDFS-RAID, and also compatible with the native/ISA-L coder.
  */
-@InterfaceAudience.Private
 public class RSRawEncoder extends RawErasureEncoder {
   // relevant to schema and won't change during encode calls.
   private byte[] encodeMatrix;

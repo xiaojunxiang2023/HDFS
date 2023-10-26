@@ -9,8 +9,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.ClientHAProxyFactory;
 import org.apache.hadoop.hdfs.server.namenode.ha.HAProxyFactory;
@@ -55,7 +53,6 @@ import org.apache.hadoop.security.UserGroupInformation;
  * For creating proxy objects with other protocols, please see
  * NameNodeProxies#createProxy(Configuration, URI, Class).
  */
-@InterfaceAudience.Private
 public class NameNodeProxiesClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(

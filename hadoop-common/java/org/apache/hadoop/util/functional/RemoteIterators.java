@@ -12,9 +12,6 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
@@ -52,8 +49,6 @@ import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStat
  * Based on the S3A Listing code, and some some work on moving other code
  * to using iterative listings so as to pick up the statistics.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public final class RemoteIterators {
 
   /**

@@ -7,17 +7,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Class that caches the netgroups and inverts group-to-user map
  * to user-to-group map, primarily intended for use with
  * netgroups (as returned by getent netgrgoup) which only returns
  * group to user mapping.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class NetgroupCache {
   private static ConcurrentHashMap<String, Set<String>> userToNetgroupsMap =
     new ConcurrentHashMap<String, Set<String>>();

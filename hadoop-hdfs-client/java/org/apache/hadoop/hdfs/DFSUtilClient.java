@@ -5,7 +5,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.SignedBytes;
 import java.net.URISyntaxException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BlockLocation;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -80,8 +79,6 @@ import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_HA_NAMENODE
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_AUXILIARY_KEY;
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_KEY;
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMESERVICES;
-
-@InterfaceAudience.Private
 public class DFSUtilClient {
   public static final byte[] EMPTY_BYTES = {};
   private static final Logger LOG = LoggerFactory.getLogger(

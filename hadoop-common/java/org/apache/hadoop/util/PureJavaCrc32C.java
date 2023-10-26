@@ -22,16 +22,11 @@ package org.apache.hadoop.util;
 
 import java.util.zip.Checksum;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A pure-java implementation of the CRC32 checksum that uses
  * the CRC32-C polynomial, the same polynomial used by iSCSI
  * and implemented on many Intel chipsets supporting SSE4.2.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class PureJavaCrc32C implements Checksum {
 
   /** the current CRC value, bit-flipped */

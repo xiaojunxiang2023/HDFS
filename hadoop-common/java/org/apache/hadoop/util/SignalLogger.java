@@ -4,8 +4,6 @@ import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
 import org.apache.commons.logging.Log;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * This class logs a message whenever we're about to exit on a UNIX signal.
@@ -13,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * For example, if the process exited because the system administrator 
  * ran a standard "kill," you would see 'EXITING ON SIGNAL SIGTERM' in the log.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public enum SignalLogger {
   INSTANCE;
 

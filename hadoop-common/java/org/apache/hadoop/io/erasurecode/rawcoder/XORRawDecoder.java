@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
 import java.nio.ByteBuffer;
@@ -12,7 +10,6 @@ import java.nio.ByteBuffer;
  * used in advanced codes, like HitchHiker and LRC, though itself is rarely
  * deployed independently.
  */
-@InterfaceAudience.Private
 public class XORRawDecoder extends RawErasureDecoder {
 
   public XORRawDecoder(ErasureCoderOptions coderOptions) {

@@ -59,7 +59,6 @@ import org.apache.hadoop.security.AccessControlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension;
@@ -91,8 +90,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
-
-@InterfaceAudience.Private
 public class DFSUtil {
   public static final Logger LOG =
       LoggerFactory.getLogger(DFSUtil.class.getName());
@@ -141,8 +138,7 @@ public class DFSUtil {
    * slow, stale, entering_maintenance and decommissioned states.
    * Order: live {@literal ->} slow {@literal ->} stale {@literal ->}
    * entering_maintenance {@literal ->} decommissioned
-   */
-  @InterfaceAudience.Private 
+   */ 
   public static class StaleAndSlowComparator extends ServiceComparator {
     private final boolean avoidStaleDataNodesForRead;
     private final long staleInterval;

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.InconsistentFSStateException;
@@ -21,7 +19,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * This class handles the setup of the journaling 
  * spool on the backup namenode.
  */
-@InterfaceAudience.Private
 public class BackupImage extends FSImage {
   /** Backup input stream for loading edits into memory */
   private final EditLogBackupInputStream backupInputStream =

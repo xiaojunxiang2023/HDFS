@@ -1,14 +1,10 @@
 package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Identifies a Block uniquely across the block pools
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ExtendedBlock {
   private String poolId;
   private Block block;

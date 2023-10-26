@@ -13,9 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.Shell.ShellCommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +20,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Plugin to calculate resource information on Linux systems.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class SysInfoLinux extends SysInfo {
   private static final Logger LOG =
       LoggerFactory.getLogger(SysInfoLinux.class);

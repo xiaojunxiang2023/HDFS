@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -38,8 +35,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * {@link Sender#replaceBlock(ExtendedBlock, StorageType, Token, String,
  * DatanodeInfo, String)}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ExternalSPSBlockMoveTaskHandler implements BlockMoveTaskHandler {
     private static final Logger LOG = LoggerFactory
             .getLogger(ExternalSPSBlockMoveTaskHandler.class);

@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -20,7 +18,6 @@ import java.net.URI;
  * hdfs://nn1.example.com/my/creds.bcfks bcfks://file/home/larry/creds.bcfks
  * {@literal ->} file:///home/user1/creds.bcfks
  */
-@InterfaceAudience.Private
 public abstract class KeyStoreProvider extends AbstractJavaKeyStoreProvider {
 
   private FileSystem fs;

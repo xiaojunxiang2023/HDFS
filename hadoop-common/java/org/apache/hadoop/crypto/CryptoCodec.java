@@ -3,9 +3,6 @@ package org.apache.hadoop.crypto;
 import java.io.Closeable;
 import java.security.GeneralSecurityException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -24,8 +21,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
 /**
  * Crypto codec class, encapsulates encryptor/decryptor pair.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class CryptoCodec implements Configurable, Closeable {
   public static Logger LOG = LoggerFactory.getLogger(CryptoCodec.class);
   

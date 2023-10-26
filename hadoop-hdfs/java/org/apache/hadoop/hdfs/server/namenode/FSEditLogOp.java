@@ -70,8 +70,6 @@ import java.util.zip.Checksum;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ChecksumException;
 import org.apache.hadoop.fs.Options.Rename;
 import org.apache.hadoop.fs.XAttr;
@@ -131,8 +129,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * All ops derive from FSEditLogOp and are only
  * instantiated from Reader#readOp()
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public abstract class FSEditLogOp {
   public final FSEditLogOpCodes opCode;
   long txid;

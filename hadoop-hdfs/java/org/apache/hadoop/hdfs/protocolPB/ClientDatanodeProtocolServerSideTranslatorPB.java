@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.protocolPB;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.client.BlockReportOptions;
 import org.apache.hadoop.hdfs.protocol.BlockLocalPathInfo;
 import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
@@ -54,7 +52,6 @@ import org.apache.hadoop.net.NetUtils;
  * received on {@link ClientDatanodeProtocolPB} to the
  * {@link ClientDatanodeProtocol} server implementation.
  */
-@InterfaceAudience.Private
 public class ClientDatanodeProtocolServerSideTranslatorPB implements
     ClientDatanodeProtocolPB {
   private final static RefreshNamenodesResponseProto REFRESH_NAMENODE_RESP =

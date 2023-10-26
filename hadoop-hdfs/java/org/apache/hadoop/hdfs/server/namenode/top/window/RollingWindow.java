@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.server.namenode.top.window;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +31,6 @@ import org.slf4j.LoggerFactory;
  *
  * Thread-safety is built in the {@link RollingWindow.Bucket}
  */
-@InterfaceAudience.Private
 public class RollingWindow {
   private static final Logger LOG = LoggerFactory.getLogger(RollingWindow.class);
 

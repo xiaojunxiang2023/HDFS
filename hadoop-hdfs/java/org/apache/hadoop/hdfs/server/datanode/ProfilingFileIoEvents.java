@@ -18,7 +18,6 @@
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.common.Util;
@@ -33,7 +32,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * Profiles the performance of the metadata and data related operations on
  * datanode volumes.
  */
-@InterfaceAudience.Private
 class ProfilingFileIoEvents {
   static final Logger LOG =
       LoggerFactory.getLogger(ProfilingFileIoEvents.class);

@@ -2,8 +2,6 @@ package org.apache.hadoop.io.erasurecode.coder;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.coder.util.HHUtil;
@@ -15,7 +13,6 @@ import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
  * information to perform a decoding step involved in the whole process of
  * decoding a block group.
  */
-@InterfaceAudience.Private
 public class HHXORErasureDecodingStep extends HHErasureCodingStep {
   private int pbIndex;
   private int[] piggyBackIndex;

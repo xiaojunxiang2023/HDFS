@@ -1,20 +1,16 @@
 package org.apache.hadoop.io.retry;
 
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * <p>
  * Specifies a policy for retrying method failures.
  * Implementations of this interface should be immutable.
  * </p>
  */
-@InterfaceStability.Evolving
 public interface RetryPolicy {
   
   /**
    * Returned by {@link RetryPolicy#shouldRetry(Exception, int, int, boolean)}.
    */
-  @InterfaceStability.Evolving
   public static class RetryAction {
     
     // A few common retry policies, with no delays.

@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.protocol;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.io.retry.Idempotent;
 
@@ -13,8 +10,6 @@ import org.apache.hadoop.io.retry.Idempotent;
  * ReconfigurationProtocol is used by HDFS admin to reload configuration
  * for NN/DN without restarting them.
  **********************************************************************/
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface ReconfigurationProtocol {
 
   long VERSIONID = 1L;

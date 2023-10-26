@@ -2,9 +2,6 @@ package org.apache.hadoop.security.authorize;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.security.AccessControlException;
 
 /**
@@ -12,8 +9,6 @@ import org.apache.hadoop.security.AccessControlException;
  * 
  * This class <em>does not</em> provide the stack trace for security purposes.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class AuthorizationException extends AccessControlException {
   private static final long serialVersionUID = 1L;
 

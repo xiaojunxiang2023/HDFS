@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.protocol.CacheDirective;
@@ -26,7 +24,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * 
  * CachePools must be accessed under the FSNamesystem lock.
  */
-@InterfaceAudience.Private
 public final class CachePool {
   @Nonnull
   private final String poolName;

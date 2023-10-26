@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.XAttrHelper;
 
@@ -13,7 +11,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 /**
  * Feature for extended attributes.
  */
-@InterfaceAudience.Private
 public class XAttrFeature implements INode.Feature {
   static final int PACK_THRESHOLD = 1024;
 

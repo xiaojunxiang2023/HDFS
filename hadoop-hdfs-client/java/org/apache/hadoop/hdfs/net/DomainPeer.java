@@ -6,13 +6,11 @@ import java.io.OutputStream;
 import java.nio.channels.ReadableByteChannel;
 
 import org.apache.hadoop.net.unix.DomainSocket;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * Represents a peer that we communicate with by using blocking I/O
  * on a UNIX domain socket.
  */
-@InterfaceAudience.Private
 public class DomainPeer implements Peer {
   private final DomainSocket socket;
   private final OutputStream out;

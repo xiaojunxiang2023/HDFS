@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
@@ -13,9 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicLong;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public abstract class RamDiskReplicaTracker {
     static final Logger LOG =
             LoggerFactory.getLogger(RamDiskReplicaTracker.class);

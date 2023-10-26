@@ -8,9 +8,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.fs.impl.OpenFileParameters;
@@ -22,8 +19,6 @@ import org.apache.hadoop.util.Progressable;
  * Implementation of AbstractFileSystem based on the existing implementation of 
  * {@link FileSystem}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public abstract class DelegateToFileSystem extends AbstractFileSystem {
   private static final int DELEGATE_TO_FS_DEFAULT_PORT = -1;
   protected final FileSystem fsImpl;

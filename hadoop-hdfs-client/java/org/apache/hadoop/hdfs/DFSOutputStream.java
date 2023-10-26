@@ -9,7 +9,6 @@ import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.CanSetDropBehind;
 import org.apache.hadoop.fs.CreateFlag;
@@ -73,7 +72,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * the first datanode in the pipeline.
  *
  ****************************************************************/
-@InterfaceAudience.Private
 public class DFSOutputStream extends FSOutputSummer
     implements Syncable, CanSetDropBehind, StreamCapabilities {
   static final Logger LOG = LoggerFactory.getLogger(DFSOutputStream.class);

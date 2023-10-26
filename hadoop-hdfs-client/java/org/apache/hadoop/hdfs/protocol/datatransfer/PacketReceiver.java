@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.DirectBufferPool;
 import org.apache.hadoop.io.IOUtils;
 
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
  * These packets are used both for reading and writing data to/from
  * DataNodes.
  */
-@InterfaceAudience.Private
 public class PacketReceiver implements Closeable {
 
   /**

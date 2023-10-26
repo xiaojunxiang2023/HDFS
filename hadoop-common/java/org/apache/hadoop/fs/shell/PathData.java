@@ -7,9 +7,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -30,8 +27,6 @@ import static org.apache.hadoop.util.functional.RemoteIterators.mappingRemoteIte
  * modify the path string).
  * The stat field will be null if the path does not exist.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 public class PathData implements Comparable<PathData> {
   protected final URI uri;

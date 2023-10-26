@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.server.datanode.DNConf;
 import org.apache.hadoop.io.nativeio.NativeIO;
@@ -18,8 +16,6 @@ import java.nio.channels.FileChannel;
 /**
  * Maps block to memory.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class MemoryMappableBlockLoader extends MappableBlockLoader {
     private static final Logger LOG =
             LoggerFactory.getLogger(MemoryMappableBlockLoader.class);

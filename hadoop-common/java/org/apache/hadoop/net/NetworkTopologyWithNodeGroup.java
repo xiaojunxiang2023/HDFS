@@ -1,8 +1,5 @@
 package org.apache.hadoop.net;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The class extends NetworkTopology to represents a cluster of computer with
  *  a 4-layers hierarchical network topology.
@@ -12,8 +9,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * 
  * @see NetworkTopology
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class NetworkTopologyWithNodeGroup extends NetworkTopology {
 
   public final static String DEFAULT_NODEGROUP = "/default-nodegroup";

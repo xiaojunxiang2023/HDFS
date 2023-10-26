@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.io.nativeio.NativeIO;
 
@@ -10,8 +7,6 @@ import java.nio.MappedByteBuffer;
 /**
  * Represents an HDFS block that is mapped to memory by the DataNode.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class MemoryMappedBlock implements MappableBlock {
     private final long length;
     private MappedByteBuffer mmap;

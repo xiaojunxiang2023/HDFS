@@ -85,7 +85,6 @@ import javax.net.SocketFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurableBase;
 import org.apache.hadoop.conf.ReconfigurationException;
@@ -213,7 +212,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // 实现了 InterDatanodeProtocol、ClientDatanodeProtocol、ReconfigurationProtocol 接口
-@InterfaceAudience.Private
 public class DataNode extends ReconfigurableBase
     implements InterDatanodeProtocol, ClientDatanodeProtocol,
         DataNodeMXBean, ReconfigurationProtocol {
@@ -1821,16 +1819,12 @@ public class DataNode extends ReconfigurableBase
     metrics.incrBlocksGetLocalPathInfo();
     return info;
   }
-
-  @InterfaceAudience.LimitedPrivate("HDFS")
   static public class ShortCircuitFdsUnsupportedException extends IOException {
     private static final long serialVersionUID = 1L;
     public ShortCircuitFdsUnsupportedException(String msg) {
       super(msg);
     }
   }
-
-  @InterfaceAudience.LimitedPrivate("HDFS")
   static public class ShortCircuitFdsVersionException extends IOException {
     private static final long serialVersionUID = 1L;
     public ShortCircuitFdsVersionException(String msg) {
@@ -2635,7 +2629,6 @@ public class DataNode extends ReconfigurableBase
    *  If this thread is specifically interrupted, it will stop waiting.
    */
   @VisibleForTesting
-  @InterfaceAudience.Private
   public static DataNode createDataNode(String args[], Configuration conf,
       SecureResources resources) throws IOException {
     DataNode dn = instantiateDataNode(args, conf, resources);

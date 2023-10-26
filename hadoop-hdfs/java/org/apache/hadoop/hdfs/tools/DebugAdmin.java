@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
@@ -49,8 +47,6 @@ import java.util.concurrent.*;
  * These operations are only for debugging, and may change or disappear
  * between HDFS versions.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DebugAdmin extends Configured implements Tool {
     private static int HEADER_LEN = 7;
     /**

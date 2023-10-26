@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.ServiceFailedException;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
@@ -13,7 +11,6 @@ import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
  * service and handles operations of type {@link OperationCategory#WRITE} and
  * {@link OperationCategory#READ}.
  */
-@InterfaceAudience.Private
 public class ActiveState extends HAState {
   public ActiveState() {
     super(HAServiceState.ACTIVE);

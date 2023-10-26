@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.ByteBufferPositionedReadable;
 import org.apache.hadoop.fs.ByteBufferReadable;
 import org.apache.hadoop.fs.ByteBufferUtil;
@@ -81,7 +80,6 @@ import static org.apache.hadoop.hdfs.util.IOUtilsClient.updateReadStatistics;
  * DFSInputStream provides bytes from a named file.  It handles
  * negotiation of the namenode and various datanodes as necessary.
  ****************************************************************/
-@InterfaceAudience.Private
 public class DFSInputStream extends FSInputStream
     implements ByteBufferReadable, CanSetDropBehind, CanSetReadahead,
                HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,

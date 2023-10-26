@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ClusterStorageCapacityExceededException;
 
 /**
@@ -16,8 +13,6 @@ import org.apache.hadoop.fs.ClusterStorageCapacityExceededException;
  *  DSQuotaExceededException or
  *  NSQuotaExceededException
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class QuotaExceededException extends ClusterStorageCapacityExceededException {
   protected static final long serialVersionUID = 1L;
   protected String pathName=null;

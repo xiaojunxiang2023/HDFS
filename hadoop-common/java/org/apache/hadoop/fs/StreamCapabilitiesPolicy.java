@@ -1,17 +1,12 @@
 package org.apache.hadoop.fs;
 
 import java.io.InputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Static methods to implement policies for {@link StreamCapabilities}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class StreamCapabilitiesPolicy {
   public static final String CAN_UNBUFFER_NOT_IMPLEMENTED_MESSAGE =
           "claims unbuffer capabilty but does not implement CanUnbuffer";

@@ -8,7 +8,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
@@ -29,7 +28,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  *       (1) a subclass of K, and
  *       (2) implementing {@link LinkedElement} interface.
  */
-@InterfaceAudience.Private
 public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
   /**
    * Elements of {@link LightWeightGSet}.

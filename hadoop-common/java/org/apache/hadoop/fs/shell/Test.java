@@ -3,17 +3,12 @@ package org.apache.hadoop.fs.shell;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.security.AccessControlException;
 
 /**
  * Perform shell-like file tests 
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 class Test extends FsCommand {  
   public static void registerCommands(CommandFactory factory) {

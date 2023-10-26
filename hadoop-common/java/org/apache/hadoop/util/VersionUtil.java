@@ -1,12 +1,9 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * A wrapper class to maven's ComparableVersion class, to comply
  * with maven's version name string convention 
  */
-@InterfaceAudience.Private
 public abstract class VersionUtil {
   /**
    * Compares two version name strings using maven's ComparableVersion class.

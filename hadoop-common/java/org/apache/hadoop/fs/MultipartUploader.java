@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 
 /**
@@ -18,8 +15,6 @@ import org.apache.hadoop.fs.statistics.IOStatisticsSource;
  * need to cast an instance to see if is a source of statistics.
  * However, implementations MAY return null for their actual statistics.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface MultipartUploader extends Closeable,
     IOStatisticsSource {
 

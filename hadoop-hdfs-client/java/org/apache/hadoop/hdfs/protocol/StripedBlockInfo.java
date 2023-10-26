@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.security.token.Token;
 
@@ -9,8 +6,6 @@ import org.apache.hadoop.security.token.Token;
  * Striped block info that can be sent elsewhere to do block group level things,
  * like checksum, and etc.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class StripedBlockInfo {
   private final ExtendedBlock block;
   private final DatanodeInfo[] datanodes;

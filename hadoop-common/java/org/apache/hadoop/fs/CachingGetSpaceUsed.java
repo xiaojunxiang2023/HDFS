@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +33,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * The implementor is fee to cache space used. As such there
  * are methods to update the cached value with any known changes.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public abstract class CachingGetSpaceUsed implements Closeable, GetSpaceUsed {
   static final Logger LOG = LoggerFactory.getLogger(CachingGetSpaceUsed.class);
 

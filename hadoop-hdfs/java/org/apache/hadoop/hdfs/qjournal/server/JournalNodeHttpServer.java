@@ -5,8 +5,6 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 
 import javax.servlet.ServletContext;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -18,7 +16,6 @@ import org.apache.hadoop.net.NetUtils;
 /**
  * Encapsulates the HTTP server started by the Journal Service.
  */
-@InterfaceAudience.Private
 public class JournalNodeHttpServer {
   public static final String JN_ATTRIBUTE_KEY = "localjournal";
 

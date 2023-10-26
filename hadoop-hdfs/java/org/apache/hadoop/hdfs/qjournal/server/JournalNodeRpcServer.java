@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.qjournal.server;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 import org.slf4j.Logger;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -39,9 +38,6 @@ import java.net.InetSocketAddress;
 import java.net.URL;
 
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_RPC_BIND_HOST_KEY;
-
-
-@InterfaceAudience.Private
 @VisibleForTesting
 public class JournalNodeRpcServer implements QJournalProtocol,
     InterQJournalProtocol {

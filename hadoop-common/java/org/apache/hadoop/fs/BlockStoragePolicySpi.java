@@ -18,15 +18,10 @@
 
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A storage policy specifies the placement of block replicas on specific
  * storage types.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public interface BlockStoragePolicySpi {
 
   /**

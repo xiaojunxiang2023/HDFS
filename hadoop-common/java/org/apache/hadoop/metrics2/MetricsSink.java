@@ -2,9 +2,6 @@ package org.apache.hadoop.metrics2;
 
 import java.io.Closeable;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The metrics sink interface. <p>
  * Implementations of this interface consume the {@link MetricsRecord} generated
@@ -14,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * implements {@link Closeable}, then the MetricsSystem will close the sink when
  * it is stopped.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface MetricsSink extends MetricsPlugin {
   /**
    * Put a metrics record in the sink

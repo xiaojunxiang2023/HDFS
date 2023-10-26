@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.permission;
 
 import java.util.regex.Pattern;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Parse umask value provided as a string, either in octal or symbolic
  * format and return it as a short value. Umask values are slightly
@@ -12,8 +9,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * or X.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class UmaskParser extends PermissionParser {
   private static Pattern chmodOctalPattern =
     Pattern.compile("^\\s*[+]?(0*)([0-7]{3})\\s*$"); // no leading 1 for sticky bit

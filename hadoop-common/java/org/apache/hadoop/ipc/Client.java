@@ -4,9 +4,7 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Public;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -66,7 +64,6 @@ import static org.apache.hadoop.ipc.RpcConstants.PING_CALL_ID;
  * @see Server
  */
 @Public
-@InterfaceStability.Evolving
 public class Client implements AutoCloseable {
   public static final Logger LOG = LoggerFactory.getLogger(Client.class);
 
@@ -1608,8 +1605,6 @@ public class Client implements AutoCloseable {
   }
 
   // for unit testing only
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   Set<ConnectionId> getConnectionIds() {
     return connections.keySet();
   }
@@ -1665,8 +1660,7 @@ public class Client implements AutoCloseable {
    * to servers are uniquely identified by {@literal <}remoteAddress, protocol,
    * ticket{@literal >}
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-  @InterfaceStability.Evolving
+  // MapReduce也可见
   public static class ConnectionId {
     InetSocketAddress address;
     UserGroupInformation ticket;
@@ -1868,7 +1862,6 @@ public class Client implements AutoCloseable {
   /** Manages the input and output streams for an IPC connection.
    *  Only exposed for use by SaslRpcClient.
    */
-  @InterfaceAudience.Private
   public static class IpcStreams implements Closeable, Flushable {
     private DataInputStream in;
     public DataOutputStream out;

@@ -1,9 +1,6 @@
 package org.apache.hadoop.fs.local;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ChecksumFileSystem;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FsServerDefaults;
@@ -18,9 +15,6 @@ import org.apache.hadoop.util.DataChecksum;
  * wrapped with {@link ChecksumFileSystem}, these settings are not
  * used.
  */
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class LocalConfigKeys extends CommonConfigurationKeys {
   public static final String BLOCK_SIZE_KEY = "file.blocksize";
   public static final long BLOCK_SIZE_DEFAULT = 64*1024*1024;

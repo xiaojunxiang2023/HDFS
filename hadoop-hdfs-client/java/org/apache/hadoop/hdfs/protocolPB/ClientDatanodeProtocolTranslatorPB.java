@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -70,8 +67,6 @@ import org.slf4j.LoggerFactory;
  * {@link ClientDatanodeProtocol} interfaces to the RPC server implementing
  * {@link ClientDatanodeProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class ClientDatanodeProtocolTranslatorPB implements
     ProtocolMetaInterface, ClientDatanodeProtocol,
     ProtocolTranslator, Closeable {

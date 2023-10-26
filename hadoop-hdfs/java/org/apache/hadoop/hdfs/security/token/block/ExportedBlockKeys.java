@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.security.token.block;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableFactories;
 import org.apache.hadoop.io.WritableFactory;
@@ -12,7 +10,6 @@ import org.apache.hadoop.io.WritableFactory;
 /**
  * Object for passing block keys
  */
-@InterfaceAudience.Private
 public class ExportedBlockKeys implements Writable {
   public static final ExportedBlockKeys DUMMY_KEYS = new ExportedBlockKeys();
   private boolean isBlockTokenEnabled;

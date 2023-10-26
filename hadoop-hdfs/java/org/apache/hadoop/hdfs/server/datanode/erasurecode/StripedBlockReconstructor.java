@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.datanode.DataNodeFaultInjector;
 import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
 import org.apache.hadoop.io.erasurecode.rawcoder.InvalidDecodingException;
@@ -14,7 +12,6 @@ import org.apache.hadoop.util.Time;
  * the striped block group, the minimum number of live striped blocks should
  * be no less than data block number.
  */
-@InterfaceAudience.Private
 class StripedBlockReconstructor extends StripedReconstructor
     implements Runnable {
 

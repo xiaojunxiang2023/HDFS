@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.common;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -22,8 +21,6 @@ import java.util.regex.Pattern;
  * Some handy internal HDFS constants
  *
  ************************************/
-
-@InterfaceAudience.Private
 public interface HdfsServerConstants {
     int MIN_BLOCKS_FOR_WRITE = 1;
 

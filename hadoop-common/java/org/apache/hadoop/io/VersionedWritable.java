@@ -4,9 +4,6 @@ import java.io.DataOutput;
 import java.io.DataInput;
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A base class for Writables that provides version checking.
  *
  * <p>This is useful when a class may evolve, so that instances written by the
@@ -14,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * handle this situation, {@link #readFields(DataInput)}
  * implementations should catch {@link VersionMismatchException}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class VersionedWritable implements Writable {
 
   /** Return the version number of the current implementation. */

@@ -2,15 +2,10 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import java.util.Set;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * An implementation of @see BlockPlacementStatus for
  * @see BlockPlacementPolicyWithNodeGroup
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockPlacementStatusWithNodeGroup implements BlockPlacementStatus {
 
   private final BlockPlacementStatus parentBlockPlacementStatus;

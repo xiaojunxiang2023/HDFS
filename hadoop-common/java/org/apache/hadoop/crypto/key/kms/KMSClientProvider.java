@@ -1,7 +1,6 @@
 package org.apache.hadoop.crypto.key.kms;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension.EncryptedKeyVersion;
@@ -76,7 +75,6 @@ import static org.apache.hadoop.util.KMSUtil.parseJSONMetadata;
 /**
  * KMS client <code>KeyProvider</code> implementation.
  */
-@InterfaceAudience.Private
 public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     KeyProviderDelegationTokenExtension.DelegationTokenExtension {
 
@@ -973,8 +971,6 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
       }
     };
   }
-
-  @InterfaceAudience.Private
   @Override
   public Token<?> selectDelegationToken(Credentials creds) {
     Token<?> token = selectDelegationToken(creds, dtService);

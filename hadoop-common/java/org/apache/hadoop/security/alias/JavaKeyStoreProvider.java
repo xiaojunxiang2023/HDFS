@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.net.URI;
  * hdfs://nn1.example.com/my/creds.jceks jceks://file/home/larry/creds.jceks
  * {@literal ->} file:///home/larry/creds.jceks
  */
-@InterfaceAudience.Private
 public final class JavaKeyStoreProvider extends KeyStoreProvider {
   public static final String SCHEME_NAME = "jceks";
   public static final String KEYSTORE_TYPE = "jceks";

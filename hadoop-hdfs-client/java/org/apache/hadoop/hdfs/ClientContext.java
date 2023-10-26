@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
@@ -37,7 +35,6 @@ import org.slf4j.LoggerFactory;
  * This allows us to share caches such as the socket cache across
  * DFSClient instances.
  */
-@InterfaceAudience.Private
 public class ClientContext {
   private static final Logger LOG = LoggerFactory.getLogger(
       ClientContext.class);

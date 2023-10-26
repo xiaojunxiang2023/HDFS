@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */package org.apache.hadoop.hdfs.server.datanode;
-
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
@@ -28,7 +25,6 @@ import javax.annotation.Nullable;
  * Injects faults in the metadata and data related operations on datanode
  * volumes.
  */
-@InterfaceAudience.Private
 public class FaultInjectorFileIoEvents {
 
   private final boolean isEnabled;

@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.codec;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.erasurecode.CodecUtil;
 import org.apache.hadoop.io.erasurecode.ECSchema;
@@ -14,7 +12,6 @@ import org.apache.hadoop.io.erasurecode.grouper.BlockGrouper;
  * Abstract Erasure Codec is defines the interface of each actual erasure
  * codec classes.
  */
-@InterfaceAudience.Private
 public abstract class ErasureCodec {
 
   private ECSchema schema;

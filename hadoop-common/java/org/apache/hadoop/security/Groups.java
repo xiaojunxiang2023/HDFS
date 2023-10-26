@@ -34,9 +34,7 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.MoreExecut
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -53,8 +51,7 @@ import org.slf4j.LoggerFactory;
  * a consistent user-to-groups mapping and protects against vagaries of 
  * different mappings on servers and clients in a Hadoop cluster. 
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class Groups {
   @VisibleForTesting
   static final Logger LOG = LoggerFactory.getLogger(Groups.class);

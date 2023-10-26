@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.SubsetConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsRecord;
@@ -64,8 +63,6 @@ public class GangliaSink30 extends AbstractGangliaSink {
       }
     }
   }
-
-  @InterfaceAudience.Private
   public void appendPrefix(MetricsRecord record, StringBuilder sb) {
     String contextName = record.context();
     Collection<MetricsTag> tags = record.tags();

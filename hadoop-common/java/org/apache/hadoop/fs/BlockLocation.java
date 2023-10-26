@@ -2,9 +2,6 @@ package org.apache.hadoop.fs;
 
 import java.io.IOException;
 import java.io.Serializable;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringInterner;
 
 /**
@@ -40,8 +37,6 @@ import org.apache.hadoop.util.StringInterner;
  * {@link FileContext#getFileBlockLocations(Path, long, long)}
  * for more examples.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class BlockLocation implements Serializable {
   private static final long serialVersionUID = 0x22986f6d;
 

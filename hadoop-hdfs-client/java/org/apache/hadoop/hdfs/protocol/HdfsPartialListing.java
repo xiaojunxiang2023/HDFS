@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ipc.RemoteException;
 
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
  * internally by the HDFS client and namenode and is not meant for public
  * consumption.
  */
-@InterfaceAudience.Private
 public class HdfsPartialListing {
 
   private final List<HdfsFileStatus> partialListing;

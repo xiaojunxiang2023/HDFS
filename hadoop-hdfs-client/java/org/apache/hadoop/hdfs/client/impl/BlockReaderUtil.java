@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.client.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.BlockReader;
 
 import java.io.IOException;
@@ -8,7 +6,6 @@ import java.io.IOException;
 /**
  * For sharing between the local and remote block reader implementations.
  */
-@InterfaceAudience.Private
 class BlockReaderUtil {
 
   /* See {@link BlockReader#readAll(byte[], int, int)} */

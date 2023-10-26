@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -26,8 +23,6 @@ import static org.apache.hadoop.util.functional.RemoteIterators.cleanupRemoteIte
 /**
  * An abstract class for the execution of a file system command
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 abstract public class Command extends Configured {
   /** field name indicating the default name of the command */

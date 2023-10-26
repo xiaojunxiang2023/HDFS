@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -24,7 +23,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 /** Utility methods. */
-@InterfaceAudience.Private
 public class FsDatasetUtil {
     static boolean isUnlinkTmpFile(File f) {
         return f.getName().endsWith(DatanodeUtil.UNLINK_BLOCK_SUFFIX);

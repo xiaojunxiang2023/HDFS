@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.web.oauth2;
 
 import org.apache.hadoop.auth.client.ConnectionConfigurator;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -15,8 +13,6 @@ import static org.apache.hadoop.hdfs.web.oauth2.Utils.notNull;
 /**
  * Configure a connection to use OAuth2 authentication.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class OAuth2ConnectionConfigurator implements ConnectionConfigurator {
 
   public static final String HEADER = "Bearer ";

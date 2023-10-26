@@ -2,14 +2,9 @@ package org.apache.hadoop.hdfs.protocol;
 
 import java.util.Date;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Rolling upgrade information
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class RollingUpgradeInfo extends RollingUpgradeStatus {
   private final long startTime;
   private long finalizeTime;

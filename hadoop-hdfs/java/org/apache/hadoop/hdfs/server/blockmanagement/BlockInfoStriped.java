@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
@@ -25,7 +24,6 @@ import java.util.NoSuchElementException;
  * array's size can be larger than (m+k). Thus currently we use an extra byte
  * array to record the block index for each triplet.
  */
-@InterfaceAudience.Private
 public class BlockInfoStriped extends BlockInfo {
   private final ErasureCodingPolicy ecPolicy;
   /**

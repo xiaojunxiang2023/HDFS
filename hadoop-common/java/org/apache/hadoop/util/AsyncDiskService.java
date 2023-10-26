@@ -8,9 +8,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +19,7 @@ import org.slf4j.LoggerFactory;
  * We can move the files to a "TO_BE_DELETED" folder before asychronously
  * deleting it, to make sure the caller can run it faster.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class AsyncDiskService {
   
   public static final Logger LOG =

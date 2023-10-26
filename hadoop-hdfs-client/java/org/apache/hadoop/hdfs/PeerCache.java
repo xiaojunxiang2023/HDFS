@@ -8,9 +8,6 @@ import java.util.Map.Entry;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.LinkedListMultimap;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.net.Peer;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.util.IOUtilsClient;
@@ -22,8 +19,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A cache of input stream sockets to Data Node.
  */
-@InterfaceStability.Unstable
-@InterfaceAudience.Private
+
 @VisibleForTesting
 public class PeerCache {
   private static final Logger LOG = LoggerFactory.getLogger(PeerCache.class);

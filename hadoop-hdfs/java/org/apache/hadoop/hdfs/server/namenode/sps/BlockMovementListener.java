@@ -1,14 +1,9 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.Block;
 
 /**
  * Interface for notifying about block movement attempt completion.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface BlockMovementListener {
 
   /**

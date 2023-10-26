@@ -7,12 +7,10 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * Stores global storage statistics objects.
  */
-@InterfaceAudience.Public
 public enum GlobalStorageStatistics {
   /**
    * The GlobalStorageStatistics singleton.

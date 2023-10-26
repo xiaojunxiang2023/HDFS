@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.EnumSet;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /****************************************************************
  * CreateFlag specifies the file create semantic. Users can combine flags like: <br>
@@ -43,8 +41,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * <li> CREATE|APPEND|OVERWRITE</li>
  * </ol>
  *****************************************************************/
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public enum CreateFlag {
 
   /**
@@ -92,7 +88,6 @@ public enum CreateFlag {
    * Advise that a block replica NOT be written to the local DataNode where
    * 'local' means the same host as the client is being run on.
    */
-  @InterfaceAudience.LimitedPrivate({"HBase"})
   NO_LOCAL_WRITE((short) 0x40),
 
   /**

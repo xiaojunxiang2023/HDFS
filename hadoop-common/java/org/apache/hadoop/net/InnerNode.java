@@ -1,13 +1,9 @@
 package org.apache.hadoop.net;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.util.List;
 
 
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public interface InnerNode extends Node {
   interface Factory<N extends InnerNode> {
     /** Construct an InnerNode from a path-like string */

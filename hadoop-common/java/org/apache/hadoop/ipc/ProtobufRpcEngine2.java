@@ -1,7 +1,4 @@
 package org.apache.hadoop.ipc;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Writable;
@@ -38,7 +35,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RPC Engine for for protobuf based RPCs.
  */
-@InterfaceStability.Evolving
 public class ProtobufRpcEngine2 implements RpcEngine {
   public static final Logger LOG =
       LoggerFactory.getLogger(ProtobufRpcEngine2.class);
@@ -334,8 +330,6 @@ public class ProtobufRpcEngine2 implements RpcEngine {
   }
 
   @VisibleForTesting
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   static Client getClient(Configuration conf) {
     return CLIENTS.getClient(conf, SocketFactory.getDefault(),
         RpcWritable.Buffer.class);
@@ -415,8 +409,6 @@ public class ProtobufRpcEngine2 implements RpcEngine {
         call.setDeferredError(t);
       }
     }
-
-    @InterfaceStability.Unstable
     public static ProtobufRpcEngineCallback2 registerForDeferredResponse2() {
       ProtobufRpcEngineCallback2 callback = new ProtobufRpcEngineCallbackImpl();
       CURRENT_CALLBACK.set(callback);

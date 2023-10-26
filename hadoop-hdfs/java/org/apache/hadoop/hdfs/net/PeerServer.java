@@ -1,12 +1,8 @@
 package org.apache.hadoop.hdfs.net;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-
-@InterfaceAudience.Private
 public interface PeerServer extends Closeable {
     /**
      * Get the receive buffer size of the PeerServer.

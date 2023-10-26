@@ -9,16 +9,12 @@ import java.util.Map.Entry;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.XAttrCodec;
 import org.apache.hadoop.util.StringUtils;
 
 /**
  * XAttr related operations
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 class XAttrCommands extends FsCommand {
   private static final String GET_FATTR = "getfattr";
   private static final String SET_FATTR = "setfattr";

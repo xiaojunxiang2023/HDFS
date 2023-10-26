@@ -5,9 +5,6 @@ import java.io.EOFException;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.StringJoiner;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 
@@ -17,9 +14,6 @@ import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStat
 /**
  * A class that optimizes reading from FSInputStream by buffering.
  */
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class BufferedFSInputStream extends BufferedInputStream
     implements Seekable, PositionedReadable, HasFileDescriptor,
     IOStatisticsSource, StreamCapabilities {

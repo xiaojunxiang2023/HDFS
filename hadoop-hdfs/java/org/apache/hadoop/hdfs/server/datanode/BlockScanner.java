@@ -19,7 +19,6 @@ import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.server.datanode.VolumeScanner.ScanResultHandler;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
@@ -30,8 +29,6 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-@InterfaceAudience.Private
 public class BlockScanner {
   public static final Logger LOG =
       LoggerFactory.getLogger(BlockScanner.class);
@@ -362,8 +359,6 @@ public class BlockScanner {
   public void setJoinVolumeScannersTimeOutMs(long joinScannersTimeOutMs) {
     this.joinVolumeScannersTimeOutMs = joinScannersTimeOutMs;
   }
-
-  @InterfaceAudience.Private
   public static class Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

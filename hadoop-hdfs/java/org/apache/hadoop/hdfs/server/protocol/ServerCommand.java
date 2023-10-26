@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Base class for a server command.
  * Issued by the name-node to notify other servers what should be done.
@@ -11,8 +8,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * @see DatanodeProtocol
  * @see NamenodeProtocol
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class ServerCommand {
   private final int action;
 

@@ -2,16 +2,11 @@ package org.apache.hadoop.net;
 
 import java.util.List;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * An interface that must be implemented to allow pluggable
  * DNS-name/IP-address to RackID resolvers.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 public interface DNSToSwitchMappingWithDependency extends DNSToSwitchMapping {
   /**

@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.StoreStatisticNames;
 
 import java.util.Iterator;
@@ -10,8 +7,6 @@ import java.util.Iterator;
  * StorageStatistics contains statistics data for a FileSystem or FileContext
  * instance.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class StorageStatistics {
 
   /**
@@ -31,7 +26,6 @@ public abstract class StorageStatistics {
    * See {@link StoreStatisticNames} for the field names used here
    * and elsewhere.
    */
-  @InterfaceStability.Evolving
   public interface CommonStatisticNames {
     // The following names are for file system operation invocations
     String OP_APPEND = StoreStatisticNames.OP_APPEND;

@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs.shell;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.io.IOUtils;
@@ -13,8 +10,6 @@ import java.util.List;
 /**
  * Show the first 1KB of the file.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 class Head extends FsCommand {
   public static void registerCommands(CommandFactory factory) {

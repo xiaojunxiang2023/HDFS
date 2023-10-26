@@ -9,8 +9,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentMap;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.util.SampleStat;
 import org.slf4j.Logger;
@@ -27,8 +25,6 @@ import org.slf4j.LoggerFactory;
  * will be lost. This allows for significantly higher concurrency
  * than {@link MutableRates}. See HADOOP-24420.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MutableRatesWithAggregation extends MutableMetric {
   static final Logger LOG =
       LoggerFactory.getLogger(MutableRatesWithAggregation.class);

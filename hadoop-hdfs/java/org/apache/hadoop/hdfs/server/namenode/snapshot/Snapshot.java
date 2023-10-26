@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -28,7 +26,6 @@ import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.security.AccessControlException;
 
 /** Snapshot of a sub-tree in the namesystem. */
-@InterfaceAudience.Private
 public class Snapshot implements Comparable<byte[]> {
   /**
    * This id is used to indicate the current state (vs. snapshots)

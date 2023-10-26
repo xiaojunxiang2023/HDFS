@@ -1,8 +1,6 @@
 package org.apache.hadoop.net;
 
 import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +28,7 @@ import javax.naming.directory.InitialDirContext;
  * 
  * 
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class DNS {
 
   private static final Logger LOG = LoggerFactory.getLogger(DNS.class);

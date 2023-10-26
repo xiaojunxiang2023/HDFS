@@ -1,17 +1,13 @@
 package org.apache.hadoop.tools;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.retry.Idempotent;
 
 /**
  * Protocol implemented by the Name Node and Job Tracker which maps users to
  * groups.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public interface GetUserMappingsProtocol {
   
   /**

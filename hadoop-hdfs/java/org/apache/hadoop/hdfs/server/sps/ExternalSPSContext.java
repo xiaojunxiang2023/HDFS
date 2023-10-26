@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -29,7 +27,6 @@ import java.util.List;
  * This class used to connect to Namenode and gets the required information to
  * SPS from Namenode state.
  */
-@InterfaceAudience.Private
 public class ExternalSPSContext implements Context {
     public static final Logger LOG = LoggerFactory
             .getLogger(ExternalSPSContext.class);

@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Class to contain Lastblock and HdfsFileStatus for the Append operation
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class LastBlockWithStatus {
 
   private final LocatedBlock lastBlock;

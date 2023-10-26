@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.util;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -52,7 +50,6 @@ import java.util.concurrent.TimeUnit;
  * |cell_9|
  * +------+  <- A cell contains cellSize bytes of data
  */
-@InterfaceAudience.Private
 public class StripedBlockUtil {
 
   public static final Logger LOG =

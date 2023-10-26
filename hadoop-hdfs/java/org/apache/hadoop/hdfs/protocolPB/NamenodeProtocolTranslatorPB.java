@@ -2,9 +2,6 @@ package org.apache.hadoop.hdfs.protocolPB;
 
 import java.io.Closeable;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsServerProtos.NamenodeCommandProto;
@@ -48,8 +45,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * {@link NamenodeProtocol} interfaces to the RPC server implementing
  * {@link NamenodeProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class NamenodeProtocolTranslatorPB implements NamenodeProtocol,
     ProtocolMetaInterface, Closeable, ProtocolTranslator {
   /** RpcController is not used and hence is set to null */

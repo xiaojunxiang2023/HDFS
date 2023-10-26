@@ -15,13 +15,10 @@
  * the License.
  */package org.apache.hadoop.hdfs.server.namenode.startupprogress;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Indicates a particular phase of the namenode startup sequence.  The phases
  * are listed here in their execution order.
  */
-@InterfaceAudience.Private
 public enum Phase {
   /**
    * The namenode is loading the fsimage file into memory.

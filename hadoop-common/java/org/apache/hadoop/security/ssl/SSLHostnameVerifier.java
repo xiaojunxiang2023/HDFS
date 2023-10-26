@@ -38,9 +38,6 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,8 +67,6 @@ import org.slf4j.LoggerFactory;
  * Inspired by Sebastian Hauer's original StrictSSLProtocolSocketFactory in the
  * HttpClient "contrib" repository.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface SSLHostnameVerifier extends javax.net.ssl.HostnameVerifier {
 
     @Override

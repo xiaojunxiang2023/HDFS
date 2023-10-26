@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.JournalRequestProto;
@@ -20,7 +18,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * received on {@link JournalProtocolPB} to the 
  * {@link JournalProtocol} server implementation.
  */
-@InterfaceAudience.Private
 public class JournalProtocolServerSideTranslatorPB implements JournalProtocolPB {
   /** Server side implementation to delegate the requests to */
   private final JournalProtocol impl;

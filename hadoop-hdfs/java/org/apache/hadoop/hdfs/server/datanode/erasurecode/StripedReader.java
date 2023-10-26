@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import java.util.concurrent.TimeUnit;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
@@ -32,7 +31,6 @@ import java.util.concurrent.Future;
  * Manage striped readers that performs reading of block data from remote to
  * serve input data for the erasure decoding.
  */
-@InterfaceAudience.Private
 class StripedReader {
   private static final Logger LOG = DataNode.LOG;
 

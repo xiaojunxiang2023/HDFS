@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
 import org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
@@ -40,7 +39,6 @@ import org.apache.hadoop.thirdparty.protobuf.ByteString;
  * The secret manager is responsible for generating and accepting the password
  * for each token.
  */
-@InterfaceAudience.Private
 public class DelegationTokenSecretManager
     extends AbstractDelegationTokenSecretManager<DelegationTokenIdentifier> {
 

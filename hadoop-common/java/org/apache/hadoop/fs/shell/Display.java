@@ -16,8 +16,6 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.AvroFSInput;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -39,8 +37,6 @@ import org.apache.hadoop.util.StringUtils;
 /**
  * Display contents or checksums of files 
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 class Display extends FsCommand {
   public static void registerCommands(CommandFactory factory) {

@@ -2,8 +2,6 @@ package org.apache.hadoop.fs;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ipc.RemoteException;
 
 import java.io.IOException;
@@ -17,8 +15,6 @@ import java.util.List;
  * ListingBatch behaves similar to a Future, in that getting the result via
  * {@link #get()} will throw an Exception if there was a failure.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class PartialListing<T extends FileStatus> {
   private final Path listedPath;
   private final List<T> partialListing;

@@ -1,13 +1,8 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Plugin to calculate resource information on the system.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class SysInfo {
 
   /**

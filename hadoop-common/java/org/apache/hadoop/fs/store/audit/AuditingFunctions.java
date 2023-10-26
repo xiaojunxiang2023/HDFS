@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.store.audit;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.functional.CallableRaisingIOE;
 import org.apache.hadoop.util.functional.FunctionRaisingIOE;
 import org.apache.hadoop.util.functional.InvocationRaisingIOE;
@@ -19,8 +16,6 @@ import org.apache.hadoop.util.functional.InvocationRaisingIOE;
  * All they do is ensure that the given span is guaranteed to be
  * active when the passed in callable/function/invokable is evaluated.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class AuditingFunctions {
 
   private AuditingFunctions() {

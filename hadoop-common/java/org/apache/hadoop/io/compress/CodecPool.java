@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
  * A global compressor/decompressor pool used to save and reuse 
  * (possibly native) compression/decompression codecs.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class CodecPool {
   private static final Logger LOG = LoggerFactory.getLogger(CodecPool.class);
   

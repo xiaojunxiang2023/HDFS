@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.qjournal.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-
-@InterfaceAudience.Private
 public class RequestInfo {
   private final String jid;
   private long epoch;

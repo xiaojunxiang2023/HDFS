@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.slf4j.Logger;
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
  * {@code /default-rack} is returned.
  * </p>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class TableMapping extends CachedDNSToSwitchMapping {
 
   private static final Logger LOG = LoggerFactory.getLogger(TableMapping.class);

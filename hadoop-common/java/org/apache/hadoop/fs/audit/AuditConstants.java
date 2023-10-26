@@ -1,13 +1,8 @@
 package org.apache.hadoop.fs.audit;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Constants related to auditing.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class AuditConstants {
 
   private AuditConstants() {

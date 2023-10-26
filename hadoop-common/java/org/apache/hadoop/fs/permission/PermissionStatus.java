@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs.permission;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.*;
 
 import java.io.DataInput;
@@ -11,8 +8,7 @@ import java.io.IOException;
 /**
  * Store permission related information.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class PermissionStatus implements Writable {
   static final WritableFactory FACTORY = new WritableFactory() {
     @Override

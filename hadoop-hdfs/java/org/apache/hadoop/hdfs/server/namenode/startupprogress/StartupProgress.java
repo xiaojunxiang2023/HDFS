@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * StartupProgress is used in various parts of the namenode codebase to indicate
  * startup progress.  Its methods provide ways to indicate begin and end of a
@@ -29,7 +27,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * For read access, call {@link #createView()} to create a consistent view with
  * a clone of the data.
  */
-@InterfaceAudience.Private
 public class StartupProgress {
   // package-private for access by StartupProgressView
   final Map<Phase, PhaseTracking> phases =

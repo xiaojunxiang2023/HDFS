@@ -1,13 +1,10 @@
 package org.apache.hadoop.hdfs.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.util.Arrays;
 
 /**
  * Wrapper for byte[] to use byte[] as key in HashMap
  */
-@InterfaceAudience.Private
 public class ByteArray {
     private final byte[] bytes;
     private int hash = 0; // cache the hash code

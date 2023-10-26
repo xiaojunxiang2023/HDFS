@@ -8,8 +8,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.PipelineAckProto;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status;
@@ -17,8 +15,6 @@ import org.apache.hadoop.thirdparty.protobuf.TextFormat;
 import org.apache.hadoop.hdfs.util.LongBitFormat;
 
 /** Pipeline Acknowledgment **/
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class PipelineAck {
   PipelineAckProto proto;
   public final static long UNKOWN_SEQNO = -2;

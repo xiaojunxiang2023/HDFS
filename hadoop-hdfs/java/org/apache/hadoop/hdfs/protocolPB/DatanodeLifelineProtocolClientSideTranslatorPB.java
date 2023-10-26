@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.protocolPB;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.proto.DatanodeProtocolProtos.HeartbeatRequestProto;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeLifelineProtocol;
@@ -27,7 +25,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * {@link DatanodeLifelineProtocol} interfaces to the RPC server implementing
  * {@link DatanodeLifelineProtocolPB}.
  */
-@InterfaceAudience.Private
 public class DatanodeLifelineProtocolClientSideTranslatorPB implements
     ProtocolMetaInterface, DatanodeLifelineProtocol, Closeable {
 

@@ -2,15 +2,10 @@ package org.apache.hadoop.metrics2.annotation;
 
 import java.lang.annotation.*;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Annotation interface for a single metric used to annotate a field or a method
  * in the class.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 @Documented
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

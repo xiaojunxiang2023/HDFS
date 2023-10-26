@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.token.delegation.web;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
  * Util class that returns the remote {@link UserGroupInformation} in scope
  * for the HTTP request.
  */
-@InterfaceAudience.Private
 public class HttpUserGroupInformation {
 
   /**

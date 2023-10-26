@@ -2,9 +2,6 @@ package org.apache.hadoop.io.compress;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
@@ -12,8 +9,6 @@ import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
 /**
  * A compression output stream.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class CompressionOutputStream extends OutputStream
     implements IOStatisticsSource {
   /**

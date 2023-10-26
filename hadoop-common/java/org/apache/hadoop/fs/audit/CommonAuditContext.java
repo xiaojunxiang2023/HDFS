@@ -6,9 +6,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_COMMAND;
 import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_PROCESS;
 import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_THREAD1;
@@ -52,8 +49,6 @@ import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_THREAD1;
  * context for the caller, which can then be manipulated.
  *
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public final class CommonAuditContext {
 
   /**

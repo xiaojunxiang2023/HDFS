@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
@@ -21,7 +20,6 @@ import static org.apache.hadoop.hdfs.server.namenode.INodeId.INVALID_INODE_ID;
  * where the replicas of the block, or blocks belonging to the erasure coding
  * block group, are stored.
  */
-@InterfaceAudience.Private
 public abstract class BlockInfo extends Block
     implements LightWeightGSet.LinkedElement {
 

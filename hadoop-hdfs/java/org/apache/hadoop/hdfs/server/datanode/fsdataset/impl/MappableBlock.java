@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 
 import java.io.Closeable;
@@ -9,8 +6,6 @@ import java.io.Closeable;
 /**
  * Represents an HDFS block that is mapped by the DataNode.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface MappableBlock extends Closeable {
 
     /**

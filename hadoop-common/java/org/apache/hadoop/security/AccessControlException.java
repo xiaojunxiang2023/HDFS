@@ -1,14 +1,10 @@
 package org.apache.hadoop.security;
 
 import java.io.IOException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * An exception class for access control related issues.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class AccessControlException extends IOException {
 
   //Required by {@link java.io.Serializable}.

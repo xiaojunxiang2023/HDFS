@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.DatanodeReportType;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
@@ -19,7 +17,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 /**
  * This class is used in Namesystem's web server to do fsck on namenode.
  */
-@InterfaceAudience.Private
 public class FsckServlet extends DfsServlet {
   /** for java.io.Serializable */
   private static final long serialVersionUID = 1L;

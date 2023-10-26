@@ -13,8 +13,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.HardLink;
@@ -48,7 +46,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * 
  * @see Storage
  */
-@InterfaceAudience.Private
 public class BlockPoolSliceStorage extends Storage {
   static final String TRASH_ROOT_DIR = "trash";
 

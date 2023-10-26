@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.web;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.DelegationTokenRenewer;
 import org.apache.hadoop.fs.DelegationTokenRenewer.Renewable;
@@ -28,7 +26,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * HTTP-based file system.
  */
 final class TokenAspect<T extends FileSystem & Renewable> {
-  @InterfaceAudience.Private
   public static class TokenManager extends TokenRenewer {
 
     @Override

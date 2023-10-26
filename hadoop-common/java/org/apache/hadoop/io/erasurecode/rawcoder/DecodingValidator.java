@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 
@@ -10,7 +8,6 @@ import java.nio.ByteBuffer;
 /**
  * A utility class to validate decoding.
  */
-@InterfaceAudience.Private
 public class DecodingValidator {
 
   private final RawErasureDecoder decoder;

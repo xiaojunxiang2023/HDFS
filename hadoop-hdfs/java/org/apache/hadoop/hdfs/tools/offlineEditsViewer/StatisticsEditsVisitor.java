@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOpCodes;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
@@ -18,8 +15,6 @@ import java.util.Map;
  * that aggregates counts of op codes processed
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class StatisticsEditsVisitor implements OfflineEditsVisitor {
     final private PrintWriter out;
     private final Map<FSEditLogOpCodes, Long> opCodeCount =

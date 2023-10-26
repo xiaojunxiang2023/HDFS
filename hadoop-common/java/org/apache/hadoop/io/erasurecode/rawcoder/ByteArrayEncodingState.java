@@ -1,7 +1,6 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 import java.nio.ByteBuffer;
 
@@ -9,7 +8,6 @@ import java.nio.ByteBuffer;
  * A utility class that maintains encoding state during an encode call using
  * byte array inputs.
  */
-@InterfaceAudience.Private
 class ByteArrayEncodingState extends EncodingState {
   byte[][] inputs;
   byte[][] outputs;

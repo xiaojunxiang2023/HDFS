@@ -3,9 +3,6 @@ package org.apache.hadoop.security.token.delegation.web;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -23,8 +20,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * {@link KerberosDelegationTokenAuthenticationHandler}.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DelegationTokenManager {
   private static final Logger LOG =
       LoggerFactory.getLogger(DelegationTokenManager.class);

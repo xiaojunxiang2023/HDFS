@@ -8,9 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableFactories;
 import org.apache.hadoop.io.WritableFactory;
@@ -26,8 +23,6 @@ import org.apache.hadoop.io.WritableFactory;
  * @see Block#hashCode()
  * @see Block#compareTo(Block)
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class Block implements Writable, Comparable<Block> {
   public static final String BLOCK_FILE_PREFIX = "blk_";
   public static final String METADATA_EXTENSION = ".meta";

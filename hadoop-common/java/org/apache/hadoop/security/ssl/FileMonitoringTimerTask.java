@@ -2,7 +2,6 @@ package org.apache.hadoop.security.ssl;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,6 @@ import java.util.function.Consumer;
  * in the constructor, otherwise any exception occurring during process will be logged
  * using this class' logger.
  */
-@InterfaceAudience.Private
 public class FileMonitoringTimerTask extends TimerTask {
 
   static final Logger LOG = LoggerFactory.getLogger(FileMonitoringTimerTask.class);

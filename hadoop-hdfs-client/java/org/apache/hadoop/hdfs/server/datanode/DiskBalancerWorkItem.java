@@ -21,16 +21,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import java.io.IOException;
 
 /**
  * Keeps track of how much work has finished.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class DiskBalancerWorkItem {
   private static final ObjectMapper MAPPER = new ObjectMapper();

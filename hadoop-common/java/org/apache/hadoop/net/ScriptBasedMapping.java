@@ -4,8 +4,6 @@ import java.util.*;
 import java.io.*;
 
 import org.apache.hadoop.util.Shell.ShellCommandExecutor;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.slf4j.Logger;
@@ -25,8 +23,6 @@ import org.slf4j.LoggerFactory;
  * This DNS mapper's {@link #isSingleSwitch()} predicate returns
  * true if and only if a script is defined.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class ScriptBasedMapping extends CachedDNSToSwitchMapping {
 
   /**

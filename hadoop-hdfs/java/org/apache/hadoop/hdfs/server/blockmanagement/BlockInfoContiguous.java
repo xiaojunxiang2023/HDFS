@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
@@ -9,7 +8,6 @@ import org.apache.hadoop.hdfs.protocol.BlockType;
 /**
  * Subclass of {@link BlockInfo}, used for a block with replication scheme.
  */
-@InterfaceAudience.Private
 public class BlockInfoContiguous extends BlockInfo {
 
   public BlockInfoContiguous(short size) {

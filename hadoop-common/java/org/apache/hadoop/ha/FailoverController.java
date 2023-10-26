@@ -1,9 +1,6 @@
 package org.apache.hadoop.ha;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
  * monitoring the health of a service, and performing a fail-over when a
  * new active service is either manually selected by a user or elected.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FailoverController {
 
   private static final Logger LOG =

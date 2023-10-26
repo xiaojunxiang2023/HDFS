@@ -2,18 +2,14 @@ package org.apache.hadoop.metrics2.util;
 
 import java.util.PriorityQueue;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Utility class to simplify creation of hadoop metrics2 source/sink.
  */
-@InterfaceAudience.Private
 public class Metrics2Util {
   /**
    * A pair of a name and its corresponding value. Defines a custom
    * comparator so the TopN PriorityQueue sorts based on the count.
    */
-  @InterfaceAudience.Private
   public static class NameValuePair implements Comparable<NameValuePair> {
     private String name;
     private long value;
@@ -53,7 +49,6 @@ public class Metrics2Util {
   /**
    * A fixed-size priority queue, used to retrieve top-n of offered entries.
    */
-  @InterfaceAudience.Private
   public static class TopN extends PriorityQueue<NameValuePair> {
     private static final long serialVersionUID = 5134028249611535803L;
     private int n; // > 0

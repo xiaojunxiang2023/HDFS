@@ -2,12 +2,8 @@ package org.apache.hadoop.util;
 
 import java.util.concurrent.ThreadFactory;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A thread that has called {@link Thread#setDaemon(boolean) } with true.*/
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class Daemon extends Thread {
 
   {
@@ -18,7 +14,7 @@ public class Daemon extends Thread {
    * Provide a factory for named daemon threads,
    * for use in ExecutorServices constructors
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
+  // MapReduce也可见
   public static class DaemonFactory extends Daemon implements ThreadFactory {
 
     @Override

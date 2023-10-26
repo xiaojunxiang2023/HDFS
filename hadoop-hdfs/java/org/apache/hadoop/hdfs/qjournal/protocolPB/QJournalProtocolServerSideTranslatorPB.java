@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.qjournal.protocolPB;
 
 import java.io.IOException;
 import java.net.URL;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocolPB.JournalProtocolPB;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocol;
@@ -64,7 +62,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * received on {@link JournalProtocolPB} to the 
  * {@link JournalProtocol} server implementation.
  */
-@InterfaceAudience.Private
 public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolPB {
   /** Server side implementation to delegate the requests to */
   private final QJournalProtocol impl;

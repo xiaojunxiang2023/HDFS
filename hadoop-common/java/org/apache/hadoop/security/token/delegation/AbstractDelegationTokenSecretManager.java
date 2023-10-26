@@ -12,9 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.crypto.SecretKey;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.HadoopKerberosName;
@@ -26,9 +23,6 @@ import org.apache.hadoop.util.Time;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract 
 class AbstractDelegationTokenSecretManager<TokenIdent 
 extends AbstractDelegationTokenIdentifier> 
@@ -574,7 +568,6 @@ extends AbstractDelegationTokenIdentifier>
   }
 
   /** Class to encapsulate a token's renew date and password. */
-  @InterfaceStability.Evolving
   public static class DelegationTokenInformation {
     long renewDate;
     byte[] password;

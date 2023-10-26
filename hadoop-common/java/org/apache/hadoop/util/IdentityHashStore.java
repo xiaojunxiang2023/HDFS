@@ -1,8 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
@@ -24,8 +21,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * @param <K>    The key type to use.
  * @param <V>    THe value type to use.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 @SuppressWarnings("unchecked")
 public final class IdentityHashStore<K, V> {
   /**

@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.OpInstanceCache;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOpCodes;
@@ -19,8 +16,6 @@ import java.util.Stack;
 /**
  * OfflineEditsXmlLoader walks an EditsVisitor over an OEV XML file
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class OfflineEditsXmlLoader
         extends DefaultHandler implements OfflineEditsLoader {
     private final boolean fixTxIds;

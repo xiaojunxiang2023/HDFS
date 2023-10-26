@@ -9,9 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSBuilder;
 import org.apache.hadoop.fs.FileSystem;
@@ -44,8 +41,6 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
  * @param <S> Return type on the {@link #build()} call.
  * @param <B> type of builder itself.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class
     AbstractFSBuilderImpl<S, B extends FSBuilder<S, B>>
     implements FSBuilder<S, B> {

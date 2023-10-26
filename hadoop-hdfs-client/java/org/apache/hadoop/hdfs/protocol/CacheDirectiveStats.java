@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Describes a path-based cache directive.
  */
-@InterfaceStability.Evolving
-@InterfaceAudience.Public
 public class CacheDirectiveStats {
   public static class Builder {
     private long bytesNeeded;

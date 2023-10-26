@@ -3,9 +3,6 @@ package org.apache.hadoop.fs.impl;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileContext;
 import org.apache.hadoop.fs.FileStatus;
@@ -33,8 +30,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
  * {@link IllegalArgumentException} will be thrown.
  *
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class FutureDataInputStreamBuilderImpl
     extends AbstractFSBuilderImpl<CompletableFuture<FSDataInputStream>, FutureDataInputStreamBuilder>
     implements FutureDataInputStreamBuilder {

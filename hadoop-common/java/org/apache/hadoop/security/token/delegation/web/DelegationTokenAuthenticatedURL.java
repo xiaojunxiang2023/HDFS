@@ -1,8 +1,6 @@
 package org.apache.hadoop.security.token.delegation.web;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.SecurityUtil;
@@ -42,8 +40,6 @@ import java.util.Map;
  * <p>
  * <code>AuthenticatedURL</code> instances are not thread-safe.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
 
   private static final Logger LOG =
@@ -59,8 +55,6 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
   /**
    * Client side authentication token that handles Delegation Tokens.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Unstable
   public static class Token extends AuthenticatedURL.Token {
     private
     org.apache.hadoop.security.token.Token<AbstractDelegationTokenIdentifier>
@@ -320,7 +314,6 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
   /**
    * Select a delegation token from all tokens in credentials, based on url.
    */
-  @InterfaceAudience.Private
   public org.apache.hadoop.security.token.Token<? extends TokenIdentifier>
       selectDelegationToken(URL url, Credentials creds) {
     final InetSocketAddress serviceAddr = new InetSocketAddress(url.getHost(),

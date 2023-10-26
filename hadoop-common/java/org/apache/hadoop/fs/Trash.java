@@ -1,9 +1,6 @@
 package org.apache.hadoop.fs;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.slf4j.Logger;
@@ -15,8 +12,6 @@ import org.slf4j.LoggerFactory;
  * See the implementation of the configured TrashPolicy for more
  * details.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class Trash extends Configured {
   private static final Logger LOG =
       LoggerFactory.getLogger(Trash.class);

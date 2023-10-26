@@ -4,17 +4,12 @@ import java.io.IOException;
 import java.io.DataInput;
 import java.io.DataOutput;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** 
  * A byte sequence that is usable as a key or value.
  * It is resizable and distinguishes between the size of the sequence and
  * the current capacity. The hash function is the front of the md5 of the 
  * buffer. The sort order is the same as memcmp.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class BytesWritable extends BinaryComparable
     implements WritableComparable<BinaryComparable> {
   private static final int LENGTH_BYTES = 4;

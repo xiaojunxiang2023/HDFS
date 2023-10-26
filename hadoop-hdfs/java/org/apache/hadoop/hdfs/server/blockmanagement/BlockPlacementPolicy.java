@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.fs.StorageType;
@@ -25,12 +24,9 @@ import org.slf4j.LoggerFactory;
  * This interface is used for choosing the desired number of targets
  * for placing block replicas.
  */
-@InterfaceAudience.Private
 public abstract class BlockPlacementPolicy {
   public static final Logger LOG = LoggerFactory.getLogger(
       BlockPlacementPolicy.class);
-
-  @InterfaceAudience.Private
   public static class NotEnoughReplicasException extends Exception {
     private static final long serialVersionUID = 1L;
     NotEnoughReplicasException(String msg) {

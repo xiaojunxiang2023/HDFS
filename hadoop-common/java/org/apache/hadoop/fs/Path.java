@@ -11,8 +11,6 @@ import java.util.regex.Pattern;
 import org.apache.avro.reflect.Stringable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 /**
@@ -20,8 +18,6 @@ import org.apache.hadoop.conf.Configuration;
  * Path strings use slash as the directory separator.
  */
 @Stringable
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class Path
     implements Comparable<Path>, Serializable, ObjectInputValidation {
 
@@ -518,7 +514,7 @@ public class Path
    * @return this path if it contains a scheme and authority and is absolute, or
    * a new path that includes a path and authority and is fully qualified
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
+  // MapReduce也可见
   public Path makeQualified(URI defaultUri, Path workingDir ) {
     Path path = this;
     if (!isAbsolute()) {

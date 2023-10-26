@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.DF;
 import org.apache.hadoop.fs.StorageType;
@@ -52,7 +51,6 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * It uses the {@link FsDatasetImpl} object for synchronization.
  */
-@InterfaceAudience.Private
 @VisibleForTesting
 public class FsVolumeImpl implements FsVolumeSpi {
     public static final Logger LOG =

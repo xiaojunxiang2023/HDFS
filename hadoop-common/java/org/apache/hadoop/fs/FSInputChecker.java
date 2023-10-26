@@ -4,9 +4,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.Checksum;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +15,6 @@ import java.nio.IntBuffer;
  * This is a generic input stream for verifying checksums for
  * data before it is read by a user.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
-@InterfaceStability.Unstable
 abstract public class FSInputChecker extends FSInputStream {
   public static final Logger LOG =
       LoggerFactory.getLogger(FSInputChecker.class);

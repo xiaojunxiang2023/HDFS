@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
@@ -19,7 +17,6 @@ import org.apache.hadoop.security.UserGroupInformation;
  * with the current user to find keys. This provider is created using a
  * URI of "user:///".
  */
-@InterfaceAudience.Private
 public class UserProvider extends KeyProvider {
   public static final String SCHEME_NAME = "user";
   private final UserGroupInformation user;

@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.common;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.namenode.JournalManager;
 
 import java.io.File;
@@ -10,7 +8,6 @@ import java.io.File;
  * errors on underlying storage directories. This avoids a circular dependency
  * between journal managers and the storage which instantiates them.
  */
-@InterfaceAudience.Private
 public interface StorageErrorReporter {
 
     /**

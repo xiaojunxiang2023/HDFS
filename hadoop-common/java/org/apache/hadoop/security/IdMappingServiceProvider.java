@@ -2,9 +2,6 @@ package org.apache.hadoop.security;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
 /**
@@ -12,8 +9,6 @@ import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
  * userName{@literal >} mapping and {@literal <}groupId, groupName{@literal >}
  * mapping.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface IdMappingServiceProvider {
 
   // Return uid for given user name

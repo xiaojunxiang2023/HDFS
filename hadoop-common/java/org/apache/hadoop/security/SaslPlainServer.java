@@ -9,12 +9,6 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
 import javax.security.sasl.SaslServerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class SaslPlainServer implements SaslServer {
   @SuppressWarnings("serial")
   public static class SecurityProvider extends Provider {

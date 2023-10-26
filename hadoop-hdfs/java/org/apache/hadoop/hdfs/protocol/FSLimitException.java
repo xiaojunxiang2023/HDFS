@@ -1,11 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
-
 /**
  * Abstract class for deriving exceptions related to filesystem constraints
  */

@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * scheduled items and remove the SPS xAttr from the file/Directory once
  * movement is success.
  */
-@InterfaceAudience.Private
 public class BlockStorageMovementNeeded {
 
   public static final Logger LOG =

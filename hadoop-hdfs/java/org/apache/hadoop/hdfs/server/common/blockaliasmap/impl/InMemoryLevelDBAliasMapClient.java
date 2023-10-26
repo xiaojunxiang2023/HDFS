@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 package org.apache.hadoop.hdfs.server.common.blockaliasmap.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -39,8 +36,6 @@ import java.util.*;
  * This is used by the Datanode and fs2img to store and retrieve FileRegions
  * based on the given Block.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class InMemoryLevelDBAliasMapClient extends BlockAliasMap<FileRegion>
         implements Configurable {
 

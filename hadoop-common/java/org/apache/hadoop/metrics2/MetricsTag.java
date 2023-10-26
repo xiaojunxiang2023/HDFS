@@ -1,8 +1,6 @@
 package org.apache.hadoop.metrics2;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import java.util.StringJoiner;
 
@@ -11,8 +9,6 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
 /**
  * Immutable tag for metrics (for grouping on host/queue/username etc.)
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MetricsTag implements MetricsInfo {
   private final MetricsInfo info;
   private final String value;

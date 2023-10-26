@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.web.SWebHdfsFileSystem;
 
@@ -12,8 +9,6 @@ import java.net.URISyntaxException;
 /**
  * AbstractFileSystem implementation for HDFS over the web (secure).
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class SWebHdfs extends DelegateToFileSystem {
 
   public static final String SCHEME = "swebhdfs";

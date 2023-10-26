@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsCollector;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsInfo;
@@ -29,7 +27,6 @@ import org.slf4j.LoggerFactory;
  * {@link MutableMetric} and adds it to the {@link MetricsRegistry}.</li>
  * </ul>
  */
-@InterfaceAudience.Private
 public class MetricsSourceBuilder {
   private static final Logger LOG =
       LoggerFactory.getLogger(MetricsSourceBuilder.class);

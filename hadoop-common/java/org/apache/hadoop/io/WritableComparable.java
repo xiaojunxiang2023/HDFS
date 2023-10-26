@@ -1,8 +1,5 @@
 package org.apache.hadoop.io;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A {@link Writable} which is also {@link Comparable}. 
  *
@@ -51,7 +48,5 @@ import org.apache.hadoop.classification.InterfaceStability;
  *     }
  * </pre></blockquote>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public interface WritableComparable<T> extends Writable, Comparable<T> {
 }

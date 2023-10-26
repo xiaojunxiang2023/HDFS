@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.XAttrHelper;
 import org.apache.hadoop.security.AccessControlException;
@@ -40,7 +38,6 @@ import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.SECURITY_
  *   read access.
  * <br>
  */
-@InterfaceAudience.Private
 public class XAttrPermissionFilter {
   
   static void checkPermissionForApi(FSPermissionChecker pc, XAttr xAttr,

@@ -5,13 +5,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A driver that is used to run programs added to it
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class ProgramDriver {
     
   /**

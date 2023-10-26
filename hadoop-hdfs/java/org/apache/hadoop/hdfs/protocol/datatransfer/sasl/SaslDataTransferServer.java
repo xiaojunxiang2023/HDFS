@@ -25,7 +25,6 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CipherOption;
 import org.apache.hadoop.hdfs.net.Peer;
@@ -56,7 +55,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  *
  * This class is used in the DataNode for handling inbound connections.
  */
-@InterfaceAudience.Private
 public class SaslDataTransferServer {
 
   private static final Logger LOG = LoggerFactory.getLogger(

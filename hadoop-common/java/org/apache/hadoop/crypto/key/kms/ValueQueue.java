@@ -21,7 +21,6 @@ import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
 import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * A Utility class that maintains a Queue of entries for a given key. It tries
@@ -33,7 +32,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * <code>QueueRefiller</code> interface that exposes a method to refill the
  * queue, when empty
  */
-@InterfaceAudience.Private
 public class ValueQueue <E> {
 
   /**

@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
@@ -23,7 +21,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * FSTreeTraverser traverse directory recursively and process files
  * in batches.
  */
-@InterfaceAudience.Private
 public abstract class FSTreeTraverser {
 
 

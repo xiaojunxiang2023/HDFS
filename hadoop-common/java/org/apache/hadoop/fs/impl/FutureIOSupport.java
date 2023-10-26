@@ -9,9 +9,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSBuilder;
 import org.apache.hadoop.util.functional.CallableRaisingIOE;
@@ -25,8 +22,6 @@ import org.apache.hadoop.util.functional.FutureIO;
  * filesystem implementations can safely use these methods
  * without linkage problems surfacing.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class FutureIOSupport {
 
   private FutureIOSupport() {

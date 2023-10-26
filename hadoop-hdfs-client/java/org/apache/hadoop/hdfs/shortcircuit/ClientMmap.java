@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.Closeable;
 import java.nio.MappedByteBuffer;
 
@@ -11,7 +9,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A reference to a memory-mapped region used by an HDFS client.
  */
-@InterfaceAudience.Private
 public class ClientMmap implements Closeable {
   static final Logger LOG = LoggerFactory.getLogger(ClientMmap.class);
 

@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.common.blockaliasmap;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.common.BlockAlias;
 
@@ -13,8 +10,6 @@ import java.util.Optional;
 /**
  * An abstract class used to read and write block maps for provided blocks.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class BlockAliasMap<T extends BlockAlias> {
 
     /**

@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * The context of the block report.
  *
@@ -11,7 +9,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * of RPCs which this block report is split into, and the index into that
  * total for the current RPC.
  */
-@InterfaceAudience.Private
 public class BlockReportContext {
   /**
    * The total number of RPCs contained in the block report.

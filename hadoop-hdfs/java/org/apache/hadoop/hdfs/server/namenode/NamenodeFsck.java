@@ -24,7 +24,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockUnderConstructionFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.StorageType;
@@ -96,7 +95,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  *  optionally can print detailed statistics on block locations and replication
  *  factors of each file.
  */
-@InterfaceAudience.Private
 public class NamenodeFsck implements DataEncryptionKeyFactory {
   public static final Logger LOG =
       LoggerFactory.getLogger(NameNode.class.getName());

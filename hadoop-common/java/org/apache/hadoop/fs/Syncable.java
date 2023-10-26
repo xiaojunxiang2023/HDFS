@@ -2,16 +2,11 @@ package org.apache.hadoop.fs;
 
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * This is the interface for flush/sync operations.
  * Consult the Hadoop filesystem specification for the definition of the
  * semantics of these operations.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public interface Syncable {
 
   /** Flush out the data in client's user buffer. After the return of

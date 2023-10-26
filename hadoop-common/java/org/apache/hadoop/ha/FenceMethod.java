@@ -1,7 +1,4 @@
 package org.apache.hadoop.ha;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 
 /**
@@ -22,8 +19,6 @@ import org.apache.hadoop.conf.Configurable;
  * If an implementation also implements {@link Configurable} then its
  * <code>setConf</code> method will be called upon instantiation.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface FenceMethod {
   /**
    * Verify that the given fencing method's arguments are valid.

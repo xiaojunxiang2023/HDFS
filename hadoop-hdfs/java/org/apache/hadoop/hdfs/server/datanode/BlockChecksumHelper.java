@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumType;
@@ -46,7 +44,6 @@ import java.util.Map;
  * Utilities for Block checksum computing, for both replicated and striped
  * blocks.
  */
-@InterfaceAudience.Private
 final class BlockChecksumHelper {
 
   static final Logger LOG = LoggerFactory.getLogger(BlockChecksumHelper.class);

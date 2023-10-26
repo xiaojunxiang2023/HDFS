@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSPacket;
@@ -35,7 +33,6 @@ import java.util.EnumSet;
  * A striped block writer that writes reconstructed data to the remote target
  * datanode.
  */
-@InterfaceAudience.Private
 class StripedBlockWriter {
   private final StripedWriter stripedWriter;
   private final DataNode datanode;

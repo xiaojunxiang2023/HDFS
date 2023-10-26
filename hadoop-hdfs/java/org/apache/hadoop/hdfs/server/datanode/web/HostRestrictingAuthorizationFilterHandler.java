@@ -26,7 +26,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.ReferenceCountUtil;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.common.HostRestrictingAuthorizationFilter;
 import org.apache.hadoop.hdfs.server.common.HostRestrictingAuthorizationFilter.HttpInteraction;
@@ -55,7 +54,6 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * the request to the next handler in the Netty pipeline.  Otherwise, this
  * handler drops the request and sends an HTTP 403 response.
  */
-@InterfaceAudience.Private
 @Sharable
 final class HostRestrictingAuthorizationFilterHandler
         extends SimpleChannelInboundHandler<HttpRequest> {

@@ -7,9 +7,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileEncryptionInfo;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileStatus.AttrFlags;
@@ -21,8 +18,6 @@ import org.apache.hadoop.io.Writable;
 /**
  * HDFS metadata for an entity in the filesystem.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface HdfsFileStatus
     extends Writable, Comparable<Object>, Serializable, ObjectInputValidation {
 
@@ -40,8 +35,6 @@ public interface HdfsFileStatus
    * Builder class for HdfsFileStatus instances. Note default values for
    * parameters.
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   class Builder {
     // Changing default values will affect cases where values are not
     // specified. Be careful!

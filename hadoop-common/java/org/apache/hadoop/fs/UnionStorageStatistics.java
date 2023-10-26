@@ -4,15 +4,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * A StorageStatistics instance which combines the outputs of several other
  * StorageStatistics instances.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class UnionStorageStatistics extends StorageStatistics {
   /**
    * The underlying StorageStatistics.

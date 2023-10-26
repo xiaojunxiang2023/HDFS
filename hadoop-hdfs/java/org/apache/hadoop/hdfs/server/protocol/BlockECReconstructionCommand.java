@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
@@ -26,8 +23,6 @@ import java.util.Collection;
  * from the reconstruction node, or multiple blocks in a group are to be
  * reconstructed).
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockECReconstructionCommand extends DatanodeCommand {
   private final Collection<BlockECReconstructionInfo> ecTasks;
 
@@ -52,8 +47,6 @@ public class BlockECReconstructionCommand extends DatanodeCommand {
   }
 
   /** Block and targets pair */
-  @InterfaceAudience.Private
-  @InterfaceStability.Evolving
   public static class BlockECReconstructionInfo {
     private final ExtendedBlock block;
     private final DatanodeInfo[] sources;

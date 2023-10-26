@@ -19,15 +19,10 @@ package org.apache.hadoop.io.file.tfile;
 
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Exception - Meta Block with the same name already exists.
  */
 @SuppressWarnings("serial")
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class MetaBlockAlreadyExists extends IOException {
   /**
    * Constructor

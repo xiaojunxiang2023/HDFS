@@ -8,8 +8,6 @@ import java.security.SecureRandom;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -23,7 +21,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
 /**
  * Implement the AES-CTR crypto codec using JCE provider.
  */
-@InterfaceAudience.Private
 public class JceAesCtrCryptoCodec extends AesCtrCryptoCodec {
   private static final Logger LOG =
       LoggerFactory.getLogger(JceAesCtrCryptoCodec.class.getName());

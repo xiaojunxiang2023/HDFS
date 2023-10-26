@@ -18,7 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
@@ -34,7 +33,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
  * assumed that FSEditLog methods, that use this class, use proper
  * synchronization.
  */
-@InterfaceAudience.Private
 public class JournalSet implements JournalManager {
 
   static final Logger LOG = LoggerFactory.getLogger(FSEditLog.class);

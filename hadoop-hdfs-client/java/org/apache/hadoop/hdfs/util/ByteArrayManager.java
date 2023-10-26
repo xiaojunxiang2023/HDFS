@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.Time;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -16,7 +15,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Manage byte array creation and release.
  */
-@InterfaceAudience.Private
 public abstract class ByteArrayManager {
   static final Logger LOG = LoggerFactory.getLogger(ByteArrayManager.class);
   private static final ThreadLocal<StringBuilder> DEBUG_MESSAGE =

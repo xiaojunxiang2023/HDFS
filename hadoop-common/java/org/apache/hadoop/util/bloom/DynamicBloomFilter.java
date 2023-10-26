@@ -35,9 +35,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Implements a <i>dynamic Bloom filter</i>, as defined in the INFOCOM 2006 paper.
  * <p>
@@ -71,8 +68,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * 
  * @see <a href="http://www.cse.fau.edu/~jie/research/publications/Publication_files/infocom2006.pdf">Theory and Network Applications of Dynamic Bloom Filters</a>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class DynamicBloomFilter extends Filter {
   /** 
    * Threshold for the maximum number of key to record in a dynamic Bloom filter row.

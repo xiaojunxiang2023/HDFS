@@ -1,16 +1,11 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Utility methods for getting the time and computing intervals.
  *
  * It has the same behavior as {{@link Time}}, with the exception that its
  * functions can be overridden for dependency injection purposes.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class Timer {
   /**
    * Current system time.  Do not use this to calculate a duration or interval

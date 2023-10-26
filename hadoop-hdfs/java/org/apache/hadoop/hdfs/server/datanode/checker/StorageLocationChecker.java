@@ -18,8 +18,6 @@
 package org.apache.hadoop.hdfs.server.datanode.checker;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocalFileSystem;
@@ -51,8 +49,6 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
  *
  * Some of this code was extracted from the DataNode class.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class StorageLocationChecker {
     public static final Logger LOG = LoggerFactory.getLogger(
             StorageLocationChecker.class);

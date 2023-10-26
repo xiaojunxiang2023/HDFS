@@ -1,15 +1,10 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.UnresolvedLinkException;
 import org.apache.hadoop.fs.Path;
 
 /**
  * Thrown when a symbolic link is encountered in a path.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public final class UnresolvedPathException extends UnresolvedLinkException {
   private static final long serialVersionUID = 1L;
   private String path;        // The path containing the link

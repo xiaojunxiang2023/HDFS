@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.filter.AuthenticationToken;
 import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.auth.util.HttpConstants;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.slf4j.Logger;
@@ -49,8 +47,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * supports 'StartTLS' extension.</li>
  * </ul>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class LdapAuthenticationHandler implements AuthenticationHandler {
   private static final Logger LOG = LoggerFactory
       .getLogger(LdapAuthenticationHandler.class);

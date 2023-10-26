@@ -17,8 +17,6 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -48,7 +46,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * NNStorage is responsible for management of the StorageDirectories used by
  * the NameNode.
  */
-@InterfaceAudience.Private
 public class NNStorage extends Storage implements Closeable,
     StorageErrorReporter {
   static final String DEPRECATED_MESSAGE_DIGEST_PROPERTY = "imageMD5Digest";

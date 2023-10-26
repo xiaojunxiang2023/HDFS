@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.balancer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -37,7 +35,6 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * The class provides utilities for accessing a NameNode.
  */
-@InterfaceAudience.Private
 public class NameNodeConnector implements Closeable {
     public static final int DEFAULT_MAX_IDLE_ITERATIONS = 5;
     private static final Logger LOG =

@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.util.StringUtils;
 
@@ -14,8 +11,6 @@ import java.nio.file.Paths;
  * EditsVisitorFactory for different implementations of EditsVisitor
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class OfflineEditsVisitorFactory {
     /**
      * Factory function that creates an EditsVisitor object

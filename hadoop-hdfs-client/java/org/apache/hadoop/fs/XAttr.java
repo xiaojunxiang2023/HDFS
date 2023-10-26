@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * XAttr is the POSIX Extended Attribute model similar to that found in
@@ -37,7 +36,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * http://en.wikipedia.org/wiki/Extended_file_attributes</a>
  *
  */
-@InterfaceAudience.Private
 public class XAttr {
 
   public enum NameSpace {

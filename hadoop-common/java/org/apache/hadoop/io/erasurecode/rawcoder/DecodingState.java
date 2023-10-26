@@ -1,12 +1,10 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * A utility class that maintains decoding state during a decode call.
  */
-@InterfaceAudience.Private
 class DecodingState {
   RawErasureDecoder decoder;
   int decodeLength;

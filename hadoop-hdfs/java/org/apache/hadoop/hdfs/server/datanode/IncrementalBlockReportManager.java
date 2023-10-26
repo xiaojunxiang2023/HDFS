@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeProtocol;
@@ -26,7 +24,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 /**
  * Manage Incremental Block Reports (IBRs).
  */
-@InterfaceAudience.Private
 class IncrementalBlockReportManager {
   private static final Logger LOG = LoggerFactory.getLogger(
       IncrementalBlockReportManager.class);

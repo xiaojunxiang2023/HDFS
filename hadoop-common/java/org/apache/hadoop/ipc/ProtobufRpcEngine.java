@@ -6,8 +6,6 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
 import com.google.protobuf.ServiceException;
 import com.google.protobuf.TextFormat;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Writable;
@@ -40,7 +38,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * from hadoop-thirdparty and use ProtobufRpcEngine2.
  */
 @Deprecated
-@InterfaceStability.Evolving
 public class ProtobufRpcEngine implements RpcEngine {
   public static final Logger LOG =
       LoggerFactory.getLogger(ProtobufRpcEngine.class);
@@ -325,8 +322,6 @@ public class ProtobufRpcEngine implements RpcEngine {
   }
 
   @VisibleForTesting
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   static Client getClient(Configuration conf) {
     return CLIENTS.getClient(conf, SocketFactory.getDefault(),
         RpcWritable.Buffer.class);
@@ -384,8 +379,6 @@ public class ProtobufRpcEngine implements RpcEngine {
         call.setDeferredError(t);
       }
     }
-
-    @InterfaceStability.Unstable
     public static ProtobufRpcEngineCallback registerForDeferredResponse() {
       ProtobufRpcEngineCallback callback = new ProtobufRpcEngineCallbackImpl();
       currentCallback.set(callback);

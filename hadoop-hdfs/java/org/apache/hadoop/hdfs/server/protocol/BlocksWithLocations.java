@@ -1,23 +1,17 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 
 /**
  * Maintains an array of blocks and their corresponding storage IDs.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlocksWithLocations {
 
   /**
    * A class to keep track of a block and its locations
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Evolving
   public static class BlockWithLocations {
     final Block block;
     final String[] datanodeUuids;

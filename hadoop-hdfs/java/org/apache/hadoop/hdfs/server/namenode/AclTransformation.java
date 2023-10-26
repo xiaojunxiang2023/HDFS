@@ -15,8 +15,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Ordering;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclEntryScope;
 import org.apache.hadoop.fs.permission.AclEntryType;
@@ -42,7 +40,6 @@ import org.apache.hadoop.hdfs.protocol.AclException;
  * is considered untrusted user input, so all operations pre-sort the ACL spec as
  * the first step.
  */
-@InterfaceAudience.Private
 final class AclTransformation {
   private static final int MAX_ENTRIES = 32;
 

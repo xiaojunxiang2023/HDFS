@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
@@ -28,7 +26,6 @@ import org.slf4j.LoggerFactory;
  * all the operations we perform are stateless-- i.e., we use pread
  * instead of read, to avoid using the shared position state.
  */
-@InterfaceAudience.Private
 public class ShortCircuitReplica {
   public static final Logger LOG = LoggerFactory.getLogger(
       ShortCircuitCache.class);

@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.metrics;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsSource;
 
 import java.io.IOException;
@@ -20,7 +18,6 @@ import java.io.IOException;
  * @see org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics
  *
  */
-@InterfaceAudience.Private
 public interface FSDatasetMBean extends MetricsSource {
 
     /**

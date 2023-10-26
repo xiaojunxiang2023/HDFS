@@ -1,14 +1,9 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 
 /**
  * Locally available datanode information
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DatanodeLocalInfo {
   private final String softwareVersion;
   private final String configVersion;

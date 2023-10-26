@@ -1,7 +1,6 @@
 package org.apache.hadoop.net;
 
 import java.io.IOException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -20,7 +19,6 @@ import java.nio.channels.SelectionKey;
  * IllegalBlockingModeException. 
  * Please use {@link SocketOutputStream} for writing.
  */
-@InterfaceAudience.LimitedPrivate("HDFS")
 public class SocketInputStream extends InputStream
                                implements ReadableByteChannel {
 

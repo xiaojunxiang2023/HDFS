@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.Arrays;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.SnapshotException;
@@ -39,7 +38,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * can be taken. This feature extends {@link DirectoryWithSnapshotFeature}, and
  * maintains extra information about all the snapshots taken on this directory.
  */
-@InterfaceAudience.Private
 public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature {
   /** Limit the number of snapshot per snapshottable directory. */
   static final int SNAPSHOT_QUOTA_DEFAULT = 1 << 16;

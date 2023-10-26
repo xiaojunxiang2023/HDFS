@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -39,7 +37,6 @@ interface ImageLoader {
      * Factory for obtaining version of image loader that can read
      * a particular image format.
      */
-    @InterfaceAudience.Private
     public class LoaderFactory {
         // Java doesn't support static methods on interfaces, which necessitates
         // this factory class

@@ -8,9 +8,6 @@ import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeys.IOSTATISTICS_LOGGING_LEVEL_ERROR;
@@ -22,8 +19,6 @@ import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStat
  * Utility operations convert IO Statistics sources/instances
  * to strings, especially for robustly logging.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public final class IOStatisticsLogging {
 
   private static final Logger LOG =

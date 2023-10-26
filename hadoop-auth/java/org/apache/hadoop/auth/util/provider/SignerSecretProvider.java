@@ -2,8 +2,6 @@ package org.apache.hadoop.auth.util.provider;
 
 import java.util.Properties;
 import javax.servlet.ServletContext;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * The SignerSecretProvider is an abstract way to provide a secret to be used
@@ -12,8 +10,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * See the RolloverSignerSecretProvider class for an implementation that
  * supports rolling over the secret at a regular interval.
  */
-@InterfaceStability.Unstable
-@InterfaceAudience.Private
+
 public abstract class SignerSecretProvider {
 
   /**

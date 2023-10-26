@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.FsPermission;
 
 /**
@@ -15,7 +13,6 @@ import org.apache.hadoop.fs.permission.FsPermission;
  * @deprecated ACLs, encryption, and erasure coding are managed on FileStatus.
  */
 @Deprecated
-@InterfaceAudience.Private
 public class FsPermissionExtension extends FsPermission {
   private static final long serialVersionUID = 0x13c298a4;
 

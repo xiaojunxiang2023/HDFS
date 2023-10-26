@@ -3,14 +3,12 @@ package org.apache.hadoop.io.erasurecode.coder.util;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
 
 /**
  * Some utilities for Hitchhiker coding.
  */
-@InterfaceAudience.Private
 public final class HHUtil {
   private HHUtil() {
     // No called

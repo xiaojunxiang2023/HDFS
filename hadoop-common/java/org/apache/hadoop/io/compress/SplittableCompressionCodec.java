@@ -3,9 +3,6 @@ package org.apache.hadoop.io.compress;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 
 /**
  * This interface is meant to be implemented by those compression codecs
@@ -25,8 +22,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * an input compressed file can be split and hence can be worked on by multiple
  * machines in parallel.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface SplittableCompressionCodec extends CompressionCodec {
 
   /**

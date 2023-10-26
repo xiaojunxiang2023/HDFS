@@ -6,8 +6,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -28,7 +26,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * "Space-efficient online computation of quantile summaries" in SIGMOD 2001
  * 
  */
-@InterfaceAudience.Private
 public class SampleQuantiles implements QuantileEstimator {
 
   /**

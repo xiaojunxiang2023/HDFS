@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.SequentialNumber;
 
 /**
@@ -9,7 +7,6 @@ import org.apache.hadoop.util.SequentialNumber;
  * around in a very long time. Root inode id is always 16385. Id 0 is used for
  * backward compatibility support.
  */
-@InterfaceAudience.Private
 public class INodeId extends SequentialNumber {
   /**
    * The last reserved inode id. InodeIDs are allocated from LAST_RESERVED_ID +

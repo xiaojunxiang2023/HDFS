@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.protocol;
 import java.io.IOException;
 import java.net.URI;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileEncryptionInfo;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
@@ -17,8 +14,6 @@ import org.apache.hadoop.hdfs.DFSUtilClient;
  * symlinks and directories are returned as {@link HdfsLocatedFileStatus} for
  * backwards compatibility.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class HdfsLocatedFileStatus
     extends LocatedFileStatus implements HdfsFileStatus {
   private static final long serialVersionUID = 0x126eb82a;

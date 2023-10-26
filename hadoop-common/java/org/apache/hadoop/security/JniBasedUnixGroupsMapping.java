@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +13,7 @@ import org.slf4j.LoggerFactory;
  * that invokes libC calls to get the group
  * memberships of a given user.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class JniBasedUnixGroupsMapping implements GroupMappingServiceProvider {
   
   private static final Logger LOG =

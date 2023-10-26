@@ -1,8 +1,5 @@
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Interface to query streams for supported capabilities.
  *
@@ -11,8 +8,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * Constant strings are chosen over enums in order to allow other file systems
  * to define their own capabilities.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface StreamCapabilities {
   /**
    * Stream hflush capability implemented by {@link Syncable#hflush()}.

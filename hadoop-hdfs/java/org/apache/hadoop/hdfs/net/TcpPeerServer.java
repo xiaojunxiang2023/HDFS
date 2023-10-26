@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.net;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.server.datanode.SecureDataNodeStarter.SecureResources;
 import org.apache.hadoop.ipc.Server;
@@ -12,8 +10,6 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ServerSocketChannel;
-
-@InterfaceAudience.Private
 public class TcpPeerServer implements PeerServer {
     static final Logger LOG = LoggerFactory.getLogger(TcpPeerServer.class);
 

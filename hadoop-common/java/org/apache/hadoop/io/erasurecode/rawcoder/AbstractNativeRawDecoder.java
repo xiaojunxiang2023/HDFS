@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.util.PerformanceAdvisory;
 import org.slf4j.Logger;
@@ -13,7 +11,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Abstract native raw decoder for all native coders to extend with.
  */
-@InterfaceAudience.Private
 abstract class AbstractNativeRawDecoder extends RawErasureDecoder {
   public static Logger LOG =
       LoggerFactory.getLogger(AbstractNativeRawDecoder.class);

@@ -1,11 +1,8 @@
 package org.apache.hadoop.crypto.key.kms;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * KMS REST and JSON constants and utility methods for the KMSServer.
  */
-@InterfaceAudience.Private
 public class KMSRESTConstants {
 
   public static final String SERVICE_VERSION = "/v1";

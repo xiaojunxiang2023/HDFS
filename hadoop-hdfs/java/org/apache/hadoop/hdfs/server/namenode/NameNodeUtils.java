@@ -19,7 +19,6 @@
 import javax.annotation.Nullable;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_RPC_ADDRESS_KEY;
 /**
  * Utility functions for the NameNode.
  */
-@InterfaceAudience.Private
 public final class NameNodeUtils {
   public static final Logger LOG = LoggerFactory.getLogger(NameNodeUtils.class);
 

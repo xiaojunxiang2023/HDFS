@@ -3,8 +3,6 @@ package org.apache.hadoop.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
@@ -18,7 +16,6 @@ import org.apache.hadoop.thirdparty.com.google.common.io.Files;
 /**
  * Utilities for working with ZooKeeper.
  */
-@InterfaceAudience.Private
 public class ZKUtil {
   
   /**
@@ -161,7 +158,6 @@ public class ZKUtil {
   /**
    * An authentication token passed to ZooKeeper.addAuthInfo
    */
-  @InterfaceAudience.Private
   public static class ZKAuthInfo {
     private final String scheme;
     private final byte[] auth;
@@ -180,8 +176,6 @@ public class ZKUtil {
       return auth;
     }
   }
-
-  @InterfaceAudience.Private
   public static class BadAclFormatException extends
       HadoopIllegalArgumentException {
     private static final long serialVersionUID = 1L;
@@ -190,8 +184,6 @@ public class ZKUtil {
       super(message);
     }
   }
-
-  @InterfaceAudience.Private
   public static class BadAuthFormatException extends
       HadoopIllegalArgumentException {
     private static final long serialVersionUID = 1L;

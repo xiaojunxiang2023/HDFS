@@ -25,8 +25,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.Doubles;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports;
@@ -47,8 +45,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * This class aggregates information from {@link SlowDiskReports} received via
  * heartbeats.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class SlowDiskTracker {
   public static final Logger LOG =
       LoggerFactory.getLogger(SlowDiskTracker.class);

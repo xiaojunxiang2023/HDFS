@@ -2,9 +2,6 @@ package org.apache.hadoop.hdfs.protocolPB;
 
 import java.io.Closeable;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.JournalRequestProto;
@@ -25,8 +22,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * {@link JournalProtocol} interfaces to the RPC server implementing
  * {@link JournalProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class JournalProtocolTranslatorPB implements ProtocolMetaInterface,
     JournalProtocol, Closeable {
   /** RpcController is not used and hence is set to null */

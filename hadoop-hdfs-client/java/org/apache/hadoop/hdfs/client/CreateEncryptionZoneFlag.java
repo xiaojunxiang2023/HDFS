@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.client;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * CreateEncryptionZoneFlag is used in
  * {@link HdfsAdmin#createEncryptionZone(Path, String, EnumSet)} to indicate
@@ -14,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  *   to support soft delete.</li>
  * </ol>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public enum CreateEncryptionZoneFlag {
 
   /**

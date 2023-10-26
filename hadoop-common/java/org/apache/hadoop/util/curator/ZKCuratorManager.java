@@ -13,7 +13,6 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.transaction.CuratorOp;
 import org.apache.curator.retry.RetryNTimes;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.SecurityUtil;
@@ -29,7 +28,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 /**
  * Helper class that provides utility methods specific to ZK operations.
  */
-@InterfaceAudience.Private
 public final class ZKCuratorManager {
 
   private static final Logger LOG =

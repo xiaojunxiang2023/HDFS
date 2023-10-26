@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient;
@@ -26,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * response. BPOfferService delegates the work to this class for handling EC
  * commands.
  */
-@InterfaceAudience.Private
 public final class ErasureCodingWorker {
   private static final Logger LOG = DataNode.LOG;
 

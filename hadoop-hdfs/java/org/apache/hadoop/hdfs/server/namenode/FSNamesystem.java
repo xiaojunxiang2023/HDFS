@@ -158,7 +158,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.crypto.key.KeyProvider.Metadata;
@@ -355,7 +354,6 @@ import org.slf4j.LoggerFactory;
  * 4)  machine {@literal -->} blocklist (inverted #2)
  * 5)  LRU cache of updated-heartbeat machines
  */
-@InterfaceAudience.Private
 @Metrics(context="dfs")
 public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     NameNodeMXBean, ReplicatedBlocksMBean, ECBlockGroupsMBean {

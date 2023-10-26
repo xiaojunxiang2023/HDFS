@@ -4,8 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -21,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-
-@InterfaceAudience.Private
 public class KeyProviderCache {
 
   public static final Logger LOG = LoggerFactory.getLogger(

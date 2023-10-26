@@ -3,9 +3,6 @@ package org.apache.hadoop.fs;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 
 /**
@@ -13,8 +10,6 @@ import org.apache.hadoop.hdfs.protocol.LocatedBlock;
  * allowing more detailed queries to the datanode about a block.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class HdfsBlockLocation extends BlockLocation implements Serializable {
   private static final long serialVersionUID = 0x7aecec92;
 

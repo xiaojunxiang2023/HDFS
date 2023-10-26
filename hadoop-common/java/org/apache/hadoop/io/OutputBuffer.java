@@ -2,9 +2,6 @@ package org.apache.hadoop.io;
 
 import java.io.*;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A reusable {@link OutputStream} implementation that writes to an in-memory
  * buffer.
  *
@@ -25,8 +22,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * @see DataOutputBuffer
  * @see InputBuffer
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class OutputBuffer extends FilterOutputStream {
 
   private static class Buffer extends ByteArrayOutputStream {

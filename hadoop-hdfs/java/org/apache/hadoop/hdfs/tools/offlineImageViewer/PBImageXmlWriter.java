@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.PermissionStatus;
@@ -42,7 +41,6 @@ import static org.apache.hadoop.hdfs.server.namenode.FSImageFormatPBINode.*;
  * PBImageXmlWriter walks over an fsimage structure and writes out
  * an equivalent XML document that contains the fsimage's components.
  */
-@InterfaceAudience.Private
 public final class PBImageXmlWriter {
     public static final String NAME_SECTION_NAME = "NameSection";
     public static final String ERASURE_CODING_SECTION_NAME =

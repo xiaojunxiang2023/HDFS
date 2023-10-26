@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 package org.apache.hadoop.hdfs.server.datanode.checker;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.Optional;
@@ -31,8 +28,6 @@ import java.util.concurrent.TimeUnit;
  * {@link ListenableFuture} is returned.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface AsyncChecker<K, V> {
 
     /**

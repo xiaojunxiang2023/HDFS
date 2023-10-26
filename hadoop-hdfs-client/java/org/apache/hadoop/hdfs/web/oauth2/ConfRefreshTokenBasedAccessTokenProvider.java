@@ -25,9 +25,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.web.URLConnectionFactory;
 import org.apache.hadoop.util.JsonSerialization;
@@ -50,8 +47,6 @@ import static org.apache.hadoop.hdfs.web.oauth2.Utils.notNull;
  * <a href="https://tools.ietf.org/html/rfc6749#section-4.1">
  *   Authorization Code Grant workflow</a>.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class ConfRefreshTokenBasedAccessTokenProvider
     extends AccessTokenProvider {
 

@@ -3,9 +3,6 @@ package org.apache.hadoop.io;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -19,8 +16,6 @@ import org.apache.hadoop.util.ReflectionUtils;
  * {@link #compare(byte[],int,int,byte[],int,int)}.  Static utility methods are
  * provided to assist in optimized implementations of this method.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class WritableComparator implements RawComparator, Configurable {
 
   private static final ConcurrentHashMap<Class, WritableComparator> comparators 

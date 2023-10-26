@@ -7,9 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 /**
@@ -22,8 +19,6 @@ import org.apache.hadoop.conf.Configuration;
  * Before returning our handler, we make sure that FileSystem knows an
  * implementation for the requested scheme/protocol.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FsUrlStreamHandlerFactory implements
     URLStreamHandlerFactory {
 

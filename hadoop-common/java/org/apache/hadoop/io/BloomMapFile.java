@@ -3,9 +3,6 @@ package org.apache.hadoop.io;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -31,8 +28,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAPFILE_BLOO
  * {@link Reader#get(WritableComparable, Writable)} operation, especially in
  * case of sparsely populated MapFile-s.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class BloomMapFile {
   private static final Logger LOG = LoggerFactory.getLogger(BloomMapFile.class);
   public static final String BLOOM_FILE_NAME = "bloom";

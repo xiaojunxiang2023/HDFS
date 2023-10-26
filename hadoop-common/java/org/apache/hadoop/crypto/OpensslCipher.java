@@ -8,8 +8,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.NativeCodeLoader;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -22,7 +20,6 @@ import org.slf4j.LoggerFactory;
  * Currently only AES-CTR is supported. It's flexible to add 
  * other crypto algorithms/modes.
  */
-@InterfaceAudience.Private
 public final class OpensslCipher {
   private static final Logger LOG =
       LoggerFactory.getLogger(OpensslCipher.class.getName());

@@ -1,15 +1,12 @@
 package org.apache.hadoop.io.retry;
 
 import java.lang.reflect.Method;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ipc.RetriableException;
 
 /**
  * A dummy invocation handler extending RetryInvocationHandler. It drops the
  * first N number of responses. This invocation handler is only used for testing.
  */
-@InterfaceAudience.Private
 public class LossyRetryInvocationHandler<T> extends RetryInvocationHandler<T> {
   private final int numToDrop;
   private static final ThreadLocal<Integer> RetryCount = 

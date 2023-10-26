@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -33,8 +30,6 @@ import org.slf4j.LoggerFactory;
  * <li><code>sshfence(...)</code> (see {@link SshFenceByTcpPort})
  * </ul>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class NodeFencer {
   private static final String CLASS_RE = "([a-zA-Z0-9\\.\\$]+)";
   private static final Pattern CLASS_WITH_ARGUMENT =

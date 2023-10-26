@@ -1,13 +1,10 @@
 package org.apache.hadoop.crypto.key.kms;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.token.delegation.web.DelegationTokenIdentifier;
 
 /**
  * Holder class for KMS delegation tokens.
  */
-@InterfaceAudience.Private
 public final class KMSDelegationToken {
 
   public static final String TOKEN_KIND_STR = "kms-dt";

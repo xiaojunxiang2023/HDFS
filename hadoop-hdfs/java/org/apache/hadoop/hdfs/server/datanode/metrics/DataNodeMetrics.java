@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.metrics;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.DataNodeUsageReport;
@@ -27,7 +25,6 @@ import static org.apache.hadoop.metrics2.impl.MsInfo.SessionId;
  *  <p> {@link #blocksRead}.inc()
  *
  */
-@InterfaceAudience.Private
 @Metrics(about = "DataNode metrics", context = "dfs")
 public class DataNodeMetrics {
 

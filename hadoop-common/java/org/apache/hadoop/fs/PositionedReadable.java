@@ -2,9 +2,6 @@ package org.apache.hadoop.fs;
 
 import java.io.*;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Stream that permits positional reading.
  *
@@ -19,8 +16,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * may make the intermediate state of the system, specifically the position
  * obtained in {@code Seekable.getPos()} visible.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface PositionedReadable {
   /**
    * Read up to the specified number of bytes, from a given

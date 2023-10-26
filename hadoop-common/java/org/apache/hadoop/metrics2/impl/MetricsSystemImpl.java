@@ -19,7 +19,6 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.math3.util.ArithmeticUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsCollector;
 import org.apache.hadoop.metrics2.MetricsException;
@@ -48,7 +47,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A base class for metrics system singletons
  */
-@InterfaceAudience.Private
 @Metrics(context="metricssystem")
 public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 

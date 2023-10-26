@@ -11,16 +11,12 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import org.apache.hadoop.fs.FSProtos.FileStatusProto;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.protocolPB.PBHelper;
 import org.apache.hadoop.io.Writable;
 
 /** Interface that represents the client side information for a file.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FileStatus implements Writable, Comparable<Object>,
     Serializable, ObjectInputValidation {
 

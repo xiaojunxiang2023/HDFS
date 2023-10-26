@@ -34,9 +34,6 @@ package org.apache.hadoop.util.bloom;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.WritableComparable;
 
 /**
@@ -44,8 +41,7 @@ import org.apache.hadoop.io.WritableComparable;
  * 
  * @see Filter The general behavior of a filter
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class Key implements WritableComparable<Key> {
   /** Byte value of key */
   byte[] bytes;

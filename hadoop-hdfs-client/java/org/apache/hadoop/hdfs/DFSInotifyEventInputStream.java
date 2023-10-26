@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs;
 
 import java.util.Collections;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.inotify.EventBatch;
 import org.apache.hadoop.hdfs.inotify.EventBatchList;
 import org.apache.hadoop.hdfs.inotify.MissingEventsException;
@@ -22,8 +20,6 @@ import java.util.concurrent.TimeUnit;
  * Stream for reading inotify events. DFSInotifyEventInputStreams should not
  * be shared among multiple threads.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class DFSInotifyEventInputStream {
   public static final Logger LOG = LoggerFactory.getLogger(
       DFSInotifyEventInputStream.class);

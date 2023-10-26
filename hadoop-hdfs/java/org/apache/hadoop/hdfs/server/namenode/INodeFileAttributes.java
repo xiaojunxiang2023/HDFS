@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.server.namenode.INodeFile.HeaderFormat;
@@ -8,7 +6,6 @@ import org.apache.hadoop.hdfs.server.namenode.INodeFile.HeaderFormat;
 /**
  * The attributes of a file.
  */
-@InterfaceAudience.Private
 public interface INodeFileAttributes extends INodeAttributes {
   /** @return the file replication. */
   short getFileReplication();

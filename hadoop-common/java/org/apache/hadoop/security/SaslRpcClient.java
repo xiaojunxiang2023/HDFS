@@ -27,9 +27,6 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslClientFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.GlobPattern;
 import org.apache.hadoop.ipc.Client.IpcStreams;
@@ -62,8 +59,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A utility class that encapsulates SASL logic for RPC client
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class SaslRpcClient {
   // This log is public as it is referenced in tests
   public static final Logger LOG = LoggerFactory.getLogger(SaslRpcClient.class);
@@ -107,7 +103,6 @@ public class SaslRpcClient {
   }
   
   @VisibleForTesting
-  @InterfaceAudience.Private
   public Object getNegotiatedProperty(String key) {
     return (saslClient != null) ? saslClient.getNegotiatedProperty(key) : null;
   }
@@ -118,7 +113,6 @@ public class SaslRpcClient {
   // exception occurs.  the SASL prep for a kerberos connection should
   // ideally relogin if necessary instead of exposing this detail to the
   // Client
-  @InterfaceAudience.Private
   public AuthMethod getAuthMethod() {
     return authMethod;
   }

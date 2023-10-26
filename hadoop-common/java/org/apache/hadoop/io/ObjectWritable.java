@@ -6,9 +6,6 @@ import java.lang.reflect.Method;
 
 import java.io.*;
 import java.util.*;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.util.ProtoUtil;
 
@@ -17,8 +14,6 @@ import org.apache.hadoop.thirdparty.protobuf.Message;
 /** A polymorphic Writable that writes an instance with it's class name.
  * Handles arrays, strings and primitive types without a Writable wrapper.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class ObjectWritable implements Writable, Configurable {
 
   private Class declaredClass;

@@ -20,7 +20,6 @@ import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -50,7 +49,6 @@ import static org.apache.hadoop.hdfs.server.common.Util.connectionFactory;
 /**
  * This class provides fetching a specified file from the NameNode.
  */
-@InterfaceAudience.Private
 public class TransferFsImage {
 
   public enum TransferResult{

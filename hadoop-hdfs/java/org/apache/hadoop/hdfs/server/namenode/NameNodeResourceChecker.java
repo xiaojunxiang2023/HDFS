@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.DF;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -26,7 +25,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * which is configured to be redundant. Volumes containing file system edits dirs
  * are added by default, and arbitrary extra volumes may be configured as well.
  */
-@InterfaceAudience.Private
 public class NameNodeResourceChecker {
   private static final Logger LOG =
       LoggerFactory.getLogger(NameNodeResourceChecker.class.getName());

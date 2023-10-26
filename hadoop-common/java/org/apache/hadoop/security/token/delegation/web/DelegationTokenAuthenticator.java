@@ -1,7 +1,4 @@
 package org.apache.hadoop.security.token.delegation.web;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -29,8 +26,6 @@ import java.util.Map;
  * {@link Authenticator} wrapper that enhances an {@link Authenticator} with
  * Delegation Token support.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class DelegationTokenAuthenticator implements Authenticator {
   private static Logger LOG = 
       LoggerFactory.getLogger(DelegationTokenAuthenticator.class);
@@ -58,7 +53,6 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
   /**
    * DelegationToken operations.
    */
-  @InterfaceAudience.Private
   public enum DelegationTokenOperation {
     GETDELEGATIONTOKEN(HTTP_GET, true),
     RENEWDELEGATIONTOKEN(HTTP_PUT, true),

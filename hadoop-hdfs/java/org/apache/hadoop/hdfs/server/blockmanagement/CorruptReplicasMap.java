@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.LongAdder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
@@ -23,8 +21,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * expected number of good replicas.
  * Mapping: Block {@literal -> TreeSet<DatanodeDescriptor>}
  */
-
-@InterfaceAudience.Private
 public class CorruptReplicasMap{
 
   /** The corruption reason code */

@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.util.Shell;
@@ -29,8 +27,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
 /**
  * An utility class for I/O related functionality. 
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class IOUtils {
   public static final Logger LOG = LoggerFactory.getLogger(IOUtils.class);
 

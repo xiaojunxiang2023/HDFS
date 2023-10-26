@@ -1,8 +1,5 @@
 package org.apache.hadoop.security.ssl;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +23,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * A {@link TrustManager} implementation that exposes a method, {@link #loadFrom(Path)}
  * to reload its configuration for example when the truststore file on disk changes.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public final class ReloadingX509TrustManager implements X509TrustManager {
 
   static final Logger LOG =

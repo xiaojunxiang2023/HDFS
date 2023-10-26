@@ -13,8 +13,6 @@ import org.apache.hadoop.fs.StorageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -57,8 +55,6 @@ import java.util.function.Consumer;
 /**
  * Manage datanodes, include decommission and other activities.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DatanodeManager {
   static final Logger LOG = LoggerFactory.getLogger(DatanodeManager.class);
 

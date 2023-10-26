@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.balancer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -25,7 +23,6 @@ import java.util.EnumSet;
 /**
  * The class provides utilities for key and token management.
  */
-@InterfaceAudience.Private
 public class KeyManager implements Closeable, DataEncryptionKeyFactory {
     private static final Logger LOG = LoggerFactory.getLogger(KeyManager.class);
 

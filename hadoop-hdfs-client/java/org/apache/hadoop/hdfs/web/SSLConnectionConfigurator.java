@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.web;
 
 import org.apache.hadoop.auth.client.ConnectionConfigurator;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.ssl.SSLFactory;
 
@@ -16,8 +14,6 @@ import java.security.GeneralSecurityException;
 /**
  * Configure a connection to use SSL authentication.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 
 public class SSLConnectionConfigurator implements ConnectionConfigurator {
   private final SSLFactory factory;

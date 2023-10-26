@@ -20,7 +20,6 @@
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi
     .FsVolumeReferences;
@@ -71,7 +70,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Only one plan can be executing in a datanode at any given time. This is
  * ensured by checking the future handle of the worker thread in submitPlan.
  */
-@InterfaceAudience.Private
 public class DiskBalancer {
 
   @VisibleForTesting

@@ -23,8 +23,6 @@ import java.util.concurrent.CompletableFuture;
 import javax.annotation.Nonnull;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.Options.CreateOpts;
@@ -156,9 +154,6 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  *  </ul>                                          
  *    
  */
-
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FileContext implements PathCapabilities {
   
   public static final Logger LOG = LoggerFactory.getLogger(FileContext.class);
@@ -492,8 +487,6 @@ public class FileContext implements PathCapabilities {
   }
 
   @VisibleForTesting
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   public AbstractFileSystem getDefaultFileSystem() {
     return defaultFS;
   }
@@ -1276,7 +1269,6 @@ public class FileContext implements PathCapabilities {
    * @throws UnexpectedServerException If server implementation throws 
    *           undeclared exception to RPC server
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "Hive"})
   public void access(final Path path, final FsAction mode)
       throws AccessControlException, FileNotFoundException,
       UnsupportedFileSystemException, IOException {
@@ -1408,8 +1400,7 @@ public class FileContext implements PathCapabilities {
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>f</code> is invalid
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-  @InterfaceStability.Evolving
+  // MapReduce也可见
   public BlockLocation[] getFileBlockLocations(final Path f, final long start,
       final long len) throws AccessControlException, FileNotFoundException,
       UnsupportedFileSystemException, IOException {
@@ -2376,7 +2367,7 @@ public class FileContext implements PathCapabilities {
    * @return List of delegation tokens.
    * @throws IOException
    */
-  @InterfaceAudience.LimitedPrivate( { "HDFS", "MapReduce" })
+  // MapReduce 也可见
   public List<Token<?>> getDelegationTokens(
       Path p, String renewer) throws IOException {
     Set<AbstractFileSystem> afsSet = resolveAbstractFileSystems(p);
@@ -2883,7 +2874,6 @@ public class FileContext implements PathCapabilities {
    * @throws IOException if some early checks cause IO failures.
    * @throws UnsupportedOperationException if support is checked early.
    */
-  @InterfaceStability.Unstable
   public FutureDataInputStreamBuilder openFile(Path path)
       throws IOException, UnsupportedOperationException {
 
@@ -2970,7 +2960,6 @@ public class FileContext implements PathCapabilities {
    * @throws IOException if some early checks cause IO failures.
    * @throws UnsupportedOperationException if support is checked early.
    */
-  @InterfaceStability.Unstable
   public MultipartUploaderBuilder createMultipartUploader(Path basePath)
       throws IOException {
     return FsLinkResolution.resolve(this,

@@ -2,9 +2,6 @@ package org.apache.hadoop.security.alias;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
 /**
@@ -15,8 +12,6 @@ import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
  * 
  * <code>CredentialProvider</code> implementations must be thread safe.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class CredentialProvider {
   public static final String CLEAR_TEXT_FALLBACK =
       CommonConfigurationKeysPublic.

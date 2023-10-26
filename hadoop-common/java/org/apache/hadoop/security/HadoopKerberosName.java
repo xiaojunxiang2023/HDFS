@@ -4,9 +4,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTH_TO_LOCAL_MECHANISM;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.auth.util.KerberosName;
 import org.apache.hadoop.auth.util.KerberosUtil;
@@ -19,8 +16,7 @@ import org.slf4j.LoggerFactory;
  * operating system names.
  */
 @SuppressWarnings("all")
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class HadoopKerberosName extends KerberosName {
   private static final Logger LOG =
           LoggerFactory.getLogger(HadoopKerberosName.class);

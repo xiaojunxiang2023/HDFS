@@ -1,12 +1,9 @@
 package org.apache.hadoop.hdfs.security.token.block;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * A little struct class to contain all fields required to perform encryption of
  * the DataTransferProtocol.
  */
-@InterfaceAudience.Private
 public class DataEncryptionKey {
   public final int keyId;
   public final String blockPoolId;

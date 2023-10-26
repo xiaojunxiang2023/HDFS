@@ -15,12 +15,9 @@
  * the License.
  */package org.apache.hadoop.hdfs.server.namenode.startupprogress;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Indicates a particular type of {@link Step}.
  */
-@InterfaceAudience.Private
 public enum StepType {
   /**
    * The namenode has entered safemode and is awaiting block reports from

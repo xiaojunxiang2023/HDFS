@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * JMX information of the secondary NameNode
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface SecondaryNameNodeInfoMXBean extends VersionInfoMXBean {
   /**
    * Gets the host and port colon separated.

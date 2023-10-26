@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.balancer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -41,7 +39,6 @@ import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
 import static org.apache.hadoop.hdfs.util.StripedBlockUtil.getInternalBlockLength;
 
 /** Dispatching block replica moves between datanodes. */
-@InterfaceAudience.Private
 public class Dispatcher {
     static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
 

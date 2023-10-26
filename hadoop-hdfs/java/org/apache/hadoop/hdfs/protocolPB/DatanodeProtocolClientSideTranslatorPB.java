@@ -4,9 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
@@ -62,8 +59,6 @@ import javax.annotation.Nonnull;
  * {@link DatanodeProtocol} interfaces to the RPC server implementing
  * {@link DatanodeProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class DatanodeProtocolClientSideTranslatorPB implements
     ProtocolMetaInterface, DatanodeProtocol, Closeable {
   

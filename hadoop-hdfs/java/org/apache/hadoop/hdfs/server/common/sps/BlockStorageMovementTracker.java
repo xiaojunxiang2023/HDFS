@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.common.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +9,6 @@ import java.util.concurrent.Future;
 /**
  * This class is used to track the completion of block movement future tasks.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockStorageMovementTracker implements Runnable {
     private static final Logger LOG = LoggerFactory
             .getLogger(BlockStorageMovementTracker.class);

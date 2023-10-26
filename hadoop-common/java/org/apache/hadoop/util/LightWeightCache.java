@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.PriorityQueue;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -33,7 +32,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  *       (1) a subclass of K, and
  *       (2) implementing {@link Entry} interface, and
  */
-@InterfaceAudience.Private
 public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
   /** Limit the number of entries in each eviction. */
   private static final int EVICTION_LIMIT = 1 << 16;

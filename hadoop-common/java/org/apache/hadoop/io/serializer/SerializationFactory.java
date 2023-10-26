@@ -2,9 +2,6 @@ package org.apache.hadoop.io.serializer;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -19,8 +16,7 @@ import org.slf4j.LoggerFactory;
  * A factory for {@link Serialization}s.
  * </p>
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class SerializationFactory extends Configured {
 
   static final Logger LOG =

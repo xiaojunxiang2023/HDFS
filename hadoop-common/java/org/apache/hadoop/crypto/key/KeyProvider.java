@@ -18,8 +18,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
@@ -35,8 +33,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
  * <p>
  * <code>KeyProvider</code> implementations must be thread safe.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class KeyProvider implements Closeable {
   public static final String DEFAULT_CIPHER_NAME =
       CommonConfigurationKeysPublic.HADOOP_SECURITY_KEY_DEFAULT_CIPHER_KEY;

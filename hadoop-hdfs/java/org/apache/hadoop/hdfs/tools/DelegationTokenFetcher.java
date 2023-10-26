@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.tools;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -30,7 +29,6 @@ import java.util.Date;
  * Fetch a DelegationToken from the current Namenode and store it in the
  * specified file.
  */
-@InterfaceAudience.Private
 public class DelegationTokenFetcher {
     private static final String WEBSERVICE = "webservice";
     private static final String CANCEL = "cancel";

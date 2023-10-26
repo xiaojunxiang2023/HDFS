@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode.checker;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 
 /**
  * A Checkable is an object whose health can be probed by invoking its
@@ -11,8 +8,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * e.g. a {@link Checkable} instance may represent a single hardware
  * resource.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface Checkable<K, V> {
 
     /**

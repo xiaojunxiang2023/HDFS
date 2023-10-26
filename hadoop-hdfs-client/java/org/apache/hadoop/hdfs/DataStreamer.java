@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.BlockWrite;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf;
@@ -94,8 +93,6 @@ import javax.annotation.Nonnull;
  * pipeline. The DataStreamer now starts sending packets from the dataQueue.
  *
  *********************************************************************/
-
-@InterfaceAudience.Private
 class DataStreamer extends Daemon {
   static final Logger LOG = LoggerFactory.getLogger(DataStreamer.class);
 

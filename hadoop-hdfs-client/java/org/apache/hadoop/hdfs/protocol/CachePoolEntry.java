@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Describes a Cache Pool entry.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class CachePoolEntry {
   private final CachePoolInfo info;
   private final CachePoolStats stats;

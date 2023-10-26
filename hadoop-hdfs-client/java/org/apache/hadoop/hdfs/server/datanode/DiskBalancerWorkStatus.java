@@ -22,8 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,8 +32,6 @@ import static com.fasterxml.jackson.databind.type.TypeFactory.defaultInstance;
 /**
  * Helper class that reports how much work has has been done by the node.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class DiskBalancerWorkStatus {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final ObjectMapper MAPPER_WITH_INDENT_OUTPUT =

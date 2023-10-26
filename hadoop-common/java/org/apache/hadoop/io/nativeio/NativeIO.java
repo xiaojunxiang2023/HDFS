@@ -12,9 +12,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.HardLink;
@@ -37,8 +34,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * These functions should generally be used alongside a fallback to another
  * more portable mechanism.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class NativeIO {
   public static class POSIX {
     // Flags for open() call from bits/fcntl.h - Set by JNI

@@ -17,9 +17,6 @@ import java.util.Arrays;
 
 import org.apache.avro.reflect.Stringable;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** This class stores text using standard UTF8 encoding.  It provides methods
  * to serialize, deserialize, and compare texts at byte level.  The type of
  * length is integer and is serialized using zero-compressed format.  <p>In
@@ -30,8 +27,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * string.
  */
 @Stringable
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class Text extends BinaryComparable
     implements WritableComparable<BinaryComparable> {
   

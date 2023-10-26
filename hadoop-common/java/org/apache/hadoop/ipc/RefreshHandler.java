@@ -1,11 +1,8 @@
 package org.apache.hadoop.ipc;
 
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Used to registry custom methods to refresh at runtime.
  */
-@InterfaceStability.Unstable
 public interface RefreshHandler {
   /**
    * Implement this method to accept refresh requests from the administrator.

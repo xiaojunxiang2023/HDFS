@@ -3,9 +3,6 @@ package org.apache.hadoop.util;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
@@ -25,8 +22,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
  * In both cases, EOF also terminates an otherwise unterminated
  * line.
  */
-@InterfaceAudience.LimitedPrivate({"MapReduce"})
-@InterfaceStability.Unstable
+// 仅 MapReduce可见
 public class LineReader implements Closeable, IOStatisticsSource {
   private static final int DEFAULT_BUFFER_SIZE = 64 * 1024;
   private int bufferSize = DEFAULT_BUFFER_SIZE;

@@ -28,7 +28,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
 import org.apache.hadoop.fs.CacheFlag;
@@ -86,7 +85,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Multimap;
  * datanode cache reports. Based on these reports and addition and removal of
  * caching directives, we will schedule caching and uncaching work.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
 public class CacheManager {
   public static final Logger LOG = LoggerFactory.getLogger(CacheManager.class);
 

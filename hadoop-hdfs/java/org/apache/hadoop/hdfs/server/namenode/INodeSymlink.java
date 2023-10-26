@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import java.io.PrintWriter;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
@@ -11,7 +9,6 @@ import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 /**
  * An {@link INode} representing a symbolic link.
  */
-@InterfaceAudience.Private
 public class INodeSymlink extends INodeWithAdditionalFields {
   private final byte[] symlink; // The target URI
 

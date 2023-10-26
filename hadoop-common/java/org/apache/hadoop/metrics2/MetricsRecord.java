@@ -2,14 +2,9 @@ package org.apache.hadoop.metrics2;
 
 import java.util.Collection;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * An immutable snapshot of metrics with a timestamp
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface MetricsRecord {
   /**
    * Get the timestamp of the metrics

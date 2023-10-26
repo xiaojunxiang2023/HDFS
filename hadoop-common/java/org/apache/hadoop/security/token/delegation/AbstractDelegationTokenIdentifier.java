@@ -1,8 +1,5 @@
 package org.apache.hadoop.security.token.delegation;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -15,9 +12,6 @@ import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.TokenIdentifier;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class AbstractDelegationTokenIdentifier 
 extends TokenIdentifier {
   private static final byte VERSION = 0;

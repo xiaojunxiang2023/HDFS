@@ -1,19 +1,8 @@
 package org.apache.hadoop.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Facilitates hooking process termination for tests, debugging
- * and embedding.
- * 
- * Hadoop code that attempts to call {@link System#exit(int)} 
- * or {@link Runtime#halt(int)} MUST invoke it via these methods.
- */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce", "YARN"})
-@InterfaceStability.Unstable
+// Yarn 和 MapReduce 也可见
 public final class ExitUtil {
   private static final Logger
       LOG = LoggerFactory.getLogger(ExitUtil.class.getName());

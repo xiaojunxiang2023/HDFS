@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.namenode.EditLogInputStream;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
 import org.apache.hadoop.io.IOUtils;
@@ -13,8 +10,6 @@ import java.io.IOException;
 /**
  * OfflineEditsBinaryLoader loads edits from a binary edits file
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class OfflineEditsBinaryLoader implements OfflineEditsLoader {
     public static final Logger LOG =
             LoggerFactory.getLogger(OfflineEditsBinaryLoader.class.getName());

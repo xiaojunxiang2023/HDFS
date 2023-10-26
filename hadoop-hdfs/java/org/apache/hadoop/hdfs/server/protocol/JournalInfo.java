@@ -1,11 +1,8 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Information that describes a journal
  */
-@InterfaceAudience.Private
 public class JournalInfo {
   private final int layoutVersion;
   private final String clusterId;

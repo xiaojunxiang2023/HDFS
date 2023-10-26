@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.namenode.INodeId;
 import org.apache.hadoop.util.SequentialNumber;
@@ -14,7 +12,6 @@ import org.apache.hadoop.util.SequentialNumber;
  * However given the sparsity of the ID space, conflicts should be rare
  * and can be skipped over when detected.
  */
-@InterfaceAudience.Private
 public class SequentialBlockIdGenerator extends SequentialNumber {
   /**
    * The last reserved block ID.

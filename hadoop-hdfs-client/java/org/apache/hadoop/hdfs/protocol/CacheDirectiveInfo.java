@@ -4,8 +4,6 @@ import java.util.Date;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Path;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -14,8 +12,6 @@ import org.apache.hadoop.hdfs.DFSUtilClient;
 /**
  * Describes a path-based cache directive.
  */
-@InterfaceStability.Evolving
-@InterfaceAudience.Public
 public class CacheDirectiveInfo {
   /**
    * A builder for creating new CacheDirectiveInfo instances.

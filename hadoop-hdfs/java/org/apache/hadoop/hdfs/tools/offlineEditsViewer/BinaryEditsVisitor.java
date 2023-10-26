@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
@@ -13,8 +10,6 @@ import java.io.IOException;
 /**
  * BinaryEditsVisitor implements a binary EditsVisitor
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class BinaryEditsVisitor implements OfflineEditsVisitor {
     final private EditLogFileOutputStream elfos;
 

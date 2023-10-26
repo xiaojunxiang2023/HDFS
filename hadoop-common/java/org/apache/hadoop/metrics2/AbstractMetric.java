@@ -1,8 +1,6 @@
 package org.apache.hadoop.metrics2;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import java.util.StringJoiner;
 
@@ -11,8 +9,6 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
 /**
  * The immutable metric
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class AbstractMetric implements MetricsInfo {
   private final MetricsInfo info;
 

@@ -10,16 +10,11 @@ import java.net.URLConnection;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 /**
  * Representation of a URL connection to open InputStreams.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class FsUrlConnection extends URLConnection {
   private static final Logger LOG =
       LoggerFactory.getLogger(FsUrlConnection.class);

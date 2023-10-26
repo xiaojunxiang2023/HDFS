@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.qjournal.protocolPB;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocolProtos.InterQJournalProtocolService;
 import org.apache.hadoop.ipc.ProtocolInfo;
@@ -16,7 +14,6 @@ import org.apache.hadoop.security.KerberosInfo;
 @ProtocolInfo(protocolName =
     "org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocol",
     protocolVersion = 1)
-@InterfaceAudience.Private
 public interface InterQJournalProtocolPB extends
     InterQJournalProtocolService.BlockingInterface {
 }

@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.permission;
 
 import java.util.List;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -13,8 +10,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * An AclStatus contains the ACL information of a specific file. AclStatus
  * instances are immutable. Use a {@link Builder} to create a new instance.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class AclStatus {
   private final String owner;
   private final String group;

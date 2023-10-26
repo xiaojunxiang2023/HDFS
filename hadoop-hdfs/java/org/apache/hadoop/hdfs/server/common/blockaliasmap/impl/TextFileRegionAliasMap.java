@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.common.blockaliasmap.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -26,8 +23,6 @@ import java.util.*;
  * This class is used for block maps stored as text files,
  * with a specified delimiter.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class TextFileRegionAliasMap
         extends BlockAliasMap<FileRegion> implements Configurable {
 

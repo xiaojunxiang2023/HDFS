@@ -2,16 +2,11 @@ package org.apache.hadoop.fs;
 
 import java.io.IOException;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.FsPermission;
 
 /**
  * This class defines a FileStatus that includes a file's block locations.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class LocatedFileStatus extends FileStatus {
 
   private static final long serialVersionUID = 0x17339920;

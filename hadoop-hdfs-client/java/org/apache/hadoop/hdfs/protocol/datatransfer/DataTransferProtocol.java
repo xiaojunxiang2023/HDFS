@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Transfer data to/from datanode using a streaming protocol.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface DataTransferProtocol {
   Logger LOG = LoggerFactory.getLogger(DataTransferProtocol.class);
 

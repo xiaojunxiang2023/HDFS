@@ -5,9 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.fs.PathNotFoundException;
@@ -18,8 +15,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 /**
  * Unix touch like commands
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 public class TouchCommands extends FsCommand {
   public static void registerCommands(CommandFactory factory) {
@@ -106,8 +101,6 @@ public class TouchCommands extends FsCommand {
     private String timestamp;
     private final SimpleDateFormat dateFormat =
         new SimpleDateFormat("yyyyMMdd:HHmmss");
-
-    @InterfaceAudience.Private
     @VisibleForTesting
     public DateFormat getDateFormat() {
       return dateFormat;

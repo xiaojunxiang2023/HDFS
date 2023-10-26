@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.metrics;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * This interface defines the methods to get status pertaining to blocks of type
  * {@link org.apache.hadoop.hdfs.protocol.BlockType#CONTIGUOUS} in FSNamesystem
@@ -12,7 +10,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * Name Node runtime activity statistic info is reported in
  * @see org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics
  */
-@InterfaceAudience.Private
 public interface ReplicatedBlocksMBean {
   /**
    * Return low redundancy blocks count.

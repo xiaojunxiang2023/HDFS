@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.NetworkTopology;
@@ -21,8 +18,6 @@ import static org.apache.hadoop.hdfs.DFSUtilClient.percent2String;
  * state, eg usage information, current administrative state, and the
  * network location that is communicated to clients.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DatanodeInfo extends DatanodeID implements Node {
   private long capacity;
   private long dfsUsed;

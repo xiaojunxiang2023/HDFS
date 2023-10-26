@@ -6,8 +6,6 @@ import java.util.List;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclEntryScope;
 import org.apache.hadoop.fs.permission.AclEntryType;
@@ -44,7 +42,6 @@ import org.apache.hadoop.hdfs.util.ReferenceCountMap;
  * validated and sorted according to the rules enforced by
  * {@link AclTransformation}.
  */
-@InterfaceAudience.Private
 public final class AclStorage {
 
   private final static ReferenceCountMap<AclFeature> UNIQUE_ACL_FEATURES =

@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
 import org.apache.commons.cli.*;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.util.ExitUtil;
@@ -19,7 +18,6 @@ import java.io.RandomAccessFile;
  * the console. Main entry point into utility, either via the command line or
  * programmatically.
  */
-@InterfaceAudience.Private
 public class OfflineImageViewerPB {
     public static final Logger LOG =
             LoggerFactory.getLogger(OfflineImageViewerPB.class);

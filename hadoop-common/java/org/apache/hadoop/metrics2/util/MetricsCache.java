@@ -1,8 +1,6 @@
 package org.apache.hadoop.metrics2.util;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsRecord;
 import org.apache.hadoop.metrics2.MetricsTag;
@@ -18,8 +16,6 @@ import java.util.StringJoiner;
 /**
  * A metrics cache for sinks that don't support sparse updates.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MetricsCache {
   static final Logger LOG = LoggerFactory.getLogger(MetricsCache.class);
   static final int MAX_RECS_PER_NAME_DEFAULT = 1000;

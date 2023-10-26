@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.client;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.crypto.CryptoOutputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -16,8 +13,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 /**
  * The Hdfs implementation of {@link FSDataOutputStream}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class HdfsDataOutputStream extends FSDataOutputStream {
   public HdfsDataOutputStream(DFSOutputStream out, FileSystem.Statistics stats,
       long startPosition) throws IOException {

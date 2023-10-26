@@ -2,9 +2,6 @@ package org.apache.hadoop.util;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
@@ -16,8 +13,6 @@ import org.slf4j.Logger;
  *
  * The logged warnings are throttled so that logs are not spammed.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class InstrumentedReadLock extends InstrumentedLock {
 
   private final ReentrantReadWriteLock readWriteLock;

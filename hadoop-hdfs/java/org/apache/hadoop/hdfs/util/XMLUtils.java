@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -15,8 +12,6 @@ import java.util.TreeMap;
  * General xml utilities.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class XMLUtils {
     private static final int NUM_SLASH_POSITIONS = 4;
 

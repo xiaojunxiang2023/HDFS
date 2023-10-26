@@ -13,10 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -27,8 +24,7 @@ import org.xml.sax.SAXException;
 
 // Keeps track of which datanodes/nodemanagers are allowed to connect to the
 // namenode/resourcemanager.
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class HostsFileReader {
   private static final Logger LOG = LoggerFactory.getLogger(HostsFileReader
       .class);

@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSStripedOutputStream.Coordinator;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -25,7 +23,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * sends an rpc call to the namenode and then populates the result for the
  * other streamers.
  */
-@InterfaceAudience.Private
 public class StripedDataStreamer extends DataStreamer {
   private final Coordinator coordinator;
   private final int index;

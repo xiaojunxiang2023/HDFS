@@ -6,9 +6,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
@@ -46,8 +43,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * which is located outside of this package. These members should be made
  * package-protected when the OIV is refactored.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FSImageSerialization {
 
   // Static-only class

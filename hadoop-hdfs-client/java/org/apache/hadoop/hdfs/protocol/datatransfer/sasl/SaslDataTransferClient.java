@@ -28,7 +28,6 @@ import javax.security.sasl.RealmChoiceCallback;
 
 import javax.security.sasl.Sasl;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CipherOption;
 import org.apache.hadoop.crypto.CipherSuite;
@@ -61,7 +60,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * needs it, because it acts as a client to other DataNodes during write
  * pipelines and block transfers.
  */
-@InterfaceAudience.Private
 public class SaslDataTransferClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(

@@ -5,8 +5,6 @@ import java.net.InetSocketAddress;
 import java.security.PrivilegedExceptionAction;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -24,7 +22,6 @@ import org.slf4j.Logger;
  * Creation, removal, starting, stopping, shutdown on BPOfferService
  * objects must be done via APIs in this class.
  */
-@InterfaceAudience.Private
 class BlockPoolManager {
   private static final Logger LOG = DataNode.LOG;
   

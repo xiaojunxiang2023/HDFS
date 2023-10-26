@@ -8,9 +8,6 @@ import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.Path;
@@ -18,8 +15,6 @@ import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.io.IOUtils;
 
 /** Various commands for copy files */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 class CopyCommands {  
   public static void registerCommands(CommandFactory factory) {

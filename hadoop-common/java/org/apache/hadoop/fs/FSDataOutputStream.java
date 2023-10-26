@@ -4,9 +4,6 @@ import java.io.DataOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.impl.StoreImplementationUtils;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
@@ -14,8 +11,6 @@ import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
 
 /** Utility that wraps a {@link OutputStream} in a {@link DataOutputStream}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FSDataOutputStream extends DataOutputStream
     implements Syncable, CanSetDropBehind, StreamCapabilities,
       IOStatisticsSource, Abortable {
@@ -103,7 +98,6 @@ public class FSDataOutputStream extends DataOutputStream
    *
    * @return the underlying output stream
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS"})
   public OutputStream getWrappedStream() {
     return wrappedStream;
   }

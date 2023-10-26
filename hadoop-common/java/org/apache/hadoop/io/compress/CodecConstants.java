@@ -1,13 +1,8 @@
 package org.apache.hadoop.io.compress;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Codec related constants.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class CodecConstants {
 
   private CodecConstants() {

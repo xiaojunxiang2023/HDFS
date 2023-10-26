@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.protocol;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.protocol.JournalInfo;
 import org.apache.hadoop.hdfs.server.protocol.NodeRegistration;
 
@@ -11,8 +8,6 @@ import org.apache.hadoop.hdfs.server.protocol.NodeRegistration;
  * This exception is thrown when a node that has not previously 
  * registered is trying to access the name node.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class UnregisteredNodeException extends IOException {
   private static final long serialVersionUID = -5620209396945970810L;
 

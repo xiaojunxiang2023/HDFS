@@ -22,9 +22,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -46,8 +43,6 @@ import static org.apache.hadoop.util.functional.FutureIO.awaitFuture;
  * which is now a subclass of this class.
  * @param <T> Type to marshal.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class JsonSerialization<T> {
 
   private static final Logger LOG =

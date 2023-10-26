@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
@@ -57,7 +56,6 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFact
  * <p>
  * This class depends on the FSNamesystem lock for synchronization.
  */
-@InterfaceAudience.Private
 public class DatanodeAdminManager {
   private static final Logger LOG =
       LoggerFactory.getLogger(DatanodeAdminManager.class);

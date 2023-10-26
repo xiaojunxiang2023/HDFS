@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.client;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.fs.BlockStoragePolicySpi;
@@ -46,8 +44,6 @@ import java.util.EnumSet;
  * is a class that provides the functionality for the CLI `hdfs dfsadmin ...'
  * commands.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class HdfsAdmin {
 
   private DistributedFileSystem dfs;

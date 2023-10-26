@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 
@@ -19,8 +16,6 @@ import java.net.InetSocketAddress;
  * These files control which DataNodes the NameNode expects to see in the
  * cluster.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public abstract class HostConfigManager implements Configurable {
 
   /**

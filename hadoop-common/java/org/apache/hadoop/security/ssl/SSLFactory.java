@@ -1,7 +1,4 @@
 package org.apache.hadoop.security.ssl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.auth.client.ConnectionConfigurator;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -34,12 +31,8 @@ import java.util.List;
  * This factory is used to configure HTTPS in Hadoop HTTP based endpoints, both
  * client and server.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class SSLFactory implements ConnectionConfigurator {
   static final Logger LOG = LoggerFactory.getLogger(SSLFactory.class);
-
-  @InterfaceAudience.Private
   public enum Mode { CLIENT, SERVER }
 
   public static final String SSL_CLIENT_CONF_KEY = "hadoop.ssl.client.conf";

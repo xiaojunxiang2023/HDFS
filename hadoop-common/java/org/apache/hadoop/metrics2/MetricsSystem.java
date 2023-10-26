@@ -1,8 +1,5 @@
 package org.apache.hadoop.metrics2;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The metrics system interface.
  * 
@@ -17,11 +14,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * {@link MetricsSource}s periodically and pass the {@link MetricsRecord}s to
  * {@link MetricsSink}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class MetricsSystem implements MetricsSystemMXBean {
-
-  @InterfaceAudience.Private
   public abstract MetricsSystem init(String prefix);
 
   /**
@@ -57,7 +50,6 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
    * @param name  of the metrics source
    * @return the metrics source (potentially wrapped) object
    */
-  @InterfaceAudience.Private
   public abstract MetricsSource getSource(String name);
 
   /**

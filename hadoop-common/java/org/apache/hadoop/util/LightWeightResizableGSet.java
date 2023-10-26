@@ -1,7 +1,6 @@
 package org.apache.hadoop.util;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * A low memory footprint {@link GSet} implementation,
@@ -20,7 +19,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  *       (1) a subclass of K, and
  *       (2) implementing {@link LinkedElement} interface.
  */
-@InterfaceAudience.Private
 public class LightWeightResizableGSet<K, E extends K>
     extends LightWeightGSet<K, E> {
 

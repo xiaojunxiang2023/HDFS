@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.Path;
@@ -40,7 +38,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * accessed via the UserProvider. Therefore, these providers won't be directly
  * used by MapReduce tasks.
  */
-@InterfaceAudience.Private
 public abstract class AbstractJavaKeyStoreProvider extends CredentialProvider {
   public static final Logger LOG = LoggerFactory.getLogger(
       AbstractJavaKeyStoreProvider.class);

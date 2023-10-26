@@ -4,15 +4,10 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.StringUtils;
 
 /** Store the summary of a content (a directory or a file). */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class ContentSummary extends QuotaUsage implements Writable{
   private long length;
   private long fileCount;
@@ -198,7 +193,6 @@ public class ContentSummary extends QuotaUsage implements Writable{
   }
 
   @Override
-  @InterfaceAudience.Private
   public void write(DataOutput out) throws IOException {
     out.writeLong(length);
     out.writeLong(fileCount);
@@ -209,7 +203,6 @@ public class ContentSummary extends QuotaUsage implements Writable{
   }
 
   @Override
-  @InterfaceAudience.Private
   public void readFields(DataInput in) throws IOException {
     this.length = in.readLong();
     this.fileCount = in.readLong();

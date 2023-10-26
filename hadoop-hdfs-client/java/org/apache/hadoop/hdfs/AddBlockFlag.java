@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CreateFlag;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -15,8 +12,6 @@ import java.util.EnumSet;
  * @see ClientProtocol#addBlock(String, String, ExtendedBlock, DatanodeInfo[],
  *      long, String[], EnumSet)
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public enum AddBlockFlag {
 
   /**

@@ -9,17 +9,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.CommandFactory;
 import org.apache.hadoop.fs.shell.CommandFormat;
 import org.apache.hadoop.fs.shell.FsCommand;
 import org.apache.hadoop.fs.shell.PathData;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 /**
  * Implements a Hadoop find command.
  */
@@ -199,7 +193,6 @@ public class Find extends FsCommand {
    * 
    * @param expression
    */
-  @InterfaceAudience.Private
   void setRootExpression(Expression expression) {
     this.rootExpression = expression;
   }
@@ -209,13 +202,11 @@ public class Find extends FsCommand {
    * 
    * @return the root expression
    */
-  @InterfaceAudience.Private
   Expression getRootExpression() {
     return this.rootExpression;
   }
 
   /** Returns the current find options, creating them if necessary. */
-  @InterfaceAudience.Private
   FindOptions getOptions() {
     if (options == null) {
       options = createOptions();

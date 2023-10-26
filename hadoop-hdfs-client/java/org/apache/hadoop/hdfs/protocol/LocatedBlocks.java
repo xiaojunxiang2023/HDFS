@@ -3,16 +3,11 @@ package org.apache.hadoop.hdfs.protocol;
 import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileEncryptionInfo;
 
 /**
  * Collection of blocks with their locations and the file length.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class LocatedBlocks {
   private final long fileLength;
   // array of blocks with prioritized locations

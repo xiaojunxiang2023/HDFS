@@ -9,8 +9,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.util.Quantile;
@@ -25,8 +23,6 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFact
  * quantiles with provably low error bounds. This is particularly useful for
  * accurate high-percentile (e.g. 95th, 99th) latency metrics.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MutableQuantiles extends MutableMetric {
 
   @VisibleForTesting

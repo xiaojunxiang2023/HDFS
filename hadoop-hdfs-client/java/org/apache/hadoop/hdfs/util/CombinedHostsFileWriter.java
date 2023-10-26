@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
 
@@ -26,8 +24,6 @@ import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
  *   {"hostName": "host3", "port": 0, "adminState": "DECOMMISSIONED"}
  * ]
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
-@InterfaceStability.Unstable
 public final class CombinedHostsFileWriter {
   private CombinedHostsFileWriter() {
   }

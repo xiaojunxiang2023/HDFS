@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.inotify;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -14,8 +11,6 @@ import java.util.Optional;
  * when a file is opened for read (although a MetadataUpdateEvent will be sent
  * if the atime is updated).
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class Event {
   public enum EventType {
     CREATE, CLOSE, APPEND, RENAME, METADATA, UNLINK, TRUNCATE
@@ -34,7 +29,6 @@ public abstract class Event {
   /**
    * Sent when a file is closed after append or create.
    */
-  @InterfaceAudience.Public
   public static class CloseEvent extends Event {
     private String path;
     private long fileSize;
@@ -67,7 +61,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       return "CloseEvent [path=" + path + ", fileSize=" + fileSize
           + ", timestamp=" + timestamp + "]";
@@ -78,7 +71,6 @@ public abstract class Event {
   /**
    * Sent when a new file is created (including overwrite).
    */
-  @InterfaceAudience.Public
   public static class CreateEvent extends Event {
 
     public enum INodeType {
@@ -239,7 +231,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       StringBuilder content = new StringBuilder();
       content.append("CreateEvent [INodeType=").append(iNodeType)
@@ -271,7 +262,6 @@ public abstract class Event {
    * metadataType of the MetadataUpdateEvent will be null or will have their default
    * values.
    */
-  @InterfaceAudience.Public
   public static class MetadataUpdateEvent extends Event {
 
     public enum MetadataType {
@@ -431,7 +421,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       StringBuilder content = new StringBuilder();
       content.append("MetadataUpdateEvent [path=").append(path)
@@ -469,7 +458,6 @@ public abstract class Event {
   /**
    * Sent when a file, directory, or symlink is renamed.
    */
-  @InterfaceAudience.Public
   public static class RenameEvent extends Event {
     private String srcPath;
     private String dstPath;
@@ -523,7 +511,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       return "RenameEvent [srcPath=" + srcPath + ", dstPath=" + dstPath
           + ", timestamp=" + timestamp + "]";
@@ -534,7 +521,6 @@ public abstract class Event {
   /**
    * Sent when an existing file is opened for append.
    */
-  @InterfaceAudience.Public
   public static class AppendEvent extends Event {
     private String path;
     private boolean newBlock;
@@ -573,7 +559,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       return "AppendEvent [path=" + path + ", newBlock=" + newBlock + "]";
     }
@@ -583,7 +568,6 @@ public abstract class Event {
   /**
    * Sent when a file, directory, or symlink is deleted.
    */
-  @InterfaceAudience.Public
   public static class UnlinkEvent extends Event {
     private String path;
     private long timestamp;
@@ -625,7 +609,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       return "UnlinkEvent [path=" + path + ", timestamp=" + timestamp + "]";
     }
@@ -634,7 +617,6 @@ public abstract class Event {
   /**
    * Sent when a file is truncated.
    */
-  @InterfaceAudience.Public
   public static class TruncateEvent extends Event {
     private String path;
     private long fileSize;
@@ -667,7 +649,6 @@ public abstract class Event {
     }
 
     @Override
-    @InterfaceStability.Unstable
     public String toString() {
       return "TruncateEvent [path=" + path + ", fileSize=" + fileSize
           + ", timestamp=" + timestamp + "]";

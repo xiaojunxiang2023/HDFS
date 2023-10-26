@@ -22,8 +22,6 @@ import javax.security.sasl.SaslServer;
 import javax.security.sasl.SaslServerFactory;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.ipc.Server;
@@ -38,8 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A utility class for dealing with SASL on RPC server
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class SaslRpcServer {
   public static final Logger LOG = LoggerFactory.getLogger(SaslRpcServer.class);
   public static final String SASL_DEFAULT_REALM = "default";
@@ -60,16 +57,10 @@ public class SaslRpcServer {
       return saslQop;
     }
   }
-
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   public AuthMethod authMethod;
   public String mechanism;
   public String protocol;
   public String serverId;
-  
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   public SaslRpcServer(AuthMethod authMethod) throws IOException {
     this.authMethod = authMethod;
     mechanism = authMethod.getMechanismName();    
@@ -100,9 +91,6 @@ public class SaslRpcServer {
             "Server does not support SASL " + authMethod);
     }
   }
-  
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   public SaslServer create(final Connection connection,
                            final Map<String,?> saslProperties,
                            SecretManager<TokenIdentifier> secretManager
@@ -196,7 +184,6 @@ public class SaslRpcServer {
   }
 
   /** Authentication method */
-  @InterfaceStability.Evolving
   public enum AuthMethod {
     SIMPLE((byte) 80, ""),
     KERBEROS((byte) 81, "GSSAPI"),
@@ -239,7 +226,6 @@ public class SaslRpcServer {
   };
 
   /** CallbackHandler for SASL DIGEST-MD5 mechanism */
-  @InterfaceStability.Evolving
   public static class SaslDigestCallbackHandler implements CallbackHandler {
     private SecretManager<TokenIdentifier> secretManager;
     private Server.Connection connection; 
@@ -314,7 +300,6 @@ public class SaslRpcServer {
   }
 
   /** CallbackHandler for SASL GSSAPI Kerberos mechanism */
-  @InterfaceStability.Evolving
   public static class SaslGssCallbackHandler implements CallbackHandler {
 
     @Override

@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.qjournal.protocol;
 
 import java.io.IOException;
 import java.net.URL;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.qjournal.client.QuorumJournalManager;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
@@ -29,7 +27,6 @@ import org.apache.hadoop.security.KerberosInfo;
 @KerberosInfo(
     serverPrincipal = DFSConfigKeys.DFS_JOURNALNODE_KERBEROS_PRINCIPAL_KEY,
     clientPrincipal = DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY)
-@InterfaceAudience.Private
 public interface QJournalProtocol {
   public static final long versionID = 1L;
 

@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -162,8 +160,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * }
  * </pre>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FSImageFormat {
   private static final Logger LOG = FSImage.LOG;
 

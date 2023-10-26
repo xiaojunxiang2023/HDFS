@@ -18,8 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.audit.CommonAuditContext;
 import org.apache.hadoop.fs.store.LogExactlyOnce;
 import org.apache.http.NameValuePair;
@@ -40,8 +38,6 @@ import static org.apache.hadoop.fs.audit.AuditConstants.REFERRER_ORIGIN_HOST;
  * so as to verify that header generation in the S3A auditors, and
  * S3 log parsing, all work.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class HttpReferrerAuditHeader {
 
   /**

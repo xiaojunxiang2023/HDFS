@@ -1,13 +1,8 @@
 package org.apache.hadoop.metrics2;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The JMX interface to the metrics system
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface MetricsSystemMXBean {
   /**
    * Start the metrics system

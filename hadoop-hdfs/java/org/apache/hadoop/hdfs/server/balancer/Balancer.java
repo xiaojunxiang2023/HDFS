@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.balancer;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -143,8 +142,6 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
  * time by running the command "stop-balancer.sh" on the machine where the 
  * balancer is running.
  */
-
-@InterfaceAudience.Private
 public class Balancer {
     static final Logger LOG = LoggerFactory.getLogger(Balancer.class);
 

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
@@ -18,7 +16,6 @@ import org.apache.hadoop.util.LightWeightResizableGSet;
  * This class is used by datanodes to maintain meta data of its replicas.
  * It provides a general interface for meta information of a replica.
  */
-@InterfaceAudience.Private
 abstract public class ReplicaInfo extends Block
     implements Replica, LightWeightResizableGSet.LinkedElement {
 

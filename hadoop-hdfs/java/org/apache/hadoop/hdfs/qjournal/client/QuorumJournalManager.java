@@ -16,7 +16,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -51,7 +50,6 @@ import org.apache.hadoop.thirdparty.protobuf.TextFormat;
  * A JournalManager that writes to a set of remote JournalNodes,
  * requiring a quorum of nodes to ack each write.
  */
-@InterfaceAudience.Private
 public class QuorumJournalManager implements JournalManager {
   static final Logger LOG = LoggerFactory.getLogger(QuorumJournalManager.class);
 

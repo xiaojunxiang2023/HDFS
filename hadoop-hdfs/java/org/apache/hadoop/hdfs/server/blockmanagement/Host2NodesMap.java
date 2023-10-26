@@ -7,12 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A map from host names to datanode descriptors. */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 class Host2NodesMap {
   private HashMap<String, String> mapHost = new HashMap<String, String>();
   private final HashMap<String, DatanodeDescriptor[]> map

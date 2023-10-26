@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.ChmodParser;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.shell.CommandFactory;
@@ -20,8 +17,6 @@ import org.slf4j.Logger;
  * This class is the home for file permissions related commands.
  * Moved to this separate class since FsShell is getting too large.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FsShellPermissions extends FsCommand {
 
   static final Logger LOG = FsShell.LOG;

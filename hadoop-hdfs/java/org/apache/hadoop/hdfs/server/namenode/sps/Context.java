@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
@@ -15,8 +12,6 @@ import org.apache.hadoop.net.NetworkTopology;
 /**
  * An interface for the communication between SPS and Namenode module.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface Context {
 
   /**

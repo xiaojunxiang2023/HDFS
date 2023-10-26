@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ha.ServiceFailedException;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
 import org.apache.hadoop.ipc.StandbyException;
@@ -11,7 +9,6 @@ import org.apache.hadoop.ipc.StandbyException;
  * Context that is to be used by {@link HAState} for getting/setting the
  * current state and performing required operations.
  */
-@InterfaceAudience.Private
 public interface HAContext {
   /** Set the state of the context to given {@code state} */
   public void setState(HAState state);

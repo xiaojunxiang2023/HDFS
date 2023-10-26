@@ -9,9 +9,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.impl.OpenFileParameters;
 import org.apache.hadoop.fs.permission.AclEntry;
@@ -32,9 +29,7 @@ import org.apache.hadoop.util.Progressable;
  * <code>FilterFs</code> may further override some of these methods and may also
  * provide additional methods and fields.
  * 
- */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving /*Evolving for a release,to be changed to Stable */
+ */ /*Evolving for a release,to be changed to Stable */
 public abstract class FilterFs extends AbstractFileSystem {
   private final AbstractFileSystem myFs;
   

@@ -1,8 +1,6 @@
 package org.apache.hadoop.metrics2;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
@@ -18,8 +16,6 @@ import java.util.Map;
  * The {@link #toString()} operator dumps out all values collected.
  *
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MetricsJsonBuilder extends MetricsRecordBuilder {
 
   public static final Logger LOG = LoggerFactory

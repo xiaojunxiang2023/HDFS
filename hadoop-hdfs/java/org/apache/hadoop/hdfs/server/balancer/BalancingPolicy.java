@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.balancer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorageReport;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
@@ -13,7 +11,6 @@ import org.apache.hadoop.hdfs.util.EnumDoubles;
  * {@link Pool} implies {@link Node}
  * but NOT the other way around
  */
-@InterfaceAudience.Private
 abstract class BalancingPolicy {
     final EnumCounters<StorageType> totalCapacities
             = new EnumCounters<StorageType>(StorageType.class);

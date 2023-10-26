@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.qjournal.protocolPB;
 
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocol;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestRequestProto;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
@@ -21,8 +19,6 @@ import java.io.IOException;
  * {@link InterQJournalProtocol} interfaces to the RPC server implementing
  * {@link InterQJournalProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class InterQJournalProtocolTranslatorPB implements ProtocolMetaInterface,
     InterQJournalProtocol, Closeable {
 

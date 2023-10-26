@@ -5,9 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.TimeZone;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileStatus;
 
 /**
@@ -28,8 +25,6 @@ import org.apache.hadoop.fs.FileStatus;
  *   %Y: mtime Milliseconds since January 1, 1970 UTC<br>
  * If the format is not specified, %y is used by default.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 class Stat extends FsCommand {
   public static void registerCommands(CommandFactory factory) {

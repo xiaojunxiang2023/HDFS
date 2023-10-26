@@ -8,7 +8,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.VersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -53,7 +52,6 @@ import java.util.stream.Collectors;
  * directory with the addition of facilities to participate
  * in the quorum protocol.
  */
-@InterfaceAudience.Private
 public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   public static final Logger LOG = LoggerFactory.getLogger(JournalNode.class);
   private Configuration conf;

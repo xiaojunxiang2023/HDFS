@@ -1,15 +1,10 @@
 package org.apache.hadoop.metrics2;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The metrics filter interface. The MetricsFilter objects can be used either to
  * filter the metrics from {@link MetricsSource}s or to filter metrics per
  * {@link MetricsSink}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class MetricsFilter implements MetricsPlugin {
 
   /**

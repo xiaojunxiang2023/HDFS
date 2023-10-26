@@ -3,14 +3,9 @@ package org.apache.hadoop.fs;
 import com.google.re2j.PatternSyntaxException;
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A filter for POSIX glob pattern with brace expansions.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class GlobFilter implements PathFilter {
   private final static PathFilter DEFAULT_FILTER = new PathFilter() {
       @Override

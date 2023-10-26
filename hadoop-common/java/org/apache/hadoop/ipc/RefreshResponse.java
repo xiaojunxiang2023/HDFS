@@ -1,13 +1,10 @@
 package org.apache.hadoop.ipc;
 
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Return a response in the handler method for the user to see.
  * Useful since you may want to display status to a user even though an
  * error has not occurred.
  */
-@InterfaceStability.Unstable
 public class RefreshResponse {
   private int returnCode = -1;
   private String message;

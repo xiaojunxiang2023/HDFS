@@ -1,11 +1,8 @@
 package org.apache.hadoop.io.erasurecode;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Erasure codec options.
  */
-@InterfaceAudience.Private
 public class ErasureCodecOptions {
   private ECSchema schema;
 

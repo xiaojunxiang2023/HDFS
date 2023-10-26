@@ -15,7 +15,6 @@ import java.security.PrivilegedExceptionAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.LayoutFlags;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion;
@@ -36,7 +35,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Throwables;
  * reads edits from a file. That file may be either on the local disk or
  * accessible via a URL.
  */
-@InterfaceAudience.Private
 public class EditLogFileInputStream extends EditLogInputStream {
   private final LogSource log;
   private final long firstTxId;

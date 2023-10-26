@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.slf4j.Logger;
@@ -13,7 +11,6 @@ import java.io.*;
  * a single <code>long</code> value. The file is updated atomically
  * and durably (i.e fsynced). 
  */
-@InterfaceAudience.Private
 public class PersistentLongFile {
     private static final Logger LOG = LoggerFactory.getLogger(
             PersistentLongFile.class);

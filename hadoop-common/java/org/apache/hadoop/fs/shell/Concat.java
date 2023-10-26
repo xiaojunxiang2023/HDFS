@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathIOException;
@@ -15,8 +12,6 @@ import org.apache.hadoop.fs.PathIOException;
 /**
  * Concat the given files.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class Concat extends FsCommand {
   public static void registerCommands(CommandFactory factory) {
     factory.addClass(Concat.class, "-concat");

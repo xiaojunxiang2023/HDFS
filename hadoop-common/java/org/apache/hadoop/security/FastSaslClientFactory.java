@@ -12,12 +12,10 @@ import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslClientFactory;
 import javax.security.sasl.SaslException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Class for dealing with caching SASL client factories.
  */
-@InterfaceAudience.LimitedPrivate({ "HDFS", "MapReduce" })
+// MapReduce 也可见
 public class FastSaslClientFactory implements SaslClientFactory {
   private final Map<String, List<SaslClientFactory>> factoryCache =
       new HashMap<String, List<SaslClientFactory>>();

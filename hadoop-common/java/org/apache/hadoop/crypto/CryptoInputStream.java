@@ -14,8 +14,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ByteBufferPositionedReadable;
 import org.apache.hadoop.fs.ByteBufferReadable;
 import org.apache.hadoop.fs.CanSetDropBehind;
@@ -47,8 +45,6 @@ import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStat
  * <p>
  * The underlying stream offset is maintained as state.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class CryptoInputStream extends FilterInputStream implements 
     Seekable, PositionedReadable, ByteBufferReadable, HasFileDescriptor, 
     CanSetDropBehind, CanSetReadahead, HasEnhancedByteBufferAccess, 

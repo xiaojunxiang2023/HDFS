@@ -11,9 +11,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.LongAdder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Options;
 import org.apache.hadoop.fs.XAttr;
@@ -102,8 +99,6 @@ import org.slf4j.LoggerFactory;
  * FSEditLog maintains a log of the namespace modifications.
  * 
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FSEditLog implements LogsPurgeable {
   public static final Logger LOG = LoggerFactory.getLogger(FSEditLog.class);
   /**

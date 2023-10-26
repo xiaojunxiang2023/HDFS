@@ -1,8 +1,6 @@
 package org.apache.hadoop.auth.util.provider;
 
 import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import javax.servlet.ServletContext;
 import java.io.*;
@@ -12,8 +10,6 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 // 基于文件的 SignerSecretProvider
-@InterfaceStability.Unstable
-@InterfaceAudience.Private
 public class FileSignerSecretProvider extends SignerSecretProvider {
 
   private byte[] secret;

@@ -1,7 +1,4 @@
 package org.apache.hadoop.security.token.delegation.web;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.auth.client.ticator.PseudoAuthenticator;
 
@@ -16,8 +13,6 @@ import java.io.IOException;
  * This mimics the model of Hadoop Simple authentication trusting the
  * {@link UserGroupInformation#getCurrentUser()} value.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class PseudoDelegationTokenAuthenticator
     extends DelegationTokenAuthenticator {
 

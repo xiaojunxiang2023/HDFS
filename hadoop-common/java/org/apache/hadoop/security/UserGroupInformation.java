@@ -54,8 +54,6 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 import org.apache.hadoop.io.retry.RetryPolicies;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.retry.RetryPolicy;
@@ -83,8 +81,6 @@ import org.slf4j.LoggerFactory;
  * user's username and groups. It supports both the Windows, Unix and Kerberos 
  * login modules.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class UserGroupInformation {
   @VisibleForTesting
   static final Logger LOG = LoggerFactory.getLogger(
@@ -154,7 +150,6 @@ public class UserGroupInformation {
    * A login module that looks at the Kerberos, Unix, or Windows principal and
    * adds the corresponding UserName.
    */
-  @InterfaceAudience.Private
   public static class HadoopLoginModule implements LoginModule {
     private Subject subject;
 
@@ -343,13 +338,9 @@ public class UserGroupInformation {
    * group look up service.
    * @param conf the configuration to use
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static void setConfiguration(Configuration conf) {
     initialize(conf, true);
   }
-
-  @InterfaceAudience.Private
   @VisibleForTesting
   public static void reset() {
     authenticationMethod = null;
@@ -371,24 +362,15 @@ public class UserGroupInformation {
   public static boolean isSecurityEnabled() {
     return !isAuthenticationMethodEnabled(AuthenticationMethod.SIMPLE);
   }
-  
-  @InterfaceAudience.Private
-  @InterfaceStability.Evolving
   private static boolean isAuthenticationMethodEnabled(AuthenticationMethod method) {
     ensureInitialized();
     return (authenticationMethod == method);
   }
-
-  @InterfaceAudience.Private
-  @InterfaceStability.Evolving
   @VisibleForTesting
   static boolean isKerberosKeyTabLoginRenewalEnabled() {
     ensureInitialized();
     return kerberosKeyTabLoginRenewalEnabled;
   }
-
-  @InterfaceAudience.Private
-  @InterfaceStability.Evolving
   @VisibleForTesting
   static Optional<ExecutorService> getKerberosLoginRenewalExecutor() {
     ensureInitialized();
@@ -552,8 +534,6 @@ public class UserGroupInformation {
    * @return the current user
    * @throws IOException if login fails
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation getCurrentUser() throws IOException {
     ensureInitialized();
     AccessControlContext context = AccessController.getContext();
@@ -594,8 +574,6 @@ public class UserGroupInformation {
    *
    * @throws IOException        if the kerberos login fails
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation getUGIFromTicketCache(
             String ticketCache, String user) throws IOException {
     if (!isAuthenticationMethodEnabled(AuthenticationMethod.KERBEROS)) {
@@ -639,8 +617,6 @@ public class UserGroupInformation {
    * @return the logged in user
    * @throws IOException if login fails
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation getLoginUser() throws IOException {
     ensureInitialized();
     UserGroupInformation loginUser = loginUserRef.get();
@@ -691,8 +667,6 @@ public class UserGroupInformation {
    *
    * @throws IOException if login fails
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static void loginUserFromSubject(Subject subject) throws IOException {
     setLoginUser(createLoginUser(subject));
   }
@@ -770,9 +744,6 @@ public class UserGroupInformation {
     LOG.debug("UGI loginUser: {}", loginUser);
     return loginUser;
   }
-
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   @VisibleForTesting
   public static void setLoginUser(UserGroupInformation ugi) {
     // if this is to become stable, should probably logout the currently
@@ -834,9 +805,6 @@ public class UserGroupInformation {
     long end = tgt.getEndTime().getTime();
     return start + (long) ((end - start) * TICKET_RENEW_WINDOW);
   }
-
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   public boolean shouldRelogin() {
     return hasKerberosCredentials() && isHadoopLogin();
   }
@@ -848,8 +816,6 @@ public class UserGroupInformation {
    *
    * @param force - used by tests to forcibly spawn thread
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   @VisibleForTesting
   void spawnAutoRenewalThreadForUserCreds(boolean force) {
     if (!force && (!shouldRelogin() || isFromKeytab())) {
@@ -917,8 +883,6 @@ public class UserGroupInformation {
    * TGT renewal (see {@code TicketCacheRenewalRunnable} and
    * {@code KeytabRenewalRunnable}).
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   @VisibleForTesting
   abstract class AutoRenewalForUserCredsRunnable implements Runnable {
     private KerberosTicket tgt;
@@ -1026,8 +990,6 @@ public class UserGroupInformation {
    * A concrete implementation of {@code AutoRenewalForUserCredsRunnable} class
    * which performs TGT renewal using kinit command.
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   @VisibleForTesting
   final class TicketCacheRenewalRunnable
       extends AutoRenewalForUserCredsRunnable {
@@ -1051,8 +1013,6 @@ public class UserGroupInformation {
    * A concrete implementation of {@code AutoRenewalForUserCredsRunnable} class
    * which performs TGT renewal using specified keytab.
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   @VisibleForTesting
   final class KeytabRenewalRunnable extends AutoRenewalForUserCredsRunnable {
 
@@ -1093,8 +1053,6 @@ public class UserGroupInformation {
    * @throws IOException
    * @throws KerberosAuthException if it's a kerberos login exception.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public
   static void loginUserFromKeytab(String user,
                                   String path
@@ -1124,8 +1082,6 @@ public class UserGroupInformation {
    * @throws KerberosAuthException if a failure occurred in logout,
    * or if the user did not log in by invoking loginUserFromKeyTab() before.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public void logoutUserFromKeytab() throws IOException {
     if (!hasKerberosCredentials()) {
       return;
@@ -1211,8 +1167,6 @@ public class UserGroupInformation {
    * @throws IOException
    * @throws KerberosAuthException on a failure
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public void reloginFromKeytab() throws IOException {
     reloginFromKeytab(false);
   }
@@ -1228,8 +1182,6 @@ public class UserGroupInformation {
    * @throws IOException
    * @throws KerberosAuthException on a failure
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public void forceReloginFromKeytab() throws IOException {
     reloginFromKeytab(false, true);
   }
@@ -1265,8 +1217,6 @@ public class UserGroupInformation {
    * @throws IOException
    * @throws KerberosAuthException on a failure
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public void reloginFromTicketCache() throws IOException {
     if (!shouldRelogin() || !isFromTicket()) {
       return;
@@ -1359,8 +1309,6 @@ public class UserGroupInformation {
    * Did the login happen via keytab
    * @return true or false
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static boolean isLoginKeytabBased() throws IOException {
     return getLoginUser().isFromKeytab();
   }
@@ -1379,8 +1327,6 @@ public class UserGroupInformation {
    * @param user the full user principal name, must not be empty or null
    * @return the UserGroupInformation for the remote user.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation createRemoteUser(String user) {
     return createRemoteUser(user, AuthMethod.SIMPLE);
   }
@@ -1391,8 +1337,6 @@ public class UserGroupInformation {
    * @param user the full user principal name, must not be empty or null
    * @return the UserGroupInformation for the remote user.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation createRemoteUser(String user, AuthMethod authMethod) {
     if (user == null || user.isEmpty()) {
       throw new IllegalArgumentException("Null user");
@@ -1407,8 +1351,6 @@ public class UserGroupInformation {
   /**
    * existing types of authentications' methods
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public enum AuthenticationMethod {
     // currently we support only one auth per method, but eventually a 
     // subtype is needed to differentiate, ex. if digest is token or ldap
@@ -1462,8 +1404,6 @@ public class UserGroupInformation {
    * @param realUser
    * @return proxyUser ugi
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation createProxyUser(String user,
       UserGroupInformation realUser) {
     if (user == null || user.isEmpty()) {
@@ -1483,8 +1423,6 @@ public class UserGroupInformation {
    * get RealUser (vs. EffectiveUser)
    * @return realUser running over proxy user
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public UserGroupInformation getRealUser() {
     for (RealUser p: subject.getPrincipals(RealUser.class)) {
       return p.getRealUser();
@@ -1530,8 +1468,6 @@ public class UserGroupInformation {
    * @param userGroups the names of the groups that the user belongs to
    * @return a fake user for running unit tests
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static UserGroupInformation createUserForTesting(String user, 
                                                           String[] userGroups) {
     ensureInitialized();
@@ -1590,8 +1526,6 @@ public class UserGroupInformation {
    * Get the user's full principal name.
    * @return the user's full principal name.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public String getUserName() {
     return user.getName();
   }
@@ -1828,8 +1762,6 @@ public class UserGroupInformation {
    * @param action the method to execute
    * @return the value from the run method
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public <T> T doAs(PrivilegedAction<T> action) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("PrivilegedAction [as: {}][action: {}]", this, action,
@@ -1849,8 +1781,6 @@ public class UserGroupInformation {
    * @throws InterruptedException if the action throws an InterruptedException
    * @throws UndeclaredThrowableException if the action throws something else
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public <T> T doAs(PrivilegedExceptionAction<T> action
                     ) throws IOException, InterruptedException {
     try {
@@ -1884,8 +1814,6 @@ public class UserGroupInformation {
    * @param ugi - UGI
    * @throws IOException
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "KMS"})
-  @InterfaceStability.Unstable
   public static void logUserInfo(Logger log, String caption,
       UserGroupInformation ugi) throws IOException {
     if (log.isDebugEnabled()) {
@@ -1901,8 +1829,6 @@ public class UserGroupInformation {
    * @param ugi - UGI
    * @throws IOException
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "KMS"})
-  @InterfaceStability.Unstable
   public static void logAllUserInfo(Logger log, UserGroupInformation ugi) throws
       IOException {
     if (log.isDebugEnabled()) {
@@ -2068,8 +1994,6 @@ public class UserGroupInformation {
    * A JAAS configuration that defines the login modules that we want
    * to use for login.
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   private static class HadoopConfiguration
   extends javax.security.auth.login.Configuration {
     static final String KRB5_LOGIN_MODULE =

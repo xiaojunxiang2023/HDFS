@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -25,8 +23,7 @@ import org.slf4j.LoggerFactory;
  * that exec's the <code>groups</code> shell command to fetch the group
  * memberships of a given user.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class ShellBasedUnixGroupsMapping extends Configured
   implements GroupMappingServiceProvider {
 

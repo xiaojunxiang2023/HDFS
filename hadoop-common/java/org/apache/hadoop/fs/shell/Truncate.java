@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs.shell;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 
 import java.io.IOException;
@@ -11,8 +8,6 @@ import java.util.List;
 /**
  * Truncates a file to a new size
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class Truncate extends FsCommand {
   public static void registerCommands(CommandFactory factory) {
     factory.addClass(Truncate.class, "-truncate");

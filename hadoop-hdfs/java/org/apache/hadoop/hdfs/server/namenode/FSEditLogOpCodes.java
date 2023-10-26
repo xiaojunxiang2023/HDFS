@@ -1,14 +1,9 @@
 package org.apache.hadoop.hdfs.server.namenode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.*;
 
 /**
  * Op codes for edits file
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public enum FSEditLogOpCodes {
   // last op code in file
   OP_ADD                        ((byte)  0, AddOp.class),

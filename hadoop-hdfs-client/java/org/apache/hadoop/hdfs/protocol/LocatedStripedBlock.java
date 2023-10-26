@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.security.token.Token;
@@ -13,8 +10,6 @@ import java.util.Arrays;
  * datanode storage is associated with a block in the block group. We need to
  * record the index (in the striped block group) for each of them.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class LocatedStripedBlock extends LocatedBlock {
   private static final byte[] EMPTY_INDICES = {};
   private static final Token<BlockTokenIdentifier> EMPTY_TOKEN = new Token<>();

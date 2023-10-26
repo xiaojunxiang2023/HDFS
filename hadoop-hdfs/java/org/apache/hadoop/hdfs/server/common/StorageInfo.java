@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.common;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.Feature;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.LayoutFeature;
@@ -23,7 +21,6 @@ import java.util.SortedSet;
  *
  * TODO namespaceID should be long and computed as hash(address + port)
  */
-@InterfaceAudience.Private
 public class StorageInfo {
     protected static final String STORAGE_FILE_VERSION = "VERSION";
     protected final NodeType storageType; // Type of the node using this storage 

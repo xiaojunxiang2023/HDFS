@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
  * This can save a lot of memory if there are many elements in the list or
  * many lists.
  */
-@InterfaceAudience.Private
 public class IntrusiveCollection<E extends IntrusiveCollection.Element>
     implements Collection<E> {
   /**
@@ -28,7 +25,6 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
    * multiple lists.  (The element will need to store separate prev and next
    * pointers for each.)
    */
-  @InterfaceAudience.Private
   public interface Element {
     /**
      * Insert this element into the list.  This is the first thing that will

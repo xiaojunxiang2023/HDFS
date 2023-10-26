@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.erasurecode.rawcoder.DecodingValidator;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
@@ -81,7 +80,6 @@ import java.util.concurrent.atomic.AtomicLong;
  *    it needs to read from several other datanodes, should we make sure the
  *    reconstructed result received by targets?
  */
-@InterfaceAudience.Private
 abstract class StripedReconstructor {
   protected static final Logger LOG = DataNode.LOG;
 

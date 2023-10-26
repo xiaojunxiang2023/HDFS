@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -13,8 +10,6 @@ import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
 /**
  * An interface for SPSService, which exposes life cycle and processing APIs.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface SPSService {
 
   /**

@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CacheDirectiveInfoExpirationProto;
@@ -51,9 +48,6 @@ import java.util.*;
 
 import static org.apache.hadoop.hdfs.server.namenode.FSImageFormatPBINode.*;
 import static org.apache.hadoop.hdfs.tools.offlineImageViewer.PBImageXmlWriter.*;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class OfflineImageReconstructor {
     public static final Logger LOG =
             LoggerFactory.getLogger(OfflineImageReconstructor.class);

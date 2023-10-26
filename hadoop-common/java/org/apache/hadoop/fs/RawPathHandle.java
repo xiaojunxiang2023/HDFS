@@ -1,8 +1,5 @@
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -14,8 +11,6 @@ import java.nio.ByteBuffer;
  * Generic format of FileStatus objects. When the origin is unknown, the
  * attributes of the handle are undefined.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class RawPathHandle implements PathHandle {
 
   private static final long serialVersionUID = 0x12ba4689510L;

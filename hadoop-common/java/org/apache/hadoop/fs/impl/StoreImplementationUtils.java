@@ -20,9 +20,6 @@ package org.apache.hadoop.fs.impl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StreamCapabilities;
 
 import static org.apache.hadoop.fs.StreamCapabilities.HFLUSH;
@@ -31,8 +28,6 @@ import static org.apache.hadoop.fs.StreamCapabilities.HSYNC;
 /**
  * Utility classes to help implementing filesystems and streams.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class StoreImplementationUtils {
 
   private StoreImplementationUtils() {

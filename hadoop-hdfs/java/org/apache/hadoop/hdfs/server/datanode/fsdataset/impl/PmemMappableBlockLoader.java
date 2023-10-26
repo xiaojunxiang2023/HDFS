@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.server.datanode.DNConf;
 import org.slf4j.Logger;
@@ -17,8 +15,6 @@ import java.nio.channels.FileChannel;
 /**
  * Maps block to persistent memory by using mapped byte buffer.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class PmemMappableBlockLoader extends MappableBlockLoader {
     private static final Logger LOG =
             LoggerFactory.getLogger(PmemMappableBlockLoader.class);

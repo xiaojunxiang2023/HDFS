@@ -67,8 +67,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.commons.collections.map.UnmodifiableMap;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -203,8 +201,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * .getAllPropertiesByTag("HDFS")</tt> or <tt>conf.getAllPropertiesByTags
  * (Arrays.asList("YARN","SECURITY"))</tt>.</p>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class Configuration implements Iterable<Map.Entry<String,String>>,
                                       Writable {
   private static final Logger LOG =
@@ -2005,7 +2001,6 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    * the second one would indicate the file that the new configuration was read
    * in from.
    */
-  @InterfaceStability.Unstable
   public synchronized String[] getPropertySources(String name) {
     if (properties == null) {
       // If properties is null, it means a resource was newly added

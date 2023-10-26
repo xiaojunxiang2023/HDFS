@@ -37,8 +37,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CryptoCodec;
 import org.apache.hadoop.crypto.CryptoInputStream;
@@ -192,7 +190,6 @@ import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
  * filesystem tasks.
  *
  ********************************************************/
-@InterfaceAudience.Private
 public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     DataEncryptionKeyFactory, KeyProviderTokenIssuer {
   public static final Logger LOG = LoggerFactory.getLogger(DFSClient.class);
@@ -696,7 +693,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * be returned if the client is not using tokens.
    * @return the token service for the client
    */
-  @InterfaceAudience.LimitedPrivate( { "HDFS" })
   public String getCanonicalServiceName() {
     return (dtService != null) ? dtService.toString() : null;
   }
@@ -765,8 +761,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
           AccessControlException.class);
     }
   }
-
-  @InterfaceAudience.Private
   public static class Renewer extends TokenRenewer {
 
     static {
@@ -1783,8 +1777,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
           UnresolvedPathException.class);
     }
   }
-
-  @InterfaceAudience.Private
   public void clearDataEncryptionKey() {
     LOG.debug("Clearing encryption key");
     synchronized (this) {

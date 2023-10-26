@@ -1,13 +1,8 @@
 package org.apache.hadoop.fs.permission;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Specifies the scope or intended usage of an ACL entry.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public enum AclEntryScope {
   /**
    * An ACL entry that is inspected during permission checks to enforce

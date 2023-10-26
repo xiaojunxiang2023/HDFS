@@ -2,15 +2,10 @@ package org.apache.hadoop.fs.permission;
 
 import java.text.MessageFormat;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A class that stores both masked and unmasked create modes
  * and is a drop-in replacement for masked permission.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class FsCreateModes extends FsPermission {
   private static final long serialVersionUID = 0x22986f6d;
   private final FsPermission unmasked;

@@ -6,8 +6,6 @@ import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.util.Arrays;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.protocol.datatransfer.PacketHeader;
 import org.apache.hadoop.hdfs.util.ByteArrayManager;
@@ -19,8 +17,6 @@ import org.apache.hadoop.tracing.SpanContext;
  * DFSOutputStream generates packets and then ask DatStreamer
  * to send them to datanodes.
  ****************************************************************/
-
-@InterfaceAudience.Private
 public class DFSPacket {
   public static final long HEART_BEAT_SEQNO = -1L;
   private static final SpanContext[] EMPTY = new SpanContext[0];

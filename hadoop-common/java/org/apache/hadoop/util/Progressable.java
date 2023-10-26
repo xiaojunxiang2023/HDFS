@@ -1,8 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A facility for reporting progress.
  * 
@@ -12,8 +9,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * in-lieu of the reported progress, the framework has to assume that an error
  * has occurred and time-out the operation.</p>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public interface Progressable {
   /**
    * Report progress to the Hadoop framework.

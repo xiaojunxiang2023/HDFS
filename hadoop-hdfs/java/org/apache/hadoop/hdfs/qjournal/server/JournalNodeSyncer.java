@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.qjournal.server;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -43,7 +42,6 @@ import java.util.List;
  * gossips with other journal nodes to compare edit log manifests and if it
  * detects any missing log segment, it downloads it from the other journal node
  */
-@InterfaceAudience.Private
 public class JournalNodeSyncer {
   public static final Logger LOG = LoggerFactory.getLogger(
       JournalNodeSyncer.class);

@@ -4,14 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Utility methods for getting the time and computing intervals.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public final class Time {
 
   /**

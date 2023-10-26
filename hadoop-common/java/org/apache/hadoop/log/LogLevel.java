@@ -22,8 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Jdk14Logger;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.http.HttpServer2;
@@ -38,7 +36,6 @@ import org.apache.hadoop.util.ToolRunner;
 /**
  * Change log level in runtime.
  */
-@InterfaceStability.Evolving
 public class LogLevel {
   public static final String USAGES = "\nUsage: Command options are:\n"
       + "\t[-getlevel <host:port> <classname> [-protocol (http|https)]\n"
@@ -297,8 +294,7 @@ public class LogLevel {
   /**
    * A servlet implementation
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-  @InterfaceStability.Unstable
+  // MapReduce也可见
   public static class Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

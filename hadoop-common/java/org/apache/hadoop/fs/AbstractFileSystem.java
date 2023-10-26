@@ -19,8 +19,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
@@ -55,8 +53,6 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * or a Slash-relative name that is assumed to be relative
  * to the root of the "this" file system .
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class AbstractFileSystem implements PathCapabilities {
   static final Logger LOG = LoggerFactory.getLogger(AbstractFileSystem.class);
 
@@ -868,7 +864,6 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * except that an UnresolvedLinkException may be thrown if a symlink is
    * encountered in the path.
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS", "Hive"})
   public void access(Path path, FsAction mode) throws AccessControlException,
       FileNotFoundException, UnresolvedLinkException, IOException {
     FileSystem.checkAccessPermissions(this.getFileStatus(path), mode);
@@ -1027,7 +1022,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    *   If delegation tokens not supported then return a list of size zero.
    * @throws IOException
    */
-  @InterfaceAudience.LimitedPrivate( { "HDFS", "MapReduce" })
+  // MapReduce 也可见
   public List<Token<?>> getDelegationTokens(String renewer) throws IOException {
     return new ArrayList<Token<?>>(0);
   }
@@ -1388,7 +1383,6 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws IOException if some early checks cause IO failures.
    * @throws UnsupportedOperationException if support is checked early.
    */
-  @InterfaceStability.Unstable
   public MultipartUploaderBuilder createMultipartUploader(Path basePath)
       throws IOException {
     methodNotSupported();

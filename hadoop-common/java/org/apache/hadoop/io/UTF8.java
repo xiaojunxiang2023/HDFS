@@ -6,9 +6,6 @@ import java.io.DataOutput;
 import java.io.UTFDataFormatException;
 
 import org.apache.hadoop.util.StringUtils;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +19,7 @@ import org.slf4j.LoggerFactory;
  * @deprecated replaced by Text
  */
 @Deprecated
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Stable
+// MapReduce也可见
 public class UTF8 implements WritableComparable<UTF8> {
   private static final Logger LOG= LoggerFactory.getLogger(UTF8.class);
   private static final DataInputBuffer IBUF = new DataInputBuffer();

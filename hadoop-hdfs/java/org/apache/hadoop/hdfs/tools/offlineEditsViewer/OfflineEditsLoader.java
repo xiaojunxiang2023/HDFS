@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileInputStream;
 import org.apache.hadoop.hdfs.server.namenode.EditLogInputStream;
@@ -12,8 +9,6 @@ import java.io.IOException;
 /**
  * OfflineEditsLoader walks an EditsVisitor over an EditLogInputStream
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 interface OfflineEditsLoader {
 
     abstract public void loadEdits() throws IOException;

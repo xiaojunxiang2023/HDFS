@@ -4,8 +4,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -36,7 +34,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * and delegates calls to both NNs. 
  * It also maintains the state about which of the NNs is considered active.
  */
-@InterfaceAudience.Private
 class BPOfferService {
   static final Logger LOG = DataNode.LOG;
   

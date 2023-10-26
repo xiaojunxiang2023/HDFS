@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.fs.StorageType;
@@ -38,7 +37,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * The 3rd replica is placed on a datanode which is on a different node of the
  * rack as the second replica.
  */
-@InterfaceAudience.Private
 public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
 
   private static final String enableDebugLogging =

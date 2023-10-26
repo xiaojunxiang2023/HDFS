@@ -25,9 +25,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.impl.StoreImplementationUtils;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -55,8 +52,6 @@ import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.iostatist
  * Implement the FileSystem API for the raw local filesystem.
  *
  *****************************************************************/
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class RawLocalFileSystem extends FileSystem {
   static final URI NAME = URI.create("file:///");
   private Path workingDir;

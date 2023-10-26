@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.ServiceFailedException;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -43,7 +41,6 @@ import org.slf4j.LoggerFactory;
  * When it takes a checkpoint, it saves it to its local
  * storage and then uploads it to the remote NameNode.
  */
-@InterfaceAudience.Private
 public class StandbyCheckpointer {
   private static final Logger LOG =
       LoggerFactory.getLogger(StandbyCheckpointer.class);

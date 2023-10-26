@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.util.EnumCounters;
@@ -10,7 +8,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 /**
  * The attributes of an inode.
  */
-@InterfaceAudience.Private
 public interface INodeDirectoryAttributes extends INodeAttributes {
   public QuotaCounts getQuotaCounts();
 

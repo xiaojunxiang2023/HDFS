@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
 
 import java.io.IOException;
@@ -10,8 +7,6 @@ import java.io.IOException;
  * An implementation of OfflineEditsVisitor can traverse the structure of an
  * Hadoop edits log and respond to each of the structures within the file.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 abstract public interface OfflineEditsVisitor {
     /**
      * Begin visiting the edits log structure.  Opportunity to perform

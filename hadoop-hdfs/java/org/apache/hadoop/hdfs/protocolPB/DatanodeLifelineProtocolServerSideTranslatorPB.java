@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.proto.DatanodeProtocolProtos.HeartbeatRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.DatanodeLifelineProtocolProtos.LifelineResponseProto;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeLifelineProtocol;
@@ -17,7 +15,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * received on {@link DatanodeLifelineProtocolPB} to the
  * {@link DatanodeLifelineProtocol} server implementation.
  */
-@InterfaceAudience.Private
 public class DatanodeLifelineProtocolServerSideTranslatorPB implements
     DatanodeLifelineProtocolPB {
 

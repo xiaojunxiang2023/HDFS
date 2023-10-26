@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FsStatus;
 import org.apache.hadoop.fs.Path;
@@ -19,8 +16,6 @@ import org.apache.hadoop.util.StringUtils;
  * Base class for commands related to viewing filesystem usage,
  * such as du and df.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 class FsUsage extends FsCommand {
   public static void registerCommands(CommandFactory factory) {

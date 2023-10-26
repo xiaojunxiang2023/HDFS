@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
 
@@ -13,8 +10,6 @@ import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
  * Interface responsible for inspecting a set of storage directories and devising
  * a plan to load the namespace from them.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 abstract class FSImageStorageInspector {
   /**
    * Inspect the contents of the given storage directory.

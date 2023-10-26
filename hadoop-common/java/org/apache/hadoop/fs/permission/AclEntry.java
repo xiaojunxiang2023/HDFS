@@ -7,8 +7,6 @@ import java.util.List;
 import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringUtils;
 
 /**
@@ -18,8 +16,6 @@ import org.apache.hadoop.util.StringUtils;
  * (access or default).  AclEntry instances are immutable.  Use a {@link Builder}
  * to create a new instance.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class AclEntry {
   private final AclEntryType type;
   private final String name;
@@ -83,7 +79,6 @@ public class AclEntry {
   }
 
   @Override
-  @InterfaceStability.Unstable
   public String toString() {
     // This currently just delegates to the stable string representation, but it
     // is permissible for the output of this method to change across versions.

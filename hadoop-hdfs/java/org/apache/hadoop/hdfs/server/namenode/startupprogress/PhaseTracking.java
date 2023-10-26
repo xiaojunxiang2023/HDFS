@@ -19,12 +19,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Internal data structure used to track progress of a {@link Phase}.
  */
-@InterfaceAudience.Private
 final class PhaseTracking extends AbstractTracking {
   String file;
   long size = Long.MIN_VALUE;

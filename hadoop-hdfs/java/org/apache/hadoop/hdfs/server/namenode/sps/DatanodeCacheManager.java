@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode.sps;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -25,7 +23,6 @@ import org.slf4j.LoggerFactory;
  * {@link Context#getLiveDatanodeStorageReport()} once it reaches refresh
  * interval.
  */
-@InterfaceAudience.Private
 public class DatanodeCacheManager {
   private static final Logger LOG = LoggerFactory
       .getLogger(DatanodeCacheManager.class);

@@ -15,14 +15,11 @@
  * the License.
  */package org.apache.hadoop.hdfs.server.namenode.startupprogress;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Abstract base of internal data structures used for tracking progress.  For
  * primitive long properties, {@link Long#MIN_VALUE} is used as a sentinel value
  * to indicate that the property is undefined.
  */
-@InterfaceAudience.Private
 abstract class AbstractTracking implements Cloneable {
   long beginTime = Long.MIN_VALUE;
   long endTime = Long.MIN_VALUE;

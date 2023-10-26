@@ -26,9 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.impl.StoreImplementationUtils;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
@@ -38,8 +35,6 @@ import org.apache.hadoop.util.IdentityHashStore;
 
 /** Utility that wraps a {@link FSInputStream} in a {@link DataInputStream}
  * and buffers input through a {@link java.io.BufferedInputStream}. */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FSDataInputStream extends DataInputStream
     implements Seekable, PositionedReadable, 
       ByteBufferReadable, HasFileDescriptor, CanSetDropBehind, CanSetReadahead,
@@ -142,7 +137,6 @@ public class FSDataInputStream extends DataInputStream
    *
    * @return the underlying input stream
    */
-  @InterfaceAudience.LimitedPrivate({"HDFS"})
   public InputStream getWrappedStream() {
     return in;
   }

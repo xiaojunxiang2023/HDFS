@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.http.lib.StaticUserWebFilter;
 import org.apache.hadoop.net.DomainNameResolver;
 import org.apache.hadoop.net.DNSDomainNameResolver;
@@ -14,9 +11,6 @@ import org.apache.hadoop.net.DNSDomainNameResolver;
  * and adds unsupported keys.
  *
  */
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class CommonConfigurationKeys extends CommonConfigurationKeysPublic {
 
   /** Default location for user home directories */

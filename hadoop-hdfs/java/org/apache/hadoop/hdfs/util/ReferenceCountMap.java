@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 
@@ -15,8 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Type E should implement {@link ReferenceCounter}<br>
  * Note: This class is NOT thread-safe.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ReferenceCountMap<E extends ReferenceCountMap.ReferenceCounter> {
 
     private Map<E, E> referenceMap = new ConcurrentHashMap<>();

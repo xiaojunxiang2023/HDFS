@@ -20,8 +20,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.configuration2.SubsetConfiguration;
 import org.apache.commons.lang3.time.FastDateFormat;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -125,8 +123,6 @@ import org.apache.hadoop.security.UserGroupInformation;
  * contain the key by which the principal can be found in the configuration,
  * for example, <code>yarn.nodemanager.principal</code>.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class RollingFileSystemSink implements MetricsSink, Closeable {
   private static final String BASEPATH_KEY = "basepath";
   private static final String SOURCE_KEY = "source";

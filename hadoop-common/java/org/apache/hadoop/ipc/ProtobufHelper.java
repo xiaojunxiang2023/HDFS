@@ -2,8 +2,6 @@ package org.apache.hadoop.ipc;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.proto.SecurityProtos.TokenProto;
 import org.apache.hadoop.security.token.Token;
@@ -15,7 +13,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 /**
  * Helper methods for protobuf related RPC implementation
  */
-@InterfaceAudience.Private
 public class ProtobufHelper {
   private ProtobufHelper() {
     // Hidden constructor for class with only static helper methods

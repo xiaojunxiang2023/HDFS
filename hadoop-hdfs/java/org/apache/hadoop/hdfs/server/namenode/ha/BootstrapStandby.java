@@ -20,7 +20,6 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
@@ -61,7 +60,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * by copying the latest namespace snapshot from the active namenode. This is
  * used when first configuring an HA cluster.
  */
-@InterfaceAudience.Private
 public class BootstrapStandby implements Tool, Configurable {
   private static final Logger LOG =
       LoggerFactory.getLogger(BootstrapStandby.class);

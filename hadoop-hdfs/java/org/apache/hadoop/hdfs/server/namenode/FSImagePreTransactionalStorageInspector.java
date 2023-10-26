@@ -14,8 +14,6 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
@@ -31,8 +29,6 @@ import org.apache.hadoop.io.IOUtils;
  *   - edits
  *   - edits.new (when logs are "rolled")
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
   private static final Logger LOG =
       LoggerFactory.getLogger(FSImagePreTransactionalStorageInspector.class);

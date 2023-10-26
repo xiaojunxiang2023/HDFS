@@ -2,15 +2,12 @@ package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
 import java.io.IOException;
 import java.security.MessageDigest;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.MD5Hash;
 
 /**
  * Computes running MD5-of-CRC over reconstructed chunk CRCs.
  */
-@InterfaceAudience.Private
 public class StripedBlockChecksumMd5CrcReconstructor
     extends StripedBlockChecksumReconstructor {
   private MD5Hash md5;

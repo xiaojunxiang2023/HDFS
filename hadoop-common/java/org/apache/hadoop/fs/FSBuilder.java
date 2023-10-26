@@ -3,9 +3,6 @@ package org.apache.hadoop.fs;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The base interface which various FileSystem FileContext Builder
  * interfaces can extend, and which underlying implementations
@@ -13,8 +10,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * @param <S> Return type on the {@link #build()} call.
  * @param <B> type of builder itself.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface FSBuilder<S, B extends FSBuilder<S, B>> {
 
   /**

@@ -1,8 +1,6 @@
 package org.apache.hadoop.metrics2.lib;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
@@ -17,8 +15,6 @@ import java.util.StringJoiner;
  * An optional metrics registry class for creating and maintaining a
  * collection of MetricsMutables, making writing metrics source easier.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MetricsRegistry {
   private final Map<String, MutableMetric> metricsMap = Maps.newLinkedHashMap();
   private final Map<String, MetricsTag> tagsMap = Maps.newLinkedHashMap();
@@ -269,8 +265,6 @@ public class MetricsRegistry {
   public MutableRate newRate(String name, String desc, boolean extended) {
     return newRate(name, desc, extended, true);
   }
-
-  @InterfaceAudience.Private
   public synchronized MutableRate newRate(String name, String desc,
       boolean extended, boolean returnExisting) {
     if (returnExisting) {

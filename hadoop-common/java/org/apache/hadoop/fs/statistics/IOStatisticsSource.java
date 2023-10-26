@@ -1,15 +1,11 @@
 package org.apache.hadoop.fs.statistics;
 
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A source of IO statistics.
  * <p>
  * These statistics MUST be instance specific, not thread local.
  * </p>
  */
-
-@InterfaceStability.Unstable
 public interface IOStatisticsSource {
 
   /**

@@ -1,11 +1,7 @@
 package org.apache.hadoop.hdfs.server.balancer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.util.Collections;
 import java.util.Set;
-
-@InterfaceAudience.Private
 final class BalancerParameters {
     static final BalancerParameters DEFAULT = new BalancerParameters();
     private final BalancingPolicy policy;

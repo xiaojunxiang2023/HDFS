@@ -2,12 +2,7 @@ package org.apache.hadoop.io;
 
 import java.io.*;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A WritableComparable for floats. */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FloatWritable implements WritableComparable<FloatWritable> {
   private float value;
 

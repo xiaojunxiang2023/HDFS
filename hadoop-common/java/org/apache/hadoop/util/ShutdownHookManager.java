@@ -5,9 +5,6 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFact
 import org.apache.hadoop.util.concurrent.HadoopExecutors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
@@ -43,8 +40,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.SERVICE_SHUTDOW
  * {@link CommonConfigurationKeysPublic#SERVICE_SHUTDOWN_TIMEOUT_DEFAULT}
  * seconds.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class ShutdownHookManager {
 
   private static final ShutdownHookManager MGR = new ShutdownHookManager();
@@ -97,7 +92,6 @@ public final class ShutdownHookManager {
    * This is exposed purely for testing: do not invoke it.
    * @return the number of shutdown hooks which timed out.
    */
-  @InterfaceAudience.Private
   @VisibleForTesting
   int executeShutdown() {
     int timeouts = 0;
@@ -149,7 +143,6 @@ public final class ShutdownHookManager {
    *
    * @return <code>ShutdownHookManager</code> singleton.
    */
-  @InterfaceAudience.Public
   public static ShutdownHookManager get() {
     return MGR;
   }
@@ -160,7 +153,6 @@ public final class ShutdownHookManager {
    * @param conf configuration to use.
    * @return a timeout, always greater than or equal to {@link #TIMEOUT_MINIMUM}
    */
-  @InterfaceAudience.Private
   @VisibleForTesting
   static long getShutdownTimeout(Configuration conf) {
     long duration = conf.getTimeDuration(
@@ -177,7 +169,6 @@ public final class ShutdownHookManager {
    * Private structure to store ShutdownHook, its priority and timeout
    * settings.
    */
-  @InterfaceAudience.Private
   @VisibleForTesting
   static class HookEntry {
     private final Runnable hook;
@@ -238,7 +229,6 @@ public final class ShutdownHookManager {
 
   //private to constructor to ensure singularity
   @VisibleForTesting
-  @InterfaceAudience.Private
   ShutdownHookManager() {
   }
 
@@ -248,7 +238,6 @@ public final class ShutdownHookManager {
    *
    * @return the list of shutdownHooks in order of execution.
    */
-  @InterfaceAudience.Private
   @VisibleForTesting
   List<HookEntry> getShutdownHooksInOrder() {
     List<HookEntry> list;
@@ -274,8 +263,6 @@ public final class ShutdownHookManager {
    * @param shutdownHook shutdownHook <code>Runnable</code>
    * @param priority priority of the shutdownHook.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Stable
   public void addShutdownHook(Runnable shutdownHook, int priority) {
     if (shutdownHook == null) {
       throw new IllegalArgumentException("shutdownHook cannot be NULL");
@@ -299,8 +286,6 @@ public final class ShutdownHookManager {
    * @param timeout timeout of the shutdownHook
    * @param unit unit of the timeout <code>TimeUnit</code>
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Stable
   public void addShutdownHook(Runnable shutdownHook, int priority, long timeout,
       TimeUnit unit) {
     if (shutdownHook == null) {
@@ -320,8 +305,6 @@ public final class ShutdownHookManager {
    * @return TRUE if the shutdownHook was registered and removed,
    * FALSE otherwise.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Stable
   public boolean removeShutdownHook(Runnable shutdownHook) {
     if (shutdownInProgress.get()) {
       throw new IllegalStateException("Shutdown in progress, cannot remove a " +
@@ -338,8 +321,6 @@ public final class ShutdownHookManager {
    * @param shutdownHook shutdownHook to check if registered.
    * @return TRUE/FALSE depending if the shutdownHook is is registered.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Stable
   public boolean hasShutdownHook(Runnable shutdownHook) {
     return hooks.contains(new HookEntry(shutdownHook, 0, TIMEOUT_MINIMUM,
       TIME_UNIT_DEFAULT));
@@ -350,8 +331,6 @@ public final class ShutdownHookManager {
    * 
    * @return TRUE if the shutdown is in progress, otherwise FALSE.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Stable
   public boolean isShutdownInProgress() {
     return shutdownInProgress.get();
   }
@@ -359,8 +338,6 @@ public final class ShutdownHookManager {
   /**
    * clear all registered shutdownHooks.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Stable
   public void clearShutdownHooks() {
     hooks.clear();
   }

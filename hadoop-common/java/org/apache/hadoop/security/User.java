@@ -4,17 +4,13 @@ import java.io.IOException;
 import java.security.Principal;
 
 import javax.security.auth.login.LoginContext;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 
 /**
  * Save the full and short name of the user as a principal. This allows us to
  * have a single type that we always look for when picking up user names.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 class User implements Principal {
   private final String fullName;
   private final String shortName;

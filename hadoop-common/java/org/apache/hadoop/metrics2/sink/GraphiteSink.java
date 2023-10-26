@@ -1,8 +1,6 @@
 package org.apache.hadoop.metrics2.sink;
 
 import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsRecord;
@@ -21,8 +19,6 @@ import java.nio.charset.StandardCharsets;
 /**
  * A metrics sink that writes to a Graphite server
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class GraphiteSink implements MetricsSink, Closeable {
     private static final Logger LOG =
         LoggerFactory.getLogger(GraphiteSink.class);

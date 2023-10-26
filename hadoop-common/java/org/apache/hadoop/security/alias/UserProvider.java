@@ -5,8 +5,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
@@ -17,7 +15,6 @@ import org.apache.hadoop.security.UserGroupInformation;
  * with the current user to find credentials. This provider is created using a
  * URI of "user:///".
  */
-@InterfaceAudience.Private
 public class UserProvider extends CredentialProvider {
   public static final String SCHEME_NAME = "user";
   private final UserGroupInformation user;

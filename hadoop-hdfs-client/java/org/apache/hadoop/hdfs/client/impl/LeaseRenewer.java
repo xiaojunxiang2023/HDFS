@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSClient;
 import org.apache.hadoop.hdfs.DFSClientFaultInjector;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -56,7 +55,6 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * <p>
  */
-@InterfaceAudience.Private
 public class LeaseRenewer {
   public static final Logger LOG = LoggerFactory.getLogger(LeaseRenewer.class);
 

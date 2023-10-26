@@ -1,15 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import java.io.IOException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Context data for an ongoing NameNode metadata recovery process. */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public final class MetaRecoveryContext  {
   public static final Logger LOG =
       LoggerFactory.getLogger(MetaRecoveryContext.class.getName());

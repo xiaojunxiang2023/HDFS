@@ -21,7 +21,6 @@ import java.util.concurrent.Future;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -61,7 +60,6 @@ import org.slf4j.LoggerFactory;
  *      and removes the lease once all files have been removed
  * 2.10) Namenode commit changes to edit log
  */
-@InterfaceAudience.Private
 public class LeaseManager {
   public static final Logger LOG = LoggerFactory.getLogger(LeaseManager.class
       .getName());

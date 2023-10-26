@@ -2,15 +2,10 @@ package org.apache.hadoop.fs.impl;
 
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Support for functional programming/lambda-expressions.
  * @deprecated use {@code org.apache.hadoop.util.functional}
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class FunctionsRaisingIOE {
 
   private FunctionsRaisingIOE() {

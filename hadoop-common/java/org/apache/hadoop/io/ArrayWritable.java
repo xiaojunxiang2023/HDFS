@@ -5,9 +5,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** 
  * A Writable for arrays containing instances of a class. The elements of this
  * writable must all be instances of the same class. If this writable will be
@@ -23,8 +20,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * }
  * </code>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class ArrayWritable implements Writable {
   private final Class<? extends Writable> valueClass;
   private Writable[] values;

@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocalFileSystem;
@@ -31,7 +29,6 @@ import org.apache.hadoop.util.StringUtils;
  * The default storage medium is assumed to be DISK, if none is specified.
  *
  */
-@InterfaceAudience.Private
 public class StorageLocation
     implements Checkable<StorageLocation.CheckContext, VolumeCheckResult>,
                Comparable<StorageLocation> {

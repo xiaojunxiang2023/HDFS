@@ -2,9 +2,6 @@ package org.apache.hadoop.hdfs.server.datanode;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -18,8 +15,6 @@ import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 /**
  * This class is used for provided replicas that are finalized.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FinalizedProvidedReplica extends ProvidedReplica {
 
   public FinalizedProvidedReplica(long blockId, URI fileURI, long fileOffset,

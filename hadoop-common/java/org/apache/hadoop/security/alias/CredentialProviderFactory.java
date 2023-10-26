@@ -8,9 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.PathIOException;
@@ -20,8 +17,6 @@ import org.apache.hadoop.fs.PathIOException;
  * Configuration. It uses a service loader interface to find the available
  * CredentialProviders and create them based on the list of URIs.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class CredentialProviderFactory {
   public static final String CREDENTIAL_PROVIDER_PATH =
       CommonConfigurationKeysPublic.HADOOP_SECURITY_CREDENTIAL_PROVIDER_PATH;

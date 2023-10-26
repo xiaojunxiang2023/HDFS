@@ -20,12 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * A step performed by the namenode during a {@link Phase} of startup.
  */
-@InterfaceAudience.Private
 public class Step implements Comparable<Step> {
   private static final AtomicInteger SEQUENCE = new AtomicInteger();
 

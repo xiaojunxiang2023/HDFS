@@ -3,9 +3,6 @@ package org.apache.hadoop.fs;
 import java.io.IOException;
 import java.net.URI;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Used primarily by {@link FileContext} to operate on and resolve
  * symlinks in a path. Operations can potentially span multiple
@@ -13,8 +10,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * 
  * @see FileSystemLinkResolver
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class FSLinkResolver<T> {
 
   /**

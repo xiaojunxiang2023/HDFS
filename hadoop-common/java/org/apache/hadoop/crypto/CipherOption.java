@@ -1,12 +1,9 @@
 package org.apache.hadoop.crypto;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Used between client and server to negotiate the 
  * cipher suite, key and iv.
  */
-@InterfaceAudience.Private
 public class CipherOption {
   private final CipherSuite suite;
   private final byte[] inKey;

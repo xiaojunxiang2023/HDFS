@@ -1,7 +1,6 @@
 package org.apache.hadoop.util;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension.EncryptedKeyVersion;
@@ -22,7 +21,6 @@ import java.util.Map;
 /**
  * Utils for KMS.
  */
-@InterfaceAudience.Private
 public final class KMSUtil {
   public static final Logger LOG =
       LoggerFactory.getLogger(KMSUtil.class);

@@ -4,8 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.datanode.DataNodeFaultInjector;
 import org.apache.hadoop.io.DataOutputBuffer;
 
@@ -15,7 +13,6 @@ import org.apache.hadoop.io.DataOutputBuffer;
  * should be no less than data block number. Then checksum will be recalculated
  * using the newly reconstructed block.
  */
-@InterfaceAudience.Private
 public abstract class StripedBlockChecksumReconstructor
     extends StripedReconstructor implements Closeable {
   private ByteBuffer targetBuffer;

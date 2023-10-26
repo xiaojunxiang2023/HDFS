@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 package org.apache.hadoop.hdfs.server.datanode.metrics;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
@@ -46,8 +43,6 @@ import java.util.*;
  *  3. Never flag resources whose aggregate latency is less than a small
  *     multiple of the median.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class OutlierDetector {
     public static final Logger LOG =
             LoggerFactory.getLogger(OutlierDetector.class);

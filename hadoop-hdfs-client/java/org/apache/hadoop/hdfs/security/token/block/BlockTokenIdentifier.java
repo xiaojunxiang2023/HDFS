@@ -10,7 +10,6 @@ import java.util.EnumSet;
 import java.util.Optional;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.AccessModeProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTokenSecretProto;
@@ -21,8 +20,6 @@ import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-
-@InterfaceAudience.Private
 public class BlockTokenIdentifier extends TokenIdentifier {
   static final Text KIND_NAME = new Text("HDFS_BLOCK_TOKEN");
 
@@ -347,8 +344,6 @@ public class BlockTokenIdentifier extends TokenIdentifier {
 
     return cache;
   }
-
-  @InterfaceAudience.Private
   public static class Renewer extends Token.TrivialRenewer {
     @Override
     protected Text getKind() {

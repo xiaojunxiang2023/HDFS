@@ -17,12 +17,9 @@
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Internal data structure used to track progress of a {@link Step}.
  */
-@InterfaceAudience.Private
 final class StepTracking extends AbstractTracking {
   AtomicLong count = new AtomicLong();
   long total = Long.MIN_VALUE;

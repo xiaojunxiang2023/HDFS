@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
 import org.slf4j.Logger;
@@ -15,9 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.XATTR_ERASURECODING_POLICY;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class ContentSummaryComputationContext {
   private FSDirectory dir = null;
   private FSNamesystem fsn = null;

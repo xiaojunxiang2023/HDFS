@@ -1,9 +1,6 @@
 package org.apache.hadoop.ha.protocolPB;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ha.ZKFCProtocol;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.CedeActiveRequestProto;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.CedeActiveResponseProto;
@@ -14,9 +11,6 @@ import org.apache.hadoop.ipc.RPC;
 
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
-
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class ZKFCProtocolServerSideTranslatorPB implements
     ZKFCProtocolPB {
   private final ZKFCProtocol server;

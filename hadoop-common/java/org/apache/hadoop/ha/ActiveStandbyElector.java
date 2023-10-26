@@ -9,8 +9,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.ZKUtil.ZKAuthInfo;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.zookeeper.data.ACL;
@@ -47,8 +45,6 @@ import org.slf4j.LoggerFactory;
  * election. The application implements the {@link ActiveStandbyElectorCallback}
  * to interact with the elector
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ActiveStandbyElector implements StatCallback, StringCallback {
 
   /**
@@ -842,8 +838,6 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       LOG.debug("Created new connection for " + this);
     }
   }
-
-  @InterfaceAudience.Private
   public synchronized void terminateConnection() {
     if (zkClient == null) {
       return;

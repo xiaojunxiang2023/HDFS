@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
@@ -18,8 +15,6 @@ import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
  * Configuration. It uses a service loader interface to find the available
  * KeyProviders and create them based on the list of URIs.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public abstract class KeyProviderFactory {
   public static final String KEY_PROVIDER_PATH =
       CommonConfigurationKeysPublic.HADOOP_SECURITY_KEY_PROVIDER_PATH;

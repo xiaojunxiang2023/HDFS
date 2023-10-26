@@ -1,8 +1,5 @@
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.IOException;
 
 /**
@@ -14,8 +11,7 @@ import java.io.IOException;
  * to org.apache.hadoop.fs.DFCachingGetSpaceUsed in your core-site.xml
  *
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class DFCachingGetSpaceUsed extends CachingGetSpaceUsed {
   private final DF df;
 

@@ -1,12 +1,9 @@
 package org.apache.hadoop.hdfs.client;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 
 import java.util.concurrent.TimeUnit;
 
 /** Client configuration properties */
-@InterfaceAudience.Private
 public interface HdfsClientConfigKeys {
   long SECOND = 1000L;
   long MINUTE = 60 * SECOND;

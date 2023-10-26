@@ -19,14 +19,9 @@ package org.apache.hadoop.fs;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Opaque, serializable reference to a part id for multipart uploads.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface PartHandle extends Serializable {
   /**
    * @return Serialized from in bytes.

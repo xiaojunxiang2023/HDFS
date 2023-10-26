@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.ha.ZKFCProtocol;
@@ -24,7 +22,6 @@ import org.apache.hadoop.ipc.GenericRefreshProtocol;
 /**
  * {@link PolicyProvider} for HDFS protocols.
  */
-@InterfaceAudience.Private
 public class HDFSPolicyProvider extends PolicyProvider {
   private static final Service[] hdfsServices =
     new Service[] {

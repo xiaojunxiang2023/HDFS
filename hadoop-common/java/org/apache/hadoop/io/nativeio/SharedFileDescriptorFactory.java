@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.FileDescriptor;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +23,6 @@ import org.slf4j.LoggerFactory;
  * remnants by trying to unlink any temporary files created by previous
  * SharedFileDescriptorFactory instances that also used our prefix.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class SharedFileDescriptorFactory {
   public static final Logger LOG =
       LoggerFactory.getLogger(SharedFileDescriptorFactory.class);

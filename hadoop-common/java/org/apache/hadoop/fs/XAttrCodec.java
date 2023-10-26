@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
@@ -17,8 +15,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * display in screen as shell response and json response, input as http
  * or shell parameter. 
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public enum XAttrCodec {
   /**
    * Value encoded as text 

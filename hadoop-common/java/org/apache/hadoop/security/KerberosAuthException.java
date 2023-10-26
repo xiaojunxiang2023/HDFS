@@ -3,8 +3,6 @@ package org.apache.hadoop.security;
 import static org.apache.hadoop.security.UGIExceptionMessages.*;
 
 import java.io.IOException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Thrown when {@link UserGroupInformation} failed with an unrecoverable error,
@@ -12,8 +10,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  *
  * Caller should not retry when catching this exception.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class KerberosAuthException extends IOException {
   static final long serialVersionUID = 31L;
 

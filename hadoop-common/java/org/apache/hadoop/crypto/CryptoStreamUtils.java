@@ -6,8 +6,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Seekable;
 import org.apache.hadoop.util.CleanerUtil;
@@ -15,8 +13,6 @@ import org.apache.hadoop.util.CleanerUtil;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-@InterfaceAudience.Private
 public class CryptoStreamUtils {
   private static final int MIN_BUFFER_SIZE = 512;
   private static final Logger LOG =

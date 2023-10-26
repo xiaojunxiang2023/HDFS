@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ChecksumException;
 import org.apache.hadoop.fs.StorageType;
@@ -38,7 +36,6 @@ import java.util.concurrent.Callable;
  * If some source DN is corrupt, set the corresponding blockReader to
  * null and will never read from it again.
  */
-@InterfaceAudience.Private
 class StripedBlockReader {
   private static final Logger LOG = DataNode.LOG;
 

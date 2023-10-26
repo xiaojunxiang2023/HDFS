@@ -6,13 +6,7 @@ import java.util.Calendar;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class ServletUtil {
   /**
    * Initial HTML header

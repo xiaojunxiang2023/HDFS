@@ -7,9 +7,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.ReadableByteChannel;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
@@ -18,8 +15,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * {@link SocketInputStream} implementation. Otherwise, timeouts are managed by
  * setting the underlying socket timeout itself.
  */
-@InterfaceAudience.LimitedPrivate("HDFS")
-@InterfaceStability.Unstable
 public class SocketInputWrapper extends FilterInputStream {
   private final Socket socket;
   private final boolean hasChannel;

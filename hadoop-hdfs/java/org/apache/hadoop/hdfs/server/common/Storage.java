@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.common;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.StorageType;
@@ -50,7 +49,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * The locks are released when the servers stop (normally or abnormally).
  *
  */
-@InterfaceAudience.Private
 public abstract class Storage extends StorageInfo {
 
     public static final Logger LOG = LoggerFactory
@@ -553,7 +551,6 @@ public abstract class Storage extends StorageInfo {
      * Implementations can define a type for storage directory by implementing
      * this interface.
      */
-    @InterfaceAudience.Private
     public interface StorageDirType {
         public StorageDirType getStorageDirType();
 
@@ -566,7 +563,6 @@ public abstract class Storage extends StorageInfo {
      *
      * This is currently a storage directory or journal manager.
      */
-    @InterfaceAudience.Private
     public interface FormatConfirmable {
         /**
          * @return true if the storage seems to have some valid data in it,
@@ -587,7 +583,6 @@ public abstract class Storage extends StorageInfo {
     /**
      * One of the storage directories.
      */
-    @InterfaceAudience.Private
     public static class StorageDirectory implements FormatConfirmable {
         final File root;              // root directory
         // whether or not this dir is shared between two separate NNs for HA, or

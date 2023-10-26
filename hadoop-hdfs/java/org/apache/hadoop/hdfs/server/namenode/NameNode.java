@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurableBase;
 import org.apache.hadoop.conf.ReconfigurationException;
@@ -219,7 +218,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeys.IPC_BACKOFF_ENABLE_DE
  * used by secondary namenodes or rebalancing processes to get partial
  * NameNode state, for example partial blocksMap etc.
  **********************************************************/
-@InterfaceAudience.Private
 public class NameNode extends ReconfigurableBase implements
     NameNodeStatusMXBean, TokenVerifier<DelegationTokenIdentifier> {
   static{

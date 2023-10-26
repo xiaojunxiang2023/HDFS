@@ -1,15 +1,10 @@
 package org.apache.hadoop.fs.statistics;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.impl.StubDurationTracker;
 import org.apache.hadoop.fs.statistics.impl.StubDurationTrackerFactory;
 
 /**
  * Support for working with IOStatistics.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public final class IOStatisticsSupport {
 
   private IOStatisticsSupport() {

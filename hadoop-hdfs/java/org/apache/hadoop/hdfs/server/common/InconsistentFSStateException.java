@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.common;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringUtils;
 
 import java.io.File;
@@ -12,8 +9,6 @@ import java.io.IOException;
  * and is not recoverable. 
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class InconsistentFSStateException extends IOException {
     private static final long serialVersionUID = 1L;
 

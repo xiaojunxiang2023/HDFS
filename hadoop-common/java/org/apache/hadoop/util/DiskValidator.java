@@ -1,7 +1,4 @@
 package org.apache.hadoop.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 
 import java.io.File;
@@ -12,8 +9,6 @@ import java.io.File;
  * The {@link #checkStatus(File)} operation checks status of a file/dir.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface DiskValidator {
   /**
    * Check the status of a file/dir.

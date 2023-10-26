@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
 import org.apache.hadoop.hdfs.util.Canceler;
 
@@ -16,7 +14,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * allows cancellation, and also is responsible for accumulating
  * failed storage directories.
  */
-@InterfaceAudience.Private
 public class SaveNamespaceContext {
   private final FSNamesystem sourceNamesystem;
   private final long txid;

@@ -12,9 +12,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedEntries;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
@@ -243,8 +240,6 @@ import org.apache.hadoop.util.concurrent.AsyncGet;
  * while translating from the parameter types used in ClientProtocol to the
  * new PB types.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class ClientNamenodeProtocolTranslatorPB implements
     ProtocolMetaInterface, ClientProtocol, Closeable, ProtocolTranslator {
   final private ClientNamenodeProtocolPB rpcProxy;

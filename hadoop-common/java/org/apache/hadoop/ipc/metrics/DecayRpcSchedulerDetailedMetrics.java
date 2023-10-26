@@ -1,7 +1,4 @@
 package org.apache.hadoop.ipc.metrics;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
@@ -17,8 +14,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * statistics when FairCallQueue is used and publishing them
  * through the metrics interface.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 @Metrics(about="Per queue(priority) metrics",
     context="decayrpcschedulerdetailed")
 public class DecayRpcSchedulerDetailedMetrics {

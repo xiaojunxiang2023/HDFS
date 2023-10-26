@@ -2,13 +2,10 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import java.util.Collection;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Given a set of checkable resources, this class is capable of determining
  * whether sufficient resources are available for the NN to continue operating.
  */
-@InterfaceAudience.Private
 final class NameNodeResourcePolicy {
 
   /**

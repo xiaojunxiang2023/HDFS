@@ -1,6 +1,4 @@
 package org.apache.hadoop.conf;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +6,6 @@ import org.slf4j.LoggerFactory;
  * Logs access to {@link Configuration}.
  * Sensitive data will be redacted.
  */
-@InterfaceAudience.Private
 public class ConfigurationWithLogging extends Configuration {
   private static final Logger LOG =
       LoggerFactory.getLogger(ConfigurationWithLogging.class);

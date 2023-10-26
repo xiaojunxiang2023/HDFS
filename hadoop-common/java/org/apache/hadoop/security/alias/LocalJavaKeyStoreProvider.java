@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.IOException;
@@ -12,7 +10,6 @@ import java.net.URI;
  * localjceks://file/home/larry/creds.jceks {@literal ->}
  * file:///home/larry/creds.jceks
  */
-@InterfaceAudience.Private
 public final class LocalJavaKeyStoreProvider extends
     LocalKeyStoreProvider {
   public static final String SCHEME_NAME = "localjceks";

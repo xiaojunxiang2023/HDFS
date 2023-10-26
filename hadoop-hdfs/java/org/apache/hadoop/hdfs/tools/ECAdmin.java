@@ -17,7 +17,6 @@
 package org.apache.hadoop.hdfs.tools;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
@@ -40,7 +39,6 @@ import java.util.*;
 /**
  * CLI for the erasure code encoding operations.
  */
-@InterfaceAudience.Private
 public class ECAdmin extends Configured implements Tool {
 
     public static final String NAME = "ec";

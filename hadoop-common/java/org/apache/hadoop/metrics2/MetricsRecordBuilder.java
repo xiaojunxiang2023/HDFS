@@ -1,13 +1,8 @@
 package org.apache.hadoop.metrics2;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The metrics record builder interface
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class MetricsRecordBuilder {
   /**
    * Add a metrics value with metrics information

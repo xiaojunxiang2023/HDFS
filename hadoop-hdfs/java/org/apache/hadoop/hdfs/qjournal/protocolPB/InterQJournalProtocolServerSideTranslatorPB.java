@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.qjournal.protocolPB;
 
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocol;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestRequestProto;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
@@ -15,7 +13,6 @@ import java.io.IOException;
  * received on {@link InterQJournalProtocolPB} to the
  * {@link InterQJournalProtocol} server implementation.
  */
-@InterfaceAudience.Private
 public class InterQJournalProtocolServerSideTranslatorPB implements
     InterQJournalProtocolPB{
 

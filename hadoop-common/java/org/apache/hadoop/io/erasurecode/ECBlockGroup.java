@@ -1,11 +1,8 @@
 package org.apache.hadoop.io.erasurecode;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * A group of blocks or {@link ECBlock} incurred in an erasure coding task.
  */
-@InterfaceAudience.Private
 public class ECBlockGroup {
 
   private ECBlock[] dataBlocks;

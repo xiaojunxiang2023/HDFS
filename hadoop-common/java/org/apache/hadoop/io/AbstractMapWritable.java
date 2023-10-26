@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 
@@ -24,8 +21,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * Class ids range from 1 to 127 so there can be at most 127 distinct classes
  * in any specific map instance.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class AbstractMapWritable implements Writable, Configurable {
   private AtomicReference<Configuration> conf;
   

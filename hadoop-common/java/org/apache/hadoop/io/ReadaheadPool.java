@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.nativeio.NativeIO;
 
 import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_WILLNEED;
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Manages a pool of threads which can issue readahead requests on file descriptors.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ReadaheadPool {
   static final Logger LOG = LoggerFactory.getLogger(ReadaheadPool.class);
   private static final int POOL_SIZE = 4;

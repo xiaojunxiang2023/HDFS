@@ -13,7 +13,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.net.DomainPeer;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -43,7 +42,6 @@ import org.slf4j.LoggerFactory;
  * The counterpart to this class on the DataNode is ShortCircuitRegistry.
  * See ShortCircuitRegistry for more information on the communication protocol.
  */
-@InterfaceAudience.Private
 public class DfsClientShmManager implements Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(
       DfsClientShmManager.class);

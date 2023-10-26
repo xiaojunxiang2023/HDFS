@@ -4,9 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.PacketHeaderProto;
 import org.apache.hadoop.hdfs.util.ByteBufferOutputStream;
 
@@ -31,8 +28,6 @@ import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
  * by a 4-byte integer representing the full packet length, and a 2-byte short
  * representing the header length.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class PacketHeader {
   private static final int MAX_PROTO_SIZE = PacketHeaderProto.newBuilder()
       .setOffsetInBlock(0)

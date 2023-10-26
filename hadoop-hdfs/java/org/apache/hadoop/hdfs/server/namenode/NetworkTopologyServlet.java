@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.Node;
@@ -26,7 +25,6 @@ import java.util.TreeSet;
 /**
  * A servlet to print out the network topology.
  */
-@InterfaceAudience.Private
 public class NetworkTopologyServlet extends DfsServlet {
 
   public static final String SERVLET_NAME = "topology";

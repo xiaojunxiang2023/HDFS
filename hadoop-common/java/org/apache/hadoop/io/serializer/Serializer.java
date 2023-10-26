@@ -3,9 +3,6 @@ package org.apache.hadoop.io.serializer;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * <p>
  * Provides a facility for serializing objects of type &lt;T&gt; to an
@@ -19,8 +16,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * </p>
  * @param <T>
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public interface Serializer<T> {
   /**
    * <p>Prepare the serializer for writing.</p>

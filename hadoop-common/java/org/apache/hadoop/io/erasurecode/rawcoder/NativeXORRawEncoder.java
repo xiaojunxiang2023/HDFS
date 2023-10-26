@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCodeNative;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
@@ -10,7 +8,6 @@ import java.nio.ByteBuffer;
 /**
  * A XOR raw encoder using Intel ISA-L library.
  */
-@InterfaceAudience.Private
 public class NativeXORRawEncoder extends AbstractNativeRawEncoder {
 
   static {

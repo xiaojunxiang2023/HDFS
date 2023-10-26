@@ -12,9 +12,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Options.Rename;
 import org.apache.hadoop.fs.permission.FsAction;
@@ -34,8 +31,6 @@ import org.slf4j.LoggerFactory;
  * content, without date support in the filesystem, and without clock
  * synchronization.)
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class TrashPolicyDefault extends TrashPolicy {
   private static final Logger LOG =
       LoggerFactory.getLogger(TrashPolicyDefault.class);

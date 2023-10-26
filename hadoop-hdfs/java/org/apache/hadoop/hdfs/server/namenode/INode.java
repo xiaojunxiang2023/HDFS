@@ -4,7 +4,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -37,7 +36,6 @@ import java.util.Map;
  * This is a base INode class containing common fields for file and 
  * directory inodes.
  */
-@InterfaceAudience.Private
 public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
   public static final Logger LOG = LoggerFactory.getLogger(INode.class);
 

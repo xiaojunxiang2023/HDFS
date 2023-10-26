@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.Storage;
@@ -20,8 +17,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * to a data-node handshake.
  * 
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class NamespaceInfo extends StorageInfo {
   final String  buildVersion;
   String blockPoolID = "";    // id of the block pool

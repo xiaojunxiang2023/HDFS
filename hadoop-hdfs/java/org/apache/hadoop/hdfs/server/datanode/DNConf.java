@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -22,7 +20,6 @@ import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.*;
  * Simple class encapsulating all of the configuration that the DataNode
  * loads at startup time.
  */
-@InterfaceAudience.Private
 public class DNConf {
     final int socketTimeout;
     final int socketWriteTimeout;

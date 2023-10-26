@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.CreateFlag;
 import org.apache.hadoop.fs.StreamCapabilities;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
@@ -61,7 +60,6 @@ import java.util.concurrent.TimeUnit;
  * This class supports writing files in striped layout and erasure coded format.
  * Each stripe contains a sequence of cells.
  */
-@InterfaceAudience.Private
 public class DFSStripedOutputStream extends DFSOutputStream
     implements StreamCapabilities {
   private static final ByteBufferPool BUFFER_POOL = new ElasticByteBufferPool();

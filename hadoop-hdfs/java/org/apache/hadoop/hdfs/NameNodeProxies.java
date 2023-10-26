@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.NameNodeProxiesClient.ProxyAndInfo;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
@@ -56,7 +55,6 @@ import org.apache.hadoop.tools.protocolPB.GetUserMappingsProtocolPB;
  * {@link NameNodeProxies#createProxy(Configuration, URI, Class)}, which will
  * create either an HA- or non-HA-enabled client proxy as appropriate.
  */
-@InterfaceAudience.Private
 public class NameNodeProxies {
   
   private static final Logger LOG =

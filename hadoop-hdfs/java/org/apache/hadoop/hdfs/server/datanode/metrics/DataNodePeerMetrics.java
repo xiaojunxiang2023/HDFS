@@ -1,8 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.metrics;
-
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.metrics2.MetricsJsonBuilder;
 import org.apache.hadoop.metrics2.lib.MutableRollingAverages;
@@ -19,8 +15,6 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_PEER_METRICS_MIN
  * This class maintains DataNode peer metrics (e.g. numOps, AvgTime, etc.) for
  * various peer operations.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class DataNodePeerMetrics {
 
     public static final Logger LOG = LoggerFactory.getLogger(

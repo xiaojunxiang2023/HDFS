@@ -1,14 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockCollection;
 import org.apache.hadoop.hdfs.server.namenode.ha.HAContext;
 import org.apache.hadoop.hdfs.util.RwLock;
 
 /** Namesystem operations. */
-@InterfaceAudience.Private
 public interface Namesystem extends RwLock, SafeMode {
   /** Is this name system running? */
   boolean isRunning();

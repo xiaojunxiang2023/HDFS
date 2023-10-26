@@ -4,17 +4,12 @@ import java.io.IOException;
 import java.io.Closeable;
 
 import static org.apache.hadoop.util.Time.monotonicNow;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 
 /**
  * A generic abstract class to support journaling of edits logs into 
  * a persistent storage.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class EditLogOutputStream implements Closeable {
   // these are statistics counters
   private long numSync;        // number of sync(s) to disk

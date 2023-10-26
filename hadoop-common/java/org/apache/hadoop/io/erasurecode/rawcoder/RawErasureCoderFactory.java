@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
 /**
@@ -8,7 +6,6 @@ import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
  * It helps in configuration since only one factory class is needed to be
  * configured.
  */
-@InterfaceAudience.Private
 public interface RawErasureCoderFactory {
 
   /**

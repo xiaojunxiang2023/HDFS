@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.client.impl.metrics;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
@@ -12,7 +11,6 @@ import org.apache.hadoop.metrics2.lib.MutableRollingAverages;
  * This class maintains a metric of rolling average latency for short circuit
  * reads.
  */
-@InterfaceAudience.Private
 @Metrics(name="HdfsShortCircuitReads",
          about="Block Reader Local's Short Circuit Read latency",
          context="dfs")

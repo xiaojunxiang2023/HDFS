@@ -25,9 +25,6 @@ import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.filter.handler.AuthenticationHandler;
 import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
@@ -73,8 +70,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
  * management operations.</li>
  * </ul>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class MultiSchemeDelegationTokenAuthenticationHandler extends
     DelegationTokenAuthenticationHandler implements
     CompositeAuthenticationHandler {

@@ -3,17 +3,12 @@ package org.apache.hadoop.fs;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.util.DataChecksum;
 
 /** MD5 of MD5 of CRC32. */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
-@InterfaceStability.Unstable
 public class MD5MD5CRC32FileChecksum extends FileChecksum {
   public static final int LENGTH = MD5Hash.MD5_LEN
       + (Integer.SIZE + Long.SIZE)/Byte.SIZE;

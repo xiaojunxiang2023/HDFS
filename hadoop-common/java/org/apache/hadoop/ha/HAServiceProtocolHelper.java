@@ -1,9 +1,6 @@
 package org.apache.hadoop.ha;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
 import org.apache.hadoop.ipc.RemoteException;
 
@@ -11,8 +8,6 @@ import org.apache.hadoop.ipc.RemoteException;
  * Helper for making {@link HAServiceProtocol} RPC calls. This helper
  * unwraps the {@link RemoteException} to specific exceptions.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class HAServiceProtocolHelper {
   public static void monitorHealth(HAServiceProtocol svc,
       StateChangeRequestInfo reqInfo)

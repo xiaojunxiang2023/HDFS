@@ -15,14 +15,9 @@
  * the License.
  */package org.apache.hadoop.hdfs.server.diskbalancer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Constants used by Disk Balancer.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class DiskBalancerConstants {
   public static final String DISKBALANCER_BANDWIDTH = "DiskBalancerBandwidth";
   public static final String DISKBALANCER_VOLUME_NAME =

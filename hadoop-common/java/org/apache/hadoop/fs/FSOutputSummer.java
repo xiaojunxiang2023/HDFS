@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.tracing.TraceScope;
 
@@ -13,8 +10,6 @@ import java.util.zip.Checksum;
  * This is a generic output stream for generating checksums for
  * data before it is written to the underlying stream
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
-@InterfaceStability.Unstable
 abstract public class FSOutputSummer extends OutputStream implements
     StreamCapabilities {
   // data checksum

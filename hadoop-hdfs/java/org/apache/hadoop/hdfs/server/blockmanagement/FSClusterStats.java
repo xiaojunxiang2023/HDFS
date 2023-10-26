@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 
 import java.util.Map;
@@ -9,7 +7,6 @@ import java.util.Map;
  * This interface is used for retrieving the load related statistics of
  * the cluster.
  */
-@InterfaceAudience.Private
 public interface FSClusterStats {
 
   /**

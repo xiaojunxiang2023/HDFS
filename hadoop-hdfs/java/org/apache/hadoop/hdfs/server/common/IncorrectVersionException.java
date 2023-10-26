@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.server.common;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.IOException;
 
 /**
@@ -10,8 +7,6 @@ import java.io.IOException;
  * current version of the application.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class IncorrectVersionException extends IOException {
     private static final long serialVersionUID = 1L;
 

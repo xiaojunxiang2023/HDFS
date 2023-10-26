@@ -23,8 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.hadoop.util.ShutdownHookManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -66,8 +64,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
  * FSImage handles checkpointing and logging of the namespace edits.
  * 
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FSImage implements Closeable {
   public static final Logger LOG =
       LoggerFactory.getLogger(FSImage.class.getName());

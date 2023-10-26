@@ -10,8 +10,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 import java.util.NoSuchElementException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.security.AccessControlException;
@@ -25,9 +23,7 @@ import org.slf4j.LoggerFactory;
  * It provide a basic implementation of a Checksumed Fs,
  * which creates a checksum file for each raw file.
  * It generates &amp; verifies checksums at the client side.
- */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving /*Evolving for a release,to be changed to Stable */
+ */ /*Evolving for a release,to be changed to Stable */
 public abstract class ChecksumFs extends FilterFs {
   private static final byte[] CHECKSUM_VERSION = new byte[] {'c', 'r', 'c', 0};
   private int defaultBytesPerChecksum = 512;

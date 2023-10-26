@@ -1,14 +1,10 @@
 package org.apache.hadoop.net;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** A base class that implements interface Node
  * 
  */
 
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class NodeBase implements Node {
   /** Path separator {@value} */
   public final static char PATH_SEPARATOR = '/';

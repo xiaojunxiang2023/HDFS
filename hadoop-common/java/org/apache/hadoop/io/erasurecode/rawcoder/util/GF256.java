@@ -1,12 +1,9 @@
 package org.apache.hadoop.io.erasurecode.rawcoder.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * A GaloisField utility class only caring of 256 fields for efficiency. Some
  * of the codes are borrowed from ISA-L implementation (C or ASM codes).
  */
-@InterfaceAudience.Private
 public final class GF256 {
 
   private GF256() { }

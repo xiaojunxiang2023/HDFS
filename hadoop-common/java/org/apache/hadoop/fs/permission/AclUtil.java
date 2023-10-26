@@ -3,16 +3,12 @@ package org.apache.hadoop.fs.permission;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 /**
  * AclUtil contains utility methods for manipulating ACLs.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public final class AclUtil {
 
   /**

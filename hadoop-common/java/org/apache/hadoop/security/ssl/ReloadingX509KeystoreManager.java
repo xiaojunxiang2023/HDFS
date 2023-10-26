@@ -1,7 +1,4 @@
 package org.apache.hadoop.security.ssl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +22,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * to implement the <code>X509ExtendedKeyManager</code> to properly delegate
  * the additional methods, otherwise the SSL handshake will fail.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ReloadingX509KeystoreManager extends X509ExtendedKeyManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ReloadingX509TrustManager.class);

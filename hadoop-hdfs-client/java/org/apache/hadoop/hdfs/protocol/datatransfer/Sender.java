@@ -6,9 +6,6 @@ import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -42,8 +39,6 @@ import org.apache.hadoop.tracing.TraceUtils;
 import org.apache.hadoop.thirdparty.protobuf.Message;
 
 /** Sender */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class Sender implements DataTransferProtocol {
   private final DataOutputStream out;
 

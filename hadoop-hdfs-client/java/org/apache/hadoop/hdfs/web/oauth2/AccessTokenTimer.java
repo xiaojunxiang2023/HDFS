@@ -16,16 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */package org.apache.hadoop.hdfs.web.oauth2;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.Timer;
 
 /**
  * Access tokens generally expire.  This timer helps keep track of that.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class AccessTokenTimer {
   public static final long EXPIRE_BUFFER_MS = 30 * 1000L;
 

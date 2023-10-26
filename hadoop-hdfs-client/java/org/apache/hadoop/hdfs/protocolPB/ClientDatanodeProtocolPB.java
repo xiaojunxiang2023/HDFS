@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.protocolPB;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.ClientDatanodeProtocolService;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenSelector;
@@ -14,7 +12,6 @@ import org.apache.hadoop.security.token.TokenInfo;
 @ProtocolInfo(protocolName =
     "org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol",
     protocolVersion = 1)
-@InterfaceAudience.Private
 public interface ClientDatanodeProtocolPB extends
     ClientDatanodeProtocolService.BlockingInterface {
 }

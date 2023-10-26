@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,8 +25,6 @@ import org.apache.hadoop.net.NetworkTopology;
  * which is on a different node of the rack as the second replica.
  * All 3 replicas have unique upgrade domains.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockPlacementPolicyWithUpgradeDomain extends
     BlockPlacementPolicyDefault {
 

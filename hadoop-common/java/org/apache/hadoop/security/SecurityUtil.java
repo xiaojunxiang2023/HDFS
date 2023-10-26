@@ -37,9 +37,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KerberosTicket;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.Text;
@@ -63,8 +60,6 @@ import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 /**
  * Security Utils.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class SecurityUtil {
   public static final Logger LOG = LoggerFactory.getLogger(SecurityUtil.class);
   public static final String HOSTNAME_PATTERN = "_HOST";
@@ -87,9 +82,6 @@ public final class SecurityUtil {
   static {
     setConfigurationInternal(new Configuration());
   }
-
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static void setConfiguration(Configuration conf) {
     LOG.info("Updating Configuration");
     setConfigurationInternal(conf);
@@ -117,7 +109,6 @@ public final class SecurityUtil {
   /**
    * For use only by tests and initialization
    */
-  @InterfaceAudience.Private
   @VisibleForTesting
   public static void setTokenServiceUseIp(boolean flag) {
     if (LOG.isDebugEnabled()) {
@@ -170,8 +161,6 @@ public final class SecurityUtil {
    * @return converted Kerberos principal name
    * @throws IOException if the client address cannot be determined
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static String getServerPrincipal(String principalConfig,
       String hostname) throws IOException {
     String[] components = getComponents(principalConfig);
@@ -197,8 +186,6 @@ public final class SecurityUtil {
    * @return converted Kerberos principal name
    * @throws IOException if the client address cannot be determined
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static String getServerPrincipal(String principalConfig,
       InetAddress addr) throws IOException {
     String[] components = getComponents(principalConfig);
@@ -272,8 +259,6 @@ public final class SecurityUtil {
    *          the key to look for user's Kerberos principal name in conf
    * @throws IOException if login fails
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static void login(final Configuration conf,
       final String keytabFileKey, final String userNameKey) throws IOException {
     login(conf, keytabFileKey, userNameKey, getLocalHostName(conf));
@@ -294,8 +279,6 @@ public final class SecurityUtil {
    *          hostname to use for substitution
    * @throws IOException if the config doesn't specify a keytab
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static void login(final Configuration conf,
       final String keytabFileKey, final String userNameKey, String hostname)
       throws IOException {
@@ -349,7 +332,6 @@ public final class SecurityUtil {
    * Test setup method to register additional providers.
    * @param providers a list of high priority providers to use
    */
-  @InterfaceAudience.Private
   public static void setSecurityInfoProviders(SecurityInfo... providers) {
     testProviders = providers;
   }
@@ -547,7 +529,6 @@ public final class SecurityUtil {
    * @return a resolved host
    * @throws UnknownHostException if the host doesn't exist
    */
-  @InterfaceAudience.Private
   public static
   InetAddress getByName(String hostname) throws UnknownHostException {
     if (logSlowLookups || LOG.isTraceEnabled()) {

@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.server.common.sps;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Block movement status code.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public enum BlockMovementStatus {
     /** Success. */
     DN_BLK_STORAGE_MOVEMENT_SUCCESS(0),

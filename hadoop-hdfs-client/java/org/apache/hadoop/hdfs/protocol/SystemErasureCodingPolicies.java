@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
 
 import java.util.Arrays;
@@ -16,8 +13,6 @@ import java.util.TreeMap;
  * stable interface. Adding, modifying, or removing built-in policies can cause
  * inconsistencies with older clients.</p>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public final class SystemErasureCodingPolicies {
 
   // Private constructor, this is a utility class.

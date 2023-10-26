@@ -1,8 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.Interner;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Interners;
 
@@ -11,8 +8,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Interners;
  * we use the standard String.intern() call, that performs very well
  * (no problems with PermGen overflowing, etc.) starting from JDK 7.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class StringInterner {
   
   /**

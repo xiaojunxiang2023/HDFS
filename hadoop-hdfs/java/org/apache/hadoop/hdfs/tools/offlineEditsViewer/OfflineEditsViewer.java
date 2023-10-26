@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
 
 import org.apache.commons.cli.*;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hdfs.tools.offlineEditsViewer.OfflineEditsLoader.OfflineEditsLoaderFactory;
 import org.apache.hadoop.util.StringUtils;
@@ -13,8 +11,6 @@ import org.apache.hadoop.util.ToolRunner;
  * This class implements an offline edits viewer, tool that
  * can be used to view edit logs.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class OfflineEditsViewer extends Configured implements Tool {
     private static final String HELP_OPT = "-h";
     private static final String HELP_LONGOPT = "--help";

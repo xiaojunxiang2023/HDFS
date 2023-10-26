@@ -3,8 +3,6 @@ package org.apache.hadoop.util;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ForwardingExecutorService;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Futures;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -28,7 +26,6 @@ import java.util.concurrent.TimeoutException;
  * this s4 threadpool</a>
  */
 @SuppressWarnings("NullableProblems")
-@InterfaceAudience.Private
 public class SemaphoredDelegatingExecutor extends
     ForwardingExecutorService {
 

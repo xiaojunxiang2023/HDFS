@@ -2,9 +2,6 @@ package org.apache.hadoop.hdfs.protocol;
 
 import java.io.IOException;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.BatchedRemoteIterator;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
@@ -14,8 +11,6 @@ import org.apache.hadoop.tracing.Tracer;
  * managed by the NameNode. Since the list is retrieved in batches, it does not
  * represent a consistent view of all open files.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class OpenFilesIterator extends
     BatchedRemoteIterator<Long, OpenFileEntry> {
 

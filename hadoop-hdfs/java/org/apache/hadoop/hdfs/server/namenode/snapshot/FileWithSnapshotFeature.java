@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
@@ -20,7 +18,6 @@ import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 /**
  * Feature for file with snapshot-related information.
  */
-@InterfaceAudience.Private
 public class FileWithSnapshotFeature implements INode.Feature {
   private final FileDiffList diffs;
   private boolean isCurrentFileDeleted = false;

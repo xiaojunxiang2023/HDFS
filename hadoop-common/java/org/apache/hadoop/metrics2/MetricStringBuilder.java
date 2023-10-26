@@ -1,8 +1,5 @@
 package org.apache.hadoop.metrics2;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Build a string dump of the metrics.
  *
@@ -11,8 +8,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * Every entry is formatted as
  * {@code prefix + name + separator + value + suffix}
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MetricStringBuilder extends MetricsRecordBuilder {
 
   private final StringBuilder builder = new StringBuilder(256);

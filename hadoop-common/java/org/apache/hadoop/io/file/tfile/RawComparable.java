@@ -19,9 +19,6 @@ package org.apache.hadoop.io.file.tfile;
 
 import java.util.Collections;
 import java.util.Comparator;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.RawComparator;
 
 /**
@@ -35,8 +32,6 @@ import org.apache.hadoop.io.RawComparator;
  * RawComparable are supposed to be semantically comparable with the same
  * RawComparator.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface RawComparable {
   /**
    * Get the underlying byte array.

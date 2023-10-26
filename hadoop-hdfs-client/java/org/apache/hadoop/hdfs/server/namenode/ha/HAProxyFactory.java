@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.AlignmentContext;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -15,7 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * {@link org.apache.hadoop.hdfs.protocol.ClientProtocol} to initialize the
  * proxy while the server side can use NamenodeProtocols
  */
-@InterfaceAudience.Private
 public interface HAProxyFactory<T> {
 
   T createProxy(Configuration conf, InetSocketAddress nnAddr, Class<T> xface,

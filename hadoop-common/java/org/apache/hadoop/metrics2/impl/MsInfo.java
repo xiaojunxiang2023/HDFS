@@ -1,6 +1,4 @@
 package org.apache.hadoop.metrics2.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsInfo;
 
 import java.util.StringJoiner;
@@ -8,7 +6,6 @@ import java.util.StringJoiner;
 /**
  * Metrics system related metrics info instances
  */
-@InterfaceAudience.Private
 public enum MsInfo implements MetricsInfo {
   NumActiveSources("Number of active metrics sources"),
   NumAllSources("Number of all registered metrics sources"),

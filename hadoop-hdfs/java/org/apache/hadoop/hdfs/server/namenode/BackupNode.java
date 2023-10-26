@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ha.ServiceFailedException;
@@ -50,7 +48,6 @@ import org.apache.hadoop.thirdparty.protobuf.BlockingService;
  * namespace image to local disk(s).</li>
  * </ol>
  */
-@InterfaceAudience.Private
 public class BackupNode extends NameNode {
   private static final String BN_ADDRESS_NAME_KEY = DFSConfigKeys.DFS_NAMENODE_BACKUP_ADDRESS_KEY;
   private static final String BN_ADDRESS_DEFAULT = DFSConfigKeys.DFS_NAMENODE_BACKUP_ADDRESS_DEFAULT;

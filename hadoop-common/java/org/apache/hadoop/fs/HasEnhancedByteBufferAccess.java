@@ -3,17 +3,12 @@ package org.apache.hadoop.fs;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.ByteBufferPool;
 
 /**
  * FSDataInputStreams implement this interface to provide enhanced
  * byte buffer access.  Usually this takes the form of mmap support.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface HasEnhancedByteBufferAccess {
   /**
    * Get a ByteBuffer containing file data.

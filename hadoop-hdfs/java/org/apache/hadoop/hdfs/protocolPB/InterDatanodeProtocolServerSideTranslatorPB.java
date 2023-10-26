@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.InitReplicaRecoveryRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.InitReplicaRecoveryResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.UpdateReplicaUnderRecoveryRequestProto;
@@ -19,7 +17,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * received on {@link InterDatanodeProtocolPB} to the
  * {@link InterDatanodeProtocol} server implementation.
  */
-@InterfaceAudience.Private
 public class InterDatanodeProtocolServerSideTranslatorPB implements
     InterDatanodeProtocolPB {
   private final InterDatanodeProtocol impl;

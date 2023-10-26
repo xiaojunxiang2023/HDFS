@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
  * just submit the same file to process. This will use file string path
  * representation.
  */
-@InterfaceAudience.Private
 public class ExternalSPSFilePathCollector implements FileCollector {
     public static final Logger LOG =
             LoggerFactory.getLogger(ExternalSPSFilePathCollector.class);

@@ -12,8 +12,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -25,8 +23,6 @@ import org.slf4j.LoggerFactory;
  * our standard naming convention as described in the doc
  *  for {link {@link #register(String, String, Object)}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public final class MBeans {
   private static final Logger LOG = LoggerFactory.getLogger(MBeans.class);
   private static final String DOMAIN_PREFIX = "Hadoop:";

@@ -1,8 +1,5 @@
 package org.apache.hadoop.fs.shell;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * The {code PrintableString} class converts any string to a printable string
  * by replacing non-printable characters with ?.
@@ -19,8 +16,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * @see Character
  * @see <a href="http://www.unicode.org/">The Unicode Consortium</a>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 class PrintableString {
   private static final char REPLACEMENT_CHAR = '?';
 

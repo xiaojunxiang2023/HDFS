@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.security.token.delegation;
 
 import java.net.URI;
 import java.util.Collection;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.io.Text;
@@ -15,7 +13,6 @@ import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSelect
 /**
  * A delegation token that is specialized for HDFS
  */
-@InterfaceAudience.Private
 public class DelegationTokenSelector
     extends AbstractDelegationTokenSelector<DelegationTokenIdentifier>{
   public static final String SERVICE_NAME_KEY = "hdfs.service.host_";

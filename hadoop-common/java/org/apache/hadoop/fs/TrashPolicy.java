@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -12,8 +9,6 @@ import java.io.IOException;
  * This interface is used for implementing different Trash policies.
  * Provides factory method to create instances of the configured Trash policy.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class TrashPolicy extends Configured {
   protected FileSystem fs; // the FileSystem
   protected Path trash; // path to trash directory

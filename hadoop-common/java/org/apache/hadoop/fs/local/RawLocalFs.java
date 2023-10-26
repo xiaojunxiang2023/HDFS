@@ -3,9 +3,6 @@ package org.apache.hadoop.fs.local;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.AbstractFileSystem;
 import org.apache.hadoop.fs.DelegateToFileSystem;
@@ -17,9 +14,7 @@ import org.apache.hadoop.fs.RawLocalFileSystem;
 /**
  * The RawLocalFs implementation of AbstractFileSystem.
  *  This impl delegates to the old FileSystem
- */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving /*Evolving for a release,to be changed to Stable */
+ */ /*Evolving for a release,to be changed to Stable */
 public class RawLocalFs extends DelegateToFileSystem {
 
   RawLocalFs(final Configuration conf) throws IOException, URISyntaxException {

@@ -3,9 +3,6 @@ package org.apache.hadoop.fs.shell;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.io.IOUtils;
@@ -15,8 +12,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 /**
  * Get a listing of all files in that match the file patterns.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 class Tail extends FsCommand {
   public static void registerCommands(CommandFactory factory) {

@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.DataChecksum;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
@@ -28,8 +25,6 @@ import org.slf4j.LoggerFactory;
  * This is not related to the Block related functionality in Namenode.
  * The biggest part of data block metadata is CRC for the block.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockMetadataHeader {
   private static final Logger LOG = LoggerFactory.getLogger(
       BlockMetadataHeader.class);

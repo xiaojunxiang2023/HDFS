@@ -42,8 +42,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.ConfServlet;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configuration.IntegerRanges;
@@ -107,8 +105,6 @@ import org.slf4j.LoggerFactory;
  * This class is a fork of the old HttpServer. HttpServer exists for
  * compatibility reasons. See HBASE-10336 for more details.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public final class HttpServer2 implements FilterContainer {
   public static final Logger LOG = LoggerFactory.getLogger(HttpServer2.class);
 

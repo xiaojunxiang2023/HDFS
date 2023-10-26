@@ -8,8 +8,6 @@ import java.util.List;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclEntryScope;
 import org.apache.hadoop.fs.permission.AclEntryType;
@@ -22,8 +20,6 @@ import org.apache.hadoop.fs.permission.ScopedAclEntries;
 /**
  * Acl related operations
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 class AclCommands extends FsCommand {
   private static String GET_FACL = "getfacl";
   private static String SET_FACL = "setfacl";

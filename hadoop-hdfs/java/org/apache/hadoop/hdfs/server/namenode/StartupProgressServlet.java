@@ -29,13 +29,10 @@ import org.apache.hadoop.hdfs.server.namenode.startupprogress.Step;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.StepType;
 import org.apache.hadoop.io.IOUtils;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Servlet that provides a JSON representation of the namenode's current startup
  * progress.
  */
-@InterfaceAudience.Private
 @SuppressWarnings("serial")
 public class StartupProgressServlet extends DfsServlet {
 

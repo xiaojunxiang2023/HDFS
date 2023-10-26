@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.fs.impl.AbstractFSBuilderImpl;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -63,8 +60,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
  * {@link IllegalArgumentException} will be thrown.
  *
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class FSDataOutputStreamBuilder
     <S extends FSDataOutputStream, B extends FSDataOutputStreamBuilder<S, B>>
     extends AbstractFSBuilderImpl<S, B> {

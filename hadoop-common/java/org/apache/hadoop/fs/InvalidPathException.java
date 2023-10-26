@@ -1,15 +1,11 @@
 package org.apache.hadoop.fs;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Path string is invalid either because it has invalid characters or due to
  * other file system specific reasons.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class InvalidPathException extends HadoopIllegalArgumentException {
   private static final long serialVersionUID = 1L;
 

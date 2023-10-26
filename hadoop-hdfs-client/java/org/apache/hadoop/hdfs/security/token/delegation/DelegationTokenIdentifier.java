@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.collections.map.LRUMap;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.web.WebHdfsConstants;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -20,7 +19,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 /**
  * A delegation token identifier that is specific to HDFS.
  */
-@InterfaceAudience.Private
 public class DelegationTokenIdentifier
     extends AbstractDelegationTokenIdentifier {
   public static final Text HDFS_DELEGATION_KIND =

@@ -2,14 +2,9 @@ package org.apache.hadoop.util;
 
 import java.time.Duration;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Little duration counter.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class OperationDuration {
 
   /**

@@ -3,9 +3,6 @@ package org.apache.hadoop.util;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 
 /**
@@ -13,8 +10,6 @@ import org.slf4j.Logger;
  * It implements the interface {@link ReadWriteLock}, and can be used to
  * create instrumented <tt>ReadLock</tt> and <tt>WriteLock</tt>.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class InstrumentedReadWriteLock implements ReadWriteLock {
 
   private final Lock readLock;

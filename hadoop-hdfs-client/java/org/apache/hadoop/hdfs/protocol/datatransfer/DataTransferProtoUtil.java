@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BaseHeaderProto;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BlockOpResponseProto;
@@ -26,8 +23,6 @@ import org.apache.hadoop.tracing.TraceUtils;
  * Static utilities for dealing with the protocol buffers used by the
  * Data Transfer Protocol.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class DataTransferProtoUtil {
   static BlockConstructionStage fromProto(
       OpWriteBlockProto.BlockConstructionStage stage) {

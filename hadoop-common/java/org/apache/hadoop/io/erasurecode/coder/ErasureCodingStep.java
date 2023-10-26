@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.coder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 
@@ -9,7 +7,6 @@ import java.io.IOException;
 /**
  * Erasure coding step that's involved in encoding/decoding of a block group.
  */
-@InterfaceAudience.Private
 public interface ErasureCodingStep {
 
   /**

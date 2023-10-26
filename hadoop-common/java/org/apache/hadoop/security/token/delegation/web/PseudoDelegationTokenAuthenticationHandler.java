@@ -1,7 +1,4 @@
 package org.apache.hadoop.security.token.delegation.web;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.filter.handler.AuthenticationHandler;
 import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
 import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
@@ -25,8 +22,6 @@ import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
  * removal scan interval in seconds (default 1 hour).</li>
  * </ul>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class PseudoDelegationTokenAuthenticationHandler
     extends DelegationTokenAuthenticationHandler {
 

@@ -17,7 +17,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.hadoop.hdfs.server.namenode.DfsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -46,7 +45,6 @@ import org.apache.hadoop.util.StringUtils;
  * another journal node.</li>
  * </ul>
  */
-@InterfaceAudience.Private
 public class GetJournalEditServlet extends DfsServlet {
 
   private static final long serialVersionUID = -4635891628211723009L;

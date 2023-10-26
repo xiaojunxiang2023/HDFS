@@ -3,17 +3,12 @@ package org.apache.hadoop.fs;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Interface filesystems MAY implement to offer a batched list.
  * If implemented, filesystems SHOULD declare
  * {@link CommonPathCapabilities#FS_EXPERIMENTAL_BATCH_LISTING} to be a supported
  * path capability.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface BatchListingOperations {
 
   /**

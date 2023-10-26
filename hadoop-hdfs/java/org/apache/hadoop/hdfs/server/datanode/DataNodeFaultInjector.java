@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.server.datanode;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,7 +11,6 @@ import java.nio.ByteBuffer;
  * Calls into this are a no-op in production code. 
  */
 @VisibleForTesting
-@InterfaceAudience.Private
 public class DataNodeFaultInjector {
   private static DataNodeFaultInjector instance = new DataNodeFaultInjector();
 

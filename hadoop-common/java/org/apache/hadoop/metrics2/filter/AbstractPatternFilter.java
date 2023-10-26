@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.commons.configuration2.SubsetConfiguration;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsFilter;
 import org.apache.hadoop.metrics2.MetricsTag;
@@ -15,7 +13,6 @@ import com.google.re2j.Pattern;
 /**
  * Base class for pattern based filters
  */
-@InterfaceAudience.Private
 public abstract class AbstractPatternFilter extends MetricsFilter {
   protected static final String INCLUDE_KEY = "include";
   protected static final String EXCLUDE_KEY = "exclude";

@@ -30,7 +30,6 @@ import org.apache.curator.framework.recipes.shared.SharedCount;
 import org.apache.curator.framework.recipes.shared.VersionedValue;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.curator.utils.EnsurePath;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.conf.Configuration;
@@ -57,7 +56,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * This class ensures that Identifiers and Keys are replicated to all nodes of
  * the service.
  */
-@InterfaceAudience.Private
 public abstract class ZKDelegationTokenSecretManager<TokenIdent extends AbstractDelegationTokenIdentifier>
     extends AbstractDelegationTokenSecretManager<TokenIdent> {
 
@@ -231,7 +229,6 @@ public abstract class ZKDelegationTokenSecretManager<TokenIdent extends Abstract
    * "java.security.auth.login.config", to point to that file. It is meant to be
    * used for connecting to ZooKeeper.
    */
-  @InterfaceAudience.Private
   public static class JaasConfiguration extends
       javax.security.auth.login.Configuration {
 

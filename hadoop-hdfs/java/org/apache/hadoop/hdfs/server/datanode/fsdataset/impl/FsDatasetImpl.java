@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.*;
@@ -56,7 +55,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * has a unique name and an extent on disk.
  *
  ***************************************************/
-@InterfaceAudience.Private
 class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
     static final Logger LOG = LoggerFactory.getLogger(FsDatasetImpl.class);
     private final static boolean isNativeIOAvailable;

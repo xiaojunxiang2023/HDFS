@@ -1,8 +1,6 @@
 package org.apache.hadoop.util;
 
 import java.util.Collection;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,6 @@ import org.slf4j.LoggerFactory;
  * @param <K> The type of the keys.
  * @param <E> The type of the elements, which must be a subclass of the keys.
  */
-@InterfaceAudience.Private
 public interface GSet<K, E extends K> extends Iterable<E> {
   Logger LOG = LoggerFactory.getLogger(GSet.class);
 

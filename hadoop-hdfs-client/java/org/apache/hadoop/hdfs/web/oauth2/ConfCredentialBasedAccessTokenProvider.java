@@ -16,9 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */package org.apache.hadoop.hdfs.web.oauth2;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.Timer;
 
@@ -30,8 +27,6 @@ import static org.apache.hadoop.hdfs.web.oauth2.Utils.notNull;
  * <a href="https://tools.ietf.org/html/rfc6749#section-4.4">
  *   Client Credentials Grant workflow</a>.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class ConfCredentialBasedAccessTokenProvider
     extends CredentialBasedAccessTokenProvider {
   private String credential;

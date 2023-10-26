@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.service.AbstractService;
 
@@ -26,7 +24,6 @@ import org.slf4j.LoggerFactory;
  * paused processing, which may cause other problems. If such a pause is
  * detected, the thread logs a message.
  */
-@InterfaceAudience.Private
 public class JvmPauseMonitor extends AbstractService {
   private static final Logger LOG = LoggerFactory.getLogger(
       JvmPauseMonitor.class);

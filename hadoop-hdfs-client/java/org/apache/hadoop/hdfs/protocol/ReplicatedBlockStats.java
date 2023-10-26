@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.util.Collection;
 
 /**
@@ -11,8 +8,6 @@ import java.util.Collection;
  * <p>
  * @see ClientProtocol#getReplicatedBlockStats()
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class ReplicatedBlockStats {
   private final long lowRedundancyBlocks;
   private final long corruptBlocks;

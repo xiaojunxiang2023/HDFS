@@ -2,8 +2,6 @@ package org.apache.hadoop.io.retry;
 
 import java.io.Closeable;
 
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * An implementer of this interface is capable of providing proxy objects for
  * use in IPC communication, and potentially modifying these objects or creating
@@ -11,7 +9,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * determination of whether or not to fail over is handled by
  * {@link RetryPolicy}.
  */
-@InterfaceStability.Evolving
 public interface FailoverProxyProvider<T> extends Closeable {
   static class ProxyInfo<T> {
     public T proxy;

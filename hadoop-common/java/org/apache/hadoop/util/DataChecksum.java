@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ChecksumException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +18,7 @@ import java.lang.invoke.MethodType;
  * This class provides interface and utilities for processing checksums for
  * DFS data transfers.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class DataChecksum implements Checksum {
   
   // checksum types

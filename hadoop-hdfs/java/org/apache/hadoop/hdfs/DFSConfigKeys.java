@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.net.DFSNetworkTopology;
@@ -19,7 +17,6 @@ import java.util.concurrent.TimeUnit;
  * This class contains constants for configuration keys and default values
  * used in hdfs.
  */
-@InterfaceAudience.Private
 public class DFSConfigKeys extends CommonConfigurationKeys {
   public static final String  DFS_BLOCK_SIZE_KEY =
       HdfsClientConfigKeys.DFS_BLOCK_SIZE_KEY;

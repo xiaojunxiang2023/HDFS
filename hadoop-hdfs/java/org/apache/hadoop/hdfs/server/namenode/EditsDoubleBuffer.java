@@ -9,7 +9,6 @@ import java.util.Arrays;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.Writer;
 import org.apache.hadoop.io.DataOutputBuffer;
@@ -24,7 +23,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * to progress concurrently to flushes without allocating new buffers each
  * time.
  */
-@InterfaceAudience.Private
 public class EditsDoubleBuffer {
   protected static final Logger LOG =
       LoggerFactory.getLogger(EditsDoubleBuffer.class);

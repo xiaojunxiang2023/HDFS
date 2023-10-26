@@ -1,12 +1,6 @@
 package org.apache.hadoop.fs.permission;
 
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 class RawParser extends PermissionParser {
   private static Pattern rawOctalPattern =
       Pattern.compile("^\\s*([01]?)([0-7]{3})\\s*$");

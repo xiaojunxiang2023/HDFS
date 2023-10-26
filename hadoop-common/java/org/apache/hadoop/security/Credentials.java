@@ -17,9 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -40,8 +37,6 @@ import org.slf4j.LoggerFactory;
  * A class that provides the facilities of reading and writing
  * secret keys and Tokens.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class Credentials implements Writable {
 
   public enum SerializedFormat {

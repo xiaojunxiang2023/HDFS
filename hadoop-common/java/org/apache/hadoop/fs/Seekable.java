@@ -2,14 +2,9 @@ package org.apache.hadoop.fs;
 
 import java.io.*;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  *  Stream that permits seeking.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface Seekable {
   /**
    * Seek to the given offset from the start of the file.
@@ -27,6 +22,5 @@ public interface Seekable {
    * Seeks a different copy of the data.  Returns true if 
    * found a new source, false otherwise.
    */
-  @InterfaceAudience.Private
   boolean seekToNewSource(long targetPos) throws IOException;
 }

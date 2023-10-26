@@ -1,10 +1,6 @@
 package org.apache.hadoop.hdfs.web;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
 import org.apache.hadoop.io.Text;
-
-@InterfaceAudience.Private
 public class WebHdfsConstants {
   public static final String WEBHDFS_SCHEME = "webhdfs";
   public static final String SWEBHDFS_SCHEME = "swebhdfs";

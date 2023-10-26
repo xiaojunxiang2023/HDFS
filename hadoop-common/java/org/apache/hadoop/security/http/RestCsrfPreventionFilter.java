@@ -15,9 +15,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 import org.eclipse.jetty.server.Response;
@@ -31,8 +28,6 @@ import org.slf4j.LoggerFactory;
  * with every request. In the absense of this header the filter will reject the
  * attempt as a bad request.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class RestCsrfPreventionFilter implements Filter {
 
   private static final Logger LOG =

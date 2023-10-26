@@ -1,7 +1,5 @@
 package org.apache.hadoop.ipc;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * The IdentityProvider creates identities for each schedulable
  * by extracting fields and returning an identity string.
@@ -9,7 +7,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * Implementers will be able to change how schedulers treat
  * Schedulables.
  */
-@InterfaceAudience.Private
 public interface IdentityProvider {
   /**
    * Return the string used for scheduling.

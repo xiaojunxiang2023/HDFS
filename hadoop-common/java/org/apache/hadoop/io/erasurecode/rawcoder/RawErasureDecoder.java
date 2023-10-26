@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
@@ -23,7 +21,6 @@ import java.nio.ByteBuffer;
  * Note it mainly provides decode() calls, which should be stateless and may be
  * made thread-safe in future.
  */
-@InterfaceAudience.Private
 public abstract class RawErasureDecoder {
 
   private final ErasureCoderOptions coderOptions;

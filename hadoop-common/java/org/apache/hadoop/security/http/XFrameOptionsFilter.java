@@ -11,9 +11,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 /**
@@ -21,8 +18,6 @@ import org.apache.hadoop.conf.Configuration;
  * are possible through use of Frames to embed the resources in another
  * application and intercept clicks to accomplish nefarious things.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class XFrameOptionsFilter implements Filter {
   public static final String X_FRAME_OPTIONS = "X-Frame-Options";
   public static final String CUSTOM_HEADER_PARAM = "xframe-options";

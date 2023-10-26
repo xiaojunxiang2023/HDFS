@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * This class tracks changes in the layout version of HDFS.
  * 
@@ -25,7 +23,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * of the change. Please see {@link Feature} for further details.
  * <br>
  */
-@InterfaceAudience.Private
 public class LayoutVersion {
   /**
    * Version in which HDFS-2991 was fixed. This bug caused OP_ADD to

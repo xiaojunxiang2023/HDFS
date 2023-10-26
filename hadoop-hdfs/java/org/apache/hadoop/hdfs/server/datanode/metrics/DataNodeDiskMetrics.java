@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.metrics;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.datanode.DataNode;
@@ -25,8 +22,6 @@ import java.util.Map;
  * This class detects and maintains DataNode disk outliers and their
  * latencies for different ops (metadata, read, write).
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class DataNodeDiskMetrics {
 
     public static final Logger LOG = LoggerFactory.getLogger(

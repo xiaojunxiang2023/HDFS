@@ -1,14 +1,9 @@
 package org.apache.hadoop.metrics2;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.annotation.Metric;
 
 /**
  * Interface to provide immutable metainfo for metrics.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface MetricsInfo {
   /**
    * Typically name corresponds to annotation {@link Metric#value()} or

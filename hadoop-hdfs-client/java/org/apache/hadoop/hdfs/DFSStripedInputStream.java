@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -42,7 +41,6 @@ import static org.apache.hadoop.hdfs.util.IOUtilsClient.updateReadStatistics;
 /**
  * DFSStripedInputStream reads from striped block groups.
  */
-@InterfaceAudience.Private
 public class DFSStripedInputStream extends DFSInputStream {
 
   private static final ByteBufferPool BUFFER_POOL = new ElasticByteBufferPool();

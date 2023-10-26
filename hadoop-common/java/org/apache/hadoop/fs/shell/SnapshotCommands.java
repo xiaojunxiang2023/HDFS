@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.shell;
 
 import java.io.IOException;
 import java.util.LinkedList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathIsNotDirectoryException;
 
@@ -13,8 +10,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 /**
  * Snapshot related operations
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 class SnapshotCommands extends FsCommand {
   private final static String CREATE_SNAPSHOT = "createSnapshot";

@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.tools;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
@@ -49,7 +47,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class provides some DFS administrative access shell commands.
  */
-@InterfaceAudience.Private
 public class DFSAdmin extends FsShell {
 
     private static final Logger LOG = LoggerFactory.getLogger(DFSAdmin.class);

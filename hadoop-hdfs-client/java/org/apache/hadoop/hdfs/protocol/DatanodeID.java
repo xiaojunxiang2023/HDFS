@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
@@ -19,8 +17,6 @@ import java.net.InetSocketAddress;
  * {@link DatanodeID#getXferAddr()} here. Helpers are defined below
  * for each context in which a DatanodeID is used.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DatanodeID implements Comparable<DatanodeID> {
   public static final DatanodeID[] EMPTY_ARRAY = {};
   public static final DatanodeID EMPTY_DATANODE_ID = new DatanodeID("null",

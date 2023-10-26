@@ -11,8 +11,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -31,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * For example,. this can be used to force a service to standby or active
  * mode, or to trigger a health-check.
  */
-@InterfaceAudience.Private
 
 public abstract class HAAdmin extends Configured implements Tool {
 

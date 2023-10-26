@@ -7,14 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Erasure coding schema to housekeeper relevant information.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class ECSchema implements Serializable {
 
   private static final long serialVersionUID = 0x10953aa0;

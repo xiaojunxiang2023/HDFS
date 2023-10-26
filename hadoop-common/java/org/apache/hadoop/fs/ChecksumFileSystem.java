@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.impl.AbstractFSBuilderImpl;
 import org.apache.hadoop.fs.impl.FutureDataInputStreamBuilderImpl;
@@ -37,8 +35,6 @@ import static org.apache.hadoop.fs.impl.StoreImplementationUtils.isProbeForSynca
  * It generates &amp; verifies checksums at the client side.
  *
  *****************************************************************/
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class ChecksumFileSystem extends FilterFileSystem {
   private static final byte[] CHECKSUM_VERSION = new byte[] {'c', 'r', 'c', 0};
   private int bytesPerChecksum = 512;

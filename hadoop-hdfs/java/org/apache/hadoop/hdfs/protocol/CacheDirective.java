@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.protocol;
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.server.namenode.CachePool;
@@ -18,7 +16,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  *
  * This is an implementation class, not part of the public API.
  */
-@InterfaceAudience.Private
 public final class CacheDirective implements IntrusiveCollection.Element {
   private final long id;
   private final String path;

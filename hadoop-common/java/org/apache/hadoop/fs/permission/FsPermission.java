@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputValidation;
 import java.io.Serializable;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.Writable;
@@ -20,8 +17,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A class for file/directory permissions.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FsPermission implements Writable, Serializable,
     ObjectInputValidation {
   private static final Logger LOG = LoggerFactory.getLogger(FsPermission.class);

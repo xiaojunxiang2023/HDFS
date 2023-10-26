@@ -1,8 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Interface for sort algorithms accepting {@link IndexedSortable} items.
  *
@@ -10,8 +7,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * {@link IndexedSortable#compare} and {@link IndexedSortable#swap} items
  * for a range of indices to effect a sort across that range.
  */
-@InterfaceAudience.LimitedPrivate({"MapReduce"})
-@InterfaceStability.Unstable
+// 仅 MapReduce可见
 public interface IndexedSorter {
 
   /**

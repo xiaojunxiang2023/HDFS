@@ -1,12 +1,9 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Encapsulates various options related to how fine-grained data checksums are
  * combined into block-level checksums.
  */
-@InterfaceAudience.Private
 public class BlockChecksumOptions {
   private final BlockChecksumType blockChecksumType;
   private final long stripeLength;

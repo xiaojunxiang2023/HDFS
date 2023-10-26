@@ -7,9 +7,6 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * This is a simple ByteBufferPool which just creates ByteBuffers as needed.
  * It also caches ByteBuffers after they're released.  It will always return
@@ -17,8 +14,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * We don't try to do anything clever here like try to limit the maximum cache
  * size.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public final class ElasticByteBufferPool implements ByteBufferPool {
   private static final class Key implements Comparable<Key> {
     private final int capacity;
@@ -107,8 +102,6 @@ public final class ElasticByteBufferPool implements ByteBufferPool {
    * @param direct Whether the size is returned for direct buffers
    * @return The size
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   public int size(boolean direct) {
     return getBufferTree(direct).size();
   }

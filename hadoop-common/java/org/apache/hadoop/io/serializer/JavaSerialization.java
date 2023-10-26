@@ -6,8 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * <p>
@@ -15,8 +13,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * </p>
  * @see JavaSerializationComparator
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class JavaSerialization implements Serialization<Serializable> {
 
   static class JavaSerializationDeserializer<T extends Serializable>
@@ -79,19 +75,16 @@ public class JavaSerialization implements Serialization<Serializable> {
   }
 
   @Override
-  @InterfaceAudience.Private
   public boolean accept(Class<?> c) {
     return Serializable.class.isAssignableFrom(c);
   }
 
   @Override
-  @InterfaceAudience.Private
   public Deserializer<Serializable> getDeserializer(Class<Serializable> c) {
     return new JavaSerializationDeserializer<Serializable>();
   }
 
   @Override
-  @InterfaceAudience.Private
   public Serializer<Serializable> getSerializer(Class<Serializable> c) {
     return new JavaSerializationSerializer();
   }

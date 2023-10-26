@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -14,8 +11,6 @@ import java.util.NoSuchElementException;
  * If the {@link Iterator} hits the last entry of the map,
  * it will then continue from the first entry.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class CyclicIteration<K, V> implements Iterable<Map.Entry<K, V>> {
     private final NavigableMap<K, V> navigablemap;
     private final NavigableMap<K, V> tailmap;

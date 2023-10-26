@@ -10,8 +10,6 @@ import javax.security.sasl.SaslClientFactory;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
 import javax.security.sasl.SaslServerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
 import org.apache.hadoop.security.FastSaslClientFactory;
 import org.apache.hadoop.security.FastSaslServerFactory;
@@ -25,7 +23,6 @@ import org.apache.hadoop.security.SaslOutputStream;
  * <code>SaslClient</code> classes, which share a lot of their interface, but
  * unfortunately don't share a common superclass.
  */
-@InterfaceAudience.Private
 class SaslParticipant {
 
   // This has to be set as part of the SASL spec, but it don't matter for

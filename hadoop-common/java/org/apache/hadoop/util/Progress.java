@@ -1,9 +1,6 @@
 package org.apache.hadoop.util;
 
 import java.util.ArrayList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +9,7 @@ import org.slf4j.LoggerFactory;
  * execution.  The root is constructed with {@link #Progress()}.  Nodes for
  * sub-phases are created by calling {@link #addPhase()}.
  */
-@InterfaceAudience.LimitedPrivate({"MapReduce"})
-@InterfaceStability.Unstable
+// 仅 MapReduce可见
 public class Progress {
   private static final Logger LOG = LoggerFactory.getLogger(Progress.class);
   private String status = "";

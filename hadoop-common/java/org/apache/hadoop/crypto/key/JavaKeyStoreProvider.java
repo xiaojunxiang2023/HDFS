@@ -1,7 +1,6 @@
 package org.apache.hadoop.crypto.key;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -67,7 +66,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * accessed via the UserProvider. Therefore, this provider won't be used by
  * MapReduce tasks.
  */
-@InterfaceAudience.Private
 public class JavaKeyStoreProvider extends KeyProvider {
   private static final String KEY_METADATA = "KeyMetadata";
   private static final Logger LOG =

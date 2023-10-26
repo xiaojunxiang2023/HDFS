@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */package org.apache.hadoop.hdfs.server.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.Time;
 
 /**
@@ -25,8 +22,6 @@ import org.apache.hadoop.util.Time;
  * the delta between current DataNode usage metrics and the usage metrics
  * captured at the time of the last report.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class DataNodeUsageReportUtil {
 
   private long bytesWritten;

@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.CanSetDropBehind;
 import org.apache.hadoop.fs.StreamCapabilities;
 import org.apache.hadoop.fs.Syncable;
@@ -33,8 +30,6 @@ import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStat
  * Note that while some of this class' methods are synchronized, this is just to
  * match the threadsafety behavior of DFSOutputStream. See HADOOP-11710.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class CryptoOutputStream extends FilterOutputStream implements 
     Syncable, CanSetDropBehind, StreamCapabilities, IOStatisticsSource {
   private final byte[] oneByteBuf = new byte[1];

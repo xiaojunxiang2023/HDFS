@@ -10,9 +10,6 @@ import java.util.LinkedList;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.StringUtils;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.ContentSummary;
@@ -20,8 +17,6 @@ import org.apache.hadoop.fs.ContentSummary;
 /**
  * Get a listing of all files in that match the file patterns.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 
 class Ls extends FsCommand {
   public static void registerCommands(CommandFactory factory) {

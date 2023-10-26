@@ -8,9 +8,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.Text;
@@ -20,8 +17,6 @@ import org.apache.hadoop.io.compress.CompressionCodecFactory;
 /**
  * Simple container class that handles support for compressed fsimage files.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FSImageCompression {
 
   /** Codec to use to save or load image, or null if the image is not compressed */

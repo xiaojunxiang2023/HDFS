@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.qjournal.protocolPB;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocolPB.JournalProtocolPB;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
@@ -59,8 +56,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * {@link JournalProtocol} interfaces to the RPC server implementing
  * {@link JournalProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
     QJournalProtocol, Closeable {
   /** RpcController is not used and hence is set to null */

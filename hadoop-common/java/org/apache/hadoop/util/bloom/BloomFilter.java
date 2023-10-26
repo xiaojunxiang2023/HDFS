@@ -37,9 +37,6 @@ import java.io.IOException;
 
 import java.util.BitSet;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Implements a <i>Bloom filter</i>, as defined by Bloom in 1970.
  * <p>
@@ -60,8 +57,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * 
  * @see <a href="http://portal.acm.org/citation.cfm?id=362692&dl=ACM&coll=portal">Space/Time Trade-Offs in Hash Coding with Allowable Errors</a>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class BloomFilter extends Filter {
   private static final byte[] bitvalues = new byte[] {
     (byte)0x01,

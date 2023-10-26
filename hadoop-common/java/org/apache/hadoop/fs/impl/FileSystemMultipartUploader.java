@@ -36,8 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.BBPartHandle;
 import org.apache.hadoop.fs.BBUploadHandle;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -66,8 +64,6 @@ import static org.apache.hadoop.io.IOUtils.cleanupWithLogger;
  *   and then delete the temp directory.</li>
  * </ul>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FileSystemMultipartUploader extends AbstractMultipartUploader {
 
   private static final Logger LOG = LoggerFactory.getLogger(

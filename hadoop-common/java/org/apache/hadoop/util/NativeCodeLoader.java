@@ -1,7 +1,4 @@
 package org.apache.hadoop.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,8 +8,6 @@ import org.slf4j.LoggerFactory;
  * or the default java implementations where appropriate.
  *  
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class NativeCodeLoader {
 
   private static final Logger LOG =

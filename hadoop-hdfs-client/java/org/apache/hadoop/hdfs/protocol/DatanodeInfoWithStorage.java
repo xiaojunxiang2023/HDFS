@@ -1,11 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DatanodeInfoWithStorage extends DatanodeInfo {
   private final String storageID;
   private final StorageType storageType;

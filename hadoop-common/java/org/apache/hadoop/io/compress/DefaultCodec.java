@@ -3,9 +3,6 @@ package org.apache.hadoop.io.compress;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.compress.zlib.ZlibDecompressor;
@@ -15,9 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
-
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class DefaultCodec implements Configurable, CompressionCodec, DirectDecompressionCodec {
   private static final Logger LOG = LoggerFactory.getLogger(DefaultCodec.class);
   

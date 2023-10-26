@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -50,7 +49,6 @@ import java.security.PrivilegedExceptionAction;
  *  The tool also provides and option to filter open files during the scan.
  *
  */
-@InterfaceAudience.Private
 public class DFSck extends Configured implements Tool {
     private static final String USAGE = "Usage: hdfs fsck <path> "
             + "[-list-corruptfileblocks | "

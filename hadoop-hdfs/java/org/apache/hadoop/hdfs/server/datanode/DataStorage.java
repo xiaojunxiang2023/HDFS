@@ -25,8 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.HardLink;
@@ -54,7 +52,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
  * <p>
  * @see Storage
  */
-@InterfaceAudience.Private
 public class DataStorage extends Storage {
 
   public final static String BLOCK_SUBDIR_PREFIX = "subdir";
@@ -203,8 +200,6 @@ public class DataStorage extends Storage {
    * to add the metadata to {@link DataStorage} so that this prepared volume can
    * be active.
    */
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   static public class VolumeBuilder {
     private DataStorage storage;
     /** Volume level storage directory. */

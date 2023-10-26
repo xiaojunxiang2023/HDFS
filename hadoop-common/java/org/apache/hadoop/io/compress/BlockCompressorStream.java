@@ -3,9 +3,6 @@ package org.apache.hadoop.io.compress;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A {@link org.apache.hadoop.io.compress.CompressorStream} which works
  * with 'block-based' based compression algorithms, as opposed to 
@@ -16,8 +13,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * {@link org.apache.hadoop.io.compress.Compressor} requires buffering to
  * effect meaningful compression, it is responsible for it.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class BlockCompressorStream extends CompressorStream {
 
   // The 'maximum' size of input data to be compressed, to account

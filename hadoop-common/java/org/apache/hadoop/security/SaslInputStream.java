@@ -11,9 +11,6 @@ import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +21,7 @@ import org.slf4j.LoggerFactory;
  * (or SaslClient) object. The SaslServer (or SaslClient) object must be fully
  * initialized before being used by a SaslInputStream.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class SaslInputStream extends InputStream implements ReadableByteChannel {
   public static final Logger LOG =
       LoggerFactory.getLogger(SaslInputStream.class);

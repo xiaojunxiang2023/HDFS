@@ -16,8 +16,6 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.CacheDirective;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.CachedBlocksList.Type;
@@ -46,7 +44,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * The CacheReplicationMonitor does a full scan when the NameNode first
  * starts up, and at configurable intervals afterwards.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
 public class CacheReplicationMonitor extends Thread implements Closeable {
 
   private static final Logger LOG =

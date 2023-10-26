@@ -15,12 +15,9 @@
  * the License.
  */package org.apache.hadoop.hdfs.server.namenode.startupprogress;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Indicates run status of a {@link Phase}.
  */
-@InterfaceAudience.Private
 public enum Status {
   /**
    * The phase has not yet started running.

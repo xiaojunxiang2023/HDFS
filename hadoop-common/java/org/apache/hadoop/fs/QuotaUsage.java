@@ -2,14 +2,9 @@ package org.apache.hadoop.fs;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.StringUtils;
 
 /** Store the quota usage of a directory. */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class QuotaUsage {
   private long fileAndDirectoryCount;
   // Make the followings protected so that

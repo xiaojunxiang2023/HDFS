@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.common.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
@@ -30,8 +27,6 @@ import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
  * Dispatching block replica moves between datanodes to satisfy the storage
  * policy.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockDispatcher {
     private static final Logger LOG = LoggerFactory
             .getLogger(BlockDispatcher.class);

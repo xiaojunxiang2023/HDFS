@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.ha.HAServiceStatus;
@@ -29,16 +26,8 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
-/**
- * This class is the client side translator to translate the requests made on
- * {@link HAServiceProtocol} interfaces to the RPC server implementing
- * {@link HAServiceProtocolPB}.
- */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class HAServiceProtocolClientSideTranslatorPB implements
     HAServiceProtocol, Closeable, ProtocolTranslator {
-  /** RpcController is not used and hence is set to null */
   private final static RpcController NULL_CONTROLLER = null;
   private final static MonitorHealthRequestProto MONITOR_HEALTH_REQ = 
       MonitorHealthRequestProto.newBuilder().build();
@@ -47,14 +36,6 @@ public class HAServiceProtocolClientSideTranslatorPB implements
   
   private final HAServiceProtocolPB rpcProxy;
 
-  public HAServiceProtocolClientSideTranslatorPB(InetSocketAddress addr,
-      Configuration conf) throws IOException {
-    RPC.setProtocolEngine(conf, HAServiceProtocolPB.class,
-        ProtobufRpcEngine2.class);
-    rpcProxy = RPC.getProxy(HAServiceProtocolPB.class,
-        RPC.getProtocolVersion(HAServiceProtocolPB.class), addr, conf);
-  }
-  
   public HAServiceProtocolClientSideTranslatorPB(
       InetSocketAddress addr, Configuration conf,
       SocketFactory socketFactory, int timeout) throws IOException {

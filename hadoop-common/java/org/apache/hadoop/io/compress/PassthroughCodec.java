@@ -6,9 +6,6 @@ import java.io.OutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 
@@ -35,8 +32,6 @@ import org.apache.hadoop.conf.Configuration;
  * to enable this. <i>Do not retrofit splitting to this class.</i>.
  *
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class PassthroughCodec
     implements Configurable, CompressionCodec {
 

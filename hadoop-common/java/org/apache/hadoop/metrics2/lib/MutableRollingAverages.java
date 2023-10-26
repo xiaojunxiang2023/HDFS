@@ -15,8 +15,6 @@ import java.util.function.Function;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.impl.MetricsCollectorImpl;
@@ -39,8 +37,6 @@ import static org.apache.hadoop.metrics2.lib.Interns.*;
  * used to compute final average, which is called rolling average.
  * </p>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class MutableRollingAverages extends MutableMetric implements Closeable {
 
   private MutableRatesWithAggregation innerMetrics =

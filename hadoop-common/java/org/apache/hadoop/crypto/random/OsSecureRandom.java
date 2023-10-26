@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IOUtils;
@@ -21,7 +19,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
  * A Random implementation that uses random bytes sourced from the
  * operating system.
  */
-@InterfaceAudience.Private
 public class OsSecureRandom extends Random implements Closeable, Configurable {
   public static final Logger LOG =
       LoggerFactory.getLogger(OsSecureRandom.class);

@@ -17,15 +17,10 @@
  */
 package org.apache.hadoop.hdfs.server.datanode.checker;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Defines the outcomes of running a disk check operation against a
  * volume.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public enum VolumeCheckResult {
     HEALTHY(1),
     DEGRADED(2),

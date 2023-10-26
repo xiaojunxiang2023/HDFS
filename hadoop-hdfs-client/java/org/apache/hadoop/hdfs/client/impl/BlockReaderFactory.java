@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.hadoop.thirdparty.com.google.common.io.ByteArrayDataOutput;
 import org.apache.hadoop.thirdparty.com.google.common.io.ByteStreams;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.BlockReader;
@@ -67,7 +66,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility class to create BlockReader implementations.
  */
-@InterfaceAudience.Private
 public class BlockReaderFactory implements ShortCircuitReplicaCreator {
   static final Logger LOG = LoggerFactory.getLogger(BlockReaderFactory.class);
   private static final int SMALL_BUFFER_SIZE = 512;

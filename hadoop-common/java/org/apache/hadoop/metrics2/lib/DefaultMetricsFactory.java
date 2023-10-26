@@ -1,12 +1,9 @@
 package org.apache.hadoop.metrics2.lib;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.metrics2.MetricsException;
 
 /**
  * Experimental interface to extend metrics dynamically
  */
-@InterfaceAudience.Private
 public enum DefaultMetricsFactory {
   INSTANCE; // the singleton
 

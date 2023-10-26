@@ -1,8 +1,6 @@
 package org.apache.hadoop.crypto.random;
 
 import java.util.Random;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.NativeCodeLoader;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -24,7 +22,6 @@ import org.slf4j.LoggerFactory;
  * See https://wiki.openssl.org/index.php/Random_Numbers
  * See http://en.wikipedia.org/wiki/RdRand
  */
-@InterfaceAudience.Private
 public class OpensslSecureRandom extends Random {
   private static final long serialVersionUID = -7828193502768789584L;
   private static final Logger LOG =

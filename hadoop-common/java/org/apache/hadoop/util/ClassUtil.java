@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-
-@InterfaceAudience.Private
 public class ClassUtil {
   /** 
    * Find a jar that contains a class of the same name, if any.

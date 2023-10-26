@@ -1,9 +1,6 @@
 package org.apache.hadoop.io.compress;
 
 import java.util.*;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.Path;
@@ -15,8 +12,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A factory that will find the correct codec for a given filename.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class CompressionCodecFactory {
 
   public static final Logger LOG =

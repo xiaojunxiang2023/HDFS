@@ -3,15 +3,12 @@ package org.apache.hadoop.ipc;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A class defining a set of static helper methods to provide conversion between
  * bytes and string for UUID-based client Id.
  */
-@InterfaceAudience.Private
 public class ClientId {
   
   /** The byte array of a UUID should be 16 */ 

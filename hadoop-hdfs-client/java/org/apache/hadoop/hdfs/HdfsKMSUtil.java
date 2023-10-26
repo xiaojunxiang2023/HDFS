@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.security.GeneralSecurityException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CipherSuite;
 import org.apache.hadoop.crypto.CryptoCodec;
@@ -32,8 +29,6 @@ import org.apache.hadoop.util.KMSUtil;
  * Utility class for key provider related methods in hdfs client package.
  *
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class HdfsKMSUtil {
   private static final String DFS_KMS_PREFIX = "dfs-kms-";
   private static String keyProviderUriKeyName =

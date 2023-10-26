@@ -8,9 +8,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 
@@ -19,8 +16,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SOCKS_SE
 /**
  * Specialized SocketFactory to create sockets with a SOCKS proxy
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class SocksSocketFactory extends SocketFactory implements
     Configurable {
 

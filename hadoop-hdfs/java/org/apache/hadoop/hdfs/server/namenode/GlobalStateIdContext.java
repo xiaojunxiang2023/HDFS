@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.ObserverReadProxyProvider;
@@ -21,8 +18,6 @@ import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto;
  * This is the server side implementation responsible for passing
  * state alignment info to clients.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 class GlobalStateIdContext implements AlignmentContext {
   /**
    * Estimated number of journal transactions a typical NameNode can execute

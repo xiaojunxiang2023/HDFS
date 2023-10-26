@@ -1,8 +1,6 @@
 package org.apache.hadoop.crypto.key;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.DelegationTokenIssuer;
@@ -44,8 +42,6 @@ public class KeyProviderDelegationTokenExtension extends
 
     // Do NOT call this. Only intended for internal use.
     @VisibleForTesting
-    @InterfaceAudience.Private
-    @InterfaceStability.Unstable
     Token<?> selectDelegationToken(Credentials creds);
   }
   

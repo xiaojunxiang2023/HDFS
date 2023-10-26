@@ -1,8 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,8 +20,6 @@ import java.util.Map;
  * <p>
  * It parses HTTP client connections and recreates the exception.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class HttpExceptionUtils {
 
   public static final String ERROR_JSON = "RemoteException";

@@ -1,16 +1,12 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.IOException;
 import java.util.Arrays;
 
 /**
  * This class provides utilities for working with CRCs.
  */
-@InterfaceAudience.LimitedPrivate({"Common", "HDFS", "MapReduce", "Yarn"})
-@InterfaceStability.Unstable
+// Yarn 和 MapReduce 也可见
 public final class CrcUtil {
   public static final int MULTIPLICATIVE_IDENTITY = 0x80000000;
   public static final int GZIP_POLYNOMIAL = 0xEDB88320;

@@ -1,13 +1,8 @@
 package org.apache.hadoop.metrics2;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A visitor interface for metrics
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface MetricsVisitor {
   /**
    * Callback for integer value gauges

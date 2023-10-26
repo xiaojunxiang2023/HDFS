@@ -9,8 +9,6 @@ import org.apache.avro.io.DatumWriter;
 import org.apache.avro.reflect.ReflectData;
 import org.apache.avro.reflect.ReflectDatumReader;
 import org.apache.avro.reflect.ReflectDatumWriter;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Serialization for Avro Reflect classes. For a class to be accepted by this 
@@ -20,8 +18,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  *
  */
 @SuppressWarnings("unchecked")
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class AvroReflectSerialization extends AvroSerialization<Object>{
 
   /**
@@ -29,12 +25,9 @@ public class AvroReflectSerialization extends AvroSerialization<Object>{
    * deserialized using this class. Multiple packages can be specified using 
    * comma-separated list.
    */
-  @InterfaceAudience.Private
   public static final String AVRO_REFLECT_PACKAGES = "avro.reflect.pkgs";
 
   private Set<String> packages; 
-
-  @InterfaceAudience.Private
   @Override
   public synchronized boolean accept(Class<?> c) {
     if (packages == null) {
@@ -53,8 +46,6 @@ public class AvroReflectSerialization extends AvroSerialization<Object>{
       }
     }
   }
-
-  @InterfaceAudience.Private
   @Override
   public DatumReader getReader(Class<Object> clazz) {
     try {
@@ -63,14 +54,10 @@ public class AvroReflectSerialization extends AvroSerialization<Object>{
       throw new RuntimeException(e);
     }
   }
-
-  @InterfaceAudience.Private
   @Override
   public Schema getSchema(Object t) {
     return ReflectData.get().getSchema(t.getClass());
   }
-
-  @InterfaceAudience.Private
   @Override
   public DatumWriter getWriter(Class<Object> clazz) {
     return new ReflectDatumWriter();

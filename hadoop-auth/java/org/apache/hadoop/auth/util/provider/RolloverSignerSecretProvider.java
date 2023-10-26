@@ -6,8 +6,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 
 // 对 SignerSecretProvider进行扩展，可以滚动
-@InterfaceStability.Unstable
-@InterfaceAudience.Private
+
 public abstract class RolloverSignerSecretProvider  extends SignerSecretProvider {
 
   @VisibleForTesting

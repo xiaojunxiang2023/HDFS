@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FsShell;
@@ -18,8 +16,6 @@ import org.apache.hadoop.fs.StorageType;
 /**
  * Count the number of directories, files, bytes, quota, and remaining quota.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 public class Count extends FsCommand {
   /**
@@ -207,7 +203,6 @@ public class Count extends FsCommand {
    * Should quotas get shown as part of the report?
    * @return if quotas should be shown then true otherwise false
    */
-  @InterfaceAudience.Private
   boolean isShowQuotas() {
     return showQuotas;
   }
@@ -216,7 +211,6 @@ public class Count extends FsCommand {
    * Should sizes be shown in human readable format rather than bytes?
    * @return true if human readable format
    */
-  @InterfaceAudience.Private
   boolean isHumanReadable() {
     return humanReadable;
   }
@@ -225,7 +219,6 @@ public class Count extends FsCommand {
    * should print quota by storage types
    * @return true if enables quota by storage types
    */
-  @InterfaceAudience.Private
   boolean isShowQuotabyType() {
     return showQuotabyType;
   }
@@ -234,7 +227,6 @@ public class Count extends FsCommand {
    * show specified storage types
    * @return specified storagetypes
    */
-  @InterfaceAudience.Private
   List<StorageType> getStorageTypes() {
     return storageTypes;
   }

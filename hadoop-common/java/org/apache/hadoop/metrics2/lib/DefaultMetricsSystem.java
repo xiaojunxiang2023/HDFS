@@ -2,9 +2,6 @@ package org.apache.hadoop.metrics2.lib;
 
 import java.util.concurrent.atomic.AtomicReference;
 import javax.management.ObjectName;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.impl.MetricsSystemImpl;
@@ -17,8 +14,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * initialization the processes call {@link DefaultMetricsSystem#init(String)}
  * to initialize the {@link MetricsSystem}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public enum DefaultMetricsSystem {
   INSTANCE; // the singleton
 
@@ -65,8 +60,6 @@ public enum DefaultMetricsSystem {
       sourceNames.map.clear();
     }
   }
-
-  @InterfaceAudience.Private
   public static MetricsSystem setInstance(MetricsSystem ms) {
     return INSTANCE.setImpl(ms);
   }
@@ -86,23 +79,15 @@ public enum DefaultMetricsSystem {
   public static boolean inMiniClusterMode() {
     return INSTANCE.miniClusterMode;
   }
-
-  @InterfaceAudience.Private
   public static ObjectName newMBeanName(String name) {
     return INSTANCE.newObjectName(name);
   }
-
-  @InterfaceAudience.Private
   public static void removeMBeanName(ObjectName name) {
     INSTANCE.removeObjectName(name.toString());
   }
-
-  @InterfaceAudience.Private
   public static void removeSourceName(String name) {
     INSTANCE.removeSource(name);
   }
-
-  @InterfaceAudience.Private
   public static String sourceName(String name, boolean dupOK) {
     return INSTANCE.newSourceName(name, dupOK);
   }

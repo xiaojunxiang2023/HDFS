@@ -17,8 +17,6 @@
  */package org.apache.hadoop.hdfs.server.datanode;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.HardLink;
@@ -71,8 +69,6 @@ import static org.apache.hadoop.hdfs.server.datanode.FileIoProvider.OPERATION.*;
  * move/rename/list. They exist to retain behavior compatibility for existing
  * code.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FileIoProvider {
   public static final Logger LOG = LoggerFactory.getLogger(
       FileIoProvider.class);

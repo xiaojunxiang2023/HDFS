@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.mover;
 
 import org.apache.commons.cli.*;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -48,8 +47,6 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-@InterfaceAudience.Private
 public class Mover {
     static final Logger LOG = LoggerFactory.getLogger(Mover.class);
     private final Dispatcher dispatcher;

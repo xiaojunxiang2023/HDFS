@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -17,7 +15,6 @@ import java.util.Map.Entry;
  * <li>Heap saved if the file name objects are reused</li>
  * </ul>
  */
-@InterfaceAudience.Private
 public class NameDistributionVisitor extends TextWriterImageVisitor {
     HashMap<String, Integer> counts = new HashMap<String, Integer>();
 

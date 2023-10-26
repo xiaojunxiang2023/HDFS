@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * This class implements a "table listing" with column headers.
@@ -17,7 +16,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * pool3  andrew  andrew  rwxr-xr-x     100
  *
  */
-@InterfaceAudience.Private
 public class TableListing {
   public enum Justification {
     LEFT,

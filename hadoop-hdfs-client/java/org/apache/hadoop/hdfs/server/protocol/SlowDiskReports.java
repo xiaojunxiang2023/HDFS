@@ -17,8 +17,6 @@
  */package org.apache.hadoop.hdfs.server.protocol;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,8 +29,6 @@ import java.util.Map;
  * The wire representation of this structure is a list of
  * SlowDiskReportProto messages.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class SlowDiskReports {
   /**
    * A map from the DataNode Disk's BasePath to its mean metadata op latency,

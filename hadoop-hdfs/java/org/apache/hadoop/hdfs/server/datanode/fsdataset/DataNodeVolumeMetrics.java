@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.metrics2.MetricsSystem;
@@ -15,8 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * This class is for maintaining Datanode Volume IO related statistics and
  * publishing them through the metrics interfaces.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 @Metrics(name = "DataNodeVolume", about = "DataNode Volume metrics",
         context = "dfs")
 public class DataNodeVolumeMetrics {

@@ -3,9 +3,6 @@ package org.apache.hadoop.fs;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Builder for input streams and subclasses whose return value is
  * actually a completable future: this allows for better asynchronous
@@ -21,8 +18,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * {@link IllegalArgumentException} will be thrown.
  *
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface FutureDataInputStreamBuilder
     extends FSBuilder<CompletableFuture<FSDataInputStream>, FutureDataInputStreamBuilder> {
 

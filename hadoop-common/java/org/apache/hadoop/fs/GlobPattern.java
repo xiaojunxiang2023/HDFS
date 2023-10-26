@@ -3,14 +3,9 @@ package org.apache.hadoop.fs;
 import com.google.re2j.Pattern;
 import com.google.re2j.PatternSyntaxException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A class for POSIX glob pattern with brace expansions.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class GlobPattern {
   private static final char BACKSLASH = '\\';
   private Pattern compiled;

@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.CachedBlocksList;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.CachedBlocksList.Type;
@@ -16,7 +14,6 @@ import org.apache.hadoop.util.LightWeightGSet.LinkedElement;
 /**
  * Represents a cached block.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
 public final class CachedBlock implements Element, 
     LightWeightGSet.LinkedElement {
   private static final Object[] EMPTY_ARRAY = new Object[0];

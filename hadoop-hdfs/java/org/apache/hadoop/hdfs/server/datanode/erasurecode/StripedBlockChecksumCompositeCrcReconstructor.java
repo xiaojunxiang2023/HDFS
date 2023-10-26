@@ -1,15 +1,12 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.util.CrcComposer;
 
 /**
  * Computes striped composite CRCs over reconstructed chunk CRCs.
  */
-@InterfaceAudience.Private
 public class StripedBlockChecksumCompositeCrcReconstructor
     extends StripedBlockChecksumReconstructor {
   private final int ecPolicyCellSize;

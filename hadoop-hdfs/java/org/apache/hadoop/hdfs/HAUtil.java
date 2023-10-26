@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -43,8 +42,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.slf4j.LoggerFactory;
-
-@InterfaceAudience.Private
 public class HAUtil {
 
   public static final org.slf4j.Logger LOG =

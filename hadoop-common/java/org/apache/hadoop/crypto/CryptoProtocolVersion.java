@@ -1,11 +1,8 @@
 package org.apache.hadoop.crypto;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Versions of the client/server protocol used for HDFS encryption.
  */
-@InterfaceAudience.Private
 public enum CryptoProtocolVersion {
   UNKNOWN("Unknown", 1),
   ENCRYPTION_ZONES("Encryption zones", 2);

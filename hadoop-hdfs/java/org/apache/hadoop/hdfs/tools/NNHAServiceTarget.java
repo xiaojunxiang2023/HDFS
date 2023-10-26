@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.tools;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.BadFencingConfigurationException;
 import org.apache.hadoop.ha.HAServiceTarget;
@@ -23,7 +21,6 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMESERVICES;
  * One of the NN NameNodes acting as the target of an administrative command
  * (e.g. failover).
  */
-@InterfaceAudience.Private
 public class NNHAServiceTarget extends HAServiceTarget {
 
     // Keys added to the fencing script environment

@@ -1,11 +1,8 @@
 package org.apache.hadoop.io.erasurecode;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Erasure coder configuration that maintains schema info and coder options.
  */
-@InterfaceAudience.Private
 public final class ErasureCoderOptions {
 
   private final int numDataUnits;

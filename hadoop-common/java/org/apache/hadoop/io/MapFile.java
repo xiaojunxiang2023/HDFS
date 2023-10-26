@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -38,8 +36,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAP_INDEX_SK
  * a new file.  Sorting large change lists can be done with {@link
  * SequenceFile.Sorter}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class MapFile {
   private static final Logger LOG = LoggerFactory.getLogger(MapFile.class);
 

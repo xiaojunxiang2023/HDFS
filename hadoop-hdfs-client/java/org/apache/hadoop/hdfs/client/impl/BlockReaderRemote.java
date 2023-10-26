@@ -10,8 +10,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.util.EnumSet;
 import java.util.UUID;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.hdfs.BlockReader;
@@ -68,7 +66,6 @@ import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_BLOC
  * implementation. It is renamed to BlockReaderRemote from BlockReaderRemote2.
  *
  */
-@InterfaceAudience.Private
 public class BlockReaderRemote implements BlockReader {
 
   static final Logger LOG = LoggerFactory.getLogger(BlockReaderRemote.class);

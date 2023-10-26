@@ -1,11 +1,8 @@
 package org.apache.hadoop.metrics2.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Helper to compute running sample stats
  */
-@InterfaceAudience.Private
 public class SampleStat {
   private final MinMax minmax = new MinMax();
   private long numSamples = 0;

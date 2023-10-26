@@ -1,13 +1,8 @@
 package org.apache.hadoop.fs.permission;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Specifies the type of an ACL entry.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public enum AclEntryType {
   /**
    * An ACL entry applied to a specific user.  These ACL entries can be unnamed,
@@ -40,7 +35,6 @@ public enum AclEntryType {
   OTHER;
 
   @Override
-  @InterfaceStability.Unstable
   public String toString() {
     // This currently just delegates to the stable string representation, but it
     // is permissible for the output of this method to change across versions.

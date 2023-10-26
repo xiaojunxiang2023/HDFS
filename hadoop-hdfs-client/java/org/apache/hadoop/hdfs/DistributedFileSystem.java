@@ -7,8 +7,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.commons.collections.list.TreeList;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.crypto.key.KeyProviderTokenIssuer;
@@ -124,8 +122,7 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * DistributedFileSystem.
  *
  *****************************************************************/
-@InterfaceAudience.LimitedPrivate({ "MapReduce", "HBase" })
-@InterfaceStability.Unstable
+// 仅MapReduce 也可见
 public class DistributedFileSystem extends FileSystem
     implements KeyProviderTokenIssuer, BatchListingOperations {
   private Path workingDir;
@@ -549,27 +546,6 @@ public class DistributedFileSystem extends FileSystem
     }.resolve(this, absF);
   }
 
-  /**
-   * Same as
-   * {@link #create(Path, FsPermission, EnumSet<CreateFlag>, int, short, long,
-   * Progressable, ChecksumOpt)} with a few additions. First, addition of
-   * favoredNodes that is a hint to where the namenode should place the file
-   * blocks. The favored nodes hint is not persisted in HDFS. Hence it may be
-   * honored at the creation time only. And with favored nodes, blocks will be
-   * pinned on the datanodes to prevent balancing move the block. HDFS could
-   * move the blocks during replication, to move the blocks from favored nodes.
-   * A value of null means no favored nodes for this create.
-   * The second addition is ecPolicyName. A non-null ecPolicyName specifies an
-   * explicit erasure coding policy for this file, overriding the inherited
-   * policy. A null ecPolicyName means the file will inherit its EC policy or
-   * replication policy from its ancestor (the default).
-   * ecPolicyName and SHOULD_REPLICATE CreateFlag are mutually exclusive. It's
-   * invalid to set both SHOULD_REPLICATE and a non-null ecPolicyName.
-   * The third addition is storagePolicyName. A non-null storage Policy
-   * specifies an explicit storage policy for this file, overriding the
-   * inherited policy.
-   *
-   */
   private HdfsDataOutputStream create(final Path f,
       final FsPermission permission, final EnumSet<CreateFlag> flag,
       final int bufferSize, final short replication, final long blockSize,
@@ -618,17 +594,6 @@ public class DistributedFileSystem extends FileSystem
     return safelyCreateWrappedOutputStream(dfsos);
   }
 
-  /**
-   * Similar to {@link #create(Path, FsPermission, EnumSet, int, short, long,
-   * Progressable, ChecksumOpt, InetSocketAddress[], String)}, it provides a
-   * HDFS-specific version of {@link #createNonRecursive(Path, FsPermission,
-   * EnumSet, int, short, long, Progressable)} with a few additions.
-   *
-   * @see #create(Path, FsPermission, EnumSet, int, short, long, Progressable,
-   * ChecksumOpt, InetSocketAddress[], String) for the descriptions of
-   * additional parameters, i.e., favoredNodes, ecPolicyName and
-   * storagePolicyName.
-   */
   private HdfsDataOutputStream createNonRecursive(final Path f,
       final FsPermission permission, final EnumSet<CreateFlag> flag,
       final int bufferSize, final short replication, final long blockSize,
@@ -1509,8 +1474,6 @@ public class DistributedFileSystem extends FileSystem
   public String toString() {
     return "DFS[" + dfs + "]";
   }
-
-  @InterfaceAudience.Private
   @VisibleForTesting
   public DFSClient getClient() {
     return dfs;

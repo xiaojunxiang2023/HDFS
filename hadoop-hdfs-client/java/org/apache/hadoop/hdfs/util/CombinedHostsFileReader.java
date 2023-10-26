@@ -14,9 +14,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
 
 import org.slf4j.Logger;
@@ -35,8 +32,6 @@ import org.slf4j.LoggerFactory;
  *   {"hostName": "host3", "port": 0, "adminState": "DECOMMISSIONED"}
  * ]
  */
-@InterfaceAudience.LimitedPrivate({"HDFS"})
-@InterfaceStability.Unstable
 public final class CombinedHostsFileReader {
 
   public static final Logger LOG =

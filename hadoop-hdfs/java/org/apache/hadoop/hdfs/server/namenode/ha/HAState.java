@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.ServiceFailedException;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
@@ -10,7 +8,6 @@ import org.apache.hadoop.util.Time;
 /**
  * Namenode base state to implement state machine pattern.
  */
-@InterfaceAudience.Private
 abstract public class HAState {
   protected final HAServiceState state;
   private long lastHATransitionTime;

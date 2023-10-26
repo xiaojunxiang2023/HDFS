@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.protocol;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.BatchedRemoteIterator;
 import org.apache.hadoop.fs.InvalidRequestException;
 import org.apache.hadoop.ipc.RemoteException;
@@ -16,8 +13,6 @@ import org.apache.hadoop.tracing.Tracer;
  * CacheDirectiveIterator is a remote iterator that iterates cache directives.
  * It supports retrying in case of namenode failover.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class CacheDirectiveIterator
     extends BatchedRemoteIterator<Long, CacheDirectiveEntry> {
 

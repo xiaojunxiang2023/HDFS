@@ -1,7 +1,6 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 
 import java.nio.ByteBuffer;
@@ -10,7 +9,6 @@ import java.util.Arrays;
 /**
  * Helpful utilities for implementing some raw erasure coders.
  */
-@InterfaceAudience.Private
 public final class CoderUtil {
 
   private CoderUtil() {

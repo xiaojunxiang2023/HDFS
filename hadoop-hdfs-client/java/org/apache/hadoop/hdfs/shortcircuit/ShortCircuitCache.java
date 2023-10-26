@@ -18,7 +18,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf.ShortCircuitConf;
 import org.apache.hadoop.hdfs.net.DomainPeer;
@@ -51,7 +50,6 @@ import org.slf4j.LoggerFactory;
  * These things include: memory-mapped regions, file descriptors, and shared
  * memory areas for communicating with the DataNode.
  */
-@InterfaceAudience.Private
 public class ShortCircuitCache implements Closeable {
   public static final Logger LOG = LoggerFactory.getLogger(
       ShortCircuitCache.class);

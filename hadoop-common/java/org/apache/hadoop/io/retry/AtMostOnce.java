@@ -5,7 +5,6 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Used to mark certain methods of an interface with at-most-once semantics.
@@ -18,7 +17,6 @@ import org.apache.hadoop.classification.InterfaceStability;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@InterfaceStability.Evolving
 public @interface AtMostOnce {
 
 }

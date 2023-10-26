@@ -8,16 +8,13 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 
 import org.apache.avro.reflect.Nullable;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 
 /**
  * Key used for generating and verifying delegation tokens
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class DelegationKey implements Writable {
   private int keyId;
   private long expiryDate;

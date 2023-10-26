@@ -5,11 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class DecompressorStream extends CompressionInputStream {
   /**
    * The maximum input buffer size.

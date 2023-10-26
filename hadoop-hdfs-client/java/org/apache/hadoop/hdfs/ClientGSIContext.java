@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ipc.AlignmentContext;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto;
@@ -15,8 +12,6 @@ import java.util.concurrent.atomic.LongAccumulator;
  * This is the client side implementation responsible for receiving
  * state alignment info from server(s).
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ClientGSIContext implements AlignmentContext {
 
   private final LongAccumulator lastSeenStateId =

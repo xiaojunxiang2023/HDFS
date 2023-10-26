@@ -1,9 +1,5 @@
 package org.apache.hadoop.service.launcher;
 
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Common Exit codes.
  * <p>
@@ -22,8 +18,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  *   60+  : application specific error codes
  * </pre>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface LauncherExitCodes {
 
   /**

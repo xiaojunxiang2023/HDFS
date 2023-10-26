@@ -16,15 +16,10 @@
  * limitations under the License.
  */package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A class that allows DataNode to communicate information about
  * usage statistics/metrics to NameNode.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class DataNodeUsageReport {
 
   private long bytesWrittenPerSec;

@@ -1,8 +1,5 @@
 package org.apache.hadoop.io;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
@@ -24,8 +21,7 @@ import java.io.DataInputStream;
  * </pre>
  *  
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class DataInputBuffer extends DataInputStream {
   private static class Buffer extends ByteArrayInputStream {
     public Buffer() {

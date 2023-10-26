@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.HAServiceTarget;
 import org.apache.hadoop.ha.HealthMonitor;
@@ -34,8 +33,6 @@ import java.util.List;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KEYTAB_FILE_KEY;
 import static org.apache.hadoop.util.ExitUtil.terminate;
-
-@InterfaceAudience.Private
 public class DFSZKFailoverController extends ZKFailoverController {
 
     private static final Logger LOG =

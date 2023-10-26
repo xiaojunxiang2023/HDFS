@@ -9,9 +9,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Future IO Helper methods.
  * <p>
@@ -29,8 +26,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * code inside futures.
  * </p>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public final class FutureIO {
 
   private FutureIO() {

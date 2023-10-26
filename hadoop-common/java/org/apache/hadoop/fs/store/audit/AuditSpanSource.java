@@ -3,14 +3,9 @@ package org.apache.hadoop.fs.store.audit;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A source of audit spans.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface AuditSpanSource<T extends AuditSpan> {
 
   /**

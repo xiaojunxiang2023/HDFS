@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
@@ -13,7 +11,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * {@link INode} with additional fields including id, name, permission,
  * access time and modification time.
  */
-@InterfaceAudience.Private
 public abstract class INodeWithAdditionalFields extends INode
     implements LinkedElement {
   // Note: this format is used both in-memory and on-disk.  Changes will be

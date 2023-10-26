@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.util;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.thirdparty.com.google.common.io.Files;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.Longs;
@@ -21,7 +19,6 @@ import java.nio.channels.FileChannel;
  * This class also differs in that it stores the value as binary data instead
  * of a textual string.
  */
-@InterfaceAudience.Private
 public class BestEffortLongFile implements Closeable {
 
     private final File file;

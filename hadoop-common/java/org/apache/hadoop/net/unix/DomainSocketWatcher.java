@@ -2,8 +2,6 @@ package org.apache.hadoop.net.unix;
 
 import java.io.Closeable;
 import java.io.EOFException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.IOUtils;
 
 import java.io.IOException;
@@ -31,7 +29,6 @@ import org.slf4j.LoggerFactory;
  *
  * See {@link DomainSocket} for more information about UNIX domain sockets.
  */
-@InterfaceAudience.LimitedPrivate("HDFS")
 public final class DomainSocketWatcher implements Closeable {
   static {
     if (SystemUtils.IS_OS_WINDOWS) {

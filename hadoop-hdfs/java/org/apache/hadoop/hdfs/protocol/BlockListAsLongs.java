@@ -10,9 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs.BlockReportReplica;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.Replica;
@@ -22,9 +19,6 @@ import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.thirdparty.protobuf.CodedInputStream;
 import org.apache.hadoop.thirdparty.protobuf.CodedOutputStream;
 import org.apache.hadoop.thirdparty.protobuf.WireFormat;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
   private final static int CHUNK_SIZE = 64*1024; // 64K
   private static long[] EMPTY_LONGS = new long[]{0, 0};
@@ -502,8 +496,6 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
       };
     }
   }
-  
-  @InterfaceAudience.Private
   public static class BlockReportReplica extends Block implements Replica {
     private ReplicaState state;
     private BlockReportReplica() {

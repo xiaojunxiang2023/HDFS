@@ -23,8 +23,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.SlowPeerReports;
@@ -51,8 +49,6 @@ import java.util.concurrent.TimeUnit;
  * This class aggregates information from {@link SlowPeerReports} received via
  * heartbeats.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class SlowPeerTracker {
   public static final Logger LOG =
       LoggerFactory.getLogger(SlowPeerTracker.class);

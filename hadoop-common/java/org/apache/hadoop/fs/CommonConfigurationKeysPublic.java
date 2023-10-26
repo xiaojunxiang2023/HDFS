@@ -1,6 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.crypto.CipherSuite;
 import org.apache.hadoop.crypto.JceAesCtrCryptoCodec;
 import org.apache.hadoop.crypto.OpensslAesCtrCryptoCodec;
@@ -14,8 +12,6 @@ import org.apache.hadoop.crypto.OpensslAesCtrCryptoCodec;
  * instead)
  *
  */
-
-@InterfaceAudience.Public
 public class CommonConfigurationKeysPublic {
   
   // The Keys

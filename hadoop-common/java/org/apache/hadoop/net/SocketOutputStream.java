@@ -10,9 +10,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.WritableByteChannel;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.LongWritable;
 
 /**
@@ -24,8 +21,7 @@ import org.apache.hadoop.io.LongWritable;
  * llegalBlockingModeException.
  * Please use {@link SocketInputStream} for reading.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Unstable
+// MapReduce也可见
 public class SocketOutputStream extends OutputStream 
                                 implements WritableByteChannel {                                
   

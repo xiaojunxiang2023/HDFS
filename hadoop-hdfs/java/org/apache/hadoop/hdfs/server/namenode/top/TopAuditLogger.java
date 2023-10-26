@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode.top;
 import java.net.InetAddress;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -20,7 +19,6 @@ import static org.apache.hadoop.hdfs.server.namenode.top.metrics.TopMetrics.TOPM
  * An {@link AuditLogger} that sends logged data directly to the metrics
  * systems. It is used when the top service is used directly by the name node
  */
-@InterfaceAudience.Private
 public class TopAuditLogger implements AuditLogger {
   public static final Logger LOG = LoggerFactory.getLogger(TopAuditLogger.class);
 

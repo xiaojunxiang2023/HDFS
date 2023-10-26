@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
 import org.apache.commons.text.WordUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CacheFlag;
@@ -27,7 +26,6 @@ import java.util.List;
 /**
  * This class implements command-line operations on the HDFS Cache.
  */
-@InterfaceAudience.Private
 public class CacheAdmin extends Configured implements Tool {
 
     private static final AdminHelper.Command[] COMMANDS = {

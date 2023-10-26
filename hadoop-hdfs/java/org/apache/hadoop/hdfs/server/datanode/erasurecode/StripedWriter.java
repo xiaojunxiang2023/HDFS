@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -19,7 +18,6 @@ import java.util.BitSet;
 /**
  * Manage striped writers that writes to a target with reconstructed data.
  */
-@InterfaceAudience.Private
 class StripedWriter {
   private static final Logger LOG = DataNode.LOG;
   private final static int WRITE_PACKET_SIZE = 64 * 1024;

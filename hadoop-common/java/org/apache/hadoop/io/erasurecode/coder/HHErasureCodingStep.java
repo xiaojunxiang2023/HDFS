@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.coder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 
 /**
@@ -9,7 +7,6 @@ import org.apache.hadoop.io.erasurecode.ECBlock;
  *
  * It implements {@link ErasureCodingStep}.
  */
-@InterfaceAudience.Private
 public abstract class HHErasureCodingStep
         implements ErasureCodingStep {
 

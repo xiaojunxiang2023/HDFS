@@ -12,8 +12,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.crypto.CryptoCodec;
 import org.apache.hadoop.crypto.Decryptor;
 import org.apache.hadoop.crypto.Encryptor;
@@ -23,7 +21,6 @@ import org.apache.hadoop.crypto.Encryptor;
  * and decrypting encrypted encryption keys.
  * 
  */
-@InterfaceAudience.Private
 public class KeyProviderCryptoExtension extends
     KeyProviderExtension<KeyProviderCryptoExtension.CryptoExtension> {
 

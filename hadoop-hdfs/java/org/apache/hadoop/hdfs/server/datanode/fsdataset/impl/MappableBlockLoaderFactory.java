@@ -1,15 +1,10 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.datanode.DNConf;
 import org.apache.hadoop.io.nativeio.NativeIO;
 
 /**
  * Creates MappableBlockLoader.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class MappableBlockLoaderFactory {
 
     private MappableBlockLoaderFactory() {

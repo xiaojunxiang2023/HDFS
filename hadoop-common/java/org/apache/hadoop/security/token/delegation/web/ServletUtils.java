@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.token.delegation.web;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
@@ -12,7 +10,6 @@ import java.util.List;
 /**
  * Servlet utility methods.
  */
-@InterfaceAudience.Private
 class ServletUtils {
   private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 

@@ -1,14 +1,9 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * This class defines a partial listing of a directory to support
  * iterative directory listing.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DirectoryListing {
   private HdfsFileStatus[] partialListing;
   private int remainingEntries;

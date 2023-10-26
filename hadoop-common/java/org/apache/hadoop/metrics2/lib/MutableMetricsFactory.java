@@ -4,17 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class MutableMetricsFactory {
   private static final Logger LOG =
       LoggerFactory.getLogger(MutableMetricsFactory.class);

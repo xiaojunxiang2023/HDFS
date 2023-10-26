@@ -1,9 +1,6 @@
 package org.apache.hadoop.service.launcher;
 
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.service.Service;
 
@@ -19,8 +16,6 @@ import org.apache.hadoop.service.Service;
  * service. When this method returns, the service launcher will exit, using
  * the return code from the method as its exit option.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface LaunchableService extends Service {
 
   /**

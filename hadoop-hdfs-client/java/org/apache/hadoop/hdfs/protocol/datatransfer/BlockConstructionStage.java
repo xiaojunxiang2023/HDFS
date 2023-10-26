@@ -1,11 +1,6 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /** Block Construction Stage */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public enum BlockConstructionStage {
   /** The enumerates are always listed as regular stage followed by the
    * recovery stage.

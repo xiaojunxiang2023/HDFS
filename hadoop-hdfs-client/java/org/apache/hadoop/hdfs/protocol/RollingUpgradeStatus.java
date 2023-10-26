@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Rolling upgrade status
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class RollingUpgradeStatus {
   private final String blockPoolId;
   private final boolean finalized;

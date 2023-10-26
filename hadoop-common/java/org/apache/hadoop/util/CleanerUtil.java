@@ -10,9 +10,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Objects;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import static java.lang.invoke.MethodHandles.constant;
 import static java.lang.invoke.MethodHandles.dropArguments;
 import static java.lang.invoke.MethodHandles.filterReturnValue;
@@ -26,8 +23,6 @@ import static java.lang.invoke.MethodType.methodType;
  * use the replacement in Java 9+.
  * This implementation is inspired by LUCENE-6989.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class CleanerUtil {
 
   // Prevent instantiation

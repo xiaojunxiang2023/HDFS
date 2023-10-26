@@ -36,7 +36,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.management.ObjectName;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.fs.FileEncryptionInfo;
@@ -141,7 +140,6 @@ import org.slf4j.LoggerFactory;
  * policy is configurable, the replicas the policy is applied to are the live
  * replicas + maintenance replicas.
  */
-@InterfaceAudience.Private
 public class BlockManager implements BlockStatsMXBean {
 
   public static final Logger LOG = LoggerFactory.getLogger(BlockManager.class);

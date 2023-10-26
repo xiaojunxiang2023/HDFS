@@ -23,9 +23,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
@@ -39,8 +36,6 @@ import org.slf4j.Logger;
  * A new instance of InstrumentedLock can be created for each object
  * that needs to be instrumented.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class InstrumentedLock implements Lock {
 
   private final Lock lock;

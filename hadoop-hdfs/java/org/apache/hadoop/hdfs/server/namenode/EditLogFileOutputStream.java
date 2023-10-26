@@ -10,7 +10,6 @@ import java.nio.channels.FileChannel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.LayoutFlags;
@@ -22,7 +21,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * An implementation of the abstract class {@link EditLogOutputStream}, which
  * stores edits in a local file.
  */
-@InterfaceAudience.Private
 public class EditLogFileOutputStream extends EditLogOutputStream {
   private static final Logger LOG =
       LoggerFactory.getLogger(EditLogFileOutputStream.class);

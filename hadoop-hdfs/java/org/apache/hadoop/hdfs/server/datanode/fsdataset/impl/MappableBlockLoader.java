@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.server.datanode.DNConf;
@@ -16,8 +14,6 @@ import java.nio.channels.FileChannel;
 /**
  * Maps block to DataNode cache region.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public abstract class MappableBlockLoader {
 
     /**

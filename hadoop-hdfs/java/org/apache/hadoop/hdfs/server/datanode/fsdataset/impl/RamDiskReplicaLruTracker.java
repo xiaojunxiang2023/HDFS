@@ -1,8 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.thirdparty.com.google.common.collect.TreeMultimap;
 import org.apache.hadoop.util.Time;
 
@@ -13,8 +9,6 @@ import java.util.*;
  * An implementation of RamDiskReplicaTracker that uses an LRU
  * eviction scheme.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class RamDiskReplicaLruTracker extends RamDiskReplicaTracker {
 
     /**

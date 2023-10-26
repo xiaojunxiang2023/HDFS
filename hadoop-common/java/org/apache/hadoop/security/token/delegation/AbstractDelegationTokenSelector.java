@@ -1,9 +1,6 @@
 package org.apache.hadoop.security.token.delegation;
 
 import java.util.Collection;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
@@ -13,8 +10,7 @@ import org.apache.hadoop.security.token.TokenSelector;
  * Look through tokens to find the first delegation token that matches the
  * service and return it.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public 
 class AbstractDelegationTokenSelector<TokenIdent 
 extends AbstractDelegationTokenIdentifier> 

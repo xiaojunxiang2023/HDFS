@@ -8,9 +8,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.impl.OpenFileParameters;
 import org.apache.hadoop.fs.permission.AclEntry;
@@ -40,8 +37,6 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * and fields.
  *
  *****************************************************************/
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class FilterFileSystem extends FileSystem {
   
   protected FileSystem fs;

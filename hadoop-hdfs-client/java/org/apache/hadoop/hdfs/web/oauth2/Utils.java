@@ -16,16 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */package org.apache.hadoop.hdfs.web.oauth2;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 final class Utils {
   private Utils() { /* Private constructor */ }
 

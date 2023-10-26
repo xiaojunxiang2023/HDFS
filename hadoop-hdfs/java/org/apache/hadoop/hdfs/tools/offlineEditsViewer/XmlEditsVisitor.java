@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.tools.offlineEditsViewer;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
 import org.apache.hadoop.hdfs.util.XMLUtils;
 import org.xml.sax.ContentHandler;
@@ -21,8 +18,6 @@ import java.io.OutputStream;
  * An XmlEditsVisitor walks over an EditLog structure and writes out
  * an equivalent XML document that contains the EditLog's components.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class XmlEditsVisitor implements OfflineEditsVisitor {
     private final static String XML_INDENTATION_PROP = "{http://xml.apache.org/" +
             "xslt}indent-amount";

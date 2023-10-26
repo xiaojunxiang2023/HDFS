@@ -19,8 +19,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.Time;
 
 /**
@@ -37,7 +35,6 @@ import org.apache.hadoop.util.Time;
  * Methods that return primitive long may return {@link Long#MIN_VALUE} as a
  * sentinel value to indicate that the property is undefined.
  */
-@InterfaceAudience.Private
 public class StartupProgressView {
 
   private final Map<Phase, PhaseTracking> phases;

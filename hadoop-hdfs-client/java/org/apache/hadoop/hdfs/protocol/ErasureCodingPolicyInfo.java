@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.protocol;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 import java.io.Serializable;
 
@@ -11,7 +10,6 @@ import java.io.Serializable;
  * HDFS internal presentation of a {@link ErasureCodingPolicy}. Also contains
  * additional information such as {@link ErasureCodingPolicyState}.
  */
-@InterfaceAudience.Private
 public class ErasureCodingPolicyInfo implements Serializable {
 
   private static final long serialVersionUID = 0x31;

@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.LongAdder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -29,7 +27,6 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * that have recently been invalidated and are thought to live
  * on the machine in question.
  */
-@InterfaceAudience.Private
 class InvalidateBlocks {
   private final Map<DatanodeInfo, LightWeightHashSet<Block>>
       nodeToBlocks = new HashMap<>();

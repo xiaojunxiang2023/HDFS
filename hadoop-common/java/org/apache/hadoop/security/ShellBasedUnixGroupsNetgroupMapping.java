@@ -3,8 +3,6 @@ package org.apache.hadoop.security;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.Shell.ExitCodeException;
@@ -18,8 +16,7 @@ import org.slf4j.LoggerFactory;
  * that exec's the <code>groups</code> shell command to fetch the group
  * memberships of a given user.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class ShellBasedUnixGroupsNetgroupMapping
   extends ShellBasedUnixGroupsMapping {
   

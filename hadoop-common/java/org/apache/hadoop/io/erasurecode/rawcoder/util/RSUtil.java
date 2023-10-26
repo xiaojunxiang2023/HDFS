@@ -1,14 +1,11 @@
 package org.apache.hadoop.io.erasurecode.rawcoder.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.nio.ByteBuffer;
 
 /**
  * Utilities for implementing Reed-Solomon code, used by RS coder. Some of the
  * codes are borrowed from ISA-L implementation (C or ASM codes).
  */
-@InterfaceAudience.Private
 public final class RSUtil {
 
   private RSUtil(){}

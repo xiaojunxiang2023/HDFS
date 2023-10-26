@@ -2,9 +2,6 @@ package org.apache.hadoop.service.launcher;
 
 
 import java.util.Locale;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.util.ExitCodeProvider;
 import org.apache.hadoop.util.ExitUtil;
 
@@ -17,8 +14,6 @@ import org.apache.hadoop.util.ExitUtil;
  * The {@link #ServiceLaunchException(int, String, Object...)} constructor
  * generates formatted exceptions.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 
 public class ServiceLaunchException extends ExitUtil.ExitException
     implements ExitCodeProvider, LauncherExitCodes {

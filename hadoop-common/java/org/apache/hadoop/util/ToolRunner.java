@@ -2,9 +2,6 @@ package org.apache.hadoop.util;
 
 import java.io.IOException;
 import java.io.PrintStream;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.audit.CommonAuditContext;
 import org.apache.hadoop.ipc.CallerContext;
@@ -24,8 +21,6 @@ import org.apache.hadoop.ipc.CallerContext;
  * @see Tool
  * @see GenericOptionsParser
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class ToolRunner {
  
   /**

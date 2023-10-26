@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.protocol;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Optional;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.InvalidPathHandleException;
 import org.apache.hadoop.fs.PathHandle;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.HdfsPathHandleProto;
@@ -15,8 +12,6 @@ import org.apache.hadoop.thirdparty.protobuf.ByteString;
 /**
  * Opaque handle to an entity in HDFS.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class HdfsPathHandle implements PathHandle {
 
   private static final long serialVersionUID = 0xc53087a5428L;

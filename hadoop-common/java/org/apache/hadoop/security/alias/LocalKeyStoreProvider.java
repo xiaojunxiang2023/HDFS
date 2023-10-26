@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -27,7 +25,6 @@ import java.util.StringTokenizer;
  * localjceks://file/home/larry/creds.jceks {@literal ->}
  * file:///home/larry/creds.jceks
  */
-@InterfaceAudience.Private
 public abstract class LocalKeyStoreProvider extends
     AbstractJavaKeyStoreProvider {
   private File file;

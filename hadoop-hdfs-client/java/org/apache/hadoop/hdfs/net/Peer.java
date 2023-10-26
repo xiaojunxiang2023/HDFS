@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.ReadableByteChannel;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.net.unix.DomainSocket;
 
 /**
  * Represents a connection to a peer.
  */
-@InterfaceAudience.Private
 public interface Peer extends Closeable {
   /**
    * @return                The input stream channel associated with this

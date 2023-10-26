@@ -4,9 +4,6 @@ import java.lang.ref.WeakReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.service.Service;
 import org.apache.hadoop.util.ShutdownHookManager;
 
@@ -16,8 +13,6 @@ import org.apache.hadoop.util.ShutdownHookManager;
  * This hook uses a weak reference to the service,
  * and when shut down, calls {@link Service#stop()} if the reference is valid.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class ServiceShutdownHook implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(
       ServiceShutdownHook.class);

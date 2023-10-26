@@ -1,16 +1,11 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
  * The public API for ReplicaAccessor objects.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class ReplicaAccessor {
   /**
    * Read bytes from the replica.

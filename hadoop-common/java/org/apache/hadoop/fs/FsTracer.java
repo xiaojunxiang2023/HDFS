@@ -1,7 +1,4 @@
 package org.apache.hadoop.fs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.tracing.TraceUtils;
 import org.apache.hadoop.tracing.Tracer;
@@ -14,8 +11,6 @@ import org.apache.hadoop.tracing.Tracer;
  * cases.  Because of this, we cannot store this Tracer inside DFSClient.  See
  * HADOOP-6356 for details.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class FsTracer {
   private static Tracer instance;
 

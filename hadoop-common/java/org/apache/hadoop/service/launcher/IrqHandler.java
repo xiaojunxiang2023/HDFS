@@ -26,9 +26,6 @@ import org.slf4j.LoggerFactory;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Handler of interrupts that relays them to a registered
  * implementation of {@link IrqHandler.Interrupted}.
@@ -36,8 +33,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * This class bundles up all the compiler warnings about abuse of sun.misc
  * interrupt handling code into one place.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 @SuppressWarnings("UseOfSunClasses")
 public final class IrqHandler implements SignalHandler {
   private static final Logger LOG = LoggerFactory.getLogger(IrqHandler.class);

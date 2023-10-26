@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 
@@ -9,7 +7,6 @@ import java.nio.channels.ClosedChannelException;
  * The exception last seen by the {@link DataStreamer} or
  * {@link DFSOutputStream}.
  */
-@InterfaceAudience.Private
 class ExceptionLastSeen {
   private IOException thrown;
 

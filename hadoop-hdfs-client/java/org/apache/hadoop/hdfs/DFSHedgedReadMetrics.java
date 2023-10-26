@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -9,7 +7,6 @@ import java.util.concurrent.atomic.LongAdder;
  * This class has a number of metrics variables that are publicly accessible,
  * we can grab them from client side, like HBase.
  */
-@InterfaceAudience.Private
 public class DFSHedgedReadMetrics {
   public final LongAdder hedgedReadOps = new LongAdder();
   public final LongAdder hedgedReadOpsWin = new LongAdder();

@@ -20,8 +20,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.client.BlockReportOptions;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs;
@@ -66,7 +64,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
  * <li> Handle commands received from the namenode</li>
  * </ul>
  */
-@InterfaceAudience.Private
 class BPServiceActor implements Runnable {
   
   static final Logger LOG = DataNode.LOG;

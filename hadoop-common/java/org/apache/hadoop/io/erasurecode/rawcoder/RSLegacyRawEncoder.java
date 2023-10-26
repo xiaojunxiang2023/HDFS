@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
 
@@ -12,7 +10,6 @@ import java.util.Arrays;
  * isn't available in some environment. Please always use native implementations
  * when possible.
  */
-@InterfaceAudience.Private
 public class RSLegacyRawEncoder extends RawErasureEncoder {
   private int[] generatingPolynomial;
 

@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -42,7 +41,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ListMultimap;
  * Periodically scans the data directories for block and block metadata files.
  * Reconciles the differences with block information maintained in the dataset.
  */
-@InterfaceAudience.Private
 public class DirectoryScanner implements Runnable {
   private static final Logger LOG =
       LoggerFactory.getLogger(DirectoryScanner.class);

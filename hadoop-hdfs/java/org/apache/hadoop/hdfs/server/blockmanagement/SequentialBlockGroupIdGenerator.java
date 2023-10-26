@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.util.SequentialNumber;
 
@@ -23,7 +21,6 @@ import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.MAX_BLOCK
  * Note that the {@link #nextValue()} methods requires external lock to
  * guarantee IDs have no conflicts.
  */
-@InterfaceAudience.Private
 public class SequentialBlockGroupIdGenerator extends SequentialNumber {
 
   private final BlockManager blockManager;

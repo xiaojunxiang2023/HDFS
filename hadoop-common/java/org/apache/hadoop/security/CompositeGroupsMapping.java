@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -22,8 +19,7 @@ import org.slf4j.LoggerFactory;
  * This allows to combine existing provider implementations and composite 
  * a virtually new provider without customized development to deal with complex situation. 
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class CompositeGroupsMapping
     implements GroupMappingServiceProvider, Configurable {
   

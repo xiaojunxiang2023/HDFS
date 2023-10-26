@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.CommandFormat;
@@ -26,7 +24,6 @@ import org.apache.hadoop.fs.shell.CommandFormat.UnknownOptionException;
  * command.  For example, the maximum command line length on Windows is 8191
  * characters.
  */
-@InterfaceAudience.Private
 public final class Classpath {
   private static final String usage =
     "classpath [--glob|--jar <path>|-h|--help] :\n"

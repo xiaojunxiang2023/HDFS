@@ -1,7 +1,6 @@
 package org.apache.hadoop.net.unix;
 
 import java.io.Closeable;
-import org.apache.hadoop.classification.InterfaceAudience;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,7 +23,6 @@ import org.slf4j.LoggerFactory;
  * 
  * See {@link DomainSocket} for more information about UNIX domain sockets.
  */
-@InterfaceAudience.LimitedPrivate("HDFS")
 public class DomainSocket implements Closeable {
   static {
     if (SystemUtils.IS_OS_WINDOWS) {
@@ -474,7 +472,6 @@ public class DomainSocket implements Closeable {
   /**
    * Input stream for UNIX domain sockets.
    */
-  @InterfaceAudience.LimitedPrivate("HDFS")
   public class DomainInputStream extends InputStream {
     @Override
     public int read() throws IOException {
@@ -525,7 +522,6 @@ public class DomainSocket implements Closeable {
   /**
    * Output stream for UNIX domain sockets.
    */
-  @InterfaceAudience.LimitedPrivate("HDFS")
   public class DomainOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
@@ -558,8 +554,6 @@ public class DomainSocket implements Closeable {
       }
     }
   }
-
-  @InterfaceAudience.LimitedPrivate("HDFS")
   public class DomainChannel implements ReadableByteChannel {
     @Override
     public boolean isOpen() {

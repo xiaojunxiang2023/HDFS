@@ -18,8 +18,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -93,8 +91,6 @@ import org.slf4j.LoggerFactory;
  * @see Tool
  * @see ToolRunner
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class GenericOptionsParser {
 
   private static final Logger LOG =

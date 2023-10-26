@@ -6,16 +6,11 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.OpensslCipher;
 import org.apache.hadoop.io.compress.bzip2.Bzip2Factory;
 import org.apache.hadoop.io.compress.zlib.ZlibFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class NativeLibraryChecker {
   public static final Logger LOG =
       LoggerFactory.getLogger(NativeLibraryChecker.class);

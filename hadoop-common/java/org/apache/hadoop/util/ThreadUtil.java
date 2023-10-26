@@ -1,13 +1,9 @@
 package org.apache.hadoop.util;
-
-import org.apache.hadoop.classification.InterfaceStability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-@InterfaceStability.Evolving
 public class ThreadUtil {
   
   private static final Logger LOG = LoggerFactory.getLogger(ThreadUtil.class);

@@ -15,8 +15,6 @@
  * the License.
  */
 package org.apache.hadoop.hdfs.server.common;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ECTopologyVerifierResult;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
@@ -36,7 +34,6 @@ import java.util.stream.Collectors;
  * 1. not enough data nodes compared to EC policy's highest data+parity number
  * 2. not enough racks to satisfy BlockPlacementPolicyRackFaultTolerant
  */
-@InterfaceAudience.Private
 public final class ECTopologyVerifier {
 
     public static final Logger LOG =

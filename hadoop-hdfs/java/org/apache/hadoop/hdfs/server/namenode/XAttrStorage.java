@@ -2,15 +2,12 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
 
 /**
  * XAttrStorage is used to read and set xattrs for an inode.
  */
-@InterfaceAudience.Private
 public class XAttrStorage {
 
   /**

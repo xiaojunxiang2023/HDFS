@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.tools;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
@@ -19,7 +17,6 @@ import java.net.InetSocketAddress;
  * HDFS implementation of a tool for getting the groups which a given user
  * belongs to.
  */
-@InterfaceAudience.Private
 public class GetGroups extends GetGroupsBase {
 
     static final String USAGE = "Usage: hdfs groups [username ...]";

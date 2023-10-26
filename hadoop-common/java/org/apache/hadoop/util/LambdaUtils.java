@@ -3,15 +3,10 @@ package org.apache.hadoop.util;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Lambda-expression utilities be they generic or specific to
  * Hadoop datatypes.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class LambdaUtils {
 
   private LambdaUtils() {

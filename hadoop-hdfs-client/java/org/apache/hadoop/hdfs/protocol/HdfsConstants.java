@@ -2,13 +2,9 @@ package org.apache.hadoop.hdfs.protocol;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.util.StringUtils;
-
-@InterfaceAudience.Private
 public final class HdfsConstants {
   // Long that indicates "leave current quota unchanged"
   public static final long QUOTA_DONT_SET = Long.MAX_VALUE;

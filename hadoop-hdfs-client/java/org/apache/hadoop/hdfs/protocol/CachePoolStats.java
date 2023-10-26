@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * CachePoolStats describes cache pool statistics.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class CachePoolStats {
   public static class Builder {
     private long bytesNeeded;

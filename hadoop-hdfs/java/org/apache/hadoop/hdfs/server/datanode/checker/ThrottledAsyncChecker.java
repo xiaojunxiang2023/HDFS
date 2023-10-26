@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 package org.apache.hadoop.hdfs.server.datanode.checker;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.*;
 import org.apache.hadoop.util.Timer;
 import org.slf4j.Logger;
@@ -44,8 +41,6 @@ import java.util.concurrent.*;
  * {@link minMsBetweenChecks} should be configured reasonably
  * by the caller to avoid spinning up too many threads frequently.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class ThrottledAsyncChecker<K, V> implements AsyncChecker<K, V> {
     public static final Logger LOG =
             LoggerFactory.getLogger(ThrottledAsyncChecker.class);

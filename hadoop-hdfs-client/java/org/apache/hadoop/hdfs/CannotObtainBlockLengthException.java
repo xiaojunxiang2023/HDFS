@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 
 import java.io.IOException;
@@ -10,8 +7,6 @@ import java.io.IOException;
  * This exception is thrown when the length of a LocatedBlock instance
  * can not be obtained.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class CannotObtainBlockLengthException extends IOException {
   private static final long serialVersionUID = 1L;
 

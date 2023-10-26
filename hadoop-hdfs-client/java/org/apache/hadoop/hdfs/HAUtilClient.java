@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -18,8 +16,6 @@ import java.util.Collection;
 
 import static org.apache.hadoop.hdfs.protocol.HdfsConstants.HA_DT_SERVICE_PREFIX;
 import static org.apache.hadoop.security.SecurityUtil.buildTokenService;
-
-@InterfaceAudience.Private
 public class HAUtilClient {
   private static final Logger LOG = LoggerFactory.getLogger(HAUtilClient.class);
 

@@ -3,9 +3,6 @@ package org.apache.hadoop.fs.impl;
 import java.io.IOException;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.AbstractFileSystem;
 import org.apache.hadoop.fs.FSLinkResolver;
 import org.apache.hadoop.fs.FileContext;
@@ -17,8 +14,6 @@ import org.apache.hadoop.fs.UnresolvedLinkException;
  * link resolution.
  * @param <T> type of the returned value.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class FsLinkResolution<T> extends FSLinkResolver<T> {
 
   /**

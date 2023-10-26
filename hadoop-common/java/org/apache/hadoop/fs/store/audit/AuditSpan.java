@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.store.audit;
 
 import java.io.Closeable;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * This is a span created by an {@link AuditSpanSource}.
  * An implementation of a span may carry context which can be picked
@@ -24,8 +21,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * Therefore each FS will need a fallback "inactive span" which
  * will be reverted to on deactivation of any other span.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public interface AuditSpan extends Closeable {
 
   /**

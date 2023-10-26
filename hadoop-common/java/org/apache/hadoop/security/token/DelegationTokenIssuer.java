@@ -1,7 +1,4 @@
 package org.apache.hadoop.security.token;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
 
@@ -9,11 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class for issuing delegation tokens.
- */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce", "Yarn"})
-@InterfaceStability.Unstable
+// Yarn 和 MapReduce 也可见
 public interface DelegationTokenIssuer {
 
   /**
@@ -63,7 +56,6 @@ public interface DelegationTokenIssuer {
   /**
    * NEVER call this method directly.
    */
-  @InterfaceAudience.Private
   static void collectDelegationTokens(
       final DelegationTokenIssuer issuer,
       final String renewer,

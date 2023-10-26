@@ -5,10 +5,7 @@ import java.net.InetAddress;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.SecurityUtil;
@@ -23,8 +20,7 @@ import org.slf4j.LoggerFactory;
  * An authorization manager which handles service-level authorization
  * for incoming service requests.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class ServiceAuthorizationManager {
   static final String BLOCKED = ".blocked";
   static final String HOSTS = ".hosts";

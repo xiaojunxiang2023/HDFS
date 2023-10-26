@@ -5,9 +5,6 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * <p>This class replaces {@code guava.Preconditions} which provides helpers
  * to validate the following conditions:
@@ -18,8 +15,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  *   <li>An invalid index causes an {@link IndexOutOfBoundsException}.</li>
  * </ul>
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class Preconditions {
   private static final Logger LOG =
       LoggerFactory.getLogger(Preconditions.class);

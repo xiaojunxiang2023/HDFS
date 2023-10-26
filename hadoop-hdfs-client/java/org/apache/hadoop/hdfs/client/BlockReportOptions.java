@@ -1,15 +1,10 @@
 package org.apache.hadoop.hdfs.client;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.net.InetSocketAddress;
 
 /**
  * Options that can be specified when manually triggering a block report.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class BlockReportOptions {
   private final boolean incremental;
   private final InetSocketAddress namenodeAddr;

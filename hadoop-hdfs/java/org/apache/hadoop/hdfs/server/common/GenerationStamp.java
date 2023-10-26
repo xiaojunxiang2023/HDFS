@@ -1,12 +1,9 @@
 package org.apache.hadoop.hdfs.server.common;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.SequentialNumber;
 
 /****************************************************************
  * A GenerationStamp is a Hadoop FS primitive, identified by a long.
  ****************************************************************/
-@InterfaceAudience.Private
 public class GenerationStamp extends SequentialNumber {
     /**
      * The last reserved generation stamp.

@@ -11,8 +11,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.fs.StorageType;
@@ -59,7 +57,6 @@ import org.slf4j.LoggerFactory;
  * if security is enabled.</li>
  * </ul>
  */
-@InterfaceAudience.Private
 class BlockReaderLocalLegacy implements BlockReader {
   private static final Logger LOG = LoggerFactory.getLogger(
       BlockReaderLocalLegacy.class);

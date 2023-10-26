@@ -3,14 +3,9 @@ package org.apache.hadoop.io.compress;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Specification of a direct ByteBuffer 'de-compressor'. 
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface DirectDecompressor {
   /*
    * This exposes a direct interface for record decompression with direct byte

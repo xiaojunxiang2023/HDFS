@@ -1,7 +1,5 @@
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Common path capabilities.
  */
@@ -110,7 +108,6 @@ public final class CommonPathCapabilities {
   /**
    * Probe for support for {@link BatchListingOperations}.
    */
-  @InterfaceStability.Unstable
   public static final String FS_EXPERIMENTAL_BATCH_LISTING =
       "fs.capability.batch.listing";
 

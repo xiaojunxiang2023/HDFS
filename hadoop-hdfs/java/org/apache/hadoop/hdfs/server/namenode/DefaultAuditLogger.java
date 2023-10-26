@@ -3,9 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenSecretManager;
@@ -17,8 +14,6 @@ import org.apache.hadoop.security.UserGroupInformation;
  * information. This class can be extended and can be used when no access logger
  * is defined in the config file.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class DefaultAuditLogger extends HdfsAuditLogger {
   protected static final ThreadLocal<StringBuilder> STRING_BUILDER =
       new ThreadLocal<StringBuilder>() {

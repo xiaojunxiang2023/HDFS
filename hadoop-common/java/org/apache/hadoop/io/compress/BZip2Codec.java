@@ -8,9 +8,6 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.Seekable;
 import org.apache.hadoop.io.compress.bzip2.BZip2Constants;
 import org.apache.hadoop.io.compress.bzip2.CBZip2InputStream;
@@ -38,8 +35,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
  * requested, the pure-Java implementation is used, regardless of the
  * setting of the configuration parameter mentioned above.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class BZip2Codec implements Configurable, SplittableCompressionCodec {
 
   private static final String HEADER = "BZ";

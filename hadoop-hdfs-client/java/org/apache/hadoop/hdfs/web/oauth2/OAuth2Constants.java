@@ -18,14 +18,10 @@
  */package org.apache.hadoop.hdfs.web.oauth2;
 
 import okhttp3.MediaType;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Sundry constants relating to OAuth2 within WebHDFS.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class OAuth2Constants {
   private OAuth2Constants() { /** Private constructor. **/ }
 

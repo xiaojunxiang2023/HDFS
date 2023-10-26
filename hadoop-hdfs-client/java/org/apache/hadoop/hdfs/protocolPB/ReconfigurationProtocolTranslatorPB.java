@@ -6,9 +6,6 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.hdfs.protocol.ReconfigurationProtocol;
@@ -34,8 +31,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * {@link ReconfigurationProtocol} interfaces to the RPC server implementing
  * {@link ReconfigurationProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class ReconfigurationProtocolTranslatorPB implements
     ProtocolMetaInterface, ReconfigurationProtocol, ProtocolTranslator,
     Closeable {

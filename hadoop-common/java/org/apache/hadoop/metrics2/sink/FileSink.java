@@ -7,8 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsRecord;
@@ -18,8 +16,6 @@ import org.apache.hadoop.metrics2.MetricsTag;
 /**
  * A metrics sink that writes to a file
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class FileSink implements MetricsSink, Closeable {
   private static final String FILENAME_KEY = "filename";
   private PrintStream writer;

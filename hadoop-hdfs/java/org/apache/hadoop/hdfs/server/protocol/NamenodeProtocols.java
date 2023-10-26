@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.protocol;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.hdfs.protocol.ReconfigurationProtocol;
@@ -11,7 +9,6 @@ import org.apache.hadoop.ipc.GenericRefreshProtocol;
 import org.apache.hadoop.tools.GetUserMappingsProtocol;
 
 /** The full set of RPC methods implemented by the Namenode.  */
-@InterfaceAudience.Private
 public interface NamenodeProtocols
   extends ClientProtocol,
           DatanodeProtocol,

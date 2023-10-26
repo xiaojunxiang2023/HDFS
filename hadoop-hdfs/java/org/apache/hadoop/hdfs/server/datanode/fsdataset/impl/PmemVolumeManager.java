@@ -3,8 +3,6 @@ package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.io.nativeio.NativeIO;
@@ -24,8 +22,6 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Manage the persistent memory volumes.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public final class PmemVolumeManager {
 
     public static final String CACHE_DIR = "hdfs_pmem_cache";

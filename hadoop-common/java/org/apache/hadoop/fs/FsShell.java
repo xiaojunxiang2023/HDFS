@@ -5,8 +5,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.shell.Command;
@@ -24,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Provide command line access to a FileSystem. */
-@InterfaceAudience.Private
 public class FsShell extends Configured implements Tool {
   
   static final Logger LOG = LoggerFactory.getLogger(FsShell.class);

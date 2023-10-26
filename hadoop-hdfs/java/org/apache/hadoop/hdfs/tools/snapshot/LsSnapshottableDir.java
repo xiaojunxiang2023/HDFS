@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.tools.snapshot;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
@@ -15,7 +13,6 @@ import java.io.IOException;
  * current user. The tool returns all the snapshottable directories if the user
  * is a super user.
  */
-@InterfaceAudience.Private
 public class LsSnapshottableDir extends Configured implements Tool {
     public static void main(String[] argv) throws Exception {
         int rc = ToolRunner.run(new LsSnapshottableDir(), argv);

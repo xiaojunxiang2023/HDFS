@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.fs.StorageType;
@@ -57,8 +56,6 @@ import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
-
-@InterfaceAudience.Private
 public final class FSImageFormatPBINode {
   public static final int ACL_ENTRY_NAME_MASK = (1 << 24) - 1;
   public static final int ACL_ENTRY_NAME_OFFSET = 6;

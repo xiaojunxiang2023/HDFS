@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.service.AbstractService;
 
@@ -14,8 +11,6 @@ import org.apache.hadoop.service.AbstractService;
  * Subclass of {@link AbstractService} that provides basic implementations
  * of the {@link LaunchableService} methods.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class AbstractLaunchableService extends AbstractService
     implements LaunchableService {
 

@@ -4,17 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Random;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 /****************************************************************
  * Implement the FileSystem API for the checksumed local filesystem.
  *
  *****************************************************************/
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class LocalFileSystem extends ChecksumFileSystem {
   static final URI NAME = URI.create("file:///");
   static private Random rand = new Random();

@@ -5,9 +5,6 @@ import java.net.InetSocketAddress;
 import java.util.Map;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.ha.protocolPB.HAServiceProtocolClientSideTranslatorPB;
@@ -19,8 +16,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 /**
  * Represents a target of the client side HA administration commands.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public abstract class HAServiceTarget {
 
   private static final String HOST_SUBST_KEY = "host";

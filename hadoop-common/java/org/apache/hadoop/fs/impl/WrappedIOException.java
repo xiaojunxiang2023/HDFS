@@ -6,9 +6,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A wrapper for an IOException which
  * {@link FutureIOSupport#raiseInnerCause(ExecutionException)} knows to
@@ -19,8 +16,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * @deprecated use the {@code UncheckedIOException}.
  */
 @Deprecated
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class WrappedIOException extends UncheckedIOException {
 
   private static final long serialVersionUID = 2510210974235779294L;

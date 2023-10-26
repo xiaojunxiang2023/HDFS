@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.namenode;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 
 import java.io.Closeable;
@@ -14,8 +11,6 @@ import java.io.IOException;
  * It should stream bytes from the storage exactly as they were written
  * into the #{@link EditLogOutputStream}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public abstract class EditLogInputStream implements Closeable {
   private FSEditLogOp cachedOp = null; 
 

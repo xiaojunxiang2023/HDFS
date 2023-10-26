@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.common;
 
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient;
@@ -26,9 +25,6 @@ import java.net.*;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.*;
-
-
-@InterfaceAudience.Private
 public final class Util {
     public final static String FILE_LENGTH = "File-Length";
     public final static String CONTENT_LENGTH = "Content-Length";

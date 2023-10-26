@@ -13,9 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding;
 import org.apache.hadoop.util.JsonSerialization;
 
@@ -41,8 +38,6 @@ import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.snapshotM
  * </p>
  */
 @SuppressWarnings("CollectionDeclaredAsConcreteClass")
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class IOStatisticsSnapshot
     implements IOStatistics, Serializable, IOStatisticsAggregator {
 

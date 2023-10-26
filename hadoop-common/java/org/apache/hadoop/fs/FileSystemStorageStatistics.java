@@ -4,16 +4,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.FileSystem.Statistics.StatisticsData;
 
 /**
  * A basic StorageStatistics instance which simply returns data from
  * FileSystem#Statistics.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FileSystemStorageStatistics extends StorageStatistics {
   /**
    * The per-class FileSystem statistics.

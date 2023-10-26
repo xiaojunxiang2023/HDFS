@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -44,7 +42,6 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_PROVIDED_ALIASMAP_LOAD_RE
 /**
  * This class is used to create provided volumes.
  */
-@InterfaceAudience.Private
 class ProvidedVolumeImpl extends FsVolumeImpl {
 
     private static final ObjectWriter WRITER =

@@ -1,15 +1,10 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.math.BigInteger;
 
 /**
  * Utility for sampling and computing CPU usage.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class CpuTimeTracker {
   public static final int UNAVAILABLE = -1;
   private final long minimumTimeInterval;

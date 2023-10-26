@@ -6,8 +6,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.InvalidRequestException;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo.Expiration;
@@ -18,8 +16,6 @@ import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo.Expiration;
  * This class is used in RPCs to create and modify cache pools.
  * It is serializable and can be stored in the edit log.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class CachePoolInfo {
 
   /**

@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.tools;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileEncryptionInfo;
@@ -26,7 +24,6 @@ import java.util.List;
 /**
  * This class implements crypto command-line operations.
  */
-@InterfaceAudience.Private
 public class CryptoAdmin extends Configured implements Tool {
 
     private static final AdminHelper.Command[] COMMANDS = {

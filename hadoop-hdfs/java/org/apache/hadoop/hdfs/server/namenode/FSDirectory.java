@@ -9,7 +9,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension;
 import org.apache.hadoop.fs.FileStatus;
@@ -86,7 +85,6 @@ import static org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot.CURRENT_S
  * to the disk.
  * @see org.apache.hadoop.hdfs.server.namenode.FSNamesystem
  **/
-@InterfaceAudience.Private
 public class FSDirectory implements Closeable {
   static final Logger LOG = LoggerFactory.getLogger(FSDirectory.class);
 

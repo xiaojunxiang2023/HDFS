@@ -5,8 +5,6 @@ import org.apache.hadoop.thirdparty.com.google.common.primitives.Bytes;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -24,8 +22,6 @@ import java.util.UUID;
 /**
  * The client-side form of the token.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class Token<T extends TokenIdentifier> implements Writable {
   public static final Logger LOG = LoggerFactory.getLogger(Token.class);
 
@@ -177,7 +173,6 @@ public class Token<T extends TokenIdentifier> implements Writable {
    * wrap another service's token.
    * @param newKind
    */
-  @InterfaceAudience.Private
   public synchronized void setKind(Text newKind) {
     kind = newKind;
     renewer = null;
@@ -493,8 +488,6 @@ public class Token<T extends TokenIdentifier> implements Writable {
    * A trivial renewer for token kinds that aren't managed. Sub-classes need
    * to implement getKind for their token kind.
    */
-  @InterfaceAudience.Public
-  @InterfaceStability.Evolving
   public static class TrivialRenewer extends TokenRenewer {
 
     // define the kind for this renewer

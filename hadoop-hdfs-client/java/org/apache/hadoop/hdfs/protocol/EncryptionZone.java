@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.crypto.CipherSuite;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 
@@ -12,8 +10,6 @@ import org.apache.hadoop.crypto.CryptoProtocolVersion;
  * zone only has a path (the root of the encryption zone), a key name, and a
  * unique id. The id is used to implement batched listing of encryption zones.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class EncryptionZone {
 
   private final long id;

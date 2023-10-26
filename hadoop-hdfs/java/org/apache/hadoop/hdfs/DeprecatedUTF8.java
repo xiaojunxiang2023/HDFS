@@ -4,8 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * A simple wrapper around {@link org.apache.hadoop.io.UTF8}.
  * This class should be used only when it is absolutely necessary
@@ -15,7 +13,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * 
  * This should be treated as package private class to HDFS.
  */
-@InterfaceAudience.Private
 @SuppressWarnings("deprecation")
 public class DeprecatedUTF8 extends org.apache.hadoop.io.UTF8 {
   

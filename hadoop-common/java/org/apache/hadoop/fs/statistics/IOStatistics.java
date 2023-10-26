@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.statistics;
 
 import java.util.Map;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * IO Statistics.
  * <p>
@@ -14,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * Consult the filesystem specification document for the requirements
  * of an implementation of this interface.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public interface IOStatistics {
 
   /**

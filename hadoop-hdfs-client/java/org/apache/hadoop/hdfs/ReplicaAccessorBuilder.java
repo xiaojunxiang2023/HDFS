@@ -1,14 +1,9 @@
 package org.apache.hadoop.hdfs;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 
 /**
  * The public API for creating a new ReplicaAccessor.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public abstract class ReplicaAccessorBuilder {
   /**
    * Set the file name which is being opened.  Provided for debugging purposes.

@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.common;
 
 import org.apache.hadoop.auth.util.KerberosName;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
 import org.apache.hadoop.hdfs.server.namenode.NameNodeHttpServer;
@@ -28,8 +27,6 @@ import java.net.InetSocketAddress;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeys.DEFAULT_HADOOP_HTTP_STATIC_USER;
 import static org.apache.hadoop.fs.CommonConfigurationKeys.HADOOP_HTTP_STATIC_USER;
-
-@InterfaceAudience.Private
 public class JspHelper {
     public static final String CURRENT_CONF = "current.conf";
     public static final String DELEGATION_PARAMETER_NAME = DelegationParam.NAME;

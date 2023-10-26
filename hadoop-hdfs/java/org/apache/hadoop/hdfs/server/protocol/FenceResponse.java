@@ -1,11 +1,8 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Response to a journal fence request. See {@link JournalProtocol#fence}
  */
-@InterfaceAudience.Private
 public class FenceResponse {
   private final long previousEpoch;
   private final long lastTransactionId;

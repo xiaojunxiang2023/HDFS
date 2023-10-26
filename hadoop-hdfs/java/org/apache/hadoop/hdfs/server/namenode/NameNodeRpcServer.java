@@ -31,7 +31,6 @@ import java.util.Set;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
@@ -216,7 +215,6 @@ import javax.annotation.Nonnull;
  * This class is responsible for handling all of the RPC calls to the NameNode.
  * It is created, started, and stopped by {@link NameNode}.
  */
-@InterfaceAudience.Private
 @VisibleForTesting
 public class NameNodeRpcServer implements NamenodeProtocols {
   

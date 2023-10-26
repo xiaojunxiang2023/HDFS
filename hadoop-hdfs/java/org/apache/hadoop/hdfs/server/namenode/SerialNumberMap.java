@@ -8,8 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Map object to serial number.
  * 
@@ -20,7 +18,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * 
  * <p>The map is thread-safe.
  */
-@InterfaceAudience.Private
 public class SerialNumberMap<T> {
   private String name;
   private final int max;

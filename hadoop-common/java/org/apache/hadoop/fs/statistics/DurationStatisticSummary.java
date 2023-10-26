@@ -3,9 +3,6 @@ package org.apache.hadoop.fs.statistics;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_FAILURES;
 import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MAX;
 import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MEAN;
@@ -17,8 +14,6 @@ import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MIN;
  * <p>
  * This is for reporting and testing.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public final class DurationStatisticSummary implements Serializable {
 
   private static final long serialVersionUID = 6776381340896518486L;

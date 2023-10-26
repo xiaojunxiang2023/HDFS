@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import javax.net.SocketFactory;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto;
@@ -32,8 +29,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * {@link InterDatanodeProtocol} interfaces to the RPC server implementing
  * {@link InterDatanodeProtocolPB}.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class InterDatanodeProtocolTranslatorPB implements
     ProtocolMetaInterface, InterDatanodeProtocol, Closeable {
   /** RpcController is not used and hence is set to null */

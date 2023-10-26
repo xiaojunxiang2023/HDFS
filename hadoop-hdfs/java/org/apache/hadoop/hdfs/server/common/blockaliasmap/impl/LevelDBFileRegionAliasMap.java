@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.common.blockaliasmap.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -26,8 +23,6 @@ import static org.fusesource.leveldbjni.JniDBFactory.factory;
 /**
  * A LevelDB based implementation of {@link BlockAliasMap}.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Unstable
 public class LevelDBFileRegionAliasMap
         extends BlockAliasMap<FileRegion> implements Configurable {
 

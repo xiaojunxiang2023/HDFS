@@ -17,7 +17,6 @@
  */package org.apache.hadoop.hdfs.util;
 
 import org.apache.hadoop.io.erasurecode.ECSchema;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -45,7 +44,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A EC policy loading tool that loads user defined EC policies from XML file.
  */
-@InterfaceAudience.Private
 public class ECPolicyLoader {
 
   private static final Logger LOG

@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.slf4j.Logger;
@@ -12,8 +9,6 @@ import java.io.IOException;
 /**
  * Represents an HDFS block that is mapped to persistent memory by the DataNode.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class NativePmemMappedBlock implements MappableBlock {
     private static final Logger LOG =
             LoggerFactory.getLogger(NativePmemMappedBlock.class);

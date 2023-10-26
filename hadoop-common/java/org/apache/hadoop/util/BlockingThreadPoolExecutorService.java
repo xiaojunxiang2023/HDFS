@@ -11,8 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * This ExecutorService blocks the submission of new tasks when its queue is
  * already full by using a semaphore. Task submissions require permits, task
@@ -21,7 +19,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * This is inspired by <a href="https://github.com/apache/incubator-s4/blob/master/subprojects/s4-comm/src/main/java/org/apache/s4/comm/staging/BlockingThreadPoolExecutorService.java">
  * this s4 threadpool</a>
  */
-@InterfaceAudience.Private
 public final class BlockingThreadPoolExecutorService
     extends SemaphoredDelegatingExecutor {
 

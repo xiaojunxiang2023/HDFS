@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
 import org.apache.commons.cli.*;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogLoader.PositionTrackingInputStream;
 import org.apache.hadoop.io.IOUtils;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import java.nio.file.Paths;
  * or the console.  Main entry point into utility, either via the
  * command line or programmatically.
  */
-@InterfaceAudience.Private
 public class OfflineImageViewer {
     public static final Logger LOG =
             LoggerFactory.getLogger(OfflineImageViewer.class);

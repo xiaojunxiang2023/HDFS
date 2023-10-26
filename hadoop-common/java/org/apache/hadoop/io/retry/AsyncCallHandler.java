@@ -2,8 +2,6 @@ package org.apache.hadoop.io.retry;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ipc.Client;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.Time;
@@ -22,7 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 /** Handle async calls. */
-@InterfaceAudience.Private
 public class AsyncCallHandler {
   public static final Logger LOG = LoggerFactory.getLogger(
       AsyncCallHandler.class);
@@ -33,7 +30,6 @@ public class AsyncCallHandler {
       ASYNC_RETURN = new ThreadLocal<>();
 
   /** @return the async return value from {@link AsyncCallHandler}. */
-  @InterfaceStability.Unstable
   @SuppressWarnings("unchecked")
   public static <R, T extends  Throwable> AsyncGet<R, T> getAsyncReturn() {
     final AsyncGet<R, T> asyncGet = (AsyncGet<R, T>)ASYNC_RETURN.get();
@@ -46,7 +42,6 @@ public class AsyncCallHandler {
   }
 
   /** For the lower rpc layers to set the async return value. */
-  @InterfaceStability.Unstable
   public static void setLowerLayerAsyncReturn(
       AsyncGet<?, Exception> asyncReturn) {
     LOWER_LAYER_ASYNC_RETURN.set(asyncReturn);

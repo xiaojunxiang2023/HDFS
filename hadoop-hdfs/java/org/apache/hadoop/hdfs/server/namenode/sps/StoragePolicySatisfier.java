@@ -14,8 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -58,7 +56,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * class will also prepare requests to send to Datanode for processing the
  * physical block movements.
  */
-@InterfaceAudience.Private
 public class StoragePolicySatisfier implements SPSService, Runnable {
   public static final Logger LOG =
       LoggerFactory.getLogger(StoragePolicySatisfier.class);

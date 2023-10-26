@@ -19,8 +19,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.ACLProvider;
 import org.apache.curator.framework.imps.DefaultACLProvider;
 import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
+import org.apache.yetus.audience.InterfaceAudience;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs.Perms;
 import org.apache.zookeeper.client.ZKClientConfig;
@@ -49,8 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 
 // 基于 ZooKeeper的 SignerSecretProvider，可以滚动
-@InterfaceStability.Unstable
-@InterfaceAudience.Private
+
 public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
 
   private static final String CONFIG_PREFIX =
@@ -426,7 +424,6 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * "java.security.auth.login.config", to point to that file. It is meant to be
    * used for connecting to ZooKeeper.
    */
-  @InterfaceAudience.Private
   public static class JaasConfiguration extends Configuration {
 
     private final javax.security.auth.login.Configuration baseConfig =

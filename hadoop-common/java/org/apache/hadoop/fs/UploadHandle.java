@@ -16,17 +16,12 @@
  */
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 /**
  * Opaque, serializable reference to an uploadId for multipart uploads.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface UploadHandle extends Serializable {
 
   /**

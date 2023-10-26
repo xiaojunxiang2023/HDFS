@@ -4,9 +4,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Implementers of this interface provide a positioned read API that writes to a
  * {@link ByteBuffer} rather than a {@code byte[]}.
@@ -14,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * @see PositionedReadable
  * @see ByteBufferReadable
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface ByteBufferPositionedReadable {
   /**
    * Reads up to {@code buf.remaining()} bytes into buf from a given position

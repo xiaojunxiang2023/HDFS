@@ -1,13 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * ItemInfo is a file info object for which need to satisfy the policy.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ItemInfo {
   private long startPathId;
   private long fileId;

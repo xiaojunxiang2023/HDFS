@@ -1,6 +1,4 @@
 package org.apache.hadoop.io.erasurecode.coder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.CodecUtil;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECBlockGroup;
@@ -19,7 +17,6 @@ import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
  * Erasure-coded Data Centers", in ACM SIGCOMM 2014.
  * This is Hitchhiker-XOR erasure encoder that encodes a block group.
  */
-@InterfaceAudience.Private
 public class HHXORErasureEncoder extends ErasureEncoder {
   private RawErasureEncoder rsRawEncoder;
   private RawErasureEncoder xorRawEncoder;

@@ -16,7 +16,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.hadoop.ipc.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
@@ -40,7 +39,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Multiset;
  * block tokens. Typically, master mode is used by NN and worker mode
  * is used by DN.
  */
-@InterfaceAudience.Private
 public class BlockTokenSecretManager extends
     SecretManager<BlockTokenIdentifier> {
   public static final Logger LOG =

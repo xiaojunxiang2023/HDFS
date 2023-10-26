@@ -2,9 +2,6 @@ package org.apache.hadoop.fs.shell;
 
 import java.io.IOException;
 import java.util.LinkedList;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FsShellPermissions;
 import org.apache.hadoop.fs.Path;
@@ -18,9 +15,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SHELL_MI
 /**
  * Base class for all "hadoop fs" commands.
  */
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 
 // this class may not look useful now, but it's a placeholder for future
 // functionality to act as a registry for fs commands.  currently it's being

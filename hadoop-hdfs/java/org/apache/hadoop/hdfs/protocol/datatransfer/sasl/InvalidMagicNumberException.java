@@ -4,13 +4,10 @@ import static org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataTransferSasl
 
 import java.io.IOException;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * Indicates that SASL protocol negotiation expected to read a pre-defined magic
  * number, but the expected value was not seen.
  */
-@InterfaceAudience.Private
 public class InvalidMagicNumberException extends IOException {
 
   private static final long serialVersionUID = 1L;

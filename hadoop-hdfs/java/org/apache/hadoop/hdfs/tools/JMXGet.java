@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 
 import org.apache.commons.cli.*;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.ExitUtil;
 
 import javax.management.*;
@@ -31,7 +30,6 @@ import java.util.regex.Pattern;
  * implementation note: all logging is sent to System.err (since it is a command
  * line tool)
  */
-@InterfaceAudience.Private
 public class JMXGet {
 
     private static final String format = "%s=%s%n";

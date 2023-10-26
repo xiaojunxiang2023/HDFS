@@ -1,7 +1,6 @@
 package org.apache.hadoop.io.erasurecode;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.erasurecode.codec.ErasureCodec;
 import org.apache.hadoop.io.erasurecode.codec.HHXORErasureCodec;
@@ -28,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
  * respectively.{@link RawErasureEncoder} and {@link RawErasureDecoder} are
  * are created by createRawEncoder and createRawDecoder.
  */
-@InterfaceAudience.Private
 public final class CodecUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(CodecUtil.class);

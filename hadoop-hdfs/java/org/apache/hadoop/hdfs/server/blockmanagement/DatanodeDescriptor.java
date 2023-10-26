@@ -14,9 +14,6 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.net.DFSTopologyNodeImpl;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -44,8 +41,6 @@ import org.slf4j.LoggerFactory;
  * health, capacity, what blocks are associated with the Datanode) that is
  * private to the Namenode, ie this class is not exposed to clients.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DatanodeDescriptor extends DatanodeInfo {
   public static final Logger LOG =
       LoggerFactory.getLogger(DatanodeDescriptor.class);
@@ -53,8 +48,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
   private static final int BLOCKS_SCHEDULED_ROLL_INTERVAL = 600*1000; //10min
 
   /** Block and targets pair */
-  @InterfaceAudience.Private
-  @InterfaceStability.Evolving
   public static class BlockTargetPair {
     public final Block block;
     public final DatanodeStorageInfo[] targets;    

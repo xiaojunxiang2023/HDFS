@@ -1,13 +1,10 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
 /**
  * A raw coder factory for the legacy raw Reed-Solomon coder in Java.
  */
-@InterfaceAudience.Private
 public class RSLegacyRawErasureCoderFactory implements RawErasureCoderFactory {
 
   public static final String CODER_NAME = "rs-legacy_java";

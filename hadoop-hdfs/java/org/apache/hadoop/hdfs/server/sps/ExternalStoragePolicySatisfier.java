@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.sps;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -28,7 +26,6 @@ import static org.apache.hadoop.util.ExitUtil.terminate;
 /**
  * This class starts and runs external SPS service.
  */
-@InterfaceAudience.Private
 public final class ExternalStoragePolicySatisfier {
     public static final Logger LOG = LoggerFactory
             .getLogger(ExternalStoragePolicySatisfier.class);

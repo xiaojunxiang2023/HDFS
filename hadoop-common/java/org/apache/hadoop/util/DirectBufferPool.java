@@ -7,10 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * A simple class for pooling direct ByteBuffers. This is necessary
@@ -24,8 +21,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * allocated at the same size. There is no attempt to reuse larger
  * buffers to satisfy smaller allocations.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class DirectBufferPool {
 
   // Essentially implement a multimap with weak values.

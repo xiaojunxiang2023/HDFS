@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -10,8 +8,6 @@ import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 /**
  * The setting of replace-datanode-on-failure feature.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ReplaceDatanodeOnFailure {
   /**
    * DEFAULT condition:

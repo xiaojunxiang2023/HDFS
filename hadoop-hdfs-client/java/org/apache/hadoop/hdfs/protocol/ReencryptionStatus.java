@@ -19,7 +19,6 @@
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
 import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus.State;
@@ -37,7 +36,6 @@ import java.util.TreeMap;
  * FSDirectory lock is used for synchronization (except test-only methods, which
  * are not protected).
  */
-@InterfaceAudience.Private
 public final class ReencryptionStatus {
 
   public static final Logger LOG =

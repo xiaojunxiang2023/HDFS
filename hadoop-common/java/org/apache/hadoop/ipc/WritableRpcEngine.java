@@ -18,8 +18,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
@@ -27,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** An RpcEngine implementation for Writable data. */
-@InterfaceStability.Evolving
 @Deprecated
 public class WritableRpcEngine implements RpcEngine {
   private static final Logger LOG = LoggerFactory.getLogger(RPC.class);
@@ -258,8 +255,6 @@ public class WritableRpcEngine implements RpcEngine {
   }
   
   // for unit testing only
-  @InterfaceAudience.Private
-  @InterfaceStability.Unstable
   static Client getClient(Configuration conf) {
     return CLIENTS.getClient(conf);
   }

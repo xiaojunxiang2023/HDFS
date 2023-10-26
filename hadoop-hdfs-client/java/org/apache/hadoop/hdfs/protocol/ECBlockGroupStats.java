@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * Get statistics pertaining to blocks of type {@link BlockType#STRIPED}
@@ -13,8 +11,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  * <p>
  * @see ClientProtocol#getECBlockGroupStats()
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class ECBlockGroupStats {
   private final long lowRedundancyBlockGroups;
   private final long corruptBlockGroups;

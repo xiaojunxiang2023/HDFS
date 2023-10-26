@@ -11,8 +11,6 @@ import java.util.Comparator;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
@@ -41,7 +39,6 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
  * Note: this class is not thread-safe and should be externally
  * synchronized.
  */
-@InterfaceAudience.Private
 public class FileJournalManager implements JournalManager {
   private static final Logger LOG =
       LoggerFactory.getLogger(FileJournalManager.class);
@@ -511,7 +508,6 @@ public class FileJournalManager implements JournalManager {
   /**
    * Record of an edit log that has been located and had its filename parsed.
    */
-  @InterfaceAudience.Private
   public static class EditLogFile {
     private File file;
     private final long firstTxId;

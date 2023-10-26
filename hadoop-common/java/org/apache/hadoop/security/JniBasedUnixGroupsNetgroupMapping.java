@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import org.apache.hadoop.util.NativeCodeLoader;
 
 import org.apache.hadoop.security.NetgroupCache;
@@ -19,8 +16,7 @@ import org.slf4j.LoggerFactory;
  * that invokes libC calls to get the group
  * memberships of a given user.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class JniBasedUnixGroupsNetgroupMapping
   extends JniBasedUnixGroupsMapping {
   

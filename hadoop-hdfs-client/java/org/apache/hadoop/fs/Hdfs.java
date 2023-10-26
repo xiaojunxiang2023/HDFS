@@ -11,9 +11,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclStatus;
@@ -39,9 +36,6 @@ import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.apache.hadoop.util.Progressable;
-
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class Hdfs extends AbstractFileSystem {
 
   DFSClient dfs;

@@ -1,8 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.datanode.FSCachingGetSpaceUsed;
 import org.apache.hadoop.hdfs.server.datanode.ReplicaInfo;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
@@ -29,8 +27,6 @@ import java.util.Objects;
  * org.apache.hadoop.hdfs.server.datanode.fsdataset
  * impl.ReplicaCachingGetSpaceUsed in your core-site.xml if we want to enable.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class ReplicaCachingGetSpaceUsed extends FSCachingGetSpaceUsed {
     static final Logger LOG =
             LoggerFactory.getLogger(ReplicaCachingGetSpaceUsed.class);

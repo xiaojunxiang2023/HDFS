@@ -8,8 +8,6 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricType;
 import org.apache.hadoop.metrics2.MetricsException;
@@ -41,8 +39,6 @@ import org.slf4j.LoggerFactory;
  * [prefix].sink.statsd.service.name=NameNode (name you want for service)
  * </pre>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class StatsDSink implements MetricsSink, Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(StatsDSink.class);
   private static final String PERIOD = ".";

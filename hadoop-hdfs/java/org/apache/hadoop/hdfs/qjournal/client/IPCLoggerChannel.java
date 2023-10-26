@@ -13,8 +13,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -58,7 +56,6 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.UncaughtEx
  * This allows calls to be bound together using the {@link QuorumCall}
  * class.
  */
-@InterfaceAudience.Private
 public class IPCLoggerChannel implements AsyncLogger {
 
   private final Configuration conf;

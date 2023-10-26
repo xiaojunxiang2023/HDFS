@@ -1,7 +1,4 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset;
-
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -28,7 +25,6 @@ import java.util.*;
  * stores replicas for a data node.
  * The default implementation stores replicas on local drives. 
  */
-@InterfaceAudience.Private
 public interface FsDatasetSpi<V extends FsVolumeSpi> extends FSDatasetMBean {
     /**
      * Returns a list of FsVolumes that hold reference counts.

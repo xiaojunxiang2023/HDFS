@@ -1,13 +1,8 @@
 package org.apache.hadoop.http;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Singleton to get access to Http related configuration.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class HttpConfig {
   public enum Policy {
     HTTP_ONLY,

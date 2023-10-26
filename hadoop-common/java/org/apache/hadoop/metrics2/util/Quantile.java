@@ -1,14 +1,11 @@
 package org.apache.hadoop.metrics2.util;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 
 /**
  * Specifies a quantile (with error bounds) to be watched by a
  * {@link SampleQuantiles} object.
  */
-@InterfaceAudience.Private
 public class Quantile implements Comparable<Quantile> {
   public final double quantile;
   public final double error;

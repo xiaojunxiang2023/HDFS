@@ -5,9 +5,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A mean statistic represented as the sum and the sample count;
  * the mean is calculated on demand.
@@ -51,8 +48,6 @@ import org.apache.hadoop.classification.InterfaceStability;
  *   are synchronized, but that things like equals are not.
  * </p>
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public final class MeanStatistic implements Serializable, Cloneable {
 
   private static final long serialVersionUID = 567888327998615425L;

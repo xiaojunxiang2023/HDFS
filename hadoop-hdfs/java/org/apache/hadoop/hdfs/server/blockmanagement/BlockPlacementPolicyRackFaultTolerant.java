@@ -1,6 +1,4 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.net.Node;
@@ -13,7 +11,6 @@ import java.util.*;
  * for placing block replicas.
  * The strategy is that it tries its best to place the replicas to most racks.
  */
-@InterfaceAudience.Private
 public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyDefault {
 
   @Override

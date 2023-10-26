@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.inotify;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 import java.util.List;
 
 /**
@@ -12,7 +10,6 @@ import java.util.List;
  * recent txid that the NameNode has sync'ed, so the client can determine how
  * far behind in the edit log it is.
  */
-@InterfaceAudience.Private
 public class EventBatchList {
   private List<EventBatch> batches;
   private long firstTxid;

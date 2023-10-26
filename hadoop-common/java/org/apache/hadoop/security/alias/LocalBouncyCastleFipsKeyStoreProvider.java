@@ -1,6 +1,4 @@
 package org.apache.hadoop.security.alias;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.net.URI;
  * localbcfks://file/home/larry/creds.bcfks {@literal ->}
  * file:///home/larry/creds.bcfks
  */
-@InterfaceAudience.Private
 public final class LocalBouncyCastleFipsKeyStoreProvider extends
     LocalKeyStoreProvider {
   public static final String SCHEME_NAME = "localbcfks";

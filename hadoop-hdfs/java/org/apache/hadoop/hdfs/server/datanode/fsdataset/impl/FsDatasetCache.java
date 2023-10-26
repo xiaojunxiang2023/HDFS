@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ChecksumException;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs;
@@ -31,8 +29,6 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
  * system calls to lock blocks into memory. Block checksums are verified upon
  * entry into the cache.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Unstable
 public class FsDatasetCache {
     private static final Logger LOG = LoggerFactory.getLogger(FsDatasetCache
             .class);

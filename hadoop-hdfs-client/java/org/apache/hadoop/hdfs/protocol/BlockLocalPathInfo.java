@@ -1,14 +1,9 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * A block and the full path information to the block data file and
  * the metadata file stored on the local file system.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class BlockLocalPathInfo {
   private final ExtendedBlock block;
   private String localBlockPath = "";  // local file storing the data

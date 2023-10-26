@@ -1,16 +1,10 @@
 package org.apache.hadoop.hdfs.tools;
-
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 
 import java.io.IOException;
-
-
-@InterfaceAudience.Private
 public class HDFSConcat {
     private final static String def_uri = "hdfs://localhost:9000";
 

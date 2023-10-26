@@ -3,16 +3,11 @@ package org.apache.hadoop.fs;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * Opaque, serializable reference to an entity in the FileSystem. May contain
  * metadata sufficient to resolve or verify subsequent accesses independent of
  * other modifications to the FileSystem.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 @FunctionalInterface
 public interface PathHandle extends Serializable {
 

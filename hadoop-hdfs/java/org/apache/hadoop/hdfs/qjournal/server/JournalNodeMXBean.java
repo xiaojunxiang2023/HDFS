@@ -1,16 +1,11 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
  * This is the JMX management interface for JournalNode information
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public interface JournalNodeMXBean {
   
   /**

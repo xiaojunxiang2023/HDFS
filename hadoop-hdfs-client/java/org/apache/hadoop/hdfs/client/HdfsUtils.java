@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
@@ -18,8 +16,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The public utility API for HDFS.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Evolving
 public class HdfsUtils {
   public static final Logger LOG = LoggerFactory.getLogger(HdfsUtils.class);
 

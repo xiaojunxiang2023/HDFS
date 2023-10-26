@@ -31,13 +31,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.hadoop.classification.InterfaceAudience;
 
 /**
  * This class validates configuration XML files in ${HADOOP_CONF_DIR} or
  * specified ones.
  */
-@InterfaceAudience.Private
 public final class ConfTest {
 
   private static final String USAGE =

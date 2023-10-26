@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.thirdparty.protobuf.ProtocolStringList;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedEntries;
 import org.apache.hadoop.fs.permission.FsCreateModes;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -292,8 +290,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
  * to the native data types used inside the NN as specified in the generic
  * ClientProtocol.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Stable
 public class ClientNamenodeProtocolServerSideTranslatorPB implements
     ClientNamenodeProtocolPB {
   final private ClientProtocol server;

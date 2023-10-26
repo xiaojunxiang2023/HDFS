@@ -28,7 +28,6 @@ import org.apache.hadoop.security.SecurityUtil;
 import org.eclipse.jetty.server.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.HAUtil;
@@ -56,7 +55,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * edit file for periodic checkpointing in Non-HA deployments.
  * Standby NameNode uses to upload checkpoints in HA deployments.
  */
-@InterfaceAudience.Private
 public class ImageServlet extends HttpServlet {
 
   public static final String PATH_SPEC = "/imagetransfer";

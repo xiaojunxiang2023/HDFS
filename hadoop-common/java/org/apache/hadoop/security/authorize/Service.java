@@ -2,9 +2,6 @@ package org.apache.hadoop.security.authorize;
 
 import java.security.Permission;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * An abstract definition of <em>service</em> as related to 
  * Service Level Authorization for Hadoop.
@@ -12,8 +9,7 @@ import org.apache.hadoop.classification.InterfaceStability;
  * Each service defines it's configuration key and also the necessary
  * {@link Permission} required to access the service.
  */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
+// MapReduce也可见
 public class Service {
   private String key;
   private Class<?> protocol;

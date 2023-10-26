@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -67,8 +66,6 @@ import org.apache.hadoop.hdfs.util.EnumCounters;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
-
-@InterfaceAudience.Private
 public class FSImageFormatPBSnapshot {
   /**
    * Loading snapshot related information from protobuf based FSImage

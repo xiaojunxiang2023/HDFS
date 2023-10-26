@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.metrics;
 
-import org.apache.hadoop.classification.InterfaceAudience;
-
 /**
  * This interface defines the methods to get status pertaining to blocks of type
  * {@link org.apache.hadoop.hdfs.protocol.BlockType#STRIPED} in FSNamesystem
@@ -13,7 +11,6 @@ import org.apache.hadoop.classification.InterfaceAudience;
  * @see org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics
  *
  */
-@InterfaceAudience.Private
 public interface ECBlockGroupsMBean {
   /**
    * Return count of erasure coded block groups with low redundancy.

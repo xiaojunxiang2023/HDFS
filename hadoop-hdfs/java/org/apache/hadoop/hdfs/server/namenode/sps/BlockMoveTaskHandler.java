@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
 import java.io.IOException;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockMovingInfo;
 
 /**
@@ -11,8 +8,6 @@ import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockM
  * connect directly to DN and request block move, and other can talk NN to
  * schedule via heart-beats.
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public interface BlockMoveTaskHandler {
 
   /**

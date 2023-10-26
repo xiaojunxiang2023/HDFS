@@ -3,9 +3,6 @@ package org.apache.hadoop.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +10,6 @@ import org.slf4j.LoggerFactory;
 /**
  * This class returns build information about Hadoop components.
  */
-@InterfaceAudience.Public
-@InterfaceStability.Stable
 public class VersionInfo {
   private static final Logger LOG = LoggerFactory.getLogger(VersionInfo.class);
 

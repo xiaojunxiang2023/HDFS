@@ -7,8 +7,6 @@ import java.lang.ref.WeakReference;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.util.Time;
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A daemon thread that waits for the next file system to renew.
  */
-@InterfaceAudience.Private
 public class DelegationTokenRenewer
     extends Thread {
   private static final Logger LOG = LoggerFactory
@@ -146,8 +143,6 @@ public class DelegationTokenRenewer
 
   /** assumes renew cycle for a token is 24 hours... */
   private static final long RENEW_CYCLE = 24 * 60 * 60 * 1000; 
-
-  @InterfaceAudience.Private
   @VisibleForTesting
   public static long renewCycle = RENEW_CYCLE;
 

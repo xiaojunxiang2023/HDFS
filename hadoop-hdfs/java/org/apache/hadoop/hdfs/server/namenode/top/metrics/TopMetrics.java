@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.namenode.top.metrics;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -47,7 +46,6 @@ import static org.apache.hadoop.hdfs.server.namenode.top.window.RollingWindowMan
  * <p>
  * Thread-safe: relies on thread-safety of RollingWindowManager
  */
-@InterfaceAudience.Private
 public class TopMetrics implements MetricsSource {
   public static final Logger LOG = LoggerFactory.getLogger(TopMetrics.class);
   public static final String TOPMETRICS_METRICS_SOURCE_NAME =

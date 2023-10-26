@@ -1,13 +1,10 @@
 package org.apache.hadoop.crypto;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.util.StringUtils;
 
 /**
  * Defines properties of a CipherSuite. Modeled after the ciphers in
  * {@link javax.crypto.Cipher}.
  */
-@InterfaceAudience.Private
 public enum CipherSuite {
   UNKNOWN("Unknown", 0),
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16);

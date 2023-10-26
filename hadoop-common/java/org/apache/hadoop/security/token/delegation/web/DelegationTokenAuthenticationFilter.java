@@ -3,8 +3,6 @@ package org.apache.hadoop.security.token.delegation.web;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.SaslRpcServer;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -54,8 +52,6 @@ import java.util.Properties;
  *  {@link #DELEGATION_TOKEN_SECRET_MANAGER_ATTR} attribute name (
  *  'hadoop.http.delegation-token-secret-manager').
  */
-@InterfaceAudience.Private
-@InterfaceStability.Evolving
 public class DelegationTokenAuthenticationFilter
     extends AuthenticationFilter {
 

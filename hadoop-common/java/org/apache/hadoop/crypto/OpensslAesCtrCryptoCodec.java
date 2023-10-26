@@ -8,8 +8,6 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Random;
-
-import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Implement the AES-CTR crypto codec using JNI into OpenSSL.
  */
-@InterfaceAudience.Private
 public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
   private static final Logger LOG =
       LoggerFactory.getLogger(OpensslAesCtrCryptoCodec.class.getName());
