@@ -15,11 +15,6 @@ import org.apache.hadoop.util.Shell;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
-/** Filesystem disk space usage statistics.
- * Uses the unix 'df' program to get mount points, and java.io.File for
- * space utilization. Tested on Linux, FreeBSD, Windows. */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
 public class DF extends Shell {
 
   private final String dirPath;
@@ -27,7 +22,7 @@ public class DF extends Shell {
   private String filesystem;
   private String mount;
   
-  private ArrayList<String> output;
+  private final ArrayList<String> output;
 
   public DF(File path, Configuration conf) throws IOException {
     this(path, conf.getLong(CommonConfigurationKeys.FS_DF_INTERVAL_KEY,
@@ -38,27 +33,17 @@ public class DF extends Shell {
     super(dfInterval);
     this.dirPath = path.getCanonicalPath();
     this.dirFile = new File(this.dirPath);
-    this.output = new ArrayList<String>();
+    this.output = new ArrayList<>();
   }
 
   /// ACCESSORS
 
-  /** @return the canonical path to the volume we're checking. */
-  public String getDirPath() {
-    return dirPath;
-  }
-
   /** @return a string indicating which filesystem volume we're checking. */
   public String getFilesystem() throws IOException {
-    if (Shell.WINDOWS) {
-      this.filesystem = dirFile.getCanonicalPath().substring(0, 2);
-      return this.filesystem;
-    } else {
-      run();
-      verifyExitCode();
-      parseOutput();
-      return filesystem;
-    }
+    run();
+    verifyExitCode();
+    parseOutput();
+    return filesystem;
   }
 
   /** @return the capacity of the measured filesystem in bytes. */
@@ -91,14 +76,9 @@ public class DF extends Shell {
           + "does not exist");
     }
 
-    if (Shell.WINDOWS) {
-      // Assume a drive letter for a mount point
-      this.mount = dirFile.getCanonicalPath().substring(0, 2);
-    } else {
-      run();
-      verifyExitCode();
-      parseOutput();
-    }
+    run();
+    verifyExitCode();
+    parseOutput();
 
     return mount;
   }
@@ -117,14 +97,8 @@ public class DF extends Shell {
 
   @Override
   protected String[] getExecString() {
-    // ignoring the error since the exit code it enough
-    if (Shell.WINDOWS){
-      throw new AssertionError(
-          "DF.getExecString() should never be called on Windows");
-    } else {
-      return new String[] {"bash","-c","exec 'df' '-k' '-P' '" + dirPath 
-                      + "' 2>/dev/null"};
-    }
+    return new String[] {"bash","-c","exec 'df' '-k' '-P' '" + dirPath 
+            + "' 2>/dev/null"};
   }
 
   @Override
@@ -140,9 +114,9 @@ public class DF extends Shell {
   @VisibleForTesting
   protected void parseOutput() throws IOException {
     if (output.size() < 2) {
-      StringBuffer sb = new StringBuffer("Fewer lines of output than expected");
+      StringBuilder sb = new StringBuilder("Fewer lines of output than expected");
       if (output.size() > 0) {
-        sb.append(": " + output.get(0));
+        sb.append(": ").append(output.get(0));
       }
       throw new IOException(sb.toString());
     }
@@ -172,9 +146,7 @@ public class DF extends Shell {
       Long.parseLong(tokens.nextToken()); // available
       Integer.parseInt(tokens.nextToken()); // pct used
       this.mount = tokens.nextToken();
-    } catch (NoSuchElementException e) {
-      throw new IOException("Could not parse line: " + line);
-    } catch (NumberFormatException e) {
+    } catch (NoSuchElementException | NumberFormatException e) {
       throw new IOException("Could not parse line: " + line);
     }
   }

@@ -66,11 +66,7 @@ public class ShellCommandFencer
     ProcessBuilder builder;
     String cmd = parseArgs(target.getTransitionTargetHAStatus(), args);
 
-    if (!Shell.WINDOWS) {
-      builder = new ProcessBuilder("bash", "-e", "-c", cmd);
-    } else {
-      builder = new ProcessBuilder("cmd.exe", "/c", cmd);
-    }
+    builder = new ProcessBuilder("bash", "-e", "-c", cmd);
 
     setConfAsEnvVars(builder.environment());
     addTargetInfoAsEnvVars(target, builder.environment());

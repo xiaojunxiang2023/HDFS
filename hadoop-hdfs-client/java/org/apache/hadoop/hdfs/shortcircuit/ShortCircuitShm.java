@@ -452,10 +452,6 @@ public class ShortCircuitShm {
     if (!NativeIO.isAvailable()) {
       throw new UnsupportedOperationException("NativeIO is not available.");
     }
-    if (Shell.WINDOWS) {
-      throw new UnsupportedOperationException(
-          "DfsClientShm is not yet implemented for Windows.");
-    }
     if (unsafe == null) {
       throw new UnsupportedOperationException(
           "can't use DfsClientShm because we failed to " +

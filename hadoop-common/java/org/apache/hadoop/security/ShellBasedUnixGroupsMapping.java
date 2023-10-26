@@ -204,12 +204,10 @@ public class ShellBasedUnixGroupsMapping extends Configured
     }
 
     // remove duplicated primary group
-    if (!Shell.WINDOWS) {
-      for (int i = 1; i < groups.size(); i++) {
-        if (groups.get(i).equals(groups.get(0))) {
-          groups.remove(i);
-          break;
-        }
+    for (int i = 1; i < groups.size(); i++) {
+      if (groups.get(i).equals(groups.get(0))) {
+        groups.remove(i);
+        break;
       }
     }
 
@@ -265,14 +263,6 @@ public class ShellBasedUnixGroupsMapping extends Configured
    */
   private List<String> resolvePartialGroupNames(String userName,
       String errMessage, String groupNames) throws PartialGroupNameException {
-    // Exception may indicate that some group names are not resolvable.
-    // Shell-based implementation should tolerate unresolvable groups names,
-    // and return resolvable ones, similar to what JNI-based implementation
-    // does.
-    if (Shell.WINDOWS) {
-      throw new PartialGroupNameException("Does not support partial group"
-      + " name resolution on Windows. " + errMessage);
-    }
     if (groupNames.isEmpty()) {
       throw new PartialGroupNameException("The user name '" + userName
           + "' is not found. " + errMessage);

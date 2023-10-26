@@ -396,12 +396,7 @@ public class IOUtils {
           "File/Directory " + fileToSync.getAbsolutePath() + " does not exist");
     }
     boolean isDir = fileToSync.isDirectory();
-
-    // HDFS-13586, FileChannel.open fails with AccessDeniedException
-    // for any directory, ignore.
-    if (isDir && Shell.WINDOWS) {
-      return;
-    }
+    
 
     // If the file is a directory we have to open read-only, for regular files
     // we must open r/w for the fsync to have an effect. See
@@ -426,20 +421,7 @@ public class IOUtils {
    */
   public static void fsync(FileChannel channel, boolean isDir)
       throws IOException {
-    try {
-      channel.force(true);
-    } catch (IOException ioe) {
-      if (isDir) {
-        assert !(Shell.LINUX
-            || Shell.MAC) : "On Linux and MacOSX fsyncing a directory"
-                + " should not throw IOException, we just don't want to rely"
-                + " on that in production (undocumented)" + ". Got: " + ioe;
-        // Ignore exception if it is a directory
-        return;
-      }
-      // Throw original exception
-      throw ioe;
-    }
+    channel.force(true);
   }
 
   /**

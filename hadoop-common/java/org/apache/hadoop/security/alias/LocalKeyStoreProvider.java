@@ -75,24 +75,8 @@ public abstract class LocalKeyStoreProvider extends
   protected void stashOriginalFilePermissions() throws IOException {
     // save off permissions in case we need to
     // rewrite the keystore in flush()
-    if (!Shell.WINDOWS) {
-      Path path = Paths.get(file.getCanonicalPath());
-      permissions = Files.getPosixFilePermissions(path);
-    } else {
-      // On Windows, the JDK does not support the POSIX file permission APIs.
-      // Instead, we can do a winutils call and translate.
-      String[] cmd = Shell.getGetPermissionCommand();
-      String[] args = new String[cmd.length + 1];
-      System.arraycopy(cmd, 0, args, 0, cmd.length);
-      args[cmd.length] = file.getCanonicalPath();
-      String out = Shell.execCommand(args);
-      StringTokenizer t = new StringTokenizer(out, Shell.TOKEN_SEPARATOR_REGEX);
-      // The winutils output consists of 10 characters because of the leading
-      // directory indicator, i.e. "drwx------".  The JDK parsing method expects
-      // a 9-character string, so remove the leading character.
-      String permString = t.nextToken().substring(1);
-      permissions = PosixFilePermissions.fromString(permString);
-    }
+    Path path = Paths.get(file.getCanonicalPath());
+    permissions = Files.getPosixFilePermissions(path);
   }
 
   @Override
@@ -128,17 +112,8 @@ public abstract class LocalKeyStoreProvider extends
     if (LOG.isDebugEnabled()) {
       LOG.debug("Resetting permissions to '" + permissions + "'");
     }
-    if (!Shell.WINDOWS) {
-      Files.setPosixFilePermissions(Paths.get(file.getCanonicalPath()),
+    Files.setPosixFilePermissions(Paths.get(file.getCanonicalPath()),
           permissions);
-    } else {
-      // FsPermission expects a 10-character string because of the leading
-      // directory indicator, i.e. "drwx------". The JDK toString method returns
-      // a 9-character string, so prepend a leading character.
-      FsPermission fsPermission = FsPermission.valueOf(
-          "-" + PosixFilePermissions.toString(permissions));
-      FileUtil.setPermission(file, fsPermission);
-    }
   }
 
   private static Set<PosixFilePermission> modeToPosixFilePermission(

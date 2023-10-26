@@ -29,7 +29,6 @@ import org.apache.hadoop.fs.PathOperationException;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclUtil;
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.viewfs.NotInMountpointException;
 import org.apache.hadoop.io.IOUtils;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
@@ -490,7 +489,7 @@ abstract class CommandWithDestination extends FsCommand {
         long defaultBlockSize;
         try {
           defaultBlockSize = getDefaultBlockSize();
-        } catch (NotInMountpointException ex) {
+        } catch (Exception ex) {
           // ViewFileSystem#getDefaultBlockSize() throws an exception as it
           // needs a target FS to retrive the default block size from.
           // Hence, for ViewFs, we should call getDefaultBlockSize with the

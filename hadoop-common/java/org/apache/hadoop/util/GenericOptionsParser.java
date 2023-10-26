@@ -489,56 +489,6 @@ public class GenericOptionsParser {
   }
 
   /**
-   * Windows powershell and cmd can parse key=value themselves, because
-   * /pkey=value is same as /pkey value under windows. However this is not
-   * compatible with how we get arbitrary key values in -Dkey=value format.
-   * Under windows -D key=value or -Dkey=value might be passed as
-   * [-Dkey, value] or [-D key, value]. This method does undo these and
-   * return a modified args list by manually changing [-D, key, value]
-   * into [-D, key=value]
-   *
-   * @param args command line arguments
-   * @return fixed command line arguments that GnuParser can parse
-   */
-  private String[] preProcessForWindows(String[] args) {
-    if (!Shell.WINDOWS) {
-      return args;
-    }
-    if (args == null) {
-      return null;
-    }
-    List<String> newArgs = new ArrayList<String>(args.length);
-    for (int i=0; i < args.length; i++) {
-      if (args[i] == null) {
-        continue;
-      }
-      String prop = null;
-      if (args[i].equals("-D")) {
-        newArgs.add(args[i]);
-        if (i < args.length - 1) {
-          prop = args[++i];
-        }
-      } else if (args[i].startsWith("-D")) {
-        prop = args[i];
-      } else {
-        newArgs.add(args[i]);
-      }
-      if (prop != null) {
-        if (prop.contains("=")) {
-          // everything good
-        } else {
-          if (i < args.length - 1) {
-            prop += "=" + args[++i];
-          }
-        }
-        newArgs.add(prop);
-      }
-    }
-
-    return newArgs.toArray(new String[newArgs.size()]);
-  }
-
-  /**
    * Parse the user-specified options, get the generic options, and modify
    * configuration accordingly.
    *
@@ -552,7 +502,7 @@ public class GenericOptionsParser {
     CommandLineParser parser = new GnuParser();
     boolean parsed = false;
     try {
-      commandLine = parser.parse(opts, preProcessForWindows(args), true);
+      commandLine = parser.parse(opts, args, true);
       processGeneralOptions(commandLine);
       parsed = true;
     } catch(ParseException e) {

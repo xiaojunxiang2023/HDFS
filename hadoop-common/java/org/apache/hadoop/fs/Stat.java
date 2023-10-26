@@ -15,12 +15,6 @@ import org.apache.hadoop.util.Shell;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
-/**
- * Wrapper for the Unix stat(1) command. Used to workaround the lack of 
- * lstat(2) in Java 6.
- */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
 public class Stat extends Shell {
 
   private final Path original;
@@ -58,22 +52,6 @@ public class Stat extends Shell {
     return stat;
   }
 
-  /**
-   * Whether Stat is supported on the current platform
-   * @return
-   */
-  public static boolean isAvailable() {
-    if (Shell.LINUX || Shell.FREEBSD || Shell.MAC) {
-      return true;
-    }
-    return false;
-  }
-
-  @VisibleForTesting
-  FileStatus getFileStatusForTesting() {
-    return stat;
-  }
-
   @Override
   protected String[] getExecString() {
     String derefFlag = "-";
@@ -83,10 +61,6 @@ public class Stat extends Shell {
     if (Shell.LINUX) {
       return new String[] {
           "stat", derefFlag + "c", "%s,%F,%Y,%X,%a,%U,%G,%N", path.toString() };
-    } else if (Shell.FREEBSD || Shell.MAC) {
-      return new String[] {
-          "stat", derefFlag + "f", "%z,%HT,%m,%a,%Op,%Su,%Sg,`link' -> `%Y'",
-          path.toString() };
     } else {
       throw new UnsupportedOperationException(
           "stat is not supported on this platform");
@@ -116,8 +90,7 @@ public class Stat extends Shell {
     StringTokenizer tokens = new StringTokenizer(line, ",");
     try {
       long length = Long.parseLong(tokens.nextToken());
-      boolean isDir = tokens.nextToken().equalsIgnoreCase("directory") ? true
-          : false;
+      boolean isDir = tokens.nextToken().equalsIgnoreCase("directory");
       // Convert from seconds to milliseconds
       long modTime = Long.parseLong(tokens.nextToken())*1000;
       long accessTime = Long.parseLong(tokens.nextToken())*1000;
@@ -135,7 +108,7 @@ public class Stat extends Shell {
       // `link' -> `target' OR 'link' -> 'target'
       // '' -> ''
       Path symlink = null;
-      String parts[] = symStr.split(" -> ");      
+      String[] parts = symStr.split(" -> ");      
       try {
         String target = parts[1];
         target = target.substring(1, target.length()-1);
@@ -148,9 +121,7 @@ public class Stat extends Shell {
       // Set stat
       stat = new FileStatus(length, isDir, 1, blockSize, modTime, accessTime,
           perms, owner, group, symlink, qualified);
-    } catch (NumberFormatException e) {
-      throw new IOException("Unexpected stat output: " + line, e);
-    } catch (NoSuchElementException e) {
+    } catch (NumberFormatException | NoSuchElementException e) {
       throw new IOException("Unexpected stat output: " + line, e);
     }
   }

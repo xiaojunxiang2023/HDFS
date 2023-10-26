@@ -2,8 +2,6 @@ package org.apache.hadoop.hdfs.tools;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.viewfs.ViewFileSystemOverloadScheme;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
@@ -27,25 +25,16 @@ public class AdminHelper {
     static DistributedFileSystem getDFS(Configuration conf)
             throws IOException {
         FileSystem fs = FileSystem.get(conf);
-        return checkAndGetDFS(fs, conf);
+        return checkAndGetDFS(fs);
     }
 
     static DistributedFileSystem getDFS(URI uri, Configuration conf)
             throws IOException {
         FileSystem fs = FileSystem.get(uri, conf);
-        return checkAndGetDFS(fs, conf);
+        return checkAndGetDFS(fs);
     }
 
-    static DistributedFileSystem checkAndGetDFS(FileSystem fs, Configuration conf)
-            throws IOException {
-        if ((fs instanceof ViewFileSystemOverloadScheme)) {
-            // With ViewFSOverloadScheme, the admin will pass -fs option with intended
-            // child fs mount path. GenericOptionsParser would have set the given -fs
-            // as FileSystem's defaultURI. So, we are using FileSystem.getDefaultUri
-            // to use the given -fs path.
-            fs = ((ViewFileSystemOverloadScheme) fs)
-                    .getRawFileSystem(new Path(FileSystem.getDefaultUri(conf)), conf);
-        }
+    static DistributedFileSystem checkAndGetDFS(FileSystem fs) {
         if (!(fs instanceof DistributedFileSystem)) {
             throw new IllegalArgumentException("FileSystem " + fs.getUri()
                     + " is not an HDFS file system. The fs class is: "

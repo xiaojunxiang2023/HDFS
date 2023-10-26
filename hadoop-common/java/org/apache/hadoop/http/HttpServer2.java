@@ -517,13 +517,6 @@ public final class HttpServer2 implements FilterContainer {
           conf.getInt(HTTP_SELECTOR_COUNT_KEY, HTTP_SELECTOR_COUNT_DEFAULT));
       ConnectionFactory connFactory = new HttpConnectionFactory(httpConfig);
       conn.addConnectionFactory(connFactory);
-      if(Shell.WINDOWS) {
-        // result of setting the SO_REUSEADDR flag is different on Windows
-        // http://msdn.microsoft.com/en-us/library/ms740621(v=vs.85).aspx
-        // without this 2 NN's can start on the same machine and listen on
-        // the same port with indeterminate routing of incoming requests to them
-        conn.setReuseAddress(false);
-      }
       return conn;
     }
 

@@ -543,12 +543,7 @@ public class FileUtil {
    * @throws IOException on windows, there can be problems with the subprocess
    */
   public static String makeSecureShellPath(File file) throws IOException {
-    if (Shell.WINDOWS) {
-      // Currently it is never called, but it might be helpful in the future.
-      throw new UnsupportedOperationException("Not implemented for Windows");
-    } else {
-      return makeShellPath(file, false).replace("'", "'\\''");
-    }
+    return makeShellPath(file, false).replace("'", "'\\''");
   }
 
   /**
@@ -700,10 +695,7 @@ public class FileUtil {
       throws IOException, InterruptedException, ExecutionException {
     ExecutorService executor = null;
     ProcessBuilder builder = new ProcessBuilder();
-    builder.command(
-        Shell.WINDOWS ? "cmd" : "bash",
-        Shell.WINDOWS ? "/c" : "-c",
-        command);
+    builder.command("bash", "-c", command);
     Process process = builder.start();
     int exitCode;
     try {
@@ -808,15 +800,9 @@ public class FileUtil {
       }
     }
 
-    if(Shell.WINDOWS) {
-      // Tar is not native to Windows. Use simple Java based implementation for
-      // tests and simple tar archives
-      unTarUsingJava(inputStream, untarDir, gzipped);
-    } else {
-      // spawn tar utility to untar archive for full fledged unix behavior such
-      // as resolving symlinks in tar archives
-      unTarUsingTar(inputStream, untarDir, gzipped);
-    }
+    // spawn tar utility to untar archive for full fledged unix behavior such
+    // as resolving symlinks in tar archives
+    unTarUsingTar(inputStream, untarDir, gzipped);
   }
 
   /**
@@ -837,16 +823,9 @@ public class FileUtil {
     }
 
     boolean gzipped = inFile.toString().endsWith("gz");
-    if(Shell.WINDOWS) {
-      // Tar is not native to Windows. Use simple Java based implementation for
-      // tests and simple tar archives
-      unTarUsingJava(inFile, untarDir, gzipped);
-    }
-    else {
-      // spawn tar utility to untar archive for full fledged unix behavior such
-      // as resolving symlinks in tar archives
-      unTarUsingTar(inFile, untarDir, gzipped);
-    }
+    // spawn tar utility to untar archive for full fledged unix behavior such
+    // as resolving symlinks in tar archives
+    unTarUsingTar(inFile, untarDir, gzipped);
   }
 
   private static void unTarUsingTar(InputStream inputStream, File untarDir,
@@ -1060,26 +1039,11 @@ public class FileUtil {
 
     ShellCommandExecutor shExec;
     try {
-      if (Shell.WINDOWS &&
-          linkFile.getParentFile() != null &&
-          !new Path(target).isAbsolute()) {
-        // Relative links on Windows must be resolvable at the time of
-        // creation. To ensure this we run the shell command in the directory
-        // of the link.
-        //
-        shExec = new ShellCommandExecutor(cmd, linkFile.getParentFile());
-      } else {
-        shExec = new ShellCommandExecutor(cmd);
-      }
+      shExec = new ShellCommandExecutor(cmd);
       shExec.execute();
     } catch (Shell.ExitCodeException ec) {
       int returnVal = ec.getExitCode();
-      if (Shell.WINDOWS && returnVal == SYMLINK_NO_PRIVILEGE) {
-        LOG.warn("Fail to create symbolic links on Windows. "
-            + "The default security settings in Windows disallow non-elevated "
-            + "administrators and all non-administrators from creating symbolic links. "
-            + "This behavior can be changed in the Local Security Policy management console");
-      } else if (returnVal != 0) {
+      if (returnVal != 0) {
         LOG.warn("Command '" + StringUtils.join(" ", cmd) + "' failed "
             + returnVal + " with: " + ec.getMessage());
       }
@@ -1161,17 +1125,7 @@ public class FileUtil {
    * @return true on success, false otherwise
    */
   public static boolean setReadable(File f, boolean readable) {
-    if (Shell.WINDOWS) {
-      try {
-        String permission = readable ? "u+r" : "u-r";
-        FileUtil.chmod(f.getCanonicalPath(), permission, false);
-        return true;
-      } catch (IOException ex) {
-        return false;
-      }
-    } else {
-      return f.setReadable(readable);
-    }
+    return f.setReadable(readable);
   }
 
   /**
@@ -1182,17 +1136,7 @@ public class FileUtil {
    * @return true on success, false otherwise
    */
   public static boolean setWritable(File f, boolean writable) {
-    if (Shell.WINDOWS) {
-      try {
-        String permission = writable ? "u+w" : "u-w";
-        FileUtil.chmod(f.getCanonicalPath(), permission, false);
-        return true;
-      } catch (IOException ex) {
-        return false;
-      }
-    } else {
-      return f.setWritable(writable);
-    }
+    return f.setWritable(writable);
   }
 
   /**
@@ -1206,17 +1150,7 @@ public class FileUtil {
    * @return true on success, false otherwise
    */
   public static boolean setExecutable(File f, boolean executable) {
-    if (Shell.WINDOWS) {
-      try {
-        String permission = executable ? "u+x" : "u-x";
-        FileUtil.chmod(f.getCanonicalPath(), permission, false);
-        return true;
-      } catch (IOException ex) {
-        return false;
-      }
-    } else {
-      return f.setExecutable(executable);
-    }
+    return f.setExecutable(executable);
   }
 
   /**
@@ -1226,16 +1160,7 @@ public class FileUtil {
    *         On Windows, true if process has read access on the path
    */
   public static boolean canRead(File f) {
-    if (Shell.WINDOWS) {
-      try {
-        return NativeIO.Windows.access(f.getCanonicalPath(),
-            NativeIO.Windows.AccessRight.ACCESS_READ);
-      } catch (IOException e) {
-        return false;
-      }
-    } else {
-      return f.canRead();
-    }
+    return f.canRead();
   }
 
   /**
@@ -1245,16 +1170,7 @@ public class FileUtil {
    *         On Windows, true if process has write access on the path
    */
   public static boolean canWrite(File f) {
-    if (Shell.WINDOWS) {
-      try {
-        return NativeIO.Windows.access(f.getCanonicalPath(),
-            NativeIO.Windows.AccessRight.ACCESS_WRITE);
-      } catch (IOException e) {
-        return false;
-      }
-    } else {
-      return f.canWrite();
-    }
+    return f.canWrite();
   }
 
   /**
@@ -1264,16 +1180,7 @@ public class FileUtil {
    *         On Windows, true if process has execute access on the path
    */
   public static boolean canExecute(File f) {
-    if (Shell.WINDOWS) {
-      try {
-        return NativeIO.Windows.access(f.getCanonicalPath(),
-            NativeIO.Windows.AccessRight.ACCESS_EXECUTE);
-      } catch (IOException e) {
-        return false;
-      }
-    } else {
-      return f.canExecute();
-    }
+    return f.canExecute();
   }
 
   /**
@@ -1291,7 +1198,7 @@ public class FileUtil {
 
     // use the native/fork if the group/other permissions are different
     // or if the native is available or on Windows
-    if (group != other || NativeIO.isAvailable() || Shell.WINDOWS) {
+    if (group != other || NativeIO.isAvailable() ) {
       execSetPermission(f, permission);
       return;
     }
@@ -1486,8 +1393,7 @@ public class FileUtil {
       Map<String, String> callerEnv) throws IOException {
     // Replace environment variables, case-insensitive on Windows
     @SuppressWarnings("unchecked")
-    Map<String, String> env = Shell.WINDOWS ? new CaseInsensitiveMap(callerEnv) :
-      callerEnv;
+    Map<String, String> env = callerEnv;
     String[] classPathEntries = inputClassPath.split(File.pathSeparator);
     for (int i = 0; i < classPathEntries.length; ++i) {
       classPathEntries[i] = StringUtils.replaceTokens(classPathEntries[i],
@@ -1816,7 +1722,7 @@ public class FileUtil {
    * specified charset. This utility method opens the file for writing, creating
    * the file if it does not exist, or overwrites an existing file.
    *
-   * @param FileContext the file context with which to create the file
+   * @param fs the file context with which to create the file
    * @param path the path to the file
    * @param charseq the char sequence to write to the file
    * @param cs the charset to use for encoding

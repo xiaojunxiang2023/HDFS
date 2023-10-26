@@ -13,8 +13,6 @@ import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FsStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.viewfs.ViewFileSystem;
-import org.apache.hadoop.fs.viewfs.ViewFileSystemUtil;
 import org.apache.hadoop.util.StringUtils;
 
 /**
@@ -110,28 +108,6 @@ class FsUsage extends FsCommand {
 
     @Override
     protected void processPath(PathData item) throws IOException {
-      if (ViewFileSystemUtil.isViewFileSystem(item.fs)
-          || ViewFileSystemUtil.isViewFileSystemOverloadScheme(item.fs)) {
-        ViewFileSystem viewFileSystem = (ViewFileSystem) item.fs;
-        Map<ViewFileSystem.MountPoint, FsStatus>  fsStatusMap =
-            ViewFileSystemUtil.getStatus(viewFileSystem, item.path);
-
-        for (Map.Entry<ViewFileSystem.MountPoint, FsStatus> entry :
-            fsStatusMap.entrySet()) {
-          ViewFileSystem.MountPoint viewFsMountPoint = entry.getKey();
-          FsStatus fsStatus = entry.getValue();
-
-          // Add the viewfs mount point status to report
-          URI[] mountPointFileSystemURIs =
-              viewFsMountPoint.getTargetFileSystemURIs();
-          // Since LinkMerge is not supported yet, we
-          // should ideally see mountPointFileSystemURIs
-          // array with only one element.
-          addToUsagesTable(mountPointFileSystemURIs[0],
-              fsStatus, viewFsMountPoint.getMountedOnPath().toString());
-        }
-      } else {
-        // Hide the columns specific to ViewFileSystem
         getUsagesTable().setColumnHide(5, true);
         FsStatus fsStatus = item.fs.getStatus(item.path);
         addToUsagesTable(item.fs.getUri(), fsStatus, "/");
@@ -141,7 +117,7 @@ class FsUsage extends FsCommand {
   }
 
   /** show disk usage */
-  public static class Du extends FsUsage {
+  class Du extends FsUsage {
     public static final String NAME = "du";
     public static final String USAGE = "[-s] [-h] [-v] [-x] <path> ...";
     public static final String DESCRIPTION =
@@ -212,7 +188,7 @@ class FsUsage extends FsCommand {
     }
   }
   /** show disk usage summary */
-  public static class Dus extends Du {
+  class Dus extends Du {
     public static final String NAME = "dus";
 
     @Override
@@ -231,7 +207,7 @@ class FsUsage extends FsCommand {
    * Creates a table of aligned values based on the maximum width of each
    * column as a string
    */
-  private static class TableBuilder {
+  class TableBuilder {
     protected boolean hasHeader = false;
     protected List<String[]> rows;
     protected int[] widths;
@@ -330,5 +306,4 @@ class FsUsage extends FsCommand {
     public boolean isEmpty() {
       return size() == 0;
     }
-  }
 }

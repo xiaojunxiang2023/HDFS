@@ -262,7 +262,7 @@ public class DFSAdmin extends FsShell {
     }
 
     protected DistributedFileSystem getDFS() throws IOException {
-        return AdminHelper.checkAndGetDFS(getFS(), getConf());
+        return AdminHelper.checkAndGetDFS(getFS());
     }
 
     /**
@@ -2221,7 +2221,7 @@ public class DFSAdmin extends FsShell {
         @Override
         public void run(PathData pathData) throws IOException {
             FileSystem fs = pathData.fs;
-            this.dfs = AdminHelper.checkAndGetDFS(fs, getConf());
+            this.dfs = AdminHelper.checkAndGetDFS(fs);
             run(pathData.path);
         }
     }

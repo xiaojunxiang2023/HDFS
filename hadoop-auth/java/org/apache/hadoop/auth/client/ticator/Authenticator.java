@@ -33,6 +33,6 @@ public interface Authenticator {
    * @throws IOException if an IO error occurred.
    * @throws AuthenticationException if an authentication error occurred.
    */
-  public void authenticate(URL url, AuthenticatedURL.Token token) throws IOException, AuthenticationException;
+  void authenticate(URL url, AuthenticatedURL.Token token) throws Exception;
 
 }

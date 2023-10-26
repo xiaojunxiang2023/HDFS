@@ -10,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 
-/** Filesystem disk space usage statistics.  Uses the unix 'du' program */
-@InterfaceAudience.LimitedPrivate({"HDFS", "MapReduce"})
-@InterfaceStability.Evolving
 public class DU extends CachingGetSpaceUsed {
   private final DUShell duShell;
 
