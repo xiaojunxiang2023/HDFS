@@ -76,11 +76,7 @@ public interface GetSpaceUsed {
         return klass;
       }
       Class<? extends GetSpaceUsed> result = null;
-      if (Shell.WINDOWS) {
-        result = WindowsGetSpaceUsed.class;
-      } else {
         result = DU.class;
-      }
       if (conf == null) {
         return result;
       }
@@ -161,12 +157,8 @@ public interface GetSpaceUsed {
       }
       // If there were any exceptions then du will be null.
       // Construct our best guess fallback.
-      if (getSpaceUsed == null) {
-        if (Shell.WINDOWS) {
-          getSpaceUsed = new WindowsGetSpaceUsed(this);
-        } else {
-          getSpaceUsed = new DU(this);
-        }
+      if (getSpaceUsed == null) { 
+        getSpaceUsed = new DU(this);
       }
       // Call init after classes constructors have finished.
       if (getSpaceUsed instanceof CachingGetSpaceUsed) {

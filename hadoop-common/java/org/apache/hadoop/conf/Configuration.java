@@ -281,7 +281,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
   /**
    * List of configuration resources.
    */
-  private ArrayList<Resource> resources = new ArrayList<Resource>();
+  private ArrayList<Resource> resources = new ArrayList<>();
   
   /**
    * The value reported as the setting resource when a key is set
@@ -293,32 +293,28 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
   /**
    * List of configuration parameters marked <b>final</b>. 
    */
-  private Set<String> finalParameters = Collections.newSetFromMap(
-      new ConcurrentHashMap<String, Boolean>());
+  private Set<String> finalParameters = Collections.newSetFromMap(new ConcurrentHashMap<>());
   
-  private boolean loadDefaults = true;
+  private final boolean loadDefaults;
 
   /**
    * Configuration objects
    */
-  private static final WeakHashMap<Configuration,Object> REGISTRY = 
-    new WeakHashMap<Configuration,Object>();
+  private static final WeakHashMap<Configuration,Object> REGISTRY = new WeakHashMap<>();
 
   /**
    * Map to hold properties by there tag groupings.
    */
-  private final Map<String, Properties> propertyTagsMap =
-      new ConcurrentHashMap<>();
+  private final Map<String, Properties> propertyTagsMap = new ConcurrentHashMap<>();
 
   /**
    * List of default Resources. Resources are loaded in the order of the list 
    * entries
    */
-  private static final CopyOnWriteArrayList<String> defaultResources =
-    new CopyOnWriteArrayList<String>();
+  private static final CopyOnWriteArrayList<String> defaultResources = new CopyOnWriteArrayList<>();
 
   private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>>
-    CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
+    CACHE_CLASSES = new WeakHashMap<>();
 
   /**
    * Sentinel value to store negative cache results in {@link #CACHE_CLASSES}.
@@ -336,8 +332,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    * Specify exact input factory to avoid time finding correct one.
    * Factory is reusable across un-synchronized threads once initialized
    */
-  private static final WstxInputFactory XML_INPUT_FACTORY =
-      new WstxInputFactory();
+  private static final WstxInputFactory XML_INPUT_FACTORY = new WstxInputFactory();
 
   /**
    * Class to keep the information about the keys which replace the deprecated
@@ -358,7 +353,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
       this.customMessage = customMessage;
     }
 
-    private final String getWarningMessage(String key) {
+    private String getWarningMessage(String key) {
       return getWarningMessage(key, null);
     }
 
@@ -903,10 +898,6 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
     addResourceObject(new Resource(name));
   }
 
-  public void addResource(String name, boolean restrictedParser) {
-    addResourceObject(new Resource(name, restrictedParser));
-  }
-
   /**
    * Add a configuration resource. 
    * 
@@ -921,10 +912,6 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
     addResourceObject(new Resource(url));
   }
 
-  public void addResource(URL url, boolean restrictedParser) {
-    addResourceObject(new Resource(url, restrictedParser));
-  }
-
   /**
    * Add a configuration resource. 
    * 
@@ -937,10 +924,6 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    */
   public void addResource(Path file) {
     addResourceObject(new Resource(file));
-  }
-
-  public void addResource(Path file, boolean restrictedParser) {
-    addResourceObject(new Resource(file, restrictedParser));
   }
 
   /**
@@ -962,25 +945,6 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
 
   public void addResource(InputStream in, boolean restrictedParser) {
     addResourceObject(new Resource(in, restrictedParser));
-  }
-
-  /**
-   * Add a configuration resource. 
-   * 
-   * The properties of this resource will override properties of previously 
-   * added resources, unless they were marked <a href="#Final">final</a>. 
-   * 
-   * @param in InputStream to deserialize the object from.
-   * @param name the name of the resource because InputStream.toString is not
-   * very descriptive some times.  
-   */
-  public void addResource(InputStream in, String name) {
-    addResourceObject(new Resource(in, name));
-  }
-
-  public void addResource(InputStream in, String name,
-      boolean restrictedParser) {
-    addResourceObject(new Resource(in, name, restrictedParser));
   }
 
   /**
@@ -3066,10 +3030,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
         return new Resource(toAddTo, name, wrapper.isParserRestricted());
       }
       return null;
-    } catch (IOException e) {
-      LOG.error("error parsing conf " + name, e);
-      throw new RuntimeException(e);
-    } catch (XMLStreamException e) {
+    } catch (IOException | XMLStreamException e) {
       LOG.error("error parsing conf " + name, e);
       throw new RuntimeException(e);
     }
