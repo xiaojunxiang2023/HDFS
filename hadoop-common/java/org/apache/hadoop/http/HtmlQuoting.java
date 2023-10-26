@@ -121,7 +121,7 @@ public class HtmlQuoting {
   public static OutputStream quoteOutputStream(final OutputStream out
                                                ) throws IOException {
     return new OutputStream() {
-      private byte[] data = new byte[1];
+      private final byte[] data = new byte[1];
       @Override
       public void write(byte[] data, int off, int len) throws IOException {
         quoteHtmlChars(out, data, off, len);
@@ -190,7 +190,7 @@ public class HtmlQuoting {
       posn = next;
       next = item.indexOf('&', posn);
     }
-    buffer.append(item.substring(posn, len));
+    buffer.append(item, posn, len);
     return buffer.toString();
   }
   
