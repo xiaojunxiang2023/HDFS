@@ -21,6 +21,7 @@ import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.ipc.ProtobufRpcEngine2;
 import org.apache.hadoop.ipc.ProtocolTranslator;
 import org.apache.hadoop.ipc.RPC;
+import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
@@ -82,7 +83,7 @@ public class HAServiceProtocolClientSideTranslatorPB implements
 
   @Override
   public void transitionToObserver(StateChangeRequestInfo reqInfo)
-      throws IOException {
+          throws AccessControlException, IOException {
     try {
       TransitionToObserverRequestProto req =
           TransitionToObserverRequestProto.newBuilder()

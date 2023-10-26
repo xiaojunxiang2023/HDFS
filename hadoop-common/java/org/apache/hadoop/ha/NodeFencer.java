@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ha.fence.FenceMethod;
+import org.apache.hadoop.ha.fence.ShellCommandFencer;
+import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.util.ReflectionUtils;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;

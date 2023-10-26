@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.util.ZKUtil.ZKAuthInfo;
 import org.apache.hadoop.util.StringUtils;

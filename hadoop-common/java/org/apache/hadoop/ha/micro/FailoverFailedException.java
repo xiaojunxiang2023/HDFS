@@ -1,8 +1,5 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.micro;
 
-/**
- * Exception thrown to indicate service failover has failed.
- */
 public class FailoverFailedException extends Exception {
   private static final long serialVersionUID = 1L;
 

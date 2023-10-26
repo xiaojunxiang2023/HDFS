@@ -57,8 +57,8 @@ import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.fs.QuotaUsage;
 import org.apache.hadoop.ha.HAServiceStatus;
-import org.apache.hadoop.ha.HealthCheckFailedException;
-import org.apache.hadoop.ha.ServiceFailedException;
+import org.apache.hadoop.ha.micro.HealthCheckFailedException;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos.HAServiceProtocolService;
 import org.apache.hadoop.ha.protocolPB.HAServiceProtocolPB;
 import org.apache.hadoop.ha.protocolPB.HAServiceProtocolServerSideTranslatorPB;
@@ -1818,7 +1818,7 @@ public class NameNodeRpcServer implements NamenodeProtocols {
 
   @Override // HAServiceProtocol
   public synchronized void transitionToObserver(StateChangeRequestInfo req)
-      throws ServiceFailedException, AccessControlException, IOException {
+          throws AccessControlException, IOException {
     checkNNStartup();
     nn.checkHaStateChange(req);
     nn.transitionToObserver();

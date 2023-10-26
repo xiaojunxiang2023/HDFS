@@ -2,10 +2,7 @@ package org.apache.hadoop.ha;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
@@ -17,6 +14,8 @@ import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
 import org.apache.hadoop.ha.HAServiceProtocol.RequestSource;
+import org.apache.hadoop.ha.micro.HealthCheckFailedException;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -24,23 +23,12 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A command-line tool for making calls in the HAServiceProtocol.
- * For example,. this can be used to force a service to standby or active
- * mode, or to trigger a health-check.
- */
-
 public abstract class HAAdmin extends Configured implements Tool {
 
-  protected static final String FORCEACTIVE = "forceactive";
-
-  /**
-   * Undocumented flag which allows an administrator to use manual failover
-   * state transitions even when auto-failover is enabled. This is an unsafe
-   * operation, which is why it is not documented in the usage below.
-   */
-  protected static final String FORCEMANUAL = "forcemanual";
   private static final Logger LOG = LoggerFactory.getLogger(HAAdmin.class);
+  
+  protected static final String FORCEACTIVE = "forceactive";
+  protected static final String FORCEMANUAL = "forcemanual";
 
   private int rpcTimeoutForChecks = -1;
   
@@ -63,7 +51,6 @@ public abstract class HAAdmin extends Configured implements Tool {
         new UsageInfo("<command>", "Displays help on the specified command"))
     .build();
 
-  /** Output stream for errors, for use in tests */
   protected PrintStream errOut = System.err;
   protected PrintStream out = System.out;
   private RequestSource requestSource = RequestSource.REQUEST_BY_USER;
@@ -87,16 +74,14 @@ public abstract class HAAdmin extends Configured implements Tool {
   protected abstract HAServiceTarget resolveTarget(String string);
   
   protected Collection<String> getTargetIds(String targetNodeToActivate) {
-    return new ArrayList<String>(
-        Arrays.asList(new String[]{targetNodeToActivate}));
+    return new ArrayList<>(Collections.singletonList(targetNodeToActivate));
   }
 
   protected String getUsageString() {
     return "Usage: HAAdmin";
   }
 
-  protected void printUsage(PrintStream pStr,
-      Map<String, UsageInfo> helpEntries) {
+  protected void printUsage(PrintStream pStr, Map<String, UsageInfo> helpEntries) {
     pStr.println(getUsageString());
     for (Map.Entry<String, UsageInfo> e : helpEntries.entrySet()) {
       String cmd = e.getKey();
@@ -133,8 +118,7 @@ public abstract class HAAdmin extends Configured implements Tool {
     printUsage(pStr, cmd, USAGE);
   }
 
-  private int transitionToActive(final CommandLine cmd)
-      throws IOException, ServiceFailedException {
+  private int transitionToActive(final CommandLine cmd) throws IOException {
     String[] argv = cmd.getArgs();
     if (argv.length != 1) {
       errOut.println("transitionToActive: incorrect number of arguments");
@@ -163,10 +147,8 @@ public abstract class HAAdmin extends Configured implements Tool {
    * @param targetNodeToActivate
    * @return true if other target node is active or some other exception 
    * occurred and forceActive was set otherwise false
-   * @throws IOException
    */
-  private boolean isOtherTargetNodeActive(String targetNodeToActivate, boolean forceActive)
-      throws IOException  {
+  private boolean isOtherTargetNodeActive(String targetNodeToActivate, boolean forceActive) {
     Collection<String> targetIds = getTargetIds(targetNodeToActivate);
     targetIds.remove(targetNodeToActivate);
     for(String targetId : targetIds) {

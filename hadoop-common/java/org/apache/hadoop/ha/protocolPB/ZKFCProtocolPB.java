@@ -11,7 +11,4 @@ import org.apache.hadoop.security.KerberosInfo;
     protocolVersion = 1)
 public interface ZKFCProtocolPB extends
     ZKFCProtocolService.BlockingInterface, VersionedProtocol {
-  /**
-   * If any methods need annotation, it can be added here
-   */
 }

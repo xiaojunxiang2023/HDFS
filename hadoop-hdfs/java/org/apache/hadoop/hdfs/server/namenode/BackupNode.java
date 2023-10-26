@@ -6,7 +6,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.ha.ServiceFailedException;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.NameNodeProxies;

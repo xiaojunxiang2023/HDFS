@@ -1,10 +1,7 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.micro;
 
 import java.io.IOException;
 
-/**
- * Exception thrown to indicate that health check of a service failed.
- */
 public class HealthCheckFailedException extends IOException {
   private static final long serialVersionUID = 1L;
 

@@ -59,8 +59,7 @@ public class ZKFCRpcServer implements ZKFCProtocol {
   }
   
   @Override
-  public void cedeActive(int millisToCede) throws IOException,
-      AccessControlException {
+  public void cedeActive(int millisToCede) throws IOException {
     zkfc.checkRpcAdminAccess();
     zkfc.cedeActive(millisToCede);
   }

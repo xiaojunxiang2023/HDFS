@@ -1,6 +1,6 @@
 package org.apache.hadoop.hdfs.tools;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.BadFencingConfigurationException;
+import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.ha.HAServiceTarget;
 import org.apache.hadoop.ha.NodeFencer;
 import org.apache.hadoop.hdfs.DFSConfigKeys;

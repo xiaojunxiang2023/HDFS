@@ -6,6 +6,9 @@ import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
 import org.apache.hadoop.ha.HAServiceProtocol.RequestSource;
+import org.apache.hadoop.ha.micro.FailoverFailedException;
+import org.apache.hadoop.ha.micro.HealthCheckFailedException;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.ipc.RPC;
 
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;

@@ -1,7 +1,9 @@
 package org.apache.hadoop.ha;
+
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+
 public class HAServiceStatus {
-  private HAServiceState state;
+  private final HAServiceState state;
   private boolean readyToBecomeActive;
   private String notReadyReason;
   
@@ -13,16 +15,14 @@ public class HAServiceStatus {
     return state;
   }
 
-  public HAServiceStatus setReadyToBecomeActive() {
+  public void setReadyToBecomeActive() {
     this.readyToBecomeActive = true;
     this.notReadyReason = null;
-    return this;
   }
   
-  public HAServiceStatus setNotReadyToBecomeActive(String reason) {
+  public void setNotReadyToBecomeActive(String reason) {
     this.readyToBecomeActive = false;
     this.notReadyReason = reason;
-    return this;
   }
 
   public boolean isReadyToBecomeActive() {

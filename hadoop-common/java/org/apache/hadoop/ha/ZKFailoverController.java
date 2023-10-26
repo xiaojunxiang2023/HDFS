@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -547,8 +549,7 @@ public abstract class ZKFailoverController {
    * the election for the specified period of time, after which it
    * will rejoin iff it is healthy.
    */
-  void cedeActive(final int millisToCede)
-      throws AccessControlException, ServiceFailedException, IOException {
+  void cedeActive(final int millisToCede) throws IOException {
     try {
       UserGroupInformation.getLoginUser().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
@@ -562,8 +563,7 @@ public abstract class ZKFailoverController {
     }
   }
   
-  private void doCedeActive(int millisToCede) 
-      throws AccessControlException, ServiceFailedException, IOException {
+  private void doCedeActive(int millisToCede) throws IOException {
     int timeout = FailoverController.getGracefulFenceTimeout(conf);
 
     // Lock elector to maintain lock ordering of elector -> ZKFC
@@ -838,17 +838,14 @@ public abstract class ZKFailoverController {
    */
   private void scheduleRecheck(long whenNanos) {
     delayExecutor.schedule(
-        new Runnable() {
-          @Override
-          public void run() {
-            try {
-              recheckElectability();
-            } catch (Throwable t) {
-              fatalError("Failed to recheck electability: " +
-                  StringUtils.stringifyException(t));
-            }
-          }
-        },
+            () -> {
+              try {
+                recheckElectability();
+              } catch (Throwable t) {
+                fatalError("Failed to recheck electability: " +
+                    StringUtils.stringifyException(t));
+              }
+            },
         whenNanos, TimeUnit.NANOSECONDS);
   }
 

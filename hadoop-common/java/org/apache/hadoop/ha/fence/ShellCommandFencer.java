@@ -1,4 +1,4 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.fence;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -7,8 +7,11 @@ import java.util.Map;
 
 import org.apache.hadoop.conf.Configured;
 
+import org.apache.hadoop.ha.HAServiceProtocol;
+import org.apache.hadoop.ha.HAServiceTarget;
+import org.apache.hadoop.ha.StreamPumper;
+import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.util.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ShellCommandFencer
   extends Configured implements FenceMethod {
+  
+  public static Logger LOG = LoggerFactory.getLogger(ShellCommandFencer.class);
 
   /** Length at which to abbreviate command in long messages */
   private static final int ABBREV_LENGTH = 20;
@@ -48,9 +53,6 @@ public class ShellCommandFencer
   private static final String SOURCE_PREFIX = "source_";
 
   private static final String ARG_DELIMITER = ",";
-
-  @VisibleForTesting
-  static Logger LOG = LoggerFactory.getLogger(ShellCommandFencer.class);
 
   @Override
   public void checkArgs(String args) throws BadFencingConfigurationException {
@@ -114,7 +116,7 @@ public class ShellCommandFencer
   }
 
   private String parseArgs(HAServiceProtocol.HAServiceState state,
-      String cmd) {
+                           String cmd) {
     String[] args = cmd.split(ARG_DELIMITER);
     if (args.length == 1) {
       // only one command is given, assuming both src and dst

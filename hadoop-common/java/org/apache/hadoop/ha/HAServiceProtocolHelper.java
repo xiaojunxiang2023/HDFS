@@ -2,6 +2,8 @@ package org.apache.hadoop.ha;
 
 import java.io.IOException;
 import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
+import org.apache.hadoop.ha.micro.HealthCheckFailedException;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.ipc.RemoteException;
 
 /**
