@@ -15,41 +15,15 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Fencing method that runs a shell command. It should be specified
- * in the fencing configuration like:<br>
- * <code>
- *   shell(/path/to/my/script.sh arg1 arg2 ...)
- * </code><br>
- * The string between '(' and ')' is passed directly to a bash shell
- * (cmd.exe on Windows) and may not include any closing parentheses.<p>
- * 
- * The shell command will be run with an environment set up to contain
- * all of the current Hadoop configuration variables, with the '_' character 
- * replacing any '.' characters in the configuration keys.<p>
- * 
- * If the shell command returns an exit code of 0, the fencing is
- * determined to be successful. If it returns any other exit code, the
- * fencing was not successful and the next fencing method in the list
- * will be attempted.<p>
- * 
- * <em>Note:</em> this fencing method does not implement any timeout.
- * If timeouts are necessary, they should be implemented in the shell
- * script itself (eg by forking a subshell to kill its parent in
- * some number of seconds).
- */
 public class ShellCommandFencer
   extends Configured implements FenceMethod {
   
   public static Logger LOG = LoggerFactory.getLogger(ShellCommandFencer.class);
 
-  /** Length at which to abbreviate command in long messages */
   private static final int ABBREV_LENGTH = 20;
 
-  /** Prefix for target parameters added to the environment */
   private static final String TARGET_PREFIX = "target_";
 
-  /** Prefix for source parameters added to the environment */
   private static final String SOURCE_PREFIX = "source_";
 
   private static final String ARG_DELIMITER = ",";

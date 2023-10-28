@@ -65,7 +65,7 @@ public class ZKFCRpcServer implements ZKFCProtocol {
   }
 
   @Override
-  public void gracefulFailover() throws IOException, AccessControlException {
+  public void gracefulFailover() throws IOException {
     zkfc.checkRpcAdminAccess();
     zkfc.gracefulFailoverToYou();
   }

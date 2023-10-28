@@ -696,6 +696,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * @throws IOException
    */
   protected ZooKeeper createZooKeeper() throws IOException {
+    String zkHostPort="172.26.129.17:2181";
     return new ZooKeeper(zkHostPort, zkSessionTimeout, watcher);
   }
 

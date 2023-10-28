@@ -6,10 +6,6 @@ import org.apache.hadoop.ha.micro.HealthCheckFailedException;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.ipc.RemoteException;
 
-/**
- * Helper for making {@link HAServiceProtocol} RPC calls. This helper
- * unwraps the {@link RemoteException} to specific exceptions.
- */
 public class HAServiceProtocolHelper {
   public static void monitorHealth(HAServiceProtocol svc,
       StateChangeRequestInfo reqInfo)

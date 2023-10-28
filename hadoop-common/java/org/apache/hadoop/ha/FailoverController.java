@@ -15,12 +15,6 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The FailOverController is responsible for electing an active service
- * on startup or when the current active is changing (eg due to failure),
- * monitoring the health of a service, and performing a fail-over when a
- * new active service is either manually selected by a user or elected.
- */
 public class FailoverController {
 
   private static final Logger LOG =
@@ -30,11 +24,6 @@ public class FailoverController {
   private final int rpcTimeoutToNewActive;
   
   private final Configuration conf;
-  /*
-   * Need a copy of conf for graceful fence to set 
-   * configurable retries for IPC client.
-   * Refer HDFS-3561
-   */
   private final Configuration gracefulFenceConf;
 
   private final RequestSource requestSource;
@@ -72,21 +61,6 @@ public class FailoverController {
         CommonConfigurationKeys.HA_FC_NEW_ACTIVE_TIMEOUT_DEFAULT);
   }
   
-  /**
-   * Perform pre-failover checks on the given service we plan to
-   * failover to, eg to prevent failing over to a service (eg due
-   * to it being inaccessible, already active, not healthy, etc).
-   *
-   * An option to ignore toSvc if it claims it is not ready to
-   * become active is provided in case performing a failover will
-   * allow it to become active, eg because it triggers a log roll
-   * so the standby can learn about new blocks and leave safemode.
-   *
-   * @param from currently active service
-   * @param target service to make active
-   * @param forceActive ignore toSvc if it reports that it is not ready
-   * @throws FailoverFailedException if we should avoid failover
-   */
   private void preFailoverChecks(HAServiceTarget from,
                                  HAServiceTarget target,
                                  boolean forceActive)
@@ -140,12 +114,6 @@ public class FailoverController {
     return new StateChangeRequestInfo(requestSource);
   }
 
-  /**
-   * Try to get the HA state of the node at the given address. This
-   * function is guaranteed to be "quick" -- ie it has a short timeout
-   * and no retries. Its only purpose is to avoid fencing a node that
-   * has already restarted.
-   */
   boolean tryGracefulFence(HAServiceTarget svc) {
     HAServiceProtocol proxy = null;
     try {

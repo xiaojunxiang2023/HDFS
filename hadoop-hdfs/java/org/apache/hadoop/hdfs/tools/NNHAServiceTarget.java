@@ -2,7 +2,7 @@ package org.apache.hadoop.hdfs.tools;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.ha.HAServiceTarget;
-import org.apache.hadoop.ha.NodeFencer;
+import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.HdfsConfiguration;

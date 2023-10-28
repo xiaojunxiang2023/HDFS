@@ -329,14 +329,6 @@ public final class SecurityUtil {
   private static SecurityInfo[] testProviders = new SecurityInfo[0];
 
   /**
-   * Test setup method to register additional providers.
-   * @param providers a list of high priority providers to use
-   */
-  public static void setSecurityInfoProviders(SecurityInfo... providers) {
-    testProviders = providers;
-  }
-  
-  /**
    * Look up the KerberosInfo for a given protocol. It searches all known
    * SecurityInfo providers.
    * @param protocol the protocol class to get the information for

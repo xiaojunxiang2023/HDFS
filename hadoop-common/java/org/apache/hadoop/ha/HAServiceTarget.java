@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
+import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.ha.protocolPB.HAServiceProtocolClientSideTranslatorPB;
 import org.apache.hadoop.ha.protocolPB.ZKFCProtocolClientSideTranslatorPB;
@@ -14,65 +15,26 @@ import org.apache.hadoop.net.NetUtils;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 
-/**
- * Represents a target of the client side HA administration commands.
- */
 public abstract class HAServiceTarget {
 
   private static final String HOST_SUBST_KEY = "host";
   private static final String PORT_SUBST_KEY = "port";
   private static final String ADDRESS_SUBST_KEY = "address";
 
-  /**
-   * The HAState this service target is intended to be after transition
-   * is complete.
-   */
   private HAServiceProtocol.HAServiceState transitionTargetHAStatus;
 
-  /**
-   * @return the IPC address of the target node.
-   */
   public abstract InetSocketAddress getAddress();
 
-  /**
-   * Returns an optional separate RPC server address for health checks at the
-   * target node.  If defined, then this address is used by the health monitor
-   * for the {@link HAServiceProtocol#monitorHealth()} and
-   * {@link HAServiceProtocol#getServiceStatus()} calls.  This can be useful for
-   * separating out these calls onto separate RPC handlers to protect against
-   * resource exhaustion in the main RPC handler pool.  If null (which is the
-   * default implementation), then all RPC calls go to the address defined by
-   * {@link #getAddress()}.
-   *
-   * @return IPC address of the lifeline RPC server on the target node, or null
-   *     if no lifeline RPC server is used
-   */
   public InetSocketAddress getHealthMonitorAddress() {
     return null;
   }
 
-  /**
-   * @return the IPC address of the ZKFC on the target node
-   */
   public abstract InetSocketAddress getZKFCAddress();
 
-  /**
-   * @return a Fencer implementation configured for this target node
-   */
   public abstract NodeFencer getFencer();
   
-  /**
-   * @throws BadFencingConfigurationException if the fencing configuration
-   * appears to be invalid. This is divorced from the above
-   * {@link #getFencer()} method so that the configuration can be checked
-   * during the pre-flight phase of failover.
-   */
-  public abstract void checkFencingConfigured()
-      throws BadFencingConfigurationException;
+  public abstract void checkFencingConfigured() throws BadFencingConfigurationException;
   
-  /**
-   * @return a proxy to connect to the target HA Service.
-   */
   public HAServiceProtocol getProxy(Configuration conf, int timeoutMs)
       throws IOException {
     return getProxyForAddress(conf, timeoutMs, getAddress());
@@ -85,23 +47,6 @@ public abstract class HAServiceTarget {
 
   public HAServiceProtocol.HAServiceState getTransitionTargetHAStatus() {
     return this.transitionTargetHAStatus;
-  }
-
-  /**
-   * Returns a proxy to connect to the target HA service for health monitoring.
-   * If {@link #getHealthMonitorAddress()} is implemented to return a non-null
-   * address, then this proxy will connect to that address.  Otherwise, the
-   * returned proxy defaults to using {@link #getAddress()}, which means this
-   * method's behavior is identical to {@link #getProxy(Configuration, int)}.
-   *
-   * @param conf Configuration
-   * @param timeoutMs timeout in milliseconds
-   * @return a proxy to connect to the target HA service for health monitoring
-   * @throws IOException if there is an error
-   */
-  public HAServiceProtocol getHealthMonitorProxy(Configuration conf,
-      int timeoutMs) throws IOException {
-    return getHealthMonitorProxy(conf, timeoutMs, 1);
   }
 
   public HAServiceProtocol getHealthMonitorProxy(Configuration conf,

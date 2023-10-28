@@ -17,33 +17,22 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * This class is a daemon which runs in a loop, periodically heartbeating
- * with an HA service. It is responsible for keeping track of that service's
- * health and exposing callbacks to the failover controller when the health
- * status changes.
- * 
- * Classes which need callbacks should implement the {@link Callback}
- * interface.
- */
 public class HealthMonitor {
   private static final Logger LOG = LoggerFactory.getLogger(
       HealthMonitor.class);
 
-  private Daemon daemon;
-  private long connectRetryInterval;
-  private long checkIntervalMillis;
-  private long sleepAfterDisconnectMillis;
+  private final Daemon daemon;
+  private final long connectRetryInterval;
+  private final long checkIntervalMillis;
+  private final long sleepAfterDisconnectMillis;
 
-  private int rpcConnectRetries;
-  private int rpcTimeout;
+  private final int rpcConnectRetries;
+  private final int rpcTimeout;
 
   private volatile boolean shouldRun = true;
 
-  /** The connected proxy */
   private HAServiceProtocol proxy;
 
-  /** The HA service to monitor */
   private final HAServiceTarget targetToMonitor;
 
   private final Configuration conf;
@@ -53,39 +42,17 @@ public class HealthMonitor {
   /**
    * Listeners for state changes
    */
-  private List<Callback> callbacks = Collections.synchronizedList(
-      new LinkedList<Callback>());
+  private final List<Callback> callbacks = Collections.synchronizedList(
+          new LinkedList<>());
 
-  private List<ServiceStateCallback> serviceStateCallbacks = Collections
-      .synchronizedList(new LinkedList<ServiceStateCallback>());
+  private final List<ServiceStateCallback> serviceStateCallbacks = Collections
+      .synchronizedList(new LinkedList<>());
 
-  private HAServiceStatus lastServiceState = new HAServiceStatus(
-      HAServiceState.INITIALIZING);
   public enum State {
-    /**
-     * The health monitor is still starting up.
-     */
     INITIALIZING,
-
-    /**
-     * The service is not responding to health check RPCs.
-     */
     SERVICE_NOT_RESPONDING,
-
-    /**
-     * The service is connected and healthy.
-     */
     SERVICE_HEALTHY,
-    
-    /**
-     * The service is running but unhealthy.
-     */
     SERVICE_UNHEALTHY,
-    
-    /**
-     * The health monitor itself failed unrecoverably and can
-     * no longer provide accurate information.
-     */
     HEALTH_MONITOR_FAILED;
   }
 
@@ -126,12 +93,6 @@ public class HealthMonitor {
     daemon.interrupt();
   }
 
-  /**
-   * @return the current proxy object to the underlying service.
-   * Note that this may return null in the case that the service
-   * is not responding. Also note that, even if the last indicated
-   * state is healthy, the service may have gone down in the meantime.
-   */
   public synchronized HAServiceProtocol getProxy() {
     return proxy;
   }
@@ -142,7 +103,6 @@ public class HealthMonitor {
       Thread.sleep(connectRetryInterval);
       tryConnect();
     }
-    assert proxy != null;
   }
 
   private void tryConnect() {
@@ -160,9 +120,6 @@ public class HealthMonitor {
     }
   }
   
-  /**
-   * Connect to the service to be monitored. Stubbed out for easier testing.
-   */
   protected HAServiceProtocol createProxy() throws IOException {
     return targetToMonitor.getHealthMonitorProxy(conf, rpcTimeout, rpcConnectRetries);
   }
@@ -210,9 +167,8 @@ public class HealthMonitor {
   }
 
   private synchronized void setLastServiceStatus(HAServiceStatus status) {
-    this.lastServiceState = status;
     for (ServiceStateCallback cb : serviceStateCallbacks) {
-      cb.reportServiceStatus(lastServiceState);
+      cb.reportServiceStatus(status);
     }
   }
 
@@ -226,14 +182,6 @@ public class HealthMonitor {
         }
       }
     }
-  }
-
-  synchronized State getHealthState() {
-    return state;
-  }
-
-  boolean isAlive() {
-    return daemon.isAlive();
   }
 
   void join() throws InterruptedException {
@@ -283,14 +231,14 @@ public class HealthMonitor {
    * callbacks following it will be called, and the health monitor
    * will terminate, entering HEALTH_MONITOR_FAILED state.
    */
-  static interface Callback {
+  interface Callback {
     void enteredState(State newState);
   }
 
   /**
    * Callback interface for service states.
    */
-  static interface ServiceStateCallback {
+  interface ServiceStateCallback {
     void reportServiceStatus(HAServiceStatus status);
   }
 }

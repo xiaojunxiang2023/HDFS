@@ -1,12 +1,11 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.fence;
 
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.fence.FenceMethod;
-import org.apache.hadoop.ha.fence.ShellCommandFencer;
+import org.apache.hadoop.ha.HAServiceTarget;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -30,7 +29,6 @@ import org.slf4j.LoggerFactory;
  * by shortened names:<br>
  * <ul>
  * <li><code>shell(/path/to/some/script.sh args...)</code></li>
- * <li><code>sshfence(...)</code> (see {@link SshFenceByTcpPort})
  * </ul>
  */
 public class NodeFencer {
@@ -48,10 +46,7 @@ public class NodeFencer {
    * Standard fencing methods included with Hadoop.
    */
   private static final Map<String, Class<? extends FenceMethod>> STANDARD_METHODS =
-    ImmutableMap.<String, Class<? extends FenceMethod>>of(
-        "shell", ShellCommandFencer.class,
-        "sshfence", SshFenceByTcpPort.class,
-        "powershell", PowerShellFencer.class);
+    ImmutableMap.of("shell", ShellCommandFencer.class);
   
   private final List<FenceMethodWithArg> methods;
   

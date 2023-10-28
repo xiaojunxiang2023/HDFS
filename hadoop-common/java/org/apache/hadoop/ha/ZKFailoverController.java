@@ -125,8 +125,7 @@ public abstract class ZKFailoverController {
   protected abstract byte[] targetToData(HAServiceTarget target);
   protected abstract HAServiceTarget dataToTarget(byte[] data);
   protected abstract void loginAsFCUser() throws IOException;
-  protected abstract void checkRpcAdminAccess()
-      throws AccessControlException, IOException;
+  protected abstract void checkRpcAdminAccess() throws IOException;
   protected abstract InetSocketAddress getRpcAddressToBindTo();
   protected abstract PolicyProvider getPolicyProvider();
   protected abstract List<HAServiceTarget> getAllOtherNodes();
