@@ -56,7 +56,7 @@ import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.fs.QuotaUsage;
-import org.apache.hadoop.ha.HAServiceStatus;
+import org.apache.hadoop.ha.status.HAServiceStatus;
 import org.apache.hadoop.ha.micro.HealthCheckFailedException;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos.HAServiceProtocolService;
@@ -1775,7 +1775,7 @@ public class NameNodeRpcServer implements NamenodeProtocols {
   }
   
   @Override // GetUserMappingsProtocol
-  public String[] getGroupsForUser(String user) throws IOException {
+  public String[] getGroupsForUser(String user) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Getting groups for user " + user);
     }
@@ -1783,15 +1783,13 @@ public class NameNodeRpcServer implements NamenodeProtocols {
   }
 
   @Override // HAServiceProtocol
-  public synchronized void monitorHealth() throws HealthCheckFailedException,
-      AccessControlException, IOException {
+  public synchronized void monitorHealth() throws IOException {
     checkNNStartup();
     nn.monitorHealth();
   }
   
   @Override // HAServiceProtocol
-  public synchronized void transitionToActive(StateChangeRequestInfo req) 
-      throws ServiceFailedException, AccessControlException, IOException {
+  public synchronized void transitionToActive(StateChangeRequestInfo req) throws IOException {
     checkNNStartup();
     nn.checkHaStateChange(req);
     nn.transitionToActive();
@@ -1799,7 +1797,7 @@ public class NameNodeRpcServer implements NamenodeProtocols {
 
   @Override // HAServiceProtocol
   public synchronized void transitionToStandby(StateChangeRequestInfo req)
-      throws ServiceFailedException, AccessControlException, IOException {
+      throws IOException {
     checkNNStartup();
     // This is to eliminate any race condition between manual transition of
     // namenode into Observer, and ZKFC auto failover election, when the

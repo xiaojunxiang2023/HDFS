@@ -7,11 +7,10 @@ import java.util.Map;
 
 import org.apache.hadoop.conf.Configured;
 
-import org.apache.hadoop.ha.HAServiceProtocol;
-import org.apache.hadoop.ha.HAServiceTarget;
-import org.apache.hadoop.ha.StreamPumper;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceTarget;
+import org.apache.hadoop.ha.micro.StreamPumper;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

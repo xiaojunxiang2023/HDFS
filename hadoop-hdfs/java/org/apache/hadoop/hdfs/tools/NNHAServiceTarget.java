@@ -1,7 +1,7 @@
 package org.apache.hadoop.hdfs.tools;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
-import org.apache.hadoop.ha.HAServiceTarget;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -17,10 +17,6 @@ import java.util.Map;
 
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMESERVICES;
 
-/**
- * One of the NN NameNodes acting as the target of an administrative command
- * (e.g. failover).
- */
 public class NNHAServiceTarget extends HAServiceTarget {
 
     // Keys added to the fencing script environment
@@ -54,7 +50,6 @@ public class NNHAServiceTarget extends HAServiceTarget {
                 throw new IllegalArgumentException(errorString);
             }
         }
-        assert nsId != null;
 
         // Make a copy of the conf, and override configs based on the
         // target node -- not the node we happen to be running on.
@@ -96,9 +91,6 @@ public class NNHAServiceTarget extends HAServiceTarget {
         this.nsId = nsId;
     }
 
-    /**
-     * @return the NN's IPC address.
-     */
     @Override
     public InetSocketAddress getAddress() {
         return addr;
@@ -114,13 +106,11 @@ public class NNHAServiceTarget extends HAServiceTarget {
         Preconditions.checkState(autoFailoverEnabled,
                 "ZKFC address not relevant when auto failover is off");
         assert zkfcAddr != null;
-
         return zkfcAddr;
     }
 
     void setZkfcPort(int port) {
         assert autoFailoverEnabled;
-
         this.zkfcAddr = new InetSocketAddress(addr.getAddress(), port);
     }
 
@@ -130,8 +120,7 @@ public class NNHAServiceTarget extends HAServiceTarget {
             throw fenceConfigError;
         }
         if (fencer == null) {
-            throw new BadFencingConfigurationException(
-                    "No fencer configured for " + this);
+            throw new BadFencingConfigurationException("No fencer configured for " + this);
         }
     }
 

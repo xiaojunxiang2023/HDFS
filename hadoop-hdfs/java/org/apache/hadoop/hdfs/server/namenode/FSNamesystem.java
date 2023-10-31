@@ -84,9 +84,9 @@ import org.apache.hadoop.hdfs.protocol.ECTopologyVerifierResult;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_STORAGE_POLICY_ENABLED_KEY;
 import static org.apache.hadoop.hdfs.server.namenode.FSDirStatAndListingOp.*;
-import static org.apache.hadoop.ha.HAServiceProtocol.HAServiceState.ACTIVE;
-import static org.apache.hadoop.ha.HAServiceProtocol.HAServiceState.STANDBY;
-import static org.apache.hadoop.ha.HAServiceProtocol.HAServiceState.OBSERVER;
+import static org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState.ACTIVE;
+import static org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState.STANDBY;
+import static org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState.OBSERVER;
 
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicyInfo;
 
@@ -185,7 +185,7 @@ import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.fs.QuotaUsage;
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;

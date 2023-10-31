@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.ObserverReadProxyProvider;
 import org.apache.hadoop.hdfs.server.namenode.ha.ReadOnly;

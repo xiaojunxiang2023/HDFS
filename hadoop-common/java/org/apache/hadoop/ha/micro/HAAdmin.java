@@ -1,4 +1,4 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.micro;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -11,11 +11,14 @@ import org.apache.commons.cli.ParseException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
-import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
-import org.apache.hadoop.ha.HAServiceProtocol.RequestSource;
-import org.apache.hadoop.ha.micro.HealthCheckFailedException;
-import org.apache.hadoop.ha.micro.ServiceFailedException;
+import org.apache.hadoop.ha.*;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.StateChangeRequestInfo;
+import org.apache.hadoop.ha.status.HAServiceProtocol.RequestSource;
+import org.apache.hadoop.ha.fc.FailoverController;
+import org.apache.hadoop.ha.fc.ZKFCProtocol;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -23,6 +26,9 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * haadmin命令
+ */
 public abstract class HAAdmin extends Configured implements Tool {
 
   private static final Logger LOG = LoggerFactory.getLogger(HAAdmin.class);
@@ -136,9 +142,9 @@ public abstract class HAAdmin extends Configured implements Tool {
     if (!checkManualStateManagementOK(target)) {
       return -1;
     }
-    HAServiceProtocol proto = target.getProxy(
+    HAServiceProtocol svc = target.getProxy(
         getConf(), 0);
-    HAServiceProtocolHelper.transitionToActive(proto, createReqInfo());
+    svc.transitionToActive(createReqInfo());
     return 0;
   }
   
@@ -176,7 +182,7 @@ public abstract class HAAdmin extends Configured implements Tool {
   }
   
   private int transitionToStandby(final CommandLine cmd)
-      throws IOException, ServiceFailedException {
+      throws IOException {
     String[] argv = cmd.getArgs();
     if (argv.length != 1) {
       errOut.println("transitionToStandby: incorrect number of arguments");
@@ -188,9 +194,8 @@ public abstract class HAAdmin extends Configured implements Tool {
     if (!checkManualStateManagementOK(target)) {
       return -1;
     }
-    HAServiceProtocol proto = target.getProxy(
-        getConf(), 0);
-    HAServiceProtocolHelper.transitionToStandby(proto, createReqInfo());
+    HAServiceProtocol svc = target.getProxy(getConf(), 0);
+    svc.transitionToStandby(createReqInfo());
     return 0;
   }
 
@@ -246,31 +251,17 @@ public abstract class HAAdmin extends Configured implements Tool {
       errOut.println("Failover failed: " + sfe.getLocalizedMessage());
       return -1;
     }
-
     return 0;
   }
 
-  private int checkHealth(final CommandLine cmd)
-      throws IOException, ServiceFailedException {
-    String[] argv = cmd.getArgs();
-    if (argv.length != 1) {
-      errOut.println("checkHealth: incorrect number of arguments");
-      printUsage(errOut, "-checkHealth");
-      return -1;
-    }
-    HAServiceProtocol proto = resolveTarget(argv[0]).getProxy(
-        getConf(), rpcTimeoutForChecks);
-    try {
-      HAServiceProtocolHelper.monitorHealth(proto, createReqInfo());
-    } catch (HealthCheckFailedException e) {
-      errOut.println("Health check failed: " + e.getLocalizedMessage());
-      return -1;
-    }
+  private int checkHealth(final CommandLine cmd) throws IOException {
+    HAServiceProtocol svc = resolveTarget(cmd.getArgs()[0]).getProxy(getConf(), rpcTimeoutForChecks);
+    svc.monitorHealth();
     return 0;
   }
 
   private int getServiceState(final CommandLine cmd)
-      throws IOException, ServiceFailedException {
+      throws IOException {
     String[] argv = cmd.getArgs();
     if (argv.length != 1) {
       errOut.println("getServiceState: incorrect number of arguments");
@@ -282,14 +273,6 @@ public abstract class HAAdmin extends Configured implements Tool {
         getConf(), rpcTimeoutForChecks);
     out.println(proto.getServiceStatus().getState());
     return 0;
-  }
-
-  /**
-   * Return the serviceId as is, we are assuming it was
-   * given as a service address of form {@literal <}host:ipcport{@literal >}.
-   */
-  protected String getServiceAddr(String serviceId) {
-    return serviceId;
   }
 
   @Override

@@ -1,10 +1,10 @@
 package org.apache.hadoop.ha.protocolPB;
 
 import java.io.IOException;
-import org.apache.hadoop.ha.HAServiceProtocol;
-import org.apache.hadoop.ha.HAServiceProtocol.StateChangeRequestInfo;
-import org.apache.hadoop.ha.HAServiceProtocol.RequestSource;
-import org.apache.hadoop.ha.HAServiceStatus;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol.StateChangeRequestInfo;
+import org.apache.hadoop.ha.status.HAServiceProtocol.RequestSource;
+import org.apache.hadoop.ha.status.HAServiceStatus;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos.GetServiceStatusRequestProto;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos.GetServiceStatusResponseProto;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos.HAStateChangeRequestInfoProto;

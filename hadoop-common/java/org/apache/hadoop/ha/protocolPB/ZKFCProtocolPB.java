@@ -7,7 +7,7 @@ import org.apache.hadoop.security.KerberosInfo;
 
 @KerberosInfo(
     serverPrincipal=CommonConfigurationKeys.HADOOP_SECURITY_SERVICE_USER_NAME_KEY)
-@ProtocolInfo(protocolName = "org.apache.hadoop.ha.ZKFCProtocol", 
+@ProtocolInfo(protocolName = "org.apache.hadoop.ha.fc.ZKFCProtocol", 
     protocolVersion = 1)
 public interface ZKFCProtocolPB extends
     ZKFCProtocolService.BlockingInterface, VersionedProtocol {

@@ -13,7 +13,7 @@ import org.apache.hadoop.thirdparty.protobuf.ProtocolStringList;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedEntries;
 import org.apache.hadoop.fs.permission.FsCreateModes;
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.ha.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos;
 import org.apache.hadoop.ha.proto.HAServiceProtocolProtos.HAServiceStateProto;
 import org.apache.hadoop.hdfs.AddBlockFlag;

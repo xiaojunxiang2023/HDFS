@@ -5,9 +5,12 @@ import org.apache.commons.cli.Options;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ha.*;
-import org.apache.hadoop.ha.HAServiceProtocol.RequestSource;
-import org.apache.hadoop.ha.micro.FailoverFailedException;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol.RequestSource;
+import org.apache.hadoop.ha.fc.FailoverController;
+import org.apache.hadoop.ha.micro.HAAdmin;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.DFSUtilClient;
@@ -245,8 +248,8 @@ public class DFSHAAdmin extends HAAdmin {
         if (!checkManualStateManagementOK(target)) {
             return -1;
         }
-        HAServiceProtocol proto = target.getProxy(getConf(), 0);
-        HAServiceProtocolHelper.transitionToObserver(proto, createReqInfo());
+        HAServiceProtocol svc = target.getProxy(getConf(), 0);
+        svc.transitionToObserver(createReqInfo());
         return 0;
     }
 
@@ -303,13 +306,8 @@ public class DFSHAAdmin extends HAAdmin {
         FailoverController fc =
                 new FailoverController(getConf(), getRequestSource());
 
-        try {
-            fc.failover(fromNode, toNode, forceFence, forceActive);
-            out.println("Failover from " + args[0] + " to " + args[1] + " successful");
-        } catch (FailoverFailedException ffe) {
-            errOut.println("Failover failed: " + ffe.getLocalizedMessage());
-            return -1;
-        }
+        fc.failover(fromNode, toNode);
+        out.println("Failover from " + args[0] + " to " + args[1] + " successful");
         return 0;
     }
 }

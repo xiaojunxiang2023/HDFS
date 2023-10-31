@@ -1,5 +1,5 @@
 package org.apache.hadoop.hdfs.server.protocol;
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 public class NNHAStatusHeartbeat {
 

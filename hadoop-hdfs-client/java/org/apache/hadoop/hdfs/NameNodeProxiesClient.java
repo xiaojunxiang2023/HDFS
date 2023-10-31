@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.hadoop.ha.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.ClientHAProxyFactory;
 import org.apache.hadoop.hdfs.server.namenode.ha.HAProxyFactory;
 import org.apache.hadoop.ipc.AlignmentContext;

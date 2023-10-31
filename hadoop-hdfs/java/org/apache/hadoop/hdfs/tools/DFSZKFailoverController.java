@@ -2,9 +2,9 @@ package org.apache.hadoop.hdfs.tools;
 
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.HAServiceTarget;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.ha.HealthMonitor;
-import org.apache.hadoop.ha.ZKFailoverController;
+import org.apache.hadoop.ha.fc.ZKFailoverController;
 import org.apache.hadoop.hdfs.*;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.ha.proto.HAZKInfoProtos.ActiveNodeInfo;
@@ -35,8 +35,7 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KEYTAB_FILE_KEY;
 import static org.apache.hadoop.util.ExitUtil.terminate;
 public class DFSZKFailoverController extends ZKFailoverController {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DFSZKFailoverController.class);
+    private static final Logger LOG =  LoggerFactory.getLogger(DFSZKFailoverController.class);
     private final AccessControlList adminAcl;
     /* the same as superclass's localTarget, but with the more specfic NN type */
     private final NNHAServiceTarget localNNTarget;
@@ -161,7 +160,8 @@ public class DFSZKFailoverController extends ZKFailoverController {
     @Override
     protected InetSocketAddress getRpcAddressToBindTo() {
         int zkfcPort = getZkfcPort(conf);
-        String zkfcBindAddr = getZkfcServerBindHost(conf);
+        // String zkfcBindAddr = getZkfcServerBindHost(conf);
+        String zkfcBindAddr = "localhost";
         if (zkfcBindAddr == null || zkfcBindAddr.isEmpty()) {
             zkfcBindAddr = localTarget.getAddress().getAddress().getHostAddress();
         }
@@ -192,7 +192,7 @@ public class DFSZKFailoverController extends ZKFailoverController {
     }
 
     @Override
-    protected void checkRpcAdminAccess() throws IOException, AccessControlException {
+    public void checkRpcAdminAccess() throws IOException, AccessControlException {
         UserGroupInformation ugi = UserGroupInformation.getCurrentUser();
         UserGroupInformation zkfcUgi = UserGroupInformation.getLoginUser();
         if (adminAcl.isUserAllowed(ugi) ||

@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 import javax.net.SocketFactory;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.ZKFCProtocol;
+import org.apache.hadoop.ha.fc.ZKFCProtocol;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.CedeActiveRequestProto;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.GracefulFailoverRequestProto;
 import org.apache.hadoop.ipc.ProtobufHelper;

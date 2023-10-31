@@ -7,8 +7,10 @@ import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import static org.apache.hadoop.fs.CommonConfigurationKeys.*;
 
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.micro.HealthCheckFailedException;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceStatus;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.util.Daemon;
@@ -57,7 +59,7 @@ public class HealthMonitor {
   }
 
 
-  HealthMonitor(Configuration conf, HAServiceTarget target) {
+  public HealthMonitor(Configuration conf, HAServiceTarget target) {
     this.targetToMonitor = target;
     this.conf = conf;
     
@@ -184,11 +186,11 @@ public class HealthMonitor {
     }
   }
 
-  void join() throws InterruptedException {
+  public void join() throws InterruptedException {
     daemon.join();
   }
 
-  void start() {
+  public void start() {
     daemon.start();
   }
 
@@ -231,14 +233,14 @@ public class HealthMonitor {
    * callbacks following it will be called, and the health monitor
    * will terminate, entering HEALTH_MONITOR_FAILED state.
    */
-  interface Callback {
+  public interface Callback {
     void enteredState(State newState);
   }
 
   /**
    * Callback interface for service states.
    */
-  interface ServiceStateCallback {
+  public interface ServiceStateCallback {
     void reportServiceStatus(HAServiceStatus status);
   }
 }

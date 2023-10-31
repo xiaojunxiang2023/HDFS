@@ -1727,4 +1727,18 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-protos</artifactId>
+            <version>3.3.4-ks-ec-3.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    
 </project>

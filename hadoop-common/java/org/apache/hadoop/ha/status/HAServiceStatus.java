@@ -1,7 +1,8 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.status;
 
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 
+// 对节点关于 HA的描述：HA状态、是否准备变成 Active
 public class HAServiceStatus {
   private final HAServiceState state;
   private boolean readyToBecomeActive;

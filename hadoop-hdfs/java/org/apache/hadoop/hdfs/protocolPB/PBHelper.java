@@ -11,7 +11,7 @@ import java.util.Map;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;

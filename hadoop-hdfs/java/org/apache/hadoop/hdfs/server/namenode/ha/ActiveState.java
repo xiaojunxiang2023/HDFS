@@ -1,7 +1,7 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
 import java.io.IOException;
-import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;

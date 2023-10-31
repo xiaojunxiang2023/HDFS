@@ -120,8 +120,7 @@ public final class ProviderUtils {
    * @return Configuration clone with new provider path
    */
   public static Configuration excludeIncompatibleCredentialProviders(
-      Configuration config, Class<? extends FileSystem> fileSystemClass)
-          throws IOException {
+      Configuration config, Class<? extends FileSystem> fileSystemClass) {
 
     String providerPath = config.get(
         CredentialProviderFactory.CREDENTIAL_PROVIDER_PATH);

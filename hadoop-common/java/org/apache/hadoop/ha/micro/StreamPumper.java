@@ -1,4 +1,4 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.micro;
 
 import org.apache.hadoop.ha.fence.ShellCommandFencer;
 import org.slf4j.Logger;

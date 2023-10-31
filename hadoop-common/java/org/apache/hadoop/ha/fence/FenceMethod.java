@@ -1,6 +1,6 @@
 package org.apache.hadoop.ha.fence;
 
-import org.apache.hadoop.ha.HAServiceTarget;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 
 public interface FenceMethod {

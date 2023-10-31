@@ -108,7 +108,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
      * 
      * @param oldActiveData the application data provided by the prior active
      */
-    void fenceOldActive(byte[] oldActiveData);
+    void fenceOldActive(byte[] oldActiveData) throws IOException;
   }
 
   /**
@@ -696,7 +696,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * @throws IOException
    */
   protected ZooKeeper createZooKeeper() throws IOException {
-    String zkHostPort="172.26.129.17:2181";
+    // String zkHostPort="kde-offline3.sdns.kscbigdata.cloud:2181";
     return new ZooKeeper(zkHostPort, zkSessionTimeout, watcher);
   }
 
@@ -944,7 +944,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * @return the Stat of the breadcrumb node that was read, or null
    * if no breadcrumb node existed
    */
-  private Stat fenceOldActive() throws InterruptedException, KeeperException {
+  private Stat fenceOldActive() throws InterruptedException, KeeperException, IOException {
     final Stat stat = new Stat();
     byte[] data;
     LOG.info("Checking for any old active which needs to be fenced...");

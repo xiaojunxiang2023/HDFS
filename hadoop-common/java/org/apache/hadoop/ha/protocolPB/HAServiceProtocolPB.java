@@ -7,7 +7,7 @@ import org.apache.hadoop.security.KerberosInfo;
 
 @KerberosInfo(
     serverPrincipal=CommonConfigurationKeys.HADOOP_SECURITY_SERVICE_USER_NAME_KEY)
-@ProtocolInfo(protocolName = "org.apache.hadoop.ha.HAServiceProtocol", 
+@ProtocolInfo(protocolName = "org.apache.hadoop.ha.status.HAServiceProtocol", 
     protocolVersion = 1)
 public interface HAServiceProtocolPB extends
     HAServiceProtocolService.BlockingInterface, VersionedProtocol {

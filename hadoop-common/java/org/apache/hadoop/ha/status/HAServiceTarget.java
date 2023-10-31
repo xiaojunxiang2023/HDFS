@@ -1,4 +1,4 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.status;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,10 +7,12 @@ import java.util.Map;
 import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
+import org.apache.hadoop.ha.fc.ZKFCProtocol;
 import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.ha.protocolPB.HAServiceProtocolClientSideTranslatorPB;
 import org.apache.hadoop.ha.protocolPB.ZKFCProtocolClientSideTranslatorPB;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.net.NetUtils;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
@@ -50,7 +52,7 @@ public abstract class HAServiceTarget {
   }
 
   public HAServiceProtocol getHealthMonitorProxy(Configuration conf,
-      int timeoutMs, int retries) throws IOException {
+                                                 int timeoutMs, int retries) throws IOException {
     InetSocketAddress addr = getHealthMonitorAddress();
     if (addr == null) {
       addr = getAddress();

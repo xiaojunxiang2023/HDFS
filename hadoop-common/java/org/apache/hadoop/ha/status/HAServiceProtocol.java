@@ -1,14 +1,8 @@
-package org.apache.hadoop.ha;
+package org.apache.hadoop.ha.status;
 
-import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.io.retry.Idempotent;
-import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.security.KerberosInfo;
 
 import java.io.IOException;
 
-@KerberosInfo(
-    serverPrincipal=CommonConfigurationKeys.HADOOP_SECURITY_SERVICE_USER_NAME_KEY)
 public interface HAServiceProtocol {
   long versionID = 1L;
 
@@ -53,21 +47,16 @@ public interface HAServiceProtocol {
   }
 
   // 监视健康状态
-  @Idempotent
   void monitorHealth() throws IOException;
 
   // transitionToActive
-  @Idempotent
   void transitionToActive(StateChangeRequestInfo reqInfo) throws IOException;
 
   // transitionToStandby
-  @Idempotent
   void transitionToStandby(StateChangeRequestInfo reqInfo) throws IOException;
 
   // transitionToObserver
-  @Idempotent
   void transitionToObserver(StateChangeRequestInfo reqInfo) throws IOException;
 
-  @Idempotent
   HAServiceStatus getServiceStatus() throws IOException;
 }

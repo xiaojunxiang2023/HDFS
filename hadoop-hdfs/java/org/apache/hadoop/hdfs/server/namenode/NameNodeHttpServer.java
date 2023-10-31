@@ -14,7 +14,7 @@ import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
 import org.apache.hadoop.security.AuthenticationFilterInitializer;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;

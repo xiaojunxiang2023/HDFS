@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.HAServiceTarget;
+import org.apache.hadoop.ha.status.HAServiceTarget;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.util.ReflectionUtils;
 
