@@ -13,6 +13,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="hadoop-auth" scope="PROVIDED" />
+    <orderEntry type="module" module-name="hadoop-common" scope="PROVIDED" />
+    <orderEntry type="module" module-name="hadoop-auth" scope="PROVIDED" />
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.4.2">
         <CLASSES>
@@ -92,6 +94,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.woodstox:woodstox-core:5.3.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: dnsjava:dnsjava:2.1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop:hadoop-annotations:3.3.4-ks-ec-3.1.2" level="project" />
     <orderEntry type="module" module-name="hadoop-hdfs-client" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.squareup.okhttp3:okhttp:4.9.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.squareup.okio:okio:2.8.0" level="project" />
@@ -178,6 +181,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.curator:curator-test:4.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.12.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.lz4:lz4-java:1.7.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop:hadoop-annotations:3.3.4-ks-ec-3.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-protos:3.3.4-ks-ec-3.1.2" level="project" />
   </component>
 </module>
