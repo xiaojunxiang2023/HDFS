@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.balancer;
 
-/**
- * Exit status - The values associated with each exit status is directly mapped
- * to the process's exit code in command line.
- */
+// 命令行状态退出码
 public enum ExitStatus {
     SUCCESS(0),
     IN_PROGRESS(1),
@@ -17,11 +14,10 @@ public enum ExitStatus {
 
     private final int code;
 
-    private ExitStatus(int code) {
+    ExitStatus(int code) {
         this.code = code;
     }
 
-    /** @return the command line exit code. */
     public int getExitCode() {
         return code;
     }

@@ -38,7 +38,6 @@ import java.util.concurrent.*;
 import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
 import static org.apache.hadoop.hdfs.util.StripedBlockUtil.getInternalBlockLength;
 
-/** Dispatching block replica moves between datanodes. */
 public class Dispatcher {
     static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
 
