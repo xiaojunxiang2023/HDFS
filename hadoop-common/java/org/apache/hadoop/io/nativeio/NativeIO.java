@@ -356,7 +356,22 @@ public class NativeIO {
     private static native void chmodImpl(String path, int mode) throws IOException;
 
     public static void chmod(String path, int mode) throws IOException {
+      if (!Shell.WINDOWS) {
         chmodImpl(path, mode);
+      } else {
+        try {
+          chmodImpl(path, mode);
+        } catch (NativeIOException nioe) {
+          if (nioe.getErrorCode() == 3) {
+            throw new NativeIOException("No such file or directory",
+                Errno.ENOENT);
+          } else {
+            LOG.warn(String.format("NativeIO.chmod error (%d): %s",
+                nioe.getErrorCode(), nioe.getMessage()));
+            throw new NativeIOException("Unknown error", Errno.UNKNOWN);
+          }
+        }
+      }
     }
 
     /** Wrapper around posix_fadvise(2) */
@@ -480,6 +495,26 @@ public class NativeIO {
       public static int S_IWUSR = -1;  /* write permission, owner */
       public static int S_IXUSR = -1;  /* execute/search permission, owner */
 
+      Stat(int ownerId, int groupId, int mode) {
+        this.ownerId = ownerId;
+        this.groupId = groupId;
+        this.mode = mode;
+      }
+
+      Stat(String owner, String group, int mode) {
+        if (!Shell.WINDOWS) {
+          this.owner = owner;
+        } else {
+          this.owner = stripDomain(owner);
+        }
+        if (!Shell.WINDOWS) {
+          this.group = group;
+        } else {
+          this.group = stripDomain(group);
+        }
+        this.mode = mode;
+      }
+
       @Override
       public String toString() {
         return "Stat(owner='" + owner + "', group='" + group + "'" +
@@ -506,9 +541,11 @@ public class NativeIO {
      */
     public static Stat getFstat(FileDescriptor fd) throws IOException {
       Stat stat = null;
-      stat = fstat(fd);
-      stat.owner = getName(IdCache.USER, stat.ownerId);
-      stat.group = getName(IdCache.GROUP, stat.groupId);
+      if (!Shell.WINDOWS) {
+        stat = fstat(fd);
+        stat.owner = getName(IdCache.USER, stat.ownerId);
+        stat.group = getName(IdCache.GROUP, stat.groupId);
+      } else {
         try {
           stat = fstat(fd);
         } catch (NativeIOException nioe) {
@@ -520,6 +557,7 @@ public class NativeIO {
                 nioe.getErrorCode(), nioe.getMessage()));
             throw new NativeIOException("Unknown error", Errno.UNKNOWN);
           }
+        }
       }
       return stat;
     }
@@ -540,9 +578,13 @@ public class NativeIO {
       }
       Stat stat = null;
       try {
-        stat = stat(path);
-        stat.owner = getName(IdCache.USER, stat.ownerId);
-        stat.group = getName(IdCache.GROUP, stat.groupId);
+        if (!Shell.WINDOWS) {
+          stat = stat(path);
+          stat.owner = getName(IdCache.USER, stat.ownerId);
+          stat.group = getName(IdCache.GROUP, stat.groupId);
+        } else {
+          stat = stat(path);
+        }
       } catch (NativeIOException nioe) {
         LOG.warn("NativeIO.getStat error ({}): {} -- file path: {}",
             nioe.getErrorCode(), nioe.getMessage(), path);
@@ -845,7 +887,11 @@ public class NativeIO {
 
   public static String getOwner(FileDescriptor fd) throws IOException {
     ensureInitialized();
- 
+    if (Shell.WINDOWS) {
+      String owner = Windows.getOwner(fd);
+      owner = stripDomain(owner);
+      return owner;
+    } else {
       long uid = POSIX.getUIDforFDOwnerforOwner(fd);
       CachedUid cUid = uidCache.get(uid);
       long now = System.currentTimeMillis();
@@ -858,7 +904,7 @@ public class NativeIO {
       cUid = new CachedUid(user, now);
       uidCache.put(uid, cUid);
       return user;
- 
+    }
   }
 
   /**
@@ -869,11 +915,28 @@ public class NativeIO {
    */
   public static FileDescriptor getShareDeleteFileDescriptor(
       File f, long seekOffset) throws IOException {
+    if (!Shell.WINDOWS) {
       RandomAccessFile rf = new RandomAccessFile(f, "r");
       if (seekOffset > 0) {
         rf.seek(seekOffset);
       }
       return rf.getFD();
+    } else {
+      // Use Windows native interface to create a FileInputStream that
+      // shares delete permission on the file opened, and set it to the
+      // given offset.
+      //
+      FileDescriptor fd = NativeIO.Windows.createFile(
+          f.getAbsolutePath(),
+          NativeIO.Windows.GENERIC_READ,
+          NativeIO.Windows.FILE_SHARE_READ |
+              NativeIO.Windows.FILE_SHARE_WRITE |
+              NativeIO.Windows.FILE_SHARE_DELETE,
+          NativeIO.Windows.OPEN_EXISTING);
+      if (seekOffset > 0)
+        NativeIO.Windows.setFilePointer(fd, seekOffset, NativeIO.Windows.FILE_BEGIN);
+      return fd;
+    }
   }
 
   /**
@@ -886,6 +949,7 @@ public class NativeIO {
    */
   public static FileOutputStream getCreateForWriteFileOutputStream(File f, int permissions)
       throws IOException {
+    if (!Shell.WINDOWS) {
       // Use the native wrapper around open(2)
       try {
         FileDescriptor fd = NativeIO.POSIX.open(f.getAbsolutePath(),
@@ -898,6 +962,27 @@ public class NativeIO {
         }
         throw nioe;
       }
+    } else {
+      // Use the Windows native APIs to create equivalent FileOutputStream
+      try {
+        FileDescriptor fd = NativeIO.Windows.createFile(f.getCanonicalPath(),
+            NativeIO.Windows.GENERIC_WRITE,
+            NativeIO.Windows.FILE_SHARE_DELETE
+                | NativeIO.Windows.FILE_SHARE_READ
+                | NativeIO.Windows.FILE_SHARE_WRITE,
+            NativeIO.Windows.CREATE_NEW);
+        NativeIO.POSIX.chmod(f.getCanonicalPath(), permissions);
+        return new FileOutputStream(fd);
+      } catch (NativeIOException nioe) {
+        if (nioe.getErrorCode() == 80) {
+          // ERROR_FILE_EXISTS
+          // 80 (0x50)
+          // The file exists
+          throw new AlreadyExistsException(nioe);
+        }
+        throw nioe;
+      }
+    }
   }
 
   private synchronized static void ensureInitialized() {
@@ -1000,6 +1085,9 @@ public class NativeIO {
    * @throws IOException
    */
   public static void copyFileUnbuffered(File src, File dst) throws IOException {
+    if (nativeLoaded && Shell.WINDOWS) {
+      copyFileUnbuffered0(src.getAbsolutePath(), dst.getAbsolutePath());
+    } else {
       FileInputStream fis = new FileInputStream(src);
       FileChannel input = null;
       try {
@@ -1018,6 +1106,7 @@ public class NativeIO {
       } finally {
         IOUtils.cleanupWithLogger(LOG, input, fis);
       }
+    }
   }
 
   private static native void copyFileUnbuffered0(String src, String dst)

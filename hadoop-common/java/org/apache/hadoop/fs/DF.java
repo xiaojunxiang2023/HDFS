@@ -30,17 +30,27 @@ public class DF extends Shell {
     super(dfInterval);
     this.dirPath = path.getCanonicalPath();
     this.dirFile = new File(this.dirPath);
-    this.output = new ArrayList<>();
+    this.output = new ArrayList<String>();
   }
 
   /// ACCESSORS
 
+  /** @return the canonical path to the volume we're checking. */
+  public String getDirPath() {
+    return dirPath;
+  }
+
   /** @return a string indicating which filesystem volume we're checking. */
   public String getFilesystem() throws IOException {
-    run();
-    verifyExitCode();
-    parseOutput();
-    return filesystem;
+    if (Shell.WINDOWS) {
+      this.filesystem = dirFile.getCanonicalPath().substring(0, 2);
+      return this.filesystem;
+    } else {
+      run();
+      verifyExitCode();
+      parseOutput();
+      return filesystem;
+    }
   }
 
   /** @return the capacity of the measured filesystem in bytes. */
@@ -73,9 +83,14 @@ public class DF extends Shell {
           + "does not exist");
     }
 
-    run();
-    verifyExitCode();
-    parseOutput();
+    if (Shell.WINDOWS) {
+      // Assume a drive letter for a mount point
+      this.mount = dirFile.getCanonicalPath().substring(0, 2);
+    } else {
+      run();
+      verifyExitCode();
+      parseOutput();
+    }
 
     return mount;
   }
@@ -94,8 +109,14 @@ public class DF extends Shell {
 
   @Override
   protected String[] getExecString() {
-    return new String[] {"bash","-c","exec 'df' '-k' '-P' '" + dirPath 
-            + "' 2>/dev/null"};
+    // ignoring the error since the exit code it enough
+    if (Shell.WINDOWS){
+      throw new AssertionError(
+          "DF.getExecString() should never be called on Windows");
+    } else {
+      return new String[] {"bash","-c","exec 'df' '-k' '-P' '" + dirPath 
+                      + "' 2>/dev/null"};
+    }
   }
 
   @Override
@@ -111,9 +132,9 @@ public class DF extends Shell {
   @VisibleForTesting
   protected void parseOutput() throws IOException {
     if (output.size() < 2) {
-      StringBuilder sb = new StringBuilder("Fewer lines of output than expected");
+      StringBuffer sb = new StringBuffer("Fewer lines of output than expected");
       if (output.size() > 0) {
-        sb.append(": ").append(output.get(0));
+        sb.append(": " + output.get(0));
       }
       throw new IOException(sb.toString());
     }
@@ -143,7 +164,9 @@ public class DF extends Shell {
       Long.parseLong(tokens.nextToken()); // available
       Integer.parseInt(tokens.nextToken()); // pct used
       this.mount = tokens.nextToken();
-    } catch (NoSuchElementException | NumberFormatException e) {
+    } catch (NoSuchElementException e) {
+      throw new IOException("Could not parse line: " + line);
+    } catch (NumberFormatException e) {
       throw new IOException("Could not parse line: " + line);
     }
   }

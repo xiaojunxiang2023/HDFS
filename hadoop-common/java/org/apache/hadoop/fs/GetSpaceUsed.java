@@ -1,3 +1,20 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.hadoop.fs;
 
 import org.apache.hadoop.conf.Configuration;
@@ -59,12 +76,21 @@ public interface GetSpaceUsed {
         return klass;
       }
       Class<? extends GetSpaceUsed> result = null;
+      if (Shell.WINDOWS) {
+        result = WindowsGetSpaceUsed.class;
+      } else {
         result = DU.class;
+      }
       if (conf == null) {
         return result;
       }
       return conf.getClass(CommonConfigurationKeys.FS_GETSPACEUSED_CLASSNAME,
           result, GetSpaceUsed.class);
+    }
+
+    public Builder setKlass(Class<? extends GetSpaceUsed> klass) {
+      this.klass = klass;
+      return this;
     }
 
     public File getPath() {
@@ -135,8 +161,12 @@ public interface GetSpaceUsed {
       }
       // If there were any exceptions then du will be null.
       // Construct our best guess fallback.
-      if (getSpaceUsed == null) { 
-        getSpaceUsed = new DU(this);
+      if (getSpaceUsed == null) {
+        if (Shell.WINDOWS) {
+          getSpaceUsed = new WindowsGetSpaceUsed(this);
+        } else {
+          getSpaceUsed = new DU(this);
+        }
       }
       // Call init after classes constructors have finished.
       if (getSpaceUsed instanceof CachingGetSpaceUsed) {

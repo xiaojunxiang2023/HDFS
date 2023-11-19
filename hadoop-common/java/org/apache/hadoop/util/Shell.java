@@ -23,8 +23,20 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Shell {
   private static final Map<Shell, Object> CHILD_SHELLS =
-      Collections.synchronizedMap(new WeakHashMap<>());
+          Collections.synchronizedMap(new WeakHashMap<Shell, Object>());
   public static final Logger LOG = LoggerFactory.getLogger(Shell.class);
+
+  /**
+   * Text to include when there are windows-specific problems.
+   * {@value}
+   */
+  private static final String WINDOWS_PROBLEMS =
+          "https://wiki.apache.org/hadoop/WindowsProblems";
+
+  /**
+   * Name of the windows utils binary: {@value}.
+   */
+  static final String WINUTILS_EXE = "winutils.exe";
 
   /**
    * System property for the Hadoop home directory: {@value}.
@@ -49,7 +61,7 @@ public abstract class Shell {
 
   // "1.8"->8, "9"->9, "10"->10
   private static final int JAVA_SPEC_VER = Math.max(8, Integer.parseInt(
-      System.getProperty("java.specification.version").split("\\.")[0]));
+          System.getProperty("java.specification.version").split("\\.")[0]));
 
   /**
    * Query to see if major version of Java specification of the system
@@ -63,6 +75,41 @@ public abstract class Shell {
   }
 
   /**
+   * Maximum command line length in Windows
+   * KB830473 documents this as 8191
+   */
+  public static final int WINDOWS_MAX_SHELL_LENGTH = 8191;
+
+  /**
+   * mis-spelling of {@link #WINDOWS_MAX_SHELL_LENGTH}.
+   * @deprecated use the correctly spelled constant.
+   */
+  @Deprecated
+  public static final int WINDOWS_MAX_SHELL_LENGHT = WINDOWS_MAX_SHELL_LENGTH;
+
+  /**
+   * Checks if a given command (String[]) fits in the Windows maximum command
+   * line length Note that the input is expected to already include space
+   * delimiters, no extra count will be added for delimiters.
+   *
+   * @param commands command parts, including any space delimiters
+   */
+  public static void checkWindowsCommandLineLength(String...commands)
+          throws IOException {
+    int len = 0;
+    for (String s: commands) {
+      len += s.length();
+    }
+    if (len > WINDOWS_MAX_SHELL_LENGTH) {
+      throw new IOException(String.format(
+              "The command line has a length of %d exceeds maximum allowed length" +
+                      " of %d. Command starts with: %s",
+              len, WINDOWS_MAX_SHELL_LENGTH,
+              StringUtils.join("", commands).substring(0, 100)));
+    }
+  }
+
+  /**
    * Quote the given arg so that bash will interpret it as a single value.
    * Note that this quotes it for one level of bash, if you are passing it
    * into a badly written shell script, you need to fix your shell script.
@@ -70,16 +117,27 @@ public abstract class Shell {
    * @return the quoted string
    */
   static String bashQuote(String arg) {
-    return '\'' +
-            arg.replace("'", "'\\''") +
-            '\'';
+    StringBuilder buffer = new StringBuilder(arg.length() + 2);
+    buffer.append('\'')
+            .append(arg.replace("'", "'\\''"))
+            .append('\'');
+    return buffer.toString();
   }
 
   /** a Unix command to get the current user's name: {@value}. */
   public static final String USER_NAME_COMMAND = "whoami";
 
+  /** Windows <code>CreateProcess</code> synchronization object. */
+  public static final Object WindowsProcessLaunchLock = new Object();
+
+  // OSType detection
+
   public enum OSType {
     OS_TYPE_LINUX,
+    OS_TYPE_WIN,
+    OS_TYPE_SOLARIS,
+    OS_TYPE_MAC,
+    OS_TYPE_FREEBSD,
     OS_TYPE_OTHER
   }
 
@@ -91,7 +149,15 @@ public abstract class Shell {
 
   private static OSType getOSType() {
     String osName = System.getProperty("os.name");
-    if (osName.startsWith("Linux")) {
+    if (osName.startsWith("Windows")) {
+      return OSType.OS_TYPE_WIN;
+    } else if (osName.contains("SunOS") || osName.contains("Solaris")) {
+      return OSType.OS_TYPE_SOLARIS;
+    } else if (osName.contains("Mac")) {
+      return OSType.OS_TYPE_MAC;
+    } else if (osName.contains("FreeBSD")) {
+      return OSType.OS_TYPE_FREEBSD;
+    } else if (osName.startsWith("Linux")) {
       return OSType.OS_TYPE_LINUX;
     } else {
       // Some other form of Unix
@@ -100,15 +166,20 @@ public abstract class Shell {
   }
 
   // Helper static vars for each platform
+  public static final boolean WINDOWS = (osType == OSType.OS_TYPE_WIN);
+  public static final boolean SOLARIS = (osType == OSType.OS_TYPE_SOLARIS);
+  public static final boolean MAC     = (osType == OSType.OS_TYPE_MAC);
+  public static final boolean FREEBSD = (osType == OSType.OS_TYPE_FREEBSD);
   public static final boolean LINUX   = (osType == OSType.OS_TYPE_LINUX);
   public static final boolean OTHER   = (osType == OSType.OS_TYPE_OTHER);
 
   public static final boolean PPC_64
-                = System.getProperties().getProperty("os.arch").contains("ppc64");
+          = System.getProperties().getProperty("os.arch").contains("ppc64");
 
   /** a Unix command to get the current user's groups list. */
   public static String[] getGroupsCommand() {
-    return new String[]{"groups"};
+    return (WINDOWS)? new String[]{"cmd", "/c", "groups"}
+            : new String[]{"groups"};
   }
 
   /**
@@ -119,9 +190,14 @@ public abstract class Shell {
    */
   public static String[] getGroupsForUserCommand(final String user) {
     //'groups username' command return is inconsistent across different unixes
-    String quotedUser = bashQuote(user);
-    return new String[] {"bash", "-c", "id -gn " + quotedUser +
-                            "; id -Gn " + quotedUser};
+    if (WINDOWS) {
+      return new String[]
+              {getWinUtilsPath(), "groups", "-F", "\"" + user + "\""};
+    } else {
+      String quotedUser = bashQuote(user);
+      return new String[] {"bash", "-c", "id -gn " + quotedUser +
+              "; id -Gn " + quotedUser};
+    }
   }
 
   /**
@@ -133,9 +209,14 @@ public abstract class Shell {
    */
   public static String[] getGroupsIDForUserCommand(final String user) {
     //'groups username' command return is inconsistent across different unixes
-    String quotedUser = bashQuote(user);
-    return new String[] {"bash", "-c", "id -g " + quotedUser + "; id -G " +
-                            quotedUser};
+    if (WINDOWS) {
+      return new String[]{getWinUtilsPath(), "groups", "-F", "\"" + user +
+              "\""};
+    } else {
+      String quotedUser = bashQuote(user);
+      return new String[] {"bash", "-c", "id -g " + quotedUser + "; id -G " +
+              quotedUser};
+    }
   }
 
   /** A command to get a given netgroup's user list. */
@@ -146,15 +227,20 @@ public abstract class Shell {
 
   /** Return a command to get permission information. */
   public static String[] getGetPermissionCommand() {
-    return new String[] { "ls", "-ld" };
+    return (WINDOWS) ? new String[] { getWinUtilsPath(), "ls", "-F" }
+            : new String[] { "ls", "-ld" };
   }
 
   /** Return a command to set permission. */
   public static String[] getSetPermissionCommand(String perm, boolean recursive) {
     if (recursive) {
-      return new String[] { "chmod", "-R", perm };
+      return (WINDOWS) ?
+              new String[] { getWinUtilsPath(), "chmod", "-R", perm }
+              : new String[] { "chmod", "-R", perm };
     } else {
-      return new String[] { "chmod", perm };
+      return (WINDOWS) ?
+              new String[] { getWinUtilsPath(), "chmod", perm }
+              : new String[] { "chmod", perm };
     }
   }
 
@@ -177,17 +263,23 @@ public abstract class Shell {
 
   /** Return a command to set owner. */
   public static String[] getSetOwnerCommand(String owner) {
-    return new String[] { "chown", owner };
+    return (WINDOWS) ?
+            new String[] { getWinUtilsPath(), "chown", "\"" + owner + "\"" }
+            : new String[] { "chown", owner };
   }
 
   /** Return a command to create symbolic links. */
   public static String[] getSymlinkCommand(String target, String link) {
-    return new String[] { "ln", "-s", target, link };
+    return WINDOWS ?
+            new String[] { getWinUtilsPath(), "symlink", link, target }
+            : new String[] { "ln", "-s", target, link };
   }
 
   /** Return a command to read the target of the a symbolic link. */
   public static String[] getReadlinkCommand(String link) {
-    return new String[] { "readlink", link };
+    return WINDOWS ?
+            new String[] { getWinUtilsPath(), "readlink", link }
+            : new String[] { "readlink", link };
   }
 
   /**
@@ -201,16 +293,25 @@ public abstract class Shell {
 
   /** Return a command to send a signal to a given pid. */
   public static String[] getSignalKillCommand(int code, String pid) {
+    // Code == 0 means check alive
+    if (Shell.WINDOWS) {
+      if (0 == code) {
+        return new String[] {Shell.getWinUtilsPath(), "task", "isAlive", pid };
+      } else {
+        return new String[] {Shell.getWinUtilsPath(), "task", "kill", pid };
+      }
+    }
+
     // Use the bash-builtin instead of the Unix kill command (usually
     // /bin/kill) as the bash-builtin supports "--" in all Hadoop supported
     // OSes.
     final String quotedPid = bashQuote(pid);
     if (isSetsidAvailable) {
       return new String[] { "bash", "-c", "kill -" + code + " -- -" +
-          quotedPid };
+              quotedPid };
     } else {
       return new String[] { "bash", "-c", "kill -" + code + " " +
-          quotedPid };
+              quotedPid };
     }
   }
 
@@ -219,7 +320,9 @@ public abstract class Shell {
 
   /** Return a regular expression string that match environment variables. */
   public static String getEnvironmentVariableRegex() {
-    return "\\$(" + ENV_NAME_REGEX + ")";
+    return (WINDOWS)
+            ? "%(" + ENV_NAME_REGEX + "?)%"
+            : "\\$(" + ENV_NAME_REGEX + ")";
   }
 
   /**
@@ -245,7 +348,7 @@ public abstract class Shell {
    * @return String script file name
    */
   public static String appendScriptExtension(String basename) {
-    return basename + ".sh";
+    return basename + (WINDOWS ? ".cmd" : ".sh");
   }
 
   /**
@@ -257,7 +360,9 @@ public abstract class Shell {
    */
   public static String[] getRunScriptCommand(File script) {
     String absolutePath = script.getAbsolutePath();
-    return new String[] {"bash", bashQuote(absolutePath) };
+    return WINDOWS ?
+            new String[] {"cmd", "/c", absolutePath }
+            : new String[] {"bash", bashQuote(absolutePath) };
   }
 
   /** a Unix command to set permission: {@value}. */
@@ -315,9 +420,9 @@ public abstract class Shell {
   static final String E_NO_EXECUTABLE = "Could not locate Hadoop executable";
   static final String E_NOT_EXECUTABLE_FILE = "Not an executable file";
   static final String E_HADOOP_PROPS_UNSET = ENV_HADOOP_HOME + " and "
-      + SYSPROP_HADOOP_HOME_DIR + " are unset.";
+          + SYSPROP_HADOOP_HOME_DIR + " are unset.";
   static final String E_HADOOP_PROPS_EMPTY = ENV_HADOOP_HOME + " or "
-      + SYSPROP_HADOOP_HOME_DIR + " set to an empty string";
+          + SYSPROP_HADOOP_HOME_DIR + " set to an empty string";
   static final String E_NOT_A_WINDOWS_SYSTEM = "Not a Windows system";
 
   /**
@@ -351,15 +456,15 @@ public abstract class Shell {
     File homedir = new File(home);
     if (!homedir.isAbsolute()) {
       throw new FileNotFoundException("Hadoop home directory " + homedir
-          + " " + E_IS_RELATIVE);
+              + " " + E_IS_RELATIVE);
     }
     if (!homedir.exists()) {
       throw new FileNotFoundException("Hadoop home directory " + homedir
-          + " " + E_DOES_NOT_EXIST);
+              + " " + E_DOES_NOT_EXIST);
     }
     if (!homedir.isDirectory()) {
       throw new FileNotFoundException("Hadoop home directory " + homedir
-          + " "+ E_NOT_DIRECTORY);
+              + " "+ E_NOT_DIRECTORY);
     }
     return homedir;
   }
@@ -398,7 +503,7 @@ public abstract class Shell {
    * @return error message, possibly with some extra text
    */
   private static String addOsText(String message) {
-    return message;
+    return WINDOWS ? (message + " -see " + WINDOWS_PROBLEMS) : message;
   }
 
   /**
@@ -410,9 +515,9 @@ public abstract class Shell {
    * @return a new exception to throw.
    */
   private static FileNotFoundException fileNotFoundException(String text,
-      Exception ex) {
+                                                             Exception ex) {
     return (FileNotFoundException) new FileNotFoundException(text)
-        .initCause(ex);
+            .initCause(ex);
   }
 
   /**
@@ -433,8 +538,8 @@ public abstract class Shell {
   private static File getHadoopHomeDir() throws FileNotFoundException {
     if (HADOOP_HOME_DIR_FAILURE_CAUSE != null) {
       throw fileNotFoundException(
-          addOsText(HADOOP_HOME_DIR_FAILURE_CAUSE.toString()),
-          HADOOP_HOME_DIR_FAILURE_CAUSE);
+              addOsText(HADOOP_HOME_DIR_FAILURE_CAUSE.toString()),
+              HADOOP_HOME_DIR_FAILURE_CAUSE);
     }
     return HADOOP_HOME_FILE;
   }
@@ -453,7 +558,7 @@ public abstract class Shell {
    * @throws FileNotFoundException if the path does not exist
    */
   public static File getQualifiedBin(String executable)
-      throws FileNotFoundException {
+          throws FileNotFoundException {
     // construct hadoop bin path to the specified executable
     return getQualifiedBinInner(getHadoopHomeDir(), executable);
   }
@@ -467,26 +572,26 @@ public abstract class Shell {
    * @throws FileNotFoundException if the executable was not found/valid
    */
   static File getQualifiedBinInner(File hadoopHomeDir, String executable)
-      throws FileNotFoundException {
+          throws FileNotFoundException {
     String binDirText = "Hadoop bin directory ";
     File bin = new File(hadoopHomeDir, "bin");
     if (!bin.exists()) {
       throw new FileNotFoundException(addOsText(binDirText + E_DOES_NOT_EXIST
-          + ": " + bin));
+              + ": " + bin));
     }
     if (!bin.isDirectory()) {
       throw new FileNotFoundException(addOsText(binDirText + E_NOT_DIRECTORY
-          + ": " + bin));
+              + ": " + bin));
     }
 
     File exeFile = new File(bin, executable);
     if (!exeFile.exists()) {
       throw new FileNotFoundException(
-          addOsText(E_NO_EXECUTABLE + ": " + exeFile));
+              addOsText(E_NO_EXECUTABLE + ": " + exeFile));
     }
     if (!exeFile.isFile()) {
       throw new FileNotFoundException(
-          addOsText(E_NOT_EXECUTABLE_FILE + ": " + exeFile));
+              addOsText(E_NOT_EXECUTABLE_FILE + ": " + exeFile));
     }
     try {
       return exeFile.getCanonicalFile();
@@ -512,9 +617,30 @@ public abstract class Shell {
    * @throws IOException on path canonicalization failures
    */
   public static String getQualifiedBinPath(String executable)
-      throws IOException {
+          throws IOException {
     return getQualifiedBin(executable).getCanonicalPath();
   }
+
+  /**
+   * Location of winutils as a string; null if not found.
+   * <p>
+   * <i>Important: caller must check for this value being null</i>.
+   * The lack of such checks has led to many support issues being raised.
+   * <p>
+   * @deprecated use one of the exception-raising getter methods,
+   * specifically {@link #getWinUtilsPath()} or {@link #getWinUtilsFile()}
+   */
+  @Deprecated
+  public static final String WINUTILS;
+
+  /** Canonical path to winutils, private to Shell. */
+  private static final String WINUTILS_PATH;
+
+  /** file reference to winutils. */
+  private static final File WINUTILS_FILE;
+
+  /** the exception raised on a failure to init the WINUTILS fields. */
+  private static final IOException WINUTILS_FAILURE;
 
   /*
    * Static WINUTILS_* field initializer.
@@ -527,10 +653,83 @@ public abstract class Shell {
     IOException ioe = null;
     String path = null;
     File file = null;
-    ioe = new FileNotFoundException(E_NOT_A_WINDOWS_SYSTEM);
+    // invariant: either there's a valid file and path,
+    // or there is a cached IO exception.
+    if (WINDOWS) {
+      try {
+        file = getQualifiedBin(WINUTILS_EXE);
+        path = file.getCanonicalPath();
+        ioe = null;
+      } catch (IOException e) {
+        LOG.warn("Did not find {}: {}", WINUTILS_EXE, e);
+        // stack trace comes at debug level
+        LOG.debug("Failed to find " + WINUTILS_EXE, e);
+        file = null;
+        path = null;
+        ioe = e;
+      }
+    } else {
+      // on a non-windows system, the invariant is kept
+      // by adding an explicit exception.
+      ioe = new FileNotFoundException(E_NOT_A_WINDOWS_SYSTEM);
+    }
+    WINUTILS_PATH = path;
+    WINUTILS_FILE = file;
+
+    WINUTILS = path;
+    WINUTILS_FAILURE = ioe;
+  }
+
+  /**
+   * Predicate to indicate whether or not the path to winutils is known.
+   *
+   * If true, then {@link #WINUTILS} is non-null, and both
+   * {@link #getWinUtilsPath()} and {@link #getWinUtilsFile()}
+   * will successfully return this value. Always false on non-windows systems.
+   * @return true if there is a valid path to the binary
+   */
+  public static boolean hasWinutilsPath() {
+    return WINUTILS_PATH != null;
+  }
+
+  /**
+   * Locate the winutils binary, or fail with a meaningful
+   * exception and stack trace as an RTE.
+   * This method is for use in methods which don't explicitly throw
+   * an <code>IOException</code>.
+   * @return the path to {@link #WINUTILS_EXE}
+   * @throws RuntimeException if the path is not resolvable
+   */
+  public static String getWinUtilsPath() {
+    if (WINUTILS_FAILURE == null) {
+      return WINUTILS_PATH;
+    } else {
+      throw new RuntimeException(WINUTILS_FAILURE.toString(),
+              WINUTILS_FAILURE);
+    }
+  }
+
+  /**
+   * Get a file reference to winutils.
+   * Always raises an exception if there isn't one
+   * @return the file instance referring to the winutils bin.
+   * @throws FileNotFoundException on any failure to locate that file.
+   */
+  public static File getWinUtilsFile() throws FileNotFoundException {
+    if (WINUTILS_FAILURE == null) {
+      return WINUTILS_FILE;
+    } else {
+      // raise a new exception to generate a new stack trace
+      throw fileNotFoundException(WINUTILS_FAILURE.toString(),
+              WINUTILS_FAILURE);
+    }
   }
 
   public static boolean checkIsBashSupported() throws InterruptedIOException {
+    if (Shell.WINDOWS) {
+      return false;
+    }
+
     ShellCommandExecutor shexec;
     boolean supported = true;
     try {
@@ -545,7 +744,7 @@ public abstract class Shell {
       supported = false;
     } catch (SecurityException se) {
       LOG.info("Bash execution is not allowed by the JVM " +
-          "security manager.Considering it not supported.");
+              "security manager.Considering it not supported.");
       supported = false;
     }
 
@@ -562,6 +761,9 @@ public abstract class Shell {
    * @return true if <code>setsid</code> was present
    */
   private static boolean isSetsidSupported() {
+    if (Shell.WINDOWS) {
+      return false;
+    }
     ShellCommandExecutor shexec = null;
     boolean setsidSupported = true;
     try {
@@ -573,21 +775,30 @@ public abstract class Shell {
       setsidSupported = false;
     } catch (SecurityException se) {
       LOG.debug("setsid is not allowed to run by the JVM "+
-          "security manager. So not using it.");
+              "security manager. So not using it.");
       setsidSupported = false;
-    } catch (Error ignored) {
-      
+    } catch (Error err) {
+      if (err.getMessage() != null
+              && err.getMessage().contains("posix_spawn is not " +
+              "a supported process launch mechanism")
+              && (Shell.FREEBSD || Shell.MAC)) {
+        // HADOOP-11924: This is a workaround to avoid failure of class init
+        // by JDK issue on TR locale(JDK-8047340).
+        LOG.info("Avoiding JDK-8047340 on BSD-based systems.", err);
+        setsidSupported = false;
+      }
     }  finally { // handle the exit code
       if (LOG.isDebugEnabled()) {
         LOG.debug("setsid exited with exit code "
-                 + (shexec != null ? shexec.getExitCode() : "(null executor)"));
+                + (shexec != null ? shexec.getExitCode() : "(null executor)"));
       }
     }
     return setsidSupported;
   }
 
   /** Token separator regex used to parse Shell tool outputs. */
-  public static final String TOKEN_SEPARATOR_REGEX = "[ \t\n\r\f]";
+  public static final String TOKEN_SEPARATOR_REGEX
+          = WINDOWS ? "[|\n\r]" : "[ \t\n\r\f]";
 
   private long interval;   // refresh interval in msec
   private long lastTime;   // last time the command was performed
@@ -655,6 +866,9 @@ public abstract class Shell {
       return;
     }
     exitCode = 0; // reset for next run
+    if (Shell.MAC) {
+      System.setProperty("jdk.lang.Process.launchMechanism", "POSIX_SPAWN");
+    }
     runCommand();
   }
 
@@ -682,7 +896,18 @@ public abstract class Shell {
 
     builder.redirectErrorStream(redirectErrorStream);
 
-    process = builder.start();
+    if (Shell.WINDOWS) {
+      synchronized (WindowsProcessLaunchLock) {
+        // To workaround the race condition issue with child processes
+        // inheriting unintended handles during process launch that can
+        // lead to hangs on reading output and error streams, we
+        // serialize process creation. More info available at:
+        // http://support.microsoft.com/kb/315939
+        process = builder.start();
+      }
+    } else {
+      process = builder.start();
+    }
 
     waitingThread = Thread.currentThread();
     CHILD_SHELLS.put(this, null);
@@ -690,16 +915,16 @@ public abstract class Shell {
     if (timeOutInterval > 0) {
       timeOutTimer = new Timer("Shell command timeout");
       timeoutTimerTask = new ShellTimeoutTimerTask(
-          this);
+              this);
       //One time scheduling.
       timeOutTimer.schedule(timeoutTimerTask, timeOutInterval);
     }
     final BufferedReader errReader =
             new BufferedReader(new InputStreamReader(
-                process.getErrorStream(), Charset.defaultCharset()));
+                    process.getErrorStream(), Charset.defaultCharset()));
     BufferedReader inReader =
             new BufferedReader(new InputStreamReader(
-                process.getInputStream(), Charset.defaultCharset()));
+                    process.getInputStream(), Charset.defaultCharset()));
     final StringBuffer errMsg = new StringBuffer();
 
     // read error and input streams as this would free up the buffers
@@ -711,7 +936,7 @@ public abstract class Shell {
           String line = errReader.readLine();
           while((line != null) && !isInterrupted()) {
             errMsg.append(line)
-                .append(System.getProperty("line.separator"));
+                    .append(System.getProperty("line.separator"));
             line = errReader.readLine();
           }
         } catch(IOException ioe) {
@@ -722,7 +947,7 @@ public abstract class Shell {
             LOG.warn("Error reading the error stream", ioe);
           } else {
             LOG.debug("Error reading the error stream due to shell "
-                + "command timeout", ioe);
+                    + "command timeout", ioe);
           }
         }
       }
@@ -732,8 +957,8 @@ public abstract class Shell {
     } catch (IllegalStateException ise) {
     } catch (OutOfMemoryError oe) {
       LOG.error("Caught " + oe + ". One possible reason is that ulimit"
-          + " setting of 'max user processes' is too low. If so, do"
-          + " 'ulimit -u <largerNum>' and try again.");
+              + " setting of 'max user processes' is too low. If so, do"
+              + " 'ulimit -u <largerNum>' and try again.");
       throw oe;
     }
     try {
@@ -801,7 +1026,7 @@ public abstract class Shell {
 
   /** Parse the execution result */
   protected abstract void parseExecResult(BufferedReader lines)
-  throws IOException;
+          throws IOException;
 
   /**
    * Get an environment variable.
@@ -853,10 +1078,10 @@ public abstract class Shell {
     @Override
     public String toString() {
       final StringBuilder sb =
-          new StringBuilder("ExitCodeException ");
+              new StringBuilder("ExitCodeException ");
       sb.append("exitCode=").append(exitCode)
-          .append(": ")
-          .append(super.getMessage());
+              .append(": ")
+              .append(super.getMessage());
       return sb.toString();
     }
   }
@@ -882,7 +1107,7 @@ public abstract class Shell {
    * is stored as-is and is expected to be small.
    */
   public static class ShellCommandExecutor extends Shell
-      implements CommandExecutor {
+          implements CommandExecutor {
 
     private String[] command;
     private StringBuffer output;
@@ -897,7 +1122,7 @@ public abstract class Shell {
     }
 
     public ShellCommandExecutor(String[] execString, File dir,
-                                 Map<String, String> env) {
+                                Map<String, String> env) {
       this(execString, dir, env , 0L);
     }
 
@@ -923,7 +1148,7 @@ public abstract class Shell {
      *                         vars from the parent process or not.
      */
     public ShellCommandExecutor(String[] execString, File dir,
-        Map<String, String> env, long timeout, boolean inheritParentEnv) {
+                                Map<String, String> env, long timeout, boolean inheritParentEnv) {
       command = execString.clone();
       if (dir != null) {
         setWorkingDirectory(dir);
@@ -953,7 +1178,7 @@ public abstract class Shell {
       for (String s : command) {
         if (s == null) {
           throw new IOException("(null) entry in command string: "
-              + StringUtils.join(" ", command));
+                  + StringUtils.join(" ", command));
         }
       }
       this.run();
@@ -1047,9 +1272,9 @@ public abstract class Shell {
    */
 
   public static String execCommand(Map<String, String> env, String[] cmd,
-      long timeout) throws IOException {
+                                   long timeout) throws IOException {
     ShellCommandExecutor exec = new ShellCommandExecutor(cmd, null, env,
-                                                          timeout);
+            timeout);
     exec.execute();
     return exec.getOutput();
   }
@@ -1064,7 +1289,7 @@ public abstract class Shell {
    * @throws IOException on any problem.
    */
   public static String execCommand(Map<String,String> env, String ... cmd)
-  throws IOException {
+          throws IOException {
     return execCommand(env, cmd, 0L);
   }
 
@@ -1127,6 +1352,12 @@ public abstract class Shell {
    * @return long value specifying the memory lock limit.
    */
   public static Long getMemlockLimit(Long ulimit) {
+    if (WINDOWS) {
+      // HDFS-13560: if ulimit is too large on Windows, Windows will complain
+      // "1450: Insufficient system resources exist to complete the requested
+      // service". Thus, cap Windows memory lock limit at Integer.MAX_VALUE.
+      return Math.min(Integer.MAX_VALUE, ulimit);
+    }
     return ulimit;
   }
 }

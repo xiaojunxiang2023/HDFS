@@ -43,7 +43,10 @@ public class NativeIOException extends IOException {
 
   @Override
   public String toString() {
-    return errno.toString() + ": " + super.getMessage();
+    if (Shell.WINDOWS)
+      return errorCode + ": " + super.getMessage();
+    else
+      return errno.toString() + ": " + super.getMessage();
   }
 }
 

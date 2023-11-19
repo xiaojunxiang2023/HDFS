@@ -36,7 +36,22 @@ public class HardLink {
   //initialize the command "getters" statically, so can use their 
   //methods without instantiating the HardLink object
   static { 
-    getHardLinkCommand = new HardLinkCGUnix();
+    if (Shell.WINDOWS) {
+      // Windows
+      getHardLinkCommand = new HardLinkCGWin();
+    } else {
+      // Unix or Linux
+      getHardLinkCommand = new HardLinkCGUnix();
+      //override getLinkCountCommand for the particular Unix variant
+      //Linux is already set as the default - {"stat","-c%h", null}
+      if (Shell.MAC || Shell.FREEBSD) {
+        String[] linkCountCmdTemplate = {"/usr/bin/stat","-f%l", null};
+        HardLinkCGUnix.setLinkCountCmdTemplate(linkCountCmdTemplate);
+      } else if (Shell.SOLARIS) {
+        String[] linkCountCmdTemplate = {"ls","-l", null};
+        HardLinkCGUnix.setLinkCountCmdTemplate(linkCountCmdTemplate);        
+      }
+    }
   }
 
   public HardLink() {
@@ -96,13 +111,15 @@ public class HardLink {
      */
     @SuppressWarnings("deprecation")
     static String[] getLinkCountCommand = {
-        "hardlink", "stat", null};
+        Shell.WINUTILS, "hardlink", "stat", null};
 
     /*
      * @see org.apache.hadoop.fs.HardLink.HardLinkCommandGetter#linkCount(java.io.File)
      */
     @Override
     String[] linkCount(File file) throws IOException {
+      // trigger the check for winutils
+      Shell.getWinUtilsFile();
       String[] buf = new String[getLinkCountCommand.length];
       System.arraycopy(getLinkCountCommand, 0, buf, 0, 
                        getLinkCountCommand.length);
@@ -195,7 +212,12 @@ public class HardLink {
       if (inpMsg == null || exitValue != 0) {
         throw createIOException(fileName, inpMsg, errMsg, exitValue, null);
       }
-      return Integer.parseInt(inpMsg);
+      if (Shell.SOLARIS) {
+        String[] result = inpMsg.split("\\s+");
+        return Integer.parseInt(result[1]);
+      } else {
+        return Integer.parseInt(inpMsg);
+      }
     } catch (ExitCodeException e) {
       inpMsg = shexec.getOutput();
       errMsg = e.getMessage();

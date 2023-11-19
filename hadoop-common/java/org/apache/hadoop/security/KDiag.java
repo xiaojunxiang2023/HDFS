@@ -516,30 +516,32 @@ public class KDiag extends Configured implements Tool, Closeable {
    * @throws IOException problems reading the file.
    */
   private void validateKrb5File() throws IOException {
-    title("Locating Kerberos configuration file");
-    String krbPath = ETC_KRB5_CONF;
-    String jvmKrbPath = System.getProperty(JAVA_SECURITY_KRB5_CONF);
-    if (jvmKrbPath != null && !jvmKrbPath.isEmpty()) {
-      println("Setting kerberos path from sysprop %s: \"%s\"",
-        JAVA_SECURITY_KRB5_CONF, jvmKrbPath);
-      krbPath = jvmKrbPath;
-    }
-  
-    String krb5name = System.getenv(KRB5_CONFIG);
-    if (krb5name != null) {
-      println("Setting kerberos path from environment variable %s: \"%s\"",
-          KRB5_CONFIG, krb5name);
-      krbPath = krb5name;
-      if (jvmKrbPath != null) {
-        println("Warning - both %s and %s were set - %s takes priority",
-            JAVA_SECURITY_KRB5_CONF, KRB5_CONFIG, KRB5_CONFIG);
+    if (!Shell.WINDOWS) {
+      title("Locating Kerberos configuration file");
+      String krbPath = ETC_KRB5_CONF;
+      String jvmKrbPath = System.getProperty(JAVA_SECURITY_KRB5_CONF);
+      if (jvmKrbPath != null && !jvmKrbPath.isEmpty()) {
+        println("Setting kerberos path from sysprop %s: \"%s\"",
+          JAVA_SECURITY_KRB5_CONF, jvmKrbPath);
+        krbPath = jvmKrbPath;
       }
+
+      String krb5name = System.getenv(KRB5_CONFIG);
+      if (krb5name != null) {
+        println("Setting kerberos path from environment variable %s: \"%s\"",
+            KRB5_CONFIG, krb5name);
+        krbPath = krb5name;
+        if (jvmKrbPath != null) {
+          println("Warning - both %s and %s were set - %s takes priority",
+              JAVA_SECURITY_KRB5_CONF, KRB5_CONFIG, KRB5_CONFIG);
+        }
+      }
+
+      File krbFile = new File(krbPath);
+      println("Kerberos configuration file = %s", krbFile);
+      dump(krbFile);
+      endln();
     }
-  
-    File krbFile = new File(krbPath);
-    println("Kerberos configuration file = %s", krbFile);
-    dump(krbFile);
-    endln();
   }
 
   /**
@@ -726,13 +728,15 @@ public class KDiag extends Configured implements Tool, Closeable {
   }
 
   private void validateNTPConf() throws IOException {
-    File ntpfile = new File(ETC_NTP);
-    if (ntpfile.exists()
-        && verifyFileIsValid(ntpfile, CAT_OS,
-        "NTP file: " + ntpfile)) {
-      title("NTP");
-      dump(ntpfile);
-      endln();
+    if (!Shell.WINDOWS) {
+      File ntpfile = new File(ETC_NTP);
+      if (ntpfile.exists()
+          && verifyFileIsValid(ntpfile, CAT_OS,
+          "NTP file: " + ntpfile)) {
+        title("NTP");
+        dump(ntpfile);
+        endln();
+      }
     }
   }
 

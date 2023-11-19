@@ -10,8 +10,8 @@ import org.junit.Test;
 public class _1_NameNode_Starter {
     @Test
     public void startNameNode() throws Exception {
-        String[] args = new String[]{"-format"};   
-//        String[] args = new String[]{ };  
+//        String[] args = new String[]{"-format"};   
+        String[] args = new String[]{ };  
         NameNode.main(args);
         Thread.sleep(System.currentTimeMillis());
     }

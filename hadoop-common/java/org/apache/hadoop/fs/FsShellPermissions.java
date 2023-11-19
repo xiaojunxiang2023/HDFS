@@ -89,7 +89,8 @@ public class FsShellPermissions extends FsCommand {
   }
   
   // used by chown/chgrp
-  static private String allowedChars = "[-_./@a-zA-Z0-9]";
+  static private String allowedChars = Shell.WINDOWS ? "[-_./@a-zA-Z0-9 ]" :
+    "[-_./@a-zA-Z0-9]";
 
   /**
    * Used to change owner and/or group of files 
