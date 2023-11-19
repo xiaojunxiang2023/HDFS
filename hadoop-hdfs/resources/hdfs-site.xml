@@ -24,12 +24,12 @@
     <!--存储目录-->
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>file:///D:/docker/dfs/namenode</value>
+        <value>/docker/dfs/namenode</value>
     </property>
 
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>D:\docker\dfs\datanode</value>
+        <value>/docker/dfs/datanode</value>
     </property>
 
 </configuration>
