@@ -173,10 +173,10 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   private static void validateAndCreateJournalDir(File dir)
       throws IOException {
 
-    if (!dir.isAbsolute()) {
-      throw new IllegalArgumentException(
-          "Journal dir '" + dir + "' should be an absolute path");
-    }
+    // if (!dir.isAbsolute()) {
+    //  throw new IllegalArgumentException(
+    //  "Journal dir '" + dir + "' should be an absolute path");
+    // }
     DiskChecker.checkDir(dir);
   }
 

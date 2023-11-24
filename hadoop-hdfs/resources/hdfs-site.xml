@@ -32,4 +32,9 @@
         <value>/docker/dfs/datanode</value>
     </property>
 
+    <property>
+        <name>dfs.journalnode.edits.dir</name>
+        <value>/docker/dfs/journalnode</value>
+    </property>
+
 </configuration>
