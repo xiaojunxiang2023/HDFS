@@ -1,5 +1,10 @@
 <configuration>
-
+    
+    <property>
+        <name>fs.file.impl</name>
+        <value>org.apache.hadoop.fs.LocalFileSystem</value>
+    </property>
+    
     <property>
         <name>hadoop.tmp.dir</name>
         <value>D:\docker\dfs\tmp</value>
