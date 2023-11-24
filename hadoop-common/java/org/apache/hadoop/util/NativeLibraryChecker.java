@@ -97,6 +97,19 @@ public class NativeLibraryChecker {
       }
     }
 
+    if (Shell.WINDOWS) {
+      // winutils.exe is required on Windows
+      try {
+        winutilsPath = Shell.getWinUtilsFile().getCanonicalPath();
+        winutilsExists = true;
+      } catch (IOException e) {
+        LOG.debug("No Winutils: ", e);
+        winutilsPath = e.getMessage();
+        winutilsExists = false;
+      }
+      System.out.printf("winutils: %b %s%n", winutilsExists, winutilsPath);
+    }
+
     System.out.println("Native library checking:");
     System.out.printf("hadoop:  %b %s%n", nativeHadoopLoaded, hadoopLibraryName);
     System.out.printf("zlib:    %b %s%n", zlibLoaded, zlibLibraryName);
@@ -106,7 +119,12 @@ public class NativeLibraryChecker {
     System.out.printf("ISA-L:   %b %s%n", isalLoaded, isalDetail);
     System.out.printf("PMDK:    %b %s%n", pmdkLoaded, pmdkDetail);
 
-    if ((!nativeHadoopLoaded) || (checkAll && !(zlibLoaded && bzip2Loaded
+    if (Shell.WINDOWS) {
+      System.out.printf("winutils: %b %s%n", winutilsExists, winutilsPath);
+    }
+
+    if ((!nativeHadoopLoaded) || (Shell.WINDOWS && (!winutilsExists)) ||
+        (checkAll && !(zlibLoaded && bzip2Loaded
             && isalLoaded && zStdLoaded))) {
       // return 1 to indicated check failed
       ExitUtil.terminate(1);

@@ -57,8 +57,13 @@ public class RawLocalFileSystem extends FileSystem {
   private Path workingDir;
   private long defaultBlockSize;
   // Temporary workaround for HADOOP-9652.
-  private static final boolean useDeprecatedFileStatus = true;
+  private static boolean useDeprecatedFileStatus = true;
 
+  @VisibleForTesting
+  public static void useStatIfAvailable() {
+    useDeprecatedFileStatus = !Stat.isAvailable();
+  }
+  
   public RawLocalFileSystem() {
     workingDir = getInitialWorkingDirectory();
   }
@@ -285,14 +290,19 @@ public class RawLocalFileSystem extends FileSystem {
         this.fos = new FileOutputStream(file, append);
       } else {
         permission = permission.applyUMask(FsPermission.getUMask(getConf()));
-        this.fos = new FileOutputStream(file, append);
-        boolean success = false;
-        try {
-          setPermission(f, permission);
-          success = true;
-        } finally {
-          if (!success) {
-            IOUtils.cleanup(LOG, this.fos);
+        if (Shell.WINDOWS && NativeIO.isAvailable()) {
+          this.fos = NativeIO.Windows.createFileOutputStreamWithMode(file,
+              append, permission.toShort());
+        } else {
+          this.fos = new FileOutputStream(file, append);
+          boolean success = false;
+          try {
+            setPermission(f, permission);
+            success = true;
+          } finally {
+            if (!success) {
+              IOUtils.cleanup(LOG, this.fos);
+            }
           }
         }
       }
@@ -458,6 +468,18 @@ public class RawLocalFileSystem extends FileSystem {
       return true;
     }
 
+    // Else try POSIX style rename on Windows only
+    if (Shell.WINDOWS &&
+        handleEmptyDstDirectoryOnWindows(src, srcFile, dst, dstFile)) {
+      return true;
+    }
+
+    // Else try POSIX style rename on Windows only
+    if (Shell.WINDOWS &&
+        handleEmptyDstDirectoryOnWindows(src, srcFile, dst, dstFile)) {
+      return true;
+    }
+
     // The fallback behavior accomplishes the rename by a full copy.
     if (LOG.isDebugEnabled()) {
       LOG.debug("Falling through to a copy of " + src + " to " + dst);
@@ -602,11 +624,25 @@ public class RawLocalFileSystem extends FileSystem {
       permission = FsPermission.getDirDefault();
     }
     permission = permission.applyUMask(FsPermission.getUMask(getConf()));
-    boolean b = p2f.mkdir();
-    if (b) {
-      setPermission(p, permission);
+    if (Shell.WINDOWS && NativeIO.isAvailable()) {
+      try {
+        NativeIO.Windows.createDirectoryWithMode(p2f, permission.toShort());
+        return true;
+      } catch (IOException e) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(String.format(
+              "NativeIO.createDirectoryWithMode error, path = %s, mode = %o",
+              p2f, permission.toShort()), e);
+        }
+        return false;
+      }
+    } else {
+      boolean b = p2f.mkdir();
+      if (b) {
+        setPermission(p, permission);
+      }
+      return b;
     }
-    return b;
   }
 
   /**
@@ -824,6 +860,13 @@ public class RawLocalFileSystem extends FileSystem {
 
         String owner = t.nextToken();
         String group = t.nextToken();
+        // If on windows domain, token format is DOMAIN\\user and we want to
+        // extract only the user name
+        // same as to the group name
+        if (Shell.WINDOWS) {
+          owner = removeDomain(owner);
+          group = removeDomain(group);
+        }
         setOwner(owner);
         setGroup(group);
       } catch (Shell.ExitCodeException ioe) {
@@ -865,6 +908,10 @@ public class RawLocalFileSystem extends FileSystem {
     void loadPermissionInfoByNativeIO() throws IOException {
       Path path = getPath();
       String pathName = path.toUri().getPath();
+      // remove leading slash for Windows path
+      if (Shell.WINDOWS && pathName.startsWith("/")) {
+        pathName = pathName.substring(1);
+      }
       try {
         NativeIO.POSIX.Stat stat = NativeIO.POSIX.getStat(pathName);
         String owner = stat.getOwner();

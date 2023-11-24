@@ -54,7 +54,8 @@ public class StringUtils {
    * Regular expression that matches and captures environment variable names
    * according to platform-specific rules.
    */
-  public static final Pattern ENV_VAR_PATTERN = SHELL_ENV_VAR_PATTERN;
+  public static final Pattern ENV_VAR_PATTERN = Shell.WINDOWS ?
+    WIN_ENV_VAR_PATTERN : SHELL_ENV_VAR_PATTERN;
 
   /**
    * Make a string representation of the exception.

@@ -34,22 +34,7 @@ public abstract class BlockPlacementPolicy {
     }
   }
     
-  /**
-   * choose <i>numOfReplicas</i> data nodes for <i>writer</i> 
-   * to re-replicate a block with size <i>blocksize</i> 
-   * If not, return as many as we can.
-   *
-   * @param srcPath the file to which this chooseTargets is being invoked.
-   * @param numOfReplicas additional number of replicas wanted.
-   * @param writer the writer's machine, null if not in the cluster.
-   * @param chosen datanodes that have been chosen as targets.
-   * @param returnChosenNodes decide if the chosenNodes are returned.
-   * @param excludedNodes datanodes that should not be considered as targets.
-   * @param blocksize size of the data to be written.
-   * @param flags Block placement flags.
-   * @return array of DatanodeDescriptor instances chosen as target
-   * and sorted as a pipeline.
-   */
+  // chooseTarget
   public abstract DatanodeStorageInfo[] chooseTarget(String srcPath,
                                              int numOfReplicas,
                                              Node writer,
@@ -59,12 +44,7 @@ public abstract class BlockPlacementPolicy {
                                              long blocksize,
                                              BlockStoragePolicy storagePolicy,
                                              EnumSet<AddBlockFlag> flags);
-  
-  /**
-   * @param favoredNodes datanodes that should be favored as targets. This
-   *          is only a hint and due to cluster state, namenode may not be 
-   *          able to place the blocks on these datanodes.
-   */
+  // chooseTarget favoredNodes
   DatanodeStorageInfo[] chooseTarget(String src,
       int numOfReplicas, Node writer,
       Set<Node> excludedNodes,
@@ -72,18 +52,12 @@ public abstract class BlockPlacementPolicy {
       List<DatanodeDescriptor> favoredNodes,
       BlockStoragePolicy storagePolicy,
       EnumSet<AddBlockFlag> flags) {
-    // This class does not provide the functionality of placing
-    // a block in favored datanodes. The implementations of this class
-    // are expected to provide this functionality
-
-    return chooseTarget(src, numOfReplicas, writer, 
-        new ArrayList<DatanodeStorageInfo>(numOfReplicas), false,
+    return chooseTarget(src, numOfReplicas, writer,
+            new ArrayList<>(numOfReplicas), false,
         excludedNodes, blocksize, storagePolicy, flags);
   }
 
-  /**
-   * @param storageTypes storage types that should be used as targets.
-   */
+  // chooseTarget storageTypes
   public DatanodeStorageInfo[] chooseTarget(String srcPath, int numOfReplicas,
       Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes,
       Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy,

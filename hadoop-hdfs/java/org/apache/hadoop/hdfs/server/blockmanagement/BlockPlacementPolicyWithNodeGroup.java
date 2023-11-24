@@ -186,10 +186,9 @@ public class BlockPlacementPolicyWithNodeGroup extends BlockPlacementPolicyDefau
   }
 
   @Override
-  protected void chooseRemoteRack(int numOfReplicas,
-      DatanodeDescriptor localMachine, Set<Node> excludedNodes,
-      long blocksize, int maxReplicasPerRack, List<DatanodeStorageInfo> results,
-      boolean avoidStaleNodes, EnumMap<StorageType, Integer> storageTypes)
+  protected void chooseRemoteRack(DatanodeDescriptor localMachine, Set<Node> excludedNodes,
+                                  long blocksize, int maxReplicasPerRack, List<DatanodeStorageInfo> results,
+                                  boolean avoidStaleNodes, EnumMap<StorageType, Integer> storageTypes)
       throws NotEnoughReplicasException {
     int oldNumOfReplicas = results.size();
 
@@ -197,11 +196,11 @@ public class BlockPlacementPolicyWithNodeGroup extends BlockPlacementPolicyDefau
         localMachine.getNetworkLocation());
     try {
       // randomly choose from remote racks
-      chooseRandom(numOfReplicas, "~" + rackLocation, excludedNodes, blocksize,
+      chooseRandom(1, "~" + rackLocation, excludedNodes, blocksize,
           maxReplicasPerRack, results, avoidStaleNodes, storageTypes);
     } catch (NotEnoughReplicasException e) {
       // fall back to the local rack
-      chooseRandom(numOfReplicas - (results.size() - oldNumOfReplicas),
+      chooseRandom(1 - (results.size() - oldNumOfReplicas),
           rackLocation, excludedNodes, blocksize,
           maxReplicasPerRack, results, avoidStaleNodes, storageTypes);
     }
@@ -260,11 +259,10 @@ public class BlockPlacementPolicyWithNodeGroup extends BlockPlacementPolicyDefau
    * Find other nodes in the same nodegroup of <i>localMachine</i> and add them
    * into <i>excludeNodes</i> as replica should not be duplicated for nodes 
    * within the same nodegroup
-   * @return number of new excluded nodes
    */
   @Override
-  protected int addToExcludedNodes(DatanodeDescriptor chosenNode,
-      Set<Node> excludedNodes) {
+  protected void addToExcludedNodes(DatanodeDescriptor chosenNode,
+                                    Set<Node> excludedNodes) {
     int countOfExcludedNodes = 0;
     String nodeGroupScope = chosenNode.getNetworkLocation();
     List<Node> leafNodes = clusterMap.getLeaves(nodeGroupScope);
@@ -277,7 +275,6 @@ public class BlockPlacementPolicyWithNodeGroup extends BlockPlacementPolicyDefau
     
     countOfExcludedNodes += addDependentNodesToExcludedNodes(
         chosenNode, excludedNodes);
-    return countOfExcludedNodes;
   }
   
   /**
