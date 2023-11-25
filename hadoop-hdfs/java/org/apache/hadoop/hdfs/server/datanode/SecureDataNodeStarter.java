@@ -70,7 +70,7 @@ public class SecureDataNodeStarter implements Daemon {
   public void init(DaemonContext context) throws Exception {
     System.err.println("Initializing secure datanode resources");
     // Create a new HdfsConfiguration object to ensure that the configuration in
-    // hdfs-site.xml is picked up.
+    // hdfs-site.xml.noha is picked up.
     Configuration conf = new HdfsConfiguration();
     
     // Stash command-line arguments for regular datanode

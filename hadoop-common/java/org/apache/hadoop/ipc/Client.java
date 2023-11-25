@@ -986,7 +986,7 @@ public class Client implements AutoCloseable {
         throw (IOException)new InterruptedIOException("Interrupted: action="
             + action + ", retry policy=" + connectionRetryPolicy).initCause(e);
       }
-      LOG.info("Retrying connect to server: " + server + ". Already tried "
+      LOG.debug("Retrying connect to server: " + server + ". Already tried "
           + curRetries + " time(s); retry policy is " + connectionRetryPolicy);
     }
 

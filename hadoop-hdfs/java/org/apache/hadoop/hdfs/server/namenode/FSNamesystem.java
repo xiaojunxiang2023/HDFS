@@ -1586,7 +1586,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     StartupOption startOpt = NameNode.getStartupOption(conf);
     if(startOpt == StartupOption.IMPORT) {
       // In case of IMPORT this will get rid of default directories 
-      // but will retain directories specified in hdfs-site.xml
+      // but will retain directories specified in hdfs-site.xml.noha
       // When importing image from a checkpoint, the name-node can
       // start with empty set of storage directories.
       Configuration cE = new HdfsConfiguration(false);
@@ -1601,7 +1601,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
           "\n\tAny changes to the file system meta-data may be lost." +
           "\n\tRecommended actions:" +
           "\n\t\t- shutdown and restart NameNode with configured \"" 
-          + propertyName + "\" in hdfs-site.xml;" +
+          + propertyName + "\" in hdfs-site.xml.noha;" +
           "\n\t\t- use Backup Node as a persistent and up-to-date storage " +
           "of the file system meta-data.");
     } else if (dirNames.isEmpty()) {

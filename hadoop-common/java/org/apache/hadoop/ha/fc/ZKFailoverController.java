@@ -161,8 +161,8 @@ public abstract class ZKFailoverController {
       
     // 初始化ZK
     initZK();
-      
-    if ("-formatZK".equals(args[0])) {
+
+    if (args.length > 0 && "-formatZK".equals(args[0])) {
       // 格式化ZK，创建父节点
       elector.ensureParentZNode();
       return 0;
