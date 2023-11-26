@@ -7,7 +7,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.hadoop</groupId>
     <artifactId>HDFS</artifactId>
-    <version>3.3.4-ks-ec-3.1.2</version>
+    <version>3.3.4-win</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -20,7 +20,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <properties>
         <!-- required as child projects with different version can't use ${project.version} -->
-        <hadoop.version>3.3.4-ks-ec-3.1.2</hadoop.version>
+        <hadoop.version>3.3.4-win</hadoop.version>
         <kde.sub.version>3.1.2</kde.sub.version>
 
         <!-- platform encoding override -->
@@ -323,33 +323,33 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-assemblies</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-annotations</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client-modules</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client-api</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client-runtime</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-common</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -360,52 +360,52 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-auth</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-nfs</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-hdfs</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-hdfs-client</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-hdfs-rbf</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-client-app</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-client-common</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-api</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-client</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-client-core</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -416,7 +416,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
@@ -427,199 +427,199 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-web-proxy</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-common</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-common</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-registry</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-nodemanager</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-applicationhistoryservice</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-timelineservice</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-timelineservice-hbase-client</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-timelineservice-hbase-common</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-applications-distributedshell</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-timeline-pluginstorage</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-server-router</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-services-core</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-services-api</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-yarn-applications-catalog-webapp</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
                 <type>war</type>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-client-hs</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-mapreduce-examples</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-gridmix</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-streaming</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-archives</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-archive-logs</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-distcp</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-datajoin</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-rumen</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-extras</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-minicluster</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-minikdc</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-openstack</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-azure</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-azure-datalake</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-aws</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-aliyun</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-cos</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-kms</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -1319,12 +1319,12 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-sls</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-cloud-storage</artifactId>
-                <version>3.3.4-ks-ec-3.1.2</version>
+                <version>3.3.4-win</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
@@ -1638,7 +1638,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-protos</artifactId>
-            <version>3.3.4-ks-ec-3.1.2</version>
+            <version>3.3.4-win</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

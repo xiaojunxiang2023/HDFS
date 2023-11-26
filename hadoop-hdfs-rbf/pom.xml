@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>HDFS</artifactId>
-        <version>3.3.4-ks-ec-3.1.2</version>
+        <version>3.3.4-win</version>
     </parent>
     <groupId>org.apache.hadoop</groupId>
     <artifactId>hadoop-hdfs-rbf</artifactId>

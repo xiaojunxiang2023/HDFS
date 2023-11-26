@@ -8,7 +8,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>HDFS</artifactId>
-        <version>3.3.4-ks-ec-3.1.2</version>
+        <version>3.3.4-win</version>
     </parent>
     <artifactId>hadoop-hdfs-client</artifactId>
     <packaging>jar</packaging>
@@ -114,7 +114,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-protos</artifactId>
-            <version>3.3.4-ks-ec-3.1.2</version>
+            <version>3.3.4-win</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
