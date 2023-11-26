@@ -115,7 +115,12 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-protos</artifactId>
             <version>3.3.4-ks-ec-3.1.2</version>
-            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
