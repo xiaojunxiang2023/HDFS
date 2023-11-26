@@ -944,6 +944,20 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
   }
 
   /**
+   * Add a configuration resource. 
+   *
+   * The properties of this resource will override properties of previously 
+   * added resources, unless they were marked <a href="#Final">final</a>. 
+   *
+   * @param in InputStream to deserialize the object from.
+   * @param name the name of the resource because InputStream.toString is not
+   * very descriptive some times.  
+   */
+  public void addResource(InputStream in, String name) {
+    addResourceObject(new Resource(in, name));
+  }
+  
+  /**
    * Add a configuration resource.
    *
    * The properties of this resource will override properties of previously
