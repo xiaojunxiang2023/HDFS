@@ -63,6 +63,7 @@ public class AuthenticatedURL {
   public static final String AUTH_COOKIE = "hadoop.auth";
 
   public AuthenticatedURL() {
+    this(null);
   }
 
   private static class AuthCookieHandler extends CookieHandler {
