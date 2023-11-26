@@ -62,6 +62,9 @@ public class AuthenticatedURL {
   // cookie 名称
   public static final String AUTH_COOKIE = "hadoop.auth";
 
+  public AuthenticatedURL() {
+  }
+
   private static class AuthCookieHandler extends CookieHandler {
     private HttpCookie authCookie;
     private Map<String, List<String>> cookieHeaders = Collections.emptyMap();
