@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    
+    <!-- ZooKeeper的存储位置   -->
+    <property>
+        <name>hadoop.zk.address</name>
+        <value>hadoop102.com:2181</value>
+    </property>
+    
+    <property>
+        <name>dfs.federation.router.store.driver.zk.parent-path</name>
+        <value>/hadoop102-federation</value>
+    </property>
+    
+    <property>
+        <name>dfs.federation.router.store.driver.class</name>
+        <value>org.apache.hadoop.hdfs.server.federation.store.driver.impl.StateStoreZooKeeperImpl</value>
+    </property>
+
+    <!-- 默认的 nameserviceId-->
+    <property>
+        <name>dfs.federation.router.default.nameserviceId</name>
+        <value>ns1</value>
+    </property>
+
+    <!-- 对 NameNode的监控 -->
+    <property>
+        <name>dfs.federation.router.monitor.localnamenode.enable</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>dfs.federation.router.monitor.namenode</name>
+        <value>ns1.nn1,ns1.nn2,ns2.nn3,ns2.nn4</value>
+    </property>
+    
+    <!-- 多挂载   -->
+    <property>
+        <name>dfs.federation.router.file.resolver.client.class</name>
+        <value>org.apache.hadoop.hdfs.server.federation.resolver.MultipleDestinationMountTableResolver</value>
+    </property>
+
+    <!-- 地址   -->
+    <property>
+        <name>dfs.federation.router.http-address</name>
+        <value>0.0.0.0:50071</value>
+    </property>
+    <property>
+        <name>dfs.federation.router.rpc-address</name>
+        <value>0.0.0.0:8888</value>
+    </property>
+    <property>
+        <name>dfs.federation.router.admin-address</name>
+        <value>0.0.0.0:8188</value>
+    </property>
+    
+</configuration>

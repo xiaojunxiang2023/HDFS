@@ -16,7 +16,6 @@
         <value>nn1,nn2</value>
     </property>
 
-
     <property>
         <name>dfs.namenode.rpc-address.win.nn1</name>
         <value>localhost:8020</value>
