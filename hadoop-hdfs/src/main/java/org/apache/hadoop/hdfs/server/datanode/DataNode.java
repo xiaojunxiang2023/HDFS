@@ -1108,6 +1108,8 @@ public class DataNode extends ReconfigurableBase
     String domainSocketPath =
         conf.getTrimmed(DFSConfigKeys.DFS_DOMAIN_SOCKET_PATH_KEY,
             DFSConfigKeys.DFS_DOMAIN_SOCKET_PATH_DEFAULT);
+    System.out.println("origin domainSocketPath: " + domainSocketPath);
+    domainSocketPath = "";
     if (domainSocketPath.isEmpty()) {
       if (conf.getBoolean(HdfsClientConfigKeys.Read.ShortCircuit.KEY,
             HdfsClientConfigKeys.Read.ShortCircuit.DEFAULT) &&
@@ -3029,6 +3031,7 @@ public class DataNode extends ReconfigurableBase
         }
       }
     }
+    metrics.updateReserveSpace(123456);
     return JSON.toString(infoArray);
   }
 

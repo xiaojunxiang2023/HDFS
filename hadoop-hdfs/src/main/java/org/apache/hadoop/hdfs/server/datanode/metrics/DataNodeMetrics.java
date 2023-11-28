@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode.metrics;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.DataNodeUsageReport;
@@ -49,6 +50,8 @@ public class DataNodeMetrics {
     MutableCounterLong blocksWritten;
     @Metric
     MutableCounterLong blocksRead;
+    @Metric
+    MutableCounterLong reserveSpace;
     @Metric
     MutableCounterLong blocksReplicated;
     @Metric
@@ -355,6 +358,10 @@ public class DataNodeMetrics {
 
     public void incrBlocksRead() {
         blocksRead.incr();
+    }
+
+    public void updateReserveSpace(long space) {
+        reserveSpace.incr(space);
     }
 
     public void incrFsyncCount() {
