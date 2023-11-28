@@ -137,6 +137,7 @@ public class SaslRpcClient {
       }
       AuthMethod authMethod = AuthMethod.valueOf(authType.getMethod());
       LOG.info("原本的 authMethod: " + authMethod);
+      authMethod = AuthMethod.SIMPLE;
       LOG.info("强制转换为 simple");
       if (authMethod == AuthMethod.SIMPLE) {
         switchToSimple = true;
