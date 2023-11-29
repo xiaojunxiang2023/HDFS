@@ -218,89 +218,89 @@ public class JMXJsonServlet extends HttpServlet {
 
     jg.writeArrayFieldStart("beans");
     Iterator<ObjectName> it = names.iterator();
-    while (it.hasNext()) {
-      ObjectName oname = it.next();
-      MBeanInfo minfo;
-      String code = "";
-      Object attributeinfo = null;
-      try {
-        minfo = mBeanServer.getMBeanInfo(oname);
-        code = minfo.getClassName();
-        String prs = "";
-        try {
-          if ("org.apache.commons.modeler.BaseModelMBean".equals(code)) {
-            prs = "modelerType";
-            code = (String) mBeanServer.getAttribute(oname, prs);
-          }
-          if (attribute!=null) {
-            prs = attribute;
-            attributeinfo = mBeanServer.getAttribute(oname, prs);
-          }
-        } catch (AttributeNotFoundException e) {
-          // If the modelerType attribute was not found, the class name is used
-          // instead.
-          LOG.error("getting attribute " + prs + " of " + oname
-              + " threw an exception", e);
-        } catch (MBeanException e) {
-          // The code inside the attribute getter threw an exception so log it,
-          // and fall back on the class name
-          LOG.error("getting attribute " + prs + " of " + oname
-              + " threw an exception", e);
-        } catch (RuntimeException e) {
-          // For some reason even with an MBeanException available to them
-          // Runtime exceptionscan still find their way through, so treat them
-          // the same as MBeanException
-          LOG.error("getting attribute " + prs + " of " + oname
-              + " threw an exception", e);
-        } catch ( ReflectionException e ) {
-          // This happens when the code inside the JMX bean (setter?? from the
-          // java docs) threw an exception, so log it and fall back on the 
-          // class name
-          LOG.error("getting attribute " + prs + " of " + oname
-              + " threw an exception", e);
-        }
-      } catch (InstanceNotFoundException e) {
-        //Ignored for some reason the bean was not found so don't output it
-        continue;
-      } catch ( IntrospectionException e ) {
-        // This is an internal error, something odd happened with reflection so
-        // log it and don't output the bean.
-        LOG.error("Problem while trying to process JMX query: " + qry
-            + " with MBean " + oname, e);
-        continue;
-      } catch ( ReflectionException e ) {
-        // This happens when the code inside the JMX bean threw an exception, so
-        // log it and don't output the bean.
-        LOG.error("Problem while trying to process JMX query: " + qry
-            + " with MBean " + oname, e);
-        continue;
-      }
-
-      jg.writeStartObject();
-      jg.writeStringField("name", oname.toString());
-      
-      jg.writeStringField("modelerType", code);
-      if ((attribute != null) && (attributeinfo == null)) {
-        jg.writeStringField("result", "ERROR");
-        jg.writeStringField("message", "No attribute with name " + attribute
-            + " was found.");
-        jg.writeEndObject();
-        jg.writeEndArray();
-        jg.close();
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return;
-      }
-      
-      if (attribute != null) {
-        writeAttribute(jg, attribute, attributeinfo);
-      } else {
-        MBeanAttributeInfo attrs[] = minfo.getAttributes();
-        for (int i = 0; i < attrs.length; i++) {
-          writeAttribute(jg, oname, attrs[i]);
-        }
-      }
-      jg.writeEndObject();
-    }
+//    while (it.hasNext()) {
+//      ObjectName oname = it.next();
+//      MBeanInfo minfo;
+//      String code = "";
+//      Object attributeinfo = null;
+//      try {
+//        minfo = mBeanServer.getMBeanInfo(oname);
+//        code = minfo.getClassName();
+//        String prs = "";
+//        try {
+//          if ("org.apache.commons.modeler.BaseModelMBean".equals(code)) {
+//            prs = "modelerType";
+//            code = (String) mBeanServer.getAttribute(oname, prs);
+//          }
+//          if (attribute!=null) {
+//            prs = attribute;
+//            attributeinfo = mBeanServer.getAttribute(oname, prs);
+//          }
+//        } catch (AttributeNotFoundException e) {
+//          // If the modelerType attribute was not found, the class name is used
+//          // instead.
+//          LOG.error("getting attribute " + prs + " of " + oname
+//              + " threw an exception", e);
+//        } catch (MBeanException e) {
+//          // The code inside the attribute getter threw an exception so log it,
+//          // and fall back on the class name
+//          LOG.error("getting attribute " + prs + " of " + oname
+//              + " threw an exception", e);
+//        } catch (RuntimeException e) {
+//          // For some reason even with an MBeanException available to them
+//          // Runtime exceptionscan still find their way through, so treat them
+//          // the same as MBeanException
+//          LOG.error("getting attribute " + prs + " of " + oname
+//              + " threw an exception", e);
+//        } catch ( ReflectionException e ) {
+//          // This happens when the code inside the JMX bean (setter?? from the
+//          // java docs) threw an exception, so log it and fall back on the 
+//          // class name
+//          LOG.error("getting attribute " + prs + " of " + oname
+//              + " threw an exception", e);
+//        }
+//      } catch (InstanceNotFoundException e) {
+//        //Ignored for some reason the bean was not found so don't output it
+//        continue;
+//      } catch ( IntrospectionException e ) {
+//        // This is an internal error, something odd happened with reflection so
+//        // log it and don't output the bean.
+//        LOG.error("Problem while trying to process JMX query: " + qry
+//            + " with MBean " + oname, e);
+//        continue;
+//      } catch ( ReflectionException e ) {
+//        // This happens when the code inside the JMX bean threw an exception, so
+//        // log it and don't output the bean.
+//        LOG.error("Problem while trying to process JMX query: " + qry
+//            + " with MBean " + oname, e);
+//        continue;
+//      }
+//
+//      jg.writeStartObject();
+//      jg.writeStringField("name", oname.toString());
+//      
+//      jg.writeStringField("modelerType", code);
+//      if ((attribute != null) && (attributeinfo == null)) {
+//        jg.writeStringField("result", "ERROR");
+//        jg.writeStringField("message", "No attribute with name " + attribute
+//            + " was found.");
+//        jg.writeEndObject();
+//        jg.writeEndArray();
+//        jg.close();
+//        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//        return;
+//      }
+//      
+//      if (attribute != null) {
+//        writeAttribute(jg, attribute, attributeinfo);
+//      } else {
+//        MBeanAttributeInfo attrs[] = minfo.getAttributes();
+//        for (int i = 0; i < attrs.length; i++) {
+//          writeAttribute(jg, oname, attrs[i]);
+//        }
+//      }
+//      jg.writeEndObject();
+//    }
     jg.writeEndArray();
   }
 
