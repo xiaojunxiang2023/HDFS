@@ -42,4 +42,9 @@ public class MutableCounterLong extends MutableCounter {
     }
   }
 
+  public void setVal(long val) {
+    value.reset();
+    value.add(val);
+  }
+
 }

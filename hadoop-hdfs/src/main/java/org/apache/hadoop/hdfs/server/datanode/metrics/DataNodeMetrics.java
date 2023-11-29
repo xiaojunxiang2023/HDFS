@@ -51,7 +51,15 @@ public class DataNodeMetrics {
     @Metric
     MutableCounterLong blocksRead;
     @Metric
+    MutableCounterLong numBlocks;
+    @Metric
     MutableCounterLong reserveSpace;
+    @Metric
+    MutableCounterLong slowDisks;
+    
+    // 8代表 8%
+    @Metric
+    MutableCounterLong processCpuLoad;
     @Metric
     MutableCounterLong blocksReplicated;
     @Metric
@@ -360,8 +368,21 @@ public class DataNodeMetrics {
         blocksRead.incr();
     }
 
-    public void updateReserveSpace(long space) {
-        reserveSpace.incr(space);
+    public void updateNumBlocks(long numBlocks) {
+        this.numBlocks.setVal(numBlocks);
+    }
+    
+    public void updateReserveSpace(long reserveSpace) {
+        this.reserveSpace.setVal(reserveSpace);
+    }
+    
+    public void updateSlowDisks(int slowDisks) {
+        this.slowDisks.setVal(slowDisks);
+    }
+    
+    public void updateProcessCpuLoad(double processCpuLoad) {
+        System.out.println("processCpuLoad： " + processCpuLoad);
+        this.processCpuLoad.setVal((int) (processCpuLoad * 100));
     }
 
     public void incrFsyncCount() {
