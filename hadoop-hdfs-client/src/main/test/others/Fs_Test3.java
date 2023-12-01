@@ -14,14 +14,8 @@ public class Fs_Test3 {
 
         // 配置
         Configuration conf = new Configuration();
-        UserGroupInformation.setConfiguration(conf);
-
-        // 使用 keytab登录
-        UserGroupInformation.loginUserFromKeytab("hbase/kde-offline1.sdns.kscbigdata.cloud@HADOOP.COM",
-                "/etc/security/keytabs/hbase.service.keytab");
-
-        FileSystem fs = FileSystem.get(conf);
-        fs.mkdirs(new Path(args[0]));
+        FileSystem fileSystem = FileSystem.get(conf);
+        fileSystem.mkdirs(new Path("hdfs://ha/test1/" + System.currentTimeMillis()));
     }
 
 }
