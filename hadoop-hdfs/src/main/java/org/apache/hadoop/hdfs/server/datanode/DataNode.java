@@ -50,6 +50,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -77,9 +80,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Nullable;
-import javax.management.ObjectName;
+import javax.management.*;
 import javax.net.SocketFactory;
 
 import org.apache.commons.logging.Log;
@@ -90,7 +94,6 @@ import org.apache.hadoop.conf.ReconfigurableBase;
 import org.apache.hadoop.conf.ReconfigurationException;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -197,6 +200,8 @@ import org.apache.hadoop.util.Timer;
 import org.apache.hadoop.util.VersionInfo;
 import org.apache.hadoop.util.concurrent.HadoopExecutors;
 import org.apache.hadoop.tracing.Tracer;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.eclipse.jetty.util.ajax.JSON;
 
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
@@ -1577,7 +1582,7 @@ public class DataNode extends ReconfigurableBase
 
   /**
    * Handles an AddBlockPoolException object thrown from
-   * {@link org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.FsVolumeList#
+   * {link org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.FsVolumeList#
    * addBlockPool}. Will ensure that all volumes that encounted a
    * AddBlockPoolException are removed from the DataNode and marked as failed
    * volumes in the same way as a runtime volume failure.
@@ -3031,7 +3036,6 @@ public class DataNode extends ReconfigurableBase
         }
       }
     }
-    metrics.updateReserveSpace(123456);
     return JSON.toString(infoArray);
   }
 
@@ -3043,7 +3047,26 @@ public class DataNode extends ReconfigurableBase
   @Override // DataNodeMXBean
   public String getVolumeInfo() {
     Preconditions.checkNotNull(data, "Storage not yet initialized");
-    return JSON.toString(data.getVolumeInfoMap());
+    Map<String, Object> volumeInfoMap = data.getVolumeInfoMap();
+    AtomicLong numBlocks = new AtomicLong();
+    AtomicLong reservedSpace = new AtomicLong();
+    volumeInfoMap.values().forEach(t->{
+      numBlocks.addAndGet((Long) ((HashMap<Object, Object>) t).get("numBlocks"));
+      reservedSpace.addAndGet((Long) ((HashMap<Object, Object>) t).get("reservedSpace"));
+    });
+    metrics.updateNumBlocks(numBlocks.get());
+    metrics.updateReserveSpace(reservedSpace.get());
+
+    try {
+      MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+      ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
+      AttributeList list = mbs.getAttributes(name, new String[]{ "ProcessCpuLoad" });
+      Attribute att = (Attribute)list.get(0);
+      metrics.updateProcessCpuLoad((Double)att.getValue());
+    } catch (Exception e) {
+      LOG.warn("when getMetrics OperatingSystem.ProcessCpuLoad, suffer error: ", e);
+    }
+    return JSON.toString(volumeInfoMap);
   }
   
   @Override // DataNodeMXBean
@@ -3527,6 +3550,7 @@ public class DataNode extends ReconfigurableBase
       return null;
     }
     Set<String> slowDisks = diskMetrics.getDiskOutliersStats().keySet();
+    metrics.updateSlowDisks(slowDisks.size());
     return JSON.toString(slowDisks);
   }
 

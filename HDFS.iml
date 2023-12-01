@@ -8,6 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.hadoop:hadoop-annotations:3.3.4-ks-ec-3.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-protos:3.3.4-win" level="project" />
   </component>
 </module>

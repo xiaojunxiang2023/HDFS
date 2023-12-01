@@ -16,21 +16,63 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:xjx_master" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd8eec76-ecae-4dc1-92f3-cc9cb7811228" name="Default Changelist" comment="整合 Hadoop-Common" />
+    <list default="true" id="fd8eec76-ecae-4dc1-92f3-cc9cb7811228" name="Default Changelist" comment="[ezone#Hadoop-000] AZ">
+      <change afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/AzPolicy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/BlockPlacementPolicyWithAvailableZone.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/hdfs-site.xml.ha" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/topology_mappings.data" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/topology_script.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-client/src/main/test/others/Fs_Test3.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs-client/src/main/test/others/Fs_Test3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs-rbf/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs-rbf/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/DFSConfigKeys.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/DFSConfigKeys.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/BlockPlacementPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/BlockPlacementPolicy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/DatanodeManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/DatanodeManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/SecureDataNodeStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/SecureDataNodeStarter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/web/DatanodeHttpServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/web/DatanodeHttpServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/FSNamesystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/namenode/FSNamesystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/tools/DFSHAAdmin.java" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/tools/DFSHAAdmin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/core-site.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/core-site.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/hdfs-default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/hdfs-default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/hdfs-site.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/hdfs-site.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hadoop-hdfs/src/main/resources/hdfs-site.xml.noha" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
+  </component>
   <component name="CompilerWorkspaceConfiguration">
     <option name="MAKE_PROJECT_ON_SAVE" value="true" />
     <option name="PARALLEL_COMPILATION" value="true" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_ON_COMMIT_AND_PUSH" value="false" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="QAtest-ec-xjx" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
@@ -52,6 +94,9 @@
     <option name="skipTests" value="true" />
   </component>
   <component name="ProjectId" id="2WHhw5koUwL0NgLhfdwueEhPZEs" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -61,7 +106,7 @@
     <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-common/3.3.4-ks-ec-3.1.2/hadoop-common-3.3.4-ks-ec-3.1.2.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/hadoop-hdfs/src/main/resources" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -70,10 +115,10 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.37471265" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="terminal" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -82,7 +127,12 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit._2_DataNode_Starter.startDataNode">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\docker\data\xjx\study-code\HDFS\hadoop-hdfs\src\main\resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Fs_Test3">
     <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" singleton="false">
       <option name="DEBUG_MODE" value="true" />
       <option name="ACTIVE_PROFILES" value="dev" />
@@ -90,6 +140,28 @@
       <option name="ALTERNATIVE_JRE_PATH" value="MyJDK_8" />
       <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Fs_Test3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="others.Fs_Test3" />
+      <module name="hadoop-hdfs-client" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="others.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="_1_NameNode_Starter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hadoop-hdfs" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="_1_NameNode_Starter" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -104,20 +176,31 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="_2_DataNode_Starter.startDataNode" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="_2_DataNode_Starter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hadoop-hdfs" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="_2_DataNode_Starter" />
-      <option name="METHOD_NAME" value="startDataNode" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="_3_ZKFC_Starter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hadoop-hdfs" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="_3_ZKFC_Starter" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit._2_DataNode_Starter.startDataNode" />
+        <item itemvalue="Application.Fs_Test3" />
         <item itemvalue="JUnit._1_NameNode_Starter.startNameNode" />
+        <item itemvalue="JUnit._2_DataNode_Starter" />
+        <item itemvalue="JUnit._1_NameNode_Starter" />
+        <item itemvalue="JUnit._3_ZKFC_Starter" />
       </list>
     </recent_temporary>
   </component>
@@ -138,6 +221,12 @@
       <workItem from="1697689187398" duration="191000" />
       <workItem from="1697690272747" duration="1276000" />
       <workItem from="1697691641000" duration="682000" />
+      <workItem from="1701154879138" duration="2460000" />
+      <workItem from="1701239196542" duration="5619000" />
+      <workItem from="1701246118584" duration="6141000" />
+      <workItem from="1701332482857" duration="10563000" />
+      <workItem from="1701406553765" duration="7187000" />
+      <workItem from="1701415200431" duration="255000" />
     </task>
     <task id="LOCAL-00001" summary="整合 Hadoop-Common">
       <created>1697692133256</created>
@@ -146,7 +235,35 @@
       <option name="project" value="LOCAL" />
       <updated>1697692133256</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="整合 Hadoop-Common">
+      <created>1701057629599</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701057629599</updated>
+    </task>
+    <task id="LOCAL-00003" summary="1">
+      <created>1701154928288</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701154928288</updated>
+    </task>
+    <task id="LOCAL-00004" summary="拓展指标">
+      <created>1701248465232</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701248465232</updated>
+    </task>
+    <task id="LOCAL-00005" summary="111">
+      <created>1701415291710</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701415291710</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,7 +274,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="xjx_master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -168,68 +297,132 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="整合 Hadoop-Common" />
-    <option name="LAST_COMMIT_MESSAGE" value="整合 Hadoop-Common" />
+    <MESSAGE value="1" />
+    <MESSAGE value="拓展指标" />
+    <MESSAGE value="11" />
+    <MESSAGE value="1111" />
+    <MESSAGE value="111" />
+    <MESSAGE value="[ezone#Hadoop-000] AZ" />
+    <option name="LAST_COMMIT_MESSAGE" value="[ezone#Hadoop-000] AZ" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="92" y="0" key="#Project_Structure" timestamp="1701335902683">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="92" y="0" key="#Project_Structure/0.0.1280.770@0.0.1280.770" timestamp="1701335902683" />
+    <state x="472" y="243" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1701241274676">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="472" y="243" key="#com.intellij.debugger.actions.ViewTextAction/0.0.1280.770@0.0.1280.770" timestamp="1701241274676" />
+    <state x="341" y="197" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1701244902837">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="341" y="197" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.770@0.0.1280.770" timestamp="1701244902837" />
+    <state x="447" y="96" key="#com.intellij.ide.util.MemberChooser" timestamp="1701414293673">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="447" y="96" key="#com.intellij.ide.util.MemberChooser/0.0.1280.770@0.0.1280.770" timestamp="1701414293673" />
+    <state width="473" height="438" key="DebuggerActiveHint" timestamp="1701242252944">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state width="473" height="438" key="DebuggerActiveHint/0.0.1280.770@0.0.1280.770" timestamp="1701242252944" />
     <state x="476" y="304" key="DetectedRootsChooserDialog" timestamp="1697013116179">
       <screen x="0" y="0" width="1422" height="859" />
     </state>
     <state x="476" y="304" key="DetectedRootsChooserDialog/0.0.1422.859@0.0.1422.859" timestamp="1697013116179" />
-    <state x="493" y="188" key="FileChooserDialogImpl" timestamp="1697013115123">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state x="94" y="94" width="1093" height="582" key="DiffContextDialog" timestamp="1701249788582">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state x="94" y="94" width="1093" height="582" key="DiffContextDialog/0.0.1280.770@0.0.1280.770" timestamp="1701249788582" />
+    <state x="444" y="169" key="FileChooserDialogImpl" timestamp="1701415455381">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="444" y="169" key="FileChooserDialogImpl/0.0.1280.770@0.0.1280.770" timestamp="1701415455381" />
     <state x="493" y="188" key="FileChooserDialogImpl/0.0.1422.859@0.0.1422.859" timestamp="1697013115123" />
-    <state width="1382" height="228" key="GridCell.Tab.0.bottom" timestamp="1697021890239">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state x="475" y="290" key="GitRewordDialog" timestamp="1701415350414">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state x="475" y="290" key="GitRewordDialog/0.0.1280.770@0.0.1280.770" timestamp="1701415350414" />
+    <state width="1225" height="206" key="GridCell.Tab.0.bottom" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state width="1225" height="206" key="GridCell.Tab.0.bottom/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="228" key="GridCell.Tab.0.bottom/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
-    <state width="1382" height="228" key="GridCell.Tab.0.center" timestamp="1697021890239">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.0.center" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.0.center/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="228" key="GridCell.Tab.0.center/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
-    <state width="1382" height="228" key="GridCell.Tab.0.left" timestamp="1697021890239">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.0.left" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.0.left/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="228" key="GridCell.Tab.0.left/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
-    <state width="1382" height="228" key="GridCell.Tab.0.right" timestamp="1697021890239">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.0.right" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.0.right/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="228" key="GridCell.Tab.0.right/0.0.1422.859@0.0.1422.859" timestamp="1697021890239" />
-    <state width="1382" height="279" key="GridCell.Tab.1.bottom" timestamp="1697021890232">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.1.bottom" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.1.bottom/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="279" key="GridCell.Tab.1.bottom/0.0.1422.859@0.0.1422.859" timestamp="1697021890232" />
-    <state width="1382" height="279" key="GridCell.Tab.1.center" timestamp="1697021890228">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.1.center" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.1.center/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="279" key="GridCell.Tab.1.center/0.0.1422.859@0.0.1422.859" timestamp="1697021890228" />
-    <state width="1382" height="279" key="GridCell.Tab.1.left" timestamp="1697021890227">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.1.left" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.1.left/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="279" key="GridCell.Tab.1.left/0.0.1422.859@0.0.1422.859" timestamp="1697021890227" />
-    <state width="1382" height="279" key="GridCell.Tab.1.right" timestamp="1697021890231">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="1225" height="206" key="GridCell.Tab.1.right" timestamp="1701406543208">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="1225" height="206" key="GridCell.Tab.1.right/0.0.1280.770@0.0.1280.770" timestamp="1701406543208" />
     <state width="1382" height="279" key="GridCell.Tab.1.right/0.0.1422.859@0.0.1422.859" timestamp="1697021890231" />
-    <state x="193" y="7" key="SettingsEditor" timestamp="1696397561073">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state x="174" y="6" key="SettingsEditor" timestamp="1701415456237">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state x="174" y="6" key="SettingsEditor/0.0.1280.770@0.0.1280.770" timestamp="1701415456237" />
     <state x="193" y="7" key="SettingsEditor/0.0.1422.859@0.0.1422.859" timestamp="1696397561073" />
-    <state x="435" y="172" width="546" height="524" key="StructurePopup" timestamp="1697687772398">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state x="392" y="154" width="555" height="470" key="StructurePopup" timestamp="1701333571688">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state x="392" y="154" width="555" height="470" key="StructurePopup/0.0.1280.770@0.0.1280.770" timestamp="1701333571688" />
     <state x="435" y="172" width="546" height="524" key="StructurePopup/0.0.1422.859@0.0.1422.859" timestamp="1697687772398" />
-    <state x="305" y="166" key="Vcs.Push.Dialog.v2" timestamp="1697692136039">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="498" height="445" key="SwitcherDM" timestamp="1701242744670">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="498" height="445" key="SwitcherDM/0.0.1280.770@0.0.1280.770" timestamp="1701242744670" />
+    <state x="275" y="149" key="Vcs.Push.Dialog.v2" timestamp="1701154930479">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="275" y="149" key="Vcs.Push.Dialog.v2/0.0.1280.770@0.0.1280.770" timestamp="1701154930479" />
     <state x="305" y="166" key="Vcs.Push.Dialog.v2/0.0.1422.859@0.0.1422.859" timestamp="1697692136039" />
-    <state x="409" y="180" width="686" height="600" key="find.popup" timestamp="1697692086558">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state width="646" height="391" key="XDebugger.FullValuePopup" timestamp="1701241254633">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state width="646" height="391" key="XDebugger.FullValuePopup/0.0.1280.770@0.0.1280.770" timestamp="1701241254633" />
+    <state x="438" y="303" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1701239199533">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="438" y="303" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.770@0.0.1280.770" timestamp="1701239199533" />
+    <state x="368" y="161" width="836" height="538" key="find.popup" timestamp="1701414984593">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="368" y="161" width="836" height="538" key="find.popup/0.0.1280.770@0.0.1280.770" timestamp="1701414984593" />
     <state x="409" y="180" width="686" height="600" key="find.popup/0.0.1422.859@0.0.1422.859" timestamp="1697692086558" />
-    <state x="374" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1697691546010">
-      <screen x="0" y="0" width="1422" height="859" />
+    <state x="434" y="244" key="scopes" timestamp="1701406933386">
+      <screen x="0" y="0" width="1280" height="770" />
     </state>
+    <state x="434" y="244" key="scopes/0.0.1280.770@0.0.1280.770" timestamp="1701406933386" />
+    <state x="337" y="161" width="672" height="608" key="search.everywhere.popup" timestamp="1701407998840">
+      <screen x="0" y="0" width="1280" height="770" />
+    </state>
+    <state x="337" y="161" width="672" height="608" key="search.everywhere.popup/0.0.1280.770@0.0.1280.770" timestamp="1701407998840" />
     <state x="374" y="180" width="672" height="678" key="search.everywhere.popup/0.0.1422.859@0.0.1422.859" timestamp="1697691546010" />
   </component>
   <component name="XDebuggerManager">
@@ -240,11 +433,64 @@
           <line>1043</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-common/src/main/java/org/apache/hadoop/security/SaslRpcClient.java</url>
+          <line>368</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/blockmanagement/HeartbeatManager.java</url>
+          <line>438</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataNode.java</url>
+          <line>565</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/metrics/DataNodeMetrics.java</url>
+          <line>384</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-common/src/main/java/org/apache/hadoop/net/ScriptBasedMapping.java</url>
+          <line>136</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-common/src/main/java/org/apache/hadoop/net/ScriptBasedMapping.java</url>
+          <line>158</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-common/src/main/java/org/apache/hadoop/net/ScriptBasedMapping.java</url>
+          <line>165</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-common/src/main/java/org/apache/hadoop/fs/FileSystem.java</url>
+          <line>747</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/hadoop-common/src/main/java/org/apache/hadoop/fs/FileSystem.java</url>
+          <line>752</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JUnit">
         <watch expression="dnConf.getVolFailuresTolerated()" />
+        <watch expression="JSON.toString(infoArray)" />
+        <watch expression="JSON.toString(data.getVolumeInfoMap())" />
+        <watch expression="data.getVolumeInfoMap()" />
+        <watch expression="systemLoadAverage" />
+        <watch expression="operatingSystemMXBean" />
+      </configuration>
+      <configuration name="Application">
+        <watch expression="getUri()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

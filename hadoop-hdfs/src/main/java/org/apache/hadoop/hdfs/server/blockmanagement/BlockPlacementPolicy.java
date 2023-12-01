@@ -20,13 +20,11 @@ import org.apache.hadoop.net.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- * This interface is used for choosing the desired number of targets
- * for placing block replicas.
- */
+// 副本放置策略
 public abstract class BlockPlacementPolicy {
   public static final Logger LOG = LoggerFactory.getLogger(
       BlockPlacementPolicy.class);
+  
   public static class NotEnoughReplicasException extends Exception {
     private static final long serialVersionUID = 1L;
     NotEnoughReplicasException(String msg) {
@@ -66,74 +64,27 @@ public abstract class BlockPlacementPolicy {
         returnChosenNodes, excludedNodes, blocksize, storagePolicy, flags);
   }
 
-  /**
-   * Verify if the block's placement meets requirement of placement policy,
-   * i.e. replicas are placed on no less than minRacks racks in the system.
-   * 
-   * @param locs block with locations
-   * @param numOfReplicas replica number of file to be verified
-   * @return the result of verification
-   */
+  // 校验副本的放置策略是否合理
   public abstract BlockPlacementStatus verifyBlockPlacement(
       DatanodeInfo[] locs, int numOfReplicas);
 
-  /**
-   * Select the excess replica storages for deletion based on either
-   * delNodehint/Excess storage types.
-   *
-   * @param availableReplicas
-   *          available replicas
-   * @param delCandidates
-   *          Candidates for deletion. For normal replication, this set is the
-   *          same with availableReplicas. For striped blocks, this set is a
-   *          subset of availableReplicas.
-   * @param expectedNumOfReplicas
-   *          The expected number of replicas remaining in the delCandidates
-   * @param excessTypes
-   *          type of the storagepolicy
-   * @param addedNode
-   *          New replica reported
-   * @param delNodeHint
-   *          Hint for excess storage selection
-   * @return Returns the list of excess replicas chosen for deletion
-   */
+  // 选择一个待删除的副本
+  // 如果不是纠删码场景，则 delCandidates等同于 availableReplicas，否则是其子集
   public abstract List<DatanodeStorageInfo> chooseReplicasToDelete(
       Collection<DatanodeStorageInfo> availableReplicas,
       Collection<DatanodeStorageInfo> delCandidates, int expectedNumOfReplicas,
       List<StorageType> excessTypes, DatanodeDescriptor addedNode,
       DatanodeDescriptor delNodeHint);
 
-  /**
-   * Used to setup a BlockPlacementPolicy object. This should be defined by 
-   * all implementations of a BlockPlacementPolicy.
-   * 
-   * @param conf the configuration object
-   * @param stats retrieve cluster status from here
-   * @param clusterMap cluster topology
-   */
   protected abstract void initialize(Configuration conf,  FSClusterStats stats,
                                      NetworkTopology clusterMap, 
                                      Host2NodesMap host2datanodeMap);
 
-  /**
-   * Check if the move is allowed. Used by balancer and other tools.
-   *
-   * @param candidates all replicas including source and target
-   * @param source source replica of the move
-   * @param target target replica of the move
-   */
+  // Balance时，isMovable
   public abstract boolean isMovable(Collection<DatanodeInfo> candidates,
       DatanodeInfo source, DatanodeInfo target);
 
-  /**
-   * Adjust rackmap, moreThanOne, and exactlyOne after removing replica on cur.
-   *
-   * @param rackMap a map from rack to replica
-   * @param moreThanOne The List of replica nodes on rack which has more than 
-   *        one replica
-   * @param exactlyOne The List of replica nodes on rack with only one replica
-   * @param cur current replica to remove
-   */
+  // moreThanOne 是具有该数据块副本的节点，且不止一个副本（rack范围内）
   public void adjustSetsWithChosenReplica(
       final Map<String, List<DatanodeStorageInfo>> rackMap,
       final List<DatanodeStorageInfo> moreThanOne,
@@ -170,25 +121,12 @@ public abstract class BlockPlacementPolicy {
     }
   }
 
-  /**
-   * Get rack string from a data node
-   * @return rack of data node
-   */
+  
   protected String getRack(final DatanodeInfo datanode) {
     return datanode.getNetworkLocation();
   }
 
-  /**
-   * Split data nodes into two sets, one set includes nodes on rack with
-   * more than one  replica, the other set contains the remaining nodes.
-   *
-   * @param availableSet all the available DataNodes/storages of the block
-   * @param candidates DatanodeStorageInfo/DatanodeInfo to be split
-   *        into two sets
-   * @param rackMap a map from rack to datanodes
-   * @param moreThanOne contains nodes on rack with more than one replica
-   * @param exactlyOne remains contains the remaining nodes
-   */
+  // 根据 rack的副本数，进行划分出：moreThanOne 和 exactlyOne两个子集合
   public <T> void splitNodesWithRack(
       final Iterable<T> availableSet,
       final Collection<T> candidates,
@@ -216,15 +154,7 @@ public abstract class BlockPlacementPolicy {
     }
   }
 
-  /**
-   * Updates the value used for excludeSlowNodesEnabled, which is set by
-   * {@code DFSConfigKeys.DFS_NAMENODE_BLOCKPLACEMENTPOLICY_EXCLUDE_SLOW_NODES_ENABLED_KEY}
-   * initially.
-   *
-   * @param enable true, we will filter out slow nodes
-   * when choosing targets for blocks, otherwise false not filter.
-   */
+  
   public abstract void setExcludeSlowNodesEnabled(boolean enable);
-
   public abstract boolean getExcludeSlowNodesEnabled();
 }

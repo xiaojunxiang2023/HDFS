@@ -294,7 +294,7 @@ public class DatanodeManager {
     this.heartbeatExpireInterval = 2 * heartbeatRecheckInterval
         + 10 * 1000 * heartbeatIntervalSeconds;
     // Effected block invalidate limit is the bigger value between
-    // value configured in hdfs-site.xml.noha, and 20 * HB interval.
+    // value configured in hdfs-site.xml.ha.noha, and 20 * HB interval.
     final int configuredBlockInvalidateLimit = conf.getInt(
         DFSConfigKeys.DFS_BLOCK_INVALIDATE_LIMIT_KEY,
         DFSConfigKeys.DFS_BLOCK_INVALIDATE_LIMIT_DEFAULT);

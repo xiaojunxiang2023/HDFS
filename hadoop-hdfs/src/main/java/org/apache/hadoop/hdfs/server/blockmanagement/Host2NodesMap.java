@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /** A map from host names to datanode descriptors. */
-class Host2NodesMap {
+public class Host2NodesMap {
   private HashMap<String, String> mapHost = new HashMap<String, String>();
   private final HashMap<String, DatanodeDescriptor[]> map
     = new HashMap<String, DatanodeDescriptor[]>();

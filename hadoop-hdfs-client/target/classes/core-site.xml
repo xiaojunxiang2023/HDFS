@@ -1,5 +1,15 @@
 <configuration>
-
+    
+    <property>
+        <name>fs.file.impl</name>
+        <value>org.apache.hadoop.fs.LocalFileSystem</value>
+    </property>
+    
+    <property>
+        <name>fs.hdfs.impl</name>
+        <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
+    </property>
+    
     <property>
         <name>hadoop.tmp.dir</name>
         <value>D:\docker\dfs\tmp</value>
@@ -9,7 +19,7 @@
         <name>fs.defaultFS</name>
         <value>hdfs://localhost:8020</value>
     </property>
-
+    
     <!--允许的主机,用户,和组-->
     <property>
         <name>hadoop.proxyuser.xiaojunxiang.hosts</name>
