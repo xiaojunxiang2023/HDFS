@@ -241,7 +241,7 @@ public class DatanodeHttpServer implements Closeable {
         if (configuration == null) {
             return null;
         }
-        // If the hdfs-site.xml.ha.noha has the proper configs for filter classes, use them.
+        // If the hdfs-site.xml.noha has the proper configs for filter classes, use them.
         Class<?>[] classes =
                 configuration.getClasses(
                         DFSConfigKeys.DFS_DATANODE_HTTPSERVER_FILTER_HANDLERS);
