@@ -28,7 +28,7 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
   }
 
   @Override
-  public BlockPlacementStatus verifyBlockPlacement(DatanodeInfo[] locs, int numOfReplicas) {
+  public BlockPlacementStatus verifyBlockPlacement(DatanodeInfo[] candidates, int numOfReplicas) {
     return null;
   }
 
