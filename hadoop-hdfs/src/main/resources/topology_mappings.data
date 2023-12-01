@@ -1,0 +1,3 @@
+[network_topology]
+localhost=/rack1
+127.0.0.1=/rack1

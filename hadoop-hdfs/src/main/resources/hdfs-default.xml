@@ -19,8 +19,8 @@
 -->
 
 <!-- Do not modify this file directly.  Instead, copy entries that you -->
-<!-- wish to modify from this file into hdfs-site.xml.noha and change them -->
-<!-- there.  If hdfs-site.xml.noha does not already exist, create it.      -->
+<!-- wish to modify from this file into hdfs-site.xml.ha.noha and change them -->
+<!-- there.  If hdfs-site.xml.ha.noha does not already exist, create it.      -->
 
 <configuration>
 
@@ -6097,6 +6097,14 @@
     <property>
         <name>dfs.protected.subdirectories.enable</name>
         <value>false</value>
+        <description>whether to protect the subdirectories of directories which
+            set on fs.protected.directories.
+        </description>
+    </property>
+
+    <property>
+        <name>az.default.main-az</name>
+        <value>/mainAz</value>
         <description>whether to protect the subdirectories of directories which
             set on fs.protected.directories.
         </description>
