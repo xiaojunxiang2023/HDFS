@@ -1,6 +1,7 @@
 package org.apache.hadoop.hdfs.server.blockmanagement.az;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
@@ -24,7 +25,51 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
 
   @Override
   public DatanodeStorageInfo[] chooseTarget(String srcPath, int numOfReplicas, Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy, EnumSet<AddBlockFlag> flags) {
+    AzExpression azExpression = AzUtils.getAZExpression(new Path(srcPath));
+    AzStrategy azStrategy = AzUtils.analyzeAzStrategy(azExpression);
+    switch (azStrategy) {
+      case NATIVE_WRITE:
+        return chooseTarget_NativeWrite(srcPath, numOfReplicas, writer, chosen, returnChosenNodes, excludedNodes, blocksize, storagePolicy, flags);
+      case NONE:
+        return chooseTarget_None(srcPath, numOfReplicas, writer, chosen, returnChosenNodes, excludedNodes, blocksize, storagePolicy, flags);
+      case POLICIES:
+        return chooseTarget_Policies(srcPath, numOfReplicas, writer, chosen, returnChosenNodes, excludedNodes, blocksize, storagePolicy, flags);
+    }
     return new DatanodeStorageInfo[0];
+  }
+
+  private DatanodeStorageInfo[] chooseTarget_NativeWrite(String srcPath, int numOfReplicas, Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy, EnumSet<AddBlockFlag> flags) {
+    String az = AzUtils.getAz(writer);
+    if (AzUtils.existAz(az)) {
+      if (AzUtils.isAzAvailable(az)) {
+        return chooseAllOneAz(writer, new Path(srcPath), az);
+      } else {
+        // TODO 异常
+        return null;
+      }
+    } else if (AzUtils.existMainAz()) {
+      return chooseAllOneAz(writer, new Path(srcPath), AzUtils.getMainAz());
+    } else {
+      // TODO 异常
+      return null;
+    }
+  }
+
+  private DatanodeStorageInfo[] chooseTarget_None(String srcPath, int numOfReplicas, Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy, EnumSet<AddBlockFlag> flags) {
+    if (AzUtils.existMainAz()) {
+      return chooseAllOneAz(writer, new Path(srcPath), AzUtils.getMainAz());
+    } else {
+      // TODO 异常
+      return null;
+    }
+  }
+
+  private DatanodeStorageInfo[] chooseTarget_Policies(String srcPath, int numOfReplicas, Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy, EnumSet<AddBlockFlag> flags) {
+    return null;
+  }
+
+  private DatanodeStorageInfo[] chooseAllOneAz(Node write, Path file, String az) {
+    return null;
   }
 
   @Override
@@ -57,7 +102,7 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
   public <T> void splitNodesWithAZInfo(Iterable<T> availableSet, Collection<T> candidates,
                                        Map<AzInfo, List<T>> azMap, List<T> moreThanOne, List<T> exactlyOne) {
     for (T s : availableSet) {
-      final AzInfo azInfo = AzUtils.getAZInfo(getDatanodeInfo(s));
+      final AzInfo azInfo = AzUtils.getAzInfo(getDatanodeInfo(s));
       List<T> storageList = azMap.get(azInfo);
       if (storageList == null) {
         storageList = new ArrayList<>();

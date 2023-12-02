@@ -13,7 +13,7 @@ public class AzInfo {
   public String rack;
 
   public AzInfo() {
-    this(NetworkTopologyAz.DEFAULT_MAIN_AZ, NetworkTopologyAz.DEFAULT_RACK);
+    this(AzNetworkTopology.DEFAULT_MAIN_AZ, AzNetworkTopology.DEFAULT_RACK);
   }
 
   public AzInfo(String az, String rack) {

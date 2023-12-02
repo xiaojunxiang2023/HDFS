@@ -1857,6 +1857,6 @@ public class DFSConfigKeys extends CommonConfigurationKeys {
       HdfsClientConfigKeys.DFS_LEASE_HARDLIMIT_DEFAULT;
 
   public static final String DEFAULT_MAIN_AZ_KEY = "az.default.main-az";
-  public static final String DEFAULT_MAIN_AZ_DEFAULT = "/mainAz";
+  public static final String DEFAULT_MAIN_AZ_DEFAULT = "/default-az";
   
 }

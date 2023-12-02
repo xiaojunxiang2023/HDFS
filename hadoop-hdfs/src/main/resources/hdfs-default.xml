@@ -6102,11 +6102,4 @@
         </description>
     </property>
 
-    <property>
-        <name>az.default.main-az</name>
-        <value>/mainAz</value>
-        <description>whether to protect the subdirectories of directories which
-            set on fs.protected.directories.
-        </description>
-    </property>
 </configuration>

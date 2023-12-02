@@ -7,4 +7,8 @@ package org.apache.hadoop.hdfs.server.blockmanagement.az;
  */
 public class AzConstant {
   public static final String TRUST = "trust.";
+  public static final String POLICIES = TRUST + "policies";
+  public static final String MAIN_AZ = TRUST + "mainAz";
+  public static final String NATIVE_WRITE = TRUST + "nativeWrite";
+  public static final String ADAPT_NOW = TRUST + "adaptNow";
 }
