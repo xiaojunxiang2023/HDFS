@@ -16,4 +16,5 @@ public class AzNetworkTopology extends NetworkTopology {
   public AzInfo getAzInfo(Node writer) {
     return null;
   }
+  
 }

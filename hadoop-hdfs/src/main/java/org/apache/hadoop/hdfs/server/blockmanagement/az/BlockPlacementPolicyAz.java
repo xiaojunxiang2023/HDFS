@@ -65,6 +65,35 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
   }
 
   private DatanodeStorageInfo[] chooseTarget_Policies(String srcPath, int numOfReplicas, Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy, EnumSet<AddBlockFlag> flags) {
+    String az = AzUtils.getAz(writer);
+    Path path = new Path(srcPath);
+    AzExpression azExpression = AzUtils.getAZExpression(path);
+
+    // 第一个副本。TODO: 表达式待定
+    if (numOfReplicas == 0) {
+      if (AzUtils.existAz(az) && AzUtils.isAzAvailable(az) && AzUtils.isInPolicy(azExpression, az)) {
+        return chooseAllOneAz(writer, path, az);
+      } else {
+        return chooseInPolicy(writer, path, azExpression);
+      }
+    } else {
+      return chooseInPolicy(writer, path, azExpression);
+    }
+  }
+
+  private DatanodeStorageInfo[] chooseInPolicy(Node writer, Path path, AzExpression azExpression) {
+    int length = azExpression.policies.length;
+    if (length == 0) {
+      return null;
+    }
+
+    String policy = azExpression.policies[0];
+
+    // TODO: 表达式待定
+    if (true) {
+      System.arraycopy(azExpression.policies, 1,
+          azExpression.policies, 0, length - 1);
+    }
     return null;
   }
 

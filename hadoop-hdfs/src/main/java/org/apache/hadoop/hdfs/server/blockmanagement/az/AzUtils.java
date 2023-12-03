@@ -125,5 +125,14 @@ public class AzUtils {
   public static String getMainAz() {
     return conf.get(DFSConfigKeys.DEFAULT_MAIN_AZ_KEY);
   }
+
+  public static boolean isInPolicy(AzExpression azExpression, String az) {
+    for (String policy : azExpression.policies) {
+      if (policy.equals(az)) {
+        return true;
+      }
+    }
+    return false;
+  }
   
 }
