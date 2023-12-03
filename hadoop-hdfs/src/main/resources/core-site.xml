@@ -12,7 +12,7 @@
     
     <property>
         <name>hadoop.tmp.dir</name>
-        <value>D:\docker\dfs\tmpNoHa</value>
+        <value>D:\docker\dfsNoHa\tmp</value>
     </property>
 
     <property>
