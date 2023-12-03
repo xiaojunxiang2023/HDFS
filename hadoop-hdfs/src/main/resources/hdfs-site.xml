@@ -13,7 +13,7 @@
     <!-- 指定HDFS副本的数量,默认为3 -->
     <property>
         <name>dfs.replication</name>
-        <value>3</value>
+        <value>6</value>
     </property>
     
     <property>
