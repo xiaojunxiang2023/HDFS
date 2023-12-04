@@ -1,8 +1,8 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,7 +25,7 @@ public class RSLegacyRawDecoder extends RawErasureDecoder {
     super(coderOptions);
     if (getNumAllUnits() >= RSUtil.GF.getFieldSize()) {
       throw new HadoopIllegalArgumentException(
-              "Invalid numDataUnits and numParityUnits");
+          "Invalid numDataUnits and numParityUnits");
     }
 
     this.errSignature = new int[getNumParityUnits()];
@@ -64,7 +64,7 @@ public class RSLegacyRawDecoder extends RawErasureDecoder {
   }
 
   private void doDecodeImpl(ByteBuffer[] inputs, int[] erasedIndexes,
-                          ByteBuffer[] outputs) {
+                            ByteBuffer[] outputs) {
     ByteBuffer valid = CoderUtil.findFirstValidInput(inputs);
     int dataLen = valid.remaining();
     for (int i = 0; i < erasedIndexes.length; i++) {
@@ -77,8 +77,8 @@ public class RSLegacyRawDecoder extends RawErasureDecoder {
   }
 
   private void doDecodeImpl(byte[][] inputs, int[] inputOffsets,
-                          int dataLen, int[] erasedIndexes,
-                          byte[][] outputs, int[] outputOffsets) {
+                            int dataLen, int[] erasedIndexes,
+                            byte[][] outputs, int[] outputOffsets) {
     for (int i = 0; i < erasedIndexes.length; i++) {
       errSignature[i] = primitivePower[erasedIndexes[i]];
       RSUtil.GF.substitute(inputs, inputOffsets, dataLen, outputs[i],
@@ -234,7 +234,7 @@ public class RSLegacyRawDecoder extends RawErasureDecoder {
   }
 
   private static byte[] checkGetBytesArrayBuffer(byte[][] bytesArrayBuffers,
-      int idx, int bufferLen) {
+                                                 int idx, int bufferLen) {
     if (bytesArrayBuffers[idx] == null ||
         bytesArrayBuffers[idx].length < bufferLen) {
       bytesArrayBuffers[idx] = new byte[bufferLen];
@@ -243,7 +243,7 @@ public class RSLegacyRawDecoder extends RawErasureDecoder {
   }
 
   private static ByteBuffer checkGetDirectBuffer(ByteBuffer[] directBuffers,
-      int idx, int bufferLen) {
+                                                 int idx, int bufferLen) {
     if (directBuffers[idx] == null ||
         directBuffers[idx].capacity() < bufferLen) {
       directBuffers[idx] = ByteBuffer.allocateDirect(bufferLen);

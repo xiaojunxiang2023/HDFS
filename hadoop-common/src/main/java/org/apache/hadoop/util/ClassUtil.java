@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
+
 public class ClassUtil {
-  /** 
+  /**
    * Find a jar that contains a class of the same name, if any.
    * It will return a jar file, even if that is not the first thing
    * on the class path that has a class with the same name.
-   * 
+   *
    * @param clazz the class to find.
    * @return a jar file that contains the class, or null.
    */
@@ -17,8 +18,8 @@ public class ClassUtil {
     ClassLoader loader = clazz.getClassLoader();
     String classFile = clazz.getName().replaceAll("\\.", "/") + ".class";
     try {
-      for(final Enumeration<URL> itr = loader.getResources(classFile);
-          itr.hasMoreElements();) {
+      for (final Enumeration<URL> itr = loader.getResources(classFile);
+           itr.hasMoreElements(); ) {
         final URL url = itr.nextElement();
         if ("jar".equals(url.getProtocol())) {
           String toReturn = url.getPath();

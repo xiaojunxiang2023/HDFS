@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.concurrent.atomic.AtomicReference;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSStripedOutputStream.Coordinator;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -10,10 +7,13 @@ import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.util.ByteArrayManager;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.Progressable;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class extends {@link DataStreamer} to support writing striped blocks
@@ -102,7 +102,7 @@ public class StripedDataStreamer extends DataStreamer {
 
   @Override
   protected void setupPipelineInternal(DatanodeInfo[] nodes,
-      StorageType[] nodeStorageTypes, String[] nodeStorageIDs)
+                                       StorageType[] nodeStorageTypes, String[] nodeStorageIDs)
       throws IOException {
     boolean success = false;
     while (!success && !streamerClosed() && dfsClient.clientRunning) {
@@ -169,6 +169,6 @@ public class StripedDataStreamer extends DataStreamer {
 
   @Override
   public String toString() {
-    return "#" + index + ": " + (!isHealthy() ? "failed, ": "") + super.toString();
+    return "#" + index + ": " + (!isHealthy() ? "failed, " : "") + super.toString();
   }
 }

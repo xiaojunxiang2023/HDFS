@@ -1,9 +1,6 @@
 package org.apache.hadoop.io.erasurecode.coder;
-import org.apache.hadoop.io.erasurecode.CodecUtil;
-import org.apache.hadoop.io.erasurecode.ECBlock;
-import org.apache.hadoop.io.erasurecode.ECBlockGroup;
-import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
-import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
+
+import org.apache.hadoop.io.erasurecode.*;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
 
 /**
@@ -27,7 +24,7 @@ public class HHXORErasureEncoder extends ErasureEncoder {
 
   @Override
   protected ErasureCodingStep prepareEncodingStep(
-          final ECBlockGroup blockGroup) {
+      final ECBlockGroup blockGroup) {
 
     RawErasureEncoder rsRawEncoderTmp = checkCreateRSRawEncoder();
     RawErasureEncoder xorRawEncoderTmp = checkCreateXorRawEncoder();
@@ -35,7 +32,7 @@ public class HHXORErasureEncoder extends ErasureEncoder {
     ECBlock[] inputBlocks = getInputBlocks(blockGroup);
 
     return new HHXORErasureEncodingStep(inputBlocks,
-            getOutputBlocks(blockGroup), rsRawEncoderTmp, xorRawEncoderTmp);
+        getOutputBlocks(blockGroup), rsRawEncoderTmp, xorRawEncoderTmp);
   }
 
   private RawErasureEncoder checkCreateRSRawEncoder() {

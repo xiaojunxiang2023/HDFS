@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
+
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
 
@@ -98,7 +99,7 @@ public class RSLegacyRawEncoder extends RawErasureEncoder {
       for (int i = 0; i < encodingState.inputs.length; i++) {
         all[encodingState.outputs.length + i] =
             Arrays.copyOfRange(encodingState.inputs[i],
-            encodingState.inputOffsets[i],
+                encodingState.inputOffsets[i],
                 encodingState.inputOffsets[i] + dataLen);
       }
     }

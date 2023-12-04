@@ -16,7 +16,7 @@ public class AzExpression {
   public boolean adaptNow;
 
   public static AzExpression defaultAzExpression = new AzExpression(
-    null, DFSConfigKeys.DEFAULT_MAIN_AZ_DEFAULT, false, false
+      null, DFSConfigKeys.DEFAULT_MAIN_AZ_DEFAULT, false, false
   );
 
   public AzExpression(byte[] policies) {

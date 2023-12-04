@@ -1,13 +1,12 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A low memory footprint Cache which extends {@link LightWeightGSet}.
@@ -17,7 +16,7 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * When an entry is expired, it may be evicted from the cache.
  * When the size limit of the cache is set, the cache will evict the entries
  * with earliest expiration time, even if they are not expired.
- * 
+ *
  * It is guaranteed that number of entries in the cache is less than or equal
  * to the size limit.  However, It is not guaranteed that expired entries are
  * evicted from the cache. An expired entry may possibly be accessed after its
@@ -54,14 +53,14 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
     public int compare(Entry left, Entry right) {
       final long l = left.getExpirationTime();
       final long r = right.getExpirationTime();
-      return l > r? 1: l < r? -1: 0;
+      return l > r ? 1 : l < r ? -1 : 0;
     }
   };
-  
+
   private static int updateRecommendedLength(int recommendedLength,
-      int sizeLimit) {
-    return sizeLimit > 0 && sizeLimit < recommendedLength?
-        (sizeLimit/4*3) // 0.75 load factor
+                                             int sizeLimit) {
+    return sizeLimit > 0 && sizeLimit < recommendedLength ?
+        (sizeLimit / 4 * 3) // 0.75 load factor
         : recommendedLength;
   }
 
@@ -89,19 +88,19 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
    *            longer than A. 
    */
   public LightWeightCache(final int recommendedLength,
-      final int sizeLimit,
-      final long creationExpirationPeriod,
-      final long accessExpirationPeriod) {
+                          final int sizeLimit,
+                          final long creationExpirationPeriod,
+                          final long accessExpirationPeriod) {
     this(recommendedLength, sizeLimit,
         creationExpirationPeriod, accessExpirationPeriod, new Timer());
   }
 
   @VisibleForTesting
   LightWeightCache(final int recommendedLength,
-      final int sizeLimit,
-      final long creationExpirationPeriod,
-      final long accessExpirationPeriod,
-      final Timer timer) {
+                   final int sizeLimit,
+                   final long creationExpirationPeriod,
+                   final long accessExpirationPeriod,
+                   final Timer timer) {
     super(updateRecommendedLength(recommendedLength, sizeLimit));
 
     this.sizeLimit = sizeLimit;
@@ -119,7 +118,7 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
     this.accessExpirationPeriod = accessExpirationPeriod;
 
     this.queue = new PriorityQueue<Entry>(
-        sizeLimit > 0? sizeLimit + 1: 1 << 10, expirationTimeComparator);
+        sizeLimit > 0 ? sizeLimit + 1 : 1 << 10, expirationTimeComparator);
     this.timer = timer;
   }
 
@@ -132,8 +131,7 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
   }
 
   private E evict() {
-    @SuppressWarnings("unchecked")
-    final E polled = (E)queue.poll();
+    @SuppressWarnings("unchecked") final E polled = (E) queue.poll();
     final E removed = super.remove(polled);
     Preconditions.checkState(removed == polled);
     return polled;
@@ -142,7 +140,7 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
   /** Evict expired entries. */
   private void evictExpiredEntries() {
     final long now = timer.monotonicNowNanos();
-    for(int i = 0; i < EVICTION_LIMIT; i++) {
+    for (int i = 0; i < EVICTION_LIMIT; i++) {
       final Entry peeked = queue.peek();
       if (peeked == null || !isExpired(peeked, now)) {
         return;
@@ -156,19 +154,19 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
   /** Evict entries in order to enforce the size limit of the cache. */
   private void evictEntries() {
     if (sizeLimit > 0) {
-      for(int i = size(); i > sizeLimit; i--) {
+      for (int i = size(); i > sizeLimit; i--) {
         evict();
       }
     }
   }
-  
+
   @Override
   public E get(K key) {
     final E entry = super.get(key);
     if (entry != null) {
       if (accessExpirationPeriod > 0) {
         // update expiration time
-        final Entry existing = (Entry)entry;
+        final Entry existing = (Entry) entry;
         Preconditions.checkState(queue.remove(existing));
         setExpirationTime(existing, accessExpirationPeriod);
         queue.offer(existing);
@@ -191,10 +189,10 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
       queue.remove(existing);
     }
 
-    final Entry e = (Entry)entry;
+    final Entry e = (Entry) entry;
     setExpirationTime(e, creationExpirationPeriod);
     queue.offer(e);
-    
+
     evictEntries();
     return existing;
   }

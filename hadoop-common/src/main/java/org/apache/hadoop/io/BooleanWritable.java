@@ -1,26 +1,31 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
-/** 
+/**
  * A WritableComparable for booleans. 
  */
 public class BooleanWritable implements WritableComparable<BooleanWritable> {
   private boolean value;
 
-  /** 
+  /**
    */
-  public BooleanWritable() {};
+  public BooleanWritable() {
+  }
 
-  /** 
+  ;
+
+  /**
    */
   public BooleanWritable(boolean value) {
     set(value);
   }
 
-  /** 
+  /**
    * Set the value of the BooleanWritable
-   */    
+   */
   public void set(boolean value) {
     this.value = value;
   }
@@ -63,7 +68,6 @@ public class BooleanWritable implements WritableComparable<BooleanWritable> {
   }
 
 
-
   /**
    */
   @Override
@@ -72,15 +76,15 @@ public class BooleanWritable implements WritableComparable<BooleanWritable> {
     boolean b = o.value;
     return ((a == b) ? 0 : (a == false) ? -1 : 1);
   }
-  
+
   @Override
   public String toString() {
     return Boolean.toString(get());
   }
 
-  /** 
+  /**
    * A Comparator optimized for BooleanWritable. 
-   */ 
+   */
   public static class Comparator extends WritableComparator {
     public Comparator() {
       super(BooleanWritable.class);

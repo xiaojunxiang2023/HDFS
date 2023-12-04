@@ -1,31 +1,31 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.Shell.ExitCodeException;
 import org.apache.hadoop.util.Shell.ShellCommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
+
 /**
- * A simple shell-based implementation of {@link GroupMappingServiceProvider} 
+ * A simple shell-based implementation of {@link GroupMappingServiceProvider}
  * that exec's the <code>groups</code> shell command to fetch the group
  * memberships of a given user.
  */
 // MapReduce也可见
 public class ShellBasedUnixGroupsMapping extends Configured
-  implements GroupMappingServiceProvider {
+    implements GroupMappingServiceProvider {
 
   @VisibleForTesting
   protected static final Logger LOG =
@@ -66,6 +66,7 @@ public class ShellBasedUnixGroupsMapping extends Configured
       return sb.toString();
     }
   }
+
   /**
    * Returns list of groups for a user
    *
@@ -85,7 +86,7 @@ public class ShellBasedUnixGroupsMapping extends Configured
     // does nothing in this provider of user to groups mapping
   }
 
-  /** 
+  /**
    * Adds groups to cache, no need to do that for this provider
    *
    * @param groups unused
@@ -223,7 +224,7 @@ public class ShellBasedUnixGroupsMapping extends Configured
    * @throws PartialGroupNameException
    */
   private List<String> parsePartialGroupNames(String groupNames,
-      String groupIDs) throws PartialGroupNameException {
+                                              String groupIDs) throws PartialGroupNameException {
     StringTokenizer nameTokenizer =
         new StringTokenizer(groupNames, Shell.TOKEN_SEPARATOR_REGEX);
     StringTokenizer idTokenizer =
@@ -233,7 +234,7 @@ public class ShellBasedUnixGroupsMapping extends Configured
       // check for unresolvable group names.
       if (!idTokenizer.hasMoreTokens()) {
         throw new PartialGroupNameException("Number of group names and ids do"
-        + " not match. group name =" + groupNames + ", group id = " + groupIDs);
+            + " not match. group name =" + groupNames + ", group id = " + groupIDs);
       }
       String groupName = nameTokenizer.nextToken();
       String groupID = idTokenizer.nextToken();
@@ -261,14 +262,14 @@ public class ShellBasedUnixGroupsMapping extends Configured
    * @throws PartialGroupNameException if the resolution fails or times out
    */
   private List<String> resolvePartialGroupNames(String userName,
-      String errMessage, String groupNames) throws PartialGroupNameException {
+                                                String errMessage, String groupNames) throws PartialGroupNameException {
     // Exception may indicate that some group names are not resolvable.
     // Shell-based implementation should tolerate unresolvable groups names,
     // and return resolvable ones, similar to what JNI-based implementation
     // does.
     if (Shell.WINDOWS) {
       throw new PartialGroupNameException("Does not support partial group"
-      + " name resolution on Windows. " + errMessage);
+          + " name resolution on Windows. " + errMessage);
     }
     if (groupNames.isEmpty()) {
       throw new PartialGroupNameException("The user name '" + userName
@@ -290,11 +291,11 @@ public class ShellBasedUnixGroupsMapping extends Configured
       } catch (IOException ioe) {
         String message =
             "Can't execute the shell command to " +
-            "get the list of group id for user '" + userName + "'";
+                "get the list of group id for user '" + userName + "'";
         if (partialResolver.isTimedOut()) {
           message +=
               " because of the command taking longer than " +
-              "the configured timeout: " + timeout + " seconds";
+                  "the configured timeout: " + timeout + " seconds";
         }
         throw new PartialGroupNameException(message, ioe);
       }

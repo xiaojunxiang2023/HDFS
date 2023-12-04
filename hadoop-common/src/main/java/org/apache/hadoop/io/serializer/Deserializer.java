@@ -8,7 +8,7 @@ import java.io.InputStream;
  * Provides a facility for deserializing objects of type {@literal <T>} from an
  * {@link InputStream}.
  * </p>
- * 
+ *
  * <p>
  * Deserializers are stateful, but must not buffer the input since
  * other producers may read from the input between calls to
@@ -22,7 +22,7 @@ public interface Deserializer<T> {
    * <p>Prepare the deserializer for reading.</p>
    */
   void open(InputStream in) throws IOException;
-  
+
   /**
    * <p>
    * Deserialize the next object from the underlying input stream.
@@ -34,7 +34,7 @@ public interface Deserializer<T> {
    * @return the deserialized object
    */
   T deserialize(T t) throws IOException;
-  
+
   /**
    * <p>Close the underlying input stream and clear up any resources.</p>
    */

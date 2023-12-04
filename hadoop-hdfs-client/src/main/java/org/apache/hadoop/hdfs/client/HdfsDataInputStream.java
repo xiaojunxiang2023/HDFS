@@ -1,17 +1,17 @@
 package org.apache.hadoop.hdfs.client;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.List;
-import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.crypto.CryptoInputStream;
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.hdfs.DFSInputStream;
 import org.apache.hadoop.hdfs.ReadStatistics;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * The Hdfs implementation of {@link FSDataInputStream}.

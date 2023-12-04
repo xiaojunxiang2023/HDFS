@@ -1,34 +1,29 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 
 public abstract class NNUpgradeUtil {
-  
+
   private static final Logger LOG =
       LoggerFactory.getLogger(NNUpgradeUtil.class);
-  
+
   /**
    * Return true if this storage dir can roll back to the previous storage
    * state, false otherwise. The NN will refuse to run the rollback operation
    * unless at least one JM or fsimage storage directory can roll back.
-   * 
+   *
    * @param storage the storage info for the current state
    * @param prevStorage the storage info for the previous (unupgraded) state
    * @param targetLayoutVersion the layout version we intend to roll back to
@@ -36,11 +31,11 @@ public abstract class NNUpgradeUtil {
    * @throws IOException in the event of error
    */
   static boolean canRollBack(StorageDirectory sd, StorageInfo storage,
-      StorageInfo prevStorage, int targetLayoutVersion) throws IOException {
+                             StorageInfo prevStorage, int targetLayoutVersion) throws IOException {
     File prevDir = sd.getPreviousDir();
     if (!prevDir.exists()) {  // use current directory then
       LOG.info("Storage directory " + sd.getRoot()
-               + " does not contain previous fs state.");
+          + " does not contain previous fs state.");
       // read and verify consistency with other directories
       storage.readProperties(sd);
       return false;
@@ -51,20 +46,20 @@ public abstract class NNUpgradeUtil {
 
     if (prevStorage.getLayoutVersion() != targetLayoutVersion) {
       throw new IOException(
-        "Cannot rollback to storage version " +
-        prevStorage.getLayoutVersion() +
-        " using this version of the NameNode, which uses storage version " +
-        targetLayoutVersion + ". " +
-        "Please use the previous version of HDFS to perform the rollback.");
+          "Cannot rollback to storage version " +
+              prevStorage.getLayoutVersion() +
+              " using this version of the NameNode, which uses storage version " +
+              targetLayoutVersion + ". " +
+              "Please use the previous version of HDFS to perform the rollback.");
     }
-    
+
     return true;
   }
 
   /**
    * Finalize the upgrade. The previous dir, if any, will be renamed and
    * removed. After this is completed, rollback is no longer allowed.
-   * 
+   *
    * @param sd the storage directory to finalize
    * @throws IOException in the event of error
    */
@@ -72,7 +67,7 @@ public abstract class NNUpgradeUtil {
     File prevDir = sd.getPreviousDir();
     if (!prevDir.exists()) { // already discarded
       LOG.info("Directory " + prevDir + " does not exist.");
-      LOG.info("Finalize upgrade for " + sd.getRoot()+ " is not required.");
+      LOG.info("Finalize upgrade for " + sd.getRoot() + " is not required.");
       return;
     }
     LOG.info("Finalizing upgrade of storage directory " + sd.getRoot());
@@ -82,9 +77,9 @@ public abstract class NNUpgradeUtil {
     // rename previous to tmp and remove
     NNStorage.rename(prevDir, tmpDir);
     NNStorage.deleteDir(tmpDir);
-    LOG.info("Finalize upgrade for " + sd.getRoot()+ " is complete.");
+    LOG.info("Finalize upgrade for " + sd.getRoot() + " is complete.");
   }
-  
+
   /**
    * Perform any steps that must succeed across all storage dirs/JournalManagers
    * involved in an upgrade before proceeding onto the actual upgrade stage. If
@@ -107,7 +102,7 @@ public abstract class NNUpgradeUtil {
     final Path tmpDir = sd.getPreviousTmp().toPath();
 
     Files.walkFileTree(tmpDir,
-      /* do not follow links */ Collections.<FileVisitOption>emptySet(),
+        /* do not follow links */ Collections.<FileVisitOption>emptySet(),
         1, new SimpleFileVisitor<Path>() {
 
           @Override
@@ -153,12 +148,12 @@ public abstract class NNUpgradeUtil {
       throw new IOException("Cannot create directory " + curDir);
     }
   }
-  
+
   /**
    * Perform the upgrade of the storage dir to the given storage info. The new
    * storage info is written into the current directory, and the previous.tmp
    * directory is renamed to previous.
-   * 
+   *
    * @param sd the storage directory to upgrade
    * @param storage info about the new upgraded versions.
    * @throws IOException in the event of error
@@ -189,7 +184,7 @@ public abstract class NNUpgradeUtil {
   /**
    * Perform rollback of the storage dir to the previous state. The existing
    * current dir is removed, and the previous dir is renamed to current.
-   * 
+   *
    * @param sd the storage directory to roll back.
    * @throws IOException in the event of error
    */
@@ -217,5 +212,5 @@ public abstract class NNUpgradeUtil {
     NNStorage.deleteDir(tmpDir);
     LOG.info("Rollback of " + sd.getRoot() + " is complete.");
   }
-  
+
 }

@@ -2,7 +2,7 @@ package org.apache.hadoop.util;
 
 /**
  * A facility for reporting progress.
- * 
+ *
  * <p>Clients and/or applications can use the provided <code>Progressable</code>
  * to explicitly report progress to the Hadoop framework. This is especially
  * important for operations which take significant amount of time since,

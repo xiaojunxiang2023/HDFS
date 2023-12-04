@@ -1,10 +1,11 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
+import org.apache.hadoop.io.IOUtils;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.hadoop.io.IOUtils;
 
 /**
  * A little struct class to wrap an InputStream and an OutputStream.

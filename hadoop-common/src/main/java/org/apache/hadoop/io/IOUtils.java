@@ -1,25 +1,21 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.WritableByteChannel;
-import java.nio.file.DirectoryStream;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.util.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
@@ -41,33 +37,33 @@ public class IOUtils {
    */
   public static void copyBytes(InputStream in, OutputStream out,
                                int buffSize, boolean close)
-    throws IOException {
+      throws IOException {
     try {
       copyBytes(in, out, buffSize);
-      if(close) {
+      if (close) {
         out.close();
         out = null;
         in.close();
         in = null;
       }
     } finally {
-      if(close) {
+      if (close) {
         closeStream(out);
         closeStream(in);
       }
     }
   }
-  
+
   /**
    * Copies from one stream to another.
-   * 
+   *
    * @param in InputStrem to read from
    * @param out OutputStream to write to
    * @param buffSize the size of the buffer 
    */
-  public static void copyBytes(InputStream in, OutputStream out, int buffSize) 
-    throws IOException {
-    PrintStream ps = out instanceof PrintStream ? (PrintStream)out : null;
+  public static void copyBytes(InputStream in, OutputStream out, int buffSize)
+      throws IOException {
+    PrintStream ps = out instanceof PrintStream ? (PrintStream) out : null;
     byte buf[] = new byte[buffSize];
     int bytesRead = in.read(buf);
     while (bytesRead >= 0) {
@@ -88,11 +84,11 @@ public class IOUtils {
    * @param conf the Configuration object 
    */
   public static void copyBytes(InputStream in, OutputStream out, Configuration conf)
-    throws IOException {
+      throws IOException {
     copyBytes(in, out, conf.getInt(
         IO_FILE_BUFFER_SIZE_KEY, IO_FILE_BUFFER_SIZE_DEFAULT), true);
   }
-  
+
   /**
    * Copies from one stream to another.
    *
@@ -103,9 +99,9 @@ public class IOUtils {
    * OutputStream at the end. The streams are closed in the finally clause.
    */
   public static void copyBytes(InputStream in, OutputStream out, Configuration conf, boolean close)
-    throws IOException {
+      throws IOException {
     copyBytes(in, out, conf.getInt(
-        IO_FILE_BUFFER_SIZE_KEY, IO_FILE_BUFFER_SIZE_DEFAULT),  close);
+        IO_FILE_BUFFER_SIZE_KEY, IO_FILE_BUFFER_SIZE_DEFAULT), close);
   }
 
   /**
@@ -118,7 +114,7 @@ public class IOUtils {
    * @throws IOException if bytes can not be read or written
    */
   public static void copyBytes(InputStream in, OutputStream out, long count,
-      boolean close) throws IOException {
+                               boolean close) throws IOException {
     byte buf[] = new byte[4096];
     long bytesRemaining = count;
     int bytesRead;
@@ -126,7 +122,7 @@ public class IOUtils {
     try {
       while (bytesRemaining > 0) {
         int bytesToRead = (int)
-          (bytesRemaining < buf.length ? bytesRemaining : buf.length);
+            (bytesRemaining < buf.length ? bytesRemaining : buf.length);
 
         bytesRead = in.read(buf, 0, bytesToRead);
         if (bytesRead == -1)
@@ -148,12 +144,12 @@ public class IOUtils {
       }
     }
   }
-  
+
   /**
    * Utility wrapper for reading from {@link InputStream}. It catches any errors
    * thrown by the underlying stream (either IO or decompression-related), and
    * re-throws as an IOException.
-   * 
+   *
    * @param is - InputStream to be read from
    * @param buf - buffer the data is read into
    * @param off - offset within buf
@@ -161,7 +157,7 @@ public class IOUtils {
    * @return number of bytes read
    */
   public static int wrappedReadForCompressedData(InputStream is, byte[] buf,
-      int off, int len) throws IOException {
+                                                 int off, int len) throws IOException {
     try {
       return is.read(buf, off, len);
     } catch (IOException ie) {
@@ -182,18 +178,18 @@ public class IOUtils {
    * for any reason (including EOF)
    */
   public static void readFully(InputStream in, byte[] buf,
-      int off, int len) throws IOException {
+                               int off, int len) throws IOException {
     int toRead = len;
     while (toRead > 0) {
       int ret = in.read(buf, off, toRead);
       if (ret < 0) {
-        throw new IOException( "Premature EOF from inputStream");
+        throw new IOException("Premature EOF from inputStream");
       }
       toRead -= ret;
       off += ret;
     }
   }
-  
+
   /**
    * Similar to readFully(). Skips bytes in a loop.
    * @param in The InputStream to skip bytes from
@@ -210,7 +206,7 @@ public class IOUtils {
         // use the read() method to figure out if we're at the end.
         int b = in.read();
         if (b == -1) {
-          throw new EOFException( "Premature EOF from inputStream after " +
+          throw new EOFException("Premature EOF from inputStream after " +
               "skipping " + (len - amt) + " byte(s).");
         }
         ret = 1;
@@ -218,7 +214,7 @@ public class IOUtils {
       amt -= ret;
     }
   }
-  
+
   /**
    * Close the Closeable objects and <b>ignore</b> any {@link Throwable} or
    * null pointers. Must only be used for cleanup in exception handlers.
@@ -234,7 +230,7 @@ public class IOUtils {
       if (c != null) {
         try {
           c.close();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
           if (log != null && log.isDebugEnabled()) {
             log.debug("Exception in closing " + c, e);
           }
@@ -251,7 +247,7 @@ public class IOUtils {
    * @param closeables the objects to close
    */
   public static void cleanupWithLogger(Logger logger,
-      java.io.Closeable... closeables) {
+                                       java.io.Closeable... closeables) {
     for (java.io.Closeable c : closeables) {
       if (c != null) {
         try {
@@ -303,7 +299,7 @@ public class IOUtils {
       }
     }
   }
-  
+
   /**
    * The /dev/null of OutputStreams.
    */
@@ -315,11 +311,11 @@ public class IOUtils {
     @Override
     public void write(int b) throws IOException {
     }
-  }  
-  
+  }
+
   /**
    * Write a ByteBuffer to a WritableByteChannel, handling short writes.
-   * 
+   *
    * @param bc               The WritableByteChannel to write to
    * @param buf              The input buffer
    * @throws IOException     On I/O error
@@ -334,14 +330,14 @@ public class IOUtils {
   /**
    * Write a ByteBuffer to a FileChannel at a given offset, 
    * handling short writes.
-   * 
+   *
    * @param fc               The FileChannel to write to
    * @param buf              The input buffer
    * @param offset           The offset in the file to start writing at
    * @throws IOException     On I/O error
    */
   public static void writeFully(FileChannel fc, ByteBuffer buf,
-      long offset) throws IOException {
+                                long offset) throws IOException {
     do {
       offset += fc.write(buf, offset);
     } while (buf.remaining() > 0);
@@ -355,16 +351,16 @@ public class IOUtils {
    * @param dir              The directory to list.
    * @param filter           If non-null, the filter to use when listing
    *                         this directory.
-   * @return                 The list of files in the directory.
+   * @return The list of files in the directory.
    *
    * @throws IOException     On I/O error
    */
   public static List<String> listDirectory(File dir, FilenameFilter filter)
       throws IOException {
-    ArrayList<String> list = new ArrayList<String> ();
+    ArrayList<String> list = new ArrayList<String>();
     try (DirectoryStream<Path> stream =
              Files.newDirectoryStream(dir.toPath())) {
-      for (Path entry: stream) {
+      for (Path entry : stream) {
         Path fileName = entry.getFileName();
         if (fileName != null) {
           String fileNameStr = fileName.toString();
@@ -403,8 +399,8 @@ public class IOUtils {
     // we must open r/w for the fsync to have an effect. See
     // http://blog.httrack.com/blog/2013/11/15/
     // everything-you-always-wanted-to-know-about-fsync/
-    try(FileChannel channel = FileChannel.open(fileToSync.toPath(),
-        isDir ? StandardOpenOption.READ : StandardOpenOption.WRITE)){
+    try (FileChannel channel = FileChannel.open(fileToSync.toPath(),
+        isDir ? StandardOpenOption.READ : StandardOpenOption.WRITE)) {
       fsync(channel, isDir);
     }
   }
@@ -428,8 +424,8 @@ public class IOUtils {
       if (isDir) {
         assert !(Shell.LINUX
             || Shell.MAC) : "On Linux and MacOSX fsyncing a directory"
-                + " should not throw IOException, we just don't want to rely"
-                + " on that in production (undocumented)" + ". Got: " + ioe;
+            + " should not throw IOException, we just don't want to rely"
+            + " on that in production (undocumented)" + ". Got: " + ioe;
         // Ignore exception if it is a directory
         return;
       }
@@ -455,7 +451,7 @@ public class IOUtils {
    * @return an exception to throw
    */
   public static IOException wrapException(final String path,
-      final String methodName, final IOException exception) {
+                                          final String methodName, final IOException exception) {
 
     if (exception instanceof InterruptedIOException
         || exception instanceof PathIOException) {

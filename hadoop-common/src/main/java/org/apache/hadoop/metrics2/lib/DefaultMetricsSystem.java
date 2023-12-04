@@ -1,12 +1,12 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.util.concurrent.atomic.AtomicReference;
-import javax.management.ObjectName;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.impl.MetricsSystemImpl;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import javax.management.ObjectName;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The default metrics system singleton. This class is used by all the daemon
@@ -19,10 +19,10 @@ public enum DefaultMetricsSystem {
 
   private AtomicReference<MetricsSystem> impl =
       new AtomicReference<MetricsSystem>(new MetricsSystemImpl());
-  
+
   @VisibleForTesting
   volatile boolean miniClusterMode = false;
-  
+
   transient final UniqueNames mBeanNames = new UniqueNames();
   transient final UniqueNames sourceNames = new UniqueNames();
 
@@ -55,11 +55,12 @@ public enum DefaultMetricsSystem {
 
   void shutdownInstance() {
     boolean last = impl.get().shutdown();
-    if (last) synchronized(this) {
+    if (last) synchronized (this) {
       mBeanNames.map.clear();
       sourceNames.map.clear();
     }
   }
+
   public static MetricsSystem setInstance(MetricsSystem ms) {
     return INSTANCE.setImpl(ms);
   }
@@ -68,7 +69,9 @@ public enum DefaultMetricsSystem {
     return impl.getAndSet(ms);
   }
 
-  MetricsSystem getImpl() { return impl.get(); }
+  MetricsSystem getImpl() {
+    return impl.get();
+  }
 
   @VisibleForTesting
   public static void setMiniClusterMode(boolean choice) {
@@ -79,15 +82,19 @@ public enum DefaultMetricsSystem {
   public static boolean inMiniClusterMode() {
     return INSTANCE.miniClusterMode;
   }
+
   public static ObjectName newMBeanName(String name) {
     return INSTANCE.newObjectName(name);
   }
+
   public static void removeMBeanName(ObjectName name) {
     INSTANCE.removeObjectName(name.toString());
   }
+
   public static void removeSourceName(String name) {
     INSTANCE.removeSource(name);
   }
+
   public static String sourceName(String name, boolean dupOK) {
     return INSTANCE.newSourceName(name, dupOK);
   }
@@ -95,7 +102,7 @@ public enum DefaultMetricsSystem {
   synchronized ObjectName newObjectName(String name) {
     try {
       if (mBeanNames.map.containsKey(name) && !miniClusterMode) {
-        throw new MetricsException(name +" already exists!");
+        throw new MetricsException(name + " already exists!");
       }
       return new ObjectName(mBeanNames.uniqueName(name));
     } catch (Exception e) {
@@ -116,7 +123,7 @@ public enum DefaultMetricsSystem {
       if (dupOK) {
         return name;
       } else if (!miniClusterMode) {
-        throw new MetricsException("Metrics source "+ name +" already exists!");
+        throw new MetricsException("Metrics source " + name + " already exists!");
       }
     }
     return sourceNames.uniqueName(name);

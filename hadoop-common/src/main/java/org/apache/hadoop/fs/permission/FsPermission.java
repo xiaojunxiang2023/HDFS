@@ -1,11 +1,5 @@
 package org.apache.hadoop.fs.permission;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputValidation;
-import java.io.Serializable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.Writable;
@@ -13,6 +7,8 @@ import org.apache.hadoop.io.WritableFactories;
 import org.apache.hadoop.io.WritableFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  * A class for file/directory permissions.
@@ -24,8 +20,11 @@ public class FsPermission implements Writable, Serializable,
 
   static final WritableFactory FACTORY = new WritableFactory() {
     @Override
-    public Writable newInstance() { return new FsPermission(); }
+    public Writable newInstance() {
+      return new FsPermission();
+    }
   };
+
   static {                                      // register a ctor
     WritableFactories.setFactory(FsPermission.class, FACTORY);
     WritableFactories.setFactory(ImmutableFsPermission.class, FACTORY);
@@ -45,7 +44,8 @@ public class FsPermission implements Writable, Serializable,
   private FsAction otheraction = null;
   private Boolean stickyBit = false;
 
-  private FsPermission() {}
+  private FsPermission() {
+  }
 
   /**
    * Construct by the given {@link FsAction}.
@@ -66,7 +66,9 @@ public class FsPermission implements Writable, Serializable,
    * @param mode
    * @see #toShort()
    */
-  public FsPermission(short mode) { fromShort(mode); }
+  public FsPermission(short mode) {
+    fromShort(mode);
+  }
 
   /**
    * Construct by the given mode.
@@ -99,12 +101,12 @@ public class FsPermission implements Writable, Serializable,
    * @see #FsPermission(short mode)
    */
   public FsPermission(int mode) {
-    this((short)(mode & 01777));
+    this((short) (mode & 01777));
   }
 
   /**
    * Copy constructor
-   * 
+   *
    * @param other other permission
    */
   public FsPermission(FsPermission other) {
@@ -113,7 +115,7 @@ public class FsPermission implements Writable, Serializable,
     this.otheraction = other.otheraction;
     this.stickyBit = other.stickyBit;
   }
-  
+
   /**
    * Construct by given mode, either in octal or symbolic format.
    * @param mode mode as a string, either in octal or symbolic format
@@ -124,13 +126,19 @@ public class FsPermission implements Writable, Serializable,
   }
 
   /** Return user {@link FsAction}. */
-  public FsAction getUserAction() {return useraction;}
+  public FsAction getUserAction() {
+    return useraction;
+  }
 
   /** Return group {@link FsAction}. */
-  public FsAction getGroupAction() {return groupaction;}
+  public FsAction getGroupAction() {
+    return groupaction;
+  }
 
   /** Return other {@link FsAction}. */
-  public FsAction getOtherAction() {return otheraction;}
+  public FsAction getOtherAction() {
+    return otheraction;
+  }
 
   private void set(FsAction u, FsAction g, FsAction o, boolean sb) {
     useraction = u;
@@ -141,7 +149,7 @@ public class FsPermission implements Writable, Serializable,
 
   public void fromShort(short n) {
     FsAction[] v = FSACTION_VALUES;
-    set(v[(n >>> 6) & 7], v[(n >>> 3) & 7], v[n & 7], (((n >>> 9) & 1) == 1) );
+    set(v[(n >>> 6) & 7], v[(n >>> 3) & 7], v[n & 7], (((n >>> 9) & 1) == 1));
   }
 
   @Override
@@ -183,12 +191,12 @@ public class FsPermission implements Writable, Serializable,
    * Encode the object to a short.
    */
   public short toShort() {
-    int s =  (stickyBit ? 1 << 9 : 0)     |
-             (useraction.ordinal() << 6)  |
-             (groupaction.ordinal() << 3) |
-             otheraction.ordinal();
+    int s = (stickyBit ? 1 << 9 : 0) |
+        (useraction.ordinal() << 6) |
+        (groupaction.ordinal() << 3) |
+        otheraction.ordinal();
 
-    return (short)s;
+    return (short) s;
   }
 
   /**
@@ -211,14 +219,14 @@ public class FsPermission implements Writable, Serializable,
    */
   public short toOctal() {
     int n = this.toShort();
-    int octal = (n>>>9&1)*1000 + (n>>>6&7)*100 + (n>>>3&7)*10 + (n&7);
-    return (short)octal;
+    int octal = (n >>> 9 & 1) * 1000 + (n >>> 6 & 7) * 100 + (n >>> 3 & 7) * 10 + (n & 7);
+    return (short) octal;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof FsPermission) {
-      FsPermission that = (FsPermission)obj;
+      FsPermission that = (FsPermission) obj;
       return this.useraction == that.useraction
           && this.groupaction == that.groupaction
           && this.otheraction == that.otheraction
@@ -228,15 +236,17 @@ public class FsPermission implements Writable, Serializable,
   }
 
   @Override
-  public int hashCode() {return toShort();}
+  public int hashCode() {
+    return toShort();
+  }
 
   @Override
   public String toString() {
     String str = useraction.SYMBOL + groupaction.SYMBOL + otheraction.SYMBOL;
-    if(stickyBit) {
+    if (stickyBit) {
       StringBuilder str2 = new StringBuilder(str);
       str2.replace(str2.length() - 1, str2.length(),
-           otheraction.implies(FsAction.EXECUTE) ? "t" : "T");
+          otheraction.implies(FsAction.EXECUTE) ? "t" : "T");
       str = str2.toString();
     }
 
@@ -252,8 +262,8 @@ public class FsPermission implements Writable, Serializable,
    * newly created files and directories get.
    *
    * @param umask              The umask to use
-   * 
-   * @return                   The effective permission
+   *
+   * @return The effective permission
    */
   public FsPermission applyUMask(FsPermission umask) {
     return new FsPermission(useraction.and(umask.useraction.not()),
@@ -261,37 +271,37 @@ public class FsPermission implements Writable, Serializable,
         otheraction.and(umask.otheraction.not()));
   }
 
-  public static final String UMASK_LABEL = 
-                  CommonConfigurationKeys.FS_PERMISSIONS_UMASK_KEY;
-  public static final int DEFAULT_UMASK = 
-                  CommonConfigurationKeys.FS_PERMISSIONS_UMASK_DEFAULT;
+  public static final String UMASK_LABEL =
+      CommonConfigurationKeys.FS_PERMISSIONS_UMASK_KEY;
+  public static final int DEFAULT_UMASK =
+      CommonConfigurationKeys.FS_PERMISSIONS_UMASK_DEFAULT;
 
   private static final FsAction[] FSACTION_VALUES = FsAction.values();
 
-  /** 
+  /**
    * Get the user file creation mask (umask)
-   * 
+   *
    * {@code UMASK_LABEL} config param has umask value that is either symbolic 
    * or octal.
-   * 
+   *
    * Symbolic umask is applied relative to file mode creation mask; 
    * the permission op characters '+' clears the corresponding bit in the mask, 
    * '-' sets bits in the mask.
-   * 
+   *
    * Octal umask, the specified bits are set in the file mode creation mask.
    */
   public static FsPermission getUMask(Configuration conf) {
     int umask = DEFAULT_UMASK;
-    
+
     // To ensure backward compatibility first use the deprecated key.
     // If the deprecated key is not present then check for the new key
-    if(conf != null) {
+    if (conf != null) {
       String confUmask = conf.get(UMASK_LABEL);
       try {
-        if(confUmask != null) {
+        if (confUmask != null) {
           umask = new UmaskParser(confUmask).getUMask();
         }
-      } catch(IllegalArgumentException iae) {
+      } catch (IllegalArgumentException iae) {
         // Provide more explanation for user-facing message
         String type = iae instanceof NumberFormatException ? "decimal"
             : "octal or symbolic";
@@ -302,8 +312,8 @@ public class FsPermission implements Writable, Serializable,
         throw new IllegalArgumentException(error);
       }
     }
-    
-    return new FsPermission((short)umask);
+
+    return new FsPermission((short) umask);
   }
 
   public boolean getStickyBit() {
@@ -359,28 +369,28 @@ public class FsPermission implements Writable, Serializable,
    * This method is kept for compatibility.
    */
   public static FsPermission getDefault() {
-    return new FsPermission((short)00777);
+    return new FsPermission((short) 00777);
   }
 
   /**
    * Get the default permission for directory.
    */
   public static FsPermission getDirDefault() {
-    return new FsPermission((short)00777);
+    return new FsPermission((short) 00777);
   }
 
   /**
    * Get the default permission for file.
    */
   public static FsPermission getFileDefault() {
-    return new FsPermission((short)00666);
+    return new FsPermission((short) 00666);
   }
 
   /**
    * Get the default permission for cache pools.
    */
   public static FsPermission getCachePoolDefault() {
-    return new FsPermission((short)00755);
+    return new FsPermission((short) 00755);
   }
 
   /**
@@ -390,30 +400,30 @@ public class FsPermission implements Writable, Serializable,
   public static FsPermission valueOf(String unixSymbolicPermission) {
     if (unixSymbolicPermission == null) {
       return null;
-    }
-    else if (unixSymbolicPermission.length() != MAX_PERMISSION_LENGTH) {
+    } else if (unixSymbolicPermission.length() != MAX_PERMISSION_LENGTH) {
       throw new IllegalArgumentException(String.format(
-        "length != %d(unixSymbolicPermission=%s)", MAX_PERMISSION_LENGTH,
-        unixSymbolicPermission));
+          "length != %d(unixSymbolicPermission=%s)", MAX_PERMISSION_LENGTH,
+          unixSymbolicPermission));
     }
 
     int n = 0;
-    for(int i = 1; i < unixSymbolicPermission.length(); i++) {
+    for (int i = 1; i < unixSymbolicPermission.length(); i++) {
       n = n << 1;
       char c = unixSymbolicPermission.charAt(i);
-      n += (c == '-' || c == 'T' || c == 'S') ? 0: 1;
+      n += (c == '-' || c == 'T' || c == 'S') ? 0 : 1;
     }
 
     // Add sticky bit value if set
-    if(unixSymbolicPermission.charAt(9) == 't' ||
+    if (unixSymbolicPermission.charAt(9) == 't' ||
         unixSymbolicPermission.charAt(9) == 'T')
       n += 01000;
 
-    return new FsPermission((short)n);
+    return new FsPermission((short) n);
   }
-  
+
   private static class ImmutableFsPermission extends FsPermission {
     private static final long serialVersionUID = 0x1bab54bd;
+
     public ImmutableFsPermission(short permission) {
       super(permission);
     }

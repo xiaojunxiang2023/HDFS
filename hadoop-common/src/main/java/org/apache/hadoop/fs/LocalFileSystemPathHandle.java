@@ -16,8 +16,8 @@
  */
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto;
+import org.apache.hadoop.thirdparty.protobuf.ByteString;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -43,7 +43,7 @@ public class LocalFileSystemPathHandle implements PathHandle {
     }
     LocalFileSystemPathHandleProto p =
         LocalFileSystemPathHandleProto.parseFrom(ByteString.copyFrom(bytes));
-    path = p.hasPath()   ? p.getPath()  : null;
+    path = p.hasPath() ? p.getPath() : null;
     mtime = p.hasMtime() ? p.getMtime() : null;
   }
 

@@ -1,16 +1,16 @@
 package org.apache.hadoop.hdfs.protocol;
 
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableFactories;
+import org.apache.hadoop.io.WritableFactory;
+
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableFactories;
-import org.apache.hadoop.io.WritableFactory;
 
 /**
  * A Block is a Hadoop FS primitive, identified by its block ID (a long). A
@@ -26,10 +26,13 @@ import org.apache.hadoop.io.WritableFactory;
 public class Block implements Writable, Comparable<Block> {
   public static final String BLOCK_FILE_PREFIX = "blk_";
   public static final String METADATA_EXTENSION = ".meta";
+
   static {                                      // register a ctor
     WritableFactories.setFactory(Block.class, new WritableFactory() {
       @Override
-      public Writable newInstance() { return new Block(); }
+      public Writable newInstance() {
+        return new Block();
+      }
     });
   }
 
@@ -82,7 +85,9 @@ public class Block implements Writable, Comparable<Block> {
   private long numBytes;
   private long generationStamp;
 
-  public Block() {this(0, 0, 0);}
+  public Block() {
+    this(0, 0, 0);
+  }
 
   public Block(final long blkid, final long len, final long generationStamp) {
     set(blkid, len, generationStamp);
@@ -175,9 +180,9 @@ public class Block implements Writable, Comparable<Block> {
 
   public void appendStringTo(StringBuilder sb) {
     sb.append(BLOCK_FILE_PREFIX)
-      .append(blockId)
-      .append('_')
-      .append(getGenerationStamp());
+        .append(blockId)
+        .append('_')
+        .append(getGenerationStamp());
   }
 
   /////////////////////////////////////

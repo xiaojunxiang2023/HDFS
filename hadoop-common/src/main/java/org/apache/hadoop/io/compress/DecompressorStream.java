@@ -1,10 +1,11 @@
 package org.apache.hadoop.io.compress;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 public class DecompressorStream extends CompressionInputStream {
   /**
    * The maximum input buffer size.
@@ -27,7 +28,7 @@ public class DecompressorStream extends CompressionInputStream {
 
   @VisibleForTesting
   DecompressorStream(InputStream in, Decompressor decompressor,
-                            int bufferSize, int skipBufferSize)
+                     int bufferSize, int skipBufferSize)
       throws IOException {
     super(in);
 
@@ -55,7 +56,7 @@ public class DecompressorStream extends CompressionInputStream {
 
   /**
    * Allow derived classes to directly set the underlying stream.
-   * 
+   *
    * @param in Underlying input stream.
    * @throws IOException
    */
@@ -72,7 +73,7 @@ public class DecompressorStream extends CompressionInputStream {
   @Override
   public int read(byte[] b, int off, int len) throws IOException {
     checkStream();
-    
+
     if ((off | len | (off + len) | (b.length - (off + len))) < 0) {
       throw new IndexOutOfBoundsException();
     } else if (len == 0) {
@@ -151,7 +152,7 @@ public class DecompressorStream extends CompressionInputStream {
 
   protected int getCompressedData() throws IOException {
     checkStream();
-  
+
     // note that the _caller_ is now required to call setInput() or throw
     return in.read(buffer, 0, buffer.length);
   }
@@ -161,7 +162,7 @@ public class DecompressorStream extends CompressionInputStream {
       throw new IOException("Stream closed");
     }
   }
-  
+
   @Override
   public void resetState() throws IOException {
     decompressor.reset();
@@ -178,7 +179,7 @@ public class DecompressorStream extends CompressionInputStream {
     // Read 'n' bytes
     int skipped = 0;
     while (skipped < n) {
-      int len = Math.min(((int)n - skipped), skipBytes.length);
+      int len = Math.min(((int) n - skipped), skipBytes.length);
       len = read(skipBytes, 0, len);
       if (len == -1) {
         eof = true;

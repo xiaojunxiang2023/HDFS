@@ -1,18 +1,18 @@
 package org.apache.hadoop.security;
 
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
 
 /**
  * A SaslInputStream is composed of an InputStream and a SaslServer (or
@@ -29,7 +29,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
   private final DataInputStream inStream;
   /** Should we wrap the communication channel? */
   private final boolean useWrap;
-  
+
   /*
    * data read from the underlying input stream before being processed by SASL
    */
@@ -66,7 +66,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * Read more data and get them processed <br>
    * Entry condition: ostart = ofinish <br>
    * Exit condition: ostart <= ofinish <br>
-   * 
+   *
    * return (ofinish-ostart) (we have this many bytes for you), 0 (no data now,
    * but could have more later), or -1 (absolutely no more data)
    */
@@ -105,7 +105,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
   /**
    * Disposes of any system resources or security-sensitive information Sasl
    * might be using.
-   * 
+   *
    * @exception SaslException
    *              if a SASL error occurs.
    */
@@ -122,7 +122,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * Constructs a SASLInputStream from an InputStream and a SaslServer <br>
    * Note: if the specified InputStream or SaslServer is null, a
    * NullPointerException may be thrown later when they are used.
-   * 
+   *
    * @param inStream
    *          the InputStream to be processed
    * @param saslServer
@@ -140,7 +140,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * Constructs a SASLInputStream from an InputStream and a SaslClient <br>
    * Note: if the specified InputStream or SaslClient is null, a
    * NullPointerException may be thrown later when they are used.
-   * 
+   *
    * @param inStream
    *          the InputStream to be processed
    * @param saslClient
@@ -162,7 +162,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * until input data is available, the end of the stream is detected, or an
    * exception is thrown.
    * <p>
-   * 
+   *
    * @return the next byte of data, or <code>-1</code> if the end of the stream
    *         is reached.
    * @exception IOException
@@ -191,7 +191,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * The <code>read</code> method of <code>InputStream</code> calls the
    * <code>read</code> method of three arguments with the arguments
    * <code>b</code>, <code>0</code>, and <code>b.length</code>.
-   * 
+   *
    * @param b
    *          the buffer into which the data is read.
    * @return the total number of bytes read into the buffer, or <code>-1</code>
@@ -210,7 +210,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * array of bytes. This method blocks until some input is available. If the
    * first argument is <code>null,</code> up to <code>len</code> bytes are read
    * and discarded.
-   * 
+   *
    * @param b
    *          the buffer into which the data is read.
    * @param off
@@ -255,16 +255,16 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
   /**
    * Skips <code>n</code> bytes of input from the bytes that can be read from
    * this input stream without blocking.
-   * 
+   *
    * <p>
    * Fewer bytes than requested might be skipped. The actual number of bytes
    * skipped is equal to <code>n</code> or the result of a call to
    * {@link #available() <code>available</code>}, whichever is smaller. If
    * <code>n</code> is less than zero, no bytes are skipped.
-   * 
+   *
    * <p>
    * The actual number of bytes skipped is returned.
-   * 
+   *
    * @param n
    *          the number of bytes to be skipped.
    * @return the actual number of bytes skipped.
@@ -292,7 +292,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * blocking. The <code>available</code> method of <code>InputStream</code>
    * returns <code>0</code>. This method <B>should</B> be overridden by
    * subclasses.
-   * 
+   *
    * @return the number of bytes that can be read from this input stream without
    *         blocking.
    * @exception IOException
@@ -312,7 +312,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    * <p>
    * The <code>close</code> method of <code>SASLInputStream</code> calls the
    * <code>close</code> method of its underlying input stream.
-   * 
+   *
    * @exception IOException
    *              if an I/O error occurs.
    */
@@ -328,7 +328,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
   /**
    * Tests if this input stream supports the <code>mark</code> and
    * <code>reset</code> methods, which it does not.
-   * 
+   *
    * @return <code>false</code>, since this class does not support the
    *         <code>mark</code> and <code>reset</code> methods.
    */
@@ -336,7 +336,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
   public boolean markSupported() {
     return false;
   }
-  
+
   @Override
   public boolean isOpen() {
     return isOpen;

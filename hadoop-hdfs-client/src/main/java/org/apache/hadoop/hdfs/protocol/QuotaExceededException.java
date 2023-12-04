@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.fs.ClusterStorageCapacityExceededException;
 
 /**
@@ -15,11 +16,12 @@ import org.apache.hadoop.fs.ClusterStorageCapacityExceededException;
  */
 public class QuotaExceededException extends ClusterStorageCapacityExceededException {
   protected static final long serialVersionUID = 1L;
-  protected String pathName=null;
+  protected String pathName = null;
   protected long quota; // quota
   protected long count; // actual value
 
-  protected QuotaExceededException() {}
+  protected QuotaExceededException() {
+  }
 
   protected QuotaExceededException(String msg) {
     super(msg);

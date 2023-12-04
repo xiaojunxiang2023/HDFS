@@ -1,4 +1,5 @@
 package org.apache.hadoop.fs;
+
 import org.apache.hadoop.fs.statistics.StoreStatisticNames;
 
 import java.util.Iterator;
@@ -77,14 +78,14 @@ public abstract class StorageStatistics {
     }
 
     /**
-     * @return    The name of this statistic.
+     * @return The name of this statistic.
      */
     public String getName() {
       return name;
     }
 
     /**
-     * @return    The value of this statistic.
+     * @return The value of this statistic.
      */
     public long getValue() {
       return value;
@@ -128,7 +129,7 @@ public abstract class StorageStatistics {
   /**
    * Get the value of a statistic.
    *
-   * @return         null if the statistic is not being tracked or is not a
+   * @return null if the statistic is not being tracked or is not a
    *                 long statistic. The value of the statistic, otherwise.
    */
   public abstract Long getLong(String key);
@@ -136,7 +137,7 @@ public abstract class StorageStatistics {
   /**
    * Return true if a statistic is being tracked.
    *
-   * @return         True only if the statistic is being tracked.
+   * @return True only if the statistic is being tracked.
    */
   public abstract boolean isTracked(String key);
 

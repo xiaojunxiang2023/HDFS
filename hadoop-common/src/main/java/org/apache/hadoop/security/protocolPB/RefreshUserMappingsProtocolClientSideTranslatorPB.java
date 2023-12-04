@@ -1,8 +1,5 @@
 package org.apache.hadoop.security.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.ipc.ProtocolMetaInterface;
 import org.apache.hadoop.ipc.RPC;
@@ -10,9 +7,11 @@ import org.apache.hadoop.ipc.RpcClientUtil;
 import org.apache.hadoop.security.RefreshUserMappingsProtocol;
 import org.apache.hadoop.security.proto.RefreshUserMappingsProtocolProtos.RefreshSuperUserGroupsConfigurationRequestProto;
 import org.apache.hadoop.security.proto.RefreshUserMappingsProtocolProtos.RefreshUserToGroupsMappingsRequestProto;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.Closeable;
+import java.io.IOException;
 
 public class RefreshUserMappingsProtocolClientSideTranslatorPB implements
     ProtocolMetaInterface, RefreshUserMappingsProtocol, Closeable {
@@ -20,13 +19,13 @@ public class RefreshUserMappingsProtocolClientSideTranslatorPB implements
   /** RpcController is not used and hence is set to null */
   private final static RpcController NULL_CONTROLLER = null;
   private final RefreshUserMappingsProtocolPB rpcProxy;
-  
-  private final static RefreshUserToGroupsMappingsRequestProto 
-  VOID_REFRESH_USER_TO_GROUPS_MAPPING_REQUEST = 
+
+  private final static RefreshUserToGroupsMappingsRequestProto
+      VOID_REFRESH_USER_TO_GROUPS_MAPPING_REQUEST =
       RefreshUserToGroupsMappingsRequestProto.newBuilder().build();
 
   private final static RefreshSuperUserGroupsConfigurationRequestProto
-  VOID_REFRESH_SUPERUSER_GROUPS_CONFIGURATION_REQUEST = 
+      VOID_REFRESH_SUPERUSER_GROUPS_CONFIGURATION_REQUEST =
       RefreshSuperUserGroupsConfigurationRequestProto.newBuilder().build();
 
   public RefreshUserMappingsProtocolClientSideTranslatorPB(

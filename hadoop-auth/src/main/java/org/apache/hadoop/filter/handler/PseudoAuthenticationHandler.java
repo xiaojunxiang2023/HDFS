@@ -1,18 +1,17 @@
 package org.apache.hadoop.filter.handler;
 
+import org.apache.hadoop.auth.client.ticator.PseudoAuthenticator;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.filter.AuthenticationFilter;
 import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.auth.client.ticator.PseudoAuthenticator;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -38,7 +37,7 @@ import java.util.regex.Pattern;
 public class PseudoAuthenticationHandler implements AuthenticationHandler {
 
   public static final Logger LOG =
-          LoggerFactory.getLogger(PseudoAuthenticationHandler.class.getName());
+      LoggerFactory.getLogger(PseudoAuthenticationHandler.class.getName());
 
   /**
    * Constant that identifies the authentication mechanism.
@@ -91,12 +90,12 @@ public class PseudoAuthenticationHandler implements AuthenticationHandler {
     acceptAnonymous = Boolean.parseBoolean(config.getProperty(ANONYMOUS_ALLOWED, "false"));
     String hostWitheRegex = null;
     try {
-      hostWitheRegex = config.getProperty(HOST_WITHE_REGEX, getDefaultHostWitheRegex( InetAddress.getLocalHost().getHostName()));
+      hostWitheRegex = config.getProperty(HOST_WITHE_REGEX, getDefaultHostWitheRegex(InetAddress.getLocalHost().getHostName()));
     } catch (UnknownHostException ex) {
       LOG.error("Failed to initialize PseudoAuthenticationHandler handler ", ex);
       throw new ServletException(ex);
     }
-    LOG.info("PseudoAuthenticationHandler current host withe regex :" + hostWitheRegex );
+    LOG.info("PseudoAuthenticationHandler current host withe regex :" + hostWitheRegex);
     hostWithePattern = Pattern.compile(hostWitheRegex);
   }
 
@@ -145,13 +144,13 @@ public class PseudoAuthenticationHandler implements AuthenticationHandler {
   public boolean managementOperation(AuthenticationToken token,
                                      HttpServletRequest request,
                                      HttpServletResponse response)
-    throws IOException, AuthenticationException {
+      throws IOException, AuthenticationException {
     return true;
   }
 
   private String getUserName(HttpServletRequest request) {
     String queryString = request.getQueryString();
-    if(queryString == null || queryString.length() == 0) {
+    if (queryString == null || queryString.length() == 0) {
       return null;
     }
     List<NameValuePair> list = URLEncodedUtils.parse(queryString, UTF8_CHARSET);
@@ -188,11 +187,11 @@ public class PseudoAuthenticationHandler implements AuthenticationHandler {
    */
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, AuthenticationException {
+      throws IOException, AuthenticationException {
     AuthenticationToken token;
     String userName = getUserName(request);
     //尝试使用 Host 白名单匹配，获取 userName
-    if(userName == null && !getAcceptAnonymous()){
+    if (userName == null && !getAcceptAnonymous()) {
       // userName = getUserNameByMatchHost(request);
       userName = "xiaojunxiang";
     }
@@ -209,6 +208,7 @@ public class PseudoAuthenticationHandler implements AuthenticationHandler {
     }
     return token;
   }
+
   /**
    * 1、根据 request 请求获取对应的 hostname
    * 2、如果 hostname 与白名称规则匹配则将 hostname 作为用户名返回

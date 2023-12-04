@@ -1,18 +1,18 @@
 package org.apache.hadoop.io.compress;
 
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Seekable;
+import org.apache.hadoop.io.compress.bzip2.BZip2Constants;
+import org.apache.hadoop.io.compress.bzip2.Bzip2Factory;
+import org.apache.hadoop.io.compress.bzip2.CBZip2InputStream;
+import org.apache.hadoop.io.compress.bzip2.CBZip2OutputStream;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-
-import org.apache.hadoop.conf.Configurable;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Seekable;
-import org.apache.hadoop.io.compress.bzip2.BZip2Constants;
-import org.apache.hadoop.io.compress.bzip2.CBZip2InputStream;
-import org.apache.hadoop.io.compress.bzip2.CBZip2OutputStream;
-import org.apache.hadoop.io.compress.bzip2.Bzip2Factory;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
@@ -43,7 +43,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
   private static final int SUB_HEADER_LEN = SUB_HEADER.length();
 
   private Configuration conf;
-  
+
   /**
    * Set the configuration to be used by this object.
    *
@@ -53,7 +53,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
   public void setConf(Configuration conf) {
     this.conf = conf;
   }
-  
+
   /**
    * Return the configuration used by this object.
    *
@@ -63,11 +63,12 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
   public Configuration getConf() {
     return conf;
   }
-  
+
   /**
-  * Creates a new instance of BZip2Codec.
-  */
-  public BZip2Codec() { }
+   * Creates a new instance of BZip2Codec.
+   */
+  public BZip2Codec() {
+  }
 
   /**
    * Create a {@link CompressionOutputStream} that will write to the given
@@ -97,12 +98,12 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
    */
   @Override
   public CompressionOutputStream createOutputStream(OutputStream out,
-      Compressor compressor) throws IOException {
+                                                    Compressor compressor) throws IOException {
     return Bzip2Factory.isNativeBzip2Loaded(conf) ?
-      new CompressorStream(out, compressor, 
-                           conf.getInt(IO_FILE_BUFFER_SIZE_KEY,
-                                   IO_FILE_BUFFER_SIZE_DEFAULT)) :
-      new BZip2CompressionOutputStream(out);
+        new CompressorStream(out, compressor,
+            conf.getInt(IO_FILE_BUFFER_SIZE_KEY,
+                IO_FILE_BUFFER_SIZE_DEFAULT)) :
+        new BZip2CompressionOutputStream(out);
   }
 
   /**
@@ -152,13 +153,13 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
    */
   @Override
   public CompressionInputStream createInputStream(InputStream in,
-      Decompressor decompressor) throws IOException {
-    return Bzip2Factory.isNativeBzip2Loaded(conf) ? 
-      new DecompressorStream(in, decompressor,
-                             conf.getInt(IO_FILE_BUFFER_SIZE_KEY,
-                                 IO_FILE_BUFFER_SIZE_DEFAULT)) :
-      new BZip2CompressionInputStream(
-              in, 0L, Long.MAX_VALUE, READ_MODE.BYBLOCK);
+                                                  Decompressor decompressor) throws IOException {
+    return Bzip2Factory.isNativeBzip2Loaded(conf) ?
+        new DecompressorStream(in, decompressor,
+            conf.getInt(IO_FILE_BUFFER_SIZE_KEY,
+                IO_FILE_BUFFER_SIZE_DEFAULT)) :
+        new BZip2CompressionInputStream(
+            in, 0L, Long.MAX_VALUE, READ_MODE.BYBLOCK);
   }
 
   /**
@@ -174,7 +175,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
    * @return CompressionInputStream for BZip2 aligned at block boundaries
    */
   public SplitCompressionInputStream createInputStream(InputStream seekableIn,
-      Decompressor decompressor, long start, long end, READ_MODE readMode)
+                                                       Decompressor decompressor, long start, long end, READ_MODE readMode)
       throws IOException {
 
     if (!(seekableIn instanceof Seekable)) {
@@ -182,7 +183,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
           Seekable.class.getName());
     }
 
-    ((Seekable)seekableIn).seek(start);
+    ((Seekable) seekableIn).seek(start);
     return new BZip2CompressionInputStream(seekableIn, start, end, readMode);
   }
 
@@ -207,10 +208,10 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
   }
 
   /**
-  * .bz2 is recognized as the default extension for compressed BZip2 files
-  *
-  * @return A String telling the default bzip2 file extension
-  */
+   * .bz2 is recognized as the default extension for compressed BZip2 files
+   *
+   * @return A String telling the default bzip2 file extension
+   */
   @Override
   public String getDefaultExtension() {
     return CodecConstants.BZIP2_CODEC_EXTENSION;
@@ -221,7 +222,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
 
     // class data starts here//
     private CBZip2OutputStream output;
-    private boolean needsReset; 
+    private boolean needsReset;
     // class data ends here//
 
     public BZip2CompressionOutputStream(OutputStream out)
@@ -256,8 +257,8 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
         writeStreamHeader();
         this.output = new CBZip2OutputStream(out);
       }
-    }    
-    
+    }
+
     public void resetState() throws IOException {
       // Cannot write to out at this point because out might not be ready
       // yet, as in SequenceFile.Writer implementation.
@@ -322,7 +323,9 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
     // See more comments about it before updatePos method.
     private enum POS_ADVERTISEMENT_STATE_MACHINE {
       HOLD, ADVERTISE
-    };
+    }
+
+    ;
 
     POS_ADVERTISEMENT_STATE_MACHINE posSM = POS_ADVERTISEMENT_STATE_MACHINE.HOLD;
     long compressedStreamPosition = 0;
@@ -334,7 +337,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
     }
 
     public BZip2CompressionInputStream(InputStream in, long start, long end,
-        READ_MODE readMode) throws IOException {
+                                       READ_MODE readMode) throws IOException {
       super(in, start, end);
       needsReset = false;
       bufferedIn = new BufferedInputStream(super.in);
@@ -344,7 +347,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
       if (this.startingPos == 0) {
         // We only strip header if it is start of file
         bufferedIn = readStreamHeader();
-      } else if (this.readMode == READ_MODE.BYBLOCK  &&
+      } else if (this.readMode == READ_MODE.BYBLOCK &&
           this.startingPos <= HEADER_LEN + SUB_HEADER_LEN) {
         // When we're in BYBLOCK mode and the start position is >=0
         // and < HEADER_LEN + SUB_HEADER_LEN, we should skip to after
@@ -431,32 +434,32 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
     }
 
     /**
-    * This method updates compressed stream position exactly when the
-    * client of this code has read off at least one byte passed any BZip2
-    * end of block marker.
-    *
-    * This mechanism is very helpful to deal with data level record
-    * boundaries. Please see constructor and next methods of
-    * org.apache.hadoop.mapred.LineRecordReader as an example usage of this
-    * feature.  We elaborate it with an example in the following:
-    *
-    * Assume two different scenarios of the BZip2 compressed stream, where
-    * [m] represent end of block, \n is line delimiter and . represent compressed
-    * data.
-    *
-    * ............[m]......\n.......
-    *
-    * ..........\n[m]......\n.......
-    *
-    * Assume that end is right after [m].  In the first case the reading
-    * will stop at \n and there is no need to read one more line.  (To see the
-    * reason of reading one more line in the next() method is explained in LineRecordReader.)
-    * While in the second example LineRecordReader needs to read one more line
-    * (till the second \n).  Now since BZip2Codecs only update position
-    * at least one byte passed a maker, so it is straight forward to differentiate
-    * between the two cases mentioned.
-    *
-    */
+     * This method updates compressed stream position exactly when the
+     * client of this code has read off at least one byte passed any BZip2
+     * end of block marker.
+     *
+     * This mechanism is very helpful to deal with data level record
+     * boundaries. Please see constructor and next methods of
+     * org.apache.hadoop.mapred.LineRecordReader as an example usage of this
+     * feature.  We elaborate it with an example in the following:
+     *
+     * Assume two different scenarios of the BZip2 compressed stream, where
+     * [m] represent end of block, \n is line delimiter and . represent compressed
+     * data.
+     *
+     * ............[m]......\n.......
+     *
+     * ..........\n[m]......\n.......
+     *
+     * Assume that end is right after [m].  In the first case the reading
+     * will stop at \n and there is no need to read one more line.  (To see the
+     * reason of reading one more line in the next() method is explained in LineRecordReader.)
+     * While in the second example LineRecordReader needs to read one more line
+     * (till the second \n).  Now since BZip2Codecs only update position
+     * at least one byte passed a maker, so it is straight forward to differentiate
+     * between the two cases mentioned.
+     *
+     */
 
     public int read(byte[] b, int off, int len) throws IOException {
       if (needsReset) {
@@ -493,8 +496,8 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
         BufferedInputStream bufferedIn = readStreamHeader();
         input = new CBZip2InputStream(bufferedIn, this.readMode);
       }
-    }    
-    
+    }
+
     public void resetState() throws IOException {
       // Cannot read from bufferedIn at this point because bufferedIn
       // might not be ready
@@ -504,7 +507,7 @@ public class BZip2Codec implements Configurable, SplittableCompressionCodec {
 
     public long getPos() {
       return this.compressedStreamPosition;
-      }
+    }
 
     /*
      * As the comments before read method tell that

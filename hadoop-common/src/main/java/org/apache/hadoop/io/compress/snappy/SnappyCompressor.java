@@ -1,14 +1,14 @@
 package org.apache.hadoop.io.compress.snappy;
 
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.compress.Compressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
+
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 /**
  * A {@link Compressor} based on the snappy compression algorithm.
@@ -262,7 +262,7 @@ public class SnappyCompressor implements Compressor {
       // Set the position and limit of `uncompressedDirectBuf` for reading
       uncompressedDirectBuf.limit(uncompressedDirectBufLen).position(0);
       int size = Snappy.compress((ByteBuffer) uncompressedDirectBuf,
-              (ByteBuffer) compressedDirectBuf);
+          (ByteBuffer) compressedDirectBuf);
       uncompressedDirectBufLen = 0;
       return size;
     }

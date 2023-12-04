@@ -1,10 +1,5 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-
-import javax.servlet.ServletContext;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -12,6 +7,11 @@ import org.apache.hadoop.hdfs.server.common.JspHelper;
 import org.apache.hadoop.http.HttpConfig;
 import org.apache.hadoop.http.HttpServer2;
 import org.apache.hadoop.net.NetUtils;
+
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
 
 /**
  * Encapsulates the HTTP server started by the Journal Service.
@@ -29,7 +29,7 @@ public class JournalNodeHttpServer {
   private final Configuration conf;
 
   JournalNodeHttpServer(Configuration conf, JournalNode jn,
-      InetSocketAddress bindAddress) {
+                        InetSocketAddress bindAddress) {
     this.conf = conf;
     this.localJournalNode = jn;
     this.bindAddress = bindAddress;
@@ -97,7 +97,7 @@ public class JournalNodeHttpServer {
     assert httpAddress != null || httpsAddress != null;
     return httpAddress != null ? httpAddress : httpsAddress;
   }
-  
+
   /**
    * Return the actual address bound to by the running server.
    */
@@ -126,7 +126,7 @@ public class JournalNodeHttpServer {
 
   public static Journal getJournalFromContext(ServletContext context, String jid)
       throws IOException {
-    JournalNode jn = (JournalNode)context.getAttribute(JN_ATTRIBUTE_KEY);
+    JournalNode jn = (JournalNode) context.getAttribute(JN_ATTRIBUTE_KEY);
     return jn.getOrCreateJournal(jid);
   }
 

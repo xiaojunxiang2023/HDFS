@@ -1,12 +1,11 @@
 package org.apache.hadoop.fs;
 
-import java.io.IOException;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.IOException;
 
 /**
  * The value of <code>XAttr</code> is byte[], this class is to 
@@ -21,23 +20,23 @@ public enum XAttrCodec {
    * string is enclosed in double quotes (\").
    */
   TEXT,
-  
+
   /**
    * Value encoded as hexadecimal string 
    * is prefixed with 0x.
    */
   HEX,
-  
+
   /**
    * Value encoded as base64 string 
    * is prefixed with 0s.
    */
   BASE64;
-  
+
   private static final String HEX_PREFIX = "0x";
   private static final String BASE64_PREFIX = "0s";
   private static final Base64 base64 = new Base64(0);
-  
+
   /**
    * Decode string representation of a value and check whether it's 
    * encoded. If the given string begins with 0x or 0X, it expresses
@@ -55,7 +54,7 @@ public enum XAttrCodec {
       if (value.length() >= 2) {
         String en = value.substring(0, 2);
         if (value.startsWith("\"") && value.endsWith("\"")) {
-          value = value.substring(1, value.length()-1);
+          value = value.substring(1, value.length() - 1);
           result = value.getBytes("utf-8");
         } else if (en.equalsIgnoreCase(HEX_PREFIX)) {
           value = value.substring(2, value.length());
@@ -75,7 +74,7 @@ public enum XAttrCodec {
     }
     return result;
   }
-  
+
   /**
    * Encode byte[] value to string representation with encoding. 
    * Values encoded as text strings are enclosed in double quotes (\"), 
@@ -86,7 +85,7 @@ public enum XAttrCodec {
    * @return String string representation of value
    * @throws IOException
    */
-  public static String encodeValue(byte[] value, XAttrCodec encoding) 
+  public static String encodeValue(byte[] value, XAttrCodec encoding)
       throws IOException {
     Preconditions.checkNotNull(value, "Value can not be null.");
     if (encoding == HEX) {

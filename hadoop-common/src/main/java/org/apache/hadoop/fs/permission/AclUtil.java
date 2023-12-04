@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.permission;
 
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 /**
  * AclUtil contains utility methods for manipulating ACLs.
@@ -19,15 +19,15 @@ public final class AclUtil {
    * @return List&lt;AclEntry&gt; containing full logical ACL
    */
   public static List<AclEntry> getAclFromPermAndEntries(FsPermission perm,
-      List<AclEntry> entries) {
+                                                        List<AclEntry> entries) {
     List<AclEntry> acl = Lists.newArrayListWithCapacity(entries.size() + 3);
 
     // Owner entry implied by owner permission bits.
     acl.add(new AclEntry.Builder()
-      .setScope(AclEntryScope.ACCESS)
-      .setType(AclEntryType.USER)
-      .setPermission(perm.getUserAction())
-      .build());
+        .setScope(AclEntryScope.ACCESS)
+        .setType(AclEntryType.USER)
+        .setPermission(perm.getUserAction())
+        .build());
 
     // All extended access ACL entries.
     boolean hasAccessAcl = false;
@@ -45,17 +45,17 @@ public final class AclUtil {
     // Mask entry implied by group permission bits, or group entry if there is
     // no access ACL (only default ACL).
     acl.add(new AclEntry.Builder()
-      .setScope(AclEntryScope.ACCESS)
-      .setType(hasAccessAcl ? AclEntryType.MASK : AclEntryType.GROUP)
-      .setPermission(perm.getGroupAction())
-      .build());
+        .setScope(AclEntryScope.ACCESS)
+        .setType(hasAccessAcl ? AclEntryType.MASK : AclEntryType.GROUP)
+        .setPermission(perm.getGroupAction())
+        .build());
 
     // Other entry implied by other bits.
     acl.add(new AclEntry.Builder()
-      .setScope(AclEntryScope.ACCESS)
-      .setType(AclEntryType.OTHER)
-      .setPermission(perm.getOtherAction())
-      .build());
+        .setScope(AclEntryScope.ACCESS)
+        .setType(AclEntryType.OTHER)
+        .setPermission(perm.getOtherAction())
+        .build());
 
     // Default ACL entries.
     if (curEntry != null && curEntry.getScope() == AclEntryScope.DEFAULT) {
@@ -77,21 +77,21 @@ public final class AclUtil {
    */
   public static List<AclEntry> getMinimalAcl(FsPermission perm) {
     return Lists.newArrayList(
-      new AclEntry.Builder()
-        .setScope(AclEntryScope.ACCESS)
-        .setType(AclEntryType.USER)
-        .setPermission(perm.getUserAction())
-        .build(),
-      new AclEntry.Builder()
-        .setScope(AclEntryScope.ACCESS)
-        .setType(AclEntryType.GROUP)
-        .setPermission(perm.getGroupAction())
-        .build(),
-      new AclEntry.Builder()
-        .setScope(AclEntryScope.ACCESS)
-        .setType(AclEntryType.OTHER)
-        .setPermission(perm.getOtherAction())
-        .build());
+        new AclEntry.Builder()
+            .setScope(AclEntryScope.ACCESS)
+            .setType(AclEntryType.USER)
+            .setPermission(perm.getUserAction())
+            .build(),
+        new AclEntry.Builder()
+            .setScope(AclEntryScope.ACCESS)
+            .setType(AclEntryType.GROUP)
+            .setPermission(perm.getGroupAction())
+            .build(),
+        new AclEntry.Builder()
+            .setScope(AclEntryScope.ACCESS)
+            .setType(AclEntryType.OTHER)
+            .setPermission(perm.getOtherAction())
+            .build());
   }
 
   /**

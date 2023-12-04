@@ -79,7 +79,7 @@ public abstract class DatanodeAdminMonitorBase
         DFSConfigKeys
             .DFS_NAMENODE_DECOMMISSION_MAX_CONCURRENT_TRACKED_NODES_DEFAULT);
     if (this.maxConcurrentTrackedNodes < 0) {
-      LOG.error("{} is set to an invalid value, it must be zero or greater. "+
+      LOG.error("{} is set to an invalid value, it must be zero or greater. " +
               "Defaulting to {}",
           DFSConfigKeys.DFS_NAMENODE_DECOMMISSION_MAX_CONCURRENT_TRACKED_NODES,
           DFSConfigKeys

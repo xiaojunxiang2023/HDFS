@@ -27,15 +27,19 @@ public class EventCounter extends AppenderSkeleton {
   }
 
   private static EventCounts counts = new EventCounts();
+
   public static long getFatal() {
     return counts.get(FATAL);
   }
+
   public static long getError() {
     return counts.get(ERROR);
   }
+
   public static long getWarn() {
     return counts.get(WARN);
   }
+
   public static long getInfo() {
     return counts.get(INFO);
   }
@@ -47,14 +51,11 @@ public class EventCounter extends AppenderSkeleton {
     // see HADOOP-7055 for details
     if (level.equals(Level.INFO)) {
       counts.incr(INFO);
-    }
-    else if (level.equals(Level.WARN)) {
+    } else if (level.equals(Level.WARN)) {
       counts.incr(WARN);
-    }
-    else if (level.equals(Level.ERROR)) {
+    } else if (level.equals(Level.ERROR)) {
       counts.incr(ERROR);
-    }
-    else if (level.equals(Level.FATAL)) {
+    } else if (level.equals(Level.FATAL)) {
       counts.incr(FATAL);
     }
   }

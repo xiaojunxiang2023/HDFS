@@ -1,19 +1,19 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.ChecksumException;
+import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
+import org.apache.hadoop.hdfs.util.StripedBlockUtil.AlignedStripe;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.BlockReadStats;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.StripingChunk;
-import org.apache.hadoop.hdfs.util.StripedBlockUtil.AlignedStripe;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.StripingChunkReadResult;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
-import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Time;
 
 import java.io.IOException;
@@ -106,14 +106,14 @@ abstract class StripeReader {
   protected ECChunk[] decodeInputs;
 
   StripeReader(AlignedStripe alignedStripe,
-      ErasureCodingPolicy ecPolicy, LocatedBlock[] targetBlocks,
-      BlockReaderInfo[] readerInfos, CorruptedBlocks corruptedBlocks,
-      RawErasureDecoder decoder,
-      DFSStripedInputStream dfsStripedInputStream) {
+               ErasureCodingPolicy ecPolicy, LocatedBlock[] targetBlocks,
+               BlockReaderInfo[] readerInfos, CorruptedBlocks corruptedBlocks,
+               RawErasureDecoder decoder,
+               DFSStripedInputStream dfsStripedInputStream) {
     this.alignedStripe = alignedStripe;
     this.ecPolicy = ecPolicy;
-    this.dataBlkNum = (short)ecPolicy.getNumDataUnits();
-    this.parityBlkNum = (short)ecPolicy.getNumParityUnits();
+    this.dataBlkNum = (short) ecPolicy.getNumDataUnits();
+    this.parityBlkNum = (short) ecPolicy.getNumParityUnits();
     this.cellSize = ecPolicy.getCellSize();
     this.targetBlocks = targetBlocks;
     this.readerInfos = readerInfos;
@@ -122,7 +122,7 @@ abstract class StripeReader {
     this.dfsStripedInputStream = dfsStripedInputStream;
 
     service = new ExecutorCompletionService<>(
-            dfsStripedInputStream.getStripedReadsThreadPool());
+        dfsStripedInputStream.getStripedReadsThreadPool());
   }
 
   /**
@@ -207,15 +207,15 @@ abstract class StripeReader {
     for (int i = 0; i < strategies.length; i++) {
       ByteBuffer buffer = chunk.getChunkBuffer().getSlice(i);
       strategies[i] = new ByteBufferStrategy(buffer,
-              dfsStripedInputStream.getReadStatistics(),
-              dfsStripedInputStream.getDFSClient());
+          dfsStripedInputStream.getReadStatistics(),
+          dfsStripedInputStream.getDFSClient());
     }
     return strategies;
   }
 
   private int readToBuffer(BlockReader blockReader,
-      DatanodeInfo currentNode, ByteBufferStrategy strategy,
-      ExtendedBlock currentBlock) throws IOException {
+                           DatanodeInfo currentNode, ByteBufferStrategy strategy,
+                           ExtendedBlock currentBlock) throws IOException {
     final int targetLength = strategy.getTargetLength();
     int length = 0;
     try {
@@ -247,9 +247,9 @@ abstract class StripeReader {
   }
 
   private Callable<BlockReadStats> readCells(final BlockReader reader,
-      final DatanodeInfo datanode, final long currentReaderOffset,
-      final long targetReaderOffset, final ByteBufferStrategy[] strategies,
-      final ExtendedBlock currentBlock) {
+                                             final DatanodeInfo datanode, final long currentReaderOffset,
+                                             final long targetReaderOffset, final ByteBufferStrategy[] strategies,
+                                             final ExtendedBlock currentBlock) {
     return () -> {
       // reader can be null if getBlockReaderWithRetry failed or
       // the reader hit exception before
@@ -297,10 +297,10 @@ abstract class StripeReader {
     chunk.state = StripingChunk.PENDING;
     Callable<BlockReadStats> readCallable =
         readCells(readerInfos[chunkIndex].reader,
-        readerInfos[chunkIndex].datanode,
-        readerInfos[chunkIndex].blockReaderOffset,
-        alignedStripe.getOffsetInBlock(), getReadStrategies(chunk),
-        block.getBlock());
+            readerInfos[chunkIndex].datanode,
+            readerInfos[chunkIndex].blockReaderOffset,
+            alignedStripe.getOffsetInBlock(), getReadStrategies(chunk),
+            block.getBlock());
 
     Future<BlockReadStats> request = service.submit(readCallable);
     futures.put(request, chunkIndex);
@@ -444,7 +444,7 @@ abstract class StripeReader {
     int pos = 0;
     for (int i = 0; i < alignedStripe.chunks.length; i++) {
       if (alignedStripe.chunks[i] != null &&
-          alignedStripe.chunks[i].state == StripingChunk.MISSING){
+          alignedStripe.chunks[i].state == StripingChunk.MISSING) {
         decodeIndices[pos++] = i;
       }
     }

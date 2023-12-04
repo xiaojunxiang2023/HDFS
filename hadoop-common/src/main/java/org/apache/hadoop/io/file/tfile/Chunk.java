@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,11 +16,7 @@
  */
 package org.apache.hadoop.io.file.tfile;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * Several related classes to support chunk-encoded sub-streams on top of a
@@ -60,7 +56,7 @@ final class Chunk {
 
     /**
      * Constructor
-     * 
+     *
      * @param in
      *          The source input stream which contains chunk-encoded data
      *          stream.
@@ -73,7 +69,7 @@ final class Chunk {
 
     /**
      * Have we reached the last chunk.
-     * 
+     *
      * @return true if we have reached the last chunk.
      * @throws java.io.IOException
      */
@@ -84,7 +80,7 @@ final class Chunk {
 
     /**
      * How many bytes remain in the current chunk?
-     * 
+     *
      * @return remaining bytes left in the current chunk.
      * @throws java.io.IOException
      */
@@ -95,7 +91,7 @@ final class Chunk {
 
     /**
      * Reading the length of next chunk.
-     * 
+     *
      * @throws java.io.IOException
      *           when no more data is available.
      */
@@ -110,7 +106,7 @@ final class Chunk {
 
     /**
      * Check whether we reach the end of the stream.
-     * 
+     *
      * @return false if the chunk encoded stream has more data to read (in which
      *         case available() will be greater than 0); true otherwise.
      * @throws java.io.IOException
@@ -226,7 +222,7 @@ final class Chunk {
 
     /**
      * Constructor.
-     * 
+     *
      * @param out
      *          the underlying output stream.
      * @param buf
@@ -241,7 +237,7 @@ final class Chunk {
 
     /**
      * Write out a chunk.
-     * 
+     *
      * @param chunk
      *          The chunk buffer.
      * @param offset
@@ -268,7 +264,7 @@ final class Chunk {
     /**
      * Write out a chunk that is a concatenation of the internal buffer plus
      * user supplied data. This will never be the last block.
-     * 
+     *
      * @param data
      *          User supplied data buffer.
      * @param offset
@@ -288,9 +284,9 @@ final class Chunk {
 
     /**
      * Flush the internal buffer.
-     * 
+     *
      * Is this the last call to flushBuffer?
-     * 
+     *
      * @throws java.io.IOException
      */
     private void flushBuffer() throws IOException {
@@ -366,7 +362,7 @@ final class Chunk {
 
     /**
      * Constructor.
-     * 
+     *
      * @param out
      *          the underlying output stream.
      * @param size

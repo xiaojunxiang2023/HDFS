@@ -1,11 +1,7 @@
 package org.apache.hadoop.ha.fc;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.ha.fc.ZKFCProtocol;
-import org.apache.hadoop.ha.fc.ZKFailoverController;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.ZKFCProtocolService;
 import org.apache.hadoop.ha.protocolPB.ZKFCProtocolPB;
 import org.apache.hadoop.ha.protocolPB.ZKFCProtocolServerSideTranslatorPB;
@@ -13,8 +9,11 @@ import org.apache.hadoop.ipc.ProtobufRpcEngine2;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.RPC.Server;
 import org.apache.hadoop.security.authorize.PolicyProvider;
-
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
 public class ZKFCRpcServer implements ZKFCProtocol {
 
   private static final int HANDLER_COUNT = 3;
@@ -29,7 +28,7 @@ public class ZKFCRpcServer implements ZKFCProtocol {
     this.server.stop();
     this.server.join();
   }
-  
+
   @Override
   public void cedeActive(int millisToCede) throws IOException {
     zkfc.checkRpcAdminAccess();
@@ -54,17 +53,17 @@ public class ZKFCRpcServer implements ZKFCProtocol {
     this.zkfc = zkfc;
 
     RPC.setProtocolEngine(conf, ZKFCProtocolPB.class,
-            ProtobufRpcEngine2.class);
+        ProtobufRpcEngine2.class);
     ZKFCProtocolServerSideTranslatorPB translator =
-            new ZKFCProtocolServerSideTranslatorPB(this);
+        new ZKFCProtocolServerSideTranslatorPB(this);
     BlockingService service = ZKFCProtocolService
-            .newReflectiveBlockingService(translator);
+        .newReflectiveBlockingService(translator);
     this.server = new RPC.Builder(conf).setProtocol(ZKFCProtocolPB.class)
-            .setInstance(service).setBindAddress(bindAddr.getHostName())
-            .setPort(bindAddr.getPort()).setNumHandlers(HANDLER_COUNT)
-            .setVerbose(false).build();
+        .setInstance(service).setBindAddress(bindAddr.getHostName())
+        .setPort(bindAddr.getPort()).setNumHandlers(HANDLER_COUNT)
+        .setVerbose(false).build();
     if (conf.getBoolean(
-            CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, false)) {
+        CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, false)) {
       server.refreshServiceAcl(conf, policy);
     }
   }
@@ -72,5 +71,5 @@ public class ZKFCRpcServer implements ZKFCProtocol {
   public InetSocketAddress getAddress() {
     return server.getListenerAddress();
   }
-  
+
 }

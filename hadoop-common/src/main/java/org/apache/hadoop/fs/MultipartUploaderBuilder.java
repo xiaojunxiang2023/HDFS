@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.permission.FsPermission;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
-
-import org.apache.hadoop.fs.permission.FsPermission;
 
 /**
  * Builder interface for Multipart readers.

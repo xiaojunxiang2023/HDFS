@@ -1,9 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.fs.XAttrSetFlag;
@@ -17,13 +14,11 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.io.erasurecode.CodecRegistry;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -41,7 +36,8 @@ final class FSDirErasureCodingOp {
    * Private constructor for preventing FSDirErasureCodingOp object
    * creation. Static-only class.
    */
-  private FSDirErasureCodingOp() {}
+  private FSDirErasureCodingOp() {
+  }
 
   /**
    * Check if the ecPolicyName is valid and enabled, return the corresponding
@@ -111,8 +107,8 @@ final class FSDirErasureCodingOp {
    * @throws AccessControlException if the user does not have write access
    */
   static FileStatus setErasureCodingPolicy(final FSNamesystem fsn,
-      final String srcArg, final String ecPolicyName,
-      final FSPermissionChecker pc, final boolean logRetryCache)
+                                           final String srcArg, final String ecPolicyName,
+                                           final FSPermissionChecker pc, final boolean logRetryCache)
       throws IOException, AccessControlException {
     assert fsn.hasWriteLock();
 
@@ -139,7 +135,7 @@ final class FSDirErasureCodingOp {
   }
 
   private static List<XAttr> setErasureCodingPolicyXAttr(final FSNamesystem fsn,
-      final INodesInPath srcIIP, ErasureCodingPolicy ecPolicy) throws IOException {
+                                                         final INodesInPath srcIIP, ErasureCodingPolicy ecPolicy) throws IOException {
     FSDirectory fsd = fsn.getFSDirectory();
     assert fsd.hasWriteLock();
     Preconditions.checkNotNull(srcIIP, "INodes cannot be null");
@@ -189,8 +185,8 @@ final class FSDirErasureCodingOp {
    * @throws AccessControlException if the user does not have write access
    */
   static FileStatus unsetErasureCodingPolicy(final FSNamesystem fsn,
-      final String srcArg, final FSPermissionChecker pc,
-      final boolean logRetryCache) throws IOException {
+                                             final String srcArg, final FSPermissionChecker pc,
+                                             final boolean logRetryCache) throws IOException {
     assert fsn.hasWriteLock();
 
     String src = srcArg;
@@ -228,7 +224,7 @@ final class FSDirErasureCodingOp {
    * @throws IOException
    */
   static ErasureCodingPolicy addErasureCodingPolicy(final FSNamesystem fsn,
-      ErasureCodingPolicy policy, final boolean logRetryCache) {
+                                                    ErasureCodingPolicy policy, final boolean logRetryCache) {
     Preconditions.checkNotNull(policy);
     ErasureCodingPolicy retPolicy =
         fsn.getErasureCodingPolicyManager().addPolicy(policy);
@@ -246,7 +242,7 @@ final class FSDirErasureCodingOp {
    * @throws IOException
    */
   static void removeErasureCodingPolicy(final FSNamesystem fsn,
-      String ecPolicyName, final boolean logRetryCache) throws IOException {
+                                        String ecPolicyName, final boolean logRetryCache) throws IOException {
     Preconditions.checkNotNull(ecPolicyName);
     fsn.getErasureCodingPolicyManager().removePolicy(ecPolicyName);
     fsn.getEditLog().logRemoveErasureCodingPolicy(ecPolicyName, logRetryCache);
@@ -262,7 +258,7 @@ final class FSDirErasureCodingOp {
    * @throws IOException
    */
   static boolean enableErasureCodingPolicy(final FSNamesystem fsn,
-      String ecPolicyName, final boolean logRetryCache) throws IOException {
+                                           String ecPolicyName, final boolean logRetryCache) throws IOException {
     Preconditions.checkNotNull(ecPolicyName);
     boolean success =
         fsn.getErasureCodingPolicyManager().enablePolicy(ecPolicyName);
@@ -283,7 +279,7 @@ final class FSDirErasureCodingOp {
    * @throws IOException
    */
   static boolean disableErasureCodingPolicy(final FSNamesystem fsn,
-      String ecPolicyName, final boolean logRetryCache) throws IOException {
+                                            String ecPolicyName, final boolean logRetryCache) throws IOException {
     Preconditions.checkNotNull(ecPolicyName);
     boolean success =
         fsn.getErasureCodingPolicyManager().disablePolicy(ecPolicyName);
@@ -333,7 +329,7 @@ final class FSDirErasureCodingOp {
    * @throws AccessControlException if no read access
    */
   static ErasureCodingPolicy getErasureCodingPolicy(final FSNamesystem fsn,
-      final String src, FSPermissionChecker pc)
+                                                    final String src, FSPermissionChecker pc)
       throws IOException, AccessControlException {
     assert fsn.hasReadLock();
 
@@ -375,7 +371,7 @@ final class FSDirErasureCodingOp {
    * @throws IOException
    */
   static ErasureCodingPolicy getErasureCodingPolicy(FSNamesystem fsn,
-      String ecPolicyName, INodesInPath iip) throws IOException {
+                                                    String ecPolicyName, INodesInPath iip) throws IOException {
     ErasureCodingPolicy ecPolicy;
     if (!StringUtils.isEmpty(ecPolicyName)) {
       ecPolicy = FSDirErasureCodingOp.getEnabledErasureCodingPolicyByName(
@@ -457,7 +453,7 @@ final class FSDirErasureCodingOp {
             DataInputStream dIn = new DataInputStream(bIn);
             String ecPolicyName = WritableUtils.readString(dIn);
             return fsd.getFSNamesystem().getErasureCodingPolicyManager()
-              .getByName(ecPolicyName);
+                .getByName(ecPolicyName);
           }
         }
       }

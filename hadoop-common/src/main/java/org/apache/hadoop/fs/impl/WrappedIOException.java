@@ -1,10 +1,10 @@
 package org.apache.hadoop.fs.impl;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.concurrent.ExecutionException;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A wrapper for an IOException which

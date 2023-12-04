@@ -1,16 +1,15 @@
 package org.apache.hadoop.conf;
 
-import java.io.IOException;
-import java.io.Writer;
+import org.apache.hadoop.http.HttpServer2;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
-import org.apache.hadoop.http.HttpServer2;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * A servlet to print out the running configuration data.
@@ -27,7 +26,7 @@ public class ConfServlet extends HttpServlet {
    * This is populated when the HttpServer starts.
    */
   private Configuration getConfFromContext() {
-    Configuration conf = (Configuration)getServletContext().getAttribute(
+    Configuration conf = (Configuration) getServletContext().getAttribute(
         HttpServer2.CONF_CONTEXT_ATTRIBUTE);
     assert conf != null;
     return conf;
@@ -38,7 +37,7 @@ public class ConfServlet extends HttpServlet {
       throws ServletException, IOException {
 
     if (!HttpServer2.isInstrumentationAccessAllowed(getServletContext(),
-                                                   request, response)) {
+        request, response)) {
       return;
     }
 
@@ -72,8 +71,8 @@ public class ConfServlet extends HttpServlet {
    * Guts of the servlet - extracted for easy testing.
    */
   static void writeResponse(Configuration conf,
-      Writer out, String format, String propertyName)
-          throws IOException, IllegalArgumentException, BadFormatException {
+                            Writer out, String format, String propertyName)
+      throws IOException, IllegalArgumentException, BadFormatException {
     if (FORMAT_JSON.equals(format)) {
       Configuration.dumpConfiguration(conf, propertyName, out);
     } else if (FORMAT_XML.equals(format)) {

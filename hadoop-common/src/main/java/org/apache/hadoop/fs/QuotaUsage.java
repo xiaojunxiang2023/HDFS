@@ -1,8 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.util.StringUtils;
+
 import java.util.Arrays;
 import java.util.List;
-import org.apache.hadoop.util.StringUtils;
 
 /** Store the quota usage of a directory. */
 public class QuotaUsage {
@@ -32,7 +33,7 @@ public class QuotaUsage {
       return this;
     }
 
-    public Builder quota(long quota){
+    public Builder quota(long quota) {
       this.quota = quota;
       return this;
     }
@@ -81,7 +82,8 @@ public class QuotaUsage {
   }
 
   // Make it protected for the deprecated ContentSummary constructor.
-  protected QuotaUsage() { }
+  protected QuotaUsage() {
+  }
 
   /** Build the instance based on the builder. */
   protected QuotaUsage(Builder builder) {
@@ -211,7 +213,7 @@ public class QuotaUsage {
   protected static final String QUOTA_STRING_FORMAT = "%12s %15s ";
   protected static final String SPACE_QUOTA_STRING_FORMAT = "%15s %15s ";
 
-  protected static final String[] QUOTA_HEADER_FIELDS = new String[] {"QUOTA",
+  protected static final String[] QUOTA_HEADER_FIELDS = new String[]{"QUOTA",
       "REM_QUOTA", "SPACE_QUOTA", "REM_SPACE_QUOTA"};
 
   protected static final String QUOTA_HEADER = String.format(
@@ -255,7 +257,7 @@ public class QuotaUsage {
    * @return the string representation of the object
    */
   public String toString(boolean hOption,
-      boolean tOption, List<StorageType> types) {
+                         boolean tOption, List<StorageType> types) {
     if (tOption) {
       return getTypesQuotaUsage(hOption, types);
     }
@@ -270,7 +272,7 @@ public class QuotaUsage {
 
     if (quota > 0L) {
       quotaStr = formatSize(quota, hOption);
-      quotaRem = formatSize(quota-fileAndDirectoryCount, hOption);
+      quotaRem = formatSize(quota - fileAndDirectoryCount, hOption);
     }
     if (spaceQuota >= 0L) {
       spaceQuotaStr = formatSize(spaceQuota, hOption);
@@ -282,7 +284,7 @@ public class QuotaUsage {
   }
 
   protected String getTypesQuotaUsage(boolean hOption,
-      List<StorageType> types) {
+                                      List<StorageType> types) {
     StringBuilder content = new StringBuilder();
     for (StorageType st : types) {
       long typeQuota = getTypeQuota(st);
@@ -313,7 +315,7 @@ public class QuotaUsage {
     for (StorageType st : storageTypes) {
       /* the field length is 13/17 for quota and remain quota
        * as the max length for quota name is ARCHIVE_QUOTA
-        * and remain quota name REM_ARCHIVE_QUOTA */
+       * and remain quota name REM_ARCHIVE_QUOTA */
       String storageName = st.toString();
       header.append(String.format(STORAGE_TYPE_SUMMARY_FORMAT,
           storageName + "_QUOTA", "REM_" + storageName + "_QUOTA"));
@@ -326,10 +328,10 @@ public class QuotaUsage {
    * @param size value to be formatted
    * @param humanReadable flag indicating human readable or not
    * @return String representation of the size
-  */
+   */
   private String formatSize(long size, boolean humanReadable) {
     return humanReadable
-      ? StringUtils.TraditionalBinaryPrefix.long2String(size, "", 1)
-      : String.valueOf(size);
+        ? StringUtils.TraditionalBinaryPrefix.long2String(size, "", 1)
+        : String.valueOf(size);
   }
 }

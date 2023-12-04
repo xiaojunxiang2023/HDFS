@@ -8,7 +8,7 @@ import java.io.InputStream;
  * A {@link org.apache.hadoop.io.compress.DecompressorStream} which works
  * with 'block-based' based compression algorithms, as opposed to 
  * 'stream-based' compression algorithms.
- *  
+ *
  */
 public class BlockDecompressorStream extends DecompressorStream {
   private int originalBlockSize = 0;
@@ -16,20 +16,20 @@ public class BlockDecompressorStream extends DecompressorStream {
 
   /**
    * Create a {@link BlockDecompressorStream}.
-   * 
+   *
    * @param in input stream
    * @param decompressor decompressor to use
    * @param bufferSize size of buffer
    * @throws IOException
    */
-  public BlockDecompressorStream(InputStream in, Decompressor decompressor, 
+  public BlockDecompressorStream(InputStream in, Decompressor decompressor,
                                  int bufferSize) throws IOException {
     super(in, decompressor, bufferSize);
   }
 
   /**
    * Create a {@link BlockDecompressorStream}.
-   * 
+   *
    * @param in input stream
    * @param decompressor decompressor to use
    * @throws IOException

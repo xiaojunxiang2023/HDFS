@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs;
+
 import org.apache.hadoop.conf.Configuration;
 
 /**
@@ -12,7 +13,7 @@ public abstract class ReplicaAccessorBuilder {
 
   /** Set the block ID and block pool ID which are being opened. */
   public abstract ReplicaAccessorBuilder
-      setBlock(long blockId, String blockPoolId);
+  setBlock(long blockId, String blockPoolId);
 
   /** Set the genstamp of the block which is being opened. */
   public abstract ReplicaAccessorBuilder setGenerationStamp(long genstamp);
@@ -24,7 +25,7 @@ public abstract class ReplicaAccessorBuilder {
    * higher level than HDFS.
    */
   public abstract ReplicaAccessorBuilder
-      setVerifyChecksum(boolean verifyChecksum);
+  setVerifyChecksum(boolean verifyChecksum);
 
   /** Set the name of the HDFS client.  Provided for debugging purposes. */
   public abstract ReplicaAccessorBuilder setClientName(String clientName);
@@ -38,7 +39,7 @@ public abstract class ReplicaAccessorBuilder {
    * ReplicaAccessorBuilder implementation.
    */
   public abstract ReplicaAccessorBuilder
-      setAllowShortCircuitReads(boolean allowShortCircuit);
+  setAllowShortCircuitReads(boolean allowShortCircuit);
 
   /**
    * Set the length of the replica which is visible to this client.  If bytes
@@ -75,7 +76,7 @@ public abstract class ReplicaAccessorBuilder {
    * If the ReplicaAccessor could not be built, implementations may wish to log
    * a message at TRACE level indicating why.
    *
-   * @return    null if the ReplicaAccessor could not be built; the
+   * @return null if the ReplicaAccessor could not be built; the
    *                ReplicaAccessor otherwise.
    */
   public abstract ReplicaAccessor build();

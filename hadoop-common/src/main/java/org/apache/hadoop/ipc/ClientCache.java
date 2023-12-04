@@ -1,32 +1,31 @@
 package org.apache.hadoop.ipc;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.ObjectWritable;
 import org.apache.hadoop.io.Writable;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import javax.net.SocketFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /* Cache a client using its socket factory as the hash key */
 // MapReduce也可见
 public class ClientCache {
   private Map<SocketFactory, Client> clients =
-    new HashMap<SocketFactory, Client>();
+      new HashMap<SocketFactory, Client>();
 
   /**
    * Construct &amp; cache an IPC client with the user-provided SocketFactory
    * if no cached client exists.
-   * 
+   *
    * @param conf Configuration
    * @param factory SocketFactory for client socket
    * @param valueClass Class of the expected response
    * @return an IPC client
    */
   public synchronized Client getClient(Configuration conf,
-      SocketFactory factory, Class<? extends Writable> valueClass) {
+                                       SocketFactory factory, Class<? extends Writable> valueClass) {
     // Construct & cache client.  The configuration is only used for timeout,
     // and Clients have connection pools.  So we can either (a) lose some
     // connection pooling and leak sockets, or (b) use the same timeout for all
@@ -48,18 +47,18 @@ public class ClientCache {
   /**
    * Construct &amp; cache an IPC client with the default SocketFactory
    * and default valueClass if no cached client exists. 
-   * 
+   *
    * @param conf Configuration
    * @return an IPC client
    */
   public synchronized Client getClient(Configuration conf) {
     return getClient(conf, SocketFactory.getDefault(), ObjectWritable.class);
   }
-  
+
   /**
    * Construct &amp; cache an IPC client with the user-provided SocketFactory
    * if no cached client exists. Default response type is ObjectWritable.
-   * 
+   *
    * @param conf Configuration
    * @param factory SocketFactory for client socket
    * @return an IPC client

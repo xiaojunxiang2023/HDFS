@@ -1,42 +1,12 @@
 package org.apache.hadoop.fs;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeSet;
-import java.util.Map.Entry;
-import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.Nonnull;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.Options.CreateOpts;
-import org.apache.hadoop.fs.impl.FutureDataInputStreamBuilderImpl;
 import org.apache.hadoop.fs.impl.FsLinkResolution;
+import org.apache.hadoop.fs.impl.FutureDataInputStreamBuilderImpl;
 import org.apache.hadoop.fs.impl.OpenFileParameters;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclStatus;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsCreateModes;
-import org.apache.hadoop.fs.permission.FsPermission;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_DEFAULT;
-
+import org.apache.hadoop.fs.permission.*;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.ipc.RpcClientException;
 import org.apache.hadoop.ipc.RpcServerException;
@@ -44,23 +14,36 @@ import org.apache.hadoop.ipc.UnexpectedServerException;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.util.ShutdownHookManager;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.ShutdownHookManager;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.security.PrivilegedExceptionAction;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_DEFAULT;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY;
 import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapabilityArgs;
 
 /**
  * The FileContext class provides an interface for users of the Hadoop
  * file system. It exposes a number of file system operations, e.g. create,
  * open, list.
- * 
+ *
  * <h2>Path Names</h2>
- * 
+ *
  * The Hadoop file system supports a URI namespace and URI names. This enables
  * multiple types of file systems to be referenced using fully-qualified URIs.
  * Two common Hadoop file system implementations are
@@ -68,7 +51,7 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * <li>the local file system: file:///path
  * <li>the HDFS file system: hdfs://nnAddress:nnPort/path
  * </ul>
- * 
+ *
  * The Hadoop file system also supports additional naming schemes besides URIs.
  * Hadoop has the concept of a <i>default file system</i>, which implies a
  * default URI scheme and authority. This enables <i>slash-relative names</i>
@@ -76,7 +59,7 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * application writers. The default FS is typically set by the user's
  * environment, though it can also be manually specified.
  * <p>
- * 
+ *
  * Hadoop also supports <i>working-directory-relative</i> names, which are paths
  * relative to the current working directory (similar to Unix). The working
  * directory can be in a different file system than the default FS.
@@ -91,19 +74,19 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * foo/bar)
  * </ul>
  *  Relative paths with scheme (scheme:foo/bar) are illegal.
- *  
+ *
  * <h2>Role of FileContext and Configuration Defaults</h2>
  *
  * The FileContext is the analogue of per-process file-related state in Unix. It
  * contains two properties:
- * 
+ *
  * <ul>
  * <li>the default file system (for resolving slash-relative names)
  * <li>the umask (for file permissions)
  * </ul>
  * In general, these properties are obtained from the default configuration file
  * in the user's environment (see {@link Configuration}).
- * 
+ *
  * Further file system properties are specified on the server-side. File system
  * operations default to using these server-side defaults unless otherwise
  * specified.
@@ -152,10 +135,10 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  *   <li> myFContext.create(path, ...);
  *   <li>...
  *  </ul>                                          
- *    
+ *
  */
 public class FileContext implements PathCapabilities {
-  
+
   public static final Logger LOG = LoggerFactory.getLogger(FileContext.class);
   /**
    * Default permission for directory and symlink
@@ -185,27 +168,27 @@ public class FileContext implements PathCapabilities {
   /**
    * List of files that should be deleted on JVM shutdown.
    */
-  static final Map<FileContext, Set<Path>> DELETE_ON_EXIT = 
-    new IdentityHashMap<FileContext, Set<Path>>();
+  static final Map<FileContext, Set<Path>> DELETE_ON_EXIT =
+      new IdentityHashMap<FileContext, Set<Path>>();
 
   /** JVM shutdown hook thread. */
-  static final FileContextFinalizer FINALIZER = 
-    new FileContextFinalizer();
-  
+  static final FileContextFinalizer FINALIZER =
+      new FileContextFinalizer();
+
   private static final PathFilter DEFAULT_FILTER = new PathFilter() {
     @Override
     public boolean accept(final Path file) {
       return true;
     }
   };
-  
+
   /**
    * The FileContext is defined by.
    *  1) defaultFS (slash)
    *  2) wd
    *  3) umask (explicitly set via setUMask(),
    *      falling back to FsPermission.getUMask(conf))
-   */   
+   */
   private final AbstractFileSystem defaultFS; //default FS for this FileContext.
   private Path workingDir;          // Fully qualified
   private FsPermission umask;
@@ -222,14 +205,14 @@ public class FileContext implements PathCapabilities {
     try {
       ugi = UserGroupInformation.getCurrentUser();
     } catch (IOException e) {
-      LOG.error("Exception in getCurrentUser: ",e);
+      LOG.error("Exception in getCurrentUser: ", e);
       throw new RuntimeException("Failed to get the current user " +
-      		"while creating a FileContext", e);
+          "while creating a FileContext", e);
     }
     /*
      * Init the wd.
-     * WorkingDir is implemented at the FileContext layer 
-     * NOT at the AbstractFileSystem layer. 
+     * WorkingDir is implemented at the FileContext layer
+     * NOT at the AbstractFileSystem layer.
      * If the DefaultFS, such as localFilesystem has a notion of
      *  builtin WD, we use that as the initial WD.
      *  Otherwise the WD is initialized to the home directory.
@@ -244,15 +227,15 @@ public class FileContext implements PathCapabilities {
     util = new Util(); // for the inner class
   }
 
-  /* 
+  /*
    * Remove relative part - return "absolute":
    * If input is relative path ("foo/bar") add wd: ie "/<workingDir>/foo/bar"
    * A fully qualified uri ("hdfs://nn:p/foo/bar") or a slash-relative path
    * ("/foo/bar") are returned unchanged.
-   * 
+   *
    * Applications that use FileContext should use #makeQualified() since
    * they really want a fully qualified URI.
-   * Hence this method is not called makeAbsolute() and 
+   * Hence this method is not called makeAbsolute() and
    * has been deliberately declared private.
    */
   Path fixRelativePart(Path p) {
@@ -287,10 +270,10 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Get the file system of supplied path.
-   * 
+   *
    * @param absOrFqPath - absolute or fully qualified path
    * @return the file system of the path
-   * 
+   *
    * @throws UnsupportedFileSystemException If the file system for
    *           <code>absOrFqPath</code> is not supported.
    * @throws IOException If the file system for <code>absOrFqPath</code> could
@@ -301,7 +284,7 @@ public class FileContext implements PathCapabilities {
     absOrFqPath.checkNotSchemeWithRelative();
     absOrFqPath.checkNotRelative();
 
-    try { 
+    try {
       // Is it the default FS for this FileContext?
       defaultFS.checkPath(absOrFqPath);
       return defaultFS;
@@ -309,7 +292,7 @@ public class FileContext implements PathCapabilities {
       return getAbstractFileSystem(ugi, absOrFqPath.toUri(), conf);
     }
   }
-  
+
   private static AbstractFileSystem getAbstractFileSystem(
       UserGroupInformation user, final URI uri, final Configuration conf)
       throws UnsupportedFileSystemException, IOException {
@@ -335,7 +318,7 @@ public class FileContext implements PathCapabilities {
           + uri, ex);
     }
   }
-  
+
   /**
    * Protected Static Factory methods for getting a FileContexts
    * that take a AbstractFileSystem as input. To be used for testing.
@@ -344,38 +327,38 @@ public class FileContext implements PathCapabilities {
   /**
    * Create a FileContext with specified FS as default using the specified
    * config.
-   * 
+   *
    * @param defFS
    * @param aConf
    * @return new FileContext with specified FS as default.
    */
   public static FileContext getFileContext(final AbstractFileSystem defFS,
-                    final Configuration aConf) {
+                                           final Configuration aConf) {
     return new FileContext(defFS, aConf);
   }
-  
+
   /**
    * Create a FileContext for specified file system using the default config.
-   * 
+   *
    * @param defaultFS
    * @return a FileContext with the specified AbstractFileSystem
    *                 as the default FS.
    */
   protected static FileContext getFileContext(
-    final AbstractFileSystem defaultFS) {
+      final AbstractFileSystem defaultFS) {
     return getFileContext(defaultFS, new Configuration());
   }
- 
+
   /**
    * Static Factory methods for getting a FileContext.
    * Note new file contexts are created for each call.
    * The only singleton is the local FS context using the default config.
-   * 
+   *
    * Methods that use the default config: the default config read from the
    * $HADOOP_CONFIG/core.xml,
    * Unspecified key-values for config are defaulted from core-defaults.xml
    * in the release jar.
-   * 
+   *
    * The keys relevant to the FileContext layer are extracted at time of
    * construction. Changes to the config after the call are ignore
    * by the FileContext layer. 
@@ -387,7 +370,7 @@ public class FileContext implements PathCapabilities {
    * Create a FileContext using the default config read from the
    * $HADOOP_CONFIG/core.xml, Unspecified key-values for config are defaulted
    * from core-defaults.xml in the release jar.
-   * 
+   *
    * @throws UnsupportedFileSystemException If the file system from the default
    *           configuration is not supported
    */
@@ -408,10 +391,10 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Create a FileContext for specified URI using the default config.
-   * 
+   *
    * @param defaultFsUri
    * @return a FileContext with the specified URI as the default FS.
-   * 
+   *
    * @throws UnsupportedFileSystemException If the file system for
    *           <code>defaultFsUri</code> is not supported
    */
@@ -422,7 +405,7 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Create a FileContext for specified default URI using the specified config.
-   * 
+   *
    * @param defaultFsUri
    * @param aConf
    * @return new FileContext for specified uri
@@ -432,7 +415,7 @@ public class FileContext implements PathCapabilities {
    *         could not be instantiated, or if login fails.
    */
   public static FileContext getFileContext(final URI defaultFsUri,
-      final Configuration aConf) throws UnsupportedFileSystemException {
+                                           final Configuration aConf) throws UnsupportedFileSystemException {
     UserGroupInformation currentUser = null;
     AbstractFileSystem defaultAfs = null;
     if (defaultFsUri.getScheme() == null) {
@@ -453,8 +436,8 @@ public class FileContext implements PathCapabilities {
   /**
    * Create a FileContext using the passed config. Generally it is better to use
    * {@link #getFileContext(URI, Configuration)} instead of this one.
-   * 
-   * 
+   *
+   *
    * @param aConf
    * @return new FileContext
    * @throws UnsupportedFileSystemException If file system in the config
@@ -464,7 +447,7 @@ public class FileContext implements PathCapabilities {
       throws UnsupportedFileSystemException {
     final URI defaultFsUri = URI.create(aConf.get(FS_DEFAULT_NAME_KEY,
         FS_DEFAULT_NAME_DEFAULT));
-    if (   defaultFsUri.getScheme() != null
+    if (defaultFsUri.getScheme() != null
         && !defaultFsUri.getScheme().trim().isEmpty()) {
       return getFileContext(defaultFsUri, aConf);
     }
@@ -476,10 +459,10 @@ public class FileContext implements PathCapabilities {
   /**
    * @param aConf - from which the FileContext is configured
    * @return a FileContext for the local file system using the specified config.
-   * 
+   *
    * @throws UnsupportedFileSystemException If default file system in the config
    *           is not supported
-   * 
+   *
    */
   public static FileContext getLocalFSFileContext(final Configuration aConf)
       throws UnsupportedFileSystemException {
@@ -490,7 +473,7 @@ public class FileContext implements PathCapabilities {
   public AbstractFileSystem getDefaultFileSystem() {
     return defaultFS;
   }
-  
+
   /**
    * Set the working directory for wd-relative names (such a "foo/bar"). Working
    * directory feature is provided by simply prefixing relative names with the
@@ -498,9 +481,9 @@ public class FileContext implements PathCapabilities {
    * to the inode. Hence setWorkingDir does not follow symlinks etc. This works
    * better in a distributed environment that has multiple independent roots.
    * {@link #getWorkingDirectory()} should return what setWorkingDir() set.
-   * 
+   *
    * @param newWDir new working directory
-   * @throws IOException 
+   * @throws IOException
    * <br>
    *           NewWdir can be one of:
    *           <ul>
@@ -517,10 +500,10 @@ public class FileContext implements PathCapabilities {
    */
   public void setWorkingDirectory(final Path newWDir) throws IOException {
     newWDir.checkNotSchemeWithRelative();
-    /* wd is stored as a fully qualified path. We check if the given 
-     * path is not relative first since resolve requires and returns 
+    /* wd is stored as a fully qualified path. We check if the given
+     * path is not relative first since resolve requires and returns
      * an absolute path.
-     */  
+     */
     final Path newWorkingDir = new Path(workingDir, newWDir);
     FileStatus status = getFileStatus(newWorkingDir);
     if (status.isFile()) {
@@ -528,14 +511,14 @@ public class FileContext implements PathCapabilities {
     }
     workingDir = newWorkingDir;
   }
-  
+
   /**
    * Gets the working directory for wd-relative names (such a "foo/bar").
    */
   public Path getWorkingDirectory() {
     return workingDir;
   }
-  
+
   /**
    * Gets the ugi in the file-context
    * @return UserGroupInformation
@@ -543,7 +526,7 @@ public class FileContext implements PathCapabilities {
   public UserGroupInformation getUgi() {
     return ugi;
   }
-  
+
   /**
    * Return the current user's home directory in this file system.
    * The default implementation returns "/user/$USER/".
@@ -552,15 +535,15 @@ public class FileContext implements PathCapabilities {
   public Path getHomeDirectory() {
     return defaultFS.getHomeDirectory();
   }
-  
+
   /**
-   * 
+   *
    * @return the umask of this FileContext
    */
   public FsPermission getUMask() {
     return (umask != null ? umask : FsPermission.getUMask(conf));
   }
-  
+
   /**
    * Set umask to the supplied parameter.
    * @param newUmask  the new umask
@@ -568,22 +551,22 @@ public class FileContext implements PathCapabilities {
   public void setUMask(final FsPermission newUmask) {
     this.umask = newUmask;
   }
-  
+
   /**
    * Resolve the path following any symlinks or mount points
    * @param f to be resolved
    * @return fully qualified resolved path
-   * 
+   *
    * @throws FileNotFoundException  If <code>f</code> does not exist
    * @throws AccessControlException if access denied
    * @throws IOException If an IO Error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
    * @throws UnexpectedServerException If server implementation throws
    *           undeclared exception to RPC server
-   * 
+   *
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>f</code> is not valid
    */
@@ -591,7 +574,7 @@ public class FileContext implements PathCapabilities {
       UnresolvedLinkException, AccessControlException, IOException {
     return resolve(f);
   }
-  
+
   /**
    * Make the path fully qualified if it is isn't. 
    * A Fully-qualified path has scheme and authority specified and an absolute
@@ -607,7 +590,7 @@ public class FileContext implements PathCapabilities {
   /**
    * Create or overwrite file on indicated path and returns an output stream for
    * writing into the file.
-   * 
+   *
    * @param f the file name to open
    * @param createFlag gives the semantics of create; see {@link CreateFlag}
    * @param opts file creation options; see {@link Options.CreateOpts}.
@@ -615,7 +598,7 @@ public class FileContext implements PathCapabilities {
    *          <li>Progress - to report progress on the operation - default null
    *          <li>Permission - umask is applied against permission: default is
    *          FsPermissions:getDefault()
-   * 
+   *
    *          <li>CreateParent - create missing parent path; default is to not
    *          to create parents
    *          <li>The defaults for the following are SS defaults of the file
@@ -630,9 +613,9 @@ public class FileContext implements PathCapabilities {
    *          if not specified.
    *          </ul>
    *          </ul>
-   * 
+   *
    * @return {@link FSDataOutputStream} for created file
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileAlreadyExistsException If file <code>f</code> already exists
    * @throws FileNotFoundException If parent of <code>f</code> does not exist
@@ -642,18 +625,18 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
    * @throws UnexpectedServerException If server implementation throws
    *           undeclared exception to RPC server
-   * 
+   *
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>f</code> is not valid
    */
   public FSDataOutputStream create(final Path f,
-      final EnumSet<CreateFlag> createFlag, Options.CreateOpts... opts)
+                                   final EnumSet<CreateFlag> createFlag, Options.CreateOpts... opts)
       throws AccessControlException, FileAlreadyExistsException,
       FileNotFoundException, ParentNotDirectoryException,
       UnsupportedFileSystemException, IOException {
@@ -665,15 +648,15 @@ public class FileContext implements PathCapabilities {
 
     CreateOpts.Perms permOpt = CreateOpts.getOpt(CreateOpts.Perms.class, opts);
     FsPermission permission = (permOpt != null) ? permOpt.getValue() :
-                                      FILE_DEFAULT_PERM;
+        FILE_DEFAULT_PERM;
     permission = FsCreateModes.applyUMask(permission, getUMask());
 
-    final CreateOpts[] updatedOpts = 
-                      CreateOpts.setOpt(CreateOpts.perms(permission), opts);
+    final CreateOpts[] updatedOpts =
+        CreateOpts.setOpt(CreateOpts.perms(permission), opts);
     return new FSLinkResolver<FSDataOutputStream>() {
       @Override
-      public FSDataOutputStream next(final AbstractFileSystem fs, final Path p) 
-        throws IOException {
+      public FSDataOutputStream next(final AbstractFileSystem fs, final Path p)
+          throws IOException {
         return fs.create(p, createFlag, updatedOpts);
       }
     }.resolve(this, absF);
@@ -684,7 +667,7 @@ public class FileContext implements PathCapabilities {
    */
   private static final class FCDataOutputStreamBuilder extends
       FSDataOutputStreamBuilder<
-        FSDataOutputStream, FCDataOutputStreamBuilder> {
+          FSDataOutputStream, FCDataOutputStreamBuilder> {
     private final FileContext fc;
 
     private FCDataOutputStreamBuilder(
@@ -744,12 +727,12 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Make(create) a directory and all the non-existent parents.
-   * 
+   *
    * @param dir - the dir to make
    * @param permission - permissions is set permission{@literal &~}umask
    * @param createParent - if true then missing parent dirs are created if false
    *          then parent must exist
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileAlreadyExistsException If directory <code>dir</code> already
    *           exists
@@ -760,19 +743,19 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>dir</code>
    *         is not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws UnexpectedServerException If server implementation throws 
    *           undeclared exception to RPC server
-   * 
+   *
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>dir</code> is not valid
    */
   public void mkdir(final Path dir, final FsPermission permission,
-      final boolean createParent) throws AccessControlException,
+                    final boolean createParent) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
-      ParentNotDirectoryException, UnsupportedFileSystemException, 
+      ParentNotDirectoryException, UnsupportedFileSystemException,
       IOException {
     final Path absDir = fixRelativePart(dir);
     final FsPermission absFerms = FsCreateModes.applyUMask(
@@ -780,8 +763,8 @@ public class FileContext implements PathCapabilities {
             FsPermission.getDirDefault() : permission, getUMask());
     new FSLinkResolver<Void>() {
       @Override
-      public Void next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Void next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         fs.mkdir(p, absFerms, createParent);
         return null;
       }
@@ -800,13 +783,13 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
    * @throws UnexpectedServerException If server implementation throws 
    *           undeclared exception to RPC server
-   * 
+   *
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>f</code> is invalid
    */
@@ -816,13 +799,13 @@ public class FileContext implements PathCapabilities {
     Path absF = fixRelativePart(f);
     return new FSLinkResolver<Boolean>() {
       @Override
-      public Boolean next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Boolean next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.delete(p, recursive);
       }
     }.resolve(this, absF);
   }
- 
+
   /**
    * Opens an FSDataInputStream at the indicated Path using
    * default buffersize.
@@ -833,7 +816,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code>
    *         is not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -845,8 +828,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<FSDataInputStream>() {
       @Override
-      public FSDataInputStream next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FSDataInputStream next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.open(p);
       }
     }.resolve(this, absF);
@@ -854,16 +837,16 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Opens an FSDataInputStream at the indicated Path.
-   * 
+   *
    * @param f the file name to open
    * @param bufferSize the size of the buffer to be used.
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileNotFoundException If file <code>f</code> does not exist
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -876,8 +859,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<FSDataInputStream>() {
       @Override
-      public FSDataInputStream next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FSDataInputStream next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.open(p, bufferSize);
       }
     }.resolve(this, absF);
@@ -928,7 +911,7 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Set replication for an existing file.
-   * 
+   *
    * @param f file name
    * @param replication new replication
    *
@@ -937,7 +920,7 @@ public class FileContext implements PathCapabilities {
    * @throws AccessControlException If access is denied
    * @throws FileNotFoundException If file <code>f</code> does not exist
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -950,8 +933,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<Boolean>() {
       @Override
-      public Boolean next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Boolean next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.setReplication(p, replication);
       }
     }.resolve(this, absF);
@@ -975,10 +958,10 @@ public class FileContext implements PathCapabilities {
    * Note that atomicity of rename is dependent on the file system
    * implementation. Please refer to the file system documentation for details
    * <p>
-   * 
+   *
    * @param src path to be renamed
    * @param dst new path after rename
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileAlreadyExistsException If <code>dst</code> already exists and
    *           <code>options</code> has {@link Options.Rename#OVERWRITE}
@@ -989,7 +972,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>src</code>
    *           and <code>dst</code> is not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -997,7 +980,7 @@ public class FileContext implements PathCapabilities {
    *           undeclared exception to RPC server
    */
   public void rename(final Path src, final Path dst,
-      final Options.Rename... options) throws AccessControlException,
+                     final Options.Rename... options) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
       ParentNotDirectoryException, UnsupportedFileSystemException,
       IOException {
@@ -1005,7 +988,7 @@ public class FileContext implements PathCapabilities {
     final Path absDst = fixRelativePart(dst);
     AbstractFileSystem srcFS = getFSofPath(absSrc);
     AbstractFileSystem dstFS = getFSofPath(absDst);
-    if(!srcFS.getUri().equals(dstFS.getUri())) {
+    if (!srcFS.getUri().equals(dstFS.getUri())) {
       throw new IOException("Renames across AbstractFileSystems not supported");
     }
     try {
@@ -1013,20 +996,20 @@ public class FileContext implements PathCapabilities {
     } catch (UnresolvedLinkException e) {
       /* We do not know whether the source or the destination path
        * was unresolved. Resolve the source path up until the final
-       * path component, then fully resolve the destination. 
+       * path component, then fully resolve the destination.
        */
-      final Path source = resolveIntermediate(absSrc);    
+      final Path source = resolveIntermediate(absSrc);
       new FSLinkResolver<Void>() {
         @Override
-        public Void next(final AbstractFileSystem fs, final Path p) 
-          throws IOException, UnresolvedLinkException {
+        public Void next(final AbstractFileSystem fs, final Path p)
+            throws IOException, UnresolvedLinkException {
           fs.rename(source, p, options);
           return null;
         }
       }.resolve(this, absDst);
     }
   }
-  
+
   /**
    * Set permission of a path.
    * @param f
@@ -1037,7 +1020,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code>
    *         is not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1050,8 +1033,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     new FSLinkResolver<Void>() {
       @Override
-      public Void next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Void next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         fs.setPermission(p, permission);
         return null;
       }
@@ -1061,29 +1044,29 @@ public class FileContext implements PathCapabilities {
   /**
    * Set owner of a path (i.e. a file or a directory). The parameters username
    * and groupname cannot both be null.
-   * 
+   *
    * @param f The path
    * @param username If it is null, the original username remains unchanged.
    * @param groupname If it is null, the original groupname remains unchanged.
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileNotFoundException If <code>f</code> does not exist
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
    * @throws UnexpectedServerException If server implementation throws 
    *           undeclared exception to RPC server
-   * 
+   *
    * RuntimeExceptions:
    * @throws HadoopIllegalArgumentException If <code>username</code> or
    *           <code>groupname</code> is invalid.
    */
   public void setOwner(final Path f, final String username,
-      final String groupname) throws AccessControlException,
+                       final String groupname) throws AccessControlException,
       UnsupportedFileSystemException, FileNotFoundException,
       IOException {
     if ((username == null) && (groupname == null)) {
@@ -1093,8 +1076,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     new FSLinkResolver<Void>() {
       @Override
-      public Void next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Void next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         fs.setOwner(p, username, groupname);
         return null;
       }
@@ -1116,7 +1099,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1129,8 +1112,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     new FSLinkResolver<Void>() {
       @Override
-      public Void next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Void next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         fs.setTimes(p, mtime, atime);
         return null;
       }
@@ -1149,7 +1132,7 @@ public class FileContext implements PathCapabilities {
    * @throws AccessControlException If access is denied
    * @throws FileNotFoundException If <code>f</code> does not exist
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1162,8 +1145,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<FileChecksum>() {
       @Override
-      public FileChecksum next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FileChecksum next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.getFileChecksum(p);
       }
     }.resolve(this, absF);
@@ -1181,7 +1164,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1206,7 +1189,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1218,8 +1201,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<FileStatus>() {
       @Override
-      public FileStatus next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FileStatus next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.getFileStatus(p);
       }
     }.resolve(this, absF);
@@ -1262,7 +1245,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException if file system for <code>path</code>
    *   is not supported
    * @throws IOException see specific implementation
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1290,7 +1273,7 @@ public class FileContext implements PathCapabilities {
    * file system does not support symbolic links.
    * @param  f The path we want information from.
    * @return A FileStatus object
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileNotFoundException If <code>f</code> does not exist
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
@@ -1303,8 +1286,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<FileStatus>() {
       @Override
-      public FileStatus next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FileStatus next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         FileStatus fi = fs.getFileLinkStatus(p);
         if (fi.isSymlink()) {
           fi.setSymlink(FSLinkResolver.qualifySymlinkTarget(fs.getUri(), p,
@@ -1314,7 +1297,7 @@ public class FileContext implements PathCapabilities {
       }
     }.resolve(this, absF);
   }
-  
+
   /**
    * Returns the target of the given symbolic link as it was specified
    * when the link was created.  Links in the path leading up to the
@@ -1322,7 +1305,7 @@ public class FileContext implements PathCapabilities {
    *
    * @param f the path to return the target of
    * @return The un-interpreted target of the symbolic link.
-   * 
+   *
    * @throws AccessControlException If access is denied
    * @throws FileNotFoundException If path <code>f</code> does not exist
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
@@ -1335,14 +1318,14 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<Path>() {
       @Override
-      public Path next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Path next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         FileStatus fi = fs.getFileLinkStatus(p);
         return fi.getSymlink();
       }
     }.resolve(this, absF);
   }
-  
+
   /**
    * Return blockLocation of the given file for the given offset and len.
    *  For a nonexistent file or regions, null will be returned.
@@ -1390,37 +1373,37 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
    * @throws UnexpectedServerException If server implementation throws 
    *           undeclared exception to RPC server
-   * 
+   *
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>f</code> is invalid
    */
   // MapReduce也可见
   public BlockLocation[] getFileBlockLocations(final Path f, final long start,
-      final long len) throws AccessControlException, FileNotFoundException,
+                                               final long len) throws AccessControlException, FileNotFoundException,
       UnsupportedFileSystemException, IOException {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<BlockLocation[]>() {
       @Override
-      public BlockLocation[] next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public BlockLocation[] next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.getFileBlockLocations(p, start, len);
       }
     }.resolve(this, absF);
   }
-  
+
   /**
    * Returns a status object describing the use and capacity of the
    * file system denoted by the Parh argument p.
    * If the file system has multiple partitions, the
    * use and capacity of the partition pointed to by the specified
    * path is reflected.
-   * 
+   *
    * @param f Path for which status should be obtained. null means the
    * root partition of the default file system. 
    *
@@ -1431,7 +1414,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1446,8 +1429,8 @@ public class FileContext implements PathCapabilities {
     final Path absF = fixRelativePart(f);
     return new FSLinkResolver<FsStatus>() {
       @Override
-      public FsStatus next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FsStatus next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.getFsStatus(p);
       }
     }.resolve(this, absF);
@@ -1457,10 +1440,10 @@ public class FileContext implements PathCapabilities {
    * Creates a symbolic link to an existing file. An exception is thrown if 
    * the symlink exits, the user does not have permission to create symlink,
    * or the underlying file system does not support symlinks.
-   * 
+   *
    * Symlink permissions are ignored, access to a symlink is determined by
    * the permissions of the symlink target.
-   * 
+   *
    * Symlinks in paths leading up to the final path component are resolved 
    * transparently. If the final path component refers to a symlink some 
    * functions operate on the symlink itself, these are:
@@ -1477,46 +1460,46 @@ public class FileContext implements PathCapabilities {
    * These are: open, setReplication, setOwner, setTimes, setWorkingDirectory,
    * setPermission, getFileChecksum, setVerifyChecksum, getFileBlockLocations,
    * getFsStatus, getFileStatus, exists, and listStatus.
-   * 
+   *
    * Symlink targets are stored as given to createSymlink, assuming the 
    * underlying file system is capable of storing a fully qualified URI.
    * Dangling symlinks are permitted. FileContext supports four types of 
    * symlink targets, and resolves them as follows
    * <pre>
    * Given a path referring to a symlink of form:
-   * 
+   *
    *   {@literal <---}X{@literal --->}
    *   fs://host/A/B/link 
    *   {@literal <-----}Y{@literal ----->}
-   * 
+   *
    * In this path X is the scheme and authority that identify the file system,
    * and Y is the path leading up to the final path component "link". If Y is
    * a symlink  itself then let Y' be the target of Y and X' be the scheme and
    * authority of Y'. Symlink targets may:
-   * 
+   *
    * 1. Fully qualified URIs
-   * 
+   *
    * fs://hostX/A/B/file  Resolved according to the target file system.
-   * 
+   *
    * 2. Partially qualified URIs (eg scheme but no host)
-   * 
+   *
    * fs:///A/B/file  Resolved according to the target file system. Eg resolving
    *                 a symlink to hdfs:///A results in an exception because
    *                 HDFS URIs must be fully qualified, while a symlink to 
    *                 file:///A will not since Hadoop's local file systems 
    *                 require partially qualified URIs.
-   * 
+   *
    * 3. Relative paths
-   * 
+   *
    * path  Resolves to [Y'][path]. Eg if Y resolves to hdfs://host/A and path 
    *       is "../B/file" then [Y'][path] is hdfs://host/B/file
-   * 
+   *
    * 4. Absolute paths
-   * 
+   *
    * path  Resolves to [X'][path]. Eg if Y resolves hdfs://host/A/B and path
    *       is "/file" then [X][path] is hdfs://host/file
    * </pre>
-   * 
+   *
    * @param target the target of the symbolic link
    * @param link the path to be created that points to target
    * @param createParent if true then missing parent dirs are created if 
@@ -1534,28 +1517,28 @@ public class FileContext implements PathCapabilities {
    */
   @SuppressWarnings("deprecation")
   public void createSymlink(final Path target, final Path link,
-      final boolean createParent) throws AccessControlException,
+                            final boolean createParent) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
-      ParentNotDirectoryException, UnsupportedFileSystemException, 
-      IOException { 
+      ParentNotDirectoryException, UnsupportedFileSystemException,
+      IOException {
     if (!FileSystem.areSymlinksEnabled()) {
       throw new UnsupportedOperationException("Symlinks not supported");
     }
     final Path nonRelLink = fixRelativePart(link);
     new FSLinkResolver<Void>() {
       @Override
-      public Void next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Void next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         fs.createSymlink(target, p, createParent);
         return null;
       }
     }.resolve(this, nonRelLink);
   }
-  
+
   /**
    * List the statuses of the files/directories in the given path if the path is
    * a directory.
-   * 
+   *
    * @param f is the path
    *
    * @return an iterator that traverses statuses of the files/directories 
@@ -1566,7 +1549,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1580,8 +1563,8 @@ public class FileContext implements PathCapabilities {
     return new FSLinkResolver<RemoteIterator<FileStatus>>() {
       @Override
       public RemoteIterator<FileStatus> next(
-          final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+          final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.listStatusIterator(p);
       }
     }.resolve(this, absF);
@@ -1593,23 +1576,23 @@ public class FileContext implements PathCapabilities {
    * @throws IOException
    */
   public RemoteIterator<Path> listCorruptFileBlocks(Path path)
-    throws IOException {
+      throws IOException {
     final Path absF = fixRelativePart(path);
     return new FSLinkResolver<RemoteIterator<Path>>() {
       @Override
       public RemoteIterator<Path> next(final AbstractFileSystem fs,
-                                       final Path p) 
-        throws IOException, UnresolvedLinkException {
+                                       final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.listCorruptFileBlocks(p);
       }
     }.resolve(this, absF);
   }
-  
+
   /**
    * List the statuses of the files/directories in the given path if the path is
    * a directory. 
    * Return the file's status and block locations If the path is a file.
-   * 
+   *
    * If a returned status is a file, it contains the file's block locations.
    *
    * @param f is the path
@@ -1625,7 +1608,7 @@ public class FileContext implements PathCapabilities {
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1640,8 +1623,8 @@ public class FileContext implements PathCapabilities {
     return new FSLinkResolver<RemoteIterator<LocatedFileStatus>>() {
       @Override
       public RemoteIterator<LocatedFileStatus> next(
-          final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+          final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.listLocatedStatus(p);
       }
     }.resolve(this, absF);
@@ -1649,16 +1632,16 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Mark a path to be deleted on JVM shutdown.
-   * 
+   *
    * @param f the existing path to delete.
    *
-   * @return  true if deleteOnExit is successful, otherwise false.
+   * @return true if deleteOnExit is successful, otherwise false.
    *
    * @throws AccessControlException If access is denied
    * @throws UnsupportedFileSystemException If file system for <code>f</code> is
    *           not supported
    * @throws IOException If an I/O error occurred
-   * 
+   *
    * Exceptions applicable to file systems accessed over RPC:
    * @throws RpcClientException If an exception occurred in the RPC client
    * @throws RpcServerException If an exception occurred in the RPC server
@@ -1674,7 +1657,7 @@ public class FileContext implements PathCapabilities {
       if (DELETE_ON_EXIT.isEmpty()) {
         ShutdownHookManager.get().addShutdownHook(FINALIZER, SHUTDOWN_HOOK_PRIORITY);
       }
-      
+
       Set<Path> set = DELETE_ON_EXIT.get(this);
       if (set == null) {
         set = new TreeSet<Path>();
@@ -1684,13 +1667,14 @@ public class FileContext implements PathCapabilities {
     }
     return true;
   }
-  
+
   private final Util util;
+
   public Util util() {
     return util;
   }
-  
-  
+
+
   /**
    * Utility/library methods built over the basic FileContext methods.
    * Since this are library functions, the oprtation are not atomic
@@ -1708,7 +1692,7 @@ public class FileContext implements PathCapabilities {
      * @throws IOException If an I/O error occurred
      * @throws UnsupportedFileSystemException If file system for <code>f</code> is
      *           not supported
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -1716,7 +1700,7 @@ public class FileContext implements PathCapabilities {
      *           undeclared exception to RPC server
      */
     public boolean exists(final Path f) throws AccessControlException,
-      UnsupportedFileSystemException, IOException {
+        UnsupportedFileSystemException, IOException {
       try {
         FileStatus fs = FileContext.this.getFileStatus(f);
         assert fs != null;
@@ -1725,7 +1709,7 @@ public class FileContext implements PathCapabilities {
         return false;
       }
     }
-    
+
     /**
      * Return the {@link ContentSummary} of path f.
      * @param f path
@@ -1737,7 +1721,7 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for 
      *         <code>f</code> is not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -1756,13 +1740,13 @@ public class FileContext implements PathCapabilities {
       }
       long[] summary = {0, 0, 1};
       RemoteIterator<FileStatus> statusIterator =
-        FileContext.this.listStatus(f);
-      while(statusIterator.hasNext()) {
+          FileContext.this.listStatus(f);
+      while (statusIterator.hasNext()) {
         FileStatus s = statusIterator.next();
         long length = s.getLen();
         ContentSummary c = s.isDirectory() ? getContentSummary(s.getPath()) :
             new ContentSummary.Builder().length(length).fileCount(1).
-            directoryCount(0).spaceConsumed(length).build();
+                directoryCount(0).spaceConsumed(length).build();
         summary[0] += c.getLength();
         summary[1] += c.getFileCount();
         summary[2] += c.getDirectoryCount();
@@ -1771,7 +1755,7 @@ public class FileContext implements PathCapabilities {
           fileCount(summary[1]).directoryCount(summary[2]).
           spaceConsumed(summary[0]).build();
     }
-    
+
     /**
      * See {@link #listStatus(Path[], PathFilter)}
      */
@@ -1779,11 +1763,11 @@ public class FileContext implements PathCapabilities {
         FileNotFoundException, IOException {
       return listStatus(files, DEFAULT_FILTER);
     }
-     
+
     /**
      * Filter files/directories in the given path using the user-supplied path
      * filter.
-     * 
+     *
      * @param f is the path name
      * @param filter is the user-supplied path filter
      *
@@ -1795,7 +1779,7 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for 
      *         <code>pathPattern</code> is not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -1809,11 +1793,11 @@ public class FileContext implements PathCapabilities {
       listStatus(results, f, filter);
       return results.toArray(new FileStatus[results.size()]);
     }
-    
+
     /**
      * Filter files/directories in the given list of paths using user-supplied
      * path filter.
-     * 
+     *
      * @param files is a list of paths
      * @param filter is the filter
      *
@@ -1824,7 +1808,7 @@ public class FileContext implements PathCapabilities {
      * @throws FileNotFoundException If a file in <code>files</code> does not 
      *           exist
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -1839,13 +1823,13 @@ public class FileContext implements PathCapabilities {
       }
       return results.toArray(new FileStatus[results.size()]);
     }
-  
+
     /*
      * Filter files/directories in the given path using the user-supplied path
      * filter. Results are added to the given array <code>results</code>.
      */
     private void listStatus(ArrayList<FileStatus> results, Path f,
-        PathFilter filter) throws AccessControlException,
+                            PathFilter filter) throws AccessControlException,
         FileNotFoundException, IOException {
       FileStatus[] listing = listStatus(f);
       if (listing != null) {
@@ -1860,7 +1844,7 @@ public class FileContext implements PathCapabilities {
     /**
      * List the statuses of the files/directories in the given path 
      * if the path is a directory.
-     * 
+     *
      * @param f is the path
      *
      * @return an array that contains statuses of the files/directories 
@@ -1871,7 +1855,7 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for <code>f</code> is
      *           not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -1884,8 +1868,8 @@ public class FileContext implements PathCapabilities {
       final Path absF = fixRelativePart(f);
       return new FSLinkResolver<FileStatus[]>() {
         @Override
-        public FileStatus[] next(final AbstractFileSystem fs, final Path p) 
-          throws IOException, UnresolvedLinkException {
+        public FileStatus[] next(final AbstractFileSystem fs, final Path p)
+            throws IOException, UnresolvedLinkException {
           return fs.listStatus(p);
         }
       }.resolve(FileContext.this, absF);
@@ -1893,14 +1877,14 @@ public class FileContext implements PathCapabilities {
 
     /**
      * List the statuses and block locations of the files in the given path.
-     * 
+     *
      * If the path is a directory, 
      *   if recursive is false, returns files in the directory;
      *   if recursive is true, return files in the subtree rooted at the path.
      *   The subtree is traversed in the depth-first order.
      * If the path is a file, return the file's status and block locations.
      * Files across symbolic links are also returned.
-     * 
+     *
      * @param f is the path
      * @param recursive if the subdirectories need to be traversed recursively
      *
@@ -1914,7 +1898,7 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for <code>f</code>
      *         is not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -1923,11 +1907,11 @@ public class FileContext implements PathCapabilities {
      */
     public RemoteIterator<LocatedFileStatus> listFiles(
         final Path f, final boolean recursive) throws AccessControlException,
-        FileNotFoundException, UnsupportedFileSystemException, 
+        FileNotFoundException, UnsupportedFileSystemException,
         IOException {
       return new RemoteIterator<LocatedFileStatus>() {
-        private Stack<RemoteIterator<LocatedFileStatus>> itors = 
-          new Stack<RemoteIterator<LocatedFileStatus>>();
+        private Stack<RemoteIterator<LocatedFileStatus>> itors =
+            new Stack<RemoteIterator<LocatedFileStatus>>();
         RemoteIterator<LocatedFileStatus> curItor = listLocatedStatus(f);
         LocatedFileStatus curFile;
 
@@ -1973,7 +1957,7 @@ public class FileContext implements PathCapabilities {
          * @throws IOException for all other IO errors
          */
         private void handleFileStat(LocatedFileStatus stat)
-        throws IOException {
+            throws IOException {
           if (stat.isFile()) { // file
             curFile = stat;
           } else if (stat.isSymlink()) { // symbolic link
@@ -2009,7 +1993,7 @@ public class FileContext implements PathCapabilities {
             LocatedFileStatus result = curFile;
             curFile = null;
             return result;
-          } 
+          }
           throw new java.util.NoSuchElementException("No more entry in " + f);
         }
       };
@@ -2018,7 +2002,7 @@ public class FileContext implements PathCapabilities {
     /**
      * <p>Return all the files that match filePattern and are not checksum
      * files. Results are sorted by their names.
-     * 
+     *
      * <p>
      * A filename pattern is composed of <i>regular</i> characters and
      * <i>special pattern matching</i> characters, which are:
@@ -2057,7 +2041,7 @@ public class FileContext implements PathCapabilities {
      *    <p>
      *    <dt> <tt> {ab,cd} </tt>
      *    <dd> Matches a string from the string set <tt>{<i>ab, cd</i>} </tt>
-     *    
+     *
      *    <p>
      *    <dt> <tt> {ab,c{de,fh}} </tt>
      *    <dd> Matches a string from string set <tt>{<i>ab, cde, cfh</i>}</tt>
@@ -2074,7 +2058,7 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for 
      *         <code>pathPattern</code> is not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -2086,14 +2070,14 @@ public class FileContext implements PathCapabilities {
         IOException {
       return new Globber(FileContext.this, pathPattern, DEFAULT_FILTER).glob();
     }
-    
+
     /**
      * Return an array of FileStatus objects whose path names match pathPattern
      * and is accepted by the user-supplied path filter. Results are sorted by
      * their path names.
      * Return null if pathPattern has no glob and the path does not exist.
      * Return an empty array if pathPattern has a glob and no path matches it. 
-     * 
+     *
      * @param pathPattern glob specifying the path pattern
      * @param filter user-supplied path filter
      *
@@ -2103,7 +2087,7 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for 
      *         <code>pathPattern</code> is not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
@@ -2111,7 +2095,7 @@ public class FileContext implements PathCapabilities {
      *           undeclared exception to RPC server
      */
     public FileStatus[] globStatus(final Path pathPattern,
-        final PathFilter filter) throws AccessControlException,
+                                   final PathFilter filter) throws AccessControlException,
         UnsupportedFileSystemException, IOException {
       return new Globber(FileContext.this, pathPattern, filter).glob();
     }
@@ -2126,7 +2110,7 @@ public class FileContext implements PathCapabilities {
         UnsupportedFileSystemException, IOException {
       return copy(src, dst, false, false);
     }
-    
+
     /**
      * Copy from src to dst, optionally deleting src and overwriting dst.
      * @param src
@@ -2145,20 +2129,20 @@ public class FileContext implements PathCapabilities {
      * @throws UnsupportedFileSystemException If file system for 
      *         <code>src</code> or <code>dst</code> is not supported
      * @throws IOException If an I/O error occurred
-     * 
+     *
      * Exceptions applicable to file systems accessed over RPC:
      * @throws RpcClientException If an exception occurred in the RPC client
      * @throws RpcServerException If an exception occurred in the RPC server
      * @throws UnexpectedServerException If server implementation throws 
      *           undeclared exception to RPC server
-     * 
+     *
      * RuntimeExceptions:
      * @throws InvalidPathException If path <code>dst</code> is invalid
      */
     public boolean copy(final Path src, final Path dst, boolean deleteSource,
-        boolean overwrite) throws AccessControlException,
+                        boolean overwrite) throws AccessControlException,
         FileAlreadyExistsException, FileNotFoundException,
-        ParentNotDirectoryException, UnsupportedFileSystemException, 
+        ParentNotDirectoryException, UnsupportedFileSystemException,
         IOException {
       src.checkNotSchemeWithRelative();
       dst.checkNotSchemeWithRelative();
@@ -2221,13 +2205,13 @@ public class FileContext implements PathCapabilities {
       // dst does not exist - OK to copy.
     }
   }
-   
+
   //
   // If the destination is a subdirectory of the source, then
   // generate exception
   //
   private static void checkDependencies(Path qualSrc, Path qualDst)
-    throws IOException {
+      throws IOException {
     if (isSameFS(qualSrc, qualDst)) {
       String srcq = qualSrc.toString() + Path.SEPARATOR;
       String dstq = qualDst.toString() + Path.SEPARATOR;
@@ -2236,12 +2220,12 @@ public class FileContext implements PathCapabilities {
           throw new IOException("Cannot copy " + qualSrc + " to itself.");
         } else {
           throw new IOException("Cannot copy " + qualSrc +
-                             " to its subdirectory " + qualDst);
+              " to its subdirectory " + qualDst);
         }
       }
     }
   }
-  
+
   /**
    * Are qualSrc and qualDst of the same file system?
    * @param qualPath1 - fully qualified path
@@ -2251,9 +2235,9 @@ public class FileContext implements PathCapabilities {
   private static boolean isSameFS(Path qualPath1, Path qualPath2) {
     URI srcUri = qualPath1.toUri();
     URI dstUri = qualPath2.toUri();
-    return (srcUri.getScheme().equals(dstUri.getScheme()) && 
+    return (srcUri.getScheme().equals(dstUri.getScheme()) &&
         !(srcUri.getAuthority() != null && dstUri.getAuthority() != null && srcUri
-        .getAuthority().equals(dstUri.getAuthority())));
+            .getAuthority().equals(dstUri.getAuthority())));
   }
 
   /**
@@ -2274,8 +2258,8 @@ public class FileContext implements PathCapabilities {
       UnresolvedLinkException, AccessControlException, IOException {
     return new FSLinkResolver<Path>() {
       @Override
-      public Path next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public Path next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.resolvePath(p);
       }
     }.resolve(this, f);
@@ -2290,8 +2274,8 @@ public class FileContext implements PathCapabilities {
   protected Path resolveIntermediate(final Path f) throws IOException {
     return new FSLinkResolver<FileStatus>() {
       @Override
-      public FileStatus next(final AbstractFileSystem fs, final Path p) 
-        throws IOException, UnresolvedLinkException {
+      public FileStatus next(final AbstractFileSystem fs, final Path p)
+          throws IOException, UnresolvedLinkException {
         return fs.getFileLinkStatus(p);
       }
     }.resolve(this, f).getPath();
@@ -2300,7 +2284,7 @@ public class FileContext implements PathCapabilities {
   /**
    * Returns the list of AbstractFileSystems accessed in the path. The list may
    * contain more than one AbstractFileSystems objects in case of symlinks.
-   * 
+   *
    * @param f
    *          Path which needs to be resolved
    * @return List of AbstractFileSystems accessed in the path
@@ -2309,8 +2293,8 @@ public class FileContext implements PathCapabilities {
   Set<AbstractFileSystem> resolveAbstractFileSystems(final Path f)
       throws IOException {
     final Path absF = fixRelativePart(f);
-    final HashSet<AbstractFileSystem> result 
-      = new HashSet<AbstractFileSystem>();
+    final HashSet<AbstractFileSystem> result
+        = new HashSet<AbstractFileSystem>();
     new FSLinkResolver<Void>() {
       @Override
       public Void next(final AbstractFileSystem fs, final Path p)
@@ -2325,7 +2309,7 @@ public class FileContext implements PathCapabilities {
 
   /**
    * Get the statistics for a particular file system
-   * 
+   *
    * @param uri
    *          the uri to lookup the statistics. Only scheme and authority part
    *          of the uri are used as the key to store and lookup.
@@ -2358,7 +2342,7 @@ public class FileContext implements PathCapabilities {
   public static Map<URI, Statistics> getAllStatistics() {
     return AbstractFileSystem.getAllStatistics();
   }
-  
+
   /**
    * Get delegation tokens for the file systems accessed for a given
    * path.
@@ -2371,7 +2355,7 @@ public class FileContext implements PathCapabilities {
   public List<Token<?>> getDelegationTokens(
       Path p, String renewer) throws IOException {
     Set<AbstractFileSystem> afsSet = resolveAbstractFileSystems(p);
-    List<Token<?>> tokenList = 
+    List<Token<?>> tokenList =
         new ArrayList<Token<?>>();
     for (AbstractFileSystem afs : afsSet) {
       List<Token<?>> afsTokens = afs.getDelegationTokens(renewer);
@@ -2539,7 +2523,7 @@ public class FileContext implements PathCapabilities {
    * @throws IOException
    */
   public void setXAttr(Path path, final String name, final byte[] value,
-      final EnumSet<XAttrSetFlag> flag) throws IOException {
+                       final EnumSet<XAttrSetFlag> flag) throws IOException {
     final Path absF = fixRelativePart(path);
     new FSLinkResolver<Void>() {
       @Override
@@ -2730,7 +2714,7 @@ public class FileContext implements PathCapabilities {
    *           undeclared exception to RPC server
    */
   public void renameSnapshot(final Path path, final String snapshotOldName,
-      final String snapshotNewName) throws IOException {
+                             final String snapshotNewName) throws IOException {
     final Path absF = fixRelativePart(path);
     new FSLinkResolver<Void>() {
       @Override
@@ -2837,7 +2821,7 @@ public class FileContext implements PathCapabilities {
     return new FSLinkResolver<BlockStoragePolicySpi>() {
       @Override
       public BlockStoragePolicySpi next(final AbstractFileSystem fs,
-          final Path p)
+                                        final Path p)
           throws IOException {
         return fs.getStoragePolicy(p);
       }

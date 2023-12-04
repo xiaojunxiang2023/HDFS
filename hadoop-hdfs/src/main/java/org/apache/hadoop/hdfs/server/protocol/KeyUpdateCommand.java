@@ -1,5 +1,7 @@
 package org.apache.hadoop.hdfs.server.protocol;
+
 import org.apache.hadoop.hdfs.security.token.block.ExportedBlockKeys;
+
 public class KeyUpdateCommand extends DatanodeCommand {
   private final ExportedBlockKeys keys;
 

@@ -1,9 +1,10 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.conf.Configuration;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandler;
-import org.apache.hadoop.conf.Configuration;
 
 /**
  * URLStream handler relying on FileSystem and on a given Configuration to

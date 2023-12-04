@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs.BlockReportReplica;
@@ -6,17 +7,12 @@ import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.RollingUpgradeSt
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.StartupOption;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.Phase;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress;
+import org.apache.hadoop.hdfs.server.namenode.startupprogress.*;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress.Counter;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.Status;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.Step;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.StepType;
 import org.apache.hadoop.net.NetworkTopology;
-import org.apache.hadoop.util.Daemon;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,14 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REPL_QUEUE_THRESHOLD_PCT_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_SAFEMODE_EXTENSION_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_SAFEMODE_EXTENSION_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_SAFEMODE_MIN_DATANODES_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_SAFEMODE_MIN_DATANODES_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_SAFEMODE_THRESHOLD_PCT_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_SAFEMODE_THRESHOLD_PCT_KEY;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
 import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
@@ -48,8 +37,10 @@ import static org.apache.hadoop.util.Time.monotonicNow;
  */
 class BlockManagerSafeMode {
   enum BMSafeModeStatus {
-    PENDING_THRESHOLD, /** Pending on more safe blocks or live datanode. */
-    EXTENSION,         /** In extension period. */
+    PENDING_THRESHOLD,
+    /** Pending on more safe blocks or live datanode. */
+    EXTENSION,
+    /** In extension period. */
     OFF                /** Safe mode is off. */
   }
 
@@ -102,7 +93,7 @@ class BlockManagerSafeMode {
   private final boolean inRollBack;
 
   BlockManagerSafeMode(BlockManager blockManager, Namesystem namesystem,
-      boolean haEnabled, Configuration conf) {
+                       boolean haEnabled, Configuration conf) {
     this.blockManager = blockManager;
     this.namesystem = namesystem;
     this.haEnabled = haEnabled;
@@ -186,31 +177,31 @@ class BlockManagerSafeMode {
     }
 
     switch (status) {
-    case PENDING_THRESHOLD:
-      if (areThresholdsMet()) {
-        if (blockTotal > 0 && extension > 0) {
-          // PENDING_THRESHOLD -> EXTENSION
-          status = BMSafeModeStatus.EXTENSION;
-          reachedTime.set(monotonicNow());
-          smmthread.start();
-          initializeReplQueuesIfNecessary();
-          reportStatus("STATE* Safe mode extension entered.", true);
+      case PENDING_THRESHOLD:
+        if (areThresholdsMet()) {
+          if (blockTotal > 0 && extension > 0) {
+            // PENDING_THRESHOLD -> EXTENSION
+            status = BMSafeModeStatus.EXTENSION;
+            reachedTime.set(monotonicNow());
+            smmthread.start();
+            initializeReplQueuesIfNecessary();
+            reportStatus("STATE* Safe mode extension entered.", true);
+          } else {
+            // PENDING_THRESHOLD -> OFF
+            leaveSafeMode(false);
+          }
         } else {
-          // PENDING_THRESHOLD -> OFF
-          leaveSafeMode(false);
+          initializeReplQueuesIfNecessary();
+          reportStatus("STATE* Safe mode ON.", false);
         }
-      } else {
-        initializeReplQueuesIfNecessary();
+        break;
+      case EXTENSION:
         reportStatus("STATE* Safe mode ON.", false);
-      }
-      break;
-    case EXTENSION:
-      reportStatus("STATE* Safe mode ON.", false);
-      break;
-    case OFF:
-      break;
-    default:
-      assert false : "Non-recognized block manager safe mode status: " + status;
+        break;
+      case OFF:
+        break;
+      default:
+        assert false : "Non-recognized block manager safe mode status: " + status;
     }
   }
 
@@ -228,7 +219,7 @@ class BlockManagerSafeMode {
 
     long newBlockTotal;
     synchronized (this) {
-      LOG.debug("Adjusting block totals from {}/{} to {}/{}",  blockSafe,
+      LOG.debug("Adjusting block totals from {}/{} to {}/{}", blockSafe,
           blockTotal, blockSafe + deltaSafe, blockTotal + deltaTotal);
       assert blockSafe + deltaSafe >= 0 : "Can't reduce blockSafe " +
           blockSafe + " by " + deltaSafe + ": would be negative";
@@ -316,19 +307,19 @@ class BlockManagerSafeMode {
     }
 
     final String turnOffTip = "Safe mode will be turned off automatically ";
-    switch(status) {
-    case PENDING_THRESHOLD:
-      msg += turnOffTip + "once the thresholds have been reached.";
-      break;
-    case EXTENSION:
-      msg += "In safe mode extension. "+ turnOffTip + "in " +
-          timeToLeaveExtension() / 1000 + " seconds.";
-      break;
-    case OFF:
-      msg += turnOffTip + "soon.";
-      break;
-    default:
-      assert false : "Non-recognized block manager safe mode status: " + status;
+    switch (status) {
+      case PENDING_THRESHOLD:
+        msg += turnOffTip + "once the thresholds have been reached.";
+        break;
+      case EXTENSION:
+        msg += "In safe mode extension. " + turnOffTip + "in " +
+            timeToLeaveExtension() / 1000 + " seconds.";
+        break;
+      case OFF:
+        msg += turnOffTip + "soon.";
+        break;
+      default:
+        assert false : "Non-recognized block manager safe mode status: " + status;
     }
     return msg;
   }
@@ -410,14 +401,14 @@ class BlockManagerSafeMode {
    *                    BlockInfoContiguous or a BlockInfoStriped
    */
   synchronized void incrementSafeBlockCount(int storageNum,
-      BlockInfo storedBlock) {
+                                            BlockInfo storedBlock) {
     assert namesystem.hasWriteLock();
     if (status == BMSafeModeStatus.OFF) {
       return;
     }
 
     final int safeNumberOfNodes = storedBlock.isStriped() ?
-        ((BlockInfoStriped)storedBlock).getRealDataBlockNum() : safeReplication;
+        ((BlockInfoStriped) storedBlock).getRealDataBlockNum() : safeReplication;
     if (storageNum == safeNumberOfNodes) {
       this.blockSafe++;
 
@@ -449,7 +440,7 @@ class BlockManagerSafeMode {
     }
 
     final int safeNumberOfNodes = b.isStriped() ?
-        ((BlockInfoStriped)b).getRealDataBlockNum() : safeReplication;
+        ((BlockInfoStriped) b).getRealDataBlockNum() : safeReplication;
     BlockInfo storedBlock = blockManager.getStoredBlock(b);
     if (storedBlock.isComplete() &&
         blockManager.countNodes(b).liveReplicas() == safeNumberOfNodes - 1) {
@@ -560,7 +551,7 @@ class BlockManagerSafeMode {
       boolean isDatanodeThresholdMet = true;
       if (isBlockThresholdMet && datanodeThreshold > 0) {
         int datanodeNum = blockManager.getDatanodeManager().
-                getNumLiveDataNodes();
+            getNumLiveDataNodes();
         isDatanodeThresholdMet = (datanodeNum >= datanodeThreshold);
       }
       return isBlockThresholdMet && isDatanodeThresholdMet;
@@ -583,8 +574,8 @@ class BlockManagerSafeMode {
       if (blockTotal != activeBlocks &&
           !(blockSafe >= 0 && blockSafe <= blockTotal)) {
         LOG.warn("SafeMode is in inconsistent filesystem state. " +
-            "BlockManagerSafeMode data: blockTotal={}, blockSafe={}; " +
-            "BlockManager data: activeBlocks={}",
+                "BlockManagerSafeMode data: blockTotal={}, blockSafe={}; " +
+                "BlockManager data: activeBlocks={}",
             blockTotal, blockSafe, activeBlocks);
       }
     }
@@ -596,7 +587,7 @@ class BlockManagerSafeMode {
   private void reportStatus(String msg, boolean rightNow) {
     assert namesystem.hasWriteLock();
     long curTime = monotonicNow();
-    if(!rightNow && (curTime - lastStatusReport < 20 * 1000)) {
+    if (!rightNow && (curTime - lastStatusReport < 20 * 1000)) {
       return;
     }
     NameNode.stateChangeLog.info(msg + " \n" + getSafeModeTip());

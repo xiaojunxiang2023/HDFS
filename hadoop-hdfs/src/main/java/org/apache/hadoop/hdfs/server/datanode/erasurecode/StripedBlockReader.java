@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ChecksumException;
 import org.apache.hadoop.fs.StorageType;
@@ -95,15 +96,15 @@ class StripedBlockReader {
       Token<BlockTokenIdentifier> blockToken = datanode.getBlockAccessToken(
           block, EnumSet.of(BlockTokenIdentifier.AccessMode.READ),
           StorageType.EMPTY_ARRAY, new String[0]);
-        /*
-         * This can be further improved if the replica is local, then we can
-         * read directly from DN and need to check the replica is FINALIZED
-         * state, notice we should not use short-circuit local read which
-         * requires config for domain-socket in UNIX or legacy config in
-         * Windows. The network distance value isn't used for this scenario.
-         *
-         * TODO: add proper tracer
-         */
+      /*
+       * This can be further improved if the replica is local, then we can
+       * read directly from DN and need to check the replica is FINALIZED
+       * state, notice we should not use short-circuit local read which
+       * requires config for domain-socket in UNIX or legacy config in
+       * Windows. The network distance value isn't used for this scenario.
+       *
+       * TODO: add proper tracer
+       */
       peer = newConnectedPeer(block, dnAddr, blockToken, source);
       if (peer.isLocal()) {
         this.isLocal = true;
@@ -145,7 +146,7 @@ class StripedBlockReader {
   }
 
   Callable<BlockReadStats> readFromBlock(final int length,
-                               final CorruptedBlocks corruptedBlocks) {
+                                         final CorruptedBlocks corruptedBlocks) {
     return new Callable<BlockReadStats>() {
 
       @Override

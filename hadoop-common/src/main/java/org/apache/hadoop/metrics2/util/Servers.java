@@ -1,10 +1,10 @@
 package org.apache.hadoop.metrics2.util;
 
+import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
 import java.net.InetSocketAddress;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.net.NetUtils;
 
 /**
  * Helpers to handle server addresses
@@ -13,7 +13,8 @@ public class Servers {
   /**
    * This class is not intended to be instantiated
    */
-  private Servers() {}
+  private Servers() {
+  }
 
   /**
    * Parses a space and/or comma separated sequence of server specifications
@@ -28,8 +29,7 @@ public class Servers {
     List<InetSocketAddress> result = Lists.newArrayList();
     if (specs == null) {
       result.add(new InetSocketAddress("localhost", defaultPort));
-    }
-    else {
+    } else {
       String[] specStrings = specs.split("[ ,]+");
       for (String specString : specStrings) {
         result.add(NetUtils.createSocketAddr(specString, defaultPort));

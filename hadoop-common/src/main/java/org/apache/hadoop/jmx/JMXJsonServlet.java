@@ -6,18 +6,7 @@ import org.apache.hadoop.http.HttpServer2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
-import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanException;
-import javax.management.MBeanInfo;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
-import javax.management.RuntimeErrorException;
-import javax.management.RuntimeMBeanException;
+import javax.management.*;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.TabularData;
@@ -37,6 +26,7 @@ import java.util.Set;
  * been rewritten to be read only and to output in a JSON format so it is not
  * really that close to the original.
  */
+
 /**
  * Provides Read only web access to JMX.
  * <p>
@@ -81,19 +71,19 @@ import java.util.Set;
  *  <p>
  *  The servlet attempts to convert the the JMXBeans into JSON. Each
  *  bean's attributes will be converted to a JSON object member.
- *  
+ *
  *  If the attribute is a boolean, a number, a string, or an array
  *  it will be converted to the JSON equivalent. 
- *  
+ *
  *  If the value is a {@link CompositeData} then it will be converted
  *  to a JSON object with the keys as the name of the JSON member and
  *  the value is converted following these same rules.
- *  
+ *
  *  If the value is a {@link TabularData} then it will be converted
  *  to an array of the {@link CompositeData} elements that it contains.
- *  
+ *
  *  All other objects will be converted to a string and output as such.
- *  
+ *
  *  The bean's name and modelerType will be returned for all beans.
  *
  */
@@ -116,6 +106,7 @@ public class JMXJsonServlet extends HttpServlet {
    * Json Factory to create Json generators for write objects in json format
    */
   protected transient JsonFactory jsonFactory;
+
   /**
    * Initialize this servlet.
    */
@@ -126,8 +117,8 @@ public class JMXJsonServlet extends HttpServlet {
     jsonFactory = new JsonFactory();
   }
 
-  protected boolean isInstrumentationAccessAllowed(HttpServletRequest request, 
-      HttpServletResponse response) throws IOException {
+  protected boolean isInstrumentationAccessAllowed(HttpServletRequest request,
+                                                   HttpServletResponse response) throws IOException {
     return HttpServer2.isInstrumentationAccessAllowed(getServletContext(),
         request, response);
   }
@@ -143,7 +134,7 @@ public class JMXJsonServlet extends HttpServlet {
 
   /**
    * Process a GET request for the specified resource.
-   * 
+   *
    * @param request
    *          The servlet request we are processing
    * @param response
@@ -159,7 +150,7 @@ public class JMXJsonServlet extends HttpServlet {
       PrintWriter writer = null;
       try {
         writer = response.getWriter();
- 
+
         response.setContentType("application/json; charset=utf8");
         response.setHeader(ACCESS_CONTROL_ALLOW_METHODS, "GET");
         response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
@@ -209,10 +200,10 @@ public class JMXJsonServlet extends HttpServlet {
   }
 
   // --------------------------------------------------------- Private Methods
-  private void listBeans(JsonGenerator jg, ObjectName qry, String attribute, 
-      HttpServletResponse response) 
-  throws IOException {
-    LOG.debug("Listing beans for "+qry);
+  private void listBeans(JsonGenerator jg, ObjectName qry, String attribute,
+                         HttpServletResponse response)
+      throws IOException {
+    LOG.debug("Listing beans for " + qry);
     Set<ObjectName> names = null;
     names = mBeanServer.queryNames(qry, null);
 
@@ -233,7 +224,7 @@ public class JMXJsonServlet extends HttpServlet {
             prs = "modelerType";
             code = (String) mBeanServer.getAttribute(oname, prs);
           }
-          if (attribute!=null) {
+          if (attribute != null) {
             prs = attribute;
             attributeinfo = mBeanServer.getAttribute(oname, prs);
           }
@@ -253,7 +244,7 @@ public class JMXJsonServlet extends HttpServlet {
           // the same as MBeanException
           LOG.error("getting attribute " + prs + " of " + oname
               + " threw an exception", e);
-        } catch ( ReflectionException e ) {
+        } catch (ReflectionException e) {
           // This happens when the code inside the JMX bean (setter?? from the
           // java docs) threw an exception, so log it and fall back on the 
           // class name
@@ -263,13 +254,13 @@ public class JMXJsonServlet extends HttpServlet {
       } catch (InstanceNotFoundException e) {
         //Ignored for some reason the bean was not found so don't output it
         continue;
-      } catch ( IntrospectionException e ) {
+      } catch (IntrospectionException e) {
         // This is an internal error, something odd happened with reflection so
         // log it and don't output the bean.
         LOG.error("Problem while trying to process JMX query: " + qry
             + " with MBean " + oname, e);
         continue;
-      } catch ( ReflectionException e ) {
+      } catch (ReflectionException e) {
         // This happens when the code inside the JMX bean threw an exception, so
         // log it and don't output the bean.
         LOG.error("Problem while trying to process JMX query: " + qry
@@ -324,9 +315,9 @@ public class JMXJsonServlet extends HttpServlet {
       // UnsupportedOperationExceptions happen in the normal course of business,
       // so no need to log them as errors all the time.
       if (e.getCause() instanceof UnsupportedOperationException) {
-        LOG.debug("getting attribute "+attName+" of "+oname+" threw an exception", e);
+        LOG.debug("getting attribute " + attName + " of " + oname + " threw an exception", e);
       } else {
-        LOG.error("getting attribute "+attName+" of "+oname+" threw an exception", e);
+        LOG.error("getting attribute " + attName + " of " + oname + " threw an exception", e);
       }
       return;
     } catch (RuntimeErrorException e) {
@@ -343,17 +334,17 @@ public class JMXJsonServlet extends HttpServlet {
     } catch (MBeanException e) {
       //The code inside the attribute getter threw an exception so log it, and
       // skip outputting the attribute
-      LOG.error("getting attribute "+attName+" of "+oname+" threw an exception", e);
+      LOG.error("getting attribute " + attName + " of " + oname + " threw an exception", e);
       return;
     } catch (RuntimeException e) {
       //For some reason even with an MBeanException available to them Runtime exceptions
       //can still find their way through, so treat them the same as MBeanException
-      LOG.error("getting attribute "+attName+" of "+oname+" threw an exception", e);
+      LOG.error("getting attribute " + attName + " of " + oname + " threw an exception", e);
       return;
     } catch (ReflectionException e) {
       //This happens when the code inside the JMX bean (setter?? from the java docs)
       //threw an exception, so log it and skip outputting the attribute
-      LOG.error("getting attribute "+attName+" of "+oname+" threw an exception", e);
+      LOG.error("getting attribute " + attName + " of " + oname + " threw an exception", e);
       return;
     } catch (InstanceNotFoundException e) {
       //Ignored the mbean itself was not found, which should never happen because we
@@ -364,14 +355,14 @@ public class JMXJsonServlet extends HttpServlet {
 
     writeAttribute(jg, attName, value);
   }
-  
+
   private void writeAttribute(JsonGenerator jg, String attName, Object value) throws IOException {
     jg.writeFieldName(attName);
     writeObject(jg, value);
   }
-  
+
   private void writeObject(JsonGenerator jg, Object value) throws IOException {
-    if(value == null) {
+    if (value == null) {
       jg.writeNull();
     } else {
       Class<?> c = value.getClass();
@@ -383,25 +374,25 @@ public class JMXJsonServlet extends HttpServlet {
           writeObject(jg, item);
         }
         jg.writeEndArray();
-      } else if(value instanceof Number) {
-        Number n = (Number)value;
+      } else if (value instanceof Number) {
+        Number n = (Number) value;
         jg.writeNumber(n.toString());
-      } else if(value instanceof Boolean) {
-        Boolean b = (Boolean)value;
+      } else if (value instanceof Boolean) {
+        Boolean b = (Boolean) value;
         jg.writeBoolean(b);
-      } else if(value instanceof CompositeData) {
-        CompositeData cds = (CompositeData)value;
+      } else if (value instanceof CompositeData) {
+        CompositeData cds = (CompositeData) value;
         CompositeType comp = cds.getCompositeType();
         Set<String> keys = comp.keySet();
         jg.writeStartObject();
-        for(String key: keys) {
+        for (String key : keys) {
           writeAttribute(jg, key, cds.get(key));
         }
         jg.writeEndObject();
-      } else if(value instanceof TabularData) {
-        TabularData tds = (TabularData)value;
+      } else if (value instanceof TabularData) {
+        TabularData tds = (TabularData) value;
         jg.writeStartArray();
-        for(Object entry : tds.values()) {
+        for (Object entry : tds.values()) {
           writeObject(jg, entry);
         }
         jg.writeEndArray();

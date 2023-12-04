@@ -13,12 +13,8 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.command;
-
-import java.io.PrintStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.command;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -30,9 +26,13 @@ import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerDataNode
 import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolume;
 import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolumeSet;
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
+import java.io.PrintStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Executes the report command.
@@ -79,7 +79,7 @@ public class ReportCommand extends Command {
         "%s[%s:%d] - <%s>: %d volumes with node data density %.2f.";
     final String volumeFormat =
         "[%s: volume-%s] - %.2f used: %d/%d, %.2f free: %d/%d, "
-        + "isFailed: %s, isReadOnly: %s, isSkip: %s, isTransient: %s.";
+            + "isFailed: %s, isReadOnly: %s, isSkip: %s, isTransient: %s.";
 
     if (cmd.hasOption(DiskBalancerCLI.NODE)) {
       /*
@@ -98,7 +98,7 @@ public class ReportCommand extends Command {
   }
 
   private void handleTopReport(final CommandLine cmd, final TextStringBuilder result,
-      final String nodeFormat) throws IllegalArgumentException {
+                               final String nodeFormat) throws IllegalArgumentException {
     Collections.sort(getCluster().getNodes(), Collections.reverseOrder());
 
     /* extract value that identifies top X DataNode(s) */
@@ -118,7 +118,7 @@ public class ReportCommand extends Command {
     for (int i = 0; i < getTopNodes() && li.hasNext(); i++) {
       DiskBalancerDataNode dbdn = li.next();
       result.appendln(String.format(nodeFormat,
-          i+1,
+          i + 1,
           getTopNodes(),
           dbdn.getDataNodeName(),
           dbdn.getDataNodeIP(),
@@ -130,7 +130,7 @@ public class ReportCommand extends Command {
   }
 
   private void handleNodeReport(final CommandLine cmd, TextStringBuilder result,
-      final String nodeFormat, final String volumeFormat) throws Exception {
+                                final String nodeFormat, final String volumeFormat) throws Exception {
     String outputLine = "";
     /*
      * get value that identifies DataNode(s) from command line, it could be
@@ -147,7 +147,7 @@ public class ReportCommand extends Command {
        */
       outputLine = String.format(
           "Reporting volume information for DataNode(s). "
-          + "These DataNode(s) are parsed from '%s'.", nodeVal);
+              + "These DataNode(s) are parsed from '%s'.", nodeVal);
 
       recordOutput(result, outputLine);
 
@@ -174,7 +174,7 @@ public class ReportCommand extends Command {
    * Put node report lines to string buffer.
    */
   private void recordNodeReport(TextStringBuilder result, DiskBalancerDataNode dbdn,
-      final String nodeFormat, final String volumeFormat) throws Exception {
+                                final String nodeFormat, final String volumeFormat) throws Exception {
     final String trueStr = "True";
     final String falseStr = "False";
 
@@ -201,7 +201,7 @@ public class ReportCommand extends Command {
             vol.getFreeSpace(),
             vol.getCapacity(),
             vol.isFailed() ? trueStr : falseStr,
-            vol.isReadOnly() ? trueStr: falseStr,
+            vol.isReadOnly() ? trueStr : falseStr,
             vol.isSkip() ? trueStr : falseStr,
             vol.isTransient() ? trueStr : falseStr));
       }
@@ -228,7 +228,7 @@ public class ReportCommand extends Command {
 
     HelpFormatter helpFormatter = new HelpFormatter();
     helpFormatter.printHelp("hdfs diskbalancer -fs http://namenode.uri " +
-        "-report [options]",
+            "-report [options]",
         header, DiskBalancerCLI.getReportOptions(), footer);
   }
 }

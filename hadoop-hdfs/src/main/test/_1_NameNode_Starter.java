@@ -1,4 +1,3 @@
-
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.junit.Test;
 
@@ -8,12 +7,12 @@ import org.junit.Test;
  * @Description:
  */
 public class _1_NameNode_Starter {
-    @Test
-    public void startNameNode() throws Exception {
+  @Test
+  public void startNameNode() throws Exception {
 //        String[] args = new String[]{"-format"};   
 //        String[] args = new String[]{"-initializeSharedEdits"};   
-        String[] args = new String[]{ };  
-        NameNode.main(args);
-        Thread.sleep(System.currentTimeMillis());
-    }
+    String[] args = new String[]{};
+    NameNode.main(args);
+    Thread.sleep(System.currentTimeMillis());
+  }
 }

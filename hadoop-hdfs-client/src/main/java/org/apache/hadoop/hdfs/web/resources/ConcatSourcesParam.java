@@ -16,7 +16,7 @@ public class ConcatSourcesParam extends StringParam {
       return "";
     }
     final StringBuilder b = new StringBuilder(paths[0].toUri().getPath());
-    for(int i = 1; i < paths.length; i++) {
+    for (int i = 1; i < paths.length; i++) {
       b.append(',').append(paths[i].toUri().getPath());
     }
     return b.toString();

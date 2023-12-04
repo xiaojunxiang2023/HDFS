@@ -1,18 +1,13 @@
 package org.apache.hadoop.io.erasurecode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.io.erasurecode.rawcoder.NativeRSRawErasureCoderFactory;
 import org.apache.hadoop.io.erasurecode.rawcoder.NativeXORRawErasureCoderFactory;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureCoderFactory;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +65,7 @@ public final class CodecRegistry {
           if (coder.getCoderName().equals(coderFactory.getCoderName())) {
             hasConflit = true;
             LOG.error("Coder {} cannot be registered because its coder name " +
-                "{} has conflict with {}", coderFactory.getClass().getName(),
+                    "{} has conflict with {}", coderFactory.getClass().getName(),
                 coderFactory.getCoderName(), coder.getClass().getName());
             break;
           }
@@ -79,7 +74,7 @@ public final class CodecRegistry {
           // set native coders as default if user does not
           // specify a fallback order
           if (coderFactory instanceof NativeRSRawErasureCoderFactory ||
-                  coderFactory instanceof NativeXORRawErasureCoderFactory) {
+              coderFactory instanceof NativeXORRawErasureCoderFactory) {
             coders.add(0, coderFactory);
           } else {
             coders.add(coderFactory);

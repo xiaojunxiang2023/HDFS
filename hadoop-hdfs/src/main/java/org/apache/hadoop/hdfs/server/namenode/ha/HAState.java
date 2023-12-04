@@ -1,6 +1,7 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
-import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
+
 import org.apache.hadoop.ha.micro.ServiceFailedException;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
 import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.util.Time;
@@ -71,7 +72,8 @@ abstract public class HAState {
    * @throws ServiceFailedException on precondition failure
    */
   public void prepareToEnterState(final HAContext context)
-      throws ServiceFailedException {}
+      throws ServiceFailedException {
+  }
 
   /**
    * Method to be overridden by subclasses to perform steps necessary for
@@ -88,7 +90,7 @@ abstract public class HAState {
    * This is used by the standby state to cancel any checkpoints
    * that are going on. It can also be used to check any preconditions
    * for the state transition.
-   * 
+   *
    * This method should not make any destructive changes to the state
    * (eg stopping threads) since {@link #prepareToEnterState(HAContext)}
    * may subsequently cancel the state transition.
@@ -96,7 +98,8 @@ abstract public class HAState {
    * @throws ServiceFailedException on precondition failure
    */
   public void prepareToExitState(final HAContext context)
-      throws ServiceFailedException {}
+      throws ServiceFailedException {
+  }
 
   /**
    * Method to be overridden by subclasses to perform steps necessary for
@@ -120,7 +123,7 @@ abstract public class HAState {
     throw new ServiceFailedException("Transition from state " + this + " to "
         + s + " is not allowed.");
   }
-  
+
   /**
    * Check if an operation is supported in a given state.
    * @param context HA context

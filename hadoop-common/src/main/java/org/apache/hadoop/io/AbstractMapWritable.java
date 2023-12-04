@@ -1,40 +1,40 @@
 package org.apache.hadoop.io;
 
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-import org.apache.hadoop.conf.Configurable;
-import org.apache.hadoop.conf.Configuration;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * Abstract base class for MapWritable and SortedMapWritable
- * 
+ *
  * Unlike org.apache.nutch.crawl.MapWritable, this class allows creation of
  * MapWritable&lt;Writable, MapWritable&gt; so the CLASS_TO_ID and ID_TO_CLASS
  * maps travel with the class instead of being static.
- * 
+ *
  * Class ids range from 1 to 127 so there can be at most 127 distinct classes
  * in any specific map instance.
  */
 public abstract class AbstractMapWritable implements Writable, Configurable {
   private AtomicReference<Configuration> conf;
-  
+
   /* Class to id mappings */
   @VisibleForTesting
   Map<Class<?>, Byte> classToIdMap = new ConcurrentHashMap<Class<?>, Byte>();
-  
+
   /* Id to Class mappings */
   @VisibleForTesting
   Map<Byte, Class<?>> idToClassMap = new ConcurrentHashMap<Byte, Class<?>>();
-  
+
   /* The number of new classes (those not established by the constructor) */
   private volatile byte newClasses = 0;
-  
+
   /** @return the number of known classes */
   byte getNewClasses() {
     return newClasses;
@@ -47,8 +47,8 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
     if (classToIdMap.containsKey(clazz)) {
       byte b = classToIdMap.get(clazz);
       if (b != id) {
-        throw new IllegalArgumentException ("Class " + clazz.getName() +
-          " already registered but maps to " + b + " and not " + id);
+        throw new IllegalArgumentException("Class " + clazz.getName() +
+            " already registered but maps to " + b + " and not " + id);
       }
     }
     if (idToClassMap.containsKey(id)) {
@@ -61,15 +61,15 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
     classToIdMap.put(clazz, id);
     idToClassMap.put(id, clazz);
   }
-  
-  /** Add a Class to the maps if it is not already present. */ 
+
+  /** Add a Class to the maps if it is not already present. */
   protected synchronized void addToMap(Class<?> clazz) {
     if (classToIdMap.containsKey(clazz)) {
       return;
     }
     if (newClasses + 1 > Byte.MAX_VALUE) {
       throw new IndexOutOfBoundsException("adding an additional class would" +
-      " exceed the maximum number allowed");
+          " exceed the maximum number allowed");
     }
     byte id = ++newClasses;
     addToMap(clazz, id);
@@ -109,24 +109,24 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
   protected AbstractMapWritable() {
     this.conf = new AtomicReference<Configuration>();
 
-    addToMap(ArrayWritable.class, (byte)-127);
-    addToMap(BooleanWritable.class, (byte)-126);
-    addToMap(BytesWritable.class, (byte)-125);
-    addToMap(FloatWritable.class, (byte)-124);
-    addToMap(IntWritable.class, (byte)-123);
-    addToMap(LongWritable.class, (byte)-122);
-    addToMap(MapWritable.class, (byte)-121);
-    addToMap(MD5Hash.class, (byte)-120);
-    addToMap(NullWritable.class, (byte)-119);
-    addToMap(ObjectWritable.class, (byte)-118);
-    addToMap(SortedMapWritable.class, (byte)-117);
-    addToMap(Text.class, (byte)-116);
-    addToMap(TwoDArrayWritable.class, (byte)-115);
+    addToMap(ArrayWritable.class, (byte) -127);
+    addToMap(BooleanWritable.class, (byte) -126);
+    addToMap(BytesWritable.class, (byte) -125);
+    addToMap(FloatWritable.class, (byte) -124);
+    addToMap(IntWritable.class, (byte) -123);
+    addToMap(LongWritable.class, (byte) -122);
+    addToMap(MapWritable.class, (byte) -121);
+    addToMap(MD5Hash.class, (byte) -120);
+    addToMap(NullWritable.class, (byte) -119);
+    addToMap(ObjectWritable.class, (byte) -118);
+    addToMap(SortedMapWritable.class, (byte) -117);
+    addToMap(Text.class, (byte) -116);
+    addToMap(TwoDArrayWritable.class, (byte) -115);
 
     // UTF8 is deprecated so we don't support it
 
-    addToMap(VIntWritable.class, (byte)-114);
-    addToMap(VLongWritable.class, (byte)-113);
+    addToMap(VIntWritable.class, (byte) -114);
+    addToMap(VLongWritable.class, (byte) -113);
   }
 
   /** @return the conf */
@@ -140,13 +140,13 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
   public void setConf(Configuration conf) {
     this.conf.set(conf);
   }
-  
+
   @Override
   public void write(DataOutput out) throws IOException {
-    
+
     // First write out the size of the class table and any classes that are
     // "unknown" classes
-    
+
     out.writeByte(newClasses);
 
     for (byte i = 1; i <= newClasses; i++) {
@@ -154,10 +154,10 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
       out.writeUTF(getClass(i).getName());
     }
   }
-  
+
   @Override
   public void readFields(DataInput in) throws IOException {
-    
+
     // Get the number of "unknown" classes
     newClasses = in.readByte();
 
@@ -177,5 +177,5 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
         throw new IOException(e);
       }
     }
-  }    
+  }
 }

@@ -1,16 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * A Class to track the block collection IDs (Inode's ID) for which physical
@@ -77,7 +73,7 @@ public class BlockStorageMovementNeeded {
    */
   @VisibleForTesting
   public synchronized void addAll(long startPath, List<ItemInfo> itemInfoList,
-      boolean scanCompleted) {
+                                  boolean scanCompleted) {
     storageMovementNeeded.addAll(itemInfoList);
     updatePendingDirScanStats(startPath, itemInfoList.size(), scanCompleted);
   }
@@ -104,7 +100,7 @@ public class BlockStorageMovementNeeded {
   }
 
   private void updatePendingDirScanStats(long startPath, int numScannedFiles,
-      boolean scanCompleted) {
+                                         boolean scanCompleted) {
     DirPendingWorkInfo pendingWork = pendingWorkForDirectory.get(startPath);
     if (pendingWork == null) {
       pendingWork = new DirPendingWorkInfo();
@@ -143,7 +139,7 @@ public class BlockStorageMovementNeeded {
    * successfully. Remove the SPS xAttr if pending child count is zero.
    */
   public synchronized void removeItemTrackInfo(ItemInfo trackInfo,
-      boolean isSuccess) throws IOException {
+                                               boolean isSuccess) throws IOException {
     if (trackInfo.isDir()) {
       // If track is part of some start inode then reduce the pending
       // directory work count.

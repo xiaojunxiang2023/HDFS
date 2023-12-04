@@ -1,34 +1,22 @@
 package org.apache.hadoop.fs.store.audit;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.audit.CommonAuditContext;
 import org.apache.hadoop.fs.store.LogExactlyOnce;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_ID;
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_OP;
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_PATH;
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_PATH2;
-import static org.apache.hadoop.fs.audit.AuditConstants.REFERRER_ORIGIN_HOST;
+import static org.apache.hadoop.fs.audit.AuditConstants.*;
 
 /**
  * Contains all the logic for generating an HTTP "Referer"
@@ -179,7 +167,7 @@ public final class HttpReferrerAuditHeader {
    * @param value query value
    */
   private void addAttribute(String key,
-      String value) {
+                            String value) {
     if (StringUtils.isNotEmpty(value)) {
       attributes.put(key, value);
     }
@@ -238,12 +226,12 @@ public final class HttpReferrerAuditHeader {
       char c = source.charAt(i);
       String s = Character.toString(c);
       switch (c) {
-      case '/':
-      case '@':
-        s = "+";
-        break;
-      default:
-        break;
+        case '/':
+        case '@':
+          s = "+";
+          break;
+        default:
+          break;
       }
       r.append(s);
     }

@@ -21,7 +21,7 @@ public class DefaultINodeAttributesProvider extends INodeAttributeProvider {
 
   @Override
   public INodeAttributes getAttributes(String[] pathElements,
-      INodeAttributes inode) {
+                                       INodeAttributes inode) {
     return inode;
   }
 

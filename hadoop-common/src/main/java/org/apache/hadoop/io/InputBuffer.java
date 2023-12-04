@@ -1,6 +1,9 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataOutput;
+import java.io.FilterInputStream;
+import java.io.InputStream;
 
 
 /** A reusable {@link InputStream} implementation that reads from an in-memory
@@ -27,22 +30,27 @@ public class InputBuffer extends FilterInputStream {
 
   private static class Buffer extends ByteArrayInputStream {
     public Buffer() {
-      super(new byte[] {});
+      super(new byte[]{});
     }
 
     public void reset(byte[] input, int start, int length) {
       this.buf = input;
-      this.count = start+length;
+      this.count = start + length;
       this.mark = start;
       this.pos = start;
     }
 
-    public int getPosition() { return pos; }
-    public int getLength() { return count; }
+    public int getPosition() {
+      return pos;
+    }
+
+    public int getLength() {
+      return count;
+    }
   }
 
   private Buffer buffer;
-  
+
   /** Constructs a new empty buffer. */
   public InputBuffer() {
     this(new Buffer());
@@ -64,9 +72,13 @@ public class InputBuffer extends FilterInputStream {
   }
 
   /** Returns the current position in the input. */
-  public int getPosition() { return buffer.getPosition(); }
+  public int getPosition() {
+    return buffer.getPosition();
+  }
 
   /** Returns the length of the input. */
-  public int getLength() { return buffer.getLength(); }
+  public int getLength() {
+    return buffer.getLength();
+  }
 
 }

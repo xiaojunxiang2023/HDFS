@@ -1,9 +1,10 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.util.List;
+import org.apache.hadoop.fs.FileEncryptionInfo;
+
 import java.util.Collections;
 import java.util.Comparator;
-import org.apache.hadoop.fs.FileEncryptionInfo;
+import java.util.List;
 
 /**
  * Collection of blocks with their locations and the file length.
@@ -29,9 +30,9 @@ public class LocatedBlocks {
   }
 
   public LocatedBlocks(long flength, boolean isUnderConstuction,
-      List<LocatedBlock> blks, LocatedBlock lastBlock,
-      boolean isLastBlockCompleted, FileEncryptionInfo feInfo,
-      ErasureCodingPolicy ecPolicy) {
+                       List<LocatedBlock> blks, LocatedBlock lastBlock,
+                       boolean isLastBlockCompleted, FileEncryptionInfo feInfo,
+                       ErasureCodingPolicy ecPolicy) {
     fileLength = flength;
     blocks = blks;
     underConstruction = isUnderConstuction;
@@ -121,10 +122,10 @@ public class LocatedBlocks {
             long bBeg = b.getStartOffset();
             long aEnd = aBeg + a.getBlockSize();
             long bEnd = bBeg + b.getBlockSize();
-            if(aBeg <= bBeg && bEnd <= aEnd
+            if (aBeg <= bBeg && bEnd <= aEnd
                 || bBeg <= aBeg && aEnd <= bEnd)
               return 0; // one of the blocks is inside the other
-            if(aBeg < bBeg)
+            if (aBeg < bBeg)
               return -1; // a's left bound is to the left of the b's
             return 1;
           }
@@ -135,33 +136,33 @@ public class LocatedBlocks {
   public void insertRange(int blockIdx, List<LocatedBlock> newBlocks) {
     int oldIdx = blockIdx;
     int insStart = 0, insEnd = 0;
-    for(int newIdx = 0; newIdx < newBlocks.size() && oldIdx < blocks.size();
-                                                        newIdx++) {
+    for (int newIdx = 0; newIdx < newBlocks.size() && oldIdx < blocks.size();
+         newIdx++) {
       long newOff = newBlocks.get(newIdx).getStartOffset();
       long oldOff = blocks.get(oldIdx).getStartOffset();
-      if(newOff < oldOff) {
+      if (newOff < oldOff) {
         insEnd++;
-      } else if(newOff == oldOff) {
+      } else if (newOff == oldOff) {
         // replace old cached block by the new one
         blocks.set(oldIdx, newBlocks.get(newIdx));
-        if(insStart < insEnd) { // insert new blocks
+        if (insStart < insEnd) { // insert new blocks
           blocks.addAll(oldIdx, newBlocks.subList(insStart, insEnd));
           oldIdx += insEnd - insStart;
         }
-        insStart = insEnd = newIdx+1;
+        insStart = insEnd = newIdx + 1;
         oldIdx++;
       } else {  // newOff > oldOff
         assert false : "List of LocatedBlock must be sorted by startOffset";
       }
     }
     insEnd = newBlocks.size();
-    if(insStart < insEnd) { // insert new blocks
+    if (insStart < insEnd) { // insert new blocks
       blocks.addAll(oldIdx, newBlocks.subList(insStart, insEnd));
     }
   }
 
   public static int getInsertIndex(int binSearchResult) {
-    return binSearchResult >= 0 ? binSearchResult : -(binSearchResult+1);
+    return binSearchResult >= 0 ? binSearchResult : -(binSearchResult + 1);
   }
 
   @Override

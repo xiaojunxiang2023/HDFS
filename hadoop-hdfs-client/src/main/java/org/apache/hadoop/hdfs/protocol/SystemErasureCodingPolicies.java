@@ -1,11 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * <p>The set of built-in erasure coding policies.</p>
@@ -16,7 +13,8 @@ import java.util.TreeMap;
 public final class SystemErasureCodingPolicies {
 
   // Private constructor, this is a utility class.
-  private SystemErasureCodingPolicies() {}
+  private SystemErasureCodingPolicies() {
+  }
 
   // 1 MB
   private static final int DEFAULT_CELLSIZE = 1024 * 1024;
@@ -107,7 +105,7 @@ public final class SystemErasureCodingPolicies {
   /**
    * Get the special REPLICATION policy.
    */
-  public static ErasureCodingPolicy  getReplicationPolicy() {
+  public static ErasureCodingPolicy getReplicationPolicy() {
     return REPLICATION_POLICY;
   }
 }

@@ -1,13 +1,11 @@
 package org.apache.hadoop.security.ssl;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -49,7 +47,7 @@ public final class ReloadingX509TrustManager implements X509TrustManager {
    * initialized due to a security error.
    */
   public ReloadingX509TrustManager(String type, String location, String password)
-    throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException {
     this.type = type;
     this.password = password;
     trustManagerRef = new AtomicReference<X509TrustManager>();
@@ -58,29 +56,30 @@ public final class ReloadingX509TrustManager implements X509TrustManager {
 
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType)
-    throws CertificateException {
+      throws CertificateException {
     X509TrustManager tm = trustManagerRef.get();
     if (tm != null) {
       tm.checkClientTrusted(chain, authType);
     } else {
       throw new CertificateException("Unknown client chain certificate: " +
-                                     chain[0].toString());
+          chain[0].toString());
     }
   }
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType)
-    throws CertificateException {
+      throws CertificateException {
     X509TrustManager tm = trustManagerRef.get();
     if (tm != null) {
       tm.checkServerTrusted(chain, authType);
     } else {
       throw new CertificateException("Unknown server chain certificate: " +
-                                     chain[0].toString());
+          chain[0].toString());
     }
   }
 
   private static final X509Certificate[] EMPTY = new X509Certificate[0];
+
   @Override
   public X509Certificate[] getAcceptedIssuers() {
     X509Certificate[] issuers = EMPTY;
@@ -102,7 +101,7 @@ public final class ReloadingX509TrustManager implements X509TrustManager {
   }
 
   X509TrustManager loadTrustManager(Path path)
-  throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException {
     X509TrustManager trustManager = null;
     KeyStore ks = KeyStore.getInstance(type);
     InputStream in = Files.newInputStream(path);
@@ -113,8 +112,8 @@ public final class ReloadingX509TrustManager implements X509TrustManager {
       in.close();
     }
 
-    TrustManagerFactory trustManagerFactory = 
-      TrustManagerFactory.getInstance(SSLFactory.SSLCERTIFICATE);
+    TrustManagerFactory trustManagerFactory =
+        TrustManagerFactory.getInstance(SSLFactory.SSLCERTIFICATE);
     trustManagerFactory.init(ks);
     TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
     for (TrustManager trustManager1 : trustManagers) {

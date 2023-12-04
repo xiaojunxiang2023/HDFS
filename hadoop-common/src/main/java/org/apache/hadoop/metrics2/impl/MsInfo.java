@@ -1,4 +1,5 @@
 package org.apache.hadoop.metrics2.impl;
+
 import org.apache.hadoop.metrics2.MetricsInfo;
 
 import java.util.StringJoiner;
@@ -22,11 +23,13 @@ public enum MsInfo implements MetricsInfo {
     this.desc = desc;
   }
 
-  @Override public String description() {
+  @Override
+  public String description() {
     return desc;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
         .add("name=" + name())
         .add("description=" + desc)

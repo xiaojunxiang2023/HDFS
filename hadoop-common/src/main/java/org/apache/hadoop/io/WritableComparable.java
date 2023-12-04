@@ -13,7 +13,7 @@ package org.apache.hadoop.io;
  * result across different instances of the JVM. Note also that the default 
  * <code>hashCode()</code> implementation in <code>Object</code> does <b>not</b>
  * satisfy this property.</p>
- *  
+ *
  * <p>Example:</p>
  * <blockquote><pre>
  *     public class MyWritableComparable implements
@@ -21,17 +21,17 @@ package org.apache.hadoop.io;
  *       // Some data
  *       private int counter;
  *       private long timestamp;
- *       
+ *
  *       public void write(DataOutput out) throws IOException {
  *         out.writeInt(counter);
  *         out.writeLong(timestamp);
  *       }
- *       
+ *
  *       public void readFields(DataInput in) throws IOException {
  *         counter = in.readInt();
  *         timestamp = in.readLong();
  *       }
- *       
+ *
  *       public int compareTo(MyWritableComparable o) {
  *         int thisValue = this.value;
  *         int thatValue = o.value;

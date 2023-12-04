@@ -20,11 +20,13 @@ public abstract class AbstractMetric implements MetricsInfo {
     this.info = checkNotNull(info, "metric info");
   }
 
-  @Override public String name() {
+  @Override
+  public String name() {
     return info.name();
   }
 
-  @Override public String description() {
+  @Override
+  public String description() {
     return info.description();
   }
 
@@ -50,16 +52,18 @@ public abstract class AbstractMetric implements MetricsInfo {
    */
   public abstract void visit(MetricsVisitor visitor);
 
-  @Override public boolean equals(Object obj) {
+  @Override
+  public boolean equals(Object obj) {
     if (obj instanceof AbstractMetric) {
       final AbstractMetric other = (AbstractMetric) obj;
       return Objects.equal(info, other.info()) &&
-             Objects.equal(value(), other.value());
+          Objects.equal(value(), other.value());
     }
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Objects.hashCode(info, value());
   }
 

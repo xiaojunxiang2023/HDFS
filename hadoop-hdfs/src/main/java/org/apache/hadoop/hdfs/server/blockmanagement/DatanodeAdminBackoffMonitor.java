@@ -1,22 +1,16 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Iterables;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.INode;
 import org.apache.hadoop.hdfs.server.namenode.INodeFile;
 import org.apache.hadoop.hdfs.server.namenode.INodeId;
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
 import org.apache.hadoop.hdfs.util.LightWeightLinkedSet;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ArrayDeque;
-import java.util.Queue;
+
+import java.util.*;
 
 /**
  * This class implements the logic to track decommissioning and entering
@@ -30,7 +24,7 @@ import java.util.Queue;
  *
  */
 public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
-    implements DatanodeAdminMonitorInterface  {
+    implements DatanodeAdminMonitorInterface {
   /**
    * Map containing the DECOMMISSION_INPROGRESS or ENTERING_MAINTENANCE
    * datanodes that are being tracked so they can be be marked as
@@ -95,7 +89,7 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
         DFSConfigKeys.
             DFS_NAMENODE_DECOMMISSION_BACKOFF_MONITOR_PENDING_LIMIT_DEFAULT);
     if (this.pendingRepLimit < 1) {
-      LOG.error("{} is set to an invalid value, it must be greater than "+
+      LOG.error("{} is set to an invalid value, it must be greater than " +
               "zero. Defaulting to {}",
           DFSConfigKeys.
               DFS_NAMENODE_DECOMMISSION_BACKOFF_MONITOR_PENDING_LIMIT,
@@ -112,7 +106,7 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
             DFS_NAMENODE_DECOMMISSION_BACKOFF_MONITOR_PENDING_BLOCKS_PER_LOCK_DEFAULT
     );
     if (blocksPerLock <= 0) {
-      LOG.error("{} is set to an invalid value, it must be greater than "+
+      LOG.error("{} is set to an invalid value, it must be greater than " +
               "zero. Defaulting to {}",
           DFSConfigKeys.
               DFS_NAMENODE_DECOMMISSION_BACKOFF_MONITOR_PENDING_BLOCKS_PER_LOCK,
@@ -188,8 +182,8 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
     }
     if (numBlocksChecked + outOfServiceNodeBlocks.size() > 0) {
       LOG.info("Checked {} blocks this tick. {} nodes are now " +
-          "in maintenance or transitioning state. {} nodes pending. {} " +
-          "nodes waiting to be cancelled.",
+              "in maintenance or transitioning state. {} nodes pending. {} " +
+              "nodes waiting to be cancelled.",
           numBlocksChecked, outOfServiceNodeBlocks.size(), pendingNodes.size(),
           cancelledNodes.size());
     }
@@ -218,7 +212,7 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
    * write lock to prevent the cancelledNodes list being modified externally.
    */
   private void processCancelledNodes() {
-    while(!cancelledNodes.isEmpty()) {
+    while (!cancelledNodes.isEmpty()) {
       DatanodeDescriptor dn = cancelledNodes.poll();
       outOfServiceNodeBlocks.remove(dn);
       pendingRep.remove(dn);
@@ -351,7 +345,7 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
             continue;
           } else {
             // Should not happen
-            LOG.error("Node {} is in an unexpected state {} and has been "+
+            LOG.error("Node {} is in an unexpected state {} and has been " +
                     "removed from tracking for decommission or maintenance",
                 dn, dn.getAdminState());
             pendingRep.remove(dn);
@@ -456,9 +450,9 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
     try {
       long repQueueSize = blockManager.getLowRedundancyBlocksCount();
 
-      LOG.info("There are {} blocks pending replication and the limit is "+
-          "{}. A further {} blocks are waiting to be processed. "+
-          "The replication queue currently has {} blocks",
+      LOG.info("There are {} blocks pending replication and the limit is " +
+              "{}. A further {} blocks are waiting to be processed. " +
+              "The replication queue currently has {} blocks",
           pendingCount, pendingRepLimit, yetToBeProcessed, repQueueSize);
 
       if (pendingCount >= pendingRepLimit) {
@@ -526,7 +520,7 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
    * @return True if the block needs replication, otherwise false
    */
   private boolean nextBlockAddedToPending(Iterator<BlockInfo> it,
-      DatanodeDescriptor dn) {
+                                          DatanodeDescriptor dn) {
     BlockInfo block = it.next();
     it.remove();
     numBlocksChecked++;
@@ -652,7 +646,7 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
     namesystem.writeLock();
     try {
       for (Iterator<Map.Entry<DatanodeDescriptor, List<BlockInfo>>>
-           entIt = pendingRep.entrySet().iterator(); entIt.hasNext();) {
+           entIt = pendingRep.entrySet().iterator(); entIt.hasNext(); ) {
         Map.Entry<DatanodeDescriptor, List<BlockInfo>> entry = entIt.next();
         DatanodeDescriptor dn = entry.getKey();
         List<BlockInfo> blocks = entry.getValue();
@@ -661,9 +655,9 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
           entIt.remove();
           continue;
         }
-        Iterator<BlockInfo> blockIt =  blocks.iterator();
+        Iterator<BlockInfo> blockIt = blocks.iterator();
         BlockStats suspectBlocks = new BlockStats();
-        while(blockIt.hasNext()) {
+        while (blockIt.hasNext()) {
           BlockInfo b = blockIt.next();
           if (isBlockReplicatedOk(dn, b, true, suspectBlocks)) {
             blockIt.remove();
@@ -704,8 +698,8 @@ public class DatanodeAdminBackoffMonitor extends DatanodeAdminMonitorBase
    * @return
    */
   private boolean isBlockReplicatedOk(DatanodeDescriptor datanode,
-      BlockInfo block, Boolean scheduleReconStruction,
-      BlockStats suspectBlocks) {
+                                      BlockInfo block, Boolean scheduleReconStruction,
+                                      BlockStats suspectBlocks) {
     if (blockManager.blocksMap.getStoredBlock(block) == null) {
       LOG.trace("Removing unknown block {}", block);
       return true;

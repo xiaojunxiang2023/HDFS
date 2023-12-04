@@ -1,13 +1,13 @@
 package org.apache.hadoop.fs.shell;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.LinkedList;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathIOException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.LinkedList;
 
 /**
  * Concat the given files.

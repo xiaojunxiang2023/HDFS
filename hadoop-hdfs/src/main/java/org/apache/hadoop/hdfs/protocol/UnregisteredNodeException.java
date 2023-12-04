@@ -1,8 +1,9 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.server.protocol.JournalInfo;
 import org.apache.hadoop.hdfs.server.protocol.NodeRegistration;
+
+import java.io.IOException;
 
 /**
  * This exception is thrown when a node that has not previously 
@@ -14,7 +15,7 @@ public class UnregisteredNodeException extends IOException {
   public UnregisteredNodeException(JournalInfo info) {
     super("Unregistered server: " + info.toString());
   }
-  
+
   public UnregisteredNodeException(NodeRegistration nodeReg) {
     super("Unregistered server: " + nodeReg.toString());
   }
@@ -22,13 +23,13 @@ public class UnregisteredNodeException extends IOException {
   /**
    * The exception is thrown if a different data-node claims the same
    * storage id as the existing one.
-   *  
+   *
    * @param nodeID unregistered data-node
    * @param storedNode data-node stored in the system with this storage id
    */
   public UnregisteredNodeException(DatanodeID nodeID, DatanodeInfo storedNode) {
-    super("Data node " + nodeID + " is attempting to report storage ID " 
-          + nodeID.getDatanodeUuid() + ". Node "
-          + storedNode + " is expected to serve this storage.");
+    super("Data node " + nodeID + " is attempting to report storage ID "
+        + nodeID.getDatanodeUuid() + ". Node "
+        + storedNode + " is expected to serve this storage.");
   }
 }

@@ -1,40 +1,24 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NavigableMap;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.BlockListAsLongs;
-import org.apache.hadoop.hdfs.protocol.DatanodeID;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfoWithStorage;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.server.common.BlockAlias;
 import org.apache.hadoop.hdfs.server.common.blockaliasmap.BlockAliasMap;
 import org.apache.hadoop.hdfs.server.common.blockaliasmap.impl.TextFileRegionAliasMap;
-import org.apache.hadoop.hdfs.server.common.BlockAlias;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage.State;
 import org.apache.hadoop.hdfs.util.RwLock;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.util.ReflectionUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.protobuf.ByteString;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * This class allows us to manage and multiplex between storages local to
@@ -87,8 +71,8 @@ public class ProvidedStorageMap {
 
     // load block reader into storage
     Class<? extends BlockAliasMap> aliasMapClass = conf.getClass(
-            DFSConfigKeys.DFS_PROVIDED_ALIASMAP_CLASS,
-            TextFileRegionAliasMap.class, BlockAliasMap.class);
+        DFSConfigKeys.DFS_PROVIDED_ALIASMAP_CLASS,
+        TextFileRegionAliasMap.class, BlockAliasMap.class);
     aliasMap = ReflectionUtils.newInstance(aliasMapClass, conf);
 
     LOG.info("Loaded alias map class: " +
@@ -135,7 +119,7 @@ public class ProvidedStorageMap {
           aliasMap.getReader(null, bm.getBlockPoolId());
       if (reader != null) {
         bm.processFirstBlockReport(providedStorageInfo,
-                new ProvidedBlockList(reader.iterator()));
+            new ProvidedBlockList(reader.iterator()));
       }
     }
   }
@@ -224,7 +208,7 @@ public class ProvidedStorageMap {
 
     @Override
     LocatedBlock newLocatedBlock(ExtendedBlock eb,
-        DatanodeStorageInfo[] storages, long pos, boolean isCorrupt) {
+                                 DatanodeStorageInfo[] storages, long pos, boolean isCorrupt) {
 
       List<DatanodeInfoWithStorage> locs = new ArrayList<>();
       List<String> sids = new ArrayList<>();
@@ -259,8 +243,8 @@ public class ProvidedStorageMap {
         numLocations++;
         // add more replicas until we reach the defaultReplication
         for (int count = numLocations + 1;
-            count <= defaultReplication && count <= providedDescriptor
-                .activeProvidedDatanodes(); count++) {
+             count <= defaultReplication && count <= providedDescriptor
+                 .activeProvidedDatanodes(); count++) {
           dn = chooseProvidedDatanode(excludedUUids);
           locs.add(new DatanodeInfoWithStorage(
               dn, storageId, StorageType.PROVIDED));
@@ -305,13 +289,13 @@ public class ProvidedStorageMap {
 
     ProvidedDescriptor() {
       super(new DatanodeID(
-            null,                         // String ipAddr,
-            null,                         // String hostName,
-            UUID.randomUUID().toString(), // String datanodeUuid,
-            0,                            // int xferPort,
-            0,                            // int infoPort,
-            0,                            // int infoSecurePort,
-            0));                          // int ipcPort
+          null,                         // String ipAddr,
+          null,                         // String hostName,
+          UUID.randomUUID().toString(), // String datanodeUuid,
+          0,                            // int xferPort,
+          0,                            // int infoPort,
+          0,                            // int infoSecurePort,
+          0));                          // int ipcPort
     }
 
     DatanodeStorageInfo getProvidedStorage(
@@ -334,7 +318,7 @@ public class ProvidedStorageMap {
     }
 
     DatanodeDescriptor choose(DatanodeDescriptor client,
-        Set<String> excludedUUids) {
+                              Set<String> excludedUUids) {
       // exact match for now
       if (client != null && !excludedUUids.contains(client.getDatanodeUuid())) {
         DatanodeDescriptor dn = dns.get(client.getDatanodeUuid());
@@ -351,7 +335,7 @@ public class ProvidedStorageMap {
     }
 
     private DatanodeDescriptor chooseRandomNode(Set<String> excludedUUids,
-        boolean preferLiveNodes) {
+                                                boolean preferLiveNodes) {
       Random r = new Random();
       for (int i = dnR.size() - 1; i >= 0; --i) {
         int pos = r.nextInt(i + 1);
@@ -381,7 +365,7 @@ public class ProvidedStorageMap {
 
     @Override
     public void addBlockToBeReplicated(Block block,
-        DatanodeStorageInfo[] targets) {
+                                       DatanodeStorageInfo[] targets) {
       // pick a random datanode, delegate to it
       DatanodeDescriptor node = chooseRandom(targets);
       if (node != null) {
@@ -494,10 +478,12 @@ public class ProvidedStorageMap {
         public BlockReportReplica next() {
           return new BlockReportReplica(inner.next().getBlock());
         }
+
         @Override
         public boolean hasNext() {
           return inner.hasNext();
         }
+
         @Override
         public void remove() {
           throw new UnsupportedOperationException();

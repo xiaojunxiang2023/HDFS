@@ -1,13 +1,12 @@
 package org.apache.hadoop.hdfs.protocol;
 
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DFSUtilClient;
+import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.hadoop.fs.Path;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
-import org.apache.hadoop.hdfs.DFSUtilClient;
 
 /**
  * This class represents to end users the difference between two snapshots of
@@ -53,7 +52,7 @@ public class SnapshotDiffReport {
       return null;
     }
 
-    public static DiffType parseDiffType(String s){
+    public static DiffType parseDiffType(String s) {
       return DiffType.valueOf(s.toUpperCase());
     }
   }
@@ -87,7 +86,7 @@ public class SnapshotDiffReport {
     }
 
     public DiffReportEntry(DiffType type, byte[][] sourcePathComponents,
-        byte[][] targetPathComponents) {
+                           byte[][] targetPathComponents) {
       this.type = type;
       this.sourcePath = DFSUtilClient.byteArray2bytes(sourcePathComponents);
       this.targetPath = targetPathComponents == null ? null : DFSUtilClient
@@ -177,8 +176,8 @@ public class SnapshotDiffReport {
     private final long totalChildrenListingTime;
 
     public DiffStats(long totalDirsProcessed, long totalDirsCompared,
-                      long totalFilesProcessed, long totalFilesCompared,
-                      long totalChildrenListingTime) {
+                     long totalFilesProcessed, long totalFilesCompared,
+                     long totalChildrenListingTime) {
       this.totalDirsCompared = totalDirsProcessed;
       this.totalDirsProcessed = totalDirsCompared;
       this.totalFilesCompared = totalFilesProcessed;
@@ -211,19 +210,19 @@ public class SnapshotDiffReport {
   private final DiffStats diffStats;
 
   public SnapshotDiffReport(String snapshotRoot, String fromSnapshot,
-      String toSnapshot, List<DiffReportEntry> entryList) {
+                            String toSnapshot, List<DiffReportEntry> entryList) {
     this(snapshotRoot, fromSnapshot, toSnapshot, new DiffStats(0, 0, 0, 0, 0),
         entryList);
   }
 
   public SnapshotDiffReport(String snapshotRoot, String fromSnapshot,
-      String toSnapshot, DiffStats dStat, List<DiffReportEntry> entryList) {
+                            String toSnapshot, DiffStats dStat, List<DiffReportEntry> entryList) {
     this.snapshotRoot = snapshotRoot;
     this.fromSnapshot = fromSnapshot;
     this.toSnapshot = toSnapshot;
     this.diffStats = dStat;
     this.diffList = entryList != null ? entryList : Collections
-        .<DiffReportEntry> emptyList();
+        .<DiffReportEntry>emptyList();
   }
 
   /** @return {@link #snapshotRoot}*/

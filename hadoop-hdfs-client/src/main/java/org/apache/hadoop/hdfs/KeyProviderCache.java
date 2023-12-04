@@ -1,24 +1,23 @@
 package org.apache.hadoop.hdfs;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
-import org.apache.hadoop.util.KMSUtil;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.apache.hadoop.thirdparty.com.google.common.cache.RemovalListener;
 import org.apache.hadoop.thirdparty.com.google.common.cache.RemovalNotification;
-
+import org.apache.hadoop.util.KMSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 public class KeyProviderCache {
 
   public static final Logger LOG = LoggerFactory.getLogger(
@@ -47,7 +46,7 @@ public class KeyProviderCache {
   }
 
   public KeyProvider get(final Configuration conf,
-      final URI serverProviderUri) {
+                         final URI serverProviderUri) {
     if (serverProviderUri == null) {
       return null;
     }

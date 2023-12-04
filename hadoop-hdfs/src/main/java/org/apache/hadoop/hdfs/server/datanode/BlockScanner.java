@@ -1,34 +1,27 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_SCANNER_SKIP_RECENT_ACCESSED;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_SCANNER_SKIP_RECENT_ACCESSED_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_SCANNER_VOLUME_BYTES_PER_SECOND;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_SCANNER_VOLUME_BYTES_PER_SECOND_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_SCANNER_VOLUME_JOIN_TIMEOUT_MSEC_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_SCANNER_VOLUME_JOIN_TIMEOUT_MSEC_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_SCAN_PERIOD_HOURS_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_SCAN_PERIOD_HOURS_DEFAULT;
-
-import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.server.datanode.VolumeScanner.ScanResultHandler;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
+
 public class BlockScanner {
   public static final Logger LOG =
       LoggerFactory.getLogger(BlockScanner.class);
@@ -94,7 +87,7 @@ public class BlockScanner {
     @VisibleForTesting
     static final long
         INTERNAL_DFS_BLOCK_SCANNER_CURSOR_SAVE_INTERVAL_MS_DEFAULT =
-            TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
+        TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
 
     static boolean allowUnitTestSettings = false;
     final long targetBytesPerSec;
@@ -129,9 +122,9 @@ public class BlockScanner {
     private static long getConfiguredScanPeriodMs(Configuration conf) {
       long tempScanPeriodMs = getUnitTestLong(
           conf, INTERNAL_DFS_DATANODE_SCAN_PERIOD_MS,
-              TimeUnit.MILLISECONDS.convert(conf.getLong(
-                  DFS_DATANODE_SCAN_PERIOD_HOURS_KEY,
-                  DFS_DATANODE_SCAN_PERIOD_HOURS_DEFAULT), TimeUnit.HOURS));
+          TimeUnit.MILLISECONDS.convert(conf.getLong(
+              DFS_DATANODE_SCAN_PERIOD_HOURS_KEY,
+              DFS_DATANODE_SCAN_PERIOD_HOURS_DEFAULT), TimeUnit.HOURS));
 
       if (tempScanPeriodMs == 0) {
         tempScanPeriodMs = TimeUnit.MILLISECONDS.convert(
@@ -159,7 +152,7 @@ public class BlockScanner {
       if (allowUnitTestSettings) {
         this.resultHandler = (Class<? extends ScanResultHandler>)
             conf.getClass(INTERNAL_VOLUME_SCANNER_SCAN_RESULT_HANDLER,
-                          ScanResultHandler.class);
+                ScanResultHandler.class);
       } else {
         this.resultHandler = ScanResultHandler.class;
       }
@@ -201,11 +194,11 @@ public class BlockScanner {
     return !scanners.isEmpty();
   }
 
- /**
-  * Set up a scanner for the given block pool and volume.
-  *
-  * @param ref              A reference to the volume.
-  */
+  /**
+   * Set up a scanner for the given block pool and volume.
+   *
+   * @param ref              A reference to the volume.
+   */
   public synchronized void addVolumeScanner(FsVolumeReference ref) {
     boolean success = false;
     try {
@@ -359,6 +352,7 @@ public class BlockScanner {
   public void setJoinVolumeScannersTimeOutMs(long joinScannersTimeOutMs) {
     this.joinVolumeScannersTimeOutMs = joinScannersTimeOutMs;
   }
+
   public static class Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

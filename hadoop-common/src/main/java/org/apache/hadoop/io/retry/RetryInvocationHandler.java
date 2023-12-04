@@ -1,10 +1,10 @@
 package org.apache.hadoop.io.retry;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.io.retry.FailoverProxyProvider.ProxyInfo;
 import org.apache.hadoop.io.retry.RetryPolicy.RetryAction;
 import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.Client.ConnectionId;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     }
 
     synchronized Long getWaitTime(final long now) {
-      return retryInfo == null? null: retryInfo.retryTime - now;
+      return retryInfo == null ? null : retryInfo.retryTime - now;
     }
 
     /** Invoke the call once without retrying. */
@@ -87,7 +87,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
               method, callId, retryPolicy, counters, failoverCount, e);
           return processWaitTimeAndRetryInfo();
         }
-      } catch(Throwable t) {
+      } catch (Throwable t) {
         return new CallReturn(t);
       }
     }
@@ -150,8 +150,8 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     public String toString() {
       return getClass().getSimpleName() + "#" + callId + ": "
           + method.getDeclaringClass().getSimpleName() + "." + method.getName()
-          + "(" + (args == null || args.length == 0? "": Arrays.toString(args))
-          +  ")";
+          + "(" + (args == null || args.length == 0 ? "" : Arrays.toString(args))
+          + ")";
     }
   }
 
@@ -224,7 +224,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     private final Exception failException;
 
     RetryInfo(long delay, RetryAction action, long expectedFailoverCount,
-        Exception failException) {
+              Exception failException) {
       this.delay = delay;
       this.retryTime = Time.monotonicNow() + delay;
       this.action = action;
@@ -234,12 +234,12 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
 
     boolean isFailover() {
       return action != null
-          && action.action ==  RetryAction.RetryDecision.FAILOVER_AND_RETRY;
+          && action.action == RetryAction.RetryDecision.FAILOVER_AND_RETRY;
     }
 
     boolean isFail() {
       return action != null
-          && action.action ==  RetryAction.RetryDecision.FAIL;
+          && action.action == RetryAction.RetryDecision.FAIL;
     }
 
     Exception getFailException() {
@@ -247,8 +247,8 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     }
 
     static RetryInfo newRetryInfo(RetryPolicy policy, Exception e,
-        Counters counters, boolean idempotentOrAtMostOnce,
-        long expectedFailoverCount) throws Exception {
+                                  Counters counters, boolean idempotentOrAtMostOnce,
+                                  long expectedFailoverCount) throws Exception {
       RetryAction max = null;
       long maxRetryDelay = 0;
       Exception ex = null;
@@ -280,12 +280,12 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     @Override
     public String toString() {
       return "RetryInfo{" +
-              "retryTime=" + retryTime +
-              ", delay=" + delay +
-              ", action=" + action +
-              ", expectedFailoverCount=" + expectedFailoverCount +
-              ", failException=" + failException +
-              '}';
+          "retryTime=" + retryTime +
+          ", delay=" + delay +
+          ", action=" + action +
+          ", expectedFailoverCount=" + expectedFailoverCount +
+          ", failException=" + failException +
+          '}';
     }
   }
 
@@ -294,18 +294,18 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
   private volatile boolean hasSuccessfulCall = false;
 
   private final RetryPolicy defaultPolicy;
-  private final Map<String,RetryPolicy> methodNameToPolicyMap;
+  private final Map<String, RetryPolicy> methodNameToPolicyMap;
 
   private final AsyncCallHandler asyncCallHandler = new AsyncCallHandler();
 
   protected RetryInvocationHandler(FailoverProxyProvider<T> proxyProvider,
-      RetryPolicy retryPolicy) {
+                                   RetryPolicy retryPolicy) {
     this(proxyProvider, retryPolicy, Collections.<String, RetryPolicy>emptyMap());
   }
 
   protected RetryInvocationHandler(FailoverProxyProvider<T> proxyProvider,
-      RetryPolicy defaultPolicy,
-      Map<String, RetryPolicy> methodNameToPolicyMap) {
+                                   RetryPolicy defaultPolicy,
+                                   Map<String, RetryPolicy> methodNameToPolicyMap) {
     this.proxyDescriptor = new ProxyDescriptor<>(proxyProvider);
     this.defaultPolicy = defaultPolicy;
     this.methodNameToPolicyMap = methodNameToPolicyMap;
@@ -313,7 +313,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
 
   private RetryPolicy getRetryPolicy(Method method) {
     final RetryPolicy policy = methodNameToPolicyMap.get(method.getName());
-    return policy != null? policy: defaultPolicy;
+    return policy != null ? policy : defaultPolicy;
   }
 
   private long getFailoverCount() {
@@ -333,7 +333,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
   public Object invoke(Object proxy, Method method, Object[] args)
       throws Throwable {
     final boolean isRpc = isRpcInvocation(proxyDescriptor.getProxy());
-    final int callId = isRpc? Client.nextCallId(): RpcConstants.INVALID_CALL_ID;
+    final int callId = isRpc ? Client.nextCallId() : RpcConstants.INVALID_CALL_ID;
 
     final Call call = newCall(method, args, isRpc, callId);
     while (true) {
@@ -348,8 +348,8 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
   }
 
   private RetryInfo handleException(final Method method, final int callId,
-      final RetryPolicy policy, final Counters counters,
-      final long expectFailoverCount, final Exception e) throws Exception {
+                                    final RetryPolicy policy, final Counters counters,
+                                    final long expectFailoverCount, final Exception e) throws Exception {
     final RetryInfo retryInfo = RetryInfo.newRetryInfo(policy, e,
         counters, proxyDescriptor.idempotentOrAtMostOnce(method),
         expectFailoverCount);
@@ -370,7 +370,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
   }
 
   private void log(final Method method, final boolean isFailover,
-      final int failovers, final long delay, final Exception ex) {
+                   final int failovers, final long delay, final Exception ex) {
     // log info if this has made some successful calls or
     // this is not the first failover
     final boolean info = hasSuccessfulCall || failovers != 0
@@ -385,8 +385,8 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     if (failovers > 0) {
       b.append(" after ").append(failovers).append(" failover attempts");
     }
-    b.append(isFailover? ". Trying to failover ": ". Retrying ");
-    b.append(delay > 0? "after sleeping for " + delay + "ms.": "immediately.");
+    b.append(isFailover ? ". Trying to failover " : ". Retrying ");
+    b.append(delay > 0 ? "after sleeping for " + delay + "ms." : "immediately.");
 
     if (info) {
       LOG.info(b.toString());

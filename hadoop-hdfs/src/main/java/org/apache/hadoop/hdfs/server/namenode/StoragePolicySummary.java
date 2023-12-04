@@ -1,20 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
+
+import java.text.NumberFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Aggregate the storage type information for a set of blocks
@@ -32,7 +23,7 @@ public class StoragePolicySummary {
 
   // Add a storage type combination
   void add(StorageType[] storageTypes, BlockStoragePolicy policy) {
-    StorageTypeAllocation storageCombo = 
+    StorageTypeAllocation storageCombo =
         new StorageTypeAllocation(storageTypes, policy);
     Long count = storageComboCounts.get(storageCombo);
     if (count == null) {
@@ -40,7 +31,7 @@ public class StoragePolicySummary {
       storageCombo.setActualStoragePolicy(
           getStoragePolicy(storageCombo.getStorageTypes()));
     } else {
-      storageComboCounts.put(storageCombo, count.longValue()+1);
+      storageComboCounts.put(storageCombo, count.longValue() + 1);
     }
     totalBlocks++;
   }
@@ -49,17 +40,16 @@ public class StoragePolicySummary {
   // in descending order
   static List<Entry<StorageTypeAllocation, Long>> sortByComparator(
       Map<StorageTypeAllocation, Long> unsortMap) {
-    List<Entry<StorageTypeAllocation, Long>> storageAllocations = 
+    List<Entry<StorageTypeAllocation, Long>> storageAllocations =
         new LinkedList<>(unsortMap.entrySet());
     // Sorting the list based on values
-    Collections.sort(storageAllocations, 
-      new Comparator<Entry<StorageTypeAllocation, Long>>() {
+    Collections.sort(storageAllocations,
+        new Comparator<Entry<StorageTypeAllocation, Long>>() {
           public int compare(Entry<StorageTypeAllocation, Long> o1,
-              Entry<StorageTypeAllocation, Long> o2)
-          {
+                             Entry<StorageTypeAllocation, Long> o2) {
             return o2.getValue().compareTo(o1.getValue());
           }
-    });
+        });
     return storageAllocations;
   }
 
@@ -75,9 +65,9 @@ public class StoragePolicySummary {
     NumberFormat percentFormat = NumberFormat.getPercentInstance();
     percentFormat.setMinimumFractionDigits(4);
     percentFormat.setMaximumFractionDigits(4);
-    for (Map.Entry<StorageTypeAllocation, Long> storageComboCount:
-      sortByComparator(storageComboCounts)) {
-      double percent = (double) storageComboCount.getValue() / 
+    for (Map.Entry<StorageTypeAllocation, Long> storageComboCount :
+        sortByComparator(storageComboCounts)) {
+      double percent = (double) storageComboCount.getValue() /
           (double) totalBlocks;
       StorageTypeAllocation sta = storageComboCount.getKey();
       if (sta.policyMatches()) {
@@ -91,7 +81,7 @@ public class StoragePolicySummary {
               .append("\nBlocks NOT satisfying the specified storage policy:")
               .append("\nStorage Policy                  ")
               .append(
-              "Specified Storage Policy      # of blocks       % of blocks\n");
+                  "Specified Storage Policy      # of blocks       % of blocks\n");
         }
         nonCompliantFormatter.format("%-35s %-20s %10d  %20s%n",
             sta.getStoragePolicyDescriptor(),
@@ -109,17 +99,17 @@ public class StoragePolicySummary {
   }
 
   /**
-   * 
+   *
    * @param storageTypes - sorted array of storageTypes
    * @return Storage Policy which matches the specific storage Combination
    */
   private BlockStoragePolicy getStoragePolicy(StorageType[] storageTypes) {
-    for (BlockStoragePolicy storagePolicy:storagePolicies) {
+    for (BlockStoragePolicy storagePolicy : storagePolicies) {
       StorageType[] policyStorageTypes = storagePolicy.getStorageTypes();
       policyStorageTypes = Arrays.copyOf(policyStorageTypes, policyStorageTypes.length);
       Arrays.sort(policyStorageTypes);
       if (policyStorageTypes.length <= storageTypes.length) {
-        int i = 0; 
+        int i = 0;
         for (; i < policyStorageTypes.length; i++) {
           if (policyStorageTypes[i] != storageTypes[i]) {
             break;
@@ -128,14 +118,14 @@ public class StoragePolicySummary {
         if (i < policyStorageTypes.length) {
           continue;
         }
-        int j=policyStorageTypes.length;
+        int j = policyStorageTypes.length;
         for (; j < storageTypes.length; j++) {
-          if (policyStorageTypes[i-1] != storageTypes[j]) {
+          if (policyStorageTypes[i - 1] != storageTypes[j]) {
             break;
           }
         }
 
-        if (j==storageTypes.length) {
+        if (j == storageTypes.length) {
           return storagePolicy;
         }
       }
@@ -152,13 +142,13 @@ public class StoragePolicySummary {
     private final StorageType[] storageTypes;
     private BlockStoragePolicy actualStoragePolicy;
 
-    StorageTypeAllocation(StorageType[] storageTypes, 
-        BlockStoragePolicy specifiedStoragePolicy) {
+    StorageTypeAllocation(StorageType[] storageTypes,
+                          BlockStoragePolicy specifiedStoragePolicy) {
       Arrays.sort(storageTypes);
       this.storageTypes = storageTypes;
       this.specifiedStoragePolicy = specifiedStoragePolicy;
     }
-    
+
     StorageType[] getStorageTypes() {
       return storageTypes;
     }
@@ -166,60 +156,60 @@ public class StoragePolicySummary {
     BlockStoragePolicy getSpecifiedStoragePolicy() {
       return specifiedStoragePolicy;
     }
-    
+
     void setActualStoragePolicy(BlockStoragePolicy actualStoragePolicy) {
       this.actualStoragePolicy = actualStoragePolicy;
     }
-    
+
     BlockStoragePolicy getActualStoragePolicy() {
       return actualStoragePolicy;
     }
 
     private static String getStorageAllocationAsString
-      (Map<StorageType, Integer> storageType_countmap) {
+        (Map<StorageType, Integer> storageType_countmap) {
       StringBuilder sb = new StringBuilder();
-      for (Map.Entry<StorageType, Integer> 
-      storageTypeCountEntry:storageType_countmap.entrySet()) {
-        sb.append(storageTypeCountEntry.getKey().name()+ ":"
+      for (Map.Entry<StorageType, Integer>
+          storageTypeCountEntry : storageType_countmap.entrySet()) {
+        sb.append(storageTypeCountEntry.getKey().name() + ":"
             + storageTypeCountEntry.getValue() + ",");
       }
       if (sb.length() > 1) {
-        sb.deleteCharAt(sb.length()-1);
+        sb.deleteCharAt(sb.length() - 1);
       }
       return sb.toString();
     }
 
     private String getStorageAllocationAsString() {
-      Map<StorageType, Integer> storageType_countmap = 
+      Map<StorageType, Integer> storageType_countmap =
           new EnumMap<>(StorageType.class);
-      for (StorageType storageType: storageTypes) {
+      for (StorageType storageType : storageTypes) {
         Integer count = storageType_countmap.get(storageType);
         if (count == null) {
           storageType_countmap.put(storageType, 1);
         } else {
-          storageType_countmap.put(storageType, count.intValue()+1);
+          storageType_countmap.put(storageType, count.intValue() + 1);
         }
       }
       return (getStorageAllocationAsString(storageType_countmap));
     }
-    
+
     String getStoragePolicyDescriptor() {
       StringBuilder storagePolicyDescriptorSB = new StringBuilder();
-      if (actualStoragePolicy!=null) {
+      if (actualStoragePolicy != null) {
         storagePolicyDescriptorSB.append(getStorageAllocationAsString())
-        .append("(")
-        .append(actualStoragePolicy.getName())
-        .append(")");
+            .append("(")
+            .append(actualStoragePolicy.getName())
+            .append(")");
       } else {
         storagePolicyDescriptorSB.append(getStorageAllocationAsString());
       }
       return storagePolicyDescriptorSB.toString();
     }
-    
+
     boolean policyMatches() {
       return specifiedStoragePolicy.equals(actualStoragePolicy);
     }
-    
+
     @Override
     public String toString() {
       return specifiedStoragePolicy.getName() + "|" + getStoragePolicyDescriptor();
@@ -227,16 +217,16 @@ public class StoragePolicySummary {
 
     @Override
     public int hashCode() {
-      return Objects.hash(specifiedStoragePolicy,Arrays.hashCode(storageTypes));
+      return Objects.hash(specifiedStoragePolicy, Arrays.hashCode(storageTypes));
     }
 
     @Override
     public boolean equals(Object another) {
-      return (another instanceof StorageTypeAllocation && 
+      return (another instanceof StorageTypeAllocation &&
           Objects.equals(specifiedStoragePolicy,
-              ((StorageTypeAllocation)another).specifiedStoragePolicy) &&
-              Arrays.equals(storageTypes,
-                  ((StorageTypeAllocation)another).storageTypes));
+              ((StorageTypeAllocation) another).specifiedStoragePolicy) &&
+          Arrays.equals(storageTypes,
+              ((StorageTypeAllocation) another).storageTypes));
     }
   }
 }

@@ -13,43 +13,43 @@ import java.io.IOException;
  */
 public abstract class UpdateNamenodeRegistrationRequest {
 
-    public static UpdateNamenodeRegistrationRequest newInstance()
-            throws IOException {
-        return StateStoreSerializer.newRecord(
-                UpdateNamenodeRegistrationRequest.class);
-    }
+  public static UpdateNamenodeRegistrationRequest newInstance()
+      throws IOException {
+    return StateStoreSerializer.newRecord(
+        UpdateNamenodeRegistrationRequest.class);
+  }
 
-    public static UpdateNamenodeRegistrationRequest newInstance(
-            String nameserviceId, String namenodeId,
-            FederationNamenodeServiceState state) throws IOException {
-        UpdateNamenodeRegistrationRequest request = newInstance();
-        request.setNameserviceId(nameserviceId);
-        request.setNamenodeId(namenodeId);
-        request.setState(state);
-        return request;
-    }
+  public static UpdateNamenodeRegistrationRequest newInstance(
+      String nameserviceId, String namenodeId,
+      FederationNamenodeServiceState state) throws IOException {
+    UpdateNamenodeRegistrationRequest request = newInstance();
+    request.setNameserviceId(nameserviceId);
+    request.setNamenodeId(namenodeId);
+    request.setState(state);
+    return request;
+  }
 
-    @Private
-    @Unstable
-    public abstract String getNameserviceId();
+  @Private
+  @Unstable
+  public abstract String getNameserviceId();
 
-    @Private
-    @Unstable
-    public abstract String getNamenodeId();
+  @Private
+  @Unstable
+  public abstract String getNamenodeId();
 
-    @Private
-    @Unstable
-    public abstract FederationNamenodeServiceState getState();
+  @Private
+  @Unstable
+  public abstract FederationNamenodeServiceState getState();
 
-    @Private
-    @Unstable
-    public abstract void setNameserviceId(String nsId);
+  @Private
+  @Unstable
+  public abstract void setNameserviceId(String nsId);
 
-    @Private
-    @Unstable
-    public abstract void setNamenodeId(String nnId);
+  @Private
+  @Unstable
+  public abstract void setNamenodeId(String nnId);
 
-    @Private
-    @Unstable
-    public abstract void setState(FederationNamenodeServiceState state);
+  @Private
+  @Unstable
+  public abstract void setState(FederationNamenodeServiceState state);
 }

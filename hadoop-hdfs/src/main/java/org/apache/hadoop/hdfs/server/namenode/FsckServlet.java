@@ -1,18 +1,18 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.protocol.HdfsConstants.DatanodeReportType;
+import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
+import org.apache.hadoop.security.UserGroupInformation;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.security.PrivilegedExceptionAction;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants.DatanodeReportType;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
-import org.apache.hadoop.security.UserGroupInformation;
 
 /**
  * This class is used in Namesystem's web server to do fsck on namenode.
@@ -24,13 +24,12 @@ public class FsckServlet extends DfsServlet {
   /** Handle fsck request */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response
-      ) throws IOException {
-    @SuppressWarnings("unchecked")
-    final Map<String,String[]> pmap = request.getParameterMap();
+  ) throws IOException {
+    @SuppressWarnings("unchecked") final Map<String, String[]> pmap = request.getParameterMap();
     final PrintWriter out = response.getWriter();
-    final InetAddress remoteAddress = 
-      InetAddress.getByName(request.getRemoteAddr());
-    final ServletContext context = getServletContext();    
+    final InetAddress remoteAddress =
+        InetAddress.getByName(request.getRemoteAddr());
+    final ServletContext context = getServletContext();
     final Configuration conf = NameNodeHttpServer.getConfFromContext(context);
 
     final UserGroupInformation ugi = getUGI(request, conf);

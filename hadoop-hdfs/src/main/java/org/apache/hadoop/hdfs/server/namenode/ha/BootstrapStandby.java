@@ -1,46 +1,17 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KEYTAB_FILE_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.DFSUtilClient;
-import org.apache.hadoop.hdfs.HAUtil;
-import org.apache.hadoop.hdfs.NameNodeProxies;
+import org.apache.hadoop.hdfs.*;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.StartupOption;
 import org.apache.hadoop.hdfs.server.common.InconsistentFSStateException;
 import org.apache.hadoop.hdfs.server.common.Storage;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.StartupOption;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageState;
-import org.apache.hadoop.hdfs.server.namenode.EditLogInputStream;
-import org.apache.hadoop.hdfs.server.namenode.FSImage;
-import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
-import org.apache.hadoop.hdfs.server.namenode.NNStorage;
+import org.apache.hadoop.hdfs.server.namenode.*;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeDirType;
-import org.apache.hadoop.hdfs.server.namenode.NNUpgradeUtil;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
-import org.apache.hadoop.hdfs.server.namenode.TransferFsImage;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
 import org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
@@ -49,11 +20,23 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.security.PrivilegedAction;
+import java.util.*;
+
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KEYTAB_FILE_KEY;
 
 /**
  * Tool which allows the standby node's storage directories to be bootstrapped
@@ -71,7 +54,7 @@ public class BootstrapStandby implements Tool, Configurable {
   private List<URI> editUrisToFormat;
   private List<URI> sharedEditsUris;
   private Configuration conf;
-  
+
   private boolean force = false;
   private boolean interactive = true;
   private boolean skipSharedEditsCheck = false;
@@ -84,7 +67,7 @@ public class BootstrapStandby implements Tool, Configurable {
   static final int ERR_CODE_INVALID_VERSION = 3;
   // Skip 4 - was used in previous versions, but no longer returned.
   static final int ERR_CODE_ALREADY_FORMATTED = 5;
-  static final int ERR_CODE_LOGS_UNAVAILABLE = 6; 
+  static final int ERR_CODE_LOGS_UNAVAILABLE = 6;
 
   @Override
   public int run(String[] args) throws Exception {
@@ -110,7 +93,7 @@ public class BootstrapStandby implements Tool, Configurable {
       }
     });
   }
-  
+
   private void parseArgs(String[] args) {
     for (String arg : args) {
       if ("-force".equals(arg)) {
@@ -145,7 +128,7 @@ public class BootstrapStandby implements Tool, Configurable {
         UserGroupInformation.getLoginUser(), true)
         .getProxy();
   }
-  
+
   private int doRun() throws IOException {
     // find the active NN
     NamenodeProtocol proxy = null;
@@ -189,18 +172,18 @@ public class BootstrapStandby implements Tool, Configurable {
 
     System.out.println(
         "=====================================================\n" +
-        "About to bootstrap Standby ID " + nnId + " from:\n" +
-        "           Nameservice ID: " + nsId + "\n" +
-        "        Other Namenode ID: " + proxyInfo.getNameNodeID() + "\n" +
-        "  Other NN's HTTP address: " + proxyInfo.getHttpAddress() + "\n" +
-        "  Other NN's IPC  address: " + proxyInfo.getIpcAddress() + "\n" +
-        "             Namespace ID: " + nsInfo.getNamespaceID() + "\n" +
-        "            Block pool ID: " + nsInfo.getBlockPoolID() + "\n" +
-        "               Cluster ID: " + nsInfo.getClusterID() + "\n" +
-        "           Layout version: " + nsInfo.getLayoutVersion() + "\n" +
-        "       isUpgradeFinalized: " + isUpgradeFinalized + "\n" +
-        "=====================================================");
-    
+            "About to bootstrap Standby ID " + nnId + " from:\n" +
+            "           Nameservice ID: " + nsId + "\n" +
+            "        Other Namenode ID: " + proxyInfo.getNameNodeID() + "\n" +
+            "  Other NN's HTTP address: " + proxyInfo.getHttpAddress() + "\n" +
+            "  Other NN's IPC  address: " + proxyInfo.getIpcAddress() + "\n" +
+            "             Namespace ID: " + nsInfo.getNamespaceID() + "\n" +
+            "            Block pool ID: " + nsInfo.getBlockPoolID() + "\n" +
+            "               Cluster ID: " + nsInfo.getClusterID() + "\n" +
+            "           Layout version: " + nsInfo.getLayoutVersion() + "\n" +
+            "       isUpgradeFinalized: " + isUpgradeFinalized + "\n" +
+            "=====================================================");
+
     NNStorage storage = new NNStorage(conf, dirsToFormat, editUrisToFormat);
 
     if (!isUpgradeFinalized) {
@@ -291,7 +274,7 @@ public class BootstrapStandby implements Tool, Configurable {
     FSImage.checkUpgrade(storage);
     // Do preUpgrade for each directory
     for (Iterator<StorageDirectory> it = storage.dirIterator(false);
-         it.hasNext();) {
+         it.hasNext(); ) {
       StorageDirectory sd = it.next();
       try {
         NNUpgradeUtil.renameCurToTmp(sd);
@@ -308,7 +291,7 @@ public class BootstrapStandby implements Tool, Configurable {
 
   private void doUpgrade(NNStorage storage) throws IOException {
     for (Iterator<StorageDirectory> it = storage.dirIterator(false);
-         it.hasNext();) {
+         it.hasNext(); ) {
       StorageDirectory sd = it.next();
       NNUpgradeUtil.doUpgrade(sd, storage);
     }
@@ -336,7 +319,7 @@ public class BootstrapStandby implements Tool, Configurable {
 
       // Download that checkpoint into our storage directories.
       MD5Hash hash = TransferFsImage.downloadImageToStorage(
-        proxyInfo.getHttpAddress(), imageTxId, storage, true, true);
+          proxyInfo.getHttpAddress(), imageTxId, storage, true, true);
       image.saveDigestAndRenameCheckpointImage(NameNodeFile.IMAGE, imageTxId,
           hash);
 
@@ -351,7 +334,7 @@ public class BootstrapStandby implements Tool, Configurable {
   }
 
   private boolean checkLogsAvailableForRead(FSImage image, long imageTxId,
-      long curTxIdOnOtherNode) {
+                                            long curTxIdOnOtherNode) {
 
     if (imageTxId == curTxIdOnOtherNode) {
       // The other node hasn't written any logs since the last checkpoint.
@@ -360,14 +343,14 @@ public class BootstrapStandby implements Tool, Configurable {
       return true;
     }
     long firstTxIdInLogs = imageTxId + 1;
-    
+
     assert curTxIdOnOtherNode >= firstTxIdInLogs :
-      "first=" + firstTxIdInLogs + " onOtherNode=" + curTxIdOnOtherNode;
-    
+        "first=" + firstTxIdInLogs + " onOtherNode=" + curTxIdOnOtherNode;
+
     try {
       Collection<EditLogInputStream> streams =
-        image.getEditLog().selectInputStreams(
-          firstTxIdInLogs, curTxIdOnOtherNode, null, true);
+          image.getEditLog().selectInputStreams(
+              firstTxIdInLogs, curTxIdOnOtherNode, null, true);
       for (EditLogInputStream stream : streams) {
         IOUtils.closeStream(stream);
       }
@@ -377,7 +360,7 @@ public class BootstrapStandby implements Tool, Configurable {
           firstTxIdInLogs + "-" + curTxIdOnOtherNode +
           " from the configured shared edits storage " +
           Joiner.on(",").join(sharedEditsUris) + ". " +
-          "Please copy these logs into the shared edits storage " + 
+          "Please copy these logs into the shared edits storage " +
           "or call saveNamespace on the active node.\n" +
           "Error: " + e.getLocalizedMessage();
       LOG.error(msg, e);
@@ -403,7 +386,7 @@ public class BootstrapStandby implements Tool, Configurable {
 
     if (!HAUtil.usesSharedEditsDir(conf)) {
       throw new HadoopIllegalArgumentException(
-        "Shared edits storage is not enabled for this namenode.");
+          "Shared edits storage is not enabled for this namenode.");
     }
 
 
@@ -478,7 +461,7 @@ public class BootstrapStandby implements Tool, Configurable {
    * @throws IOException
    */
   private int formatAndDownloadAliasMap(String pathAliasMap,
-      RemoteNameNodeInfo proxyInfo) throws IOException {
+                                        RemoteNameNodeInfo proxyInfo) throws IOException {
     LOG.info("Bootstrapping the InMemoryAliasMap from "
         + proxyInfo.getHttpAddress());
     if (pathAliasMap == null) {
@@ -517,7 +500,7 @@ public class BootstrapStandby implements Tool, Configurable {
   public Configuration getConf() {
     return conf;
   }
-  
+
   public static int run(String[] argv, Configuration conf) throws IOException {
     BootstrapStandby bs = new BootstrapStandby();
     bs.setConf(conf);
@@ -525,7 +508,7 @@ public class BootstrapStandby implements Tool, Configurable {
       return ToolRunner.run(bs, argv);
     } catch (Exception e) {
       if (e instanceof IOException) {
-        throw (IOException)e;
+        throw (IOException) e;
       } else {
         throw new IOException(e);
       }

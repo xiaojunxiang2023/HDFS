@@ -1,10 +1,11 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.PathExistsException;
+import org.apache.hadoop.fs.PathIOException;
+import org.apache.hadoop.fs.shell.CopyCommands.CopyFromLocal;
+
 import java.io.IOException;
 import java.util.LinkedList;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.fs.PathExistsException;
-import org.apache.hadoop.fs.shell.CopyCommands.CopyFromLocal;
 
 /** Various commands for moving files */
 
@@ -22,14 +23,14 @@ class MoveCommands {
     public static final String NAME = "moveFromLocal";
     public static final String USAGE =
         "[-f] [-p] [-l] [-d] <localsrc> ... <dst>";
-    public static final String DESCRIPTION = 
+    public static final String DESCRIPTION =
         "Same as -put, except that the source is " +
-        "deleted after it's copied\n" +
-        "and -t option has not yet implemented.";
+            "deleted after it's copied\n" +
+            "and -t option has not yet implemented.";
 
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {
-      if(args.contains("-t")) {
+      if (args.contains("-t")) {
         throw new CommandFormat.UnknownOptionException("-t");
       }
       super.processOptions(args);
@@ -43,7 +44,7 @@ class MoveCommands {
       }
       super.processPath(src, target);
     }
-    
+
     @Override
     protected void postProcessPath(PathData src) throws IOException {
       if (!src.fs.delete(src.path, false)) {
@@ -58,7 +59,7 @@ class MoveCommands {
   /**
    *  Move remote files to a local filesystem
    */
-  public static class MoveToLocal extends FsCommand { 
+  public static class MoveToLocal extends FsCommand {
     public static final String NAME = "moveToLocal";
     public static final String USAGE = "<src> <localdst>";
     public static final String DESCRIPTION = "Not implemented yet";
@@ -73,10 +74,10 @@ class MoveCommands {
   public static class Rename extends CommandWithDestination {
     public static final String NAME = "mv";
     public static final String USAGE = "<src> ... <dst>";
-    public static final String DESCRIPTION = 
-      "Move files that match the specified file pattern <src> " +
-      "to a destination <dst>.  When moving multiple files, the " +
-      "destination must be a directory.";
+    public static final String DESCRIPTION =
+        "Move files that match the specified file pattern <src> " +
+            "to a destination <dst>.  When moving multiple files, the " +
+            "destination must be a directory.";
 
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {

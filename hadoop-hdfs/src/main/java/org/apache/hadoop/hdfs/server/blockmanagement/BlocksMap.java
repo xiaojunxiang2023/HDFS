@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.Iterator;
-import java.util.concurrent.atomic.LongAdder;
-
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.namenode.INodeId;
 import org.apache.hadoop.util.GSet;
 import org.apache.hadoop.util.LightWeightGSet;
+
+import java.util.Iterator;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * This class maintains the map from a block to its metadata.
@@ -41,14 +41,14 @@ class BlocksMap {
     }
 
     @Override
-    public void remove()  {
+    public void remove() {
       throw new UnsupportedOperationException("Sorry. can't remove.");
     }
   }
 
   /** Constant {@link LightWeightGSet} capacity. */
   private final int capacity;
-  
+
   private GSet<Block, BlockInfo> blocks;
 
   private final LongAdder totalReplicatedBlocks = new LongAdder();
@@ -78,7 +78,7 @@ class BlocksMap {
     clear();
     blocks = null;
   }
-  
+
   void clear() {
     if (blocks != null) {
       blocks.clear();
@@ -116,7 +116,7 @@ class BlocksMap {
     assert blockInfo.getBlockCollectionId() == INodeId.INVALID_INODE_ID;
     final int size = blockInfo.isStriped() ?
         blockInfo.getCapacity() : blockInfo.numNodes();
-    for(int idx = size - 1; idx >= 0; idx--) {
+    for (int idx = size - 1; idx >= 0; idx--) {
       DatanodeDescriptor dn = blockInfo.getDatanode(idx);
       if (dn != null) {
         removeBlock(dn, blockInfo); // remove from the list and wipe the location
@@ -198,7 +198,7 @@ class BlocksMap {
   Iterable<BlockInfo> getBlocks() {
     return blocks;
   }
-  
+
   /** Get the capacity of the HashMap that stores blocks */
   int getCapacity() {
     return capacity;

@@ -78,7 +78,7 @@ public class OperationDuration {
    * @return the currently recorded duration.
    */
   public long value() {
-    return finished -started;
+    return finished - started;
   }
 
   /**

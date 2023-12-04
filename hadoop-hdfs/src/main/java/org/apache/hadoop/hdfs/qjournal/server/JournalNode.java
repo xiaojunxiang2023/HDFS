@@ -1,13 +1,5 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.base.Strings;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.util.VersionInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
@@ -22,28 +14,28 @@ import org.apache.hadoop.metrics2.source.JvmMetrics;
 import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.base.Strings;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.tracing.TraceUtils;
-import org.apache.hadoop.util.DiskChecker;
-
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_HTTP_BIND_HOST_KEY;
-import static org.apache.hadoop.util.ExitUtil.terminate;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.*;
 import org.eclipse.jetty.util.ajax.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.ObjectName;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_HTTP_BIND_HOST_KEY;
+import static org.apache.hadoop.util.ExitUtil.terminate;
 
 /**
  * The JournalNode is a daemon which allows namenodes using
@@ -68,7 +60,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   static {
     HdfsConfiguration.init();
   }
-  
+
   /**
    * When stopped, the daemon will exit with this code. 
    */
@@ -79,7 +71,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
                                           StartupOption startOpt)
       throws IOException {
     QuorumJournalManager.checkJournalId(jid);
-    
+
     Journal journal = journalsById.get(jid);
     if (journal == null) {
       File logDir = getLogDir(jid, nameServiceId);
@@ -154,7 +146,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
       // nameserviceId
       for (String nameService : nameserviceIds) {
         journalNodeDir = conf.get(DFSConfigKeys.DFS_JOURNALNODE_EDITS_DIR_KEY +
-        "." + nameService);
+            "." + nameService);
       }
       if (journalNodeDir == null) {
         journalNodeDir = conf.get(DFSConfigKeys.DFS_JOURNALNODE_EDITS_DIR_KEY,
@@ -257,7 +249,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
       jSyncer.stopSync();
     }
 
-    if (rpcServer != null) { 
+    if (rpcServer != null) {
       rpcServer.stop();
     }
 
@@ -268,7 +260,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
         LOG.warn("Unable to stop HTTP server for " + this, ioe);
       }
     }
-    
+
     for (Journal j : journalsById.values()) {
       IOUtils.cleanupWithLogger(LOG, j);
     }
@@ -295,7 +287,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     }
     return resultCode;
   }
-  
+
   public void stopAndJoin(int rc) throws InterruptedException {
     stop(rc);
     join();
@@ -307,7 +299,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
    * @param jid the journal identifier
    * @return the file, which may or may not exist yet
    */
-  private File getLogDir(String jid, String nameServiceId) throws IOException{
+  private File getLogDir(String jid, String nameServiceId) throws IOException {
     String dir = null;
     if (nameServiceId != null) {
       dir = conf.get(DFSConfigKeys.DFS_JOURNALNODE_EDITS_DIR_KEY + "." +
@@ -326,18 +318,17 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     }
 
     Preconditions.checkArgument(jid != null &&
-        !jid.isEmpty(),
+            !jid.isEmpty(),
         "bad journal identifier: %s", jid);
     assert jid != null;
     return new File(journalDir, jid);
   }
 
 
-
   @Override // JournalNodeMXBean
   public String getJournalsStatus() {
     // jid:{Formatted:True/False}
-    Map<String, Map<String, String>> status = 
+    Map<String, Map<String, String>> status =
         new HashMap<String, Map<String, String>>();
     synchronized (this) {
       for (Map.Entry<String, Journal> entry : journalsById.entrySet()) {
@@ -346,7 +337,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
         status.put(entry.getKey(), jMap);
       }
     }
-    
+
     // It is possible that some journals have been formatted before, while the 
     // corresponding journals are not in journalsById yet (because of restarting
     // JN, e.g.). For simplicity, let's just assume a journal is formatted if
@@ -437,8 +428,8 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   }
 
   public Boolean canRollBack(String journalId, StorageInfo storage,
-      StorageInfo prevStorage, int targetLayoutVersion,
-      String nameServiceId) throws IOException {
+                             StorageInfo prevStorage, int targetLayoutVersion,
+                             String nameServiceId) throws IOException {
     return getOrCreateJournal(journalId,
         nameServiceId, StartupOption.ROLLBACK).canRollBack(
         storage, prevStorage, targetLayoutVersion);
@@ -462,7 +453,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   }
 
   @VisibleForTesting
-  public Journal getJournal(String  jid) {
+  public Journal getJournal(String jid) {
     return journalsById.get(jid);
   }
 

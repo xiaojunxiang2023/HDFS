@@ -1,21 +1,16 @@
 package org.apache.hadoop.io;
 
-import java.io.IOException;
+import org.apache.avro.reflect.Stringable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.MalformedInputException;
+import java.nio.charset.*;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
-
-import org.apache.avro.reflect.Stringable;
 
 /** This class stores text using standard UTF8 encoding.  It provides methods
  * to serialize, deserialize, and compare texts at byte level.  The type of
@@ -29,29 +24,29 @@ import org.apache.avro.reflect.Stringable;
 @Stringable
 public class Text extends BinaryComparable
     implements WritableComparable<BinaryComparable> {
-  
+
   private static final ThreadLocal<CharsetEncoder> ENCODER_FACTORY =
-    new ThreadLocal<CharsetEncoder>() {
-      @Override
-      protected CharsetEncoder initialValue() {
-        return Charset.forName("UTF-8").newEncoder().
-               onMalformedInput(CodingErrorAction.REPORT).
-               onUnmappableCharacter(CodingErrorAction.REPORT);
-    }
-  };
-  
+      new ThreadLocal<CharsetEncoder>() {
+        @Override
+        protected CharsetEncoder initialValue() {
+          return Charset.forName("UTF-8").newEncoder().
+              onMalformedInput(CodingErrorAction.REPORT).
+              onUnmappableCharacter(CodingErrorAction.REPORT);
+        }
+      };
+
   private static final ThreadLocal<CharsetDecoder> DECODER_FACTORY =
-    new ThreadLocal<CharsetDecoder>() {
-    @Override
-    protected CharsetDecoder initialValue() {
-      return Charset.forName("UTF-8").newDecoder().
-             onMalformedInput(CodingErrorAction.REPORT).
-             onUnmappableCharacter(CodingErrorAction.REPORT);
-    }
-  };
-  
-  private static final byte [] EMPTY_BYTES = new byte[0];
-  
+      new ThreadLocal<CharsetDecoder>() {
+        @Override
+        protected CharsetDecoder initialValue() {
+          return Charset.forName("UTF-8").newDecoder().
+              onMalformedInput(CodingErrorAction.REPORT).
+              onUnmappableCharacter(CodingErrorAction.REPORT);
+        }
+      };
+
+  private static final byte[] EMPTY_BYTES = new byte[0];
+
   private byte[] bytes;
   private int length;
 
@@ -72,10 +67,10 @@ public class Text extends BinaryComparable
 
   /** Construct from a byte array.
    */
-  public Text(byte[] utf8)  {
+  public Text(byte[] utf8) {
     set(utf8);
   }
-  
+
   /**
    * Get a copy of the bytes that is exactly the length of the data.
    * See {@link #getBytes()} for faster access to the underlying array.
@@ -85,7 +80,7 @@ public class Text extends BinaryComparable
     System.arraycopy(bytes, 0, result, 0, length);
     return result;
   }
-  
+
   /**
    * Returns the raw bytes; however, only data up to {@link #getLength()} is
    * valid. Please use {@link #copyBytes()} if you
@@ -96,12 +91,12 @@ public class Text extends BinaryComparable
     return bytes;
   }
 
-  /** Returns the number of bytes in the byte array */ 
+  /** Returns the number of bytes in the byte array */
   @Override
   public int getLength() {
     return length;
   }
-  
+
   /**
    * Returns the Unicode Scalar Value (32-bit integer value)
    * for the character at <code>position</code>. Note that this
@@ -113,15 +108,15 @@ public class Text extends BinaryComparable
   public int charAt(int position) {
     if (position > this.length) return -1; // too long
     if (position < 0) return -1; // duh.
-      
-    ByteBuffer bb = (ByteBuffer)ByteBuffer.wrap(bytes).position(position);
+
+    ByteBuffer bb = (ByteBuffer) ByteBuffer.wrap(bytes).position(position);
     return bytesToCodePoint(bb.slice());
   }
-  
+
   public int find(String what) {
     return find(what, 0);
   }
-  
+
   /**
    * Finds any occurrence of <code>what</code> in the backing
    * buffer, starting as position <code>start</code>. The starting
@@ -133,17 +128,17 @@ public class Text extends BinaryComparable
    */
   public int find(String what, int start) {
     try {
-      ByteBuffer src = ByteBuffer.wrap(this.bytes,0,this.length);
+      ByteBuffer src = ByteBuffer.wrap(this.bytes, 0, this.length);
       ByteBuffer tgt = encode(what);
       byte b = tgt.get();
       src.position(start);
-          
+
       while (src.hasRemaining()) {
         if (b == src.get()) { // matching first byte
           src.mark(); // save position in loop
           tgt.mark(); // save position in target
           boolean found = true;
-          int pos = src.position()-1;
+          int pos = src.position() - 1;
           while (tgt.hasRemaining()) {
             if (!src.hasRemaining()) { // src expired first
               tgt.reset();
@@ -167,7 +162,8 @@ public class Text extends BinaryComparable
       e.printStackTrace();
       return -1;
     }
-  }  
+  }
+
   /** Set to contain the contents of a string. 
    */
   public void set(String string) {
@@ -175,8 +171,8 @@ public class Text extends BinaryComparable
       ByteBuffer bb = encode(string, true);
       bytes = bb.array();
       length = bb.limit();
-    }catch(CharacterCodingException e) {
-      throw new RuntimeException("Should not have happened ", e); 
+    } catch (CharacterCodingException e) {
+      throw new RuntimeException("Should not have happened ", e);
     }
   }
 
@@ -185,7 +181,7 @@ public class Text extends BinaryComparable
   public void set(byte[] utf8) {
     set(utf8, 0, utf8.length);
   }
-  
+
   /** copy a text. */
   public void set(Text other) {
     set(other.getBytes(), 0, other.getLength());
@@ -240,14 +236,14 @@ public class Text extends BinaryComparable
   private void setCapacity(int len, boolean keepData) {
     if (bytes == null || bytes.length < len) {
       if (bytes != null && keepData) {
-        bytes = Arrays.copyOf(bytes, Math.max(len,length << 1));
+        bytes = Arrays.copyOf(bytes, Math.max(len, length << 1));
       } else {
         bytes = new byte[len];
       }
     }
   }
-   
-  /** 
+
+  /**
    * Convert text back to string
    * @see java.lang.Object#toString()
    */
@@ -255,11 +251,11 @@ public class Text extends BinaryComparable
   public String toString() {
     try {
       return decode(bytes, 0, length);
-    } catch (CharacterCodingException e) { 
-      throw new RuntimeException("Should not have happened " , e); 
+    } catch (CharacterCodingException e) {
+      throw new RuntimeException("Should not have happened ", e);
     }
   }
-  
+
   /** deserialize 
    */
   @Override
@@ -267,7 +263,7 @@ public class Text extends BinaryComparable
     int newLength = WritableUtils.readVInt(in);
     readWithKnownLength(in, newLength);
   }
-  
+
   public void readFields(DataInput in, int maxLength) throws IOException {
     int newLength = WritableUtils.readVInt(in);
     if (newLength < 0) {
@@ -342,7 +338,7 @@ public class Text extends BinaryComparable
                        byte[] b2, int s2, int l2) {
       int n1 = WritableUtils.decodeVIntSize(b1[s1]);
       int n2 = WritableUtils.decodeVIntSize(b2[s2]);
-      return compareBytes(b1, s1+n1, l1-n1, b2, s2+n2, l2-n2);
+      return compareBytes(b1, s1 + n1, l1 - n1, b2, s2 + n2, l2 - n2);
     }
   }
 
@@ -352,6 +348,7 @@ public class Text extends BinaryComparable
   }
 
   /// STATIC UTILITIES FROM HERE DOWN
+
   /**
    * Converts the provided byte array to a String using the
    * UTF-8 encoding. If the input is malformed,
@@ -360,12 +357,12 @@ public class Text extends BinaryComparable
   public static String decode(byte[] utf8) throws CharacterCodingException {
     return decode(ByteBuffer.wrap(utf8), true);
   }
-  
-  public static String decode(byte[] utf8, int start, int length) 
-    throws CharacterCodingException {
+
+  public static String decode(byte[] utf8, int start, int length)
+      throws CharacterCodingException {
     return decode(ByteBuffer.wrap(utf8, start, length), true);
   }
-  
+
   /**
    * Converts the provided byte array to a String using the
    * UTF-8 encoding. If <code>replace</code> is true, then
@@ -373,13 +370,13 @@ public class Text extends BinaryComparable
    * substitution character, which is U+FFFD. Otherwise the
    * method throws a MalformedInputException.
    */
-  public static String decode(byte[] utf8, int start, int length, boolean replace) 
-    throws CharacterCodingException {
+  public static String decode(byte[] utf8, int start, int length, boolean replace)
+      throws CharacterCodingException {
     return decode(ByteBuffer.wrap(utf8, start, length), replace);
   }
-  
-  private static String decode(ByteBuffer utf8, boolean replace) 
-    throws CharacterCodingException {
+
+  private static String decode(ByteBuffer utf8, boolean replace)
+      throws CharacterCodingException {
     CharsetDecoder decoder = DECODER_FACTORY.get();
     if (replace) {
       decoder.onMalformedInput(
@@ -404,7 +401,7 @@ public class Text extends BinaryComparable
    */
 
   public static ByteBuffer encode(String string)
-    throws CharacterCodingException {
+      throws CharacterCodingException {
     return encode(string, true);
   }
 
@@ -418,14 +415,14 @@ public class Text extends BinaryComparable
    *                     and length is ByteBuffer.limit()
    */
   public static ByteBuffer encode(String string, boolean replace)
-    throws CharacterCodingException {
+      throws CharacterCodingException {
     CharsetEncoder encoder = ENCODER_FACTORY.get();
     if (replace) {
       encoder.onMalformedInput(CodingErrorAction.REPLACE);
       encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
     }
-    ByteBuffer bytes = 
-      encoder.encode(CharBuffer.wrap(string.toCharArray()));
+    ByteBuffer bytes =
+        encoder.encode(CharBuffer.wrap(string.toCharArray()));
     if (replace) {
       encoder.onMalformedInput(CodingErrorAction.REPORT);
       encoder.onUnmappableCharacter(CodingErrorAction.REPORT);
@@ -440,17 +437,17 @@ public class Text extends BinaryComparable
   public static String readString(DataInput in) throws IOException {
     return readString(in, Integer.MAX_VALUE);
   }
-  
+
   /** Read a UTF8 encoded string with a maximum size
    */
   public static String readString(DataInput in, int maxLength)
       throws IOException {
     int length = WritableUtils.readVIntInRange(in, 0, maxLength);
-    byte [] bytes = new byte[length];
+    byte[] bytes = new byte[length];
     in.readFully(bytes, 0, length);
     return decode(bytes);
   }
-  
+
   /** Write a UTF8 encoded string to out
    */
   public static int writeString(DataOutput out, String s) throws IOException {
@@ -478,22 +475,22 @@ public class Text extends BinaryComparable
   }
 
   ////// states for validateUTF8
-  
+
   private static final int LEAD_BYTE = 0;
 
   private static final int TRAIL_BYTE_1 = 1;
 
   private static final int TRAIL_BYTE = 2;
 
-  /** 
+  /**
    * Check if a byte array contains valid utf-8
    * @param utf8 byte array
    * @throws MalformedInputException if the byte array contains invalid utf-8
    */
   public static void validateUTF8(byte[] utf8) throws MalformedInputException {
-    validateUTF8(utf8, 0, utf8.length);     
+    validateUTF8(utf8, 0, utf8.length);
   }
-  
+
   /**
    * Check to see if a byte array is valid utf-8
    * @param utf8 the array of bytes
@@ -502,67 +499,67 @@ public class Text extends BinaryComparable
    * @throws MalformedInputException if the byte array contains invalid bytes
    */
   public static void validateUTF8(byte[] utf8, int start, int len)
-    throws MalformedInputException {
+      throws MalformedInputException {
     int count = start;
     int leadByte = 0;
     int length = 0;
     int state = LEAD_BYTE;
-    while (count < start+len) {
+    while (count < start + len) {
       int aByte = utf8[count] & 0xFF;
 
       switch (state) {
-      case LEAD_BYTE:
-        leadByte = aByte;
-        length = bytesFromUTF8[aByte];
+        case LEAD_BYTE:
+          leadByte = aByte;
+          length = bytesFromUTF8[aByte];
 
-        switch (length) {
-        case 0: // check for ASCII
-          if (leadByte > 0x7F)
-            throw new MalformedInputException(count);
+          switch (length) {
+            case 0: // check for ASCII
+              if (leadByte > 0x7F)
+                throw new MalformedInputException(count);
+              break;
+            case 1:
+              if (leadByte < 0xC2 || leadByte > 0xDF)
+                throw new MalformedInputException(count);
+              state = TRAIL_BYTE_1;
+              break;
+            case 2:
+              if (leadByte < 0xE0 || leadByte > 0xEF)
+                throw new MalformedInputException(count);
+              state = TRAIL_BYTE_1;
+              break;
+            case 3:
+              if (leadByte < 0xF0 || leadByte > 0xF4)
+                throw new MalformedInputException(count);
+              state = TRAIL_BYTE_1;
+              break;
+            default:
+              // too long! Longest valid UTF-8 is 4 bytes (lead + three)
+              // or if < 0 we got a trail byte in the lead byte position
+              throw new MalformedInputException(count);
+          } // switch (length)
           break;
-        case 1:
-          if (leadByte < 0xC2 || leadByte > 0xDF)
+
+        case TRAIL_BYTE_1:
+          if (leadByte == 0xF0 && aByte < 0x90)
             throw new MalformedInputException(count);
-          state = TRAIL_BYTE_1;
-          break;
-        case 2:
-          if (leadByte < 0xE0 || leadByte > 0xEF)
+          if (leadByte == 0xF4 && aByte > 0x8F)
             throw new MalformedInputException(count);
-          state = TRAIL_BYTE_1;
-          break;
-        case 3:
-          if (leadByte < 0xF0 || leadByte > 0xF4)
+          if (leadByte == 0xE0 && aByte < 0xA0)
             throw new MalformedInputException(count);
-          state = TRAIL_BYTE_1;
+          if (leadByte == 0xED && aByte > 0x9F)
+            throw new MalformedInputException(count);
+          // falls through to regular trail-byte test!!
+        case TRAIL_BYTE:
+          if (aByte < 0x80 || aByte > 0xBF)
+            throw new MalformedInputException(count);
+          if (--length == 0) {
+            state = LEAD_BYTE;
+          } else {
+            state = TRAIL_BYTE;
+          }
           break;
         default:
-          // too long! Longest valid UTF-8 is 4 bytes (lead + three)
-          // or if < 0 we got a trail byte in the lead byte position
-          throw new MalformedInputException(count);
-        } // switch (length)
-        break;
-
-      case TRAIL_BYTE_1:
-        if (leadByte == 0xF0 && aByte < 0x90)
-          throw new MalformedInputException(count);
-        if (leadByte == 0xF4 && aByte > 0x8F)
-          throw new MalformedInputException(count);
-        if (leadByte == 0xE0 && aByte < 0xA0)
-          throw new MalformedInputException(count);
-        if (leadByte == 0xED && aByte > 0x9F)
-          throw new MalformedInputException(count);
-        // falls through to regular trail-byte test!!
-      case TRAIL_BYTE:
-        if (aByte < 0x80 || aByte > 0xBF)
-          throw new MalformedInputException(count);
-        if (--length == 0) {
-          state = LEAD_BYTE;
-        } else {
-          state = TRAIL_BYTE;
-        }
-        break;
-      default:
-        break;
+          break;
       } // switch (state)
       count++;
     }
@@ -576,21 +573,21 @@ public class Text extends BinaryComparable
    * five and six byte sequences.
    */
   static final int[] bytesFromUTF8 =
-  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    // trail bytes
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-    3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5 };
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0,
+          // trail bytes
+          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+          3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5};
 
   /**
    * Returns the next code point at the current position in
@@ -606,22 +603,33 @@ public class Text extends BinaryComparable
     int ch = 0;
 
     switch (extraBytesToRead) {
-    case 5: ch += (bytes.get() & 0xFF); ch <<= 6; /* remember, illegal UTF-8 */
-    case 4: ch += (bytes.get() & 0xFF); ch <<= 6; /* remember, illegal UTF-8 */
-    case 3: ch += (bytes.get() & 0xFF); ch <<= 6;
-    case 2: ch += (bytes.get() & 0xFF); ch <<= 6;
-    case 1: ch += (bytes.get() & 0xFF); ch <<= 6;
-    case 0: ch += (bytes.get() & 0xFF);
+      case 5:
+        ch += (bytes.get() & 0xFF);
+        ch <<= 6; /* remember, illegal UTF-8 */
+      case 4:
+        ch += (bytes.get() & 0xFF);
+        ch <<= 6; /* remember, illegal UTF-8 */
+      case 3:
+        ch += (bytes.get() & 0xFF);
+        ch <<= 6;
+      case 2:
+        ch += (bytes.get() & 0xFF);
+        ch <<= 6;
+      case 1:
+        ch += (bytes.get() & 0xFF);
+        ch <<= 6;
+      case 0:
+        ch += (bytes.get() & 0xFF);
     }
     ch -= offsetsFromUTF8[extraBytesToRead];
 
     return ch;
   }
 
-  
+
   static final int offsetsFromUTF8[] =
-  { 0x00000000, 0x00003080,
-    0x000E2080, 0x03C82080, 0xFA082080, 0x82082080 };
+      {0x00000000, 0x00003080,
+          0x000E2080, 0x03C82080, 0xFA082080, 0x82082080};
 
   /**
    * For the given string, returns the number of UTF-8 bytes

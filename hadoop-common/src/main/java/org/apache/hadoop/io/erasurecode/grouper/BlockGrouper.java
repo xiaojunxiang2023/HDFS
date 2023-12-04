@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.grouper;
+
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECBlockGroup;
 import org.apache.hadoop.io.erasurecode.ECSchema;

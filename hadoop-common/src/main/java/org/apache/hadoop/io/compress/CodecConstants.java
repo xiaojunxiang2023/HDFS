@@ -7,6 +7,7 @@ public final class CodecConstants {
 
   private CodecConstants() {
   }
+
   /**
    * Default extension for {@link org.apache.hadoop.io.compress.DefaultCodec}.
    */

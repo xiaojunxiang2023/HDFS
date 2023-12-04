@@ -1,38 +1,25 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.ReadOption;
-import org.apache.hadoop.hdfs.protocol.BlockType;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
-import org.apache.hadoop.hdfs.protocol.LocatedStripedBlock;
-import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
 import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
 import org.apache.hadoop.hdfs.StripeReader.BlockReaderInfo;
 import org.apache.hadoop.hdfs.StripeReader.ReaderRetryPolicy;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.AlignedStripe;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.StripeRange;
 import org.apache.hadoop.io.ByteBufferPool;
-
 import org.apache.hadoop.io.ElasticByteBufferPool;
 import org.apache.hadoop.io.erasurecode.CodecUtil;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -74,8 +61,8 @@ public class DFSStripedInputStream extends DFSInputStream {
       Collections.newSetFromMap(new ConcurrentHashMap<>());
 
   DFSStripedInputStream(DFSClient dfsClient, String src,
-      boolean verifyChecksum, ErasureCodingPolicy ecPolicy,
-      LocatedBlocks locatedBlocks) throws IOException {
+                        boolean verifyChecksum, ErasureCodingPolicy ecPolicy,
+                        LocatedBlocks locatedBlocks) throws IOException {
     super(dfsClient, src, verifyChecksum, locatedBlocks);
 
     this.readStatistics.setBlockType(BlockType.STRIPED);
@@ -136,9 +123,10 @@ public class DFSStripedInputStream extends DFSInputStream {
     return BUFFER_POOL;
   }
 
-  protected ThreadPoolExecutor getStripedReadsThreadPool(){
+  protected ThreadPoolExecutor getStripedReadsThreadPool() {
     return dfsClient.getStripedReadsThreadPool();
   }
+
   /**
    * When seeking into a new block group, create blockReader for each internal
    * block in the group.
@@ -189,7 +177,7 @@ public class DFSStripedInputStream extends DFSInputStream {
   @Override
   protected void closeCurrentBlockReaders() {
     resetCurStripeBuffer(false);
-    if (blockReaders ==  null || blockReaders.length == 0) {
+    if (blockReaders == null || blockReaders.length == 0) {
       return;
     }
     for (int i = 0; i < groupSize; i++) {
@@ -220,8 +208,8 @@ public class DFSStripedInputStream extends DFSInputStream {
   }
 
   boolean createBlockReader(LocatedBlock block, long offsetInBlock,
-      LocatedBlock[] targetBlocks, BlockReaderInfo[] readerInfos,
-      int chunkIndex) throws IOException {
+                            LocatedBlock[] targetBlocks, BlockReaderInfo[] readerInfos,
+                            int chunkIndex) throws IOException {
     BlockReader reader = null;
     final ReaderRetryPolicy retry = new ReaderRetryPolicy();
     DFSInputStream.DNAddrPair dnInfo =
@@ -458,7 +446,7 @@ public class DFSStripedInputStream extends DFSInputStream {
     LocatedBlock lb = super.getBlockAt(offset);
     assert lb instanceof LocatedStripedBlock : "NameNode" +
         " should return a LocatedStripedBlock for a striped file";
-    return (LocatedStripedBlock)lb;
+    return (LocatedStripedBlock) lb;
   }
 
   /**
@@ -466,7 +454,7 @@ public class DFSStripedInputStream extends DFSInputStream {
    */
   @Override
   protected void fetchBlockByteRange(LocatedBlock block, long start,
-      long end, ByteBuffer buf, CorruptedBlocks corruptedBlocks)
+                                     long end, ByteBuffer buf, CorruptedBlocks corruptedBlocks)
       throws IOException {
     // Refresh the striped block group
     LocatedStripedBlock blockGroup = getBlockGroupAt(block.getStartOffset());
@@ -487,7 +475,7 @@ public class DFSStripedInputStream extends DFSInputStream {
           preader.close();
         }
       }
-      buf.position(buf.position() + (int)(end - start + 1));
+      buf.position(buf.position() + (int) (end - start + 1));
     } finally {
       for (BlockReaderInfo preaderInfo : preaderInfos) {
         closeReader(preaderInfo);
@@ -497,7 +485,7 @@ public class DFSStripedInputStream extends DFSInputStream {
 
   @Override
   protected void reportLostBlock(LocatedBlock lostBlock,
-      Collection<DatanodeInfo> ignoredNodes) {
+                                 Collection<DatanodeInfo> ignoredNodes) {
     DatanodeInfo[] nodes = lostBlock.getLocations();
     if (nodes != null && nodes.length > 0) {
       List<String> dnUUIDs = new ArrayList<>();
@@ -521,8 +509,8 @@ public class DFSStripedInputStream extends DFSInputStream {
    */
   @Override
   public synchronized ByteBuffer read(ByteBufferPool bufferPool,
-      int maxLength, EnumSet<ReadOption> opts)
-          throws IOException, UnsupportedOperationException {
+                                      int maxLength, EnumSet<ReadOption> opts)
+      throws IOException, UnsupportedOperationException {
     throw new UnsupportedOperationException(
         "Not support enhanced byte buffer access.");
   }

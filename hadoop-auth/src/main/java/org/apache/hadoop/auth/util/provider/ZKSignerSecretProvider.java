@@ -1,25 +1,13 @@
 package org.apache.hadoop.auth.util.provider;
 
-import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import java.nio.ByteBuffer;
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
-import javax.security.auth.login.AppConfigurationEntry;
-import javax.security.auth.login.Configuration;
-import javax.servlet.ServletContext;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.ACLProvider;
 import org.apache.curator.framework.imps.DefaultACLProvider;
 import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.yetus.audience.InterfaceAudience;
+import org.apache.hadoop.filter.AuthenticationFilter;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs.Perms;
 import org.apache.zookeeper.client.ZKClientConfig;
@@ -28,6 +16,13 @@ import org.apache.zookeeper.data.Id;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.Configuration;
+import javax.servlet.ServletContext;
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * A SignerSecretProvider that synchronizes a rolling random secret between
@@ -52,13 +47,13 @@ import org.slf4j.LoggerFactory;
 public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
 
   private static final String CONFIG_PREFIX =
-          "signer.secret.provider.zookeeper.";
+      "signer.secret.provider.zookeeper.";
 
   /**
    * Constant for the property that specifies the ZooKeeper connection string.
    */
   public static final String ZOOKEEPER_CONNECTION_STRING =
-          CONFIG_PREFIX + "connection.string";
+      CONFIG_PREFIX + "connection.string";
 
   /**
    * Constant for the property that specifies the ZooKeeper path.
@@ -75,13 +70,13 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * Constant for the property that specifies the Kerberos keytab file.
    */
   public static final String ZOOKEEPER_KERBEROS_KEYTAB =
-          CONFIG_PREFIX + "kerberos.keytab";
+      CONFIG_PREFIX + "kerberos.keytab";
 
   /**
    * Constant for the property that specifies the Kerberos principal.
    */
   public static final String ZOOKEEPER_KERBEROS_PRINCIPAL =
-          CONFIG_PREFIX + "kerberos.principal";
+      CONFIG_PREFIX + "kerberos.principal";
 
   /**
    * Constant for the property that specifies whether or not the Curator client
@@ -90,7 +85,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * disconnection is being handled elsewhere.
    */
   public static final String DISCONNECT_FROM_ZOOKEEPER_ON_SHUTDOWN =
-          CONFIG_PREFIX + "disconnect.on.shutdown";
+      CONFIG_PREFIX + "disconnect.on.shutdown";
 
   /**
    * Constant for the ServletContext attribute that can be used for providing a
@@ -104,10 +99,10 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
       CONFIG_PREFIX + "curator.client";
 
   private static final String JAAS_LOGIN_ENTRY_NAME =
-          "ZKSignerSecretProviderClient";
+      "ZKSignerSecretProviderClient";
 
   private static Logger LOG = LoggerFactory.getLogger(
-          ZKSignerSecretProvider.class);
+      ZKSignerSecretProvider.class);
   private String path;
   /**
    * Stores the next secret that will be used after the current one rolls over.
@@ -153,11 +148,11 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
 
   @Override
   public void init(Properties config, ServletContext servletContext,
-          long tokenValidity) throws Exception {
+                   long tokenValidity) throws Exception {
     Object curatorClientObj = servletContext.getAttribute(
-            ZOOKEEPER_SIGNER_SECRET_PROVIDER_CURATOR_CLIENT_ATTRIBUTE);
+        ZOOKEEPER_SIGNER_SECRET_PROVIDER_CURATOR_CLIENT_ATTRIBUTE);
     if (curatorClientObj != null
-            && curatorClientObj instanceof CuratorFramework) {
+        && curatorClientObj instanceof CuratorFramework) {
       client = (CuratorFramework) curatorClientObj;
     } else {
       client = createCuratorClient(config);
@@ -166,11 +161,11 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
     }
     this.tokenValidity = tokenValidity;
     shouldDisconnect = Boolean.parseBoolean(
-            config.getProperty(DISCONNECT_FROM_ZOOKEEPER_ON_SHUTDOWN, "true"));
+        config.getProperty(DISCONNECT_FROM_ZOOKEEPER_ON_SHUTDOWN, "true"));
     path = config.getProperty(ZOOKEEPER_PATH);
     if (path == null) {
       throw new IllegalArgumentException(ZOOKEEPER_PATH
-              + " must be specified");
+          + " must be specified");
     }
     try {
       nextRolloverDate = System.currentTimeMillis() + tokenValidity;
@@ -178,7 +173,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
       // znode doesn't already exist.  Everyone else will synchronize on the
       // data from the znode
       client.create().creatingParentsIfNeeded()
-              .forPath(path, generateZKData(generateRandomSecret(),
+          .forPath(path, generateZKData(generateRandomSecret(),
               generateRandomSecret(), null));
       zkVersion = 0;
       LOG.info("Creating secret znode");
@@ -195,7 +190,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
       int i = 1;
       while (initialDelay < 1l) {
         initialDelay = nextRolloverDate + tokenValidity * i
-                - System.currentTimeMillis();
+            - System.currentTimeMillis();
         i++;
       }
     }
@@ -239,7 +234,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * @param previousSecret  The previous secret
    */
   private synchronized void pushToZK(byte[] newSecret, byte[] currentSecret,
-          byte[] previousSecret) {
+                                     byte[] previousSecret) {
     byte[] bytes = generateZKData(newSecret, currentSecret, previousSecret);
     try {
       client.setData().withVersion(zkVersion).forPath(path, bytes);
@@ -247,7 +242,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
       LOG.debug("Unable to push to znode; another server already did it");
     } catch (Exception ex) {
       LOG.error("An unexpected exception occurred pushing data to ZooKeeper",
-              ex);
+          ex);
     }
   }
 
@@ -266,7 +261,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * @return The serialized data for ZooKeeper
    */
   private synchronized byte[] generateZKData(byte[] newSecret,
-          byte[] currentSecret, byte[] previousSecret) {
+                                             byte[] currentSecret, byte[] previousSecret) {
     int newSecretLength = newSecret.length;
     int currentSecretLength = currentSecret.length;
     int previousSecretLength = 0;
@@ -304,7 +299,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
       int dataVersion = bb.getInt();
       if (dataVersion > DATA_VERSION) {
         throw new IllegalStateException("Cannot load data from ZooKeeper; it"
-                + "was written with a newer version");
+            + "was written with a newer version");
       }
       int nextSecretLength = bb.getInt();
       byte[] nextSecret = new byte[nextSecretLength];
@@ -326,7 +321,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
       }
     } catch (Exception ex) {
       LOG.error("An unexpected exception occurred while pulling data from"
-              + "ZooKeeper", ex);
+          + "ZooKeeper", ex);
     }
   }
 
@@ -344,31 +339,31 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * @throws Exception thrown if an error occurred
    */
   protected CuratorFramework createCuratorClient(Properties config)
-          throws Exception {
+      throws Exception {
     String connectionString = config.getProperty(
-            ZOOKEEPER_CONNECTION_STRING, "localhost:2181");
+        ZOOKEEPER_CONNECTION_STRING, "localhost:2181");
 
     RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
     ACLProvider aclProvider;
     String authType = config.getProperty(ZOOKEEPER_AUTH_TYPE, "none");
     if (authType.equals("sasl")) {
       LOG.info("Connecting to ZooKeeper with SASL/Kerberos"
-              + "and using 'sasl' ACLs");
+          + "and using 'sasl' ACLs");
       String principal = setJaasConfiguration(config);
       System.setProperty(ZKClientConfig.LOGIN_CONTEXT_NAME_KEY,
-              JAAS_LOGIN_ENTRY_NAME);
+          JAAS_LOGIN_ENTRY_NAME);
       System.setProperty("zookeeper.authProvider.1",
-              "org.apache.zookeeper.server.auth.SASLAuthenticationProvider");
+          "org.apache.zookeeper.server.auth.SASLAuthenticationProvider");
       aclProvider = new SASLOwnerACLProvider(principal);
     } else {  // "none"
       LOG.info("Connecting to ZooKeeper without authentication");
       aclProvider = new DefaultACLProvider();     // open to everyone
     }
     CuratorFramework cf = CuratorFrameworkFactory.builder()
-            .connectString(connectionString)
-            .retryPolicy(retryPolicy)
-            .aclProvider(aclProvider)
-            .build();
+        .connectString(connectionString)
+        .retryPolicy(retryPolicy)
+        .aclProvider(aclProvider)
+        .build();
     cf.start();
     return cf;
   }
@@ -377,19 +372,19 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
     String keytabFile = config.getProperty(ZOOKEEPER_KERBEROS_KEYTAB).trim();
     if (keytabFile == null || keytabFile.length() == 0) {
       throw new IllegalArgumentException(ZOOKEEPER_KERBEROS_KEYTAB
-              + " must be specified");
+          + " must be specified");
     }
     String principal = config.getProperty(ZOOKEEPER_KERBEROS_PRINCIPAL)
-            .trim();
+        .trim();
     if (principal == null || principal.length() == 0) {
       throw new IllegalArgumentException(ZOOKEEPER_KERBEROS_PRINCIPAL
-              + " must be specified");
+          + " must be specified");
     }
 
     // This is equivalent to writing a jaas.conf file and setting the system
     // property, "java.security.auth.login.config", to point to it
     JaasConfiguration jConf =
-            new JaasConfiguration(JAAS_LOGIN_ENTRY_NAME, principal, keytabFile);
+        new JaasConfiguration(JAAS_LOGIN_ENTRY_NAME, principal, keytabFile);
     Configuration.setConfiguration(jConf);
     return principal.split("[/@]")[0];
   }
@@ -404,7 +399,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
 
     private SASLOwnerACLProvider(String principal) {
       this.saslACL = Collections.singletonList(
-              new ACL(Perms.ALL, new Id("sasl", principal)));
+          new ACL(Perms.ALL, new Id("sasl", principal)));
     }
 
     @Override
@@ -453,15 +448,15 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
         options.put("debug", "true");
       }
       entry = new AppConfigurationEntry[]{
-                  new AppConfigurationEntry(getKrb5LoginModuleName(),
-                  AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
-                  options)};
+          new AppConfigurationEntry(getKrb5LoginModuleName(),
+              AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
+              options)};
     }
 
     @Override
     public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
       return (entryName.equals(name)) ? entry : ((baseConfig != null)
-        ? baseConfig.getAppConfigurationEntry(name) : null);
+          ? baseConfig.getAppConfigurationEntry(name) : null);
     }
 
     private String getKrb5LoginModuleName() {

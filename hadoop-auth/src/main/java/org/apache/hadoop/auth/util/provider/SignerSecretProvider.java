@@ -1,7 +1,7 @@
 package org.apache.hadoop.auth.util.provider;
 
-import java.util.Properties;
 import javax.servlet.ServletContext;
+import java.util.Properties;
 
 /**
  * The SignerSecretProvider is an abstract way to provide a secret to be used
@@ -21,11 +21,13 @@ public abstract class SignerSecretProvider {
    * @throws Exception thrown if an error occurred
    */
   public abstract void init(Properties config, ServletContext servletContext,
-          long tokenValidity) throws Exception;
+                            long tokenValidity) throws Exception;
+
   /**
    * Will be called on shutdown; subclasses should perform any cleanup here.
    */
-  public void destroy() {}
+  public void destroy() {
+  }
 
   /**
    * Returns the current secret to be used by the Signer for signing new

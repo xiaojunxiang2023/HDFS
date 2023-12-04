@@ -2,16 +2,7 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.hdfs.util.EnumCounters;
 
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.CORRUPT;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.DECOMMISSIONED;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.DECOMMISSIONING;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.EXCESS;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.LIVE;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.MAINTENANCE_FOR_READ;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.MAINTENANCE_NOT_FOR_READ;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.READONLY;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.REDUNDANT;
-import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.STALESTORAGE;
+import static org.apache.hadoop.hdfs.server.blockmanagement.NumberReplicas.StoredReplicaState.*;
 
 /**
  * A immutable object that stores the number of live replicas and
@@ -88,7 +79,7 @@ public class NumberReplicas extends EnumCounters<NumberReplicas.StoredReplicaSta
   public int excessReplicas() {
     return (int) get(EXCESS);
   }
-  
+
   /**
    * @return the number of replicas which are on stale nodes.
    * This is not mutually exclusive with the other counts -- ie a
@@ -115,6 +106,6 @@ public class NumberReplicas extends EnumCounters<NumberReplicas.StoredReplicaSta
   }
 
   public int liveEnteringMaintenanceReplicas() {
-    return (int)get(MAINTENANCE_FOR_READ);
+    return (int) get(MAINTENANCE_FOR_READ);
   }
 }

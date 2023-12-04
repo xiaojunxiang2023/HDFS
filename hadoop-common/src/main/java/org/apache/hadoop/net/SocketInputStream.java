@@ -20,75 +20,75 @@ import java.nio.channels.SelectionKey;
  * Please use {@link SocketOutputStream} for writing.
  */
 public class SocketInputStream extends InputStream
-                               implements ReadableByteChannel {
+    implements ReadableByteChannel {
 
   private Reader reader;
 
   private static class Reader extends SocketIOWithTimeout {
     ReadableByteChannel channel;
-    
+
     Reader(ReadableByteChannel channel, long timeout) throws IOException {
-      super((SelectableChannel)channel, timeout);
+      super((SelectableChannel) channel, timeout);
       this.channel = channel;
     }
-    
+
     @Override
     int performIO(ByteBuffer buf) throws IOException {
       return channel.read(buf);
     }
   }
-  
+
   /**
    * Create a new input stream with the given timeout. If the timeout
    * is zero, it will be treated as infinite timeout. The socket's
    * channel will be configured to be non-blocking.
-   * 
-   * @param channel 
+   *
+   * @param channel
    *        Channel for reading, should also be a {@link SelectableChannel}.
    *        The channel will be configured to be non-blocking.
    * @param timeout timeout in milliseconds. must not be negative.
    * @throws IOException
    */
   public SocketInputStream(ReadableByteChannel channel, long timeout)
-                                                        throws IOException {
+      throws IOException {
     SocketIOWithTimeout.checkChannelValidity(channel);
     reader = new Reader(channel, timeout);
   }
 
   /**
    * Same as SocketInputStream(socket.getChannel(), timeout): <br><br>
-   * 
+   *
    * Create a new input stream with the given timeout. If the timeout
    * is zero, it will be treated as infinite timeout. The socket's
    * channel will be configured to be non-blocking.
-   * 
+   *
    * @see SocketInputStream#SocketInputStream(ReadableByteChannel, long)
-   *  
+   *
    * @param socket should have a channel associated with it.
    * @param timeout timeout timeout in milliseconds. must not be negative.
    * @throws IOException
    */
-  public SocketInputStream(Socket socket, long timeout) 
-                                         throws IOException {
+  public SocketInputStream(Socket socket, long timeout)
+      throws IOException {
     this(socket.getChannel(), timeout);
   }
-  
+
   /**
    * Same as SocketInputStream(socket.getChannel(), socket.getSoTimeout())
    * :<br><br>
-   * 
+   *
    * Create a new input stream with the given timeout. If the timeout
    * is zero, it will be treated as infinite timeout. The socket's
    * channel will be configured to be non-blocking.
    * @see SocketInputStream#SocketInputStream(ReadableByteChannel, long)
-   *  
+   *
    * @param socket should have a channel associated with it.
    * @throws IOException
    */
   public SocketInputStream(Socket socket) throws IOException {
     this(socket.getChannel(), socket.getSoTimeout());
   }
-  
+
   @Override
   public int read() throws IOException {
     /* Allocation can be removed if required.
@@ -97,7 +97,7 @@ public class SocketInputStream extends InputStream
     byte[] buf = new byte[1];
     int ret = read(buf, 0, 1);
     if (ret > 0) {
-      return (int)(buf[0] & 0xff);
+      return (int) (buf[0] & 0xff);
     }
     if (ret != -1) {
       // unexpected
@@ -126,26 +126,26 @@ public class SocketInputStream extends InputStream
    * {@link FileChannel#transferFrom(ReadableByteChannel, long, long)}.
    */
   public ReadableByteChannel getChannel() {
-    return reader.channel; 
+    return reader.channel;
   }
-  
+
   //ReadableByteChannel interface
-    
+
   @Override
   public boolean isOpen() {
     return reader.isOpen();
   }
-    
+
   @Override
   public int read(ByteBuffer dst) throws IOException {
     return reader.doIO(dst, SelectionKey.OP_READ);
   }
-  
+
   /**
    * waits for the underlying channel to be ready for reading.
    * The timeout specified for this stream applies to this wait.
-   * 
-   * @throws SocketTimeoutException 
+   *
+   * @throws SocketTimeoutException
    *         if select on the channel times out.
    * @throws IOException
    *         if any other I/O error occurs. 

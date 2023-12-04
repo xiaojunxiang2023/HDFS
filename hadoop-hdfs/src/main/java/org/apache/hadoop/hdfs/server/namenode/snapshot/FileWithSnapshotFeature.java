@@ -1,19 +1,15 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
+import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
+import org.apache.hadoop.hdfs.protocol.HdfsConstants;
+import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
+import org.apache.hadoop.hdfs.server.namenode.*;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
-import org.apache.hadoop.hdfs.server.namenode.AclFeature;
-import org.apache.hadoop.hdfs.server.namenode.INode;
-import org.apache.hadoop.hdfs.server.namenode.AclStorage;
-import org.apache.hadoop.hdfs.server.namenode.INodeFile;
-import org.apache.hadoop.hdfs.server.namenode.INodeFileAttributes;
-import org.apache.hadoop.hdfs.server.namenode.QuotaCounts;
-import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 
 /**
  * Feature for file with snapshot-related information.
@@ -21,16 +17,16 @@ import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 public class FileWithSnapshotFeature implements INode.Feature {
   private final FileDiffList diffs;
   private boolean isCurrentFileDeleted = false;
-  
+
   public FileWithSnapshotFeature(FileDiffList diffs) {
-    this.diffs = diffs != null? diffs: new FileDiffList();
+    this.diffs = diffs != null ? diffs : new FileDiffList();
   }
 
   public boolean isCurrentFileDeleted() {
     return isCurrentFileDeleted;
   }
-  
-  /** 
+
+  /**
    * We need to distinguish two scenarios:
    * 1) the file is still in the current file directory, it has been modified 
    *    before while it is included in some snapshot
@@ -46,11 +42,11 @@ public class FileWithSnapshotFeature implements INode.Feature {
   public FileDiffList getDiffs() {
     return diffs;
   }
-  
+
   /** @return the max replication factor in diffs */
   public short getMaxBlockRepInDiffs(FileDiff excluded) {
     short max = 0;
-    for(FileDiff d : getDiffs()) {
+    for (FileDiff d : getDiffs()) {
       if (d != excluded && d.snapshotINode != null) {
         final short replication = d.snapshotINode.getFileReplication();
         if (replication > max) {
@@ -96,12 +92,12 @@ public class FileWithSnapshotFeature implements INode.Feature {
   }
 
   public String getDetailedString() {
-    return (isCurrentFileDeleted()? "(DELETED), ": ", ") + diffs;
+    return (isCurrentFileDeleted() ? "(DELETED), " : ", ") + diffs;
   }
-  
+
   public void cleanFile(INode.ReclaimContext reclaimContext,
-      final INodeFile file, final int snapshotId, int priorSnapshotId,
-      byte storagePolicyId) {
+                        final INodeFile file, final int snapshotId, int priorSnapshotId,
+                        byte storagePolicyId) {
     if (snapshotId == Snapshot.CURRENT_STATE_ID) {
       // delete the current file while the file has snapshot feature
       if (!isCurrentFileDeleted()) {
@@ -120,13 +116,13 @@ public class FileWithSnapshotFeature implements INode.Feature {
           file);
     }
   }
-  
+
   public void clearDiffs() {
     this.diffs.clear();
   }
-  
+
   public void updateQuotaAndCollectBlocks(INode.ReclaimContext reclaimContext,
-      INodeFile file, FileDiff removed) {
+                                          INodeFile file, FileDiff removed) {
     byte storagePolicyID = file.getStoragePolicyID();
     BlockStoragePolicy bsp = null;
     if (storagePolicyID != HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED) {
@@ -151,7 +147,7 @@ public class FileWithSnapshotFeature implements INode.Feature {
           allBlocks.addAll(Arrays.asList(diffBlocks));
         }
       }
-      for (BlockInfo b: allBlocks) {
+      for (BlockInfo b : allBlocks) {
         short replication = b.getReplication();
         long blockSize = b.isComplete() ? b.getNumBytes() : file
             .getPreferredBlockSize();
@@ -180,7 +176,7 @@ public class FileWithSnapshotFeature implements INode.Feature {
     if (file.getBlocks() != null) {
       short replInDiff = getMaxBlockRepInDiffs(removed);
       short repl = (short) Math.max(file.getPreferredBlockReplication(),
-                                    replInDiff);
+          replInDiff);
       for (BlockInfo b : file.getBlocks()) {
         if (repl != b.getReplication()) {
           reclaimContext.collectedBlocks().addUpdateReplicationFactor(b, repl);
@@ -206,7 +202,7 @@ public class FileWithSnapshotFeature implements INode.Feature {
     final long max;
     FileDiff diff = getDiffs().getLast();
     if (isCurrentFileDeleted()) {
-      max = diff == null? 0: diff.getFileSize();
+      max = diff == null ? 0 : diff.getFileSize();
     } else {
       max = file.computeFileSize();
     }
@@ -214,11 +210,11 @@ public class FileWithSnapshotFeature implements INode.Feature {
     // Collect blocks that should be deleted
     FileDiff last = diffs.getLast();
     BlockInfo[] snapshotBlocks = last == null ? null : last.getBlocks();
-    if(snapshotBlocks == null)
+    if (snapshotBlocks == null)
       file.collectBlocksBeyondMax(max, reclaimContext.collectedBlocks(), null);
     else
       file.collectBlocksBeyondSnapshot(snapshotBlocks,
-                                       reclaimContext.collectedBlocks());
+          reclaimContext.collectedBlocks());
   }
 
   @Override

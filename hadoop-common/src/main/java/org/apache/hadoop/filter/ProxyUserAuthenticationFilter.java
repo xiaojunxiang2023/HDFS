@@ -1,28 +1,23 @@
 package org.apache.hadoop.filter;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.AuthorizationException;
 import org.apache.hadoop.security.authorize.ProxyUsers;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.HttpExceptionUtils;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.*;
 
 /**
  * AuthenticationFilter which adds support to perform operations
@@ -46,7 +41,7 @@ public class ProxyUserAuthenticationFilter extends AuthenticationFilter {
 
   @Override
   protected void doFilter(FilterChain filterChain, HttpServletRequest request,
-      HttpServletResponse response) throws IOException, ServletException {
+                          HttpServletResponse response) throws IOException, ServletException {
     final HttpServletRequest lowerCaseRequest = toLowerCase(request);
     String doAsUser = lowerCaseRequest.getParameter(DO_AS);
 
@@ -106,8 +101,8 @@ public class ProxyUserAuthenticationFilter extends AuthenticationFilter {
   }
 
   static boolean containsUpperCase(final Iterable<String> strings) {
-    for(String s : strings) {
-      for(int i = 0; i < s.length(); i++) {
+    for (String s : strings) {
+      for (int i = 0; i < s.length(); i++) {
         if (Character.isUpperCase(s.charAt(i))) {
           return true;
         }
@@ -118,8 +113,7 @@ public class ProxyUserAuthenticationFilter extends AuthenticationFilter {
 
   public static HttpServletRequest toLowerCase(
       final HttpServletRequest request) {
-    @SuppressWarnings("unchecked")
-    final Map<String, String[]> original = (Map<String, String[]>)
+    @SuppressWarnings("unchecked") final Map<String, String[]> original = (Map<String, String[]>)
         request.getParameterMap();
     if (!containsUpperCase(original.keySet())) {
       return request;

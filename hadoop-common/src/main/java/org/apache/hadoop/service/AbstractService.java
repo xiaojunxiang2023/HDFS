@@ -1,19 +1,18 @@
 package org.apache.hadoop.service;
 
+import org.apache.hadoop.classification.InterfaceAudience.Public;
+import org.apache.hadoop.classification.InterfaceStability.Evolving;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.classification.InterfaceAudience.Public;
-import org.apache.hadoop.classification.InterfaceStability.Evolving;
-import org.apache.hadoop.conf.Configuration;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the base implementation class for services.
@@ -48,12 +47,12 @@ public abstract class AbstractService implements Service {
    * that it will never be null.
    */
   private final ServiceOperations.ServiceListeners listeners
-    = new ServiceOperations.ServiceListeners();
+      = new ServiceOperations.ServiceListeners();
   /**
    * Static listeners to all events across all services
    */
   private static ServiceOperations.ServiceListeners globalListeners
-    = new ServiceOperations.ServiceListeners();
+      = new ServiceOperations.ServiceListeners();
 
   /**
    * The cause of any failure -will be null.
@@ -72,21 +71,21 @@ public abstract class AbstractService implements Service {
    * across threads.
    */
   private final AtomicBoolean terminationNotification =
-    new AtomicBoolean(false);
+      new AtomicBoolean(false);
 
   /**
    * History of lifecycle transitions
    */
   private final List<LifecycleEvent> lifecycleHistory
-    = new ArrayList<LifecycleEvent>(5);
+      = new ArrayList<LifecycleEvent>(5);
 
   /**
    * Map of blocking dependencies
    */
-  private final Map<String,String> blockerMap = new HashMap<String, String>();
+  private final Map<String, String> blockerMap = new HashMap<String, String>();
 
   private final Object stateChangeLock = new Object();
- 
+
   /**
    * Construct the service.
    * @param name service name
@@ -134,7 +133,7 @@ public abstract class AbstractService implements Service {
   public void init(Configuration conf) {
     if (conf == null) {
       throw new ServiceStateException("Cannot initialize service "
-                                      + getName() + ": null configuration");
+          + getName() + ": null configuration");
     }
     if (isInState(STATE.INITED)) {
       return;
@@ -257,7 +256,7 @@ public abstract class AbstractService implements Service {
     boolean completed = terminationNotification.get();
     while (!completed) {
       try {
-        synchronized(terminationNotification) {
+        synchronized (terminationNotification) {
           terminationNotification.wait(timeout);
         }
         // here there has been a timeout, the object has terminated,

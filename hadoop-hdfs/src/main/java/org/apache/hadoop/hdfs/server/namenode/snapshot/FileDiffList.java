@@ -11,12 +11,12 @@ import org.apache.hadoop.hdfs.server.namenode.INodeFileAttributes;
 /** A list of FileDiffs for storing snapshot data. */
 public class FileDiffList extends
     AbstractINodeDiffList<INodeFile, INodeFileAttributes, FileDiff> {
-  
+
   @Override
   FileDiff createDiff(int snapshotId, INodeFile file) {
     return new FileDiff(snapshotId, file);
   }
-  
+
   @Override
   INodeFileAttributes createSnapshotCopy(INodeFile currentINode) {
     return new INodeFileAttributes.SnapshotCopy(currentINode);
@@ -30,7 +30,7 @@ public class FileDiffList extends
   }
 
   public void saveSelf2Snapshot(int latestSnapshotId, INodeFile iNodeFile,
-      INodeFileAttributes snapshotCopy, boolean withBlocks) {
+                                INodeFileAttributes snapshotCopy, boolean withBlocks) {
     final FileDiff diff =
         super.saveSelf2Snapshot(latestSnapshotId, iNodeFile, snapshotCopy);
     if (withBlocks) {  // Store blocks if this is the first update
@@ -48,9 +48,9 @@ public class FileDiffList extends
     DiffList<FileDiff> diffs = this.asList();
     int i = diffs.binarySearch(snapshotId);
     BlockInfo[] blocks = null;
-    for(i = i >= 0 ? i : -i-2; i >= 0; i--) {
+    for (i = i >= 0 ? i : -i - 2; i >= 0; i--) {
       blocks = diffs.get(i).getBlocks();
-      if(blocks != null) {
+      if (blocks != null) {
         break;
       }
     }
@@ -65,7 +65,7 @@ public class FileDiffList extends
     DiffList<FileDiff> diffs = this.asList();
     int i = diffs.binarySearch(snapshotId);
     BlockInfo[] blocks = null;
-    for (i = i >= 0 ? i+1 : -i-1; i < diffs.size(); i++) {
+    for (i = i >= 0 ? i + 1 : -i - 1; i < diffs.size(); i++) {
       blocks = diffs.get(i).getBlocks();
       if (blocks != null) {
         break;
@@ -85,7 +85,7 @@ public class FileDiffList extends
     if (removedBlocks == null) {
       FileWithSnapshotFeature sf = file.getFileWithSnapshotFeature();
       assert sf != null : "FileWithSnapshotFeature is null";
-      if(sf.isCurrentFileDeleted())
+      if (sf.isCurrentFileDeleted())
         sf.collectBlocksAndClear(reclaimContext, file);
       return;
     }
@@ -102,10 +102,10 @@ public class FileDiffList extends
     laterBlocks = (laterBlocks == null) ? file.getBlocks() : laterBlocks;
     // Skip blocks, which belong to either the earlier or the later lists
     int i = 0;
-    for(; i < removedBlocks.length; i++) {
-      if(i < earlierBlocks.length && removedBlocks[i] == earlierBlocks[i])
+    for (; i < removedBlocks.length; i++) {
+      if (i < earlierBlocks.length && removedBlocks[i] == earlierBlocks[i])
         continue;
-      if(i < laterBlocks.length && removedBlocks[i] == laterBlocks[i])
+      if (i < laterBlocks.length && removedBlocks[i] == laterBlocks[i])
         continue;
       break;
     }
@@ -118,8 +118,8 @@ public class FileDiffList extends
           .getTruncateBlock();
     }
     // Collect the remaining blocks of the file, ignoring truncate block
-    for (;i < removedBlocks.length; i++) {
-      if(dontRemoveBlock == null || !removedBlocks[i].equals(dontRemoveBlock)) {
+    for (; i < removedBlocks.length; i++) {
+      if (dontRemoveBlock == null || !removedBlocks[i].equals(dontRemoveBlock)) {
         reclaimContext.collectedBlocks().addDeleteBlock(removedBlocks[i]);
       }
     }

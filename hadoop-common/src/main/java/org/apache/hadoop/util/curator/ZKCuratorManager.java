@@ -1,12 +1,4 @@
-
-
 package org.apache.hadoop.util.curator;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.curator.framework.AuthInfo;
 import org.apache.curator.framework.CuratorFramework;
@@ -16,6 +8,7 @@ import org.apache.curator.retry.RetryNTimes;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ZKUtil;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.ACL;
@@ -23,7 +16,11 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Helper class that provides utility methods specific to ZK operations.
@@ -328,7 +325,7 @@ public final class ZKCuratorManager {
   }
 
   public void safeCreate(String path, byte[] data, List<ACL> acl,
-      CreateMode mode, List<ACL> fencingACL, String fencingNodePath)
+                         CreateMode mode, List<ACL> fencingACL, String fencingNodePath)
       throws Exception {
     if (!exists(path)) {
       SafeTransaction transaction = createTransaction(fencingACL,
@@ -344,7 +341,7 @@ public final class ZKCuratorManager {
    * @throws Exception if any problem occurs while performing deletion.
    */
   public void safeDelete(final String path, List<ACL> fencingACL,
-      String fencingNodePath) throws Exception {
+                         String fencingNodePath) throws Exception {
     if (exists(path)) {
       SafeTransaction transaction = createTransaction(fencingACL,
           fencingNodePath);
@@ -354,7 +351,7 @@ public final class ZKCuratorManager {
   }
 
   public void safeSetData(String path, byte[] data, int version,
-      List<ACL> fencingACL, String fencingNodePath)
+                          List<ACL> fencingACL, String fencingNodePath)
       throws Exception {
     SafeTransaction transaction = createTransaction(fencingACL,
         fencingNodePath);
@@ -363,7 +360,7 @@ public final class ZKCuratorManager {
   }
 
   public SafeTransaction createTransaction(List<ACL> fencingACL,
-      String fencingNodePath) throws Exception {
+                                           String fencingNodePath) throws Exception {
     return new SafeTransaction(fencingACL, fencingNodePath);
   }
 
@@ -379,14 +376,14 @@ public final class ZKCuratorManager {
         throws Exception {
       this.fencingNodePath = fencingNodePath;
       curatorOperations.add(curator.transactionOp().create()
-                              .withMode(CreateMode.PERSISTENT)
-                              .withACL(fencingACL)
-                              .forPath(fencingNodePath, new byte[0]));
+          .withMode(CreateMode.PERSISTENT)
+          .withACL(fencingACL)
+          .forPath(fencingNodePath, new byte[0]));
     }
 
     public void commit() throws Exception {
       curatorOperations.add(curator.transactionOp().delete()
-                              .forPath(fencingNodePath));
+          .forPath(fencingNodePath));
       curator.transaction().forOperations(curatorOperations);
       curatorOperations.clear();
     }
@@ -394,21 +391,21 @@ public final class ZKCuratorManager {
     public void create(String path, byte[] data, List<ACL> acl, CreateMode mode)
         throws Exception {
       curatorOperations.add(curator.transactionOp().create()
-                              .withMode(mode)
-                              .withACL(acl)
-                              .forPath(path, data));
+          .withMode(mode)
+          .withACL(acl)
+          .forPath(path, data));
     }
 
     public void delete(String path) throws Exception {
       curatorOperations.add(curator.transactionOp().delete()
-                              .forPath(path));
+          .forPath(path));
     }
 
     public void setData(String path, byte[] data, int version)
         throws Exception {
       curatorOperations.add(curator.transactionOp().setData()
-                              .withVersion(version)
-                              .forPath(path, data));
+          .withVersion(version)
+          .forPath(path, data));
     }
   }
 }

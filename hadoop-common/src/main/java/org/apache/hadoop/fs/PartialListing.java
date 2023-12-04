@@ -1,8 +1,8 @@
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.hadoop.ipc.RemoteException;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +29,7 @@ public class PartialListing<T extends FileStatus> {
   }
 
   private PartialListing(Path listedPath, List<T> partialListing,
-      RemoteException exception) {
+                         RemoteException exception) {
     Preconditions.checkArgument(partialListing == null ^ exception == null);
     this.partialListing = partialListing;
     this.listedPath = listedPath;

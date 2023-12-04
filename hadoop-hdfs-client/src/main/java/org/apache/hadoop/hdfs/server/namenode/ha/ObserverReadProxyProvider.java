@@ -14,17 +14,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.namenode.ha;
+ */
+package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
-import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.ClientGSIContext;
@@ -35,18 +27,22 @@ import org.apache.hadoop.io.retry.Idempotent;
 import org.apache.hadoop.io.retry.RetryPolicies;
 import org.apache.hadoop.io.retry.RetryPolicy;
 import org.apache.hadoop.io.retry.RetryPolicy.RetryAction;
-import org.apache.hadoop.ipc.AlignmentContext;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.Client.ConnectionId;
-import org.apache.hadoop.ipc.ObserverRetryOnActiveException;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RemoteException;
-import org.apache.hadoop.ipc.RpcInvocationHandler;
-import org.apache.hadoop.ipc.StandbyException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.net.URI;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A {@link org.apache.hadoop.io.retry.FailoverProxyProvider} implementation
@@ -197,7 +193,7 @@ public class ObserverReadProxyProvider<T>
     combinedInfo.append(']');
     T wrappedProxy = (T) Proxy.newProxyInstance(
         ObserverReadInvocationHandler.class.getClassLoader(),
-        new Class<?>[] {xface}, new ObserverReadInvocationHandler());
+        new Class<?>[]{xface}, new ObserverReadInvocationHandler());
     combinedProxy = new ProxyInfo<>(wrappedProxy, combinedInfo.toString());
 
     autoMsyncPeriodMs = conf.getTimeDuration(
@@ -524,7 +520,8 @@ public class ObserverReadProxyProvider<T>
     }
 
     @Override
-    public void close() throws IOException {}
+    public void close() throws IOException {
+    }
 
     @Override
     public ConnectionId getConnectionId() {
@@ -538,7 +535,7 @@ public class ObserverReadProxyProvider<T>
     for (ProxyInfo<T> pi : nameNodeProxies) {
       if (pi.proxy != null) {
         if (pi.proxy instanceof Closeable) {
-          ((Closeable)pi.proxy).close();
+          ((Closeable) pi.proxy).close();
         } else {
           RPC.stopProxy(pi.proxy);
         }

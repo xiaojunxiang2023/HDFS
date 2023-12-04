@@ -1,37 +1,23 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Arrays;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.SnapshotException;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
-import org.apache.hadoop.hdfs.server.namenode.Content;
-import org.apache.hadoop.hdfs.server.namenode.ContentCounts;
-import org.apache.hadoop.hdfs.server.namenode.INode;
-import org.apache.hadoop.hdfs.server.namenode.INodeDirectory;
+import org.apache.hadoop.hdfs.server.namenode.*;
 import org.apache.hadoop.hdfs.server.namenode.INodeDirectory.SnapshotAndINode;
-import org.apache.hadoop.hdfs.server.namenode.INodeFile;
-import org.apache.hadoop.hdfs.server.namenode.INodeReference;
 import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithCount;
 import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithName;
-import org.apache.hadoop.hdfs.server.namenode.INodesInPath;
-import org.apache.hadoop.hdfs.server.namenode.LeaseManager;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.util.Time;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * A directory with this feature is a snapshottable directory, where snapshots
@@ -67,7 +53,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
   /** @return the snapshot with the given name. */
   public Snapshot getSnapshot(byte[] snapshotName) {
     final int i = searchSnapshot(snapshotName);
-    return i < 0? null: snapshotsByNames.get(i);
+    return i < 0 ? null : snapshotsByNames.get(i);
   }
 
   public Snapshot getSnapshotById(int sid) {
@@ -100,7 +86,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    *           exists
    */
   public void renameSnapshot(String path, String oldName, String newName,
-      long mtime)
+                             long mtime)
       throws SnapshotException {
     final int indexOfOld = searchSnapshot(DFSUtil.string2Bytes(oldName));
     if (indexOfOld < 0) {
@@ -160,8 +146,8 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    *           with the same name already exists or snapshot quota exceeds
    */
   public Snapshot addSnapshot(INodeDirectory snapshotRoot, int id, String name,
-      final LeaseManager leaseManager, final boolean captureOpenFiles,
-      int maxSnapshotLimit, long now)
+                              final LeaseManager leaseManager, final boolean captureOpenFiles,
+                              int maxSnapshotLimit, long now)
       throws SnapshotException {
     //check snapshot quota
     final int n = getNumSnapshots();
@@ -240,7 +226,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
 
   @Override
   public void computeContentSummary4Snapshot(final BlockStoragePolicySuite bsps,
-      final ContentCounts counts) throws AccessControlException {
+                                             final ContentCounts counts) throws AccessControlException {
     counts.addContent(Content.SNAPSHOT, snapshotsByNames.size());
     counts.addContent(Content.SNAPSHOTTABLE_DIRECTORY, 1);
     super.computeContentSummary4Snapshot(bsps, counts);
@@ -263,8 +249,8 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    *           as a previous snapshot.
    */
   SnapshotDiffInfo computeDiff(final INodeDirectory snapshotRootDir,
-      final INodeDirectory snapshotDiffScopeDir, final String from,
-      final String to) throws SnapshotException {
+                               final INodeDirectory snapshotDiffScopeDir, final String from,
+                               final String to) throws SnapshotException {
     Preconditions.checkArgument(snapshotDiffScopeDir
         .isDescendantOfSnapshotRoot(snapshotRootDir));
     Snapshot fromSnapshot = getSnapshotByName(snapshotRootDir, from);
@@ -310,9 +296,9 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    *           as a previous snapshot.
    */
   SnapshotDiffListingInfo computeDiff(final INodeDirectory snapshotRootDir,
-      final INodeDirectory snapshotDiffScopeDir, final String from,
-      final String to, byte[] startPath, int index,
-      int snapshotDiffReportEntriesLimit) throws SnapshotException {
+                                      final INodeDirectory snapshotDiffScopeDir, final String from,
+                                      final String to, byte[] startPath, int index,
+                                      int snapshotDiffReportEntriesLimit) throws SnapshotException {
     Preconditions.checkArgument(
         snapshotDiffScopeDir.isDescendantOfSnapshotRoot(snapshotRootDir));
     Snapshot fromSnapshot = getSnapshotByName(snapshotRootDir, from);
@@ -341,7 +327,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    *           is no snapshot matching the name.
    */
   private Snapshot getSnapshotByName(INodeDirectory snapshotRoot,
-      String snapshotName) throws SnapshotException {
+                                     String snapshotName) throws SnapshotException {
     Snapshot s = null;
     if (snapshotName != null && !snapshotName.isEmpty()) {
       final int index = searchSnapshot(DFSUtil.string2Bytes(snapshotName));
@@ -366,7 +352,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    * @param diffReport data structure used to store the diff.
    */
   private void computeDiffRecursively(final INodeDirectory snapshotDir,
-      INode node, List<byte[]> parentPath, SnapshotDiffInfo diffReport) {
+                                      INode node, List<byte[]> parentPath, SnapshotDiffInfo diffReport) {
     final Snapshot earlierSnapshot = diffReport.isFromEarlier() ?
         diffReport.getFrom() : diffReport.getTo();
     final Snapshot laterSnapshot = diffReport.isFromEarlier() ?
@@ -396,7 +382,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
           byte[][] renameTargetPath = findRenameTargetPath(
               snapshotDir, (WithName) child,
               laterSnapshot == null ? Snapshot.CURRENT_STATE_ID :
-                laterSnapshot.getId());
+                  laterSnapshot.getId());
           if (renameTargetPath != null) {
             toProcess = true;
             diffReport.setRenameTarget(child.getId(), renameTargetPath);
@@ -437,8 +423,8 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    *                    computation has to start is processed or not.
    */
   private boolean computeDiffRecursively(final INodeDirectory snapshotDir,
-       INode node, List<byte[]> parentPath, SnapshotDiffListingInfo diffReport,
-       final byte[][] resume, int level, boolean processFlag) {
+                                         INode node, List<byte[]> parentPath, SnapshotDiffListingInfo diffReport,
+                                         final byte[][] resume, int level, boolean processFlag) {
     final Snapshot earlier = diffReport.getEarlier();
     final Snapshot later = diffReport.getLater();
     byte[][] relativePath = parentPath.toArray(new byte[parentPath.size()][]);
@@ -509,7 +495,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
    * if the rename target is also under the same snapshottable directory.
    */
   public byte[][] findRenameTargetPath(final INodeDirectory snapshotRoot,
-      INodeReference.WithName wn, final int snapshotId) {
+                                       INodeReference.WithName wn, final int snapshotId) {
     INode inode = wn.getReferredINode();
     final LinkedList<byte[]> ancestors = Lists.newLinkedList();
     while (inode != null) {
@@ -543,19 +529,19 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
 
   @VisibleForTesting
   public void dumpTreeRecursively(INodeDirectory snapshotRoot, PrintWriter out,
-      StringBuilder prefix, int snapshot) {
+                                  StringBuilder prefix, int snapshot) {
     if (snapshot == Snapshot.CURRENT_STATE_ID) {
       out.println();
       out.print(prefix);
 
       out.print("Snapshot of ");
       final String name = snapshotRoot.getLocalName();
-      out.print(name.isEmpty()? "/": name);
+      out.print(name.isEmpty() ? "/" : name);
       out.print(": quota=");
       out.print(getSnapshotQuota());
 
       int n = 0;
-      for(DirectoryDiff diff : getDiffs()) {
+      for (DirectoryDiff diff : getDiffs()) {
         if (diff.isSnapshotRoot()) {
           n++;
         }
@@ -567,43 +553,43 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
 
       INodeDirectory.dumpTreeRecursively(out, prefix,
           new Iterable<SnapshotAndINode>() {
-        @Override
-        public Iterator<SnapshotAndINode> iterator() {
-          return new Iterator<SnapshotAndINode>() {
-            final Iterator<DirectoryDiff> i = getDiffs().iterator();
-            private DirectoryDiff next = findNext();
+            @Override
+            public Iterator<SnapshotAndINode> iterator() {
+              return new Iterator<SnapshotAndINode>() {
+                final Iterator<DirectoryDiff> i = getDiffs().iterator();
+                private DirectoryDiff next = findNext();
 
-            private DirectoryDiff findNext() {
-              for(; i.hasNext(); ) {
-                final DirectoryDiff diff = i.next();
-                if (diff.isSnapshotRoot()) {
-                  return diff;
+                private DirectoryDiff findNext() {
+                  for (; i.hasNext(); ) {
+                    final DirectoryDiff diff = i.next();
+                    if (diff.isSnapshotRoot()) {
+                      return diff;
+                    }
+                  }
+                  return null;
                 }
-              }
-              return null;
-            }
 
-            @Override
-            public boolean hasNext() {
-              return next != null;
-            }
+                @Override
+                public boolean hasNext() {
+                  return next != null;
+                }
 
-            @Override
-            public SnapshotAndINode next() {
-              final SnapshotAndINode pair = new SnapshotAndINode(next
-                  .getSnapshotId(), getSnapshotById(next.getSnapshotId())
-                  .getRoot());
-              next = findNext();
-              return pair;
-            }
+                @Override
+                public SnapshotAndINode next() {
+                  final SnapshotAndINode pair = new SnapshotAndINode(next
+                      .getSnapshotId(), getSnapshotById(next.getSnapshotId())
+                      .getRoot());
+                  next = findNext();
+                  return pair;
+                }
 
-            @Override
-            public void remove() {
-              throw new UnsupportedOperationException();
+                @Override
+                public void remove() {
+                  throw new UnsupportedOperationException();
+                }
+              };
             }
-          };
-        }
-      });
+          });
     }
   }
 }

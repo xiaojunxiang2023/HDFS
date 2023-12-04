@@ -28,7 +28,7 @@ public final class BBUploadHandle implements UploadHandle {
 
   private final byte[] bytes;
 
-  private BBUploadHandle(ByteBuffer byteBuffer){
+  private BBUploadHandle(ByteBuffer byteBuffer) {
     this.bytes = byteBuffer.array();
   }
 

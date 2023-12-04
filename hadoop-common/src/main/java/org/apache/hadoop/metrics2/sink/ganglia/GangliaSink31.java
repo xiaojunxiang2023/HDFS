@@ -28,14 +28,14 @@ public class GangliaSink31 extends GangliaSink30 {
    */
   @Override
   protected void emitMetric(String groupName, String name, String type,
-      String value, GangliaConf gConf, GangliaSlope gSlope) 
-    throws IOException {
+                            String value, GangliaConf gConf, GangliaSlope gSlope)
+      throws IOException {
 
     if (name == null) {
       LOG.warn("Metric was emitted with no name.");
       return;
     } else if (value == null) {
-      LOG.warn("Metric name " + name +" was emitted with a null value.");
+      LOG.warn("Metric name " + name + " was emitted with a null value.");
       return;
     } else if (type == null) {
       LOG.warn("Metric name " + name + ", value " + value + " has no type.");
@@ -44,7 +44,7 @@ public class GangliaSink31 extends GangliaSink30 {
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Emitting metric " + name + ", type " + type + ", value " + value
-          + ", slope " + gSlope.name()+ " from hostname " + getHostName());
+          + ", slope " + gSlope.name() + " from hostname " + getHostName());
     }
 
     // The following XDR recipe was done through a careful reading of

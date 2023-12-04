@@ -1,20 +1,20 @@
 package org.apache.hadoop.security.authorize;
 
-import java.net.InetAddress;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ReflectionUtils;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.net.InetAddress;
+
 // MapReduce 也可见
 public class ProxyUsers {
 
   public static final String CONF_HADOOP_PROXYUSER = "hadoop.proxyuser";
 
-  private static volatile ImpersonationProvider sip ;
+  private static volatile ImpersonationProvider sip;
 
   /**
    * Returns an instance of ImpersonationProvider.
@@ -46,8 +46,8 @@ public class ProxyUsers {
    * @param proxyUserPrefix proxy user configuration prefix
    */
   public static void refreshSuperUserGroupsConfiguration(Configuration conf,
-      String proxyUserPrefix) {
-    Preconditions.checkArgument(proxyUserPrefix != null && 
+                                                         String proxyUserPrefix) {
+    Preconditions.checkArgument(proxyUserPrefix != null &&
         !proxyUserPrefix.isEmpty(), "prefix cannot be NULL or empty");
     // sip is volatile. Any assignment to it as well as the object's state
     // will be visible to all the other threads. 
@@ -64,7 +64,7 @@ public class ProxyUsers {
   public static void refreshSuperUserGroupsConfiguration(Configuration conf) {
     refreshSuperUserGroupsConfiguration(conf, CONF_HADOOP_PROXYUSER);
   }
-  
+
   /**
    * Authorize the superuser which is doing doAs.
    * {@link #authorize(UserGroupInformation, InetAddress)} should be preferred
@@ -74,8 +74,8 @@ public class ProxyUsers {
    * @param remoteAddress the ip address of client
    * @throws AuthorizationException
    */
-  public static void authorize(UserGroupInformation user, 
-      String remoteAddress) throws AuthorizationException {
+  public static void authorize(UserGroupInformation user,
+                               String remoteAddress) throws AuthorizationException {
     getSip().authorize(user, remoteAddress);
   }
 
@@ -87,7 +87,7 @@ public class ProxyUsers {
    * @throws AuthorizationException
    */
   public static void authorize(UserGroupInformation user,
-      InetAddress remoteAddress) throws AuthorizationException {
+                               InetAddress remoteAddress) throws AuthorizationException {
     getSip().authorize(user, remoteAddress);
   }
 
@@ -110,14 +110,14 @@ public class ProxyUsers {
    * @deprecated use {@link #authorize(UserGroupInformation, String)} instead.
    */
   @Deprecated
-  public static void authorize(UserGroupInformation user, 
-      String remoteAddress, Configuration conf) throws AuthorizationException {
+  public static void authorize(UserGroupInformation user,
+                               String remoteAddress, Configuration conf) throws AuthorizationException {
     authorize(user, remoteAddress);
   }
-  
-  @VisibleForTesting 
+
+  @VisibleForTesting
   public static DefaultImpersonationProvider getDefaultImpersonationProvider() {
     return ((DefaultImpersonationProvider) getSip());
   }
-      
+
 }

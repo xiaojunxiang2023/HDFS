@@ -1,8 +1,9 @@
 package org.apache.hadoop.ipc;
 
-import java.io.IOException;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto;
+
+import java.io.IOException;
 
 /**
  * This interface intends to align the state between client and server

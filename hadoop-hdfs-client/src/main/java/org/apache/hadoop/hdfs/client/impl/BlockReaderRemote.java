@@ -1,15 +1,5 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
-import java.util.EnumSet;
-import java.util.UUID;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.hdfs.BlockReader;
@@ -30,12 +20,17 @@ import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.shortcircuit.ClientMmap;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.util.DataChecksum;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
+import org.apache.hadoop.util.DataChecksum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.util.EnumSet;
+import java.util.UUID;
 
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_BLOCK_READER_REMOTE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_BLOCK_READER_REMOTE_BUFFER_SIZE_KEY;
@@ -235,7 +230,7 @@ public class BlockReaderRemote implements BlockReader {
         break;
       }
 
-      int skip = (int)Math.min(curDataSlice.remaining(), needToSkip);
+      int skip = (int) Math.min(curDataSlice.remaining(), needToSkip);
       curDataSlice.position(curDataSlice.position() + skip);
       skipped += skip;
     }
@@ -267,7 +262,7 @@ public class BlockReaderRemote implements BlockReader {
     this.in = peer.getInputStreamChannel();
     this.checksum = checksum;
     this.verifyChecksum = verifyChecksum;
-    this.startOffset = Math.max( startOffset, 0 );
+    this.startOffset = Math.max(startOffset, 0);
     this.filename = file;
     this.peerCache = peerCache;
     this.blockId = blockId;
@@ -337,7 +332,7 @@ public class BlockReaderRemote implements BlockReader {
    * @return string that has a file name for debug purposes
    */
   public static String getFileName(final InetSocketAddress s,
-      final String poolId, final long blockId) {
+                                   final String poolId, final long blockId) {
     return s.toString() + ":" + poolId + ":" + blockId;
   }
 
@@ -367,15 +362,15 @@ public class BlockReaderRemote implements BlockReader {
    * @return New BlockReader instance, or null on error.
    */
   public static BlockReader newBlockReader(String file,
-      ExtendedBlock block,
-      Token<BlockTokenIdentifier> blockToken,
-      long startOffset, long len,
-      boolean verifyChecksum,
-      String clientName,
-      Peer peer, DatanodeID datanodeID,
-      PeerCache peerCache,
-      CachingStrategy cachingStrategy,
-      int networkDistance, Configuration configuration) throws IOException {
+                                           ExtendedBlock block,
+                                           Token<BlockTokenIdentifier> blockToken,
+                                           long startOffset, long len,
+                                           boolean verifyChecksum,
+                                           String clientName,
+                                           Peer peer, DatanodeID datanodeID,
+                                           PeerCache peerCache,
+                                           CachingStrategy cachingStrategy,
+                                           int networkDistance, Configuration configuration) throws IOException {
     // in and out will be closed when sock is closed (by the caller)
     int bufferSize = configuration.getInt(
         DFS_CLIENT_BLOCK_READER_REMOTE_BUFFER_SIZE_KEY,
@@ -402,7 +397,7 @@ public class BlockReaderRemote implements BlockReader {
     // Read the first chunk offset.
     long firstChunkOffset = checksumInfo.getChunkOffset();
 
-    if ( firstChunkOffset < 0 || firstChunkOffset > startOffset ||
+    if (firstChunkOffset < 0 || firstChunkOffset > startOffset ||
         firstChunkOffset <= (startOffset - checksum.getBytesPerChecksum())) {
       throw new IOException("BlockReader: error in first chunk offset (" +
           firstChunkOffset + ") startOffset is " +

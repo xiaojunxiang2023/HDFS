@@ -1,16 +1,23 @@
 package org.apache.hadoop.hdfs.server.federation.resolver;
 
 public interface FederationNamenodeContext {
-    String getRpcAddress();
-    String getServiceAddress();
-    String getLifelineAddress();
-    String getWebAddress();
+  String getRpcAddress();
 
-    String getNameserviceId();
-    String getNamenodeId();
-    String getNamenodeKey();
+  String getServiceAddress();
 
-    String getWebScheme();
-    FederationNamenodeServiceState getState();
-    long getDateModified();
+  String getLifelineAddress();
+
+  String getWebAddress();
+
+  String getNameserviceId();
+
+  String getNamenodeId();
+
+  String getNamenodeKey();
+
+  String getWebScheme();
+
+  FederationNamenodeServiceState getState();
+
+  long getDateModified();
 }

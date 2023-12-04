@@ -1,4 +1,5 @@
 package org.apache.hadoop.metrics2.lib;
+
 import org.apache.hadoop.metrics2.MetricsException;
 
 /**
@@ -21,7 +22,7 @@ public enum DefaultMetricsFactory {
       }
       return (T) mmfImpl;
     }
-    throw new MetricsException("Unknown metrics factory type: "+ cls.getName());
+    throw new MetricsException("Unknown metrics factory type: " + cls.getName());
   }
 
   public synchronized void setInstance(MutableMetricsFactory factory) {

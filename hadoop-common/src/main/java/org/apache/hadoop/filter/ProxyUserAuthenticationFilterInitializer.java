@@ -1,11 +1,12 @@
 package org.apache.hadoop.filter;
 
-import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.http.FilterContainer;
 import org.apache.hadoop.http.FilterInitializer;
 import org.apache.hadoop.security.AuthenticationFilterInitializer;
 import org.apache.hadoop.security.authorize.ProxyUsers;
+
+import java.util.Map;
 
 /**
  * Filter initializer to initialize

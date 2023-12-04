@@ -14,35 +14,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.protocol.datatransfer.sasl;
-
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_RPC_PROTECTION;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_DATA_TRANSFER_PROTECTION_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_DATA_TRANSFER_SASL_PROPS_RESOLVER_CLASS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_ENCRYPT_DATA_TRANSFER_CIPHER_KEY_BITLENGTH_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_ENCRYPT_DATA_TRANSFER_CIPHER_KEY_BITLENGTH_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_ENCRYPT_DATA_TRANSFER_CIPHER_SUITES_KEY;
-import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import javax.security.sasl.Sasl;
+ */
+package org.apache.hadoop.hdfs.protocol.datatransfer.sasl;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.crypto.CipherOption;
-import org.apache.hadoop.crypto.CipherSuite;
-import org.apache.hadoop.crypto.CryptoCodec;
-import org.apache.hadoop.crypto.CryptoInputStream;
-import org.apache.hadoop.crypto.CryptoOutputStream;
+import org.apache.hadoop.crypto.*;
 import org.apache.hadoop.hdfs.net.Peer;
 import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
 import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
@@ -54,14 +31,29 @@ import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.security.token.block.InvalidBlockTokenException;
 import org.apache.hadoop.security.SaslPropertiesResolver;
 import org.apache.hadoop.security.SaslRpcServer.QualityOfProtection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableSet;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.security.sasl.Sasl;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_RPC_PROTECTION;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS;
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.*;
+import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
 
 /**
  * Utility methods implementing SASL negotiation for DataTransferProtocol.
@@ -92,7 +84,7 @@ public final class DataTransferSaslUtil {
    * @throws IOException for any error
    */
   public static void checkSaslComplete(SaslParticipant sasl,
-      Map<String, String> saslProps) throws IOException {
+                                       Map<String, String> saslProps) throws IOException {
     if (!sasl.isComplete()) {
       throw new IOException("Failed to complete SASL handshake");
     }
@@ -180,7 +172,7 @@ public final class DataTransferSaslUtil {
     String qops = conf.get(DFS_DATA_TRANSFER_PROTECTION_KEY);
     if (qops == null || qops.isEmpty()) {
       LOG.debug("DataTransferProtocol not using SaslPropertiesResolver, no " +
-          "QOP found in configuration for {}",
+              "QOP found in configuration for {}",
           DFS_DATA_TRANSFER_PROTECTION_KEY);
       return null;
     }
@@ -191,7 +183,7 @@ public final class DataTransferSaslUtil {
         SaslPropertiesResolver.class, SaslPropertiesResolver.class);
     resolverClass =
         conf.getClass(DFS_DATA_TRANSFER_SASL_PROPS_RESOLVER_CLASS_KEY,
-        resolverClass, SaslPropertiesResolver.class);
+            resolverClass, SaslPropertiesResolver.class);
     saslPropsResolverConf.setClass(HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS,
         resolverClass, SaslPropertiesResolver.class);
     SaslPropertiesResolver resolver = SaslPropertiesResolver.getInstance(
@@ -204,22 +196,22 @@ public final class DataTransferSaslUtil {
   }
 
   private static <T> T readSaslMessage(InputStream in,
-      Function<DataTransferEncryptorMessageProto, ? extends T> handler) throws IOException {
+                                       Function<DataTransferEncryptorMessageProto, ? extends T> handler) throws IOException {
     DataTransferEncryptorMessageProto proto =
         DataTransferEncryptorMessageProto.parseFrom(vintPrefixed(in));
     switch (proto.getStatus()) {
-    case ERROR_UNKNOWN_KEY:
-      throw new InvalidEncryptionKeyException(proto.getMessage());
-    case ERROR:
-      if (proto.hasAccessTokenError() && proto.getAccessTokenError()) {
-        throw new InvalidBlockTokenException(proto.getMessage());
-      }
-      throw new IOException(proto.getMessage());
-    case SUCCESS:
-      return handler.apply(proto);
-    default:
-      throw new IOException(
-          "Unknown status: " + proto.getStatus() + ", message: " + proto.getMessage());
+      case ERROR_UNKNOWN_KEY:
+        throw new InvalidEncryptionKeyException(proto.getMessage());
+      case ERROR:
+        if (proto.hasAccessTokenError() && proto.getAccessTokenError()) {
+          throw new InvalidBlockTokenException(proto.getMessage());
+        }
+        throw new IOException(proto.getMessage());
+      case SUCCESS:
+        return handler.apply(proto);
+      default:
+        throw new IOException(
+            "Unknown status: " + proto.getStatus() + ", message: " + proto.getMessage());
     }
   }
 
@@ -302,7 +294,7 @@ public final class DataTransferSaslUtil {
    * @return CipherOption negotiated cipher option
    */
   public static CipherOption negotiateCipherOption(Configuration conf,
-      List<CipherOption> options) throws IOException {
+                                                   List<CipherOption> options) throws IOException {
     // Negotiate cipher suites if configured.  Currently, the only supported
     // cipher suite is AES/CTR/NoPadding, but the protocol allows multiple
     // values for future expansion.
@@ -379,8 +371,8 @@ public final class DataTransferSaslUtil {
    * @throws IOException for any error
    */
   public static IOStreamPair createStreamPair(Configuration conf,
-      CipherOption cipherOption, OutputStream out, InputStream in,
-      boolean isServer) throws IOException {
+                                              CipherOption cipherOption, OutputStream out, InputStream in,
+                                              boolean isServer) throws IOException {
     LOG.debug("Creating IOStreamPair of CryptoInputStream and "
         + "CryptoOutputStream.");
     CryptoCodec codec = CryptoCodec.getInstance(conf,
@@ -404,7 +396,7 @@ public final class DataTransferSaslUtil {
    * @throws IOException for any error
    */
   public static void sendGenericSaslErrorMessage(OutputStream out,
-      String message) throws IOException {
+                                                 String message) throws IOException {
     sendSaslMessage(out, DataTransferEncryptorStatus.ERROR, null, message);
   }
 
@@ -421,7 +413,7 @@ public final class DataTransferSaslUtil {
   }
 
   public static void sendSaslMessageHandshakeSecret(OutputStream out,
-      byte[] payload, byte[] secret, String bpid) throws IOException {
+                                                    byte[] payload, byte[] secret, String bpid) throws IOException {
     sendSaslMessageHandshakeSecret(out, DataTransferEncryptorStatus.SUCCESS,
         payload, null, secret, bpid);
   }
@@ -462,7 +454,7 @@ public final class DataTransferSaslUtil {
    * @throws IOException for any error
    */
   public static SaslResponseWithNegotiatedCipherOption
-      readSaslMessageAndNegotiatedCipherOption(InputStream in)
+  readSaslMessageAndNegotiatedCipherOption(InputStream in)
       throws IOException {
     return readSaslMessage(in, proto -> {
       byte[] response = proto.getPayload().toByteArray();
@@ -540,21 +532,21 @@ public final class DataTransferSaslUtil {
    * @throws IOException for any error
    */
   public static void sendSaslMessage(OutputStream out,
-      DataTransferEncryptorStatus status, byte[] payload, String message)
+                                     DataTransferEncryptorStatus status, byte[] payload, String message)
       throws IOException {
     sendSaslMessage(out, status, payload, message, null);
   }
 
   public static void sendSaslMessage(OutputStream out,
-      DataTransferEncryptorStatus status, byte[] payload, String message,
-      HandshakeSecretProto handshakeSecret)
+                                     DataTransferEncryptorStatus status, byte[] payload, String message,
+                                     HandshakeSecretProto handshakeSecret)
       throws IOException {
     sendSaslMessage(out, status, payload, message, handshakeSecret, false);
   }
 
   public static void sendSaslMessage(OutputStream out,
-      DataTransferEncryptorStatus status, byte[] payload, String message,
-      HandshakeSecretProto handshakeSecret, boolean accessTokenError)
+                                     DataTransferEncryptorStatus status, byte[] payload, String message,
+                                     HandshakeSecretProto handshakeSecret, boolean accessTokenError)
       throws IOException {
     DataTransferEncryptorMessageProto.Builder builder =
         DataTransferEncryptorMessageProto.newBuilder();
@@ -579,8 +571,8 @@ public final class DataTransferSaslUtil {
   }
 
   public static void sendSaslMessageHandshakeSecret(OutputStream out,
-      DataTransferEncryptorStatus status, byte[] payload, String message,
-      byte[] secret, String bpid) throws IOException {
+                                                    DataTransferEncryptorStatus status, byte[] payload, String message,
+                                                    byte[] secret, String bpid) throws IOException {
     HandshakeSecretProto.Builder builder =
         HandshakeSecretProto.newBuilder();
     builder.setSecret(ByteString.copyFrom(secret));

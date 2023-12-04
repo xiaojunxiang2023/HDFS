@@ -1,13 +1,12 @@
 package org.apache.hadoop.tools.protocolPB;
 
-import java.io.IOException;
-
+import org.apache.hadoop.thirdparty.protobuf.RpcController;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 import org.apache.hadoop.tools.GetUserMappingsProtocol;
 import org.apache.hadoop.tools.proto.GetUserMappingsProtocolProtos.GetGroupsForUserRequestProto;
 import org.apache.hadoop.tools.proto.GetUserMappingsProtocolProtos.GetGroupsForUserResponseProto;
 
-import org.apache.hadoop.thirdparty.protobuf.RpcController;
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+import java.io.IOException;
 
 public class GetUserMappingsProtocolServerSideTranslatorPB implements
     GetUserMappingsProtocolPB {

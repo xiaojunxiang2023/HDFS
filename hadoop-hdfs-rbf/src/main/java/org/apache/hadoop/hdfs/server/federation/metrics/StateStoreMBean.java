@@ -6,19 +6,19 @@ import org.apache.hadoop.classification.InterfaceStability;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public interface StateStoreMBean {
-    long getReadOps();
+  long getReadOps();
 
-    double getReadAvg();
+  double getReadAvg();
 
-    long getWriteOps();
+  long getWriteOps();
 
-    double getWriteAvg();
+  double getWriteAvg();
 
-    long getFailureOps();
+  long getFailureOps();
 
-    double getFailureAvg();
+  double getFailureAvg();
 
-    long getRemoveOps();
+  long getRemoveOps();
 
-    double getRemoveAvg();
+  double getRemoveAvg();
 }

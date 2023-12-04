@@ -1,26 +1,24 @@
 package org.apache.hadoop.net.unix;
 
+import org.apache.commons.lang3.SystemUtils;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
+import org.apache.hadoop.util.NativeCodeLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.EOFException;
-import org.apache.hadoop.io.IOUtils;
-
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.TreeMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.commons.lang3.SystemUtils;
-import org.apache.hadoop.util.NativeCodeLoader;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The DomainSocketWatcher watches a set of domain sockets to see when they
@@ -42,7 +40,7 @@ public final class DomainSocketWatcher implements Closeable {
         problem = null;
       } catch (Throwable t) {
         problem = "DomainSocketWatcher#anchorNative got error: " +
-          t.getMessage();
+            t.getMessage();
       }
       loadingFailureReason = problem;
     }
@@ -71,7 +69,7 @@ public final class DomainSocketWatcher implements Closeable {
      * readable, or the remote end being closed.
      *
      * @param sock    The socket that the event occurred on.
-     * @return        Whether we should close the socket.
+     * @return Whether we should close the socket.
      */
     boolean handle(DomainSocket sock);
   }
@@ -81,12 +79,12 @@ public final class DomainSocketWatcher implements Closeable {
    */
   private class NotificationHandler implements Handler {
     public boolean handle(DomainSocket sock) {
-      assert(lock.isHeldByCurrentThread());
+      assert (lock.isHeldByCurrentThread());
       try {
         kicked = false;
         if (LOG.isTraceEnabled()) {
           LOG.trace(this + ": NotificationHandler: doing a read on " +
-            sock.fd);
+              sock.fd);
         }
         if (sock.getInputStream().read() == -1) {
           if (LOG.isTraceEnabled()) {
@@ -96,7 +94,7 @@ public final class DomainSocketWatcher implements Closeable {
         }
         if (LOG.isTraceEnabled()) {
           LOG.trace(this + ": NotificationHandler: read succeeded on " +
-            sock.fd);
+              sock.fd);
         }
         return false;
       } catch (IOException e) {
@@ -160,7 +158,7 @@ public final class DomainSocketWatcher implements Closeable {
      * Get an array containing all the FDs marked as readable.
      * Also clear the state of all FDs.
      *
-     * @return     An array containing all of the currently readable file
+     * @return An array containing all of the currently readable file
      *             descriptors.
      */
     native int[] getAndClearReadableFds();
@@ -209,7 +207,7 @@ public final class DomainSocketWatcher implements Closeable {
    * Whether or not this DomainSocketWatcher is closed.
    */
   private boolean closed = false;
-  
+
   /**
    * True if we have written a byte to the notification socket. We should not
    * write anything else to the socket until the notification handler has had a
@@ -337,12 +335,12 @@ public final class DomainSocketWatcher implements Closeable {
    * Wake up the DomainSocketWatcher thread.
    */
   private void kick() {
-    assert(lock.isHeldByCurrentThread());
-    
+    assert (lock.isHeldByCurrentThread());
+
     if (kicked) {
       return;
     }
-    
+
     try {
       notificationSockets[0].getOutputStream().write(0);
       kicked = true;
@@ -364,14 +362,14 @@ public final class DomainSocketWatcher implements Closeable {
    * @return true if the domain socket was closed as a result of processing
    */
   private boolean sendCallback(String caller, TreeMap<Integer, Entry> entries,
-      FdSet fdSet, int fd) {
+                               FdSet fdSet, int fd) {
     if (LOG.isTraceEnabled()) {
       LOG.trace(this + ": " + caller + " starting sendCallback for fd " + fd);
     }
     Entry entry = entries.get(fd);
     Preconditions.checkNotNull(entry,
         this + ": fdSet contained " + fd + ", which we were " +
-        "not tracking.");
+            "not tracking.");
     DomainSocket sock = entry.getDomainSocket();
     if (entry.getHandler().handle(sock)) {
       if (LOG.isTraceEnabled()) {
@@ -381,7 +379,7 @@ public final class DomainSocketWatcher implements Closeable {
       if (toRemove.remove(fd) != null) {
         if (LOG.isTraceEnabled()) {
           LOG.trace(this + ": " + caller + " : sendCallback processed fd " +
-            fd  + " in toRemove.");
+              fd + " in toRemove.");
         }
       }
       try {
@@ -389,7 +387,7 @@ public final class DomainSocketWatcher implements Closeable {
       } catch (IOException e) {
         Preconditions.checkArgument(false,
             this + ": file descriptor " + sock.fd + " was closed while " +
-            "still in the poll(2) loop.");
+                "still in the poll(2) loop.");
       }
       IOUtils.cleanupWithLogger(LOG, sock);
       fdSet.remove(fd);
@@ -413,7 +411,7 @@ public final class DomainSocketWatcher implements Closeable {
    * @param fd file descriptor
    */
   private void sendCallbackAndRemove(String caller,
-      TreeMap<Integer, Entry> entries, FdSet fdSet, int fd) {
+                                     TreeMap<Integer, Entry> entries, FdSet fdSet, int fd) {
     if (sendCallback(caller, entries, fdSet, fd)) {
       entries.remove(fd);
     }
@@ -447,7 +445,7 @@ public final class DomainSocketWatcher implements Closeable {
                 Entry prevEntry = entries.put(sock.fd, entry);
                 Preconditions.checkState(prevEntry == null,
                     this + ": tried to watch a file descriptor that we " +
-                    "were already watching: " + sock);
+                        "were already watching: " + sock);
                 if (LOG.isTraceEnabled()) {
                   LOG.trace(this + ": adding fd " + sock.fd);
                 }
@@ -500,7 +498,7 @@ public final class DomainSocketWatcher implements Closeable {
           closed = true;
           if (!(toAdd.isEmpty() && toRemove.isEmpty())) {
             // Items in toAdd might not be added to entries, handle it here
-            for (Iterator<Entry> iter = toAdd.iterator(); iter.hasNext();) {
+            for (Iterator<Entry> iter = toAdd.iterator(); iter.hasNext(); ) {
               Entry entry = iter.next();
               entry.getDomainSocket().refCount.unreference();
               entry.getHandler().handle(entry.getDomainSocket());
@@ -524,8 +522,8 @@ public final class DomainSocketWatcher implements Closeable {
   });
 
   private void addNotificationSocket(final TreeMap<Integer, Entry> entries,
-      FdSet fdSet) {
-    entries.put(notificationSockets[1].fd, 
+                                     FdSet fdSet) {
+    entries.put(notificationSockets[1].fd,
         new Entry(notificationSockets[1], new NotificationHandler()));
     try {
       notificationSockets[1].refCount.reference();
@@ -541,7 +539,7 @@ public final class DomainSocketWatcher implements Closeable {
   }
 
   public String toString() {
-    return "DomainSocketWatcher(" + System.identityHashCode(this) + ")"; 
+    return "DomainSocketWatcher(" + System.identityHashCode(this) + ")";
   }
 
   private static native int doPoll0(int maxWaitMs, FdSet readFds)

@@ -8,9 +8,9 @@ import java.io.IOException;
  * API request for refreshing super user groups on router.
  */
 public abstract class RefreshSuperUserGroupsConfigurationRequest {
-    public static RefreshSuperUserGroupsConfigurationRequest newInstance()
-            throws IOException {
-        return StateStoreSerializer
-                .newRecord(RefreshSuperUserGroupsConfigurationRequest.class);
-    }
+  public static RefreshSuperUserGroupsConfigurationRequest newInstance()
+      throws IOException {
+    return StateStoreSerializer
+        .newRecord(RefreshSuperUserGroupsConfigurationRequest.class);
+  }
 }

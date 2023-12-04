@@ -1,10 +1,10 @@
 package org.apache.hadoop.ipc;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.hadoop.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Determines which queue to start reading from, occasionally drawing from
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class WeightedRoundRobinMultiplexer implements RpcMultiplexer {
   // Config keys
   public static final String IPC_CALLQUEUE_WRRMUX_WEIGHTS_KEY =
-    "faircallqueue.multiplexer.weights";
+      "faircallqueue.multiplexer.weights";
 
   public static final Logger LOG =
       LoggerFactory.getLogger(WeightedRoundRobinMultiplexer.class);
@@ -36,22 +36,22 @@ public class WeightedRoundRobinMultiplexer implements RpcMultiplexer {
   private int[] queueWeights; // The weights for each queue
 
   public WeightedRoundRobinMultiplexer(int aNumQueues, String ns,
-    Configuration conf) {
+                                       Configuration conf) {
     if (aNumQueues <= 0) {
       throw new IllegalArgumentException("Requested queues (" + aNumQueues +
-        ") must be greater than zero.");
+          ") must be greater than zero.");
     }
 
     this.numQueues = aNumQueues;
     this.queueWeights = conf.getInts(ns + "." +
-      IPC_CALLQUEUE_WRRMUX_WEIGHTS_KEY);
+        IPC_CALLQUEUE_WRRMUX_WEIGHTS_KEY);
 
     if (this.queueWeights.length == 0) {
       this.queueWeights = getDefaultQueueWeights(this.numQueues);
     } else if (this.queueWeights.length != this.numQueues) {
       throw new IllegalArgumentException(ns + "." +
-        IPC_CALLQUEUE_WRRMUX_WEIGHTS_KEY + " must specify exactly " +
-        this.numQueues + " weights: one for each priority level.");
+          IPC_CALLQUEUE_WRRMUX_WEIGHTS_KEY + " must specify exactly " +
+          this.numQueues + " weights: one for each priority level.");
     }
 
     this.currentQueueIndex = new AtomicInteger(0);
@@ -67,7 +67,7 @@ public class WeightedRoundRobinMultiplexer implements RpcMultiplexer {
     int[] weights = new int[aNumQueues];
 
     int weight = 1; // Start low
-    for(int i = aNumQueues - 1; i >= 0; i--) { // Start at lowest queue
+    for (int i = aNumQueues - 1; i >= 0; i--) { // Start at lowest queue
       weights[i] = weight;
       weight *= 2; // Double every iteration
     }
@@ -92,7 +92,7 @@ public class WeightedRoundRobinMultiplexer implements RpcMultiplexer {
     // called again, for the new currentQueueIndex
     this.requestsLeft.set(this.queueWeights[nextIdx]);
     LOG.debug("Moving to next queue from queue index {} to index {}, " +
-        "number of requests left for current queue: {}.",
+            "number of requests left for current queue: {}.",
         thisIdx, nextIdx, requestsLeft);
   }
 

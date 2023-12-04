@@ -24,7 +24,7 @@ public class UnmaskedPermissionParam extends PermissionParam {
    * @param str a string representation of the parameter value.
    */
   public UnmaskedPermissionParam(final String str) {
-    super(DOMAIN, DOMAIN.parse(str), (short)0, (short)01777);
+    super(DOMAIN, DOMAIN.parse(str), (short) 0, (short) 01777);
   }
 
   @Override

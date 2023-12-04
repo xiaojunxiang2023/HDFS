@@ -1,17 +1,12 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.IOException;
-import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.JournalRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.JournalResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.StartLogSegmentRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.StartLogSegmentResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.server.protocol.FenceResponse;
 import org.apache.hadoop.hdfs.server.protocol.JournalProtocol;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
 
 /**
  * Implementation for protobuf service that forwards requests
@@ -22,11 +17,11 @@ public class JournalProtocolServerSideTranslatorPB implements JournalProtocolPB 
   /** Server side implementation to delegate the requests to */
   private final JournalProtocol impl;
 
-  private final static JournalResponseProto VOID_JOURNAL_RESPONSE = 
-  JournalResponseProto.newBuilder().build();
+  private final static JournalResponseProto VOID_JOURNAL_RESPONSE =
+      JournalResponseProto.newBuilder().build();
 
   private final static StartLogSegmentResponseProto
-  VOID_START_LOG_SEGMENT_RESPONSE =
+      VOID_START_LOG_SEGMENT_RESPONSE =
       StartLogSegmentResponseProto.newBuilder().build();
 
   public JournalProtocolServerSideTranslatorPB(JournalProtocol impl) {
@@ -36,7 +31,7 @@ public class JournalProtocolServerSideTranslatorPB implements JournalProtocolPB 
   /** @see JournalProtocol#journal */
   @Override
   public JournalResponseProto journal(RpcController unused,
-      JournalRequestProto req) throws ServiceException {
+                                      JournalRequestProto req) throws ServiceException {
     try {
       impl.journal(PBHelper.convert(req.getJournalInfo()), req.getEpoch(),
           req.getFirstTxnId(), req.getNumTxns(), req.getRecords().toByteArray());
@@ -49,7 +44,7 @@ public class JournalProtocolServerSideTranslatorPB implements JournalProtocolPB 
   /** @see JournalProtocol#startLogSegment */
   @Override
   public StartLogSegmentResponseProto startLogSegment(RpcController controller,
-      StartLogSegmentRequestProto req) throws ServiceException {
+                                                      StartLogSegmentRequestProto req) throws ServiceException {
     try {
       impl.startLogSegment(PBHelper.convert(req.getJournalInfo()),
           req.getEpoch(), req.getTxid());
@@ -61,7 +56,7 @@ public class JournalProtocolServerSideTranslatorPB implements JournalProtocolPB 
 
   @Override
   public FenceResponseProto fence(RpcController controller,
-      FenceRequestProto req) throws ServiceException {
+                                  FenceRequestProto req) throws ServiceException {
     try {
       FenceResponse resp = impl.fence(PBHelper.convert(req.getJournalInfo()), req.getEpoch(),
           req.getFencerInfo());

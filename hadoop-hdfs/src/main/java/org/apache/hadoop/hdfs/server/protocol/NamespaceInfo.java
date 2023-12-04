@@ -1,24 +1,24 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.io.IOException;
 import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NodeType;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NodeType;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage;
-import org.apache.hadoop.util.VersionInfo;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.VersionInfo;
+
+import java.io.IOException;
 
 /**
  * NamespaceInfo is returned by the name-node in reply 
  * to a data-node handshake.
- * 
+ *
  */
 public class NamespaceInfo extends StorageInfo {
-  final String  buildVersion;
+  final String buildVersion;
   String blockPoolID = "";    // id of the block pool
   String softwareVersion;
   long capabilities;
@@ -43,11 +43,13 @@ public class NamespaceInfo extends StorageInfo {
     STORAGE_BLOCK_REPORT_BUFFERS(true); // use optimized ByteString buffers
     private final boolean supported;
     private final long mask;
+
     Capability(boolean isSupported) {
       supported = isSupported;
       int bits = ordinal() - 1;
       mask = (bits < 0) ? 0 : (1L << bits);
     }
+
     public long getMask() {
       return mask;
     }
@@ -62,14 +64,14 @@ public class NamespaceInfo extends StorageInfo {
 
   // defaults to enabled capabilites since this ctor is for server
   public NamespaceInfo(int nsID, String clusterID, String bpID,
-      long cT, String buildVersion, String softwareVersion) {
+                       long cT, String buildVersion, String softwareVersion) {
     this(nsID, clusterID, bpID, cT, buildVersion, softwareVersion,
         CAPABILITIES_SUPPORTED);
   }
 
   public NamespaceInfo(int nsID, String clusterID, String bpID,
-      long cT, String buildVersion, String softwareVersion,
-      long capabilities, HAServiceState st) {
+                       long cT, String buildVersion, String softwareVersion,
+                       long capabilities, HAServiceState st) {
     this(nsID, clusterID, bpID, cT, buildVersion, softwareVersion,
         capabilities);
     this.state = st;
@@ -77,8 +79,8 @@ public class NamespaceInfo extends StorageInfo {
 
   // for use by server and/or client
   public NamespaceInfo(int nsID, String clusterID, String bpID,
-      long cT, String buildVersion, String softwareVersion,
-      long capabilities) {
+                       long cT, String buildVersion, String softwareVersion,
+                       long capabilities) {
     super(HdfsServerConstants.NAMENODE_LAYOUT_VERSION, nsID, clusterID, cT,
         NodeType.NAME_NODE);
     blockPoolID = bpID;
@@ -87,19 +89,19 @@ public class NamespaceInfo extends StorageInfo {
     this.capabilities = capabilities;
   }
 
-  public NamespaceInfo(int nsID, String clusterID, String bpID, 
-      long cT) {
+  public NamespaceInfo(int nsID, String clusterID, String bpID,
+                       long cT) {
     this(nsID, clusterID, bpID, cT, Storage.getBuildVersion(),
         VersionInfo.getVersion());
   }
 
   public NamespaceInfo(int nsID, String clusterID, String bpID,
-      long cT, HAServiceState st) {
+                       long cT, HAServiceState st) {
     this(nsID, clusterID, bpID, cT, Storage.getBuildVersion(),
         VersionInfo.getVersion());
     this.state = st;
   }
-  
+
   public long getCapabilities() {
     return capabilities;
   }
@@ -128,7 +130,7 @@ public class NamespaceInfo extends StorageInfo {
   public String getBlockPoolID() {
     return blockPoolID;
   }
-  
+
   public String getSoftwareVersion() {
     return softwareVersion;
   }
@@ -146,7 +148,7 @@ public class NamespaceInfo extends StorageInfo {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return super.toString() + ";bpid=" + blockPoolID;
   }
 

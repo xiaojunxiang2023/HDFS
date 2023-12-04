@@ -13,7 +13,7 @@ public class DataEncryptionKey {
   public final String encryptionAlgorithm;
 
   public DataEncryptionKey(int keyId, String blockPoolId, byte[] nonce,
-      byte[] encryptionKey, long expiryDate, String encryptionAlgorithm) {
+                           byte[] encryptionKey, long expiryDate, String encryptionAlgorithm) {
     this.keyId = keyId;
     this.blockPoolId = blockPoolId;
     this.nonce = nonce;

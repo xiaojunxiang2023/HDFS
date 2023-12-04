@@ -1,25 +1,23 @@
 package org.apache.hadoop.security;
 
+import org.apache.hadoop.util.Shell;
+import org.apache.hadoop.util.Shell.ExitCodeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.hadoop.util.Shell;
-import org.apache.hadoop.util.Shell.ExitCodeException;
-
-import org.apache.hadoop.security.NetgroupCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * A simple shell-based implementation of {@link GroupMappingServiceProvider} 
+ * A simple shell-based implementation of {@link GroupMappingServiceProvider}
  * that exec's the <code>groups</code> shell command to fetch the group
  * memberships of a given user.
  */
 // MapReduce也可见
 public class ShellBasedUnixGroupsNetgroupMapping
-  extends ShellBasedUnixGroupsMapping {
-  
+    extends ShellBasedUnixGroupsMapping {
+
   private static final Logger LOG =
       LoggerFactory.getLogger(ShellBasedUnixGroupsNetgroupMapping.class);
 
@@ -54,11 +52,11 @@ public class ShellBasedUnixGroupsNetgroupMapping
    */
   @Override
   public void cacheGroupsAdd(List<String> groups) throws IOException {
-    for(String group: groups) {
-      if(group.length() == 0) {
+    for (String group : groups) {
+      if (group.length() == 0) {
         // better safe than sorry (should never happen)
-      } else if(group.charAt(0) == '@') {
-        if(!NetgroupCache.isCached(group)) {
+      } else if (group.charAt(0) == '@') {
+        if (!NetgroupCache.isCached(group)) {
           NetgroupCache.add(group, getUsersForNetgroup(group));
         }
       } else {
@@ -73,8 +71,8 @@ public class ShellBasedUnixGroupsNetgroupMapping
    * @param netgroup return users for this netgroup
    * @return list of users for a given netgroup
    */
-  protected List<String> getUsersForNetgroup(String netgroup) 
-    throws IOException {
+  protected List<String> getUsersForNetgroup(String netgroup)
+      throws IOException {
 
     List<String> users = new LinkedList<String>();
 
@@ -85,11 +83,11 @@ public class ShellBasedUnixGroupsNetgroupMapping
     usersRaw = usersRaw.replaceAll(" +", "");
     // remove netgroup name at the beginning of the string
     usersRaw = usersRaw.replaceFirst(
-      netgroup.replaceFirst("@", "") + "[()]+",
-      "");
+        netgroup.replaceFirst("@", "") + "[()]+",
+        "");
     // split string into user infos
     String[] userInfos = usersRaw.split("[()]+");
-    for(String userInfo : userInfos) {
+    for (String userInfo : userInfos) {
       // userInfo: xxx,user,yyy (xxx, yyy can be empty strings)
       // get rid of everything before first and after last comma
       String user = userInfo.replaceFirst("[^,]*,", "");
@@ -115,7 +113,7 @@ public class ShellBasedUnixGroupsNetgroupMapping
     try {
       // shell command does not expect '@' at the beginning of the group name
       result = Shell.execCommand(
-        Shell.getUsersForNetgroupCommand(netgroup.substring(1)));
+          Shell.getUsersForNetgroupCommand(netgroup.substring(1)));
     } catch (ExitCodeException e) {
       // if we didn't get the group - just return empty list;
       LOG.warn("error getting users for netgroup " + netgroup, e);

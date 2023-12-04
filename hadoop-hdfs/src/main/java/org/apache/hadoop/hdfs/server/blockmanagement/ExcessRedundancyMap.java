@@ -1,14 +1,13 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
+import org.apache.hadoop.hdfs.server.namenode.NameNode;
+import org.apache.hadoop.hdfs.util.LightWeightHashSet;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
-import org.apache.hadoop.hdfs.util.LightWeightHashSet;
-import org.slf4j.Logger;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * Maps a datnode to the set of excess redundancy details.
@@ -18,7 +17,7 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 class ExcessRedundancyMap {
   public static final Logger blockLog = NameNode.blockStateChangeLog;
 
-  private final Map<String, LightWeightHashSet<BlockInfo>> map =new HashMap<>();
+  private final Map<String, LightWeightHashSet<BlockInfo>> map = new HashMap<>();
   private final AtomicLong size = new AtomicLong(0L);
 
   /**
@@ -34,7 +33,7 @@ class ExcessRedundancyMap {
   @VisibleForTesting
   synchronized int getSize4Testing(String dnUuid) {
     final LightWeightHashSet<BlockInfo> set = map.get(dnUuid);
-    return set == null? 0: set.size();
+    return set == null ? 0 : set.size();
   }
 
   synchronized void clear() {

@@ -1,6 +1,8 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.lang.reflect.Array;
 
 /** A Writable for 2D arrays containing a matrix of instances of a class. */
@@ -30,14 +32,18 @@ public class TwoDArrayWritable implements Writable {
     return result;
   }
 
-  public void set(Writable[][] values) { this.values = values; }
+  public void set(Writable[][] values) {
+    this.values = values;
+  }
 
-  public Writable[][] get() { return values; }
+  public Writable[][] get() {
+    return values;
+  }
 
   @Override
   public void readFields(DataInput in) throws IOException {
     // construct matrix
-    values = new Writable[in.readInt()][];          
+    values = new Writable[in.readInt()][];
     for (int i = 0; i < values.length; i++) {
       values[i] = new Writable[in.readInt()];
     }
@@ -47,7 +53,7 @@ public class TwoDArrayWritable implements Writable {
       for (int j = 0; j < values[i].length; j++) {
         Writable value;                             // construct value
         try {
-          value = (Writable)valueClass.newInstance();
+          value = (Writable) valueClass.newInstance();
         } catch (InstantiationException e) {
           throw new RuntimeException(e.toString());
         } catch (IllegalAccessException e) {

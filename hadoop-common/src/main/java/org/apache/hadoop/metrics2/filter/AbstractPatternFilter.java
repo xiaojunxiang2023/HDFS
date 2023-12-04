@@ -1,15 +1,15 @@
 package org.apache.hadoop.metrics2.filter;
 
-import java.util.Map;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+import com.google.re2j.Matcher;
+import com.google.re2j.Pattern;
 import org.apache.commons.configuration2.SubsetConfiguration;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsFilter;
 import org.apache.hadoop.metrics2.MetricsTag;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 
-import com.google.re2j.Matcher;
-import com.google.re2j.Pattern;
+import java.util.Map;
+
 /**
  * Base class for pattern based filters
  */
@@ -45,7 +45,7 @@ public abstract class AbstractPatternFilter extends MetricsFilter {
       for (String pstr : patternStrings) {
         Matcher matcher = tagPattern.matcher(pstr);
         if (!matcher.matches()) {
-          throw new MetricsException("Illegal tag pattern: "+ pstr);
+          throw new MetricsException("Illegal tag pattern: " + pstr);
         }
         setIncludeTagPattern(matcher.group(1), compile(matcher.group(2)));
       }
@@ -55,7 +55,7 @@ public abstract class AbstractPatternFilter extends MetricsFilter {
       for (String pstr : patternStrings) {
         Matcher matcher = tagPattern.matcher(pstr);
         if (!matcher.matches()) {
-          throw new MetricsException("Illegal tag pattern: "+ pstr);
+          throw new MetricsException("Illegal tag pattern: " + pstr);
         }
         setExcludeTagPattern(matcher.group(1), compile(matcher.group(2)));
       }

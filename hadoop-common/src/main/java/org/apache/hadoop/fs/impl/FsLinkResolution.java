@@ -1,13 +1,9 @@
 package org.apache.hadoop.fs.impl;
 
-import java.io.IOException;
-
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.fs.AbstractFileSystem;
-import org.apache.hadoop.fs.FSLinkResolver;
-import org.apache.hadoop.fs.FileContext;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.UnresolvedLinkException;
+
+import java.io.IOException;
 
 /**
  * Class to allow Lambda expressions to be used in {@link FileContext}

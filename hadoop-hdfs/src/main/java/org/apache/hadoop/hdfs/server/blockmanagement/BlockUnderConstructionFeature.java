@@ -46,7 +46,7 @@ public class BlockUnderConstructionFeature {
   private BlockInfo truncateBlock;
 
   public BlockUnderConstructionFeature(Block blk,
-      BlockUCState state, DatanodeStorageInfo[] targets, BlockType blockType) {
+                                       BlockUCState state, DatanodeStorageInfo[] targets, BlockType blockType) {
     assert getBlockUCState() != COMPLETE :
         "BlockUnderConstructionFeature cannot be in COMPLETE state";
     this.blockUCState = state;
@@ -55,7 +55,7 @@ public class BlockUnderConstructionFeature {
 
   /** Set expected locations */
   public void setExpectedLocations(Block block, DatanodeStorageInfo[] targets,
-      BlockType blockType) {
+                                   BlockType blockType) {
     if (targets == null) {
       return;
     }
@@ -68,7 +68,7 @@ public class BlockUnderConstructionFeature {
 
     this.replicas = new ReplicaUnderConstruction[numLocations];
     int offset = 0;
-    for(int i = 0; i < targets.length; i++) {
+    for (int i = 0; i < targets.length; i++) {
       if (targets[i] != null) {
         // when creating a new striped block we simply sequentially assign block
         // index to each storage
@@ -104,7 +104,7 @@ public class BlockUnderConstructionFeature {
 
       @Override
       public boolean hasNext() {
-        return index <  replicas.length;
+        return index < replicas.length;
       }
 
       @Override
@@ -211,7 +211,7 @@ public class BlockUnderConstructionFeature {
    * @param startRecovery Issue recovery command to datanode if true.
    */
   public void initializeBlockRecovery(BlockInfo blockInfo, long recoveryId,
-      boolean startRecovery) {
+                                      boolean startRecovery) {
     setBlockUCState(BlockUCState.UNDER_RECOVERY);
     blockRecoveryId = recoveryId;
     if (!startRecovery) {
@@ -267,7 +267,7 @@ public class BlockUnderConstructionFeature {
 
   /** Add the reported replica if it is not already in the replica list. */
   void addReplicaIfNotPresent(DatanodeStorageInfo storage,
-      Block reportedBlock, ReplicaState rState) {
+                              Block reportedBlock, ReplicaState rState) {
     if (replicas.length == 0) {
       replicas = new ReplicaUnderConstruction[1];
       replicas[0] = new ReplicaUnderConstruction(reportedBlock, storage,
@@ -308,9 +308,9 @@ public class BlockUnderConstructionFeature {
 
   private void appendUCParts(StringBuilder sb) {
     sb.append("{UCState=").append(blockUCState)
-      .append(", truncateBlock=").append(truncateBlock)
-      .append(", primaryNodeIndex=").append(primaryNodeIndex)
-      .append(", replicas=[");
+        .append(", truncateBlock=").append(truncateBlock)
+        .append(", primaryNodeIndex=").append(primaryNodeIndex)
+        .append(", replicas=[");
     int i = 0;
     for (ReplicaUnderConstruction r : replicas) {
       r.appendStringTo(sb);
@@ -320,7 +320,7 @@ public class BlockUnderConstructionFeature {
     }
     sb.append("]}");
   }
-  
+
   public void appendUCPartsConcise(StringBuilder sb) {
     sb.append("replicas=");
     int i = 0;

@@ -1,56 +1,11 @@
 package org.apache.hadoop.hdfs;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.ClosedByInterruptException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.fs.ByteBufferPositionedReadable;
-import org.apache.hadoop.fs.ByteBufferReadable;
-import org.apache.hadoop.fs.ByteBufferUtil;
-import org.apache.hadoop.fs.CanSetDropBehind;
-import org.apache.hadoop.fs.CanSetReadahead;
-import org.apache.hadoop.fs.CanUnbuffer;
-import org.apache.hadoop.fs.ChecksumException;
-import org.apache.hadoop.fs.FSExceptionMessages;
-import org.apache.hadoop.fs.FSInputStream;
-import org.apache.hadoop.fs.FileEncryptionInfo;
-import org.apache.hadoop.fs.HasEnhancedByteBufferAccess;
-import org.apache.hadoop.fs.ReadOption;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.fs.StreamCapabilities;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
 import org.apache.hadoop.hdfs.client.impl.BlockReaderFactory;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf;
-import org.apache.hadoop.hdfs.protocol.BlockType;
-import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.security.token.block.InvalidBlockTokenException;
@@ -65,14 +20,22 @@ import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.IdentityHashStore;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import javax.annotation.Nonnull;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ClosedByInterruptException;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.apache.hadoop.hdfs.util.IOUtilsClient.updateReadStatistics;
 
@@ -82,8 +45,8 @@ import static org.apache.hadoop.hdfs.util.IOUtilsClient.updateReadStatistics;
  ****************************************************************/
 public class DFSInputStream extends FSInputStream
     implements ByteBufferReadable, CanSetDropBehind, CanSetReadahead,
-               HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,
-               ByteBufferPositionedReadable {
+    HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,
+    ByteBufferPositionedReadable {
   @VisibleForTesting
   public static boolean tcpReadsDisabledForTesting = false;
   private long hedgedReadOpsLoopNumForTesting = 0;
@@ -130,7 +93,7 @@ public class DFSInputStream extends FSInputStream
   private IdentityHashStore<ByteBuffer, Object> extendedReadBuffers;
 
   private synchronized IdentityHashStore<ByteBuffer, Object>
-        getExtendedReadBuffers() {
+  getExtendedReadBuffers() {
     if (extendedReadBuffers == null) {
       extendedReadBuffers = new IdentityHashStore<>(0);
     }
@@ -157,13 +120,13 @@ public class DFSInputStream extends FSInputStream
   /* XXX Use of ConcurrentHashMap is temp fix. Need to fix
    * parallel accesses to DFSInputStream (through ptreads) properly */
   private final ConcurrentHashMap<DatanodeInfo, DatanodeInfo> deadNodes =
-             new ConcurrentHashMap<>();
+      new ConcurrentHashMap<>();
 
   private byte[] oneByteBuf; // used for 'int read()'
 
   protected void addToLocalDeadNodes(DatanodeInfo dnInfo) {
     DFSClient.LOG.debug("Add {} to local dead nodes, previously was {}.",
-            dnInfo, deadNodes);
+        dnInfo, deadNodes);
     deadNodes.put(dnInfo, dnInfo);
   }
 
@@ -185,7 +148,7 @@ public class DFSInputStream extends FSInputStream
   }
 
   DFSInputStream(DFSClient dfsClient, String src, boolean verifyChecksum,
-      LocatedBlocks locatedBlocks) throws IOException {
+                 LocatedBlocks locatedBlocks) throws IOException {
     this.dfsClient = dfsClient;
     this.refreshReadBlockIntervals =
         this.dfsClient.getRefreshReadBlkLocationsInterval();
@@ -228,7 +191,7 @@ public class DFSInputStream extends FSInputStream
    */
   void openInfo(boolean refreshLocatedBlocks) throws IOException {
     final DfsClientConf conf = dfsClient.getConf();
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       lastBlockBeingWrittenLength =
           fetchLocatedBlocksAndGetLastBlockLength(refreshLocatedBlocks);
       int retriesForLastBlockLength = conf.getRetryTimesForGetLastBlockLength();
@@ -336,7 +299,7 @@ public class DFSInputStream extends FSInputStream
     return lastBlkBeingWrittenLength;
   }
 
-  private long getLastBlockLength() throws IOException{
+  private long getLastBlockLength() throws IOException {
     long lastBlockBeingWrittenLength = 0;
     if (!locatedBlocks.isLastBlockComplete()) {
       final LocatedBlock last = locatedBlocks.getLastLocatedBlock();
@@ -398,7 +361,7 @@ public class DFSInputStream extends FSInputStream
           }
         }
         DFSClient.LOG.debug("Failed to getReplicaVisibleLength from datanode {}"
-              + " for block {}", datanode, locatedblock.getBlock(), ioe);
+            + " for block {}", datanode, locatedblock.getBlock(), ioe);
       } finally {
         if (cdp != null) {
           RPC.stopProxy(cdp);
@@ -444,8 +407,8 @@ public class DFSInputStream extends FSInputStream
   }
 
   public long getFileLength() {
-    synchronized(infoLock) {
-      return locatedBlocks == null? 0:
+    synchronized (infoLock) {
+      return locatedBlocks == null ? 0 :
           locatedBlocks.getFileLength() + lastBlockBeingWrittenLength;
     }
   }
@@ -453,7 +416,7 @@ public class DFSInputStream extends FSInputStream
   // Short circuit local reads are forbidden for files that are
   // under construction.  See HDFS-2757.
   boolean shortCircuitForbidden() {
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       return locatedBlocks.isUnderConstruction();
     }
   }
@@ -469,7 +432,7 @@ public class DFSInputStream extends FSInputStream
    * Returns the block containing the target position.
    */
   synchronized public ExtendedBlock getCurrentBlock() {
-    if (currentLocatedBlock == null){
+    if (currentLocatedBlock == null) {
       return null;
     }
     return currentLocatedBlock.getBlock();
@@ -491,7 +454,7 @@ public class DFSInputStream extends FSInputStream
    * @throws IOException
    */
   protected LocatedBlock getBlockAt(long offset) throws IOException {
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       assert (locatedBlocks != null) : "locatedBlocks is null";
 
       final LocatedBlock blk;
@@ -501,14 +464,12 @@ public class DFSInputStream extends FSInputStream
         throw new IOException("offset < 0 || offset >= getFileLength(), offset="
             + offset
             + ", locatedBlocks=" + locatedBlocks);
-      }
-      else if (offset >= locatedBlocks.getFileLength()) {
+      } else if (offset >= locatedBlocks.getFileLength()) {
         // offset to the portion of the last block,
         // which is not known to the name-node yet;
         // getting the last block
         blk = locatedBlocks.getLastLocatedBlock();
-      }
-      else {
+      } else {
         // search cached blocks first
         blk = fetchBlockAt(offset, 0, true);
       }
@@ -524,7 +485,7 @@ public class DFSInputStream extends FSInputStream
   /** Fetch a block from namenode and cache it */
   private LocatedBlock fetchBlockAt(long offset, long length, boolean useCache)
       throws IOException {
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       updateBlockLocationsStamp();
       int targetBlockIdx = locatedBlocks.findBlock(offset);
       if (targetBlockIdx < 0) { // block is not cached
@@ -561,14 +522,14 @@ public class DFSInputStream extends FSInputStream
    * @throws IOException
    */
   private List<LocatedBlock> getBlockRange(long offset,
-      long length)  throws IOException {
+                                           long length) throws IOException {
     // getFileLength(): returns total file length
     // locatedBlocks.getFileLength(): returns length of completed blocks
     if (offset >= getFileLength()) {
       throw new IOException("Offset: " + offset +
-        " exceeds file length: " + getFileLength());
+          " exceeds file length: " + getFileLength());
     }
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       final List<LocatedBlock> blocks;
       final long lengthOfCompleteBlk = locatedBlocks.getFileLength();
       final boolean readOffsetWithinCompleteBlk = offset < lengthOfCompleteBlk;
@@ -577,7 +538,7 @@ public class DFSInputStream extends FSInputStream
       if (readOffsetWithinCompleteBlk) {
         //get the blocks of finalized (completed) block range
         blocks = getFinalizedBlockRange(offset,
-          Math.min(length, lengthOfCompleteBlk - offset));
+            Math.min(length, lengthOfCompleteBlk - offset));
       } else {
         blocks = new ArrayList<>(1);
       }
@@ -598,13 +559,13 @@ public class DFSInputStream extends FSInputStream
    */
   private List<LocatedBlock> getFinalizedBlockRange(
       long offset, long length) throws IOException {
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       assert (locatedBlocks != null) : "locatedBlocks is null";
       List<LocatedBlock> blockRange = new ArrayList<>();
       // search cached blocks first
       long remaining = length;
       long curOff = offset;
-      while(remaining > 0) {
+      while (remaining > 0) {
         LocatedBlock blk = fetchBlockAt(curOff, remaining, true);
         assert curOff >= blk.getStartOffset() : "Block not found";
         blockRange.add(blk);
@@ -650,7 +611,7 @@ public class DFSInputStream extends FSInputStream
       // update current position
       this.pos = target;
       this.blockEnd = targetBlock.getStartOffset() +
-            targetBlock.getBlockSize() - 1;
+          targetBlock.getBlockSize() - 1;
       this.currentLocatedBlock = targetBlock;
 
       long offsetIntoBlock = target - targetBlock.getStartOffset();
@@ -666,9 +627,9 @@ public class DFSInputStream extends FSInputStream
         blockReader = getBlockReader(targetBlock, offsetIntoBlock,
             targetBlock.getBlockSize() - offsetIntoBlock, targetAddr,
             storageType, chosenNode);
-        if(connectFailedOnce) {
+        if (connectFailedOnce) {
           DFSClient.LOG.info("Successfully connected to " + targetAddr +
-                             " for " + targetBlock.getBlock());
+              " for " + targetBlock.getBlock());
         }
         return chosenNode;
       } catch (IOException ex) {
@@ -706,8 +667,8 @@ public class DFSInputStream extends FSInputStream
   }
 
   protected BlockReader getBlockReader(LocatedBlock targetBlock,
-      long offsetInBlock, long length, InetSocketAddress targetAddr,
-      StorageType storageType, DatanodeInfo datanode) throws IOException {
+                                       long offsetInBlock, long length, InetSocketAddress targetAddr,
+                                       StorageType storageType, DatanodeInfo datanode) throws IOException {
     ExtendedBlock blk = targetBlock.getBlock();
     Token<BlockTokenIdentifier> accessToken = targetBlock.getBlockToken();
     CachingStrategy curCachingStrategy;
@@ -865,7 +826,7 @@ public class DFSInputStream extends FSInputStream
             currentNode = blockSeekTo(pos);
           }
           int realLen = (int) Math.min(len, (blockEnd - pos + 1L));
-          synchronized(infoLock) {
+          synchronized (infoLock) {
             if (locatedBlocks.isLastBlockComplete()) {
               realLen = (int) Math.min(realLen,
                   locatedBlocks.getFileLength() - pos);
@@ -946,7 +907,7 @@ public class DFSInputStream extends FSInputStream
   }
 
   private DNAddrPair chooseDataNode(LocatedBlock block,
-      Collection<DatanodeInfo> ignoredNodes) throws IOException {
+                                    Collection<DatanodeInfo> ignoredNodes) throws IOException {
     return chooseDataNode(block, ignoredNodes, true);
   }
 
@@ -961,7 +922,7 @@ public class DFSInputStream extends FSInputStream
    * false.
    */
   private DNAddrPair chooseDataNode(LocatedBlock block,
-      Collection<DatanodeInfo> ignoredNodes, boolean refetchIfRequired)
+                                    Collection<DatanodeInfo> ignoredNodes, boolean refetchIfRequired)
       throws IOException {
     while (true) {
       DNAddrPair result = getBestNodeDNAddrPair(block, ignoredNodes);
@@ -976,9 +937,9 @@ public class DFSInputStream extends FSInputStream
   }
 
   private LocatedBlock refetchLocations(LocatedBlock block,
-      Collection<DatanodeInfo> ignoredNodes) throws IOException {
+                                        Collection<DatanodeInfo> ignoredNodes) throws IOException {
     String errMsg = getBestNodeDNAddrPairErrorString(block.getLocations(),
-            dfsClient.getDeadNodes(this), ignoredNodes);
+        dfsClient.getDeadNodes(this), ignoredNodes);
     String blockInfo = block.getBlock() + " file=" + src;
     if (failures >= dfsClient.getConf().getMaxBlockAcquireFailures()) {
       String description = "Could not obtain block: " + blockInfo;
@@ -1010,10 +971,10 @@ public class DFSInputStream extends FSInputStream
       double waitTime = timeWindow * failures +
           // expanding time window for each failure
           timeWindow * (failures + 1) *
-          ThreadLocalRandom.current().nextDouble();
+              ThreadLocalRandom.current().nextDouble();
       DFSClient.LOG.warn("DFS chooseDataNode: got # " + (failures + 1) +
           " IOException, will wait for " + waitTime + " msec.");
-      Thread.sleep((long)waitTime);
+      Thread.sleep((long) waitTime);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new InterruptedIOException(
@@ -1033,7 +994,7 @@ public class DFSInputStream extends FSInputStream
    * @return The DNAddrPair of the best node. Null if no node can be chosen.
    */
   protected DNAddrPair getBestNodeDNAddrPair(LocatedBlock block,
-      Collection<DatanodeInfo> ignoredNodes) {
+                                             Collection<DatanodeInfo> ignoredNodes) {
     DatanodeInfo[] nodes = block.getLocations();
     StorageType[] storageTypes = block.getStorageTypes();
     DatanodeInfo chosenNode = null;
@@ -1080,7 +1041,7 @@ public class DFSInputStream extends FSInputStream
    * Warn the user of a lost block
    */
   protected void reportLostBlock(LocatedBlock lostBlock,
-      Collection<DatanodeInfo> ignoredNodes) {
+                                 Collection<DatanodeInfo> ignoredNodes) {
     DatanodeInfo[] nodes = lostBlock.getLocations();
     DFSClient.LOG.warn("No live nodes contain block " + lostBlock.getBlock() +
         " after checking nodes = " + Arrays.toString(nodes) +
@@ -1088,7 +1049,7 @@ public class DFSInputStream extends FSInputStream
   }
 
   private boolean isValidNode(DatanodeInfo node,
-      Collection<DatanodeInfo> ignoredNodes) {
+                              Collection<DatanodeInfo> ignoredNodes) {
     if (!dfsClient.getDeadNodes(this).containsKey(node)
         && (ignoredNodes == null || !ignoredNodes.contains(node))) {
       return true;
@@ -1122,7 +1083,7 @@ public class DFSInputStream extends FSInputStream
   }
 
   protected void fetchBlockByteRange(LocatedBlock block, long start, long end,
-      ByteBuffer buf, CorruptedBlocks corruptedBlocks)
+                                     ByteBuffer buf, CorruptedBlocks corruptedBlocks)
       throws IOException {
     while (true) {
       DNAddrPair addressPair = chooseDataNode(block, null);
@@ -1141,10 +1102,10 @@ public class DFSInputStream extends FSInputStream
   }
 
   private Callable<ByteBuffer> getFromOneDataNode(final DNAddrPair datanode,
-      final LocatedBlock block, final long start, final long end,
-      final ByteBuffer bb,
-      final CorruptedBlocks corruptedBlocks,
-      final int hedgedReadId) {
+                                                  final LocatedBlock block, final long start, final long end,
+                                                  final ByteBuffer bb,
+                                                  final CorruptedBlocks corruptedBlocks,
+                                                  final int hedgedReadId) {
     return new Callable<ByteBuffer>() {
       @Override
       public ByteBuffer call() throws Exception {
@@ -1166,7 +1127,7 @@ public class DFSInputStream extends FSInputStream
    *                          block replica
    */
   void actualGetFromOneDataNode(final DNAddrPair datanode, final long startInBlk,
-      final long endInBlk, ByteBuffer buf, CorruptedBlocks corruptedBlocks)
+                                final long endInBlk, ByteBuffer buf, CorruptedBlocks corruptedBlocks)
       throws IOException {
     DFSClientFaultInjector.get().startFetchFromDatanode();
     int refetchToken = 1; // only need to get a new access token once
@@ -1268,7 +1229,7 @@ public class DFSInputStream extends FSInputStream
    * time. We then wait on which ever read returns first.
    */
   private void hedgedFetchBlockByteRange(LocatedBlock block, long start,
-      long end, ByteBuffer buf, CorruptedBlocks corruptedBlocks)
+                                         long end, ByteBuffer buf, CorruptedBlocks corruptedBlocks)
       throws IOException {
     final DfsClientConf conf = dfsClient.getConf();
     ArrayList<Future<ByteBuffer>> futures = new ArrayList<>();
@@ -1414,7 +1375,7 @@ public class DFSInputStream extends FSInputStream
    *         refetched
    */
   protected static boolean tokenRefetchNeeded(IOException ex,
-      InetSocketAddress targetAddr) {
+                                              InetSocketAddress targetAddr) {
     /*
      * Get a new access token and retry. Retry is needed in 2 cases. 1)
      * When both NN and DN re-started while DFSClient holding a cached
@@ -1471,7 +1432,7 @@ public class DFSInputStream extends FSInputStream
     int length = buffer.remaining();
     int realLen = length;
     if ((position + length) > filelen) {
-      realLen = (int)(filelen - position);
+      realLen = (int) (filelen - position);
     }
 
     // determine the block and byte range within the block
@@ -1527,7 +1488,7 @@ public class DFSInputStream extends FSInputStream
    * @param dataNodeCount number of data nodes who contains the block replicas
    */
   protected void reportCheckSumFailure(CorruptedBlocks corruptedBlocks,
-      int dataNodeCount, boolean isStriped) {
+                                       int dataNodeCount, boolean isStriped) {
 
     Map<ExtendedBlock, Set<DatanodeInfo>> corruptedBlockMap =
         corruptedBlocks.getCorruptionMap();
@@ -1543,7 +1504,7 @@ public class DFSInputStream extends FSInputStream
           || ((dataNodeCount == 1) && (dnSet.size() == dataNodeCount))) {
         DatanodeInfo[] locs = new DatanodeInfo[dnSet.size()];
         int i = 0;
-        for (DatanodeInfo dn:dnSet) {
+        for (DatanodeInfo dn : dnSet) {
           locs[i++] = dn;
         }
         reportList.add(new LocatedBlock(blk, locs));
@@ -1561,10 +1522,10 @@ public class DFSInputStream extends FSInputStream
     if (n > 0) {
       long curPos = getPos();
       long fileLen = getFileLength();
-      if (n+curPos > fileLen) {
+      if (n + curPos > fileLen) {
         n = fileLen - curPos;
       }
-      seek(curPos+n);
+      seek(curPos + n);
       return n;
     }
     return n < 0 ? -1 : 0;
@@ -1591,7 +1552,7 @@ public class DFSInputStream extends FSInputStream
       // block, and this piece of data might already be lying in
       // the TCP buffer, then just eat up the intervening data.
       //
-      int diff = (int)(targetPos - pos);
+      int diff = (int) (targetPos - pos);
       if (diff <= blockReader.available()) {
         try {
           pos += blockReader.skip(diff);
@@ -1675,7 +1636,7 @@ public class DFSInputStream extends FSInputStream
     }
 
     final long remaining = getFileLength() - pos;
-    return remaining <= Integer.MAX_VALUE? (int)remaining: Integer.MAX_VALUE;
+    return remaining <= Integer.MAX_VALUE ? (int) remaining : Integer.MAX_VALUE;
   }
 
   /**
@@ -1685,9 +1646,11 @@ public class DFSInputStream extends FSInputStream
   public boolean markSupported() {
     return false;
   }
+
   @Override
   public void mark(int readLimit) {
   }
+
   @Override
   public void reset() throws IOException {
     throw new IOException("Mark/reset not supported");
@@ -1722,7 +1685,7 @@ public class DFSInputStream extends FSInputStream
     final LocatedBlock block;
 
     DNAddrPair(DatanodeInfo info, InetSocketAddress addr,
-        StorageType storageType, LocatedBlock block) {
+               StorageType storageType, LocatedBlock block) {
       this.info = info;
       this.addr = addr;
       this.storageType = storageType;
@@ -1745,7 +1708,7 @@ public class DFSInputStream extends FSInputStream
   }
 
   public FileEncryptionInfo getFileEncryptionInfo() {
-    synchronized(infoLock) {
+    synchronized (infoLock) {
       return fileEncryptionInfo;
     }
   }
@@ -1794,8 +1757,8 @@ public class DFSInputStream extends FSInputStream
 
   @Override
   public synchronized ByteBuffer read(ByteBufferPool bufferPool,
-      int maxLength, EnumSet<ReadOption> opts)
-          throws IOException, UnsupportedOperationException {
+                                      int maxLength, EnumSet<ReadOption> opts)
+      throws IOException, UnsupportedOperationException {
     if (maxLength == 0) {
       return EMPTY_BUFFER;
     } else if (maxLength < 0) {
@@ -1832,7 +1795,7 @@ public class DFSInputStream extends FSInputStream
   }
 
   private synchronized ByteBuffer tryReadZeroCopy(int maxLength,
-      EnumSet<ReadOption> opts) throws IOException {
+                                                  EnumSet<ReadOption> opts) throws IOException {
     // Copy 'pos' and 'blockEnd' to local variables to make it easier for the
     // JVM to optimize this function.
     final long curPos = pos;
@@ -1855,13 +1818,13 @@ public class DFSInputStream extends FSInputStream
       }
       DFSClient.LOG.debug("Reducing read length from {} to {} to avoid going "
               + "more than one byte past the end of the block.  blockPos={}; "
-              +" curPos={}; curEnd={}",
+              + " curPos={}; curEnd={}",
           maxLength, length63, blockPos, curPos, curEnd);
     }
     // Make sure that don't go beyond 31-bit offsets in the MappedByteBuffer.
     int length;
     if (blockPos + length63 <= Integer.MAX_VALUE) {
-      length = (int)length63;
+      length = (int) length63;
     } else {
       long length31 = Integer.MAX_VALUE - blockPos;
       if (length31 <= 0) {
@@ -1875,9 +1838,9 @@ public class DFSInputStream extends FSInputStream
             + "curEnd={}", curPos, src, blockPos, curEnd);
         return null;
       }
-      length = (int)length31;
+      length = (int) length31;
       DFSClient.LOG.debug("Reducing read length from {} to {} to avoid 31-bit "
-          + "limit.  blockPos={}; curPos={}; curEnd={}",
+              + "limit.  blockPos={}; curPos={}; curEnd={}",
           maxLength, length, blockPos, curPos, curEnd);
     }
     final ClientMmap clientMmap = blockReader.getClientMmap(opts);
@@ -1891,8 +1854,8 @@ public class DFSInputStream extends FSInputStream
     try {
       seek(curPos + length);
       buffer = clientMmap.getMappedByteBuffer().asReadOnlyBuffer();
-      buffer.position((int)blockPos);
-      buffer.limit((int)(blockPos + length));
+      buffer.position((int) blockPos);
+      buffer.limit((int) (blockPos + length));
       getExtendedReadBuffers().put(buffer, clientMmap);
       readStatistics.addZeroCopyBytes(length);
       DFSClient.LOG.debug("readZeroCopy read {} bytes from offset {} via the "
@@ -1915,9 +1878,9 @@ public class DFSInputStream extends FSInputStream
           "that was not created by this stream, " + buffer);
     }
     if (val instanceof ClientMmap) {
-      IOUtils.closeQuietly((ClientMmap)val);
+      IOUtils.closeQuietly((ClientMmap) val);
     } else if (val instanceof ByteBufferPool) {
-      ((ByteBufferPool)val).putBuffer(buffer);
+      ((ByteBufferPool) val).putBuffer(buffer);
     }
   }
 
@@ -1929,14 +1892,14 @@ public class DFSInputStream extends FSInputStream
   @Override
   public boolean hasCapability(String capability) {
     switch (StringUtils.toLowerCase(capability)) {
-    case StreamCapabilities.READAHEAD:
-    case StreamCapabilities.DROPBEHIND:
-    case StreamCapabilities.UNBUFFER:
-    case StreamCapabilities.READBYTEBUFFER:
-    case StreamCapabilities.PREADBYTEBUFFER:
-      return true;
-    default:
-      return false;
+      case StreamCapabilities.READAHEAD:
+      case StreamCapabilities.DROPBEHIND:
+      case StreamCapabilities.UNBUFFER:
+      case StreamCapabilities.READBYTEBUFFER:
+      case StreamCapabilities.PREADBYTEBUFFER:
+        return true;
+      default:
+        return false;
     }
   }
 }

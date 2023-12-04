@@ -1,8 +1,8 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.*;
 
 /** A reusable {@link DataOutput} implementation that writes to an in-memory
  * buffer.
@@ -21,23 +21,28 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  *   ... write data to its ultimate destination ...
  * }
  * </pre>
- *  
+ *
  */
 // MapReduce也可见
 public class DataOutputBuffer extends DataOutputStream {
 
   private static class Buffer extends ByteArrayOutputStream {
-    public byte[] getData() { return buf; }
-    public int getLength() { return count; }
+    public byte[] getData() {
+      return buf;
+    }
+
+    public int getLength() {
+      return count;
+    }
 
     public Buffer() {
       super();
     }
-    
+
     public Buffer(int size) {
       super(size);
     }
-    
+
     public void write(DataInput in, int len) throws IOException {
       int newcount = count + len;
       if (newcount > buf.length) {
@@ -63,16 +68,16 @@ public class DataOutputBuffer extends DataOutputStream {
   }
 
   private Buffer buffer;
-  
+
   /** Constructs a new empty buffer. */
   public DataOutputBuffer() {
     this(new Buffer());
   }
-  
+
   public DataOutputBuffer(int size) {
     this(new Buffer(size));
   }
-  
+
   private DataOutputBuffer(Buffer buffer) {
     super(buffer);
     this.buffer = buffer;
@@ -81,10 +86,14 @@ public class DataOutputBuffer extends DataOutputStream {
   /** Returns the current contents of the buffer.
    *  Data is only valid to {@link #getLength()}.
    */
-  public byte[] getData() { return buffer.getData(); }
+  public byte[] getData() {
+    return buffer.getData();
+  }
 
   /** Returns the length of the valid data currently in the buffer. */
-  public int getLength() { return buffer.getLength(); }
+  public int getLength() {
+    return buffer.getLength();
+  }
 
   /** Resets the buffer to empty. */
   public DataOutputBuffer reset() {

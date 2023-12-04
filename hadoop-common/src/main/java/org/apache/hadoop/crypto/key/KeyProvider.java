@@ -1,19 +1,5 @@
 package org.apache.hadoop.crypto.key;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -22,6 +8,10 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
 import javax.crypto.KeyGenerator;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_CRYPTO_JCEKS_KEY_SERIALFILTER;
 
@@ -67,7 +57,7 @@ public abstract class KeyProvider implements Closeable {
       this.versionName = versionName == null ? null : versionName.intern();
       this.material = material;
     }
-    
+
     public String getName() {
       return name;
     }
@@ -89,7 +79,7 @@ public abstract class KeyProvider implements Closeable {
       if (material == null) {
         buf.append("null");
       } else {
-        for(byte b: material) {
+        for (byte b : material) {
           buf.append(' ');
           int right = b & 0xff;
           if (right < 0x10) {
@@ -146,12 +136,12 @@ public abstract class KeyProvider implements Closeable {
     private Map<String, String> attributes;
 
     protected Metadata(String cipher, int bitLength, String description,
-        Map<String, String> attributes, Date created, int versions) {
+                       Map<String, String> attributes, Date created, int versions) {
       this.cipher = cipher;
       this.bitLength = bitLength;
       this.description = description;
       this.attributes = (attributes == null || attributes.isEmpty())
-                        ? null : attributes;
+          ? null : attributes;
       this.created = created;
       this.versions = versions;
     }
@@ -201,7 +191,7 @@ public abstract class KeyProvider implements Closeable {
      */
     public String getAlgorithm() {
       int slash = cipher.indexOf('/');
-      if (slash == - 1) {
+      if (slash == -1) {
         return cipher;
       } else {
         return cipher.substring(0, slash);
@@ -378,14 +368,14 @@ public abstract class KeyProvider implements Closeable {
 
   /**
    * Constructor.
-   * 
+   *
    * @param conf configuration for the provider
    */
   public KeyProvider(Configuration conf) {
     this.conf = new Configuration(conf);
     // Added for HADOOP-15473. Configured serialFilter property fixes
     // java.security.UnrecoverableKeyException in JDK 8u171.
-    if(System.getProperty(JCEKS_KEY_SERIAL_FILTER) == null) {
+    if (System.getProperty(JCEKS_KEY_SERIAL_FILTER) == null) {
       String serialFilter =
           conf.get(HADOOP_SECURITY_CRYPTO_JCEKS_KEY_SERIALFILTER,
               JCEKS_KEY_SERIALFILTER_DEFAULT);
@@ -395,13 +385,13 @@ public abstract class KeyProvider implements Closeable {
 
   /**
    * Return the provider configuration.
-   * 
+   *
    * @return the provider configuration
    */
   public Configuration getConf() {
     return conf;
   }
-  
+
   /**
    * A helper function to create an options object.
    * @param conf the configuration to use
@@ -430,7 +420,7 @@ public abstract class KeyProvider implements Closeable {
    * @throws IOException
    */
   public abstract KeyVersion getKeyVersion(String versionName
-                                            ) throws IOException;
+  ) throws IOException;
 
   /**
    * Get the key names for all keys.
@@ -446,7 +436,7 @@ public abstract class KeyProvider implements Closeable {
    */
   public Metadata[] getKeysMetadata(String... names) throws IOException {
     Metadata[] result = new Metadata[names.length];
-    for (int i=0; i < names.length; ++i) {
+    for (int i = 0; i < names.length; ++i) {
       result[i] = getMetadata(names[i]);
     }
     return result;
@@ -559,8 +549,8 @@ public abstract class KeyProvider implements Closeable {
    * @throws IOException
    */
   public abstract KeyVersion rollNewVersion(String name,
-                                             byte[] material
-                                            ) throws IOException;
+                                            byte[] material
+  ) throws IOException;
 
   /**
    * Can be used by implementing classes to close any resources
@@ -581,7 +571,7 @@ public abstract class KeyProvider implements Closeable {
    * @throws IOException
    */
   public KeyVersion rollNewVersion(String name) throws NoSuchAlgorithmException,
-                                                       IOException {
+      IOException {
     Metadata meta = getMetadata(name);
     if (meta == null) {
       throw new IOException("Can't find Metadata for key " + name);
@@ -643,7 +633,7 @@ public abstract class KeyProvider implements Closeable {
    */
   public static KeyProvider findProvider(List<KeyProvider> providerList,
                                          String keyName) throws IOException {
-    for(KeyProvider provider: providerList) {
+    for (KeyProvider provider : providerList) {
       if (provider.getMetadata(keyName) != null) {
         return provider;
       }

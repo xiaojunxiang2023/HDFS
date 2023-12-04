@@ -32,7 +32,9 @@ public interface SplittableCompressionCodec extends CompressionCodec {
    * While in continuous mode, the caller of codecs is unaware about the blocks
    * and uncompressed data is spilled out like a continuous stream.
    */
-  public enum READ_MODE {CONTINUOUS, BYBLOCK};
+  public enum READ_MODE {CONTINUOUS, BYBLOCK}
+
+  ;
 
   /**
    * Create a stream as dictated by the readMode.  This method is used when
@@ -45,10 +47,10 @@ public interface SplittableCompressionCodec extends CompressionCodec {
    *            the underlying codec.
    * @param readMode Controls whether stream position is reported continuously
    *                 from the compressed stream only only at block boundaries.
-   * @return  a stream to read uncompressed bytes from
+   * @return a stream to read uncompressed bytes from
    */
   SplitCompressionInputStream createInputStream(InputStream seekableIn,
-      Decompressor decompressor, long start, long end, READ_MODE readMode)
+                                                Decompressor decompressor, long start, long end, READ_MODE readMode)
       throws IOException;
 
 }

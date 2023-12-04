@@ -1,13 +1,5 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -15,8 +7,16 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.alias.CredentialProviderFactory;
 import org.apache.hadoop.security.alias.JavaKeyStoreProvider;
 import org.apache.hadoop.security.alias.LocalJavaKeyStoreProvider;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
 
 /**
  * Utility methods for both key and credential provider APIs.
@@ -26,19 +26,19 @@ public final class ProviderUtils {
   @VisibleForTesting
   public static final String NO_PASSWORD_WARN =
       "WARNING: You have accepted the use of the default provider password\n" +
-      "by not configuring a password in one of the two following locations:\n";
+          "by not configuring a password in one of the two following locations:\n";
   @VisibleForTesting
   public static final String NO_PASSWORD_ERROR =
       "ERROR: The provider cannot find a password in the expected " +
-      "locations.\nPlease supply a password using one of the " +
-      "following two mechanisms:\n";
+          "locations.\nPlease supply a password using one of the " +
+          "following two mechanisms:\n";
   @VisibleForTesting
   public static final String NO_PASSWORD_CONT =
       "Continuing with the default provider password.\n";
   @VisibleForTesting
   public static final String NO_PASSWORD_INSTRUCTIONS_DOC =
       "Please review the documentation regarding provider passwords in\n" +
-      "the keystore passwords section of the Credential Provider API\n";
+          "the keystore passwords section of the Credential Provider API\n";
 
   private static final Logger LOG =
       LoggerFactory.getLogger(ProviderUtils.class);
@@ -131,7 +131,7 @@ public final class ProviderUtils {
     StringBuffer newProviderPath = new StringBuffer();
     String[] providers = providerPath.split(",");
     Path path = null;
-    for (String provider: providers) {
+    for (String provider : providers) {
       try {
         path = unnestUri(new URI(provider));
         Class<? extends FileSystem> clazz = null;
@@ -217,9 +217,9 @@ public final class ProviderUtils {
   private static String noPasswordInstruction(String envKey, String fileKey) {
     return
         "    * In the environment variable " + envKey + "\n" +
-        "    * In a file referred to by the configuration entry\n" +
-        "      " + fileKey + ".\n" +
-        NO_PASSWORD_INSTRUCTIONS_DOC;
+            "    * In a file referred to by the configuration entry\n" +
+            "      " + fileKey + ".\n" +
+            NO_PASSWORD_INSTRUCTIONS_DOC;
   }
 
   public static String noPasswordWarning(String envKey, String fileKey) {

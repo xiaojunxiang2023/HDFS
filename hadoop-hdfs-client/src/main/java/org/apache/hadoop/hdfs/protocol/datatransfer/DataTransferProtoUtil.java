@@ -1,23 +1,18 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BaseHeaderProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BlockOpResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ChecksumProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ClientOperationHeaderProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.DataTransferTraceInfoProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpWriteBlockProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status;
+import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ChecksumTypeProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.security.token.block.InvalidBlockTokenException;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.tracing.Span;
-import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.tracing.TraceUtils;
+import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.DataChecksum;
+
+import java.io.IOException;
 
 /**
  * Static utilities for dealing with the protocol buffers used by the
@@ -38,9 +33,9 @@ public abstract class DataTransferProtoUtil {
     ChecksumTypeProto type = PBHelperClient.convert(checksum.getChecksumType());
     // ChecksumType#valueOf never returns null
     return ChecksumProto.newBuilder()
-      .setBytesPerChecksum(checksum.getBytesPerChecksum())
-      .setType(type)
-      .build();
+        .setBytesPerChecksum(checksum.getBytesPerChecksum())
+        .setType(type)
+        .build();
   }
 
   public static DataChecksum fromProto(ChecksumProto proto) {
@@ -54,16 +49,16 @@ public abstract class DataTransferProtoUtil {
   }
 
   static ClientOperationHeaderProto buildClientHeader(ExtendedBlock blk,
-      String client, Token<BlockTokenIdentifier> blockToken) {
+                                                      String client, Token<BlockTokenIdentifier> blockToken) {
     return ClientOperationHeaderProto.newBuilder()
-      .setBaseHeader(buildBaseHeader(blk, blockToken))
-      .setClientName(client)
-      .build();
+        .setBaseHeader(buildBaseHeader(blk, blockToken))
+        .setClientName(client)
+        .build();
   }
 
   static BaseHeaderProto buildBaseHeader(ExtendedBlock blk,
-      Token<BlockTokenIdentifier> blockToken) {
-    BaseHeaderProto.Builder builder =  BaseHeaderProto.newBuilder()
+                                         Token<BlockTokenIdentifier> blockToken) {
+    BaseHeaderProto.Builder builder = BaseHeaderProto.newBuilder()
         .setBlock(PBHelperClient.convert(blk))
         .setToken(PBHelperClient.convert(blockToken));
     Span span = Tracer.getCurrentSpan();
@@ -77,34 +72,34 @@ public abstract class DataTransferProtoUtil {
   }
 
   public static void checkBlockOpStatus(
-          BlockOpResponseProto response,
-          String logInfo) throws IOException {
+      BlockOpResponseProto response,
+      String logInfo) throws IOException {
     checkBlockOpStatus(response, logInfo, false);
   }
 
   public static void checkBlockOpStatus(BlockOpResponseProto response,
-      String logInfo, boolean checkBlockPinningErr) throws IOException {
+                                        String logInfo, boolean checkBlockPinningErr) throws IOException {
     if (response.getStatus() != Status.SUCCESS) {
       if (response.getStatus() == Status.ERROR_ACCESS_TOKEN) {
         throw new InvalidBlockTokenException(
-          "Got access token error"
-          + ", status message " + response.getMessage()
-          + ", " + logInfo
+            "Got access token error"
+                + ", status message " + response.getMessage()
+                + ", " + logInfo
         );
       } else if (checkBlockPinningErr
           && response.getStatus() == Status.ERROR_BLOCK_PINNED) {
         throw new BlockPinningException(
             "Got error"
-            + ", status=" + response.getStatus().name()
-            + ", status message " + response.getMessage()
-            + ", " + logInfo
-          );
+                + ", status=" + response.getStatus().name()
+                + ", status message " + response.getMessage()
+                + ", " + logInfo
+        );
       } else {
         throw new IOException(
-          "Got error"
-          + ", status=" + response.getStatus().name()
-          + ", status message " + response.getMessage()
-          + ", " + logInfo
+            "Got error"
+                + ", status=" + response.getStatus().name()
+                + ", status message " + response.getMessage()
+                + ", " + logInfo
         );
       }
     }

@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
@@ -11,6 +7,11 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.LengthInputStream;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 import org.apache.hadoop.util.LightWeightResizableGSet;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
 
 /**
  * This class is used by datanodes to maintain meta data of its replicas.
@@ -40,17 +41,17 @@ abstract public class ReplicaInfo extends Block
   }
 
   /**
-  * Constructor
-  * @param vol volume where replica is located
-  * @param blockId block id
-  * @param len replica length
-  * @param genStamp replica generation stamp
-  */
+   * Constructor
+   * @param vol volume where replica is located
+   * @param blockId block id
+   * @param len replica length
+   * @param genStamp replica generation stamp
+   */
   ReplicaInfo(FsVolumeSpi vol, long blockId, long len, long genStamp) {
     super(blockId, len, genStamp);
     this.volume = vol;
   }
-  
+
   /**
    * Copy constructor.
    * @param from where to copy from

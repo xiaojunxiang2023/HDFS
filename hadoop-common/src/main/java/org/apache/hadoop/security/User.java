@@ -1,10 +1,10 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.security.Principal;
+import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 
 import javax.security.auth.login.LoginContext;
-import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
+import java.io.IOException;
+import java.security.Principal;
 
 /**
  * Save the full and short name of the user as a principal. This allows us to
@@ -21,13 +21,13 @@ class User implements Principal {
   public User(String name) {
     this(name, null, null);
   }
-  
+
   public User(String name, AuthenticationMethod authMethod, LoginContext login) {
     try {
       shortName = new HadoopKerberosName(name).getShortName();
     } catch (IOException ioe) {
       throw new IllegalArgumentException("Illegal principal name " + name
-                                         +": " + ioe.toString(), ioe);
+          + ": " + ioe.toString(), ioe);
     }
     fullName = name;
 
@@ -42,7 +42,7 @@ class User implements Principal {
   public String getName() {
     return fullName;
   }
-  
+
   /**
    * Get the user name up to the first '/' or '@'
    * @return the leading part of the user name
@@ -50,7 +50,7 @@ class User implements Principal {
   public String getShortName() {
     return shortName;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -61,12 +61,12 @@ class User implements Principal {
       return ((fullName.equals(((User) o).fullName)) && (authMethod == ((User) o).authMethod));
     }
   }
-  
+
   @Override
   public int hashCode() {
     return fullName.hashCode();
   }
-  
+
   @Override
   public String toString() {
     return fullName;
@@ -79,7 +79,7 @@ class User implements Principal {
   public AuthenticationMethod getAuthenticationMethod() {
     return authMethod;
   }
-  
+
   /**
    * Returns login object
    * @return login
@@ -87,7 +87,7 @@ class User implements Principal {
   public LoginContext getLogin() {
     return login;
   }
-  
+
   /**
    * Set the login object
    * @param login
@@ -95,7 +95,7 @@ class User implements Principal {
   public void setLogin(LoginContext login) {
     this.login = login;
   }
-  
+
   /**
    * Set the last login time.
    * @param time the number of milliseconds since the beginning of time
@@ -103,7 +103,7 @@ class User implements Principal {
   public void setLastLogin(long time) {
     lastLogin = time;
   }
-  
+
   /**
    * Get the time of the last login.
    * @return the number of milliseconds since the beginning of time.

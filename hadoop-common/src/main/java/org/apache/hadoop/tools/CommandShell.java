@@ -1,9 +1,9 @@
 package org.apache.hadoop.tools;
 
-import java.io.PrintStream;
-
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
+
+import java.io.PrintStream;
 
 /**
  * This program is a CLI utility base class utilizing hadoop Tool class.
@@ -80,7 +80,7 @@ public abstract class CommandShell extends Configured implements Tool {
     out.flush();
   }
 
-  protected void printException(Exception ex){
+  protected void printException(Exception ex) {
     ex.printStackTrace(err);
   }
 

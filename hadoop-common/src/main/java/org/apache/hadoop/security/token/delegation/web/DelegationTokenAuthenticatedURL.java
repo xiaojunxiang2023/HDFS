@@ -1,15 +1,15 @@
 package org.apache.hadoop.security.token.delegation.web;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.auth.client.AuthenticatedURL;
+import org.apache.hadoop.auth.client.ConnectionConfigurator;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.auth.client.AuthenticatedURL;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.auth.client.ConnectionConfigurator;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +64,7 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
     getDelegationToken() {
       return delegationToken;
     }
+
     public void setDelegationToken(
         org.apache.hadoop.security.token.Token<AbstractDelegationTokenIdentifier> delegationToken) {
       this.delegationToken = delegationToken;
@@ -98,13 +99,13 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
    * @return the delegation token authenticator class to use as default.
    */
   public static Class<? extends DelegationTokenAuthenticator>
-      getDefaultDelegationTokenAuthenticator() {
+  getDefaultDelegationTokenAuthenticator() {
     return DEFAULT_AUTHENTICATOR;
   }
 
   private static DelegationTokenAuthenticator
-      obtainDelegationTokenAuthenticator(DelegationTokenAuthenticator dta,
-            ConnectionConfigurator connConfigurator) {
+  obtainDelegationTokenAuthenticator(DelegationTokenAuthenticator dta,
+                                     ConnectionConfigurator connConfigurator) {
     try {
       if (dta == null) {
         dta = DEFAULT_AUTHENTICATOR.newInstance();
@@ -161,7 +162,7 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
       DelegationTokenAuthenticator authenticator,
       ConnectionConfigurator connConfigurator) {
     super(obtainDelegationTokenAuthenticator(authenticator, connConfigurator),
-            connConfigurator);
+        connConfigurator);
   }
 
   /**
@@ -208,7 +209,7 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
   public HttpURLConnection openConnection(URL url, AuthenticatedURL.Token token)
       throws IOException, AuthenticationException {
     return (token instanceof Token) ? openConnection(url, (Token) token)
-                                    : super.openConnection(url ,token);
+        : super.openConnection(url, token);
   }
 
   /**
@@ -315,7 +316,7 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
    * Select a delegation token from all tokens in credentials, based on url.
    */
   public org.apache.hadoop.security.token.Token<? extends TokenIdentifier>
-      selectDelegationToken(URL url, Credentials creds) {
+  selectDelegationToken(URL url, Credentials creds) {
     final InetSocketAddress serviceAddr = new InetSocketAddress(url.getHost(),
         url.getPort());
     final Text service = SecurityUtil.buildTokenService(serviceAddr);
@@ -339,8 +340,8 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
    * @throws AuthenticationException if an authentication exception occurred.
    */
   public org.apache.hadoop.security.token.Token<AbstractDelegationTokenIdentifier>
-      getDelegationToken(URL url, Token token, String renewer)
-          throws IOException, AuthenticationException {
+  getDelegationToken(URL url, Token token, String renewer)
+      throws IOException, AuthenticationException {
     return getDelegationToken(url, token, renewer, null);
   }
 
@@ -359,8 +360,8 @@ public class DelegationTokenAuthenticatedURL extends AuthenticatedURL {
    * @throws AuthenticationException if an authentication exception occurred.
    */
   public org.apache.hadoop.security.token.Token<AbstractDelegationTokenIdentifier>
-      getDelegationToken(URL url, Token token, String renewer, String doAsUser)
-          throws IOException, AuthenticationException {
+  getDelegationToken(URL url, Token token, String renewer, String doAsUser)
+      throws IOException, AuthenticationException {
     Preconditions.checkNotNull(url, "url");
     Preconditions.checkNotNull(token, "token");
     try {

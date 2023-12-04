@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.datatransfer.PacketHeader;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.server.datanode.DataNode;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.DataChecksum;
 import org.slf4j.Logger;
 
@@ -47,7 +47,7 @@ class StripedWriter {
   private int checksumSize;
 
   StripedWriter(StripedReconstructor reconstructor, DataNode datanode,
-      Configuration conf, StripedReconstructionInfo stripedReconInfo) {
+                Configuration conf, StripedReconstructionInfo stripedReconInfo) {
     this.reconstructor = reconstructor;
     this.datanode = datanode;
     this.conf = conf;
@@ -111,7 +111,7 @@ class StripedWriter {
       if (!bitset.get(i)) {
         if (reconstructor.getBlockLen(i) > 0) {
           if (m < targets.length) {
-            targetIndices[m++] = (short)i;
+            targetIndices[m++] = (short) i;
             hasValidTargets = true;
           }
         }
@@ -230,7 +230,7 @@ class StripedWriter {
         if (remaining <= 0) {
           writers[i].getTargetBuffer().limit(0);
         } else if (remaining < toReconstructLen) {
-          writers[i].getTargetBuffer().limit((int)remaining);
+          writers[i].getTargetBuffer().limit((int) remaining);
         }
       }
     }

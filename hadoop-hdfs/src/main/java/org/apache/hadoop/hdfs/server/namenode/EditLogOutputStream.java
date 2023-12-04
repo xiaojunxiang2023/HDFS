@@ -1,10 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+
 import java.io.Closeable;
+import java.io.IOException;
 
 import static org.apache.hadoop.util.Time.monotonicNow;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 
 /**
  * A generic abstract class to support journaling of edits logs into 
@@ -29,11 +30,13 @@ public abstract class EditLogOutputStream implements Closeable {
    */
   public long getLastJournalledTxId() {
     return HdfsServerConstants.INVALID_TXID;
-  };
+  }
+
+  ;
 
   /**
    * Write edits log operation to the stream.
-   * 
+   *
    * @param op operation
    * @throws IOException
    */
@@ -55,7 +58,7 @@ public abstract class EditLogOutputStream implements Closeable {
 
   /**
    * Create and initialize underlying persistent edits log storage.
-   * 
+   *
    * @param layoutVersion The LayoutVersion of the journal
    * @throws IOException
    */
@@ -74,7 +77,7 @@ public abstract class EditLogOutputStream implements Closeable {
    * This may be called after a previous write or close threw an exception.
    */
   abstract public void abort() throws IOException;
-  
+
   /**
    * All data that has been written to the stream so far will be flushed.
    * New data can be still written to the stream while flushing is performed.
@@ -97,7 +100,7 @@ public abstract class EditLogOutputStream implements Closeable {
   public void flush() throws IOException {
     flush(true);
   }
-  
+
   public void flush(boolean durable) throws IOException {
     numSync++;
     long start = monotonicNow();
@@ -110,13 +113,13 @@ public abstract class EditLogOutputStream implements Closeable {
    * Implement the policy when to automatically sync the buffered edits log
    * The buffered edits can be flushed when the buffer becomes full or
    * a certain period of time is elapsed.
-   * 
+   *
    * @return true if the buffered data should be automatically synced to disk
    */
   public boolean shouldForceSync() {
     return false;
   }
-  
+
   /**
    * Return total time spent in {@link #flushAndSync(boolean)}
    */

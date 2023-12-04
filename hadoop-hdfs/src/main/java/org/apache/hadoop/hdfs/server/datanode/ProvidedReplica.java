@@ -1,27 +1,23 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocalFileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathHandle;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.hdfs.server.common.FileRegion;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.LengthInputStream;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.FsDatasetUtil;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
@@ -59,8 +55,8 @@ public abstract class ProvidedReplica extends ReplicaInfo {
    * @param remoteFS reference to the remote filesystem to use for this replica.
    */
   public ProvidedReplica(long blockId, URI fileURI, long fileOffset,
-      long blockLen, long genStamp, PathHandle pathHandle, FsVolumeSpi volume,
-      Configuration conf, FileSystem remoteFS) {
+                         long blockLen, long genStamp, PathHandle pathHandle, FsVolumeSpi volume,
+                         Configuration conf, FileSystem remoteFS) {
     super(volume, blockId, blockLen, genStamp);
     this.fileURI = fileURI;
     this.fileOffset = fileOffset;
@@ -99,8 +95,8 @@ public abstract class ProvidedReplica extends ReplicaInfo {
    * @param remoteFS reference to the remote filesystem to use for this replica.
    */
   public ProvidedReplica(long blockId, Path pathPrefix, String pathSuffix,
-      long fileOffset, long blockLen, long genStamp, PathHandle pathHandle,
-      FsVolumeSpi volume, Configuration conf, FileSystem remoteFS) {
+                         long fileOffset, long blockLen, long genStamp, PathHandle pathHandle,
+                         FsVolumeSpi volume, Configuration conf, FileSystem remoteFS) {
     super(volume, blockId, blockLen, genStamp);
     this.fileURI = null;
     this.pathPrefix = pathPrefix;
@@ -201,7 +197,7 @@ public abstract class ProvidedReplica extends ReplicaInfo {
 
   @Override
   public boolean blockDataExists() {
-    if(remoteFS != null) {
+    if (remoteFS != null) {
       try {
         return remoteFS.exists(new Path(getRemoteURI()));
       } catch (IOException e) {

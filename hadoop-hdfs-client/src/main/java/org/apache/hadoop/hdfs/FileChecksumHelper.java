@@ -1,27 +1,9 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.fs.CompositeCrcFileChecksum;
-import org.apache.hadoop.fs.FileChecksum;
-import org.apache.hadoop.fs.MD5MD5CRC32CastagnoliFileChecksum;
-import org.apache.hadoop.fs.MD5MD5CRC32GzipFileChecksum;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.Options.ChecksumCombineMode;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
-import org.apache.hadoop.hdfs.protocol.BlockChecksumType;
-import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
-import org.apache.hadoop.hdfs.protocol.LocatedStripedBlock;
-import org.apache.hadoop.hdfs.protocol.StripedBlockInfo;
-import org.apache.hadoop.hdfs.protocol.datatransfer.DataTransferProtoUtil;
-import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
-import org.apache.hadoop.hdfs.protocol.datatransfer.Op;
-import org.apache.hadoop.hdfs.protocol.datatransfer.Sender;
-import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocol.datatransfer.*;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BlockOpResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpBlockChecksumResponseProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
@@ -47,7 +29,8 @@ final class FileChecksumHelper {
   static final Logger LOG =
       LoggerFactory.getLogger(FileChecksumHelper.class);
 
-  private FileChecksumHelper() {}
+  private FileChecksumHelper() {
+  }
 
   /**
    * A common abstract class to compute file checksum.
@@ -89,14 +72,14 @@ final class FileChecksumHelper {
       this.client = client;
       this.combineMode = combineMode;
       switch (combineMode) {
-      case MD5MD5CRC:
-        this.blockChecksumType = BlockChecksumType.MD5CRC;
-        break;
-      case COMPOSITE_CRC:
-        this.blockChecksumType = BlockChecksumType.COMPOSITE_CRC;
-        break;
-      default:
-        throw new IOException("Unknown ChecksumCombineMode: " + combineMode);
+        case MD5MD5CRC:
+          this.blockChecksumType = BlockChecksumType.MD5CRC;
+          break;
+        case COMPOSITE_CRC:
+          this.blockChecksumType = BlockChecksumType.COMPOSITE_CRC;
+          break;
+        default:
+          throw new IOException("Unknown ChecksumCombineMode: " + combineMode);
       }
 
       this.remaining = length;
@@ -230,7 +213,7 @@ final class FileChecksumHelper {
         final int lenOfZeroBytes = 32;
         byte[] emptyBlockMd5 = new byte[lenOfZeroBytes];
         MD5Hash fileMD5 = MD5Hash.digest(emptyBlockMd5);
-        fileChecksum =  new MD5MD5CRC32GzipFileChecksum(0, 0, fileMD5);
+        fileChecksum = new MD5MD5CRC32GzipFileChecksum(0, 0, fileMD5);
       } else {
         checksumBlocks();
         fileChecksum = makeFinalResult();
@@ -251,12 +234,12 @@ final class FileChecksumHelper {
      */
     FileChecksum makeFinalResult() throws IOException {
       switch (combineMode) {
-      case MD5MD5CRC:
-        return makeMd5CrcResult();
-      case COMPOSITE_CRC:
-        return makeCompositeCrcResult();
-      default:
-        throw new IOException("Unknown ChecksumCombineMode: " + combineMode);
+        case MD5MD5CRC:
+          return makeMd5CrcResult();
+        case COMPOSITE_CRC:
+          return makeCompositeCrcResult();
+        default:
+          throw new IOException("Unknown ChecksumCombineMode: " + combineMode);
       }
     }
 
@@ -264,15 +247,15 @@ final class FileChecksumHelper {
       //compute file MD5
       final MD5Hash fileMD5 = MD5Hash.digest(blockChecksumBuf.getData());
       switch (crcType) {
-      case CRC32:
-        return new MD5MD5CRC32GzipFileChecksum(bytesPerCRC,
-            crcPerBlock, fileMD5);
-      case CRC32C:
-        return new MD5MD5CRC32CastagnoliFileChecksum(bytesPerCRC,
-            crcPerBlock, fileMD5);
-      default:
-        // we will get here when crcType is "NULL".
-        return null;
+        case CRC32:
+          return new MD5MD5CRC32GzipFileChecksum(bytesPerCRC,
+              crcPerBlock, fileMD5);
+        case CRC32C:
+          return new MD5MD5CRC32CastagnoliFileChecksum(bytesPerCRC,
+              crcPerBlock, fileMD5);
+        default:
+          // we will get here when crcType is "NULL".
+          return null;
       }
     }
 
@@ -371,9 +354,9 @@ final class FileChecksumHelper {
         if (getBlockChecksumType() == BlockChecksumType.COMPOSITE_CRC) {
           LOG.warn(
               "Current bytesPerCRC={} doesn't match next bpc={}, but "
-              + "continuing anyway because we're using COMPOSITE_CRC. "
-              + "If trying to preserve CHECKSUMTYPE, only the current "
-              + "bytesPerCRC will be preserved.", getBytesPerCRC(), bpc);
+                  + "continuing anyway because we're using COMPOSITE_CRC. "
+                  + "If trying to preserve CHECKSUMTYPE, only the current "
+                  + "bytesPerCRC will be preserved.", getBytesPerCRC(), bpc);
         } else {
           throw new IOException("Byte-per-checksum not matched: bpc=" + bpc
               + " but bytesPerCRC=" + getBytesPerCRC());
@@ -427,32 +410,32 @@ final class FileChecksumHelper {
         throws IOException {
       String blockChecksumForDebug = null;
       switch (getBlockChecksumType()) {
-      case MD5CRC:
-        //read md5
-        final MD5Hash md5 = new MD5Hash(
-            checksumData.getBlockChecksum().toByteArray());
-        md5.write(getBlockChecksumBuf());
-        if (LOG.isDebugEnabled()) {
-          blockChecksumForDebug = md5.toString();
-        }
-        break;
-      case COMPOSITE_CRC:
-        BlockChecksumType returnedType = PBHelperClient.convert(
-            checksumData.getBlockChecksumOptions().getBlockChecksumType());
-        if (returnedType != BlockChecksumType.COMPOSITE_CRC) {
-          throw new IOException(String.format(
-              "Unexpected blockChecksumType '%s', expecting COMPOSITE_CRC",
-              returnedType));
-        }
-        byte[] crcBytes = checksumData.getBlockChecksum().toByteArray();
-        if (LOG.isDebugEnabled()) {
-          blockChecksumForDebug = CrcUtil.toSingleCrcString(crcBytes);
-        }
-        getBlockChecksumBuf().write(crcBytes);
-        break;
-      default:
-        throw new IOException(
-            "Unknown BlockChecksumType: " + getBlockChecksumType());
+        case MD5CRC:
+          //read md5
+          final MD5Hash md5 = new MD5Hash(
+              checksumData.getBlockChecksum().toByteArray());
+          md5.write(getBlockChecksumBuf());
+          if (LOG.isDebugEnabled()) {
+            blockChecksumForDebug = md5.toString();
+          }
+          break;
+        case COMPOSITE_CRC:
+          BlockChecksumType returnedType = PBHelperClient.convert(
+              checksumData.getBlockChecksumOptions().getBlockChecksumType());
+          if (returnedType != BlockChecksumType.COMPOSITE_CRC) {
+            throw new IOException(String.format(
+                "Unexpected blockChecksumType '%s', expecting COMPOSITE_CRC",
+                returnedType));
+          }
+          byte[] crcBytes = checksumData.getBlockChecksum().toByteArray();
+          if (LOG.isDebugEnabled()) {
+            blockChecksumForDebug = CrcUtil.toSingleCrcString(crcBytes);
+          }
+          getBlockChecksumBuf().write(crcBytes);
+          break;
+        default:
+          throw new IOException(
+              "Unknown BlockChecksumType: " + getBlockChecksumType());
       }
       return blockChecksumForDebug;
     }
@@ -531,7 +514,7 @@ final class FileChecksumHelper {
             LOG.debug("Got invalid encryption key error in response to "
                     + "OP_BLOCK_CHECKSUM for file {} for block {} from "
                     + "datanode {}. Will retry " + "the block once.",
-                  getSrc(), block, datanodes[j]);
+                getSrc(), block, datanodes[j]);
             setLastRetriedIndex(blockIdx);
             done = true; // actually it's not done; but we'll retry
             blockIdx--; // repeat at i-th block

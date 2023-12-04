@@ -1,9 +1,10 @@
 package org.apache.hadoop.net;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -15,7 +16,7 @@ import org.apache.hadoop.fs.CommonConfigurationKeys;
  * It contains a static class <code>RawScriptBasedMappingWithDependency</code>
  * that performs the getDependency work.
  */
-public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping 
+public class ScriptBasedMappingWithDependency extends ScriptBasedMapping
     implements DNSToSwitchMappingWithDependency {
   /**
    * key to the dependency script filename {@value}
@@ -23,7 +24,7 @@ public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping
   static final String DEPENDENCY_SCRIPT_FILENAME_KEY =
       CommonConfigurationKeys.NET_DEPENDENCY_SCRIPT_FILE_NAME_KEY;
 
-  private Map<String, List<String>> dependencyCache = 
+  private Map<String, List<String>> dependencyCache =
       new ConcurrentHashMap<String, List<String>>();
 
   /**
@@ -42,7 +43,7 @@ public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping
    * @return the inner raw script mapping.
    */
   private RawScriptBasedMappingWithDependency getRawMapping() {
-    return (RawScriptBasedMappingWithDependency)rawMapping;
+    return (RawScriptBasedMappingWithDependency) rawMapping;
   }
 
   @Override
@@ -74,7 +75,7 @@ public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping
     //normalize all input names to be in the form of IP addresses
     name = NetUtils.normalizeHostName(name);
 
-    if (name==null) {
+    if (name == null) {
       return Collections.emptyList();
     }
 
@@ -82,20 +83,20 @@ public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping
     if (dependencies == null) {
       //not cached
       dependencies = getRawMapping().getDependency(name);
-      if(dependencies != null) {
+      if (dependencies != null) {
         dependencyCache.put(name, dependencies);
       }
     }
 
     return dependencies;
-}
+  }
 
   /**
    * This is the uncached script mapping that is fed into the cache managed
    * by the superclass {@link CachedDNSToSwitchMapping}
    */
   private static final class RawScriptBasedMappingWithDependency
-      extends ScriptBasedMapping.RawScriptBasedMapping 
+      extends ScriptBasedMapping.RawScriptBasedMapping
       implements DNSToSwitchMappingWithDependency {
     private String dependencyScriptName;
 
@@ -104,7 +105,7 @@ public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping
      * @param conf the new configuration
      */
     @Override
-    public void setConf (Configuration conf) {
+    public void setConf(Configuration conf) {
       super.setConf(conf);
       if (conf != null) {
         dependencyScriptName = conf.get(DEPENDENCY_SCRIPT_FILENAME_KEY);
@@ -117,19 +118,20 @@ public class ScriptBasedMappingWithDependency  extends ScriptBasedMapping
      * Constructor. The mapping is not ready to use until
      * {@link #setConf(Configuration)} has been called
      */
-    public RawScriptBasedMappingWithDependency() {}
+    public RawScriptBasedMappingWithDependency() {
+    }
 
     @Override
     public List<String> getDependency(String name) {
-      if (name==null || dependencyScriptName==null) {
+      if (name == null || dependencyScriptName == null) {
         return Collections.emptyList();
       }
 
-      List <String> m = new LinkedList<String>();
-      List <String> args = new ArrayList<String>(1);
+      List<String> m = new LinkedList<String>();
+      List<String> args = new ArrayList<String>(1);
       args.add(name);
-  
-      String output = runResolveCommand(args,dependencyScriptName);
+
+      String output = runResolveCommand(args, dependencyScriptName);
       if (output != null) {
         StringTokenizer allSwitchInfo = new StringTokenizer(output);
         while (allSwitchInfo.hasMoreTokens()) {

@@ -1,7 +1,7 @@
 package org.apache.hadoop.net;
 
 /** A base class that implements interface Node
- * 
+ *
  */
 
 // MapReduce也可见
@@ -12,30 +12,30 @@ public class NodeBase implements Node {
   public final static String PATH_SEPARATOR_STR = "/";
   /** string representation of root {@value} */
   public final static String ROOT = "";
-  
+
   protected String name; //host:port#
   protected String location; //string representation of this node's location
   protected int level; //which level of the tree the node resides
   protected Node parent; //its parent
-  
+
   /** Default constructor */
   public NodeBase() {
   }
-  
+
   /** Construct a node from its path
-   * @param path 
+   * @param path
    *   a concatenation of this node's location, the path separator, and its name
    */
   public NodeBase(String path) {
     path = normalize(path);
     int index = path.lastIndexOf(PATH_SEPARATOR);
-    if (index== -1) {
+    if (index == -1) {
       set(ROOT, path);
     } else {
-      set(path.substring(index+1), path.substring(0, index));
+      set(path.substring(index + 1), path.substring(0, index));
     }
   }
-  
+
   /** Construct a node from its name and its location
    * @param name this node's name (can be null, must not contain {@link #PATH_SEPARATOR})
    * @param location this node's location 
@@ -43,7 +43,7 @@ public class NodeBase implements Node {
   public NodeBase(String name, String location) {
     set(name, normalize(location));
   }
-  
+
   /** Construct a node from its name and its location
    * @param name this node's name (can be null, must not contain {@link #PATH_SEPARATOR})
    * @param location this node's location 
@@ -64,25 +64,31 @@ public class NodeBase implements Node {
   private void set(String name, String location) {
     if (name != null && name.contains(PATH_SEPARATOR_STR))
       throw new IllegalArgumentException(
-                                         "Network location name contains /: "+name);
-    this.name = (name==null)?"":name;
-    this.location = location;      
+          "Network location name contains /: " + name);
+    this.name = (name == null) ? "" : name;
+    this.location = location;
   }
-  
+
   /** @return this node's name */
   @Override
-  public String getName() { return name; }
-  
+  public String getName() {
+    return name;
+  }
+
   /** @return this node's network location */
   @Override
-  public String getNetworkLocation() { return location; }
-  
+  public String getNetworkLocation() {
+    return location;
+  }
+
   /** Set this node's network location
    * @param location the location
    */
   @Override
-  public void setNetworkLocation(String location) { this.location = location; }
-  
+  public void setNetworkLocation(String location) {
+    this.location = location;
+  }
+
   /**
    * Get the path of a node
    * @param node a non-null node
@@ -109,7 +115,7 @@ public class NodeBase implements Node {
     if (!(to instanceof NodeBase)) {
       return false;
     }
-    return getPath(this).equals(getPath((NodeBase)to));
+    return getPath(this).equals(getPath((NodeBase) to));
   }
 
   @Override
@@ -139,24 +145,26 @@ public class NodeBase implements Node {
     if (path.length() == 0) {
       return ROOT;
     }
-    
+
     if (path.charAt(0) != PATH_SEPARATOR) {
       throw new IllegalArgumentException(
-                                         "Network Location path does not start with "
-                                         +PATH_SEPARATOR_STR+ ": "+path);
+          "Network Location path does not start with "
+              + PATH_SEPARATOR_STR + ": " + path);
     }
-    
+
     int len = path.length();
-    if (path.charAt(len-1) == PATH_SEPARATOR) {
-      return path.substring(0, len-1);
+    if (path.charAt(len - 1) == PATH_SEPARATOR) {
+      return path.substring(0, len - 1);
     }
     return path;
   }
-  
+
   /** @return this node's parent */
   @Override
-  public Node getParent() { return parent; }
-  
+  public Node getParent() {
+    return parent;
+  }
+
   /** Set this node's parent
    * @param parent the parent
    */
@@ -164,13 +172,15 @@ public class NodeBase implements Node {
   public void setParent(Node parent) {
     this.parent = parent;
   }
-  
+
   /** @return this node's level in the tree.
    * E.g. the root of a tree returns 0 and its children return 1
    */
   @Override
-  public int getLevel() { return level; }
-  
+  public int getLevel() {
+    return level;
+  }
+
   /** Set this node's level in the tree
    * @param level the level
    */
@@ -178,7 +188,7 @@ public class NodeBase implements Node {
   public void setLevel(int level) {
     this.level = level;
   }
-  
+
   public static int locationToDepth(String location) {
     String normalizedLocation = normalize(location);
     int length = normalizedLocation.length();

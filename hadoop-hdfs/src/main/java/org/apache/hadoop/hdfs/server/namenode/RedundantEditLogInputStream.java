@@ -1,18 +1,18 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.log.LogThrottlingHelper;
+import org.apache.hadoop.log.LogThrottlingHelper.LogAction;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Longs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.io.IOUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Longs;
-import org.apache.hadoop.log.LogThrottlingHelper;
-import org.apache.hadoop.log.LogThrottlingHelper.LogAction;
 
 /**
  * A merged input stream that handles failover between different edit logs.
@@ -77,10 +77,10 @@ class RedundantEditLogInputStream extends EditLogInputStream {
   private IOException prevException;
 
   RedundantEditLogInputStream(Collection<EditLogInputStream> streams,
-      long startTxId) {
+                              long startTxId) {
     this.curIdx = 0;
     this.prevTxId = (startTxId == HdfsServerConstants.INVALID_TXID) ?
-      HdfsServerConstants.INVALID_TXID : (startTxId - 1);
+        HdfsServerConstants.INVALID_TXID : (startTxId - 1);
     this.state = (streams.isEmpty()) ? State.EOF : State.SKIP_UNTIL;
     this.prevException = null;
     // EditLogInputStreams in a RedundantEditLogInputStream must be finalized,
@@ -95,10 +95,10 @@ class RedundantEditLogInputStream extends EditLogInputStream {
         first = s;
       } else {
         Preconditions.checkArgument(s.getFirstTxId() == first.getFirstTxId(),
-          "All streams in the RedundantEditLogInputStream must have the same " +
-          "start transaction ID!  " + first + " had start txId " +
-          first.getFirstTxId() + ", but " + s + " had start txId " +
-          s.getFirstTxId());
+            "All streams in the RedundantEditLogInputStream must have the same " +
+                "start transaction ID!  " + first + " had start txId " +
+                first.getFirstTxId() + ", but " + s + " had start txId " +
+                s.getFirstTxId());
       }
     }
 
@@ -142,7 +142,7 @@ class RedundantEditLogInputStream extends EditLogInputStream {
 
   @Override
   public void close() throws IOException {
-    IOUtils.cleanupWithLogger(LOG,  streams);
+    IOUtils.cleanupWithLogger(LOG, streams);
   }
 
   @Override
@@ -162,83 +162,83 @@ class RedundantEditLogInputStream extends EditLogInputStream {
   protected FSEditLogOp nextOp() throws IOException {
     while (true) {
       switch (state) {
-      case SKIP_UNTIL:
-       try {
-          if (prevTxId != HdfsServerConstants.INVALID_TXID) {
-            LogAction logAction = fastForwardLoggingHelper.record();
-            if (logAction.shouldLog()) {
-              LOG.info("Fast-forwarding stream '" + streams[curIdx].getName() +
-                  "' to transaction ID " + (prevTxId + 1) +
-                  LogThrottlingHelper.getLogSupressionMessage(logAction));
+        case SKIP_UNTIL:
+          try {
+            if (prevTxId != HdfsServerConstants.INVALID_TXID) {
+              LogAction logAction = fastForwardLoggingHelper.record();
+              if (logAction.shouldLog()) {
+                LOG.info("Fast-forwarding stream '" + streams[curIdx].getName() +
+                    "' to transaction ID " + (prevTxId + 1) +
+                    LogThrottlingHelper.getLogSupressionMessage(logAction));
+              }
+              streams[curIdx].skipUntil(prevTxId + 1);
             }
-            streams[curIdx].skipUntil(prevTxId + 1);
+          } catch (IOException e) {
+            prevException = e;
+            state = State.STREAM_FAILED;
           }
-        } catch (IOException e) {
-          prevException = e;
-          state = State.STREAM_FAILED;
-        }
-        state = State.OK;
-        break;
-      case OK:
-        try {
-          FSEditLogOp op = streams[curIdx].readOp();
-          if (op == null) {
-            state = State.EOF;
-            if (streams[curIdx].getLastTxId() == prevTxId) {
-              return null;
-            } else {
-              throw new PrematureEOFException("got premature end-of-file " +
-                  "at txid " + prevTxId + "; expected file to go up to " +
-                  streams[curIdx].getLastTxId());
+          state = State.OK;
+          break;
+        case OK:
+          try {
+            FSEditLogOp op = streams[curIdx].readOp();
+            if (op == null) {
+              state = State.EOF;
+              if (streams[curIdx].getLastTxId() == prevTxId) {
+                return null;
+              } else {
+                throw new PrematureEOFException("got premature end-of-file " +
+                    "at txid " + prevTxId + "; expected file to go up to " +
+                    streams[curIdx].getLastTxId());
+              }
             }
+            prevTxId = op.getTransactionId();
+            return op;
+          } catch (IOException e) {
+            prevException = e;
+            state = State.STREAM_FAILED;
           }
-          prevTxId = op.getTransactionId();
-          return op;
-        } catch (IOException e) {
-          prevException = e;
-          state = State.STREAM_FAILED;
-        }
-        break;
-      case STREAM_FAILED:
-        if (curIdx + 1 == streams.length) {
-          throw prevException;
-        }
-        long oldLast = streams[curIdx].getLastTxId();
-        long newLast = streams[curIdx + 1].getLastTxId();
-        if (newLast < oldLast) {
-          throw new IOException("We encountered an error reading " +
-              streams[curIdx].getName() + ".  During automatic edit log " +
-              "failover, we noticed that all of the remaining edit log " +
-              "streams are shorter than the current one!  The best " +
-              "remaining edit log ends at transaction " +
-              newLast + ", but we thought we could read up to transaction " +
-              oldLast + ".  If you continue, metadata will be lost forever!",
-              prevException);
-        }
-        LOG.error("Got error reading edit log input stream " +
-          streams[curIdx].getName() + "; failing over to edit log " +
-          streams[curIdx + 1].getName(), prevException);
-        curIdx++;
-        state = State.SKIP_UNTIL;
-        break;
-      case STREAM_FAILED_RESYNC:
-        if (curIdx + 1 == streams.length) {
-          if (prevException instanceof PrematureEOFException) {
-            // bypass early EOF check
-            state = State.EOF;
-          } else {
-            streams[curIdx].resync();
-            state = State.SKIP_UNTIL;
+          break;
+        case STREAM_FAILED:
+          if (curIdx + 1 == streams.length) {
+            throw prevException;
           }
-        } else {
-          LOG.error("failing over to edit log " +
-              streams[curIdx + 1].getName());
+          long oldLast = streams[curIdx].getLastTxId();
+          long newLast = streams[curIdx + 1].getLastTxId();
+          if (newLast < oldLast) {
+            throw new IOException("We encountered an error reading " +
+                streams[curIdx].getName() + ".  During automatic edit log " +
+                "failover, we noticed that all of the remaining edit log " +
+                "streams are shorter than the current one!  The best " +
+                "remaining edit log ends at transaction " +
+                newLast + ", but we thought we could read up to transaction " +
+                oldLast + ".  If you continue, metadata will be lost forever!",
+                prevException);
+          }
+          LOG.error("Got error reading edit log input stream " +
+              streams[curIdx].getName() + "; failing over to edit log " +
+              streams[curIdx + 1].getName(), prevException);
           curIdx++;
           state = State.SKIP_UNTIL;
-        }
-        break;
-      case EOF:
-        return null;
+          break;
+        case STREAM_FAILED_RESYNC:
+          if (curIdx + 1 == streams.length) {
+            if (prevException instanceof PrematureEOFException) {
+              // bypass early EOF check
+              state = State.EOF;
+            } else {
+              streams[curIdx].resync();
+              state = State.SKIP_UNTIL;
+            }
+          } else {
+            LOG.error("failing over to edit log " +
+                streams[curIdx + 1].getName());
+            curIdx++;
+            state = State.SKIP_UNTIL;
+          }
+          break;
+        case EOF:
+          return null;
       }
     }
   }
@@ -265,6 +265,7 @@ class RedundantEditLogInputStream extends EditLogInputStream {
 
   static private final class PrematureEOFException extends IOException {
     private static final long serialVersionUID = 1L;
+
     PrematureEOFException(String msg) {
       super(msg);
     }

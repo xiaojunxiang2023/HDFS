@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.fs.XAttr;
+import org.apache.hadoop.hdfs.XAttrHelper;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.hadoop.fs.XAttr;
-import org.apache.hadoop.hdfs.XAttrHelper;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 
 /**
  * Feature for extended attributes.

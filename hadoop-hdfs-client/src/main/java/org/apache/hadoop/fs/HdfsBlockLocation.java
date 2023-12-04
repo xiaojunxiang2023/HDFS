@@ -1,9 +1,10 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.hdfs.protocol.LocatedBlock;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 
 /**
  * Wrapper for {@link BlockLocation} that also includes a {@link LocatedBlock},

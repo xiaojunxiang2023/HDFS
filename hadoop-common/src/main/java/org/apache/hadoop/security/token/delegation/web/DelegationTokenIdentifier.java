@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.token.delegation.web;
+
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 
@@ -25,7 +26,7 @@ public class DelegationTokenIdentifier
    * @param realUser the real username of the token owner
    */
   public DelegationTokenIdentifier(Text kind, Text owner, Text renewer,
-      Text realUser) {
+                                   Text realUser) {
     super(owner, renewer, realUser);
     this.kind = kind;
   }

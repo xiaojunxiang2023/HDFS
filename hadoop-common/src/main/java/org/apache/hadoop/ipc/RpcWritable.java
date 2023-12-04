@@ -1,31 +1,27 @@
 package org.apache.hadoop.ipc;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Writable;
-
 import org.apache.hadoop.thirdparty.protobuf.CodedInputStream;
 import org.apache.hadoop.thirdparty.protobuf.CodedOutputStream;
 import org.apache.hadoop.thirdparty.protobuf.Message;
+
+import java.io.*;
+import java.nio.ByteBuffer;
 
 // note anything marked public is solely for access by SaslRpcClient
 public abstract class RpcWritable implements Writable {
 
   static RpcWritable wrap(Object o) {
     if (o instanceof RpcWritable) {
-      return (RpcWritable)o;
+      return (RpcWritable) o;
     } else if (o instanceof Message) {
-      return new ProtobufWrapper((Message)o);
+      return new ProtobufWrapper((Message) o);
     } else if (o instanceof com.google.protobuf.Message) {
       return new ProtobufWrapperLegacy((com.google.protobuf.Message) o);
     } else if (o instanceof Writable) {
-      return new WritableWrapper((Writable)o);
+      return new WritableWrapper((Writable) o);
     }
     throw new IllegalArgumentException("Cannot wrap " + o.getClass());
   }
@@ -35,6 +31,7 @@ public abstract class RpcWritable implements Writable {
   public final void readFields(DataInput in) throws IOException {
     throw new UnsupportedOperationException();
   }
+
   @Override
   public final void write(DataOutput out) throws IOException {
     throw new UnsupportedOperationException();
@@ -42,6 +39,7 @@ public abstract class RpcWritable implements Writable {
 
   // methods optimized for reduced intermediate byte[] allocations.
   abstract void writeTo(ResponseBuffer out) throws IOException;
+
   abstract <T> T readFrom(ByteBuffer bb) throws IOException;
 
   // adapter for Writables.
@@ -69,7 +67,7 @@ public abstract class RpcWritable implements Writable {
         // advance over the bytes read.
         bb.position(bb.limit() - in.available());
       }
-      return (T)writable;
+      return (T) writable;
     }
   }
 
@@ -110,7 +108,7 @@ public abstract class RpcWritable implements Writable {
         // advance over the bytes read.
         bb.position(bb.position() + cis.getTotalBytesRead());
       }
-      return (T)message;
+      return (T) message;
     }
   }
 
@@ -153,7 +151,7 @@ public abstract class RpcWritable implements Writable {
         // advance over the bytes read.
         bb.position(bb.position() + cis.getTotalBytesRead());
       }
-      return (T)message;
+      return (T) message;
     }
   }
 
@@ -167,7 +165,8 @@ public abstract class RpcWritable implements Writable {
       return new Buffer(bb);
     }
 
-    Buffer() {}
+    Buffer() {
+    }
 
     Buffer(ByteBuffer bb) {
       this.bb = bb;
@@ -190,17 +189,17 @@ public abstract class RpcWritable implements Writable {
       // perspective.
       this.bb = bb.slice();
       bb.limit(bb.position());
-      return (T)this;
+      return (T) this;
     }
 
     public <T> T newInstance(Class<T> valueClass,
-        Configuration conf) throws IOException {
+                             Configuration conf) throws IOException {
       T instance;
       try {
         // this is much faster than ReflectionUtils!
         instance = valueClass.newInstance();
         if (instance instanceof Configurable) {
-          ((Configurable)instance).setConf(conf);
+          ((Configurable) instance).setConf(conf);
         }
       } catch (Exception e) {
         throw new RuntimeException(e);

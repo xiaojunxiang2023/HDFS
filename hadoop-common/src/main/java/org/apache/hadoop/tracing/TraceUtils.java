@@ -1,4 +1,5 @@
 package org.apache.hadoop.tracing;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 
@@ -9,7 +10,7 @@ public class TraceUtils {
   static final String DEFAULT_HADOOP_TRACE_PREFIX = "hadoop.htrace.";
 
   public static TraceConfiguration wrapHadoopConf(final String prefix,
-      final Configuration conf) {
+                                                  final Configuration conf) {
     return null;
   }
 

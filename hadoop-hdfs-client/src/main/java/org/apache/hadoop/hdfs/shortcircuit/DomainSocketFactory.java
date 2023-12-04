@@ -1,24 +1,22 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf.ShortCircuitConf;
 import org.apache.hadoop.net.unix.DomainSocket;
-import org.apache.hadoop.util.PerformanceAdvisory;
-
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
-
+import org.apache.hadoop.util.PerformanceAdvisory;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 public class DomainSocketFactory {
   private static final Logger LOG = LoggerFactory.getLogger(
@@ -48,7 +46,7 @@ public class DomainSocketFactory {
 
   public static class PathInfo {
     private final static PathInfo NOT_CONFIGURED =
-          new PathInfo("", PathState.UNUSABLE);
+        new PathInfo("", PathState.UNUSABLE);
 
     final private String path;
     final private PathState state;
@@ -114,7 +112,7 @@ public class DomainSocketFactory {
    * @param addr         The inet address to use.
    * @param conf         The client configuration.
    *
-   * @return             Information about the socket path.
+   * @return Information about the socket path.
    */
   public PathInfo getPathInfo(InetSocketAddress addr, ShortCircuitConf conf)
       throws IOException {

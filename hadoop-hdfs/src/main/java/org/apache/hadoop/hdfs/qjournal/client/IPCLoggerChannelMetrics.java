@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.qjournal.client;
 
-import java.net.InetSocketAddress;
-import java.util.Map;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -11,22 +8,24 @@ import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.MetricsRegistry;
 import org.apache.hadoop.metrics2.lib.MutableQuantiles;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+
+import java.net.InetSocketAddress;
+import java.util.Map;
 
 /**
  * The metrics for a journal from the writer's perspective.
  */
-@Metrics(about="Journal client metrics", context="dfs")
+@Metrics(about = "Journal client metrics", context = "dfs")
 class IPCLoggerChannelMetrics {
   final MetricsRegistry registry = new MetricsRegistry("NameNode");
 
   private volatile IPCLoggerChannel ch;
-  
+
   private final MutableQuantiles[] writeEndToEndLatencyQuantiles;
   private final MutableQuantiles[] writeRpcLatencyQuantiles;
 
-  
+
   /**
    * In the case of the NN transitioning between states, edit logs are closed
    * and reopened. Thus, the IPCLoggerChannel instance that writes to a
@@ -40,12 +39,12 @@ class IPCLoggerChannelMetrics {
    */
   private static final Map<String, IPCLoggerChannelMetrics> REGISTRY =
       Maps.newHashMap();
-  
+
   private IPCLoggerChannelMetrics(IPCLoggerChannel ch) {
     this.ch = ch;
-    
+
     Configuration conf = new HdfsConfiguration();
-    int[] intervals = 
+    int[] intervals =
         conf.getInts(DFSConfigKeys.DFS_METRICS_PERCENTILES_INTERVALS_KEY);
     if (intervals != null) {
       writeEndToEndLatencyQuantiles = new MutableQuantiles[intervals.length];
@@ -64,7 +63,7 @@ class IPCLoggerChannelMetrics {
       writeRpcLatencyQuantiles = null;
     }
   }
-  
+
   private void setChannel(IPCLoggerChannel ch) {
     assert ch.getRemoteAddress().equals(this.ch.getRemoteAddress());
     this.ch = ch;
@@ -88,32 +87,32 @@ class IPCLoggerChannelMetrics {
   private static String getName(IPCLoggerChannel ch) {
     InetSocketAddress addr = ch.getRemoteAddress();
     String addrStr = addr.getAddress().getHostAddress();
-    
+
     // IPv6 addresses have colons, which aren't allowed as part of
     // MBean names. Replace with '.'
     addrStr = addrStr.replace(':', '.');
-    
+
     return "IPCLoggerChannel-" + addrStr +
         "-" + addr.getPort();
   }
 
   @Metric("Is the remote logger out of sync with the quorum")
   public String isOutOfSync() {
-    return Boolean.toString(ch.isOutOfSync()); 
+    return Boolean.toString(ch.isOutOfSync());
   }
-  
+
   @Metric("The number of transactions the remote log is lagging behind the " +
-          "quorum")
+      "quorum")
   public long getCurrentLagTxns() {
     return ch.getLagTxns();
   }
-  
+
   @Metric("The number of milliseconds the remote log is lagging behind the " +
-          "quorum")
+      "quorum")
   public long getLagTimeMillis() {
     return ch.getLagTimeMillis();
   }
-  
+
   @Metric("The number of bytes of pending data to be sent to the remote node")
   public int getQueuedEditsSize() {
     return ch.getQueuedEditsSize();
@@ -126,7 +125,7 @@ class IPCLoggerChannelMetrics {
       }
     }
   }
-  
+
   public void addWriteRpcLatency(long micros) {
     if (writeRpcLatencyQuantiles != null) {
       for (MutableQuantiles q : writeRpcLatencyQuantiles) {

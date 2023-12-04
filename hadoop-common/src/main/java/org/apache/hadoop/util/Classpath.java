@@ -1,14 +1,15 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.shell.CommandFormat;
+import org.apache.hadoop.fs.shell.CommandFormat.UnknownOptionException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.shell.CommandFormat;
-import org.apache.hadoop.fs.shell.CommandFormat.UnknownOptionException;
 
 /**
  * Command-line utility for getting the full classpath needed to launch a Hadoop
@@ -26,14 +27,14 @@ import org.apache.hadoop.fs.shell.CommandFormat.UnknownOptionException;
  */
 public final class Classpath {
   private static final String usage =
-    "classpath [--glob|--jar <path>|-h|--help] :\n"
-    + "  Prints the classpath needed to get the Hadoop jar and the required\n"
-    + "  libraries.\n"
-    + "  Options:\n"
-    + "\n"
-    + "  --glob       expand wildcards\n"
-    + "  --jar <path> write classpath as manifest in jar named <path>\n"
-    + "  -h, --help   print help\n";
+      "classpath [--glob|--jar <path>|-h|--help] :\n"
+          + "  Prints the classpath needed to get the Hadoop jar and the required\n"
+          + "  libraries.\n"
+          + "  Options:\n"
+          + "\n"
+          + "  --glob       expand wildcards\n"
+          + "  --jar <path> write classpath as manifest in jar named <path>\n"
+          + "  -h, --help   print help\n";
 
   /**
    * Main entry point.
@@ -73,7 +74,7 @@ public final class Classpath {
       final String tmpJarPath;
       try {
         tmpJarPath = FileUtil.createJarWithClassPath(classPath, workingDir,
-          System.getenv())[0];
+            System.getenv())[0];
       } catch (IOException e) {
         terminate(1, "I/O error creating jar: " + e.getMessage());
         return;
@@ -85,7 +86,7 @@ public final class Classpath {
         FileUtil.replaceFile(new File(tmpJarPath), new File(jarPath));
       } catch (IOException e) {
         terminate(1, "I/O error renaming jar temporary file to path: " +
-          e.getMessage());
+            e.getMessage());
         return;
       }
     }

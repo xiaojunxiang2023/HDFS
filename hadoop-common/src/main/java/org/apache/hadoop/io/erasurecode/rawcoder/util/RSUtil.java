@@ -8,7 +8,8 @@ import java.nio.ByteBuffer;
  */
 public final class RSUtil {
 
-  private RSUtil(){}
+  private RSUtil() {
+  }
 
   // We always use the byte system (with symbol size 8, field size 256,
   // primitive polynomial 285, and primitive root 2).
@@ -25,7 +26,7 @@ public final class RSUtil {
   }
 
   public static void initTables(int k, int rows, byte[] codingMatrix,
-      int matrixOffset, byte[] gfTables) {
+                                int matrixOffset, byte[] gfTables) {
     int i, j;
 
     int offset = 0, idx = matrixOffset;
@@ -64,8 +65,8 @@ public final class RSUtil {
    * leverages Java auto-vectorization support for performance.
    */
   public static void encodeData(byte[] gfTables, int dataLen, byte[][] inputs,
-      int[] inputOffsets, byte[][] outputs,
-      int[] outputOffsets) {
+                                int[] inputOffsets, byte[][] outputs,
+                                int[] outputOffsets) {
     int numInputs = inputs.length;
     int numOutputs = outputs.length;
     int l, i, j, iPos, oPos;
@@ -115,7 +116,7 @@ public final class RSUtil {
    * See above. Try to use the byte[] version when possible.
    */
   public static void encodeData(byte[] gfTables, ByteBuffer[] inputs,
-      ByteBuffer[] outputs) {
+                                ByteBuffer[] outputs) {
     int numInputs = inputs.length;
     int numOutputs = outputs.length;
     int dataLen = inputs[0].remaining();

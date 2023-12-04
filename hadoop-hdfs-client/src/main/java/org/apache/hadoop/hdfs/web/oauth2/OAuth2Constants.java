@@ -15,7 +15,8 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */package org.apache.hadoop.hdfs.web.oauth2;
+ */
+package org.apache.hadoop.hdfs.web.oauth2;
 
 import okhttp3.MediaType;
 
@@ -23,7 +24,7 @@ import okhttp3.MediaType;
  * Sundry constants relating to OAuth2 within WebHDFS.
  */
 public final class OAuth2Constants {
-  private OAuth2Constants() { /** Private constructor. **/ }
+  private OAuth2Constants() { /** Private constructor. **/}
 
   public static final MediaType URLENCODED
       = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");

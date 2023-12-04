@@ -1,10 +1,9 @@
 package org.apache.hadoop.hdfs.web.resources;
 
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.ws.rs.core.Response;
 
 
 /** Http operation parameter. */
@@ -55,11 +54,11 @@ public abstract class HttpOpParam<E extends Enum<E> & HttpOpParam.Op>
 
     static final List<TemporaryRedirectOp> values
         = Collections.unmodifiableList(Arrays.asList(CREATE, APPEND, OPEN,
-                                       GETFILECHECKSUM));
+        GETFILECHECKSUM));
 
     /** Get an object for the given op. */
     public static TemporaryRedirectOp valueOf(final Op op) {
-      for(TemporaryRedirectOp t : values) {
+      for (TemporaryRedirectOp t : values) {
         if (op == t.op) {
           return t;
         }

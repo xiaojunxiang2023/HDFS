@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.namenode.FSImageSerialization;
 import org.apache.hadoop.hdfs.server.namenode.INode;
@@ -11,6 +7,10 @@ import org.apache.hadoop.hdfs.server.namenode.INode.BlocksMapUpdateInfo;
 import org.apache.hadoop.hdfs.server.namenode.INodeFile;
 import org.apache.hadoop.hdfs.server.namenode.INodeFileAttributes;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.SnapshotFSImageFormat.ReferenceMap;
+
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * The difference of an {@link INodeFile} between two snapshots.
@@ -31,7 +31,7 @@ public class FileDiff extends
 
   /** Constructor used by FSImage loading */
   FileDiff(int snapshotId, INodeFileAttributes snapshotINode,
-      FileDiff posteriorDiff, long fileSize) {
+           FileDiff posteriorDiff, long fileSize) {
     super(snapshotId, snapshotINode, posteriorDiff);
     this.fileSize = fileSize;
     blocks = null;
@@ -48,10 +48,10 @@ public class FileDiff extends
    * Should be done only once.
    */
   public void setBlocks(BlockInfo[] blocks) {
-    if(this.blocks != null)
+    if (this.blocks != null)
       return;
     int numBlocks = 0;
-    for(long s = 0; numBlocks < blocks.length && s < fileSize; numBlocks++)
+    for (long s = 0; numBlocks < blocks.length && s < fileSize; numBlocks++)
       s += blocks[numBlocks].getNumBytes();
     this.blocks = Arrays.copyOf(blocks, numBlocks);
   }
@@ -68,11 +68,11 @@ public class FileDiff extends
     assert sf != null : "FileWithSnapshotFeature is null";
     sf.updateQuotaAndCollectBlocks(reclaimContext, currentINode, posterior);
   }
-  
+
   @Override
   public String toString() {
     return super.toString() + " fileSize=" + fileSize + ", rep="
-        + (snapshotINode == null? "?": snapshotINode.getFileReplication());
+        + (snapshotINode == null ? "?" : snapshotINode.getFileReplication());
   }
 
   @Override
@@ -91,7 +91,7 @@ public class FileDiff extends
 
   @Override
   void destroyDiffAndCollectBlocks(INode.ReclaimContext reclaimContext,
-      INodeFile currentINode) {
+                                   INodeFile currentINode) {
     currentINode.getFileWithSnapshotFeature().updateQuotaAndCollectBlocks(
         reclaimContext, currentINode, this);
   }

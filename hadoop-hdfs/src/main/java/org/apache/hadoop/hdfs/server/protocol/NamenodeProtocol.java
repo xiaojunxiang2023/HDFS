@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.security.token.block.ExportedBlockKeys;
@@ -9,6 +8,8 @@ import org.apache.hadoop.hdfs.server.namenode.ha.ReadOnly;
 import org.apache.hadoop.io.retry.AtMostOnce;
 import org.apache.hadoop.io.retry.Idempotent;
 import org.apache.hadoop.security.KerberosInfo;
+
+import java.io.IOException;
 
 /*****************************************************************************
  * Protocol that a secondary NameNode uses to communicate with the NameNode.
@@ -22,17 +23,17 @@ public interface NamenodeProtocol {
    * Until version 6L, this class served as both
    * the client interface to the NN AND the RPC protocol used to 
    * communicate with the NN.
-   * 
+   *
    * This class is used by both the DFSClient and the 
    * NN server side to insulate from the protocol serialization.
-   * 
+   *
    * If you are adding/changing NN's interface then you need to 
    * change both this class and ALSO related protocol buffer
    * wire protocol definition in NamenodeProtocol.proto.
-   * 
+   *
    * For more details on protocol buffer wire protocol, please see 
    * .../org/apache/hadoop/hdfs/protocolPB/overview.html
-   * 
+   *
    * 6: Switch to txid-based file naming for image and edits
    */
   public static final long versionID = 6L;
@@ -64,9 +65,9 @@ public interface NamenodeProtocol {
 
   /**
    * Get the current block keys
-   * 
+   *
    * @return ExportedBlockKeys containing current block keys
-   * @throws IOException 
+   * @throws IOException
    */
   @Idempotent
   public ExportedBlockKeys getBlockKeys() throws IOException;
@@ -97,7 +98,7 @@ public interface NamenodeProtocol {
 
   /**
    * Request name-node version and storage information.
-   * 
+   *
    * @return {@link NamespaceInfo} identifying versions and storage information 
    *          of the name-node
    * @throws IOException
@@ -109,7 +110,7 @@ public interface NamenodeProtocol {
    * Report to the active name-node an error occurred on a subordinate node.
    * Depending on the error code the active node may decide to unregister the
    * reporting node.
-   * 
+   *
    * @param registration requesting node.
    * @param errorCode indicates the error
    * @param msg free text description of the error
@@ -117,10 +118,10 @@ public interface NamenodeProtocol {
    */
   @Idempotent
   public void errorReport(NamenodeRegistration registration,
-                          int errorCode, 
+                          int errorCode,
                           String msg) throws IOException;
 
-  /** 
+  /**
    * Register a subordinate name-node like backup node.
    *
    * @return  {@link NamenodeRegistration} of the node,
@@ -135,23 +136,23 @@ public interface NamenodeProtocol {
    * The name-node should decide whether to admit it or reject.
    * The name-node also decides what should be done with the backup node
    * image before and after the checkpoint.
-   * 
+   *
    * @see CheckpointCommand
    * @see NamenodeCommand
    * @see #ACT_SHUTDOWN
-   * 
+   *
    * @param registration the requesting node
    * @return {@link CheckpointCommand} if checkpoint is allowed.
    * @throws IOException
    */
   @AtMostOnce
   public NamenodeCommand startCheckpoint(NamenodeRegistration registration)
-  throws IOException;
+      throws IOException;
 
   /**
    * A request to the active name-node to finalize
    * previously started checkpoint.
-   * 
+   *
    * @param registration the requesting node
    * @param sig {@code CheckpointSignature} which identifies the checkpoint.
    * @throws IOException
@@ -159,8 +160,8 @@ public interface NamenodeProtocol {
   @AtMostOnce
   public void endCheckpoint(NamenodeRegistration registration,
                             CheckpointSignature sig) throws IOException;
-  
-  
+
+
   /**
    * Return a structure containing details about all edit logs
    * available to be fetched from the NameNode.
@@ -169,7 +170,7 @@ public interface NamenodeProtocol {
    */
   @Idempotent
   public RemoteEditLogManifest getEditLogManifest(long sinceTxId)
-    throws IOException;
+      throws IOException;
 
   /**
    * @return Whether the NameNode is in upgrade state (false) or not (true)

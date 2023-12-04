@@ -1,15 +1,15 @@
 package org.apache.hadoop.fs;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.Checksum;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.zip.Checksum;
 
 /**
  * This is a generic input stream for verifying checksums for
@@ -18,7 +18,7 @@ import java.nio.IntBuffer;
 abstract public class FSInputChecker extends FSInputStream {
   public static final Logger LOG =
       LoggerFactory.getLogger(FSInputChecker.class);
-  
+
   /** The file name from which data is read from */
   protected Path file;
   private Checksum sum;
@@ -29,9 +29,9 @@ abstract public class FSInputChecker extends FSInputStream {
   private IntBuffer checksumInts; // wrapper on checksum buffer
   private int pos; // the position of the reader inside buf
   private int count; // the number of bytes currently in buf
-  
+
   private int numOfRetries;
-  
+
   // cached file position
   // this should always be a multiple of maxChunkSize
   private long chunkPos = 0;
@@ -44,29 +44,29 @@ abstract public class FSInputChecker extends FSInputStream {
   protected static final int CHECKSUM_SIZE = 4; // 32-bit checksum
 
   /** Constructor
-   * 
+   *
    * @param file The name of the file to be read
    * @param numOfRetries Number of read retries when ChecksumError occurs
    */
-  protected FSInputChecker( Path file, int numOfRetries) {
+  protected FSInputChecker(Path file, int numOfRetries) {
     this.file = file;
     this.numOfRetries = numOfRetries;
   }
-  
+
   /** Constructor
-   * 
+   *
    * @param file The name of the file to be read
    * @param numOfRetries Number of read retries when ChecksumError occurs
    * @param sum the type of Checksum engine
    * @param chunkSize maximun chunk size
    * @param checksumSize the number byte of each checksum
    */
-  protected FSInputChecker( Path file, int numOfRetries, 
-      boolean verifyChecksum, Checksum sum, int chunkSize, int checksumSize ) {
+  protected FSInputChecker(Path file, int numOfRetries,
+                           boolean verifyChecksum, Checksum sum, int chunkSize, int checksumSize) {
     this(file, numOfRetries);
     set(verifyChecksum, sum, chunkSize, checksumSize);
   }
-  
+
   /**
    * Reads in checksum chunks into <code>buf</code> at <code>offset</code>
    * and checksum into <code>checksum</code>.
@@ -98,7 +98,7 @@ abstract public class FSInputChecker extends FSInputStream {
    * @return number of bytes read
    */
   abstract protected int readChunk(long pos, byte[] buf, int offset, int len,
-      byte[] checksum) throws IOException;
+                                   byte[] checksum) throws IOException;
 
   /** Return position of beginning of chunk containing pos. 
    *
@@ -114,10 +114,10 @@ abstract public class FSInputChecker extends FSInputStream {
 
   /**
    * Read one checksum-verified byte
-   * 
-   * @return     the next byte of data, or <code>-1</code> if the end of the
+   *
+   * @return the next byte of data, or <code>-1</code> if the end of the
    *             stream is reached.
-   * @exception  IOException  if an I/O error occurs.
+   * @exception IOException  if an I/O error occurs.
    */
 
   @Override
@@ -130,7 +130,7 @@ abstract public class FSInputChecker extends FSInputStream {
     }
     return buf[pos++] & 0xff;
   }
-  
+
   /**
    * Read checksum verified bytes from this byte-input stream into 
    * the specified byte array, starting at the given offset.
@@ -156,9 +156,9 @@ abstract public class FSInputChecker extends FSInputStream {
    * @param      b     destination buffer.
    * @param      off   offset at which to start storing bytes.
    * @param      len   maximum number of bytes to read.
-   * @return     the number of bytes read, or <code>-1</code> if the end of
+   * @return the number of bytes read, or <code>-1</code> if the end of
    *             the stream has been reached.
-   * @exception  IOException  if an I/O error occurs.
+   * @exception IOException  if an I/O error occurs.
    *             ChecksumException if any checksum error occurs
    */
   @Override
@@ -171,24 +171,24 @@ abstract public class FSInputChecker extends FSInputStream {
     }
 
     int n = 0;
-    for (;;) {
+    for (; ; ) {
       int nread = read1(b, off + n, len - n);
-      if (nread <= 0) 
+      if (nread <= 0)
         return (n == 0) ? nread : n;
       n += nread;
       if (n >= len)
         return n;
     }
   }
-  
+
   /**
    * Fills the buffer with a chunk data. 
    * No mark is supported.
    * This method assumes that all data in the buffer has already been read in,
    * hence pos > count.
    */
-  private void fill(  ) throws IOException {
-    assert(pos>=count);
+  private void fill() throws IOException {
+    assert (pos >= count);
     // fill internal buffer
     count = readChecksumChunk(buf, 0, maxChunkSize);
     if (count < 0) count = 0;
@@ -198,8 +198,8 @@ abstract public class FSInputChecker extends FSInputStream {
    * Like read(byte[], int, int), but does not provide a dest buffer,
    * so the read data is discarded.
    * @param      len maximum number of bytes to read.
-   * @return     the number of bytes read.
-   * @throws     IOException  if an I/O error occurs.
+   * @return the number of bytes read.
+   * @throws IOException  if an I/O error occurs.
    */
   final protected synchronized int readAndDiscard(int len) throws IOException {
     int total = 0;
@@ -222,38 +222,38 @@ abstract public class FSInputChecker extends FSInputStream {
    * stream at most once if necessary.
    */
   private int read1(byte b[], int off, int len)
-  throws IOException {
-    int avail = count-pos;
-    if( avail <= 0 ) {
-      if(len >= maxChunkSize) {
+      throws IOException {
+    int avail = count - pos;
+    if (avail <= 0) {
+      if (len >= maxChunkSize) {
         // read a chunk to user buffer directly; avoid one copy
         int nread = readChecksumChunk(b, off, len);
         return nread;
       } else {
         // read a chunk into the local buffer
-         fill();
-        if( count <= 0 ) {
+        fill();
+        if (count <= 0) {
           return -1;
         } else {
           avail = count;
         }
       }
     }
-    
+
     // copy content of the local buffer to the user buffer
     int cnt = (avail < len) ? avail : len;
     System.arraycopy(buf, pos, b, off, cnt);
     pos += cnt;
-    return cnt;    
+    return cnt;
   }
-  
+
   /* Read up one or more checksum chunk to array <i>b</i> at pos <i>off</i>
    * It requires at least one checksum chunk boundary
-   * in between <cur_pos, cur_pos+len> 
+   * in between <cur_pos, cur_pos+len>
    * and it stops reading at the last boundary or at the end of the stream;
    * Otherwise an IllegalArgumentException is thrown.
    * This makes sure that all data read are checksum verified.
-   * 
+   *
    * @param b   the buffer into which the data is read.
    * @param off the start offset in array <code>b</code>
    *            at which the data is written.
@@ -262,69 +262,68 @@ abstract public class FSInputChecker extends FSInputStream {
    *            <code>-1</code> if there is no more data because the end of
    *            the stream has been reached.
    * @throws IOException if an I/O error occurs.
-   */ 
+   */
   private int readChecksumChunk(byte b[], final int off, final int len)
-  throws IOException {
+      throws IOException {
     // invalidate buffer
     count = pos = 0;
-          
+
     int read = 0;
     boolean retry = true;
-    int retriesLeft = numOfRetries; 
+    int retriesLeft = numOfRetries;
     do {
       retriesLeft--;
 
       try {
         read = readChunk(chunkPos, b, off, len, checksum);
-        if( read > 0) {
-          if( needChecksum() ) {
+        if (read > 0) {
+          if (needChecksum()) {
             verifySums(b, off, read);
           }
           chunkPos += read;
         }
         retry = false;
       } catch (ChecksumException ce) {
-          LOG.info("Found checksum error: b[" + off + ", " + (off+read) + "]="
-              + StringUtils.byteToHexString(b, off, off + read), ce);
-          if (retriesLeft == 0) {
-            throw ce;
-          }
-          
-          // try a new replica
-          if (seekToNewSource(chunkPos)) {
-            // Since at least one of the sources is different, 
-            // the read might succeed, so we'll retry.
-            seek(chunkPos);
-          } else {
-            // Neither the data stream nor the checksum stream are being read
-            // from different sources, meaning we'll still get a checksum error 
-            // if we try to do the read again.  We throw an exception instead.
-            throw ce;
-          }
+        LOG.info("Found checksum error: b[" + off + ", " + (off + read) + "]="
+            + StringUtils.byteToHexString(b, off, off + read), ce);
+        if (retriesLeft == 0) {
+          throw ce;
         }
+
+        // try a new replica
+        if (seekToNewSource(chunkPos)) {
+          // Since at least one of the sources is different, 
+          // the read might succeed, so we'll retry.
+          seek(chunkPos);
+        } else {
+          // Neither the data stream nor the checksum stream are being read
+          // from different sources, meaning we'll still get a checksum error 
+          // if we try to do the read again.  We throw an exception instead.
+          throw ce;
+        }
+      }
     } while (retry);
     return read;
   }
 
   private void verifySums(final byte b[], final int off, int read)
-    throws ChecksumException
-  {
+      throws ChecksumException {
     int leftToVerify = read;
     int verifyOff = 0;
     checksumInts.rewind();
-    checksumInts.limit((read - 1)/maxChunkSize + 1);
+    checksumInts.limit((read - 1) / maxChunkSize + 1);
 
     while (leftToVerify > 0) {
       sum.update(b, off + verifyOff, Math.min(leftToVerify, maxChunkSize));
       int expected = checksumInts.get();
-      int calculated = (int)sum.getValue();
+      int calculated = (int) sum.getValue();
       sum.reset();
 
       if (expected != calculated) {
         long errPos = chunkPos + verifyOff;
         throw new ChecksumException(
-          "Checksum error: "+file+" at "+ errPos +
-          " exp: " + expected + " got: " + calculated, errPos);
+            "Checksum error: " + file + " at " + errPos +
+                " exp: " + expected + " got: " + calculated, errPos);
       }
       leftToVerify -= maxChunkSize;
       verifyOff += maxChunkSize;
@@ -339,22 +338,22 @@ abstract public class FSInputChecker extends FSInputStream {
   @Deprecated
   static public long checksum2long(byte[] checksum) {
     long crc = 0L;
-    for(int i=0; i<checksum.length; i++) {
-      crc |= (0xffL&(long)checksum[i])<<((checksum.length-i-1)*8);
+    for (int i = 0; i < checksum.length; i++) {
+      crc |= (0xffL & (long) checksum[i]) << ((checksum.length - i - 1) * 8);
     }
     return crc;
   }
 
   @Override
   public synchronized long getPos() throws IOException {
-    return chunkPos-Math.max(0L, count - pos);
+    return chunkPos - Math.max(0L, count - pos);
   }
 
   @Override
   public synchronized int available() throws IOException {
     return Math.max(0, count - pos);
   }
-  
+
   /**
    * Skips over and discards <code>n</code> bytes of data from the
    * input stream.
@@ -368,8 +367,8 @@ abstract public class FSInputChecker extends FSInputStream {
    *<p>If <code>n</code> is negative, no bytes are skipped.
    *
    * @param      n   the number of bytes to be skipped.
-   * @return     the actual number of bytes skipped.
-   * @exception  IOException  if an I/O error occurs.
+   * @return the actual number of bytes skipped.
+   * @exception IOException  if an I/O error occurs.
    *             ChecksumException if the chunk to skip to is corrupted
    */
   @Override
@@ -378,44 +377,44 @@ abstract public class FSInputChecker extends FSInputStream {
       return 0;
     }
 
-    seek(getPos()+n);
+    seek(getPos() + n);
     return n;
   }
 
   /**
    * Seek to the given position in the stream.
    * The next read() will be from that position.
-   * 
+   *
    * <p>This method may seek past the end of the file.
    * This produces no exception and an attempt to read from
    * the stream will result in -1 indicating the end of the file.
    *
    * @param      pos   the position to seek to.
-   * @exception  IOException  if an I/O error occurs.
+   * @exception IOException  if an I/O error occurs.
    *             ChecksumException if the chunk to seek to is corrupted
    */
 
   @Override
   public synchronized void seek(long pos) throws IOException {
-    if( pos < 0 ) {
+    if (pos < 0) {
       throw new EOFException(FSExceptionMessages.NEGATIVE_SEEK);
     }
     // optimize: check if the pos is in the buffer
     long start = chunkPos - this.count;
-    if( pos>=start && pos<chunkPos) {
-      this.pos = (int)(pos-start);
+    if (pos >= start && pos < chunkPos) {
+      this.pos = (int) (pos - start);
       return;
     }
-    
+
     // reset the current state
     resetState();
-    
+
     // seek to a checksum boundary
     chunkPos = getChunkPosition(pos);
-    
+
     // scan to the desired position
-    int delta = (int)(pos - chunkPos);
-    if( delta > 0) {
+    int delta = (int) (pos - chunkPos);
+    if (delta > 0) {
       readFully(this, new byte[delta], 0, delta);
     }
   }
@@ -423,7 +422,7 @@ abstract public class FSInputChecker extends FSInputStream {
   /**
    * A utility function that tries to read up to <code>len</code> bytes from
    * <code>stm</code>
-   * 
+   *
    * @param stm    an input stream
    * @param buf    destination buffer
    * @param offset offset at which to store data
@@ -431,19 +430,19 @@ abstract public class FSInputChecker extends FSInputStream {
    * @return actual number of bytes read
    * @throws IOException if there is any IO error
    */
-  protected static int readFully(InputStream stm, 
-      byte[] buf, int offset, int len) throws IOException {
+  protected static int readFully(InputStream stm,
+                                 byte[] buf, int offset, int len) throws IOException {
     int n = 0;
-    for (;;) {
+    for (; ; ) {
       int nread = stm.read(buf, offset + n, len - n);
-      if (nread <= 0) 
+      if (nread <= 0)
         return (n == 0) ? nread : n;
       n += nread;
       if (n >= len)
         return n;
     }
   }
-  
+
   /**
    * Set the checksum related parameters
    * @param verifyChecksum whether to verify checksum
@@ -452,7 +451,7 @@ abstract public class FSInputChecker extends FSInputStream {
    * @param checksumSize checksum size
    */
   final protected synchronized void set(boolean verifyChecksum,
-      Checksum sum, int maxChunkSize, int checksumSize) {
+                                        Checksum sum, int maxChunkSize, int checksumSize) {
 
     // The code makes assumptions that checksums are always 32-bit.
     assert !verifyChecksum || sum == null || checksumSize == CHECKSUM_SIZE;
@@ -473,16 +472,16 @@ abstract public class FSInputChecker extends FSInputStream {
   final public boolean markSupported() {
     return false;
   }
-  
+
   @Override
   final public void mark(int readlimit) {
   }
-  
+
   @Override
   final public void reset() throws IOException {
     throw new IOException("mark/reset not supported");
   }
-  
+
 
   /* reset this FSInputChecker's state */
   private void resetState() {

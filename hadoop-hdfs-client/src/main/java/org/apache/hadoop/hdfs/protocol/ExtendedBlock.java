@@ -27,7 +27,7 @@ public class ExtendedBlock {
   }
 
   public ExtendedBlock(final String poolId, final long blkid, final long len,
-      final long genstamp) {
+                       final long genstamp) {
     this.poolId = poolId != null ? poolId.intern() : null;
     block = new Block(blkid, len, genstamp);
   }
@@ -86,7 +86,7 @@ public class ExtendedBlock {
     if (!(o instanceof ExtendedBlock)) {
       return false;
     }
-    ExtendedBlock b = (ExtendedBlock)o;
+    ExtendedBlock b = (ExtendedBlock) o;
     return b.block.equals(block) &&
         (b.poolId != null ? b.poolId.equals(poolId) : poolId == null);
   }

@@ -1,42 +1,28 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
-import static org.apache.hadoop.hdfs.protocol.datatransfer.DataTransferProtoUtil.toProto;
-
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.StripedBlockInfo;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.CachingStrategyProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ChecksumProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ClientOperationHeaderProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.DataTransferTraceInfoProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpBlockChecksumProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpBlockGroupChecksumProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpCopyBlockProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpReadBlockProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpReplaceBlockProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpRequestShortCircuitAccessProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpTransferBlockProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpWriteBlockProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ReleaseShortCircuitAccessRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ShortCircuitShmRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.*;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.protobuf.Message;
+import org.apache.hadoop.tracing.Span;
+import org.apache.hadoop.tracing.TraceUtils;
+import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.util.DataChecksum;
 
-import org.apache.hadoop.tracing.Span;
-import org.apache.hadoop.tracing.Tracer;
-import org.apache.hadoop.tracing.TraceUtils;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 
-import org.apache.hadoop.thirdparty.protobuf.Message;
+import static org.apache.hadoop.hdfs.protocol.datatransfer.DataTransferProtoUtil.toProto;
 
 /** Sender */
 public class Sender implements DataTransferProtocol {
@@ -54,7 +40,7 @@ public class Sender implements DataTransferProtocol {
   }
 
   private static void send(final DataOutputStream out, final Op opcode,
-      final Message proto) throws IOException {
+                           final Message proto) throws IOException {
     LOG.trace("Sending DataTransferOp {}: {}",
         proto.getClass().getSimpleName(), proto);
     op(out, opcode);
@@ -76,12 +62,12 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void readBlock(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String clientName,
-      final long blockOffset,
-      final long length,
-      final boolean sendChecksum,
-      final CachingStrategy cachingStrategy) throws IOException {
+                        final Token<BlockTokenIdentifier> blockToken,
+                        final String clientName,
+                        final long blockOffset,
+                        final long length,
+                        final boolean sendChecksum,
+                        final CachingStrategy cachingStrategy) throws IOException {
 
     OpReadBlockProto proto = OpReadBlockProto.newBuilder()
         .setHeader(DataTransferProtoUtil.buildClientHeader(blk, clientName,
@@ -98,24 +84,24 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void writeBlock(final ExtendedBlock blk,
-      final StorageType storageType,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String clientName,
-      final DatanodeInfo[] targets,
-      final StorageType[] targetStorageTypes,
-      final DatanodeInfo source,
-      final BlockConstructionStage stage,
-      final int pipelineSize,
-      final long minBytesRcvd,
-      final long maxBytesRcvd,
-      final long latestGenerationStamp,
-      DataChecksum requestedChecksum,
-      final CachingStrategy cachingStrategy,
-      final boolean allowLazyPersist,
-      final boolean pinning,
-      final boolean[] targetPinnings,
-      final String storageId,
-      final String[] targetStorageIds) throws IOException {
+                         final StorageType storageType,
+                         final Token<BlockTokenIdentifier> blockToken,
+                         final String clientName,
+                         final DatanodeInfo[] targets,
+                         final StorageType[] targetStorageTypes,
+                         final DatanodeInfo source,
+                         final BlockConstructionStage stage,
+                         final int pipelineSize,
+                         final long minBytesRcvd,
+                         final long maxBytesRcvd,
+                         final long latestGenerationStamp,
+                         DataChecksum requestedChecksum,
+                         final CachingStrategy cachingStrategy,
+                         final boolean allowLazyPersist,
+                         final boolean pinning,
+                         final boolean[] targetPinnings,
+                         final String storageId,
+                         final String[] targetStorageIds) throws IOException {
     ClientOperationHeaderProto header = DataTransferProtoUtil.buildClientHeader(
         blk, clientName, blockToken);
 
@@ -151,11 +137,11 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void transferBlock(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String clientName,
-      final DatanodeInfo[] targets,
-      final StorageType[] targetStorageTypes,
-      final String[] targetStorageIds) throws IOException {
+                            final Token<BlockTokenIdentifier> blockToken,
+                            final String clientName,
+                            final DatanodeInfo[] targets,
+                            final StorageType[] targetStorageTypes,
+                            final String[] targetStorageIds) throws IOException {
 
     OpTransferBlockProto proto = OpTransferBlockProto.newBuilder()
         .setHeader(DataTransferProtoUtil.buildClientHeader(
@@ -171,8 +157,8 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void requestShortCircuitFds(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      SlotId slotId, int maxVersion, boolean supportsReceiptVerification)
+                                     final Token<BlockTokenIdentifier> blockToken,
+                                     SlotId slotId, int maxVersion, boolean supportsReceiptVerification)
       throws IOException {
     OpRequestShortCircuitAccessProto.Builder builder =
         OpRequestShortCircuitAccessProto.newBuilder()
@@ -220,11 +206,11 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void replaceBlock(final ExtendedBlock blk,
-      final StorageType storageType,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String delHint,
-      final DatanodeInfo source,
-      final String storageId) throws IOException {
+                           final StorageType storageType,
+                           final Token<BlockTokenIdentifier> blockToken,
+                           final String delHint,
+                           final DatanodeInfo source,
+                           final String storageId) throws IOException {
     OpReplaceBlockProto.Builder proto = OpReplaceBlockProto.newBuilder()
         .setHeader(DataTransferProtoUtil.buildBaseHeader(blk, blockToken))
         .setStorageType(PBHelperClient.convertStorageType(storageType))
@@ -239,7 +225,7 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void copyBlock(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken) throws IOException {
+                        final Token<BlockTokenIdentifier> blockToken) throws IOException {
     OpCopyBlockProto proto = OpCopyBlockProto.newBuilder()
         .setHeader(DataTransferProtoUtil.buildBaseHeader(blk, blockToken))
         .build();
@@ -249,8 +235,8 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void blockChecksum(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      BlockChecksumOptions blockChecksumOptions) throws IOException {
+                            final Token<BlockTokenIdentifier> blockToken,
+                            BlockChecksumOptions blockChecksumOptions) throws IOException {
     OpBlockChecksumProto proto = OpBlockChecksumProto.newBuilder()
         .setHeader(DataTransferProtoUtil.buildBaseHeader(blk, blockToken))
         .setBlockChecksumOptions(PBHelperClient.convert(blockChecksumOptions))
@@ -261,9 +247,9 @@ public class Sender implements DataTransferProtocol {
 
   @Override
   public void blockGroupChecksum(StripedBlockInfo stripedBlockInfo,
-      Token<BlockTokenIdentifier> blockToken,
-      long requestedNumBytes,
-      BlockChecksumOptions blockChecksumOptions) throws IOException {
+                                 Token<BlockTokenIdentifier> blockToken,
+                                 long requestedNumBytes,
+                                 BlockChecksumOptions blockChecksumOptions) throws IOException {
     OpBlockGroupChecksumProto proto = OpBlockGroupChecksumProto.newBuilder()
         .setHeader(DataTransferProtoUtil.buildBaseHeader(
             stripedBlockInfo.getBlock(), blockToken))

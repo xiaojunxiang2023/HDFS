@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.shell.find;
 
+import org.apache.hadoop.fs.shell.PathData;
+
 import java.io.IOException;
 import java.util.Deque;
-
-import org.apache.hadoop.fs.shell.PathData;
 
 /**
  * Implements the -a (and) operator for the
@@ -17,14 +17,14 @@ final class And extends BaseExpression {
     factory.addClass(And.class, "-and");
   }
 
-  private static final String[] USAGE = { "expression -a expression",
-      "expression -and expression", "expression expression" };
+  private static final String[] USAGE = {"expression -a expression",
+      "expression -and expression", "expression expression"};
   private static final String[] HELP = {
       "Logical AND operator for joining two expressions. Returns",
       "true if both child expressions return true. Implied by the",
       "juxtaposition of two expressions and so does not need to be",
       "explicitly specified. The second expression will not be",
-      "applied if the first fails." };
+      "applied if the first fails."};
 
   public And() {
     super();

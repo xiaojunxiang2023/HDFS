@@ -1,10 +1,11 @@
 package org.apache.hadoop.log;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Timer;
+
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.apache.hadoop.util.Timer;
 
 /**
  * This is a class to help easily throttle log statements, so that they will
@@ -143,7 +144,7 @@ public class LogThrottlingHelper {
 
   @VisibleForTesting
   LogThrottlingHelper(long minLogPeriodMs, String primaryRecorderName,
-      Timer timer) {
+                      Timer timer) {
     this.minLogPeriodMs = minLogPeriodMs;
     this.primaryRecorderName = primaryRecorderName;
     this.timer = timer;
@@ -226,7 +227,7 @@ public class LogThrottlingHelper {
    * @see #record(double...)
    */
   public LogAction record(String recorderName, long currentTimeMs,
-      double... values) {
+                          double... values) {
     if (primaryRecorderName == null) {
       primaryRecorderName = recorderName;
     }

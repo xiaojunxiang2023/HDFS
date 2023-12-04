@@ -5,18 +5,18 @@ package org.apache.hadoop.hdfs.tools.offlineImageViewer;
  * Visitor class (ImageVisitor, EditsVisitor etc.)
  */
 public class DepthCounter {
-    private int depth = 0;
+  private int depth = 0;
 
-    public void incLevel() {
-        depth++;
-    }
+  public void incLevel() {
+    depth++;
+  }
 
-    public void decLevel() {
-        if (depth >= 1) depth--;
-    }
+  public void decLevel() {
+    if (depth >= 1) depth--;
+  }
 
-    public int getLevel() {
-        return depth;
-    }
+  public int getLevel() {
+    return depth;
+  }
 }
 

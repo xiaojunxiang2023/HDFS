@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.statistics.impl;
 
-import java.util.Map;
-
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.MeanStatistic;
+
+import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 

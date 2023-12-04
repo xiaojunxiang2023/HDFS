@@ -1,17 +1,16 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage.State;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A Datanode has one or more storages. A storage in the Datanode is represented
@@ -22,11 +21,12 @@ public class DatanodeStorageInfo {
 
   public static DatanodeInfo[] toDatanodeInfos(
       DatanodeStorageInfo[] storages) {
-    return storages == null ? null: toDatanodeInfos(Arrays.asList(storages));
+    return storages == null ? null : toDatanodeInfos(Arrays.asList(storages));
   }
+
   static DatanodeInfo[] toDatanodeInfos(List<DatanodeStorageInfo> storages) {
     final DatanodeInfo[] datanodes = new DatanodeInfo[storages.size()];
-    for(int i = 0; i < storages.size(); i++) {
+    for (int i = 0; i < storages.size(); i++) {
       datanodes[i] = storages.get(i).getDatanodeDescriptor();
     }
     return datanodes;
@@ -46,7 +46,7 @@ public class DatanodeStorageInfo {
       return null;
     }
     String[] storageIDs = new String[storages.length];
-    for(int i = 0; i < storageIDs.length; i++) {
+    for (int i = 0; i < storageIDs.length; i++) {
       storageIDs[i] = storages[i].getStorageID();
     }
     return storageIDs;
@@ -57,7 +57,7 @@ public class DatanodeStorageInfo {
       return null;
     }
     StorageType[] storageTypes = new StorageType[storages.length];
-    for(int i = 0; i < storageTypes.length; i++) {
+    for (int i = 0; i < storageTypes.length; i++) {
       storageTypes[i] = storages[i].getStorageType();
     }
     return storageTypes;
@@ -132,7 +132,7 @@ public class DatanodeStorageInfo {
   }
 
   DatanodeStorageInfo(DatanodeDescriptor dn, String storageID,
-      StorageType storageType, State state) {
+                      StorageType storageType, State state) {
     this.dn = dn;
     this.storageID = storageID;
     this.storageType = storageType;
@@ -170,7 +170,7 @@ public class DatanodeStorageInfo {
 
   @VisibleForTesting
   public void setUtilizationForTesting(long capacity, long dfsUsed,
-                      long remaining, long blockPoolUsed) {
+                                       long remaining, long blockPoolUsed) {
     this.capacity = capacity;
     this.dfsUsed = dfsUsed;
     this.remaining = remaining;
@@ -254,6 +254,7 @@ public class DatanodeStorageInfo {
     blockList = b.listInsert(blockList, this);
     numBlocks++;
   }
+
   boolean removeBlock(BlockInfo b) {
     blockList = b.listRemove(blockList, this);
     if (b.removeStorage(this)) {
@@ -287,7 +288,7 @@ public class DatanodeStorageInfo {
    * @return the head of the blockList
    */
   @VisibleForTesting
-  BlockInfo getBlockListHeadForTesting(){
+  BlockInfo getBlockListHeadForTesting() {
     return blockList;
   }
 
@@ -303,7 +304,7 @@ public class DatanodeStorageInfo {
     return dn;
   }
 
-  /** Increment the number of blocks scheduled for each given storage */ 
+  /** Increment the number of blocks scheduled for each given storage */
   public static void incrementBlocksScheduled(DatanodeStorageInfo... storages) {
     for (DatanodeStorageInfo s : storages) {
       s.getDatanodeDescriptor().incrementBlocksScheduled(s.getStorageType());
@@ -327,7 +328,7 @@ public class DatanodeStorageInfo {
     } else if (obj == null || !(obj instanceof DatanodeStorageInfo)) {
       return false;
     }
-    final DatanodeStorageInfo that = (DatanodeStorageInfo)obj;
+    final DatanodeStorageInfo that = (DatanodeStorageInfo) obj;
     return this.storageID.equals(that.storageID);
   }
 
@@ -340,7 +341,7 @@ public class DatanodeStorageInfo {
   public String toString() {
     return "[" + storageType + "]" + storageID + ":" + state + ":" + dn;
   }
-  
+
   StorageReport toStorageReport() {
     return new StorageReport(
         new DatanodeStorage(storageID, state, storageType),
@@ -350,21 +351,28 @@ public class DatanodeStorageInfo {
   static Iterable<StorageType> toStorageTypes(
       final Iterable<DatanodeStorageInfo> infos) {
     return new Iterable<StorageType>() {
-        @Override
-        public Iterator<StorageType> iterator() {
-          return new Iterator<StorageType>() {
-            final Iterator<DatanodeStorageInfo> i = infos.iterator();
-            @Override
-            public boolean hasNext() {return i.hasNext();}
-            @Override
-            public StorageType next() {return i.next().getStorageType();}
-            @Override
-            public void remove() {
-              throw new UnsupportedOperationException();
-            }
-          };
-        }
-      };
+      @Override
+      public Iterator<StorageType> iterator() {
+        return new Iterator<StorageType>() {
+          final Iterator<DatanodeStorageInfo> i = infos.iterator();
+
+          @Override
+          public boolean hasNext() {
+            return i.hasNext();
+          }
+
+          @Override
+          public StorageType next() {
+            return i.next().getStorageType();
+          }
+
+          @Override
+          public void remove() {
+            throw new UnsupportedOperationException();
+          }
+        };
+      }
+    };
   }
 
   /** @return the first {@link DatanodeStorageInfo} corresponding to
@@ -376,7 +384,7 @@ public class DatanodeStorageInfo {
     if (datanode == null) {
       return null;
     }
-    for(DatanodeStorageInfo storage : infos) {
+    for (DatanodeStorageInfo storage : infos) {
       if (storage.getDatanodeDescriptor() == datanode) {
         return storage;
       }

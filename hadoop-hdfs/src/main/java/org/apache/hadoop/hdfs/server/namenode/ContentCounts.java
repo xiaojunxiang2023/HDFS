@@ -62,7 +62,7 @@ public class ContentCounts {
   }
 
   private ContentCounts(EnumCounters<Content> contents,
-      EnumCounters<StorageType> types) {
+                        EnumCounters<StorageType> types) {
     this.contents = contents;
     this.types = types;
   }

@@ -1,14 +1,13 @@
 package org.apache.hadoop.filter.handler;
 
-import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.filter.AuthenticationToken;
 import org.apache.hadoop.auth.util.HttpConstants;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationFilter;
+import org.apache.hadoop.filter.AuthenticationToken;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.Properties;
 
@@ -74,7 +73,7 @@ public interface AuthenticationHandler {
   public boolean managementOperation(AuthenticationToken token,
                                      HttpServletRequest request,
                                      HttpServletResponse response)
-    throws IOException, AuthenticationException;
+      throws IOException, AuthenticationException;
 
   /**
    * Performs an authentication step for the given HTTP client request.
@@ -102,6 +101,6 @@ public interface AuthenticationHandler {
    * @throws AuthenticationException thrown if an Authentication error occurred.
    */
   public AuthenticationToken authenticate(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, AuthenticationException;
+      throws IOException, AuthenticationException;
 
 }

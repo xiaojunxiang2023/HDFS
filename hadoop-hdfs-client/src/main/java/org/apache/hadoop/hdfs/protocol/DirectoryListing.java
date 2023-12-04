@@ -14,7 +14,7 @@ public class DirectoryListing {
    * @param remainingEntries number of entries that are left to be listed
    */
   public DirectoryListing(HdfsFileStatus[] partialListing,
-      int remainingEntries) {
+                          int remainingEntries) {
     if (partialListing == null) {
       throw new IllegalArgumentException("partial listing should not be null");
     }
@@ -59,6 +59,6 @@ public class DirectoryListing {
     if (partialListing.length == 0) {
       return null;
     }
-    return partialListing[partialListing.length-1].getLocalNameInBytes();
+    return partialListing[partialListing.length - 1].getLocalNameInBytes();
   }
 }

@@ -20,16 +20,16 @@ public class DataOutputOutputStream extends OutputStream {
    */
   public static OutputStream constructOutputStream(DataOutput out) {
     if (out instanceof OutputStream) {
-      return (OutputStream)out;
+      return (OutputStream) out;
     } else {
       return new DataOutputOutputStream(out);
     }
   }
-  
+
   private DataOutputOutputStream(DataOutput out) {
     this.out = out;
   }
-  
+
   @Override
   public void write(int b) throws IOException {
     out.writeByte(b);
@@ -44,6 +44,6 @@ public class DataOutputOutputStream extends OutputStream {
   public void write(byte[] b) throws IOException {
     out.write(b);
   }
-  
+
 
 }

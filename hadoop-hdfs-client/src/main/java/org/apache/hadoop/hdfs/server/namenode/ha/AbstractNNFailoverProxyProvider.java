@@ -1,15 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
@@ -23,8 +13,14 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class AbstractNNFailoverProxyProvider<T> implements
-    FailoverProxyProvider <T> {
+    FailoverProxyProvider<T> {
   protected static final Logger LOG =
       LoggerFactory.getLogger(AbstractNNFailoverProxyProvider.class);
 
@@ -38,7 +34,7 @@ public abstract class AbstractNNFailoverProxyProvider<T> implements
   }
 
   protected AbstractNNFailoverProxyProvider(Configuration conf, URI uri,
-      Class<T> xface, HAProxyFactory<T> factory) {
+                                            Class<T> xface, HAProxyFactory<T> factory) {
     this.conf = new Configuration(conf);
     this.xface = xface;
     this.factory = factory;
@@ -57,12 +53,12 @@ public abstract class AbstractNNFailoverProxyProvider<T> implements
 
     int maxRetriesOnSocketTimeouts = this.conf.getInt(
         HdfsClientConfigKeys
-        .Failover.CONNECTION_RETRIES_ON_SOCKET_TIMEOUTS_KEY,
+            .Failover.CONNECTION_RETRIES_ON_SOCKET_TIMEOUTS_KEY,
         HdfsClientConfigKeys
-        .Failover.CONNECTION_RETRIES_ON_SOCKET_TIMEOUTS_DEFAULT);
+            .Failover.CONNECTION_RETRIES_ON_SOCKET_TIMEOUTS_DEFAULT);
     this.conf.setInt(
         CommonConfigurationKeysPublic
-        .IPC_CLIENT_CONNECT_MAX_RETRIES_ON_SOCKET_TIMEOUTS_KEY,
+            .IPC_CLIENT_CONNECT_MAX_RETRIES_ON_SOCKET_TIMEOUTS_KEY,
         maxRetriesOnSocketTimeouts);
   }
 
@@ -193,12 +189,12 @@ public abstract class AbstractNNFailoverProxyProvider<T> implements
    */
   Collection<InetSocketAddress> getResolvedHostsIfNecessary(
       Collection<InetSocketAddress> addressesOfNns, URI nameNodeUri)
-          throws IOException {
+      throws IOException {
     // 'host' here is usually the ID of the nameservice when address
     // resolving is needed.
     String host = nameNodeUri.getHost();
     String configKeyWithHost =
-        HdfsClientConfigKeys.Failover.RESOLVE_ADDRESS_NEEDED_KEY  + "." + host;
+        HdfsClientConfigKeys.Failover.RESOLVE_ADDRESS_NEEDED_KEY + "." + host;
     boolean resolveNeeded = conf.getBoolean(configKeyWithHost,
         HdfsClientConfigKeys.Failover.RESOLVE_ADDRESS_NEEDED_DEFAULT);
     if (!resolveNeeded) {
@@ -213,7 +209,7 @@ public abstract class AbstractNNFailoverProxyProvider<T> implements
 
     Collection<InetSocketAddress> addressOfResolvedNns = new ArrayList<>();
     DomainNameResolver dnr = DomainNameResolverFactory.newInstance(
-          conf, nameNodeUri, HdfsClientConfigKeys.Failover.RESOLVE_SERVICE_KEY);
+        conf, nameNodeUri, HdfsClientConfigKeys.Failover.RESOLVE_SERVICE_KEY);
     // If the address needs to be resolved, get all of the IP addresses
     // from this address and pass them into the proxy
     LOG.debug("Namenode domain name will be resolved with {}",

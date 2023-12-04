@@ -1,33 +1,27 @@
 package org.apache.hadoop.fs.ftp;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.permission.FsAction;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Progressable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.URI;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileAlreadyExistsException;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.ParentNotDirectoryException;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.net.NetUtils;
-import org.apache.hadoop.util.Progressable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -91,7 +85,7 @@ public class FTPFileSystem extends FileSystem {
 
     // get port information from uri, (overrides info in conf)
     int port = uri.getPort();
-    if(port == -1){
+    if (port == -1) {
       port = conf.getInt(FS_FTP_HOST_PORT, FTP.DEFAULT_PORT);
     }
     conf.setInt(FS_FTP_HOST_PORT, port);
@@ -104,7 +98,7 @@ public class FTPFileSystem extends FileSystem {
     }
     String[] userPasswdInfo = userAndPassword.split(":");
     Preconditions.checkState(userPasswdInfo.length > 1,
-                             "Invalid username / password");
+        "Invalid username / password");
     conf.set(FS_FTP_USER_PREFIX + host, userPasswdInfo[0]);
     conf.set(FS_FTP_PASSWORD_PREFIX + host, userPasswdInfo[1]);
     setConf(conf);
@@ -113,7 +107,7 @@ public class FTPFileSystem extends FileSystem {
 
   /**
    * Connect to the FTP server using configuration parameters *
-   * 
+   *
    * @return An FTPClient instance
    * @throws IOException
    */
@@ -129,8 +123,8 @@ public class FTPFileSystem extends FileSystem {
     int reply = client.getReplyCode();
     if (!FTPReply.isPositiveCompletion(reply)) {
       throw NetUtils.wrapException(host, port,
-                   NetUtils.UNKNOWN_HOST, 0,
-                   new ConnectException("Server response " + reply));
+          NetUtils.UNKNOWN_HOST, 0,
+          new ConnectException("Server response " + reply));
     } else if (client.login(user, password)) {
       client.setFileTransferMode(getTransferMode(conf));
       client.setFileType(FTP.BINARY_FILE_TYPE);
@@ -220,7 +214,7 @@ public class FTPFileSystem extends FileSystem {
 
   /**
    * Logout and disconnect the given FTPClient. *
-   * 
+   *
    * @param client
    * @throws IOException
    */
@@ -240,7 +234,7 @@ public class FTPFileSystem extends FileSystem {
 
   /**
    * Resolve against given working directory. *
-   * 
+   *
    * @param workDir
    * @param path
    * @return
@@ -290,8 +284,8 @@ public class FTPFileSystem extends FileSystem {
    */
   @Override
   public FSDataOutputStream create(Path file, FsPermission permission,
-      boolean overwrite, int bufferSize, short replication, long blockSize,
-      Progressable progress) throws IOException {
+                                   boolean overwrite, int bufferSize, short replication, long blockSize,
+                                   Progressable progress) throws IOException {
     final FTPClient client = connect();
     Path workDir = new Path(client.printWorkingDirectory());
     Path absolute = makeAbsolute(workDir, file);
@@ -309,7 +303,7 @@ public class FTPFileSystem extends FileSystem {
         throw new FileAlreadyExistsException("File already exists: " + file);
       }
     }
-    
+
     Path parent = absolute.getParent();
     if (parent == null || !mkdirs(client, parent, FsPermission.getDirDefault())) {
       parent = (parent == null) ? new Path("/") : parent;
@@ -356,11 +350,11 @@ public class FTPFileSystem extends FileSystem {
   /** This optional operation is not yet supported. */
   @Override
   public FSDataOutputStream append(Path f, int bufferSize,
-      Progressable progress) throws IOException {
+                                   Progressable progress) throws IOException {
     throw new UnsupportedOperationException("Append is not supported "
         + "by FTPFileSystem");
   }
-  
+
   /**
    * Convenience method, so that we don't open a new connection when using this
    * method from within another method. Otherwise every API invocation incurs
@@ -466,7 +460,7 @@ public class FTPFileSystem extends FileSystem {
     Path absolute = makeAbsolute(workDir, file);
     FileStatus fileStat = getFileStatus(client, absolute);
     if (fileStat.isFile()) {
-      return new FileStatus[] { fileStat };
+      return new FileStatus[]{fileStat};
     }
     FTPFile[] ftpFiles = client.listFiles(absolute.toUri().getPath());
     FileStatus[] fileStats = new FileStatus[ftpFiles.length];
@@ -528,7 +522,7 @@ public class FTPFileSystem extends FileSystem {
 
   /**
    * Convert the file information in FTPFile to a {@link FileStatus} object. *
-   * 
+   *
    * @param ftpFile
    * @param parentPath
    * @return FileStatus
@@ -639,7 +633,7 @@ public class FTPFileSystem extends FileSystem {
    * Convenience method, so that we don't open a new connection when using this
    * method from within another method. Otherwise every API invocation incurs
    * the overhead of opening/closing a TCP connection.
-   * 
+   *
    * @param client
    * @param src
    * @param dst
@@ -668,13 +662,13 @@ public class FTPFileSystem extends FileSystem {
     String parentDst = absoluteDst.getParent().toUri().toString();
     if (isParentOf(absoluteSrc, absoluteDst)) {
       throw new IOException("Cannot rename " + absoluteSrc + " under itself"
-      + " : "+ absoluteDst);
+          + " : " + absoluteDst);
     }
 
     if (!parentSrc.equals(parentDst)) {
       throw new IOException("Cannot rename source: " + absoluteSrc
           + " to " + absoluteDst
-          + " -"+ E_SAME_DIRECTORY_ONLY);
+          + " -" + E_SAME_DIRECTORY_ONLY);
     }
     String from = absoluteSrc.getName();
     String to = absoluteDst.getName();

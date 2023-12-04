@@ -33,7 +33,7 @@ abstract class BlockReconstructionWork {
   /** Nodes containing the block; avoid them in choosing new targets */
   private final List<DatanodeDescriptor> containingNodes;
   /** Required by {@link BlockPlacementPolicy#chooseTarget} */
-  private  final List<DatanodeStorageInfo> liveReplicaStorages;
+  private final List<DatanodeStorageInfo> liveReplicaStorages;
   private final int additionalReplRequired;
 
   private DatanodeStorageInfo[] targets;
@@ -41,12 +41,12 @@ abstract class BlockReconstructionWork {
   private boolean notEnoughRack = false;
 
   public BlockReconstructionWork(BlockInfo block,
-      BlockCollection bc,
-      DatanodeDescriptor[] srcNodes,
-      List<DatanodeDescriptor> containingNodes,
-      List<DatanodeStorageInfo> liveReplicaStorages,
-      int additionalReplRequired,
-      int priority) {
+                                 BlockCollection bc,
+                                 DatanodeDescriptor[] srcNodes,
+                                 List<DatanodeDescriptor> containingNodes,
+                                 List<DatanodeStorageInfo> liveReplicaStorages,
+                                 int additionalReplRequired,
+                                 int priority) {
     this.block = block;
     this.srcPath = bc.getName();
     this.blockSize = block.getNumBytes();
@@ -120,8 +120,8 @@ abstract class BlockReconstructionWork {
   }
 
   abstract void chooseTargets(BlockPlacementPolicy blockplacement,
-      BlockStoragePolicySuite storagePolicySuite,
-      Set<Node> excludedNodes);
+                              BlockStoragePolicySuite storagePolicySuite,
+                              Set<Node> excludedNodes);
 
   /**
    * Add reconstruction task into a source datanode.

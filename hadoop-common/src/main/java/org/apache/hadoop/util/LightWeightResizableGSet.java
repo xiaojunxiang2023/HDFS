@@ -91,7 +91,7 @@ public class LightWeightResizableGSet<K, E extends K>
       LinkedElement e = oldEntries[i];
       while (e != null) {
         LinkedElement next = e.getNext();
-        int index = getIndex((E)e);
+        int index = getIndex((E) e);
         e.setNext(entries[index]);
         entries[index] = e;
         e = next;

@@ -1,11 +1,5 @@
 package org.apache.hadoop.hdfs.security.token.delegation;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.hadoop.hdfs.web.WebHdfsConstants;
 import org.apache.hadoop.io.Text;
@@ -13,8 +7,13 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * A delegation token identifier that is specific to HDFS.
@@ -111,6 +110,7 @@ public class DelegationTokenIdentifier
     public WebHdfsDelegationTokenIdentifier() {
       super();
     }
+
     @Override
     public Text getKind() {
       return WebHdfsConstants.WEBHDFS_TOKEN_KIND;
@@ -122,6 +122,7 @@ public class DelegationTokenIdentifier
     public SWebHdfsDelegationTokenIdentifier() {
       super();
     }
+
     @Override
     public Text getKind() {
       return WebHdfsConstants.SWEBHDFS_TOKEN_KIND;

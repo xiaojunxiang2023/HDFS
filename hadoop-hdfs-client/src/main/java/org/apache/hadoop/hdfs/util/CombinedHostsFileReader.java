@@ -4,20 +4,19 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reader support for JSON-based datanode configuration, an alternative format
@@ -41,9 +40,9 @@ public final class CombinedHostsFileReader {
   }
 
   private static final String REFER_TO_DOC_MSG = " For the correct JSON" +
-          " format please refer to the documentation (https://hadoop.apache" +
-          ".org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDataNodeAd" +
-          "minGuide.html#JSON-based_configuration)";
+      " format please refer to the documentation (https://hadoop.apache" +
+      ".org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDataNodeAd" +
+      "minGuide.html#JSON-based_configuration)";
 
   /**
    * Deserialize a set of DatanodeAdminProperties from a json file.
@@ -52,7 +51,7 @@ public final class CombinedHostsFileReader {
    * @throws IOException
    */
   public static DatanodeAdminProperties[]
-      readFile(final String hostsFilePath) throws IOException {
+  readFile(final String hostsFilePath) throws IOException {
     DatanodeAdminProperties[] allDNs = new DatanodeAdminProperties[0];
     ObjectMapper objectMapper = new ObjectMapper();
     File hostFile = new File(hostsFilePath);
@@ -60,8 +59,8 @@ public final class CombinedHostsFileReader {
 
     if (hostFile.length() > 0) {
       try (Reader input =
-          new InputStreamReader(
-              Files.newInputStream(hostFile.toPath()), "UTF-8")) {
+               new InputStreamReader(
+                   Files.newInputStream(hostFile.toPath()), "UTF-8")) {
         allDNs = objectMapper.readValue(input, DatanodeAdminProperties[].class);
       } catch (JsonMappingException jme) {
         // The old format doesn't have json top-level token to enclose
@@ -79,8 +78,8 @@ public final class CombinedHostsFileReader {
       JsonFactory jsonFactory = new JsonFactory();
       List<DatanodeAdminProperties> all = new ArrayList<>();
       try (Reader input =
-          new InputStreamReader(Files.newInputStream(Paths.get(hostsFilePath)),
-                  "UTF-8")) {
+               new InputStreamReader(Files.newInputStream(Paths.get(hostsFilePath)),
+                   "UTF-8")) {
         Iterator<DatanodeAdminProperties> iterator =
             objectReader.readValues(jsonFactory.createParser(input));
         while (iterator.hasNext()) {
@@ -90,7 +89,7 @@ public final class CombinedHostsFileReader {
         LOG.warn(hostsFilePath + " has legacy JSON format." + REFER_TO_DOC_MSG);
       } catch (Throwable ex) {
         LOG.warn(hostsFilePath + " has invalid JSON format." + REFER_TO_DOC_MSG,
-                ex);
+            ex);
       }
       allDNs = all.toArray(new DatanodeAdminProperties[all.size()]);
     }

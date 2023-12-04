@@ -1,9 +1,9 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.util.Map;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+
+import java.util.Map;
 
 /**
  * Generates predictable and user-friendly unique names

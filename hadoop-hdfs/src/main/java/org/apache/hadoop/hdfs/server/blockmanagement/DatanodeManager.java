@@ -1,19 +1,8 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import static org.apache.hadoop.hdfs.server.protocol.DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION;
-import static org.apache.hadoop.util.Time.monotonicNow;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
-
-import org.apache.hadoop.fs.StorageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -36,9 +25,16 @@ import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.net.*;
 import org.apache.hadoop.net.NetworkTopology.InvalidTopologyException;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
+import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.Timer;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,6 +47,9 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static org.apache.hadoop.hdfs.server.protocol.DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * Manage datanodes, include decommission and other activities.
@@ -96,7 +95,7 @@ public class DatanodeManager {
   private final boolean rejectUnresolvedTopologyDN;
 
   private final int defaultXferPort;
-  
+
   private final int defaultInfoPort;
 
   private final int defaultInfoSecurePort;
@@ -113,7 +112,7 @@ public class DatanodeManager {
 
   /** The interval for judging stale DataNodes for read/write */
   private final long staleInterval;
-  
+
   /** Whether or not to avoid using stale DataNodes for reading */
   private final boolean avoidStaleDataNodesForRead;
 
@@ -170,7 +169,7 @@ public class DatanodeManager {
    * Software version -> Number of datanodes with this version
    */
   private final HashMap<String, Integer> datanodesSoftwareVersions =
-    new HashMap<>(4, 0.75f);
+      new HashMap<>(4, 0.75f);
 
   /**
    * True if we should process latency metrics from downstream peers.
@@ -197,7 +196,7 @@ public class DatanodeManager {
 
   @Nullable
   private final SlowDiskTracker slowDiskTracker;
-  
+
   /**
    * The minimum time between resending caching directives to Datanodes,
    * in milliseconds.
@@ -209,7 +208,7 @@ public class DatanodeManager {
   private final long timeBetweenResendingCachingDirectivesMs;
 
   DatanodeManager(final BlockManager blockManager, final Namesystem namesystem,
-      final Configuration conf) throws IOException {
+                  final Configuration conf) throws IOException {
     this.namesystem = namesystem;
     this.blockManager = blockManager;
 
@@ -249,17 +248,17 @@ public class DatanodeManager {
     this.slowDiskTracker = dataNodeDiskStatsEnabled ?
         new SlowDiskTracker(conf, timer) : null;
     this.defaultXferPort = NetUtils.createSocketAddr(
-          conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_ADDRESS_KEY,
-              DFSConfigKeys.DFS_DATANODE_ADDRESS_DEFAULT)).getPort();
+        conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_ADDRESS_KEY,
+            DFSConfigKeys.DFS_DATANODE_ADDRESS_DEFAULT)).getPort();
     this.defaultInfoPort = NetUtils.createSocketAddr(
-          conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_HTTP_ADDRESS_KEY,
-              DFSConfigKeys.DFS_DATANODE_HTTP_ADDRESS_DEFAULT)).getPort();
+        conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_HTTP_ADDRESS_KEY,
+            DFSConfigKeys.DFS_DATANODE_HTTP_ADDRESS_DEFAULT)).getPort();
     this.defaultInfoSecurePort = NetUtils.createSocketAddr(
         conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_HTTPS_ADDRESS_KEY,
             DFSConfigKeys.DFS_DATANODE_HTTPS_ADDRESS_DEFAULT)).getPort();
     this.defaultIpcPort = NetUtils.createSocketAddr(
-          conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_IPC_ADDRESS_KEY,
-              DFSConfigKeys.DFS_DATANODE_IPC_ADDRESS_DEFAULT)).getPort();
+        conf.getTrimmed(DFSConfigKeys.DFS_DATANODE_IPC_ADDRESS_KEY,
+            DFSConfigKeys.DFS_DATANODE_IPC_ADDRESS_DEFAULT)).getPort();
     this.hostConfigManager = ReflectionUtils.newInstance(
         conf.getClass(DFSConfigKeys.DFS_NAMENODE_HOSTS_PROVIDER_CLASSNAME_KEY,
             HostFileManager.class, HostConfigManager.class), conf);
@@ -269,12 +268,12 @@ public class DatanodeManager {
       LOG.error("error reading hosts files: ", e);
     }
     this.dnsToSwitchMapping = ReflectionUtils.newInstance(
-        conf.getClass(DFSConfigKeys.NET_TOPOLOGY_NODE_SWITCH_MAPPING_IMPL_KEY, 
+        conf.getClass(DFSConfigKeys.NET_TOPOLOGY_NODE_SWITCH_MAPPING_IMPL_KEY,
             ScriptBasedMapping.class, DNSToSwitchMapping.class), conf);
     this.rejectUnresolvedTopologyDN = conf.getBoolean(
         DFSConfigKeys.DFS_REJECT_UNRESOLVED_DN_TOPOLOGY_MAPPING_KEY,
         DFSConfigKeys.DFS_REJECT_UNRESOLVED_DN_TOPOLOGY_MAPPING_DEFAULT);
-    
+
     // If the dns to switch mapping supports cache, resolve network
     // locations of those hosts in the include list and store the mapping
     // in the cache; so future calls to resolve will be fast.
@@ -289,7 +288,7 @@ public class DatanodeManager {
         DFSConfigKeys.DFS_HEARTBEAT_INTERVAL_KEY,
         DFSConfigKeys.DFS_HEARTBEAT_INTERVAL_DEFAULT, TimeUnit.SECONDS);
     heartbeatRecheckInterval = conf.getInt(
-        DFSConfigKeys.DFS_NAMENODE_HEARTBEAT_RECHECK_INTERVAL_KEY, 
+        DFSConfigKeys.DFS_NAMENODE_HEARTBEAT_RECHECK_INTERVAL_KEY,
         DFSConfigKeys.DFS_NAMENODE_HEARTBEAT_RECHECK_INTERVAL_DEFAULT); // 5 minutes
     this.heartbeatExpireInterval = 2 * heartbeatRecheckInterval
         + 10 * 1000 * heartbeatIntervalSeconds;
@@ -298,7 +297,7 @@ public class DatanodeManager {
     final int configuredBlockInvalidateLimit = conf.getInt(
         DFSConfigKeys.DFS_BLOCK_INVALIDATE_LIMIT_KEY,
         DFSConfigKeys.DFS_BLOCK_INVALIDATE_LIMIT_DEFAULT);
-    final int countedBlockInvalidateLimit = 20*(int)(heartbeatIntervalSeconds);
+    final int countedBlockInvalidateLimit = 20 * (int) (heartbeatIntervalSeconds);
     this.blockInvalidateLimit = Math.max(countedBlockInvalidateLimit,
         configuredBlockInvalidateLimit);
     LOG.info(DFSConfigKeys.DFS_BLOCK_INVALIDATE_LIMIT_KEY
@@ -338,11 +337,11 @@ public class DatanodeManager {
         DFSConfigKeys.DFS_NAMENODE_USE_STALE_DATANODE_FOR_WRITE_RATIO_KEY,
         DFSConfigKeys.DFS_NAMENODE_USE_STALE_DATANODE_FOR_WRITE_RATIO_DEFAULT);
     Preconditions.checkArgument(
-        (ratioUseStaleDataNodesForWrite > 0 && 
+        (ratioUseStaleDataNodesForWrite > 0 &&
             ratioUseStaleDataNodesForWrite <= 1.0f),
         DFSConfigKeys.DFS_NAMENODE_USE_STALE_DATANODE_FOR_WRITE_RATIO_KEY +
-        " = '" + ratioUseStaleDataNodesForWrite + "' is invalid. " +
-        "It should be a positive non-zero float value, not greater than 1.0f.");
+            " = '" + ratioUseStaleDataNodesForWrite + "' is invalid. " +
+            "It should be a positive non-zero float value, not greater than 1.0f.");
     this.timeBetweenResendingCachingDirectivesMs = conf.getLong(
         DFSConfigKeys.DFS_NAMENODE_PATH_BASED_CACHE_RETRY_INTERVAL_MS,
         DFSConfigKeys.DFS_NAMENODE_PATH_BASED_CACHE_RETRY_INTERVAL_MS_DEFAULT);
@@ -390,15 +389,15 @@ public class DatanodeManager {
   }
 
   private static long getStaleIntervalFromConf(Configuration conf,
-      long heartbeatExpireInterval) {
+                                               long heartbeatExpireInterval) {
     long staleInterval = conf.getLong(
-        DFSConfigKeys.DFS_NAMENODE_STALE_DATANODE_INTERVAL_KEY, 
+        DFSConfigKeys.DFS_NAMENODE_STALE_DATANODE_INTERVAL_KEY,
         DFSConfigKeys.DFS_NAMENODE_STALE_DATANODE_INTERVAL_DEFAULT);
     Preconditions.checkArgument(staleInterval > 0,
         DFSConfigKeys.DFS_NAMENODE_STALE_DATANODE_INTERVAL_KEY +
-        " = '" + staleInterval + "' is invalid. " +
-        "It should be a positive non-zero value.");
-    
+            " = '" + staleInterval + "' is invalid. " +
+            "It should be a positive non-zero value.");
+
     final long heartbeatIntervalSeconds = conf.getTimeDuration(
         DFSConfigKeys.DFS_HEARTBEAT_INTERVAL_KEY,
         DFSConfigKeys.DFS_HEARTBEAT_INTERVAL_DEFAULT, TimeUnit.SECONDS);
@@ -412,9 +411,9 @@ public class DatanodeManager {
       LOG.warn("The given interval for marking stale datanode = "
           + staleInterval + ", which is less than "
           + DFSConfigKeys.DFS_NAMENODE_STALE_DATANODE_MINIMUM_INTERVAL_DEFAULT
-          + " heartbeat intervals. This may cause too frequent changes of " 
-          + "stale states of DataNodes since a heartbeat msg may be missing " 
-          + "due to temporary short-term failures. Reset stale interval to " 
+          + " heartbeat intervals. This may cause too frequent changes of "
+          + "stale states of DataNodes since a heartbeat msg may be missing "
+          + "due to temporary short-term failures. Reset stale interval to "
           + minStaleInterval + ".");
       staleInterval = minStaleInterval;
     }
@@ -425,7 +424,7 @@ public class DatanodeManager {
     }
     return staleInterval;
   }
-  
+
   void activate(final Configuration conf) {
     datanodeAdminManager.activate(conf);
     heartbeatManager.activate();
@@ -518,13 +517,13 @@ public class DatanodeManager {
    * and block tokens.
    */
   public void sortLocatedBlocks(final String targetHost,
-      final List<LocatedBlock> locatedBlocks) {
+                                final List<LocatedBlock> locatedBlocks) {
     Comparator<DatanodeInfo> comparator =
         avoidStaleDataNodesForRead || avoidSlowDataNodesForRead ?
-        new DFSUtil.StaleAndSlowComparator(
-            avoidStaleDataNodesForRead, staleInterval,
-            avoidSlowDataNodesForRead, slowNodesUuidSet) :
-        new DFSUtil.ServiceComparator();
+            new DFSUtil.StaleAndSlowComparator(
+                avoidStaleDataNodesForRead, staleInterval,
+                avoidSlowDataNodesForRead, slowNodesUuidSet) :
+            new DFSUtil.ServiceComparator();
     // sort located block
     for (LocatedBlock lb : locatedBlocks) {
       if (lb.isStriped()) {
@@ -544,7 +543,7 @@ public class DatanodeManager {
    * @param comparator dn comparator
    */
   private void sortLocatedStripedBlock(final LocatedBlock lb,
-      Comparator<DatanodeInfo> comparator) {
+                                       Comparator<DatanodeInfo> comparator) {
     DatanodeInfo[] di = lb.getLocations();
     HashMap<DatanodeInfo, Byte> locToIndex = new HashMap<>();
     HashMap<DatanodeInfo, Token<BlockTokenIdentifier>> locToToken =
@@ -577,7 +576,7 @@ public class DatanodeManager {
    * @param comparator dn comparator
    */
   private void sortLocatedBlock(final LocatedBlock lb, String targetHost,
-      Comparator<DatanodeInfo> comparator) {
+                                Comparator<DatanodeInfo> comparator) {
     // As it is possible for the separation of node manager and datanode, 
     // here we should get node but not datanode only .
     boolean nonDatanodeReader = false;
@@ -591,11 +590,11 @@ public class DatanodeManager {
         String rName = resolvedHosts.get(0);
         if (rName != null) {
           client = new NodeBase(rName + NodeBase.PATH_SEPARATOR_STR +
-            targetHost);
+              targetHost);
         }
       } else {
         LOG.error("Node Resolution failed. Please make sure that rack " +
-          "awareness scripts are functional.");
+            "awareness scripts are functional.");
       }
     }
 
@@ -612,7 +611,7 @@ public class DatanodeManager {
       --lastActiveIndex;
     }
     int activeLen = lastActiveIndex + 1;
-    if(nonDatanodeReader) {
+    if (nonDatanodeReader) {
       networktopology.sortByDistanceUsingNetworkLocation(client,
           lb.getLocations(), activeLen, createSecondaryNodeSorter());
     } else {
@@ -682,13 +681,13 @@ public class DatanodeManager {
       node = getDatanodeByHost(host);
     }
     if (node == null) {
-      String networkLocation = 
+      String networkLocation =
           resolveNetworkLocationWithFallBackToDefaultLocation(dnId);
 
       // If the current cluster doesn't contain the node, fallback to
       // something machine local and then rack local.
       List<Node> rackNodes = getNetworkTopology()
-                                   .getDatanodesInRack(networkLocation);
+          .getDatanodesInRack(networkLocation);
       if (rackNodes != null) {
         // Try something machine local.
         for (Node rackNode : rackNodes) {
@@ -708,8 +707,8 @@ public class DatanodeManager {
       // If we can't even choose rack local, just choose any node in the
       // cluster.
       if (node == null) {
-        node = (DatanodeDescriptor)getNetworkTopology()
-                                   .chooseRandom(NodeBase.ROOT);
+        node = (DatanodeDescriptor) getNetworkTopology()
+            .chooseRandom(NodeBase.ROOT);
       }
     }
     return node;
@@ -728,7 +727,7 @@ public class DatanodeManager {
 
   /**
    * Get data node by datanode ID.
-   * 
+   *
    * @param nodeID datanode ID
    * @return DatanodeDescriptor or null if the node is not found.
    * @throws UnregisteredNodeException
@@ -736,13 +735,13 @@ public class DatanodeManager {
   public DatanodeDescriptor getDatanode(DatanodeID nodeID)
       throws UnregisteredNodeException {
     final DatanodeDescriptor node = getDatanode(nodeID.getDatanodeUuid());
-    if (node == null) 
+    if (node == null)
       return null;
     if (!node.getXferAddr().equals(nodeID.getXferAddr())) {
       final UnregisteredNodeException e = new UnregisteredNodeException(
           nodeID, node);
       NameNode.stateChangeLog.error("BLOCK* NameSystem.getDatanode: "
-                                    + e.getLocalizedMessage());
+          + e.getLocalizedMessage());
       throw e;
     }
     return node;
@@ -754,20 +753,20 @@ public class DatanodeManager {
     storageIDs = storageIDs == null ? new String[0] : storageIDs;
     if (datanodeID.length != storageIDs.length) {
       // Error for pre-2.0.0-alpha clients.
-      final String err = (storageIDs.length == 0?
+      final String err = (storageIDs.length == 0 ?
           "Missing storageIDs: It is likely that the HDFS client,"
-          + " who made this call, is running in an older version of Hadoop"
-          + "(pre-2.0.0-alpha)  which does not support storageIDs."
+              + " who made this call, is running in an older version of Hadoop"
+              + "(pre-2.0.0-alpha)  which does not support storageIDs."
           : "Length mismatched: storageIDs.length=" + storageIDs.length + " != "
-          ) + " datanodeID.length=" + datanodeID.length;
+      ) + " datanodeID.length=" + datanodeID.length;
       throw new HadoopIllegalArgumentException(
-          err + ", "+ String.format(format, args));
+          err + ", " + String.format(format, args));
     }
     if (datanodeID.length == 0) {
       return null;
     }
     final DatanodeStorageInfo[] storages = new DatanodeStorageInfo[datanodeID.length];
-    for(int i = 0; i < datanodeID.length; i++) {
+    for (int i = 0; i < datanodeID.length; i++) {
       if (datanodeID[i].equals(DatanodeID.EMPTY_DATANODE_ID)) {
         storages[i] = null;
         continue;
@@ -782,7 +781,7 @@ public class DatanodeManager {
 
   /** Prints information about all datanodes. */
   void datanodeDump(final PrintWriter out) {
-    final Map<String,DatanodeDescriptor> sortedDatanodeMap;
+    final Map<String, DatanodeDescriptor> sortedDatanodeMap;
     synchronized (this) {
       sortedDatanodeMap = new TreeMap<>(datanodeMap);
     }
@@ -805,7 +804,7 @@ public class DatanodeManager {
    * @param nodeInfo datanode descriptor.
    */
   private void removeDatanode(DatanodeDescriptor nodeInfo,
-      boolean removeBlocksFromBlocksMap) {
+                              boolean removeBlocksFromBlocksMap) {
     assert namesystem.hasWriteLock();
     heartbeatManager.removeDatanode(nodeInfo);
     if (removeBlocksFromBlocksMap) {
@@ -823,7 +822,7 @@ public class DatanodeManager {
 
   /**
    * Remove a datanode
-   * @throws UnregisteredNodeException 
+   * @throws UnregisteredNodeException
    */
   public void removeDatanode(final DatanodeID node)
       throws UnregisteredNodeException {
@@ -834,7 +833,7 @@ public class DatanodeManager {
         removeDatanode(descriptor, true);
       } else {
         NameNode.stateChangeLog.warn("BLOCK* removeDatanode: "
-                                     + node + " does not exist");
+            + node + " does not exist");
       }
     } finally {
       namesystem.writeUnlock();
@@ -843,11 +842,11 @@ public class DatanodeManager {
 
   /** Remove a dead datanode. */
   void removeDeadDatanode(final DatanodeID nodeID,
-      boolean removeBlocksFromBlockMap) {
+                          boolean removeBlocksFromBlockMap) {
     DatanodeDescriptor d;
     try {
       d = getDatanode(nodeID);
-    } catch(IOException e) {
+    } catch (IOException e) {
       d = null;
     }
     if (d != null && isDatanodeDead(d)) {
@@ -861,7 +860,7 @@ public class DatanodeManager {
   /** Is the datanode dead? */
   boolean isDatanodeDead(DatanodeDescriptor node) {
     return (node.getLastUpdateMonotonic() <
-            (monotonicNow() - heartbeatExpireInterval));
+        (monotonicNow() - heartbeatExpireInterval));
   }
 
   /** Add a datanode. */
@@ -869,7 +868,7 @@ public class DatanodeManager {
     // To keep host2DatanodeMap consistent with datanodeMap,
     // remove  from host2DatanodeMap the datanodeDescriptor removed
     // from datanodeMap before adding node to host2DatanodeMap.
-    synchronized(this) {
+    synchronized (this) {
       host2DatanodeMap.remove(datanodeMap.put(node.getDatanodeUuid(), node));
     }
 
@@ -892,7 +891,7 @@ public class DatanodeManager {
     }
     if (LOG.isDebugEnabled()) {
       LOG.debug(getClass().getSimpleName() + ".wipeDatanode("
-          + node + "): storage " + key 
+          + node + "): storage " + key
           + " is removed from datanodeMap.");
     }
   }
@@ -901,7 +900,7 @@ public class DatanodeManager {
     if (version == null) {
       return;
     }
-    synchronized(this) {
+    synchronized (this) {
       Integer count = this.datanodesSoftwareVersions.get(version);
       count = count == null ? 1 : count + 1;
       this.datanodesSoftwareVersions.put(version, count);
@@ -912,11 +911,11 @@ public class DatanodeManager {
     if (version == null) {
       return;
     }
-    synchronized(this) {
+    synchronized (this) {
       Integer count = this.datanodesSoftwareVersions.get(version);
-      if(count != null) {
-        if(count > 1) {
-          this.datanodesSoftwareVersions.put(version, count-1);
+      if (count != null) {
+        if (count > 1) {
+          this.datanodesSoftwareVersions.put(version, count - 1);
         } else {
           this.datanodesSoftwareVersions.remove(version);
         }
@@ -940,12 +939,12 @@ public class DatanodeManager {
   }
 
   private void countSoftwareVersions() {
-    synchronized(this) {
+    synchronized (this) {
       datanodesSoftwareVersions.clear();
-      for(DatanodeDescriptor dn: datanodeMap.values()) {
+      for (DatanodeDescriptor dn : datanodeMap.values()) {
         if (shouldCountVersion(dn)) {
           Integer num = datanodesSoftwareVersions.get(dn.getSoftwareVersion());
-          num = num == null ? 1 : num+1;
+          num = num == null ? 1 : num + 1;
           datanodesSoftwareVersions.put(dn.getSoftwareVersion(), num);
         }
       }
@@ -953,8 +952,8 @@ public class DatanodeManager {
   }
 
   public HashMap<String, Integer> getDatanodesSoftwareVersions() {
-    synchronized(this) {
-      return new HashMap<> (this.datanodesSoftwareVersions);
+    synchronized (this) {
+      return new HashMap<>(this.datanodesSoftwareVersions);
     }
   }
 
@@ -971,7 +970,7 @@ public class DatanodeManager {
    *  @param node to resolve to network location
    *  @return network location path
    */
-  private String resolveNetworkLocationWithFallBackToDefaultLocation (
+  private String resolveNetworkLocationWithFallBackToDefaultLocation(
       DatanodeID node) {
     String networkLocation;
     try {
@@ -983,7 +982,7 @@ public class DatanodeManager {
     }
     return networkLocation;
   }
-  
+
   /**
    * Resolve a node's network location. If the DNS to switch mapping fails, 
    * then this method throws UnresolvedTopologyException. 
@@ -992,7 +991,7 @@ public class DatanodeManager {
    * @throws UnresolvedTopologyException if the DNS to switch mapping fails 
    *    to resolve network location.
    */
-  private String resolveNetworkLocation (DatanodeID node) 
+  private String resolveNetworkLocation(DatanodeID node)
       throws UnresolvedTopologyException {
     List<String> names = new ArrayList<>(1);
     if (dnsToSwitchMapping instanceof CachedDNSToSwitchMapping) {
@@ -1000,13 +999,13 @@ public class DatanodeManager {
     } else {
       names.add(node.getHostName());
     }
-    
+
     List<String> rName = resolveNetworkLocation(names);
     String networkLocation;
     if (rName == null) {
       LOG.error("The resolve call returned null!");
-        throw new UnresolvedTopologyException(
-            "Unresolved topology mapping for host " + node.getHostName());
+      throw new UnresolvedTopologyException(
+          "Unresolved topology mapping for host " + node.getHostName());
     } else {
       networkLocation = rName.get(0);
     }
@@ -1034,13 +1033,13 @@ public class DatanodeManager {
     try {
       dependencies = getNetworkDependencies(node);
     } catch (UnresolvedTopologyException e) {
-      LOG.error("Unresolved dependency mapping for host " + 
-          node.getHostName() +". Continuing with an empty dependency list");
+      LOG.error("Unresolved dependency mapping for host " +
+          node.getHostName() + ". Continuing with an empty dependency list");
       dependencies = Collections.emptyList();
     }
     return dependencies;
   }
-  
+
   /**
    * Resolves a node's dependencies in the network. If the DNS to switch 
    * mapping fails to get dependencies, then this method throws 
@@ -1055,13 +1054,13 @@ public class DatanodeManager {
 
     if (dnsToSwitchMapping instanceof DNSToSwitchMappingWithDependency) {
       //Get dependencies
-      dependencies = 
-          ((DNSToSwitchMappingWithDependency)dnsToSwitchMapping).getDependency(
+      dependencies =
+          ((DNSToSwitchMappingWithDependency) dnsToSwitchMapping).getDependency(
               node.getHostName());
-      if(dependencies == null) {
-        LOG.error("The dependency call returned null for host " + 
+      if (dependencies == null) {
+        LOG.error("The dependency call returned null for host " +
             node.getHostName());
-        throw new UnresolvedTopologyException("The dependency call returned " + 
+        throw new UnresolvedTopologyException("The dependency call returned " +
             "null for host " + node.getHostName());
       }
     }
@@ -1076,7 +1075,7 @@ public class DatanodeManager {
    */
   private static void removeDecomNodeFromList(
       final List<DatanodeDescriptor> nodeList) {
-    for (Iterator<DatanodeDescriptor> it = nodeList.iterator(); it.hasNext();) {
+    for (Iterator<DatanodeDescriptor> it = nodeList.iterator(); it.hasNext(); ) {
       DatanodeDescriptor node = it.next();
       if (node.isDecommissioned()) {
         it.remove();
@@ -1129,23 +1128,23 @@ public class DatanodeManager {
       nodeReg.setIpAddr(ip);
       nodeReg.setPeerHostName(hostname);
     }
-    
+
     try {
       nodeReg.setExportedKeys(blockManager.getBlockKeys());
-  
+
       // Checks if the node is not on the hosts list.  If it is not, then
       // it will be disallowed from registering. 
       if (!hostConfigManager.isIncluded(nodeReg)) {
         throw new DisallowedDatanodeException(nodeReg);
       }
-        
+
       NameNode.stateChangeLog.info("BLOCK* registerDatanode: from "
           + nodeReg + " storage " + nodeReg.getDatanodeUuid());
-  
+
       DatanodeDescriptor nodeS = getDatanode(nodeReg.getDatanodeUuid());
       DatanodeDescriptor nodeN = host2DatanodeMap.getDatanodeByXferAddr(
           nodeReg.getIpAddr(), nodeReg.getXferPort());
-        
+
       if (nodeN != null && nodeN != nodeS) {
         NameNode.LOG.info("BLOCK* registerDatanode: " + nodeN);
         // nodeN previously served a different data storage, 
@@ -1155,13 +1154,13 @@ public class DatanodeManager {
         wipeDatanode(nodeN);
         nodeN = null;
       }
-  
+
       if (nodeS != null) {
         if (nodeN == nodeS) {
           // The same datanode has been just restarted to serve the same data 
           // storage. We do not need to remove old data blocks, the delta will
           // be calculated on the next block report from the datanode
-          if(NameNode.stateChangeLog.isDebugEnabled()) {
+          if (NameNode.stateChangeLog.isDebugEnabled()) {
             NameNode.stateChangeLog.debug("BLOCK* registerDatanode: "
                 + "node restarted.");
           }
@@ -1174,17 +1173,17 @@ public class DatanodeManager {
             nodes with its data cleared (or user can just remove the StorageID
             value in "VERSION" file under the data directory of the datanode,
             but this is might not work if VERSION file format has changed 
-         */        
+         */
           NameNode.stateChangeLog.info("BLOCK* registerDatanode: " + nodeS
               + " is replaced by " + nodeReg + " with the same storageID "
               + nodeReg.getDatanodeUuid());
         }
-        
+
         boolean success = false;
         try {
           // update cluster map
           getNetworkTopology().remove(nodeS);
-          if(shouldCountVersion(nodeS)) {
+          if (shouldCountVersion(nodeS)) {
             decrementVersionCount(nodeS.getSoftwareVersion());
           }
           nodeS.updateRegInfo(nodeReg);
@@ -1193,7 +1192,7 @@ public class DatanodeManager {
           nodeS.setDisallowed(false); // Node is in the include list
 
           // resolve network location
-          if(this.rejectUnresolvedTopologyDN) {
+          if (this.rejectUnresolvedTopologyDN) {
             nodeS.setNetworkLocation(resolveNetworkLocation(nodeS));
             nodeS.setDependentHostNames(getNetworkDependencies(nodeS));
           } else {
@@ -1220,12 +1219,12 @@ public class DatanodeManager {
         return;
       }
 
-      DatanodeDescriptor nodeDescr 
-        = new DatanodeDescriptor(nodeReg, NetworkTopology.DEFAULT_RACK);
+      DatanodeDescriptor nodeDescr
+          = new DatanodeDescriptor(nodeReg, NetworkTopology.DEFAULT_RACK);
       boolean success = false;
       try {
         // resolve network location
-        if(this.rejectUnresolvedTopologyDN) {
+        if (this.rejectUnresolvedTopologyDN) {
           nodeDescr.setNetworkLocation(resolveNetworkLocation(nodeDescr));
           nodeDescr.setDependentHostNames(getNetworkDependencies(nodeDescr));
         } else {
@@ -1295,7 +1294,7 @@ public class DatanodeManager {
     }
     this.hostConfigManager.refresh();
   }
-  
+
   /**
    * Reload datanode membership and the desired admin operations from
    * host files. If a node isn't allowed, hostConfigManager.isIncluded returns
@@ -1338,8 +1337,8 @@ public class DatanodeManager {
   public int getNumLiveDataNodes() {
     int numLive = 0;
     synchronized (this) {
-      for(DatanodeDescriptor dn : datanodeMap.values()) {
-        if (!isDatanodeDead(dn) ) {
+      for (DatanodeDescriptor dn : datanodeMap.values()) {
+        if (!isDatanodeDead(dn)) {
           numLive++;
         }
       }
@@ -1378,7 +1377,7 @@ public class DatanodeManager {
    * Whether stale datanodes should be avoided as targets on the write path.
    * The result of this function may change if the number of stale datanodes
    * eclipses a configurable threshold.
-   * 
+   *
    * @return whether stale datanodes should be avoided on the write path
    */
   public boolean shouldAvoidStaleDataNodesForWrite() {
@@ -1411,14 +1410,14 @@ public class DatanodeManager {
   /**
    * Set the number of current stale DataNodes. The HeartbeatManager got this
    * number based on DataNodes' heartbeats.
-   * 
+   *
    * @param numStaleNodes
    *          The number of stale DataNodes to be set.
    */
   void setNumStaleNodes(int numStaleNodes) {
     this.numStaleNodes = numStaleNodes;
   }
-  
+
   /**
    * @return Return the current number of stale DataNodes (detected by
    * HeartbeatManager). 
@@ -1444,8 +1443,8 @@ public class DatanodeManager {
   }
 
   /** Fetch live and dead datanodes. */
-  public void fetchDatanodes(final List<DatanodeDescriptor> live, 
-      final List<DatanodeDescriptor> dead, final boolean removeDecommissionNode) {
+  public void fetchDatanodes(final List<DatanodeDescriptor> live,
+                             final List<DatanodeDescriptor> dead, final boolean removeDecommissionNode) {
     if (live == null && dead == null) {
       throw new HadoopIllegalArgumentException("Both live and dead lists are null");
     }
@@ -1454,7 +1453,7 @@ public class DatanodeManager {
     // getDatanodeListForReport will synchronize on datanodeMap
     final List<DatanodeDescriptor> results =
         getDatanodeListForReport(DatanodeReportType.ALL);
-    for(DatanodeDescriptor node : results) {
+    for (DatanodeDescriptor node : results) {
       if (isDatanodeDead(node)) {
         if (dead != null) {
           dead.add(node);
@@ -1465,7 +1464,7 @@ public class DatanodeManager {
         }
       }
     }
-    
+
     if (removeDecommissionNode) {
       if (live != null) {
         removeDecomNodeFromList(live);
@@ -1480,7 +1479,7 @@ public class DatanodeManager {
    * Check if the cluster now consists of multiple racks. If it does, and this
    * is the first time it's consisted of multiple racks, then process blocks
    * that may now be misreplicated.
-   * 
+   *
    * @param node DN which caused cluster to become multi-rack. Used for logging.
    */
   @VisibleForTesting
@@ -1520,7 +1519,7 @@ public class DatanodeManager {
       port = DFSConfigKeys.DFS_DATANODE_DEFAULT_PORT;
     } else {
       hostStr = hostLine.substring(0, idx);
-      port = Integer.parseInt(hostLine.substring(idx+1));
+      port = Integer.parseInt(hostLine.substring(idx + 1));
     }
 
     if (InetAddresses.isInetAddress(hostStr)) {
@@ -1549,26 +1548,26 @@ public class DatanodeManager {
       final DatanodeReportType type) {
     final boolean listLiveNodes =
         type == DatanodeReportType.ALL ||
-        type == DatanodeReportType.LIVE;
+            type == DatanodeReportType.LIVE;
     final boolean listDeadNodes =
         type == DatanodeReportType.ALL ||
-        type == DatanodeReportType.DEAD;
+            type == DatanodeReportType.DEAD;
     final boolean listDecommissioningNodes =
         type == DatanodeReportType.ALL ||
-        type == DatanodeReportType.DECOMMISSIONING;
+            type == DatanodeReportType.DECOMMISSIONING;
     final boolean listEnteringMaintenanceNodes =
         type == DatanodeReportType.ALL ||
-        type == DatanodeReportType.ENTERING_MAINTENANCE;
+            type == DatanodeReportType.ENTERING_MAINTENANCE;
     final boolean listInMaintenanceNodes =
         type == DatanodeReportType.ALL ||
-        type == DatanodeReportType.IN_MAINTENANCE;
+            type == DatanodeReportType.IN_MAINTENANCE;
 
     ArrayList<DatanodeDescriptor> nodes;
     final HostSet foundNodes = new HostSet();
     final Iterable<InetSocketAddress> includedNodes =
         hostConfigManager.getIncludes();
 
-    synchronized(this) {
+    synchronized (this) {
       nodes = new ArrayList<>(datanodeMap.size());
       for (DatanodeDescriptor dn : datanodeMap.values()) {
         final boolean isDead = isDatanodeDead(dn);
@@ -1605,9 +1604,9 @@ public class DatanodeManager {
         // We can't ask the DataNode what it had configured, because it's
         // dead.
         DatanodeDescriptor dn = new DatanodeDescriptor(new DatanodeID(addr
-                .getAddress().getHostAddress(), addr.getHostName(), "",
-                addr.getPort() == 0 ? defaultXferPort : addr.getPort(),
-                defaultInfoPort, defaultInfoSecurePort, defaultIpcPort));
+            .getAddress().getHostAddress(), addr.getHostName(), "",
+            addr.getPort() == 0 ? defaultXferPort : addr.getPort(),
+            defaultInfoPort, defaultInfoSecurePort, defaultIpcPort));
         setDatanodeDead(dn);
         if (hostConfigManager.isExcluded(dn)) {
           dn.setDecommissioned();
@@ -1625,7 +1624,7 @@ public class DatanodeManager {
     }
     return nodes;
   }
-  
+
   /**
    * Checks if name resolution was successful for the given address.  If IP
    * address and host name are the same, then it means name resolution has
@@ -1641,14 +1640,14 @@ public class DatanodeManager {
     String ip = address.getHostAddress();
     return !hostname.equals(ip) || NetUtils.isLocalAddress(address);
   }
-  
+
   private void setDatanodeDead(DatanodeDescriptor node) {
     node.setLastUpdate(0);
     node.setLastUpdateMonotonic(0);
   }
 
   private BlockRecoveryCommand getBlockRecoveryCommand(String blockPoolId,
-      DatanodeDescriptor nodeinfo) throws IOException {
+                                                       DatanodeDescriptor nodeinfo) throws IOException {
     BlockInfo[] blocks = nodeinfo.getLeaseRecoveryCommand(Integer.MAX_VALUE);
     if (blocks == null) {
       return null;
@@ -1656,7 +1655,7 @@ public class DatanodeManager {
     BlockRecoveryCommand brCommand = new BlockRecoveryCommand(blocks.length);
     for (BlockInfo b : blocks) {
       BlockUnderConstructionFeature uc = b.getUnderConstructionFeature();
-      if(uc == null) {
+      if (uc == null) {
         throw new IOException("Recovery block " + b +
             "where it is not under construction.");
       }
@@ -1709,7 +1708,7 @@ public class DatanodeManager {
   }
 
   private void addCacheCommands(String blockPoolId, DatanodeDescriptor nodeinfo,
-      List<DatanodeCommand> cmds) {
+                                List<DatanodeCommand> cmds) {
     boolean sendingCachingCommands = false;
     final long nowMs = monotonicNow();
     if (shouldSendCachingCommands &&
@@ -1737,12 +1736,12 @@ public class DatanodeManager {
 
   /** Handle heartbeat from datanodes. */
   public DatanodeCommand[] handleHeartbeat(DatanodeRegistration nodeReg,
-      StorageReport[] reports, final String blockPoolId,
-      long cacheCapacity, long cacheUsed, int xceiverCount, 
-      int maxTransfers, int failedVolumes,
-      VolumeFailureSummary volumeFailureSummary,
-      @Nonnull SlowPeerReports slowPeers,
-      @Nonnull SlowDiskReports slowDisks) throws IOException {
+                                           StorageReport[] reports, final String blockPoolId,
+                                           long cacheCapacity, long cacheUsed, int xceiverCount,
+                                           int maxTransfers, int failedVolumes,
+                                           VolumeFailureSummary volumeFailureSummary,
+                                           @Nonnull SlowPeerReports slowPeers,
+                                           @Nonnull SlowDiskReports slowDisks) throws IOException {
     final DatanodeDescriptor nodeinfo;
     try {
       nodeinfo = getDatanode(nodeReg);
@@ -1885,9 +1884,9 @@ public class DatanodeManager {
    * @throws IOException if there is an error
    */
   public void handleLifeline(DatanodeRegistration nodeReg,
-      StorageReport[] reports, long cacheCapacity,
-      long cacheUsed, int xceiverCount, int failedVolumes,
-      VolumeFailureSummary volumeFailureSummary) throws IOException {
+                             StorageReport[] reports, long cacheCapacity,
+                             long cacheUsed, int xceiverCount, int failedVolumes,
+                             VolumeFailureSummary volumeFailureSummary) throws IOException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Received handleLifeline from nodeReg = " + nodeReg);
     }
@@ -1918,11 +1917,11 @@ public class DatanodeManager {
    *                   clears the list.
    * @param action     The action to perform in the command.
    * @param poolId     The block pool id.
-   * @return           A DatanodeCommand to be sent back to the DN, or null if
+   * @return A DatanodeCommand to be sent back to the DN, or null if
    *                   there is nothing to be done.
    */
   private DatanodeCommand getCacheCommand(CachedBlocksList list, int action,
-      String poolId) {
+                                          String poolId) {
     int length = list.size();
     if (length == 0) {
       return null;
@@ -1951,18 +1950,18 @@ public class DatanodeManager {
    * @throws IOException
    */
   public void setBalancerBandwidth(long bandwidth) throws IOException {
-    synchronized(this) {
+    synchronized (this) {
       for (DatanodeDescriptor nodeInfo : datanodeMap.values()) {
         nodeInfo.setBalancerBandwidth(bandwidth);
       }
     }
   }
-  
+
   public void markAllDatanodesStale() {
     LOG.info("Marking all datanodes as stale");
     synchronized (this) {
       for (DatanodeDescriptor dn : datanodeMap.values()) {
-        for(DatanodeStorageInfo storage : dn.getStorageInfos()) {
+        for (DatanodeStorageInfo storage : dn.getStorageInfos()) {
           storage.markStaleAfterFailover();
         }
       }
@@ -2035,8 +2034,8 @@ public class DatanodeManager {
         final int nodes = getNumDatanodesInService();
         if (nodes != 0) {
           final int xceivers = heartbeatManager
-            .getInServiceXceiverCount();
-          avgLoad = (double)xceivers/nodes;
+              .getInServiceXceiverCount();
+          avgLoad = (double) xceivers / nodes;
         }
         return avgLoad;
       }
@@ -2062,7 +2061,7 @@ public class DatanodeManager {
    * Set parameters derived from heartbeat interval.
    */
   private void setHeartbeatInterval(long intervalSeconds,
-      int recheckInterval) {
+                                    int recheckInterval) {
     this.heartbeatIntervalSeconds = intervalSeconds;
     this.heartbeatRecheckInterval = recheckInterval;
     this.heartbeatExpireInterval = 2L * recheckInterval + 10 * 1000
@@ -2093,7 +2092,7 @@ public class DatanodeManager {
         slowPeerTracker.getSlowNodes(maxSlowPeerReportNodes);
     for (String slowNode : slowNodes) {
       if (StringUtils.isBlank(slowNode)
-              || !slowNode.contains(IP_PORT_SEPARATOR)) {
+          || !slowNode.contains(IP_PORT_SEPARATOR)) {
         continue;
       }
       String ipAddr = slowNode.split(IP_PORT_SEPARATOR)[0];

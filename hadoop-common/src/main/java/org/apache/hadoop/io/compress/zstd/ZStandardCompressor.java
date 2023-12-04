@@ -1,11 +1,11 @@
 package org.apache.hadoop.io.compress.zstd;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.io.compress.Compressor;
 import org.apache.hadoop.io.compress.ZStandardCodec;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -277,11 +277,17 @@ public class ZStandardCompressor implements Compressor {
   }
 
   private native static long create();
+
   private native static void init(int level, long stream);
+
   private native int deflateBytesDirect(ByteBuffer src, int srcOffset,
-      int srcLen, ByteBuffer dst, int dstLen);
+                                        int srcLen, ByteBuffer dst, int dstLen);
+
   private native static int getStreamSize();
+
   private native static void end(long strm);
+
   private native static void initIDs();
+
   public native static String getLibraryName();
 }

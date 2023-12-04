@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.web.resources;
 
-import java.io.IOException;
-
 import org.apache.hadoop.fs.XAttrCodec;
+
+import java.io.IOException;
 
 public class XAttrValueParam extends StringParam {
   /** Parameter name. **/

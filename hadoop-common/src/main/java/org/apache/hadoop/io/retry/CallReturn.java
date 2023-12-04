@@ -33,13 +33,16 @@ class CallReturn {
   CallReturn(Object r) {
     this(r, null, State.RETURNED);
   }
+
   CallReturn(Throwable t) {
     this(null, t, State.EXCEPTION);
     Preconditions.checkNotNull(t);
   }
+
   private CallReturn(State s) {
     this(null, null, s);
   }
+
   private CallReturn(Object r, Throwable t, State s) {
     Preconditions.checkArgument(r == null || t == null);
     returnValue = r;

@@ -1,13 +1,7 @@
 package org.apache.hadoop.ipc;
 
 import org.apache.hadoop.ipc.RPC.Server.VerProtocolImpl;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolSignatureRequestProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolSignatureResponseProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolVersionsRequestProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolVersionsResponseProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.ProtocolSignatureProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.ProtocolVersionProto;
-
+import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.*;
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
@@ -19,17 +13,17 @@ public class ProtocolMetaInfoServerSideTranslatorPB implements
     ProtocolMetaInfoPB {
 
   RPC.Server server;
-  
+
   public ProtocolMetaInfoServerSideTranslatorPB(RPC.Server server) {
     this.server = server;
   }
-  
+
   @Override
   public GetProtocolVersionsResponseProto getProtocolVersions(
       RpcController controller, GetProtocolVersionsRequestProto request)
       throws ServiceException {
     String protocol = request.getProtocol();
-    GetProtocolVersionsResponseProto.Builder builder = 
+    GetProtocolVersionsResponseProto.Builder builder =
         GetProtocolVersionsResponseProto.newBuilder();
     for (RPC.RpcKind r : RPC.RpcKind.values()) {
       long[] versions;
@@ -85,9 +79,9 @@ public class ProtocolMetaInfoServerSideTranslatorPB implements
     }
     return builder.build();
   }
-  
+
   private long[] getProtocolVersionForRpcKind(RPC.RpcKind rpcKind,
-      String protocol) throws ClassNotFoundException {
+                                              String protocol) throws ClassNotFoundException {
     Class<?> protocolClass = Class.forName(protocol);
     String protocolName = RPC.getProtocolName(protocolClass);
     VerProtocolImpl[] vers = server.getSupportedProtocolVersions(rpcKind,
@@ -95,8 +89,8 @@ public class ProtocolMetaInfoServerSideTranslatorPB implements
     if (vers == null) {
       return null;
     }
-    long [] versions = new long[vers.length];
-    for (int i=0; i<versions.length; i++) {
+    long[] versions = new long[vers.length];
+    for (int i = 0; i < versions.length; i++) {
       versions[i] = vers[i].version;
     }
     return versions;

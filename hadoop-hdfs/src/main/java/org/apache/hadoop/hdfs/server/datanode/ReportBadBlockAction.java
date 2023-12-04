@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo.DatanodeInfoBuilder;
@@ -10,6 +8,8 @@ import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeRegistration;
 import org.apache.hadoop.ipc.RemoteException;
+
+import java.io.IOException;
 
 /**
  * ReportBadBlockAction is an instruction issued by {{BPOfferService}} to
@@ -22,31 +22,31 @@ public class ReportBadBlockAction implements BPServiceActorAction {
   private final String storageUuid;
   private final StorageType storageType;
 
-  public ReportBadBlockAction(ExtendedBlock block, String storageUuid, 
-      StorageType storageType) {
+  public ReportBadBlockAction(ExtendedBlock block, String storageUuid,
+                              StorageType storageType) {
     this.block = block;
     this.storageUuid = storageUuid;
     this.storageType = storageType;
   }
 
   @Override
-  public void reportTo(DatanodeProtocolClientSideTranslatorPB bpNamenode, 
-    DatanodeRegistration bpRegistration) throws BPServiceActorActionException {
+  public void reportTo(DatanodeProtocolClientSideTranslatorPB bpNamenode,
+                       DatanodeRegistration bpRegistration) throws BPServiceActorActionException {
     if (bpRegistration == null) {
       return;
     }
     DatanodeInfo[] dnArr = {new DatanodeInfoBuilder()
         .setNodeID(bpRegistration).build()};
-    String[] uuids = { storageUuid };
-    StorageType[] types = { storageType };
-    LocatedBlock[] locatedBlock = { new LocatedBlock(block,
-        dnArr, uuids, types) };
+    String[] uuids = {storageUuid};
+    StorageType[] types = {storageType};
+    LocatedBlock[] locatedBlock = {new LocatedBlock(block,
+        dnArr, uuids, types)};
 
     try {
       bpNamenode.reportBadBlocks(locatedBlock);
     } catch (RemoteException re) {
       DataNode.LOG.info("reportBadBlock encountered RemoteException for "
-          + "block:  " + block , re);
+          + "block:  " + block, re);
     } catch (IOException e) {
       throw new BPServiceActorActionException("Failed to report bad block "
           + block + " to namenode.", e);

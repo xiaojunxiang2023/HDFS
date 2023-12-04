@@ -1,7 +1,7 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.io.erasurecode.ECChunk;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

@@ -1,12 +1,5 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -20,12 +13,18 @@ import org.apache.hadoop.hdfs.server.common.StorageErrorReporter;
 import org.apache.hadoop.hdfs.server.namenode.FileJournalManager;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A {@link Storage} implementation for the {@link JournalNode}.
- * 
+ *
  * The JN has a storage directory for each namespace for which it stores
  * metadata. There is only a single directory per JN in the current design.
  */
@@ -44,12 +43,12 @@ class JNStorage extends Storage {
    * @param conf Configuration object
    * @param logDir the path to the directory in which data will be stored
    * @param errorReporter a callback to report errors
-   * @throws IOException 
+   * @throws IOException
    */
   protected JNStorage(Configuration conf, File logDir, StartupOption startOpt,
-      StorageErrorReporter errorReporter) throws IOException {
+                      StorageErrorReporter errorReporter) throws IOException {
     super(NodeType.JOURNAL_NODE);
-    
+
     sd = new StorageDirectory(logDir, null, false, new FsPermission(conf.get(
         DFSConfigKeys.DFS_JOURNAL_EDITS_DIR_PERMISSION_KEY,
         DFSConfigKeys.DFS_JOURNAL_EDITS_DIR_PERMISSION_DEFAULT)));
@@ -58,7 +57,7 @@ class JNStorage extends Storage {
 
     analyzeAndRecoverStorage(startOpt);
   }
-  
+
   FileJournalManager getJournalManager() {
     return fjm;
   }
@@ -92,7 +91,7 @@ class JNStorage extends Storage {
     return new File(sd.getCurrentDir(),
         NNStorage.getInProgressEditsFileName(startTxId));
   }
-  
+
   /**
    * @param segmentTxId the first txid of the segment
    * @param epoch the epoch number of the writer which is coordinating
@@ -102,7 +101,7 @@ class JNStorage extends Storage {
    */
   File getSyncLogTemporaryFile(long segmentTxId, long epoch) {
     String name = NNStorage.getInProgressEditsFileName(segmentTxId) +
-        ".epoch=" + epoch; 
+        ".epoch=" + epoch;
     return new File(sd.getCurrentDir(), name);
   }
 
@@ -123,12 +122,12 @@ class JNStorage extends Storage {
 
   File getTemporaryEditsFile(long startTxId, long endTxId) {
     return new File(getEditsSyncDir(), String.format("%s_%019d-%019d",
-            NNStorage.NameNodeFile.EDITS.getName(), startTxId, endTxId));
+        NNStorage.NameNodeFile.EDITS.getName(), startTxId, endTxId));
   }
 
   File getFinalizedEditsFile(long startTxId, long endTxId) {
     return new File(sd.getCurrentDir(), String.format("%s_%019d-%019d",
-            NNStorage.NameNodeFile.EDITS.getName(), startTxId, endTxId));
+        NNStorage.NameNodeFile.EDITS.getName(), startTxId, endTxId));
   }
 
   /**
@@ -138,22 +137,22 @@ class JNStorage extends Storage {
   File getPaxosFile(long segmentTxId) {
     return new File(getOrCreatePaxosDir(), String.valueOf(segmentTxId));
   }
-  
+
   File getOrCreatePaxosDir() {
     File paxosDir = new File(sd.getCurrentDir(), "paxos");
-    if(!paxosDir.exists()) {
+    if (!paxosDir.exists()) {
       LOG.info("Creating paxos dir: {}", paxosDir.toPath());
-      if(!paxosDir.mkdir()) {
+      if (!paxosDir.mkdir()) {
         LOG.error("Could not create paxos dir: {}", paxosDir.toPath());
       }
     }
     return paxosDir;
   }
-  
+
   File getRoot() {
     return sd.getRoot();
   }
-  
+
   /**
    * Remove any log files and associated paxos files which are older than
    * the given txid.
@@ -164,7 +163,7 @@ class JNStorage extends Storage {
     purgeMatching(getOrCreatePaxosDir(),
         PAXOS_DIR_PURGE_REGEXES, minTxIdToKeep);
   }
-  
+
   /**
    * Purge files in the given directory which match any of the set of patterns.
    * The patterns must have a single numeric capture group which determines
@@ -173,11 +172,11 @@ class JNStorage extends Storage {
    * are removed.
    */
   private static void purgeMatching(File dir, List<Pattern> patterns,
-      long minTxIdToKeep) throws IOException {
+                                    long minTxIdToKeep) throws IOException {
 
     for (File f : FileUtil.listFiles(dir)) {
       if (!f.isFile()) continue;
-      
+
       for (Pattern p : patterns) {
         Matcher matcher = p.matcher(f.getName());
         if (matcher.matches()) {
@@ -216,7 +215,7 @@ class JNStorage extends Storage {
     getOrCreatePaxosDir();
     analyzeStorage();
   }
-  
+
   void analyzeStorage() throws IOException {
     this.state = sd.analyzeStorage(StartupOption.REGULAR, this);
     refreshStorage();
@@ -257,12 +256,12 @@ class JNStorage extends Storage {
           this.sd + ": NameNode has nsId " + nsInfo.getNamespaceID() +
           " but storage has nsId " + getNamespaceID());
     }
-    
+
     if (!nsInfo.getClusterID().equals(getClusterID())) {
       throw new IOException("Incompatible clusterID for journal " +
           this.sd + ": NameNode has clusterId '" + nsInfo.getClusterID() +
           "' but storage has clusterId '" + getClusterID() + "'");
-      
+
     }
   }
 

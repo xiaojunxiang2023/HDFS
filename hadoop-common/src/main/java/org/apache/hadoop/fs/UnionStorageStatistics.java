@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A StorageStatistics instance which combines the outputs of several other
@@ -89,7 +89,7 @@ public class UnionStorageStatistics extends StorageStatistics {
   /**
    * Return true if a statistic is being tracked.
    *
-   * @return         True only if the statistic is being tracked.
+   * @return True only if the statistic is being tracked.
    */
   @Override
   public boolean isTracked(String key) {

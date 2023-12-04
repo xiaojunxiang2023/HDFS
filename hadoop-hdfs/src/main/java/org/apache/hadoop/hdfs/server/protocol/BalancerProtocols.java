@@ -14,7 +14,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.protocol;
+ */
+package org.apache.hadoop.hdfs.server.protocol;
+
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.security.KerberosInfo;
@@ -23,4 +25,5 @@ import org.apache.hadoop.security.KerberosInfo;
 /** The full set of protocols used by the Balancer. */
 @KerberosInfo(
     serverPrincipal = DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY)
-public interface BalancerProtocols extends ClientProtocol, NamenodeProtocol { }
+public interface BalancerProtocols extends ClientProtocol, NamenodeProtocol {
+}

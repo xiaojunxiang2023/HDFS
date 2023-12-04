@@ -1,10 +1,10 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
-
 import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeRegistration;
 import org.apache.hadoop.ipc.RemoteException;
+
+import java.io.IOException;
 
 
 /**
@@ -15,21 +15,21 @@ public class ErrorReportAction implements BPServiceActorAction {
 
   final int errorCode;
   final String errorMessage;
-  
+
   public ErrorReportAction(int errorCode, String errorMessage) {
     this.errorCode = errorCode;
     this.errorMessage = errorMessage;
   }
-  
+
   @Override
-  public void reportTo(DatanodeProtocolClientSideTranslatorPB bpNamenode, 
-    DatanodeRegistration bpRegistration) throws BPServiceActorActionException {
+  public void reportTo(DatanodeProtocolClientSideTranslatorPB bpNamenode,
+                       DatanodeRegistration bpRegistration) throws BPServiceActorActionException {
     try {
       bpNamenode.errorReport(bpRegistration, errorCode, errorMessage);
     } catch (RemoteException re) {
       DataNode.LOG.info("trySendErrorReport encountered RemoteException  "
           + "errorMessage: " + errorMessage + "  errorCode: " + errorCode, re);
-    } catch(IOException e) {
+    } catch (IOException e) {
       throw new BPServiceActorActionException("Error reporting "
           + "an error to namenode.", e);
     }

@@ -1,23 +1,23 @@
 package org.apache.hadoop.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
+import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.io.Files;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Id;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
-import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Utilities for working with ZooKeeper.
  */
 public class ZKUtil {
-  
+
   /**
    * Parse ACL permission string, partially borrowed from
    * ZooKeeperMain private method
@@ -25,27 +25,27 @@ public class ZKUtil {
   private static int getPermFromString(String permString) {
     int perm = 0;
     for (int i = 0; i < permString.length(); i++) {
-      char c = permString.charAt(i); 
+      char c = permString.charAt(i);
       switch (c) {
-      case 'r':
-        perm |= ZooDefs.Perms.READ;
-        break;
-      case 'w':
-        perm |= ZooDefs.Perms.WRITE;
-        break;
-      case 'c':
-        perm |= ZooDefs.Perms.CREATE;
-        break;
-      case 'd':
-        perm |= ZooDefs.Perms.DELETE;
-        break;
-      case 'a':
-        perm |= ZooDefs.Perms.ADMIN;
-        break;
-      default:
-        throw new BadAclFormatException(
-            "Invalid permission '" + c + "' in permission string '" +
-            permString + "'");
+        case 'r':
+          perm |= ZooDefs.Perms.READ;
+          break;
+        case 'w':
+          perm |= ZooDefs.Perms.WRITE;
+          break;
+        case 'c':
+          perm |= ZooDefs.Perms.CREATE;
+          break;
+        case 'd':
+          perm |= ZooDefs.Perms.DELETE;
+          break;
+        case 'a':
+          perm |= ZooDefs.Perms.ADMIN;
+          break;
+        default:
+          throw new BadAclFormatException(
+              "Invalid permission '" + c + "' in permission string '" +
+                  permString + "'");
       }
     }
     return perm;
@@ -78,10 +78,10 @@ public class ZKUtil {
     if (aclString == null) {
       return acl;
     }
-    
+
     List<String> aclComps = Lists.newArrayList(
         Splitter.on(',').omitEmptyStrings().trimResults()
-        .split(aclString));
+            .split(aclString));
     for (String a : aclComps) {
       // from ZooKeeperMain private method
       int firstColon = a.indexOf(':');
@@ -97,30 +97,30 @@ public class ZKUtil {
       newAcl.setPerms(getPermFromString(a.substring(lastColon + 1)));
       acl.add(newAcl);
     }
-    
+
     return acl;
   }
-  
+
   /**
    * Parse a comma-separated list of authentication mechanisms. Each
    * such mechanism should be of the form 'scheme:auth' -- the same
    * syntax used for the 'addAuth' command in the ZK CLI.
-   * 
+   *
    * @param authString the comma-separated auth mechanisms
    * @return a list of parsed authentications
    * @throws BadAuthFormatException if the auth format is invalid
    */
   public static List<ZKAuthInfo> parseAuth(String authString) throws
-      BadAuthFormatException{
+      BadAuthFormatException {
     List<ZKAuthInfo> ret = Lists.newArrayList();
     if (authString == null) {
       return ret;
     }
-    
+
     List<String> authComps = Lists.newArrayList(
         Splitter.on(',').omitEmptyStrings().trimResults()
-        .split(authString));
-    
+            .split(authString));
+
     for (String comp : authComps) {
       String parts[] = comp.split(":", 2);
       if (parts.length != 2) {
@@ -132,14 +132,14 @@ public class ZKUtil {
     }
     return ret;
   }
-  
+
   /**
    * Because ZK ACLs and authentication information may be secret,
    * allow the configuration values to be indirected through a file
    * by specifying the configuration as "@/path/to/file". If this
    * syntax is used, this function will return the contents of the file
    * as a String.
-   * 
+   *
    * @param valInConf the value from the Configuration 
    * @return either the same value, or the contents of the referenced
    * file if the configured value starts with "@"
@@ -161,7 +161,7 @@ public class ZKUtil {
   public static class ZKAuthInfo {
     private final String scheme;
     private final byte[] auth;
-    
+
     public ZKAuthInfo(String scheme, byte[] auth) {
       super();
       this.scheme = scheme;
@@ -176,6 +176,7 @@ public class ZKUtil {
       return auth;
     }
   }
+
   public static class BadAclFormatException extends
       HadoopIllegalArgumentException {
     private static final long serialVersionUID = 1L;
@@ -184,6 +185,7 @@ public class ZKUtil {
       super(message);
     }
   }
+
   public static class BadAuthFormatException extends
       HadoopIllegalArgumentException {
     private static final long serialVersionUID = 1L;

@@ -1,25 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
@@ -30,31 +10,38 @@ import org.apache.hadoop.hdfs.protocol.OpenFileEntry;
 import org.apache.hadoop.hdfs.protocol.OpenFilesIterator;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.util.Daemon;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static org.apache.hadoop.util.Time.monotonicNow;
+
 /**
  * LeaseManager does the lease housekeeping for writing on files.   
  * This class also provides useful static methods for lease recovery.
- * 
+ *
  * Lease Recovery Algorithm
  * 1) Namenode retrieves lease information
  * 2) For each file f in the lease, consider the last block b of f
  * 2.1) Get the datanodes which contains b
  * 2.2) Assign one of the datanodes as the primary datanode p
-
  * 2.3) p obtains a new generation stamp from the namenode
  * 2.4) p gets the block info from each datanode
  * 2.5) p computes the minimum block length
  * 2.6) p updates the datanodes, which have a valid generation stamp,
  *      with the new generation stamp and the minimum block length 
  * 2.7) p acknowledges the namenode the update results
-
  * 2.8) Namenode updates the BlockInfo
  * 2.9) Namenode removes f from the lease
  *      and removes the lease once all files have been removed
@@ -117,7 +104,7 @@ public class LeaseManager {
    */
   synchronized long getNumUnderConstructionBlocks() {
     assert this.fsnamesystem.hasReadLock() : "The FSNamesystem read lock wasn't"
-      + "acquired before counting under construction blocks";
+        + "acquired before counting under construction blocks";
     long numUCBlocks = 0;
     for (Long id : getINodeIdWithLeases()) {
       INode inode = fsnamesystem.getFSDirectory().getInode(id);
@@ -135,11 +122,11 @@ public class LeaseManager {
         continue;
       }
       BlockInfo[] blocks = cons.getBlocks();
-      if(blocks == null) {
+      if (blocks == null) {
         continue;
       }
-      for(BlockInfo b : blocks) {
-        if(!b.isComplete()) {
+      for (BlockInfo b : blocks) {
+        if (!b.isComplete()) {
           numUCBlocks++;
         }
       }
@@ -148,7 +135,9 @@ public class LeaseManager {
     return numUCBlocks;
   }
 
-  Collection<Long> getINodeIdWithLeases() {return leasesById.keySet();}
+  Collection<Long> getINodeIdWithLeases() {
+    return leasesById.keySet();
+  }
 
   /**
    * Get {@link INodesInPath} for all {@link INode} in the system
@@ -187,7 +176,7 @@ public class LeaseManager {
    * @return {@code Set<INodesInPath>}
    */
   public Set<INodesInPath> getINodeWithLeases(final INodeDirectory
-      ancestorDir) throws IOException {
+                                                  ancestorDir) throws IOException {
     assert fsnamesystem.hasReadLock();
     final long startTimeMs = Time.monotonicNow();
     Set<INodesInPath> iipSet = new HashSet<>();
@@ -313,7 +302,9 @@ public class LeaseManager {
   }
 
   /** @return the lease containing src */
-  public synchronized Lease getLease(INodeFile src) {return leasesById.get(src.getId());}
+  public synchronized Lease getLease(INodeFile src) {
+    return leasesById.get(src.getId());
+  }
 
   /** @return the number of leases currently in the system */
   @VisibleForTesting
@@ -434,6 +425,7 @@ public class LeaseManager {
       this.holder = h;
       renew();
     }
+
     /** Only LeaseManager object can renew a lease */
     private void renew() {
       this.lastUpdate = monotonicNow();
@@ -454,7 +446,9 @@ public class LeaseManager {
     }
 
     /** Does this lease contain any path? */
-    boolean hasFiles() {return !files.isEmpty();}
+    boolean hasFiles() {
+      return !files.isEmpty();
+    }
 
     boolean removeFile(long inodeId) {
       return files.remove(inodeId);
@@ -487,7 +481,7 @@ public class LeaseManager {
 
   public void setLeasePeriod(long softLimit, long hardLimit) {
     this.softLimit = softLimit;
-    this.hardLimit = hardLimit; 
+    this.hardLimit = hardLimit;
   }
 
   private synchronized Collection<Lease> getExpiredCandidateLeases() {
@@ -500,7 +494,7 @@ public class LeaseManager {
     }
     return expired;
   }
-  
+
   /******************************************************
    * Monitor checks for leases that have expired,
    * and disposes of them.
@@ -511,7 +505,7 @@ public class LeaseManager {
     /** Check leases periodically. */
     @Override
     public void run() {
-      for(; shouldRunMonitor && fsnamesystem.isRunning(); ) {
+      for (; shouldRunMonitor && fsnamesystem.isRunning(); ) {
         boolean needSync = false;
         try {
           // sleep now to avoid infinite loop if an exception was thrown.
@@ -535,9 +529,9 @@ public class LeaseManager {
               fsnamesystem.getEditLog().logSync();
             }
           }
-        } catch(InterruptedException ie) {
+        } catch (InterruptedException ie) {
           LOG.debug("{} is interrupted", name, ie);
-        } catch(Throwable e) {
+        } catch (Throwable e) {
           LOG.warn("Unexpected throwable: ", e);
         }
       }
@@ -575,7 +569,7 @@ public class LeaseManager {
       FSDirectory fsd = fsnamesystem.getFSDirectory();
       String p = null;
       String newHolder = getInternalLeaseHolder();
-      for(Long id : leaseINodeIds) {
+      for (Long id : leaseINodeIds) {
         try {
           INodesInPath iip = INodesInPath.fromINode(fsd.getInode(id));
           p = iip.getPath();
@@ -622,7 +616,7 @@ public class LeaseManager {
         }
       }
 
-      for(Long id : removing) {
+      for (Long id : removing) {
         removeLease(leaseToCheck, id);
       }
     }
@@ -651,7 +645,7 @@ public class LeaseManager {
     lmthread = new Daemon(new Monitor());
     lmthread.start();
   }
-  
+
   void stopMonitor() {
     if (lmthread != null) {
       shouldRunMonitor = false;

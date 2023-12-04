@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.protocol.CacheDirective;
@@ -11,9 +8,11 @@ import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
 import org.apache.hadoop.hdfs.protocol.CachePoolStats;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.IntrusiveCollection;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * A CachePool describes a set of cache resources being managed by the NameNode.
@@ -21,7 +20,7 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  *
  * This is an internal class, only used on the NameNode.  For identifying or
  * describing a cache pool to clients, please use CachePoolInfo.
- * 
+ *
  * CachePools must be accessed under the FSNamesystem lock.
  */
 public final class CachePool {
@@ -33,10 +32,10 @@ public final class CachePool {
 
   @Nonnull
   private String groupName;
-  
+
   /**
    * Cache pool permissions.
-   * 
+   *
    * READ permission means that you can list the cache directives in this pool.
    * WRITE permission means that you can add, remove, or modify cache directives
    *       in this pool.
@@ -102,7 +101,7 @@ public final class CachePool {
       }
       groupName = ugi.getPrimaryGroupName();
     }
-    FsPermission mode = (info.getMode() == null) ? 
+    FsPermission mode = (info.getMode() == null) ?
         FsPermission.getCachePoolDefault() : info.getMode();
     long limit = info.getLimit() == null ?
         CachePoolInfo.DEFAULT_LIMIT : info.getLimit();
@@ -129,8 +128,8 @@ public final class CachePool {
   }
 
   CachePool(String poolName, String ownerName, String groupName,
-      FsPermission mode, long limit,
-      short defaultReplication, long maxRelativeExpiry) {
+            FsPermission mode, long limit,
+            short defaultReplication, long maxRelativeExpiry) {
     Preconditions.checkNotNull(poolName);
     Preconditions.checkNotNull(ownerName);
     Preconditions.checkNotNull(groupName);
@@ -258,7 +257,7 @@ public final class CachePool {
   }
 
   public long getBytesOverlimit() {
-    return Math.max(bytesNeeded-limit, 0);
+    return Math.max(bytesNeeded - limit, 0);
   }
 
   public long getFilesNeeded() {
@@ -272,7 +271,7 @@ public final class CachePool {
   /**
    * Get statistics about this CachePool.
    *
-   * @return   Cache pool statistics.
+   * @return Cache pool statistics.
    */
   private CachePoolStats getStats() {
     return new CachePoolStats.Builder().
@@ -288,7 +287,7 @@ public final class CachePool {
    * Returns a CachePoolInfo describing this CachePool based on the permissions
    * of the calling user. Unprivileged users will see only minimal descriptive
    * information about the pool.
-   * 
+   *
    * @param pc Permission checker to be used to validate the user's permissions,
    *          or null
    * @return CachePoolEntry describing this CachePool
@@ -302,7 +301,7 @@ public final class CachePool {
         hasPermission = false;
       }
     }
-    return new CachePoolEntry(getInfo(hasPermission), 
+    return new CachePoolEntry(getInfo(hasPermission),
         hasPermission ? getStats() : new CachePoolStats.Builder().build());
   }
 

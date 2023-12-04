@@ -1,18 +1,14 @@
 package org.apache.hadoop.filter.handler;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
+import org.apache.hadoop.auth.util.KerberosName;
+import org.apache.hadoop.auth.util.KerberosUtil;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.filter.AuthenticationFilter;
 import org.apache.hadoop.filter.AuthenticationToken;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.auth.util.KerberosName;
-import org.apache.hadoop.auth.util.KerberosUtil;
-import org.ietf.jgss.GSSException;
-import org.ietf.jgss.GSSContext;
-import org.ietf.jgss.GSSCredential;
-import org.ietf.jgss.GSSManager;
-import org.ietf.jgss.Oid;
+import org.ietf.jgss.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +18,6 @@ import javax.security.auth.kerberos.KeyTab;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
@@ -144,7 +139,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
       if (!keytabFile.exists()) {
         throw new ServletException("Keytab does not exist: " + keytab);
       }
-      
+
       // use all SPNEGO principals in the keytab if a principal isn't
       // specifically configured
       final String[] spnegoPrincipals;
@@ -177,7 +172,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
       final String whitelistStr = config.getProperty(ENDPOINT_WHITELIST, null);
       if (whitelistStr != null) {
         final String[] strs = whitelistStr.trim().split("\\s*[,\n]\\s*");
-        for (String s: strs) {
+        for (String s : strs) {
           if (s.isEmpty()) continue;
           if (ENDPOINT_PATTERN.matcher(s).matches()) {
             whitelist.add(s);
@@ -262,7 +257,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
   public boolean managementOperation(AuthenticationToken token,
                                      HttpServletRequest request,
                                      HttpServletResponse response)
-    throws IOException, AuthenticationException {
+      throws IOException, AuthenticationException {
     return true;
   }
 
@@ -283,13 +278,13 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
    */
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request,
-      final HttpServletResponse response)
+                                          final HttpServletResponse response)
       throws IOException, AuthenticationException {
 
     // If the request servlet path is in the whitelist,
     // skip Kerberos authentication and return anonymous token.
     final String path = request.getServletPath();
-    for(final String endpoint: whitelist) {
+    for (final String endpoint : whitelist) {
       if (endpoint.equals(path)) {
         return AuthenticationToken.ANONYMOUS;
       }
@@ -321,14 +316,14 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
         if (!serverPrincipal.startsWith("HTTP/")) {
           throw new IllegalArgumentException(
               "Invalid server principal " + serverPrincipal +
-              "decoded from client request");
+                  "decoded from client request");
         }
         token = Subject.doAs(serverSubject,
             new PrivilegedExceptionAction<AuthenticationToken>() {
               @Override
               public AuthenticationToken run() throws Exception {
                 return runWithPrincipal(serverPrincipal, clientToken,
-                      base64, response);
+                    base64, response);
               }
             });
       } catch (PrivilegedActionException ex) {
@@ -345,7 +340,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
   }
 
   private AuthenticationToken runWithPrincipal(String serverPrincipal,
-      byte[] clientToken, Base64 base64, HttpServletResponse response) throws
+                                               byte[] clientToken, Base64 base64, HttpServletResponse response) throws
       IOException, GSSException {
     GSSContext gssContext = null;
     GSSCredential gssCreds = null;
@@ -358,7 +353,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
           GSSCredential.INDEFINITE_LIFETIME,
           new Oid[]{
               KerberosUtil.GSS_SPNEGO_MECH_OID,
-              KerberosUtil.GSS_KRB5_MECH_OID },
+              KerberosUtil.GSS_KRB5_MECH_OID},
           GSSCredential.ACCEPT_ONLY);
       gssContext = this.gssManager.createContext(gssCreds);
       byte[] serverToken = gssContext.acceptSecContext(clientToken, 0,
@@ -366,8 +361,8 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
       if (serverToken != null && serverToken.length > 0) {
         String authenticate = base64.encodeToString(serverToken);
         response.setHeader(KerberosAuthenticator.WWW_AUTHENTICATE,
-                           KerberosAuthenticator.NEGOTIATE + " " +
-                           authenticate);
+            KerberosAuthenticator.NEGOTIATE + " " +
+                authenticate);
       }
       if (!gssContext.isEstablished()) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

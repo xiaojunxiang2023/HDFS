@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.token.delegation.web;
+
 import org.apache.hadoop.filter.handler.AuthenticationHandler;
 import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
 

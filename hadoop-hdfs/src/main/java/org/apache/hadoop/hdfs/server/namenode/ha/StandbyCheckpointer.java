@@ -1,8 +1,22 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
-
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ha.micro.ServiceFailedException;
+import org.apache.hadoop.hdfs.DFSUtil;
+import org.apache.hadoop.hdfs.HAUtil;
+import org.apache.hadoop.hdfs.server.namenode.*;
+import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
+import org.apache.hadoop.hdfs.util.Canceler;
+import org.apache.hadoop.io.MultipleIOException;
+import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -12,28 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.micro.ServiceFailedException;
-import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.HAUtil;
-import org.apache.hadoop.hdfs.server.namenode.CheckpointConf;
-import org.apache.hadoop.hdfs.server.namenode.CheckpointFaultInjector;
-import org.apache.hadoop.hdfs.server.namenode.FSImage;
-import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
-import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
-import org.apache.hadoop.hdfs.server.namenode.SaveNamespaceCancelledException;
-import org.apache.hadoop.hdfs.server.namenode.TransferFsImage;
-import org.apache.hadoop.hdfs.util.Canceler;
-import org.apache.hadoop.io.MultipleIOException;
-import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.security.UserGroupInformation;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * Thread which runs inside the NN when it's in Standby state,
@@ -44,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class StandbyCheckpointer {
   private static final Logger LOG =
       LoggerFactory.getLogger(StandbyCheckpointer.class);
-  private static final long PREVENT_AFTER_CANCEL_MS = 2*60*1000L;
+  private static final long PREVENT_AFTER_CANCEL_MS = 2 * 60 * 1000L;
   private final CheckpointConf checkpointConf;
   private final Configuration conf;
   private final FSNamesystem namesystem;
@@ -63,12 +57,12 @@ public class StandbyCheckpointer {
 
   // A map from NN url to the most recent image upload time.
   private final HashMap<String, CheckpointReceiverEntry> checkpointReceivers;
-  
+
   public StandbyCheckpointer(Configuration conf, FSNamesystem ns)
       throws IOException {
     this.namesystem = ns;
     this.conf = conf;
-    this.checkpointConf = new CheckpointConf(conf); 
+    this.checkpointConf = new CheckpointConf(conf);
     this.thread = new CheckpointerThread();
     this.uploadThreadFactory = new ThreadFactoryBuilder().setDaemon(true)
         .setNameFormat("TransferFsImageUpload-%d").build();
@@ -109,7 +103,7 @@ public class StandbyCheckpointer {
   /**
    * Determine the address of the NN we are checkpointing
    * as well as our own HTTP address from the configuration.
-   * @throws IOException 
+   * @throws IOException
    */
   private void setNameNodeAddresses(Configuration conf) throws IOException {
     // Look up our own address.
@@ -132,14 +126,14 @@ public class StandbyCheckpointer {
     Preconditions.checkArgument(checkAddress(myNNAddress), "Bad address for standby NN: %s",
         myNNAddress);
   }
-  
+
   private URL getHttpAddress(Configuration conf) throws IOException {
     final String scheme = DFSUtil.getHttpClientScheme(conf);
     String defaultHost = NameNode.getServiceAddress(conf, true).getHostName();
     URI addr = DFSUtil.getInfoServerWithDefaultHost(defaultHost, conf, scheme);
     return addr.toURL();
   }
-  
+
   /**
    * Ensure that the given address is valid and has a port
    * specified.
@@ -154,7 +148,7 @@ public class StandbyCheckpointer {
         "Serving checkpoints at {}", activeNNAddresses, myNNAddress);
     thread.start();
   }
-  
+
   public void stop() throws IOException {
     cancelAndPreventCheckpoints("Stopping checkpointer");
     thread.setShouldRun(false);
@@ -181,8 +175,8 @@ public class StandbyCheckpointer {
     namesystem.cpLockInterruptibly();
     try {
       assert namesystem.getEditLog().isOpenForRead() :
-        "Standby Checkpointer should only attempt a checkpoint when " +
-        "NN is in standby mode, but the edit logs are in an unexpected state";
+          "Standby Checkpointer should only attempt a checkpoint when " +
+              "NN is in standby mode, but the edit logs are in an unexpected state";
 
       FSImage img = namesystem.getFSImage();
 
@@ -216,7 +210,7 @@ public class StandbyCheckpointer {
           img.saveLegacyOIVImage(namesystem, outputDir, canceler);
         } catch (IOException ioe) {
           LOG.warn("Exception encountered while saving legacy OIV image; "
-                  + "continuing with other checkpointing steps", ioe);
+              + "continuing with other checkpointing steps", ioe);
         }
       }
     } finally {
@@ -325,7 +319,7 @@ public class StandbyCheckpointer {
       throw MultipleIOException.createIOException(ioes);
     }
   }
-  
+
   /**
    * Cancel any checkpoint that's currently being made,
    * and prevent any new checkpoints from starting for the next
@@ -348,7 +342,7 @@ public class StandbyCheckpointer {
       }
     }
   }
-  
+
   @VisibleForTesting
   static int getCanceledCount() {
     return canceledCount;
@@ -357,7 +351,7 @@ public class StandbyCheckpointer {
   private long countUncheckpointedTxns() {
     FSImage img = namesystem.getFSImage();
     return img.getCorrectLastAppliedOrWrittenTxId() -
-      img.getStorage().getMostRecentCheckpointTxId();
+        img.getStorage().getMostRecentCheckpointTxId();
   }
 
   private class CheckpointerThread extends Thread {
@@ -367,7 +361,7 @@ public class StandbyCheckpointer {
     private CheckpointerThread() {
       super("Standby State Checkpointer");
     }
-    
+
     private void setShouldRun(boolean shouldRun) {
       this.shouldRun = shouldRun;
     }
@@ -378,12 +372,12 @@ public class StandbyCheckpointer {
       // is concerned, in order to use kerberized SSL properly.
       SecurityUtil.doAsLoginUserOrFatal(
           new PrivilegedAction<Object>() {
-          @Override
-          public Object run() {
-            doWork();
-            return null;
-          }
-        });
+            @Override
+            public Object run() {
+              doWork();
+              return null;
+            }
+          });
     }
 
     /**
@@ -392,7 +386,7 @@ public class StandbyCheckpointer {
      * mode. We need to not only cancel any concurrent checkpoint,
      * but also prevent any checkpoints from racing to start just
      * after the cancel call.
-     * 
+     *
      * @param delayMs the number of MS for which checkpoints will be
      * prevented
      */
@@ -421,7 +415,7 @@ public class StandbyCheckpointer {
           if (UserGroupInformation.isSecurityEnabled()) {
             UserGroupInformation.getCurrentUser().checkTGTAndReloginFromKeytab();
           }
-          
+
           final long now = monotonicNow();
           final long uncheckpointed = countUncheckpointedTxns();
           final long secsSinceLast = (now - lastCheckpointTime) / 1000;
@@ -433,8 +427,8 @@ public class StandbyCheckpointer {
             LOG.info("Triggering a rollback fsimage for rolling upgrade.");
           } else if (uncheckpointed >= checkpointConf.getTxnCount()) {
             LOG.info("Triggering checkpoint because there have been {} txns " +
-                "since the last checkpoint, " +
-                "which exceeds the configured threshold {}",
+                    "since the last checkpoint, " +
+                    "which exceeds the configured threshold {}",
                 uncheckpointed, checkpointConf.getTxnCount());
             needCheckpoint = true;
           } else if (secsSinceLast >= checkpointConf.getPeriod()) {

@@ -1,21 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.LayoutFlags;
 import org.apache.hadoop.io.IOUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * An implementation of the abstract class {@link EditLogOutputStream}, which
@@ -44,7 +39,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
 
   /**
    * Creates output buffers and file object.
-   * 
+   *
    * @param conf
    *          Configuration object
    * @param name
@@ -57,8 +52,8 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
       throws IOException {
     super();
     shouldSyncWritesAndSkipFsync = conf.getBoolean(
-            DFSConfigKeys.DFS_NAMENODE_EDITS_NOEDITLOGCHANNELFLUSH,
-            DFSConfigKeys.DFS_NAMENODE_EDITS_NOEDITLOGCHANNELFLUSH_DEFAULT);
+        DFSConfigKeys.DFS_NAMENODE_EDITS_NOEDITLOGCHANNELFLUSH,
+        DFSConfigKeys.DFS_NAMENODE_EDITS_NOEDITLOGCHANNELFLUSH_DEFAULT);
 
     file = name;
     doubleBuf = new EditsDoubleBuffer(size);
@@ -112,7 +107,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
   /**
    * Write header information for this EditLogFileOutputStream to the provided
    * DataOutputSream.
-   * 
+   *
    * @param layoutVersion the LayoutVersion of the EditLog
    * @param out the output stream to write the header to.
    * @throws IOException in the event of error writing to the stream.
@@ -138,7 +133,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
         doubleBuf.close();
         doubleBuf = null;
       }
-      
+
       // remove any preallocated padding bytes from the transaction log.
       if (fc != null && fc.isOpen()) {
         fc.truncate(fc.position());
@@ -155,7 +150,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
     }
     fp = null;
   }
-  
+
   @Override
   public void abort() throws IOException {
     if (fp == null) {
@@ -220,9 +215,9 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
       size += fillCapacity;
       total += fillCapacity;
     }
-    if(LOG.isDebugEnabled()) {
+    if (LOG.isDebugEnabled()) {
       LOG.debug("Preallocated " + total + " bytes at the end of " +
-      		"the edit log (offset " + oldSize + ")");
+          "the edit log (offset " + oldSize + ")");
     }
   }
 
@@ -232,7 +227,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
   File getFile() {
     return file;
   }
-  
+
   @Override
   public String toString() {
     return "EditLogFileOutputStream(" + file + ")";
@@ -244,17 +239,17 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
   public boolean isOpen() {
     return fp != null;
   }
-  
+
   @VisibleForTesting
   public void setFileChannelForTesting(FileChannel fc) {
     this.fc = fc;
   }
-  
+
   @VisibleForTesting
   public FileChannel getFileChannelForTesting() {
     return fc;
   }
-  
+
   /**
    * For the purposes of unit tests, we don't need to actually
    * write durably to disk. So, we can skip the fsync() calls

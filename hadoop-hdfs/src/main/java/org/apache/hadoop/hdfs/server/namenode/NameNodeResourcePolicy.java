@@ -11,7 +11,7 @@ final class NameNodeResourcePolicy {
   /**
    * Return true if and only if there are sufficient NN
    * resources to continue logging edits.
-   * 
+   *
    * @param resources the collection of resources to check.
    * @param minimumRedundantResources the minimum number of redundant resources
    *        required to continue operation.
@@ -29,7 +29,7 @@ final class NameNodeResourcePolicy {
     if (resources.isEmpty()) {
       return true;
     }
-    
+
     int requiredResourceCount = 0;
     int redundantResourceCount = 0;
     int disabledRedundantResourceCount = 0;
@@ -47,7 +47,7 @@ final class NameNodeResourcePolicy {
         }
       }
     }
-    
+
     if (redundantResourceCount == 0) {
       // If there are no redundant resources, return true if there are any
       // required resources available.

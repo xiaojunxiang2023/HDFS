@@ -1,41 +1,40 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NodeType;
+import org.apache.hadoop.hdfs.server.common.Storage;
+import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
+import org.apache.hadoop.hdfs.server.common.StorageErrorReporter;
+import org.apache.hadoop.hdfs.server.common.StorageInfo;
+import org.apache.hadoop.hdfs.server.namenode.FSEditLogLoader.EditLogValidation;
+import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
+import org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager.StoragePurger;
+import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
+import org.apache.hadoop.hdfs.server.protocol.RemoteEditLog;
+import org.apache.hadoop.io.nativeio.NativeIO;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
-import java.util.Comparator;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.hdfs.server.common.Storage;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NodeType;
-import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
-import org.apache.hadoop.hdfs.server.common.StorageErrorReporter;
-import org.apache.hadoop.hdfs.server.common.StorageInfo;
-import org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager.StoragePurger;
-import org.apache.hadoop.hdfs.server.namenode.FSEditLogLoader.EditLogValidation;
-import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
-import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
-import org.apache.hadoop.hdfs.server.protocol.RemoteEditLog;
-import org.apache.hadoop.io.nativeio.NativeIO;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 
 /**
  * Journal manager for the common case of edits files being written
  * to a storage directory.
- * 
+ *
  * Note: this class is not thread-safe and should be externally
  * synchronized.
  */
@@ -46,12 +45,12 @@ public class FileJournalManager implements JournalManager {
   private final Configuration conf;
   private final StorageDirectory sd;
   private final StorageErrorReporter errorReporter;
-  private int outputBufferCapacity = 512*1024;
+  private int outputBufferCapacity = 512 * 1024;
 
   private static final Pattern EDITS_REGEX = Pattern.compile(
-    NameNodeFile.EDITS.getName() + "_(\\d+)-(\\d+)");
+      NameNodeFile.EDITS.getName() + "_(\\d+)-(\\d+)");
   private static final Pattern EDITS_INPROGRESS_REGEX = Pattern.compile(
-    NameNodeFile.EDITS_INPROGRESS.getName() + "_(\\d+)");
+      NameNodeFile.EDITS_INPROGRESS.getName() + "_(\\d+)");
   private static final Pattern EDITS_INPROGRESS_STALE_REGEX = Pattern.compile(
       NameNodeFile.EDITS_INPROGRESS.getName() + "_(\\d+).*(\\S+)");
 
@@ -69,18 +68,19 @@ public class FileJournalManager implements JournalManager {
 
   @VisibleForTesting
   StoragePurger purger
-    = new NNStorageRetentionManager.DeletionStoragePurger();
+      = new NNStorageRetentionManager.DeletionStoragePurger();
 
   public FileJournalManager(Configuration conf, StorageDirectory sd,
-      StorageErrorReporter errorReporter) {
+                            StorageErrorReporter errorReporter) {
     this.conf = conf;
     this.sd = sd;
     this.errorReporter = errorReporter;
   }
 
-  @Override 
-  public void close() throws IOException {}
-  
+  @Override
+  public void close() throws IOException {
+  }
+
   @Override
   public void format(NamespaceInfo ns, boolean force) throws IOException {
     // Formatting file journals is done by the StorageDirectory
@@ -88,7 +88,7 @@ public class FileJournalManager implements JournalManager {
     // checkpoints, etc.
     throw new UnsupportedOperationException();
   }
-  
+
   @Override
   public boolean hasSomeData() {
     // Formatting file journals is done by the StorageDirectory
@@ -99,7 +99,7 @@ public class FileJournalManager implements JournalManager {
 
   @Override
   synchronized public EditLogOutputStream startLogSegment(long txid,
-      int layoutVersion) throws IOException {
+                                                          int layoutVersion) throws IOException {
     try {
       currentInProgress = NNStorage.getInProgressEditsFile(sd, txid);
       EditLogOutputStream stm = new EditLogFileOutputStream(conf,
@@ -123,10 +123,10 @@ public class FileJournalManager implements JournalManager {
     File dstFile = NNStorage.getFinalizedEditsFile(
         sd, firstTxId, lastTxId);
     LOG.info("Finalizing edits file " + inprogressFile + " -> " + dstFile);
-    
+
     Preconditions.checkState(!dstFile.exists(),
         "Can't finalize edits file " + inprogressFile + " since finalized file " +
-        "already exists");
+            "already exists");
 
     try {
       NativeIO.renameTo(inprogressFile, dstFile);
@@ -212,7 +212,7 @@ public class FileJournalManager implements JournalManager {
    * @throws IOException if edit logs cannot be listed.
    */
   public List<RemoteEditLog> getRemoteEditLogs(long firstTxId,
-      boolean inProgressOk) throws IOException {
+                                               boolean inProgressOk) throws IOException {
     File currentDir = sd.getCurrentDir();
     List<EditLogFile> allLogFiles = matchEditLogs(currentDir);
     List<RemoteEditLog> ret = Lists.newArrayListWithCapacity(
@@ -240,12 +240,12 @@ public class FileJournalManager implements JournalManager {
             elf.isInProgress()));
       }
     }
-    
+
     Collections.sort(ret);
-    
+
     return ret;
   }
-  
+
   /**
    * Discard all editlog segments whose first txid is greater than or equal to
    * the given txid, by renaming them with suffix ".trash".
@@ -275,7 +275,7 @@ public class FileJournalManager implements JournalManager {
   /**
    * returns matching edit logs via the log directory. Simple helper function
    * that lists the files in the logDir and calls matchEditLogs(File[])
-   * 
+   *
    * @param logDir
    *          directory to match edit logs in
    * @return matched edit logs
@@ -291,7 +291,7 @@ public class FileJournalManager implements JournalManager {
   }
 
   private static List<EditLogFile> matchEditLogs(File[] filesInStorage,
-      boolean forPurging) {
+                                                 boolean forPurging) {
     List<EditLogFile> ret = Lists.newArrayList();
     for (File f : filesInStorage) {
       String name = f.getName();
@@ -305,11 +305,11 @@ public class FileJournalManager implements JournalManager {
           continue;
         } catch (NumberFormatException nfe) {
           LOG.error("Edits file " + f + " has improperly formatted " +
-                    "transaction ID");
+              "transaction ID");
           // skip
         }
       }
-      
+
       // Check for in-progress edits
       Matcher inProgressEditsMatch = EDITS_INPROGRESS_REGEX.matcher(name);
       if (inProgressEditsMatch.matches()) {
@@ -320,7 +320,7 @@ public class FileJournalManager implements JournalManager {
           continue;
         } catch (NumberFormatException nfe) {
           LOG.error("In-progress edits file " + f + " has improperly " +
-                    "formatted transaction ID");
+              "formatted transaction ID");
           // skip
         }
       }
@@ -365,10 +365,10 @@ public class FileJournalManager implements JournalManager {
     addStreamsToCollectionFromFiles(elfs, streams, fromTxId,
         getLastReadableTxId(), inProgressOk);
   }
-  
+
   static void addStreamsToCollectionFromFiles(Collection<EditLogFile> elfs,
-      Collection<EditLogInputStream> streams, long fromTxId,
-      long maxTxIdToScan, boolean inProgressOk) {
+                                              Collection<EditLogInputStream> streams, long fromTxId,
+                                              long maxTxIdToScan, boolean inProgressOk) {
     for (EditLogFile elf : elfs) {
       if (elf.isInProgress()) {
         if (!inProgressOk) {
@@ -396,7 +396,7 @@ public class FileJournalManager implements JournalManager {
         continue;
       }
       EditLogFileInputStream elfis = new EditLogFileInputStream(elf.getFile(),
-            elf.getFirstTxId(), elf.getLastTxId(), elf.isInProgress());
+          elf.getFirstTxId(), elf.getLastTxId(), elf.isInProgress());
       LOG.debug("selecting edit log stream " + elf);
       streams.add(elfis);
     }
@@ -449,19 +449,19 @@ public class FileJournalManager implements JournalManager {
     File currentDir = sd.getCurrentDir();
     List<EditLogFile> allLogFiles = matchEditLogs(currentDir);
     List<EditLogFile> logFiles = Lists.newArrayList();
-    
+
     for (EditLogFile elf : allLogFiles) {
       if (fromTxId <= elf.getFirstTxId() ||
           elf.containsTxId(fromTxId)) {
         logFiles.add(elf);
       }
     }
-    
+
     Collections.sort(logFiles, EditLogFile.COMPARE_BY_START_TXID);
 
     return logFiles;
   }
-  
+
   public EditLogFile getLogFile(long startTxId) throws IOException {
     return getLogFile(sd.getCurrentDir(), startTxId, true);
   }
@@ -477,7 +477,7 @@ public class FileJournalManager implements JournalManager {
   }
 
   public static EditLogFile getLogFile(File dir, long startTxId,
-      boolean inProgressOk) throws IOException {
+                                       boolean inProgressOk) throws IOException {
     List<EditLogFile> files = matchEditLogs(dir);
     List<EditLogFile> ret = Lists.newLinkedList();
     for (EditLogFile elf : files) {
@@ -487,14 +487,14 @@ public class FileJournalManager implements JournalManager {
         }
       }
     }
-    
+
     if (ret.isEmpty()) {
       // no matches
       return null;
     } else if (ret.size() == 1) {
       return ret.get(0);
     } else {
-      throw new IllegalStateException("More than one log segment in " + 
+      throw new IllegalStateException("More than one log segment in " +
           dir + " starting at txid " + startTxId + ": " +
           Joiner.on(", ").join(ret));
     }
@@ -516,53 +516,53 @@ public class FileJournalManager implements JournalManager {
     private boolean hasCorruptHeader = false;
     private final boolean isInProgress;
 
-    final static Comparator<EditLogFile> COMPARE_BY_START_TXID 
-      = new Comparator<EditLogFile>() {
+    final static Comparator<EditLogFile> COMPARE_BY_START_TXID
+        = new Comparator<EditLogFile>() {
       @Override
       public int compare(EditLogFile a, EditLogFile b) {
         return ComparisonChain.start()
-        .compare(a.getFirstTxId(), b.getFirstTxId())
-        .compare(a.getLastTxId(), b.getLastTxId())
-        .result();
+            .compare(a.getFirstTxId(), b.getFirstTxId())
+            .compare(a.getLastTxId(), b.getLastTxId())
+            .result();
       }
     };
 
     EditLogFile(File file,
-        long firstTxId, long lastTxId) {
+                long firstTxId, long lastTxId) {
       this(file, firstTxId, lastTxId, false);
       assert (lastTxId != HdfsServerConstants.INVALID_TXID)
-        && (lastTxId >= firstTxId);
+          && (lastTxId >= firstTxId);
     }
-    
-    EditLogFile(File file, long firstTxId, 
-                long lastTxId, boolean isInProgress) { 
+
+    EditLogFile(File file, long firstTxId,
+                long lastTxId, boolean isInProgress) {
       assert (lastTxId == HdfsServerConstants.INVALID_TXID && isInProgress)
-        || (lastTxId != HdfsServerConstants.INVALID_TXID && lastTxId >= firstTxId);
+          || (lastTxId != HdfsServerConstants.INVALID_TXID && lastTxId >= firstTxId);
       assert (firstTxId > 0) || (firstTxId == HdfsServerConstants.INVALID_TXID);
       assert file != null;
-      
+
       Preconditions.checkArgument(!isInProgress ||
           lastTxId == HdfsServerConstants.INVALID_TXID);
-      
+
       this.firstTxId = firstTxId;
       this.lastTxId = lastTxId;
       this.file = file;
       this.isInProgress = isInProgress;
     }
-    
+
     public long getFirstTxId() {
       return firstTxId;
     }
-    
+
     public long getLastTxId() {
       return lastTxId;
     }
-    
+
     boolean containsTxId(long txId) {
       return firstTxId <= txId && txId <= lastTxId;
     }
 
-    /** 
+    /**
      * Find out where the edit log ends.
      * This will update the lastTxId of the EditLogFile or
      * mark it as corrupt if it is.
@@ -587,7 +587,7 @@ public class FileJournalManager implements JournalManager {
     public File getFile() {
       return file;
     }
-    
+
     boolean hasCorruptHeader() {
       return hasCorruptHeader;
     }
@@ -633,24 +633,24 @@ public class FileJournalManager implements JournalManager {
     @Override
     public String toString() {
       return String.format("EditLogFile(file=%s,first=%019d,last=%019d,"
-                           +"inProgress=%b,hasCorruptHeader=%b)",
-                           file.toString(), firstTxId, lastTxId,
-                           isInProgress(), hasCorruptHeader);
+              + "inProgress=%b,hasCorruptHeader=%b)",
+          file.toString(), firstTxId, lastTxId,
+          isInProgress(), hasCorruptHeader);
     }
   }
-  
+
   @Override
   public void doPreUpgrade() throws IOException {
     LOG.info("Starting upgrade of edits directory " + sd.getRoot());
     try {
-     NNUpgradeUtil.doPreUpgrade(conf, sd);
+      NNUpgradeUtil.doPreUpgrade(conf, sd);
     } catch (IOException ioe) {
-     LOG.error("Failed to move aside pre-upgrade storage " +
-         "in image directory " + sd.getRoot(), ioe);
-     throw ioe;
+      LOG.error("Failed to move aside pre-upgrade storage " +
+          "in image directory " + sd.getRoot(), ioe);
+      throw ioe;
     }
   }
-  
+
   /**
    * This method assumes that the fields of the {@link Storage} object have
    * already been updated to the appropriate new values for the upgrade.
@@ -659,7 +659,7 @@ public class FileJournalManager implements JournalManager {
   public void doUpgrade(Storage storage) throws IOException {
     NNUpgradeUtil.doUpgrade(sd, storage);
   }
-  
+
   @Override
   public void doFinalize() throws IOException {
     NNUpgradeUtil.doFinalize(sd);
@@ -667,7 +667,7 @@ public class FileJournalManager implements JournalManager {
 
   @Override
   public boolean canRollBack(StorageInfo storage, StorageInfo prevStorage,
-      int targetLayoutVersion) throws IOException {
+                             int targetLayoutVersion) throws IOException {
     return NNUpgradeUtil.canRollBack(sd, storage,
         prevStorage, targetLayoutVersion);
   }
@@ -684,7 +684,7 @@ public class FileJournalManager implements JournalManager {
 
   @Override
   public long getJournalCTime() throws IOException {
-    StorageInfo sInfo = new StorageInfo((NodeType)null);
+    StorageInfo sInfo = new StorageInfo((NodeType) null);
     sInfo.readProperties(sd);
     return sInfo.getCTime();
   }

@@ -8,13 +8,13 @@ package org.apache.hadoop.io.serializer;
  */
 // MapReduce也可见
 public interface Serialization<T> {
-  
+
   /**
    * Allows clients to test whether this {@link Serialization}
    * supports the given class.
    */
   boolean accept(Class<?> c);
-  
+
   /**
    * @return a {@link Serializer} for the given class.
    */

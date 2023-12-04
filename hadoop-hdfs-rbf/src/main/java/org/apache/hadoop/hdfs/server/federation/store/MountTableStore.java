@@ -14,40 +14,40 @@ import org.slf4j.LoggerFactory;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public abstract class MountTableStore extends CachedRecordStore<MountTable>
-        implements MountTableManager {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(MountTableStore.class);
+    implements MountTableManager {
+  private static final Logger LOG =
+      LoggerFactory.getLogger(MountTableStore.class);
 
-    // 事件驱动刷新缓存 Service
-    private MountTableRefresherService refreshService;
-    // quotaManager
-    private RouterQuotaManager quotaManager;
+  // 事件驱动刷新缓存 Service
+  private MountTableRefresherService refreshService;
+  // quotaManager
+  private RouterQuotaManager quotaManager;
 
-    public MountTableStore(StateStoreDriver driver) {
-        super(MountTable.class, driver);
+  public MountTableStore(StateStoreDriver driver) {
+    super(MountTable.class, driver);
+  }
+
+  public void setRefreshService(MountTableRefresherService refreshService) {
+    this.refreshService = refreshService;
+  }
+
+  public void setQuotaManager(RouterQuotaManager quotaManager) {
+    this.quotaManager = quotaManager;
+  }
+
+  public RouterQuotaManager getQuotaManager() {
+    return quotaManager;
+  }
+
+  // 更新所有 Routers的挂载表缓存 
+  protected void updateCacheAllRouters() {
+    if (refreshService != null) {
+      try {
+        refreshService.refresh();
+      } catch (StateStoreUnavailableException e) {
+        LOG.error("Cannot refresh mount table: state store not available", e);
+      }
     }
-
-    public void setRefreshService(MountTableRefresherService refreshService) {
-        this.refreshService = refreshService;
-    }
-
-    public void setQuotaManager(RouterQuotaManager quotaManager) {
-        this.quotaManager = quotaManager;
-    }
-
-    public RouterQuotaManager getQuotaManager() {
-        return quotaManager;
-    }
-
-    // 更新所有 Routers的挂载表缓存 
-    protected void updateCacheAllRouters() {
-        if (refreshService != null) {
-            try {
-                refreshService.refresh();
-            } catch (StateStoreUnavailableException e) {
-                LOG.error("Cannot refresh mount table: state store not available", e);
-            }
-        }
-    }
+  }
 
 }

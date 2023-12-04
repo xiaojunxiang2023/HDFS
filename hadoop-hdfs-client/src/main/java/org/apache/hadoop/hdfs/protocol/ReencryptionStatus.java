@@ -14,14 +14,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.protocol;
+ */
+package org.apache.hadoop.hdfs.protocol;
 
+import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
+import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus.State;
+import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
-import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
-import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +122,7 @@ public final class ReencryptionStatus {
    * @return true if this is a zone is added.
    */
   private boolean addZoneIfNecessary(final Long zoneId, final String name,
-      final ReencryptionInfoProto reProto) {
+                                     final ReencryptionInfoProto reProto) {
     if (!zoneStatuses.containsKey(zoneId)) {
       LOG.debug("Adding zone {} for re-encryption status", zoneId);
       Preconditions.checkNotNull(reProto);
@@ -149,7 +150,7 @@ public final class ReencryptionStatus {
   }
 
   public void updateZoneStatus(final Long zoneId, final String zonePath,
-      final ReencryptionInfoProto reProto) {
+                               final ReencryptionInfoProto reProto) {
     Preconditions.checkArgument(zoneId != null, "zoneId can't be null");
     if (addZoneIfNecessary(zoneId, zonePath, reProto)) {
       return;

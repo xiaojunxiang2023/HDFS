@@ -1,13 +1,14 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.EnumSet;
 import org.apache.hadoop.fs.FileEncryptionInfo;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSUtilClient;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.EnumSet;
 
 /**
  * HDFS metadata for an entity in the filesystem with locations. Note that

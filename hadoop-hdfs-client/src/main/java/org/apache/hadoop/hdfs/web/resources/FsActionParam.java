@@ -23,7 +23,7 @@ public class FsActionParam extends StringParam {
    * @param str a string representation of the parameter value.
    */
   public FsActionParam(final String str) {
-    super(DOMAIN, str == null || str.equals(DEFAULT)? null: str);
+    super(DOMAIN, str == null || str.equals(DEFAULT) ? null : str);
   }
 
   /**
@@ -31,7 +31,7 @@ public class FsActionParam extends StringParam {
    * @param value the parameter value.
    */
   public FsActionParam(final FsAction value) {
-    super(DOMAIN, value == null? null: value.SYMBOL);
+    super(DOMAIN, value == null ? null : value.SYMBOL);
   }
 
   @Override

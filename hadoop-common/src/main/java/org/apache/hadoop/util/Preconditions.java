@@ -1,9 +1,9 @@
 package org.apache.hadoop.util;
 
-import java.util.function.Supplier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Supplier;
 
 /**
  * <p>This class replaces {@code guava.Preconditions} which provides helpers
@@ -60,7 +60,7 @@ public final class Preconditions {
    * @see #checkNotNull(Object, String, Object...)
    */
   public static <T> T checkNotNull(final T obj,
-      final Object errorMessage) {
+                                   final Object errorMessage) {
     if (obj == null) {
       throw new NullPointerException(String.valueOf(errorMessage));
     }
@@ -84,7 +84,7 @@ public final class Preconditions {
    * @see #checkNotNull(Object, Supplier)
    */
   public static <T> T checkNotNull(final T obj, final String message,
-      final Object... values) {
+                                   final Object... values) {
     // Deferring the evaluation of the message is a tradeoff between the cost
     // of constructing lambda Vs constructing a string object.
     // Using lambda would allocate an object on every call:
@@ -117,7 +117,7 @@ public final class Preconditions {
    * @throws NullPointerException if the object is {@code null}
    */
   public static <T> T checkNotNull(final T obj,
-      final Supplier<String> msgSupplier) {
+                                   final Supplier<String> msgSupplier) {
     if (obj == null) {
       String msg;
       try {

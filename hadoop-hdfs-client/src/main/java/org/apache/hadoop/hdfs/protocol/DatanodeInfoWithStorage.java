@@ -1,11 +1,13 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.fs.StorageType;
+
 public class DatanodeInfoWithStorage extends DatanodeInfo {
   private final String storageID;
   private final StorageType storageType;
 
   public DatanodeInfoWithStorage(DatanodeInfo from, String storageID,
-      StorageType storageType) {
+                                 StorageType storageType) {
     super(from);
     this.storageID = storageID;
     this.storageType = storageType;

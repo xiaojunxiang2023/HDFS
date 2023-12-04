@@ -27,8 +27,8 @@ class FSDirDeleteOp {
    * @return the number of files that have been removed
    */
   static long delete(FSDirectory fsd, INodesInPath iip,
-      BlocksMapUpdateInfo collectedBlocks, List<INode> removedINodes,
-      List<Long> removedUCFiles, long mtime) throws IOException {
+                     BlocksMapUpdateInfo collectedBlocks, List<INode> removedINodes,
+                     List<Long> removedUCFiles, long mtime) throws IOException {
     if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("DIR* FSDirectory.delete: " + iip.getPath());
     }
@@ -47,7 +47,7 @@ class FSDirDeleteOp {
           fsn.removeSnapshottableDirs(snapshottableDirs);
         }
         fsd.updateReplicationFactor(context.collectedBlocks()
-                                        .toUpdateReplicationInfo());
+            .toUpdateReplicationInfo());
         fsd.updateCount(iip, context.quotaDelta(), false);
       }
     } finally {
@@ -86,7 +86,7 @@ class FSDirDeleteOp {
     final INodesInPath iip = fsd.resolvePath(pc, src, DirOp.WRITE_LINK);
     if (fsd.isPermissionEnabled()) {
       fsd.checkPermission(pc, iip, false, null, FsAction.WRITE, null,
-                          FsAction.ALL, true);
+          FsAction.ALL, true);
     }
     if (fsd.isNonEmptyDirectory(iip)) {
       if (!recursive) {
@@ -177,7 +177,7 @@ class FSDirDeleteOp {
 
     if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug(
-          "DIR* Namesystem.delete: " + iip.getPath() +" is removed");
+          "DIR* Namesystem.delete: " + iip.getPath() + " is removed");
     }
     return collectedBlocks;
   }
@@ -213,7 +213,7 @@ class FSDirDeleteOp {
    * @return true if there are inodes deleted
    */
   private static boolean unprotectedDelete(FSDirectory fsd, INodesInPath iip,
-      ReclaimContext reclaimContext, long mtime) {
+                                           ReclaimContext reclaimContext, long mtime) {
     assert fsd.hasWriteLock();
 
     // check if target node exists

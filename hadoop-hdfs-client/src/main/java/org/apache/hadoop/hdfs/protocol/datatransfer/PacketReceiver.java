@@ -1,18 +1,18 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
+import org.apache.hadoop.util.DirectBufferPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
-import org.apache.hadoop.util.DirectBufferPool;
-import org.apache.hadoop.io.IOUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to handle reading packets one-at-a-time from the wire.
@@ -135,7 +135,7 @@ public class PacketReceiver implements Closeable {
     int totalLen = payloadLen + headerLen;
     if (totalLen < 0 || totalLen > MAX_PACKET_SIZE) {
       throw new IOException("Incorrect value for packet payload size: " +
-                            payloadLen);
+          payloadLen);
     }
 
     // Make sure we have space for the whole packet, and
@@ -182,7 +182,7 @@ public class PacketReceiver implements Closeable {
 
 
   private static void doReadFully(ReadableByteChannel ch, InputStream in,
-      ByteBuffer buf) throws IOException {
+                                  ByteBuffer buf) throws IOException {
     if (ch != null) {
       readChannelFully(ch, buf);
     } else {
@@ -210,8 +210,8 @@ public class PacketReceiver implements Closeable {
     assert dataLen >= 0 : "invalid datalen: " + dataLen;
     assert curPacketBuf.position() == lenThroughHeader;
     assert curPacketBuf.limit() == lenThroughData :
-      "headerLen= " + headerLen + " clen=" + checksumsLen + " dlen=" + dataLen +
-      " rem=" + curPacketBuf.remaining();
+        "headerLen= " + headerLen + " clen=" + checksumsLen + " dlen=" + dataLen +
+            " rem=" + curPacketBuf.remaining();
 
     // Slice the checksums.
     curPacketBuf.position(lenThroughHeader);

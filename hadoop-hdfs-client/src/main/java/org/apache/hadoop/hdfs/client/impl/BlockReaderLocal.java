@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.BlockReader;
@@ -14,6 +12,8 @@ import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.shortcircuit.ClientMmap;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitReplica;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.DirectBufferPool;
 import org.apache.hadoop.util.Timer;
@@ -79,8 +79,8 @@ class BlockReaderLocal implements BlockReader {
     public Builder setCachingStrategy(CachingStrategy cachingStrategy) {
       long readahead = cachingStrategy.getReadahead() != null ?
           cachingStrategy.getReadahead() :
-              HdfsClientConfigKeys.DFS_DATANODE_READAHEAD_BYTES_DEFAULT;
-      this.maxReadahead = (int)Math.min(Integer.MAX_VALUE, readahead);
+          HdfsClientConfigKeys.DFS_DATANODE_READAHEAD_BYTES_DEFAULT;
+      this.maxReadahead = (int) Math.min(Integer.MAX_VALUE, readahead);
       return this;
     }
 
@@ -323,7 +323,7 @@ class BlockReaderLocal implements BlockReader {
    *              multiples of the checksum size.
    * @param canSkipChecksum  True if we can skip checksumming.
    *
-   * @return      Total bytes read.  0 on EOF.
+   * @return Total bytes read.  0 on EOF.
    */
   private synchronized int fillBuffer(ByteBuffer buf, boolean canSkipChecksum)
       throws IOException {
@@ -443,13 +443,13 @@ class BlockReaderLocal implements BlockReader {
    * fill the latter part of dataBuf.
    *
    * @param canSkipChecksum  true if we can skip checksumming.
-   * @return                 true if we hit EOF.
+   * @return true if we hit EOF.
    * @throws IOException
    */
   private synchronized boolean fillDataBuf(boolean canSkipChecksum)
       throws IOException {
     createDataBufIfNeeded();
-    final int slop = (int)(dataPos % bytesPerChecksum);
+    final int slop = (int) (dataPos % bytesPerChecksum);
     final long oldDataPos = dataPos;
     dataBuf.limit(maxReadaheadLength);
     if (canSkipChecksum) {
@@ -486,7 +486,7 @@ class BlockReaderLocal implements BlockReader {
    * @param canSkipChecksum  True if we can skip checksums.
    */
   private synchronized int readWithBounceBuffer(ByteBuffer buf,
-        boolean canSkipChecksum) throws IOException {
+                                                boolean canSkipChecksum) throws IOException {
     int total = 0;
     int bb = drainDataBuf(buf); // drain bounce buffer if possible
     if (bb >= 0) {
@@ -496,7 +496,7 @@ class BlockReaderLocal implements BlockReader {
     boolean eof = true, done = false;
     do {
       if (buf.isDirect() && (buf.remaining() >= maxReadaheadLength)
-            && ((dataPos % bytesPerChecksum) == 0)) {
+          && ((dataPos % bytesPerChecksum) == 0)) {
         // Fast lane: try to read directly into user-supplied buffer, bypassing
         // bounce buffer.
         int oldLimit = buf.limit();
@@ -531,7 +531,7 @@ class BlockReaderLocal implements BlockReader {
 
   @Override
   public synchronized int read(byte[] arr, int off, int len)
-        throws IOException {
+      throws IOException {
     boolean canSkipChecksum = createNoChecksumContext();
     int nRead;
     try {
@@ -559,7 +559,7 @@ class BlockReaderLocal implements BlockReader {
   }
 
   private synchronized int readWithoutBounceBuffer(byte arr[], int off,
-        int len) throws IOException {
+                                                   int len) throws IOException {
     freeDataBufIfExists();
     freeChecksumBufIfExists();
     int nRead = blockReaderIoProvider.read(
@@ -573,7 +573,7 @@ class BlockReaderLocal implements BlockReader {
   }
 
   private synchronized int readWithBounceBuffer(byte arr[], int off, int len,
-        boolean canSkipChecksum) throws IOException {
+                                                boolean canSkipChecksum) throws IOException {
     createDataBufIfNeeded();
     if (!dataBuf.hasRemaining()) {
       dataBuf.position(0);
@@ -591,7 +591,7 @@ class BlockReaderLocal implements BlockReader {
     int discardedFromBuf = 0;
     long remaining = n;
     if ((dataBuf != null) && dataBuf.hasRemaining()) {
-      discardedFromBuf = (int)Math.min(dataBuf.remaining(), n);
+      discardedFromBuf = (int) Math.min(dataBuf.remaining(), n);
       dataBuf.position(dataBuf.position() + discardedFromBuf);
       remaining -= discardedFromBuf;
     }
@@ -652,7 +652,7 @@ class BlockReaderLocal implements BlockReader {
    *
    * @param opts     The options to use, such as SKIP_CHECKSUMS.
    *
-   * @return         null on failure; the ClientMmap otherwise.
+   * @return null on failure; the ClientMmap otherwise.
    */
   @Override
   public ClientMmap getClientMmap(EnumSet<ReadOption> opts) {

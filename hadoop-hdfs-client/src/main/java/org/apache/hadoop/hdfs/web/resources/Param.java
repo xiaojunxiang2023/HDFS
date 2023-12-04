@@ -10,7 +10,7 @@ import java.util.Comparator;
 public abstract class Param<T, D extends Param.Domain<T>> {
   static final String NULL = "null";
 
-  static final Comparator<Param<?,?>> NAME_CMP = new Comparator<Param<?,?>>() {
+  static final Comparator<Param<?, ?>> NAME_CMP = new Comparator<Param<?, ?>>() {
     @Override
     public int compare(Param<?, ?> left, Param<?, ?> right) {
       return left.getName().compareTo(right.getName());
@@ -24,11 +24,11 @@ public abstract class Param<T, D extends Param.Domain<T>> {
    * @return the encoded URI string
    */
   public static String toSortedString(final String separator,
-      final Param<?, ?>... parameters) {
+                                      final Param<?, ?>... parameters) {
     Arrays.sort(parameters, NAME_CMP);
     final StringBuilder b = new StringBuilder();
     try {
-      for(Param<?, ?> p : parameters) {
+      for (Param<?, ?> p : parameters) {
         if (p.getValue() != null) {
           b.append(separator)
               .append(URLEncoder.encode(p.getName(), "UTF-8"))
@@ -95,7 +95,7 @@ public abstract class Param<T, D extends Param.Domain<T>> {
     public final T parse(final String varName, final String str) {
       try {
         return str != null && str.trim().length() > 0 ? parse(str) : null;
-      } catch(Exception e) {
+      } catch (Exception e) {
         throw new IllegalArgumentException("Failed to parse \"" + str
             + "\" for the parameter " + varName
             + ".  The value must be in the domain " + getDomain(), e);

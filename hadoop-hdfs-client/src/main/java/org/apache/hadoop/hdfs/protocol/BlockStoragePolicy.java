@@ -1,15 +1,15 @@
 package org.apache.hadoop.hdfs.protocol;
 
+import org.apache.hadoop.fs.BlockStoragePolicySpi;
+import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.fs.BlockStoragePolicySpi;
-import org.apache.hadoop.fs.StorageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A block storage policy describes how to select the storage types
@@ -38,15 +38,15 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
 
   @VisibleForTesting
   public BlockStoragePolicy(byte id, String name, StorageType[] storageTypes,
-      StorageType[] creationFallbacks, StorageType[] replicationFallbacks) {
+                            StorageType[] creationFallbacks, StorageType[] replicationFallbacks) {
     this(id, name, storageTypes, creationFallbacks, replicationFallbacks,
-         false);
+        false);
   }
 
   @VisibleForTesting
   public BlockStoragePolicy(byte id, String name, StorageType[] storageTypes,
-      StorageType[] creationFallbacks, StorageType[] replicationFallbacks,
-      boolean copyOnCreateFile) {
+                            StorageType[] creationFallbacks, StorageType[] replicationFallbacks,
+                            boolean copyOnCreateFile) {
     this.id = id;
     this.name = name;
     this.storageTypes = storageTypes;
@@ -64,7 +64,7 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
 
     // Do not return transient storage types. We will not have accurate
     // usage information for transient types.
-    for (;i < replication && j < storageTypes.length; ++j) {
+    for (; i < replication && j < storageTypes.length; ++j) {
       if (!storageTypes[j].isTransient()) {
         types.add(storageTypes[j]);
         ++i;
@@ -89,12 +89,12 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
    * @return a list of {@link StorageType}s for storing the replicas of a block.
    */
   public List<StorageType> chooseStorageTypes(final short replication,
-      final Iterable<StorageType> chosen) {
+                                              final Iterable<StorageType> chosen) {
     return chooseStorageTypes(replication, chosen, null);
   }
 
   private List<StorageType> chooseStorageTypes(final short replication,
-      final Iterable<StorageType> chosen, final List<StorageType> excess) {
+                                               final Iterable<StorageType> chosen, final List<StorageType> excess) {
     final List<StorageType> types = chooseStorageTypes(replication);
     diff(types, chosen, excess);
     return types;
@@ -113,19 +113,19 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
    * @return a list of {@link StorageType}s for storing the replicas of a block.
    */
   public List<StorageType> chooseStorageTypes(final short replication,
-      final Iterable<StorageType> chosen,
-      final EnumSet<StorageType> unavailables,
-      final boolean isNewBlock) {
+                                              final Iterable<StorageType> chosen,
+                                              final EnumSet<StorageType> unavailables,
+                                              final boolean isNewBlock) {
     final List<StorageType> excess = new LinkedList<>();
     final List<StorageType> storageTypes = chooseStorageTypes(
         replication, chosen, excess);
     final int expectedSize = storageTypes.size() - excess.size();
     final List<StorageType> removed = new LinkedList<>();
-    for(int i = storageTypes.size() - 1; i >= 0; i--) {
+    for (int i = storageTypes.size() - 1; i >= 0; i--) {
       // replace/remove unavailable storage types.
       final StorageType t = storageTypes.get(i);
       if (unavailables.contains(t)) {
-        final StorageType fallback = isNewBlock?
+        final StorageType fallback = isNewBlock ?
             getCreationFallback(unavailables)
             : getReplicationFallback(unavailables);
         if (fallback == null) {
@@ -139,9 +139,9 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
     diff(storageTypes, excess, null);
     if (storageTypes.size() < expectedSize) {
       LOG.warn("Failed to place enough replicas: expected size is {}"
-          + " but only {} storage types can be selected (replication={},"
-          + " selected={}, unavailable={}" + ", removed={}" + ", policy={}"
-          + ")", expectedSize, storageTypes.size(), replication, storageTypes,
+              + " but only {} storage types can be selected (replication={},"
+              + " selected={}, unavailable={}" + ", removed={}" + ", policy={}"
+              + ")", expectedSize, storageTypes.size(), replication, storageTypes,
           unavailables, removed, this);
     }
     return storageTypes;
@@ -153,8 +153,8 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
    * Further, if e is not null, set e = e + c - t;
    */
   private static void diff(List<StorageType> t, Iterable<StorageType> c,
-      List<StorageType> e) {
-    for(StorageType storagetype : c) {
+                           List<StorageType> e) {
+    for (StorageType storagetype : c) {
       final int i = t.indexOf(storagetype);
       if (i >= 0) {
         t.remove(i);
@@ -173,7 +173,7 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
    * @return a list of {@link StorageType}s for deletion.
    */
   public List<StorageType> chooseExcess(final short replication,
-      final Iterable<StorageType> chosen) {
+                                        final Iterable<StorageType> chosen) {
     final List<StorageType> types = chooseStorageTypes(replication);
     final List<StorageType> excess = new LinkedList<>();
     diff(types, chosen, excess);
@@ -202,7 +202,7 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
     } else if (obj == null || !(obj instanceof BlockStoragePolicy)) {
       return false;
     }
-    final BlockStoragePolicy that = (BlockStoragePolicy)obj;
+    final BlockStoragePolicy that = (BlockStoragePolicy) obj;
     return this.id == that.id;
   }
 
@@ -239,8 +239,8 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
   }
 
   private static StorageType getFallback(EnumSet<StorageType> unavailables,
-      StorageType[] fallbacks) {
-    for(StorageType fb : fallbacks) {
+                                         StorageType[] fallbacks) {
+    for (StorageType fb : fallbacks) {
       if (!unavailables.contains(fb)) {
         return fb;
       }

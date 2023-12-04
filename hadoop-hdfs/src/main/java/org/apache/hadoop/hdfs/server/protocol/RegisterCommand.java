@@ -7,7 +7,7 @@ package org.apache.hadoop.hdfs.server.protocol;
  * the rest of the DatanodeCommands in the same HeartbeatResponse.
  */
 public class RegisterCommand extends DatanodeCommand {
-  
+
   public static final DatanodeCommand REGISTER = new RegisterCommand();
 
   public RegisterCommand() {

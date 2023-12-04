@@ -22,11 +22,14 @@ public class DataNodeFaultInjector {
     instance = injector;
   }
 
-  public void getHdfsBlocksMetadata() {}
+  public void getHdfsBlocksMetadata() {
+  }
 
-  public void writeBlockAfterFlush() throws IOException {}
+  public void writeBlockAfterFlush() throws IOException {
+  }
 
-  public void sendShortCircuitShmResponse() throws IOException {}
+  public void sendShortCircuitShmResponse() throws IOException {
+  }
 
   public boolean dropHeartbeatPacket() {
     return false;
@@ -57,16 +60,21 @@ public class DataNodeFaultInjector {
       throws IOException {
   }
 
-  public void noRegistration() throws IOException { }
+  public void noRegistration() throws IOException {
+  }
 
-  public void failMirrorConnection() throws IOException { }
+  public void failMirrorConnection() throws IOException {
+  }
 
   public void failPipeline(ReplicaInPipeline replicaInfo,
-      String mirrorAddr) throws IOException { }
+                           String mirrorAddr) throws IOException {
+  }
 
-  public void startOfferService() throws Exception {}
+  public void startOfferService() throws Exception {
+  }
 
-  public void endOfferService() throws Exception {}
+  public void endOfferService() throws Exception {
+  }
 
   public void throwTooManyOpenFiles() throws FileNotFoundException {
   }
@@ -75,48 +83,57 @@ public class DataNodeFaultInjector {
    * Used as a hook to inject failure in erasure coding reconstruction
    * process.
    */
-  public void stripedBlockReconstruction() throws IOException {}
+  public void stripedBlockReconstruction() throws IOException {
+  }
 
   /**
    * Used as a hook to inject failure in erasure coding checksum reconstruction
    * process.
    */
-  public void stripedBlockChecksumReconstruction() throws IOException {}
+  public void stripedBlockChecksumReconstruction() throws IOException {
+  }
 
   /**
    * Used as a hook to inject latency when read block
    * in erasure coding reconstruction process.
    */
-  public void delayBlockReader() {}
+  public void delayBlockReader() {
+  }
 
   /**
    * Used as a hook to inject intercept when free the block reader buffer.
    */
-  public void interceptFreeBlockReaderBuffer() {}
+  public void interceptFreeBlockReaderBuffer() {
+  }
 
   /**
    * Used as a hook to inject intercept When finish reading from block.
    */
-  public void interceptBlockReader() {}
+  public void interceptBlockReader() {
+  }
 
   /**
    * Used as a hook to inject intercept when BPOfferService hold lock.
    */
-  public void delayWhenOfferServiceHoldLock() {}
+  public void delayWhenOfferServiceHoldLock() {
+  }
 
   /**
    * Used as a hook to inject intercept when re-register.
    */
-  public void blockUtilSendFullBlockReport() {}
+  public void blockUtilSendFullBlockReport() {
+  }
 
   /**
    * Just delay a while.
    */
-  public void delay() {}
+  public void delay() {
+  }
 
   /**
    * Used as a hook to inject data pollution
    * into an erasure coding reconstruction.
    */
-  public void badDecoding(ByteBuffer[] outputs) {}
+  public void badDecoding(ByteBuffer[] outputs) {
+  }
 }

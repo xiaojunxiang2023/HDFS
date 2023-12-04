@@ -1,33 +1,29 @@
 package org.apache.hadoop.filter.handler;
 
-import java.io.IOException;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-import java.text.ParseException;
-
-import java.security.interfaces.RSAPublicKey;
-
-import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.auth.util.CertificateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jwt.SignedJWT;
+import org.apache.hadoop.auth.util.CertificateUtil;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationFilter;
+import org.apache.hadoop.filter.AuthenticationToken;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * The {@link JWTRedirectAuthenticationHandler} extends
@@ -59,7 +55,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
  * </ul>
  */
 public class JWTRedirectAuthenticationHandler extends
-        AltKerberosAuthenticationHandler {
+    AltKerberosAuthenticationHandler {
   private static final Logger LOG = LoggerFactory
       .getLogger(JWTRedirectAuthenticationHandler.class);
 
@@ -160,7 +156,7 @@ public class JWTRedirectAuthenticationHandler extends
         } else {
           LOG.warn("jwtToken failed validation: " + jwtToken.serialize());
         }
-      } catch(ParseException pe) {
+      } catch (ParseException pe) {
         // unable to parse the token let's try and get another one
         LOG.warn("Unable to parse the JWT token", pe);
       }

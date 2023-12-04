@@ -1,10 +1,10 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.File;
-
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
+
+import java.io.File;
 
 /** This class represents replicas being written. 
  * Those are the replicas that
@@ -21,7 +21,7 @@ public class ReplicaBeingWritten extends LocalReplicaInPipeline {
    *                       the estimated maximum block length.
    */
   public ReplicaBeingWritten(long blockId, long genStamp,
-        FsVolumeSpi vol, File dir, long bytesToReserve) {
+                             FsVolumeSpi vol, File dir, long bytesToReserve) {
     super(blockId, genStamp, vol, dir, bytesToReserve);
   }
 
@@ -33,7 +33,7 @@ public class ReplicaBeingWritten extends LocalReplicaInPipeline {
    * @param writer a thread that is writing to this replica
    */
   public ReplicaBeingWritten(Block block,
-      FsVolumeSpi vol, File dir, Thread writer) {
+                             FsVolumeSpi vol, File dir, Thread writer) {
     super(block, vol, dir, writer);
   }
 
@@ -49,7 +49,7 @@ public class ReplicaBeingWritten extends LocalReplicaInPipeline {
    *                       the estimated maximum block length.
    */
   public ReplicaBeingWritten(long blockId, long len, long genStamp,
-      FsVolumeSpi vol, File dir, Thread writer, long bytesToReserve) {
+                             FsVolumeSpi vol, File dir, Thread writer, long bytesToReserve) {
     super(blockId, len, genStamp, vol, dir, writer, bytesToReserve);
   }
 
@@ -70,12 +70,12 @@ public class ReplicaBeingWritten extends LocalReplicaInPipeline {
   public ReplicaState getState() {
     return ReplicaState.RBW;
   }
-  
+
   @Override  // Object
   public boolean equals(Object o) {
     return super.equals(o);
   }
-  
+
   @Override  // Object
   public int hashCode() {
     return super.hashCode();

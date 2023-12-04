@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.io.IOException;
 
 /**
  * Used to inject certain faults for testing.
@@ -18,23 +18,30 @@ public class EncryptionFaultInjector {
   }
 
   @VisibleForTesting
-  public void startFileNoKey() throws IOException {}
+  public void startFileNoKey() throws IOException {
+  }
 
   @VisibleForTesting
-  public void startFileBeforeGenerateKey() throws IOException {}
+  public void startFileBeforeGenerateKey() throws IOException {
+  }
 
   @VisibleForTesting
-  public void startFileAfterGenerateKey() throws IOException {}
+  public void startFileAfterGenerateKey() throws IOException {
+  }
 
   @VisibleForTesting
-  public void reencryptEncryptedKeys() throws IOException {}
+  public void reencryptEncryptedKeys() throws IOException {
+  }
 
   @VisibleForTesting
-  public void reencryptUpdaterProcessOneTask() throws IOException {}
+  public void reencryptUpdaterProcessOneTask() throws IOException {
+  }
 
   @VisibleForTesting
-  public void reencryptUpdaterProcessCheckpoint() throws IOException {}
+  public void reencryptUpdaterProcessCheckpoint() throws IOException {
+  }
 
   @VisibleForTesting
-  public void ensureKeyIsInitialized() throws IOException {}
+  public void ensureKeyIsInitialized() throws IOException {
+  }
 }

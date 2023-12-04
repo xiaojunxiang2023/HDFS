@@ -1,41 +1,34 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.FSImageStorageInspector.FSImageFile;
 import org.apache.hadoop.hdfs.server.namenode.FileJournalManager.EditLogFile;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
 import org.apache.hadoop.hdfs.util.MD5FileUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The NNStorageRetentionManager is responsible for inspecting the storage
  * directories of the NN and enforcing a retention policy on checkpoints
  * and edit logs.
- * 
+ *
  * It delegates the actual removal of files to a StoragePurger
  * implementation, which might delete the files or instead copy them to
  * a filer or HDFS for later analysis.
  */
 public class NNStorageRetentionManager {
-  
+
   private final int numCheckpointsToRetain;
   private final long numExtraEditsToRetain;
   private final int maxExtraEditsSegmentsToRetain;
@@ -44,7 +37,7 @@ public class NNStorageRetentionManager {
   private final NNStorage storage;
   private final StoragePurger purger;
   private final LogsPurgeable purgeableLogs;
-  
+
   public NNStorageRetentionManager(
       Configuration conf,
       NNStorage storage,
@@ -63,15 +56,15 @@ public class NNStorageRetentionManager {
         "Must retain at least one checkpoint");
     Preconditions.checkArgument(numExtraEditsToRetain >= 0,
         DFSConfigKeys.DFS_NAMENODE_NUM_EXTRA_EDITS_RETAINED_KEY +
-        " must not be negative");
-    
+            " must not be negative");
+
     this.storage = storage;
     this.purgeableLogs = purgeableLogs;
     this.purger = purger;
   }
-  
+
   public NNStorageRetentionManager(Configuration conf, NNStorage storage,
-      LogsPurgeable purgeableLogs) {
+                                   LogsPurgeable purgeableLogs) {
     this(conf, storage, purgeableLogs, new DeletionStoragePurger());
   }
 
@@ -98,7 +91,7 @@ public class NNStorageRetentionManager {
 
     long minImageTxId = getImageTxIdToRetain(inspector);
     purgeCheckpointsOlderThan(inspector, minImageTxId);
-    
+
     if (nnf == NameNodeFile.IMAGE_ROLLBACK) {
       // do not purge edits for IMAGE_ROLLBACK.
       return;
@@ -115,7 +108,7 @@ public class NNStorageRetentionManager {
     // on the configured amount.
     long minimumRequiredTxId = minImageTxId + 1;
     long purgeLogsFrom = Math.max(0, minimumRequiredTxId - numExtraEditsToRetain);
-    
+
     ArrayList<EditLogInputStream> editLogs = new ArrayList<EditLogInputStream>();
     purgeableLogs.selectInputStreams(editLogs, purgeLogsFrom, false, false);
     Collections.sort(editLogs, new Comparator<EditLogInputStream>() {
@@ -133,14 +126,14 @@ public class NNStorageRetentionManager {
         editLogs.get(editLogs.size() - 1).getFirstTxId() >= minimumRequiredTxId) {
       editLogs.remove(editLogs.size() - 1);
     }
-    
+
     // Next, adjust the number of transactions to retain if doing so would mean
     // keeping too many segments around.
     while (editLogs.size() > maxExtraEditsSegmentsToRetain) {
       purgeLogsFrom = editLogs.get(0).getLastTxId() + 1;
       editLogs.remove(0);
     }
-    
+
     // Finally, ensure that we're not trying to purge any transactions that we
     // actually need.
     if (purgeLogsFrom > minimumRequiredTxId) {
@@ -148,10 +141,10 @@ public class NNStorageRetentionManager {
           + "restore: " + purgeLogsFrom + " should be <= "
           + minimumRequiredTxId);
     }
-    
+
     purgeableLogs.purgeLogsOlderThan(purgeLogsFrom);
   }
-  
+
   private void purgeCheckpointsOlderThan(
       FSImageTransactionalStorageInspector inspector,
       long minTxId) {
@@ -192,10 +185,12 @@ public class NNStorageRetentionManager {
    */
   interface StoragePurger {
     void purgeLog(EditLogFile log);
+
     void purgeImage(FSImageFile image);
+
     void markStale(EditLogFile log);
   }
-  
+
   static class DeletionStoragePurger implements StoragePurger {
     @Override
     public void purgeLog(EditLogFile log) {
@@ -215,10 +210,10 @@ public class NNStorageRetentionManager {
         // It's OK if we fail to delete something -- we'll catch it
         // next time we swing through this directory.
         LOG.warn("Could not delete {}", file);
-      }      
+      }
     }
 
-    public void markStale(EditLogFile log){
+    public void markStale(EditLogFile log) {
       try {
         log.moveAsideStaleInprogressFile();
       } catch (IOException e) {

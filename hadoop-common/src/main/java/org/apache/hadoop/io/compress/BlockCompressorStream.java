@@ -21,14 +21,14 @@ public class BlockCompressorStream extends CompressorStream {
 
   /**
    * Create a {@link BlockCompressorStream}.
-   * 
+   *
    * @param out stream
    * @param compressor compressor to be used
    * @param bufferSize size of buffer
    * @param compressionOverhead maximum 'overhead' of the compression 
    *                            algorithm with given bufferSize
    */
-  public BlockCompressorStream(OutputStream out, Compressor compressor, 
+  public BlockCompressorStream(OutputStream out, Compressor compressor,
                                int bufferSize, int compressionOverhead) {
     super(out, compressor, bufferSize);
     MAX_INPUT_SIZE = bufferSize - compressionOverhead;
@@ -39,7 +39,7 @@ public class BlockCompressorStream extends CompressorStream {
    * compressor.
    * Use default of 512 as bufferSize and compressionOverhead of 
    * (1% of bufferSize + 12 bytes) =  18 bytes (zlib algorithm).
-   * 
+   *
    * @param out stream
    * @param compressor compressor to be used
    */
@@ -64,7 +64,7 @@ public class BlockCompressorStream extends CompressorStream {
     if (b == null) {
       throw new NullPointerException();
     } else if ((off < 0) || (off > b.length) || (len < 0) ||
-               ((off + len) > b.length)) {
+        ((off + len) > b.length)) {
       throw new IndexOutOfBoundsException();
     } else if (len == 0) {
       return;
@@ -85,7 +85,7 @@ public class BlockCompressorStream extends CompressorStream {
       rawWriteInt(len);
       do {
         int bufLen = Math.min(len, MAX_INPUT_SIZE);
-        
+
         compressor.setInput(b, off, bufLen);
         compressor.finish();
         while (!compressor.finished()) {
@@ -103,7 +103,7 @@ public class BlockCompressorStream extends CompressorStream {
     if (!compressor.needsInput()) {
       // compressor buffer size might be smaller than the maximum
       // size, so we permit it to flush if required.
-      rawWriteInt((int)compressor.getBytesRead());
+      rawWriteInt((int) compressor.getBytesRead());
       do {
         compress();
       } while (!compressor.needsInput());
@@ -113,7 +113,7 @@ public class BlockCompressorStream extends CompressorStream {
   @Override
   public void finish() throws IOException {
     if (!compressor.finished()) {
-      rawWriteInt((int)compressor.getBytesRead());
+      rawWriteInt((int) compressor.getBytesRead());
       compressor.finish();
       while (!compressor.finished()) {
         compress();
@@ -130,12 +130,12 @@ public class BlockCompressorStream extends CompressorStream {
       out.write(buffer, 0, len);
     }
   }
-  
+
   private void rawWriteInt(int v) throws IOException {
     out.write((v >>> 24) & 0xFF);
     out.write((v >>> 16) & 0xFF);
-    out.write((v >>>  8) & 0xFF);
-    out.write((v >>>  0) & 0xFF);
+    out.write((v >>> 8) & 0xFF);
+    out.write((v >>> 0) & 0xFF);
   }
 
 }

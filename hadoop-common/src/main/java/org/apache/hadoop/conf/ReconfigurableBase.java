@@ -1,10 +1,10 @@
 package org.apache.hadoop.conf;
 
+import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +21,9 @@ import java.util.Optional;
  * properties and getReconfigurableProperties to get all properties that
  * can be changed at run time.
  */
-public abstract class ReconfigurableBase 
-  extends Configured implements Reconfigurable {
-  
+public abstract class ReconfigurableBase
+    extends Configured implements Reconfigurable {
+
   private static final Logger LOG =
       LoggerFactory.getLogger(ReconfigurableBase.class);
   // Use for testing purpose.
@@ -201,10 +201,10 @@ public abstract class ReconfigurableBase
    */
   @Override
   public final void reconfigureProperty(String property, String newVal)
-    throws ReconfigurationException {
+      throws ReconfigurationException {
     if (isPropertyReconfigurable(property)) {
       LOG.info("changing property " + property + " to " + newVal);
-      synchronized(getConf()) {
+      synchronized (getConf()) {
         getConf().get(property);
         String effectiveValue = reconfigurePropertyImpl(property, newVal);
         if (newVal != null) {
@@ -215,7 +215,7 @@ public abstract class ReconfigurableBase
       }
     } else {
       throw new ReconfigurationException(property, newVal,
-                                             getConf().get(property));
+          getConf().get(property));
     }
   }
 
@@ -224,7 +224,7 @@ public abstract class ReconfigurableBase
    *
    * Subclasses must override this.
    */
-  @Override 
+  @Override
   public abstract Collection<String> getReconfigurableProperties();
 
 

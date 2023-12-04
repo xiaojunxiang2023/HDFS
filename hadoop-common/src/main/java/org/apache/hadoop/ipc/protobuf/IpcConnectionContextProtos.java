@@ -1,7 +1,9 @@
 package org.apache.hadoop.ipc.protobuf;
 
 public final class IpcConnectionContextProtos {
-  private IpcConnectionContextProtos() {}
+  private IpcConnectionContextProtos() {
+  }
+
   public static void registerAllExtensions(
       org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite registry) {
   }
@@ -11,6 +13,7 @@ public final class IpcConnectionContextProtos {
     registerAllExtensions(
         (org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite) registry);
   }
+
   public interface UserInformationProtoOrBuilder extends
       // @@protoc_insertion_point(interface_extends:hadoop.common.UserInformationProto)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
@@ -19,30 +22,35 @@ public final class IpcConnectionContextProtos {
      * <code>optional string effectiveUser = 1;</code>
      */
     boolean hasEffectiveUser();
+
     /**
      * <code>optional string effectiveUser = 1;</code>
      */
     java.lang.String getEffectiveUser();
+
     /**
      * <code>optional string effectiveUser = 1;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getEffectiveUserBytes();
+    getEffectiveUserBytes();
 
     /**
      * <code>optional string realUser = 2;</code>
      */
     boolean hasRealUser();
+
     /**
      * <code>optional string realUser = 2;</code>
      */
     java.lang.String getRealUser();
+
     /**
      * <code>optional string realUser = 2;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getRealUserBytes();
+    getRealUserBytes();
   }
+
   /**
    * <pre>
    **
@@ -51,15 +59,17 @@ public final class IpcConnectionContextProtos {
    *
    * Protobuf type {@code hadoop.common.UserInformationProto}
    */
-  public  static final class UserInformationProto extends
+  public static final class UserInformationProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.UserInformationProto)
       UserInformationProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use UserInformationProto.newBuilder() to construct.
     private UserInformationProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private UserInformationProto() {
       effectiveUser_ = "";
       realUser_ = "";
@@ -70,6 +80,7 @@ public final class IpcConnectionContextProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private UserInformationProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -120,14 +131,15 @@ public final class IpcConnectionContextProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_UserInformationProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_UserInformationProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.class, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.Builder.class);
@@ -136,12 +148,14 @@ public final class IpcConnectionContextProtos {
     private int bitField0_;
     public static final int EFFECTIVEUSER_FIELD_NUMBER = 1;
     private volatile java.lang.Object effectiveUser_;
+
     /**
      * <code>optional string effectiveUser = 1;</code>
      */
     public boolean hasEffectiveUser() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional string effectiveUser = 1;</code>
      */
@@ -150,7 +164,7 @@ public final class IpcConnectionContextProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -159,14 +173,15 @@ public final class IpcConnectionContextProtos {
         return s;
       }
     }
+
     /**
      * <code>optional string effectiveUser = 1;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getEffectiveUserBytes() {
+    getEffectiveUserBytes() {
       java.lang.Object ref = effectiveUser_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         effectiveUser_ = b;
@@ -178,12 +193,14 @@ public final class IpcConnectionContextProtos {
 
     public static final int REALUSER_FIELD_NUMBER = 2;
     private volatile java.lang.Object realUser_;
+
     /**
      * <code>optional string realUser = 2;</code>
      */
     public boolean hasRealUser() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>optional string realUser = 2;</code>
      */
@@ -192,7 +209,7 @@ public final class IpcConnectionContextProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -201,14 +218,15 @@ public final class IpcConnectionContextProtos {
         return s;
       }
     }
+
     /**
      * <code>optional string realUser = 2;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getRealUserBytes() {
+    getRealUserBytes() {
       java.lang.Object ref = realUser_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         realUser_ = b;
@@ -219,6 +237,7 @@ public final class IpcConnectionContextProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -231,7 +250,7 @@ public final class IpcConnectionContextProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.writeString(output, 1, effectiveUser_);
       }
@@ -261,7 +280,7 @@ public final class IpcConnectionContextProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto)) {
         return super.equals(obj);
@@ -307,38 +326,45 @@ public final class IpcConnectionContextProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -346,11 +372,13 @@ public final class IpcConnectionContextProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -358,12 +386,14 @@ public final class IpcConnectionContextProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -373,13 +403,18 @@ public final class IpcConnectionContextProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -392,6 +427,7 @@ public final class IpcConnectionContextProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -405,13 +441,13 @@ public final class IpcConnectionContextProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.UserInformationProto)
         org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_UserInformationProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_UserInformationProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.class, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.Builder.class);
@@ -427,11 +463,13 @@ public final class IpcConnectionContextProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -444,7 +482,7 @@ public final class IpcConnectionContextProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_UserInformationProto_descriptor;
       }
 
@@ -484,38 +522,44 @@ public final class IpcConnectionContextProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -523,7 +567,8 @@ public final class IpcConnectionContextProtos {
       }
 
       public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto other) {
-        if (other == org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.getDefaultInstance())
+          return this;
         if (other.hasEffectiveUser()) {
           bitField0_ |= 0x00000001;
           effectiveUser_ = other.effectiveUser_;
@@ -562,15 +607,18 @@ public final class IpcConnectionContextProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
       private java.lang.Object effectiveUser_ = "";
+
       /**
        * <code>optional string effectiveUser = 1;</code>
        */
       public boolean hasEffectiveUser() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional string effectiveUser = 1;</code>
        */
@@ -588,14 +636,15 @@ public final class IpcConnectionContextProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string effectiveUser = 1;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getEffectiveUserBytes() {
+      getEffectiveUserBytes() {
         java.lang.Object ref = effectiveUser_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           effectiveUser_ = b;
@@ -604,19 +653,21 @@ public final class IpcConnectionContextProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string effectiveUser = 1;</code>
        */
       public Builder setEffectiveUser(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
         effectiveUser_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string effectiveUser = 1;</code>
        */
@@ -626,27 +677,30 @@ public final class IpcConnectionContextProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string effectiveUser = 1;</code>
        */
       public Builder setEffectiveUserBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
         effectiveUser_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object realUser_ = "";
+
       /**
        * <code>optional string realUser = 2;</code>
        */
       public boolean hasRealUser() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional string realUser = 2;</code>
        */
@@ -664,14 +718,15 @@ public final class IpcConnectionContextProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string realUser = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getRealUserBytes() {
+      getRealUserBytes() {
         java.lang.Object ref = realUser_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           realUser_ = b;
@@ -680,19 +735,21 @@ public final class IpcConnectionContextProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string realUser = 2;</code>
        */
       public Builder setRealUser(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         realUser_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string realUser = 2;</code>
        */
@@ -702,19 +759,21 @@ public final class IpcConnectionContextProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string realUser = 2;</code>
        */
       public Builder setRealUserBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         realUser_ = value;
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -733,6 +792,7 @@ public final class IpcConnectionContextProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.UserInformationProto)
     private static final org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto();
     }
@@ -741,7 +801,8 @@ public final class IpcConnectionContextProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<UserInformationProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<UserInformationProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<UserInformationProto>() {
       @java.lang.Override
       public UserInformationProto parsePartialFrom(
@@ -781,6 +842,7 @@ public final class IpcConnectionContextProtos {
      * <code>optional .hadoop.common.UserInformationProto userInfo = 2;</code>
      */
     boolean hasUserInfo();
+
     /**
      * <pre>
      * UserInfo beyond what is determined as part of security handshake 
@@ -790,6 +852,7 @@ public final class IpcConnectionContextProtos {
      * <code>optional .hadoop.common.UserInformationProto userInfo = 2;</code>
      */
     org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto getUserInfo();
+
     /**
      * <pre>
      * UserInfo beyond what is determined as part of security handshake 
@@ -809,6 +872,7 @@ public final class IpcConnectionContextProtos {
      * <code>optional string protocol = 3;</code>
      */
     boolean hasProtocol();
+
     /**
      * <pre>
      * Protocol name for next rpc layer.
@@ -818,6 +882,7 @@ public final class IpcConnectionContextProtos {
      * <code>optional string protocol = 3;</code>
      */
     java.lang.String getProtocol();
+
     /**
      * <pre>
      * Protocol name for next rpc layer.
@@ -827,8 +892,9 @@ public final class IpcConnectionContextProtos {
      * <code>optional string protocol = 3;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getProtocolBytes();
+    getProtocolBytes();
   }
+
   /**
    * <pre>
    **
@@ -838,15 +904,17 @@ public final class IpcConnectionContextProtos {
    *
    * Protobuf type {@code hadoop.common.IpcConnectionContextProto}
    */
-  public  static final class IpcConnectionContextProto extends
+  public static final class IpcConnectionContextProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.IpcConnectionContextProto)
       IpcConnectionContextProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use IpcConnectionContextProto.newBuilder() to construct.
     private IpcConnectionContextProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private IpcConnectionContextProto() {
       protocol_ = "";
     }
@@ -856,6 +924,7 @@ public final class IpcConnectionContextProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private IpcConnectionContextProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -913,14 +982,15 @@ public final class IpcConnectionContextProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_IpcConnectionContextProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_IpcConnectionContextProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto.class, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto.Builder.class);
@@ -929,6 +999,7 @@ public final class IpcConnectionContextProtos {
     private int bitField0_;
     public static final int USERINFO_FIELD_NUMBER = 2;
     private org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto userInfo_;
+
     /**
      * <pre>
      * UserInfo beyond what is determined as part of security handshake 
@@ -940,6 +1011,7 @@ public final class IpcConnectionContextProtos {
     public boolean hasUserInfo() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <pre>
      * UserInfo beyond what is determined as part of security handshake 
@@ -951,6 +1023,7 @@ public final class IpcConnectionContextProtos {
     public org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto getUserInfo() {
       return userInfo_ == null ? org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.getDefaultInstance() : userInfo_;
     }
+
     /**
      * <pre>
      * UserInfo beyond what is determined as part of security handshake 
@@ -965,6 +1038,7 @@ public final class IpcConnectionContextProtos {
 
     public static final int PROTOCOL_FIELD_NUMBER = 3;
     private volatile java.lang.Object protocol_;
+
     /**
      * <pre>
      * Protocol name for next rpc layer.
@@ -976,6 +1050,7 @@ public final class IpcConnectionContextProtos {
     public boolean hasProtocol() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * Protocol name for next rpc layer.
@@ -989,7 +1064,7 @@ public final class IpcConnectionContextProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -998,6 +1073,7 @@ public final class IpcConnectionContextProtos {
         return s;
       }
     }
+
     /**
      * <pre>
      * Protocol name for next rpc layer.
@@ -1007,10 +1083,10 @@ public final class IpcConnectionContextProtos {
      * <code>optional string protocol = 3;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getProtocolBytes() {
+    getProtocolBytes() {
       java.lang.Object ref = protocol_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         protocol_ = b;
@@ -1021,6 +1097,7 @@ public final class IpcConnectionContextProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1033,7 +1110,7 @@ public final class IpcConnectionContextProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeMessage(2, getUserInfo());
       }
@@ -1051,7 +1128,7 @@ public final class IpcConnectionContextProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(2, getUserInfo());
+            .computeMessageSize(2, getUserInfo());
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(3, protocol_);
@@ -1064,7 +1141,7 @@ public final class IpcConnectionContextProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto)) {
         return super.equals(obj);
@@ -1110,38 +1187,45 @@ public final class IpcConnectionContextProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1149,11 +1233,13 @@ public final class IpcConnectionContextProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1161,12 +1247,14 @@ public final class IpcConnectionContextProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1176,13 +1264,18 @@ public final class IpcConnectionContextProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -1195,6 +1288,7 @@ public final class IpcConnectionContextProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -1209,13 +1303,13 @@ public final class IpcConnectionContextProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.IpcConnectionContextProto)
         org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_IpcConnectionContextProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_IpcConnectionContextProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto.class, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto.Builder.class);
@@ -1231,12 +1325,14 @@ public final class IpcConnectionContextProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
           getUserInfoFieldBuilder();
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -1253,7 +1349,7 @@ public final class IpcConnectionContextProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.internal_static_hadoop_common_IpcConnectionContextProto_descriptor;
       }
 
@@ -1297,38 +1393,44 @@ public final class IpcConnectionContextProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1336,7 +1438,8 @@ public final class IpcConnectionContextProtos {
       }
 
       public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto other) {
-        if (other == org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto.getDefaultInstance())
+          return this;
         if (other.hasUserInfo()) {
           mergeUserInfo(other.getUserInfo());
         }
@@ -1373,11 +1476,13 @@ public final class IpcConnectionContextProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
       private org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto userInfo_;
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
           org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.Builder, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProtoOrBuilder> userInfoBuilder_;
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1389,6 +1494,7 @@ public final class IpcConnectionContextProtos {
       public boolean hasUserInfo() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1404,6 +1510,7 @@ public final class IpcConnectionContextProtos {
           return userInfoBuilder_.getMessage();
         }
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1425,6 +1532,7 @@ public final class IpcConnectionContextProtos {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1444,6 +1552,7 @@ public final class IpcConnectionContextProtos {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1458,7 +1567,7 @@ public final class IpcConnectionContextProtos {
               userInfo_ != null &&
               userInfo_ != org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.getDefaultInstance()) {
             userInfo_ =
-              org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.newBuilder(userInfo_).mergeFrom(value).buildPartial();
+                org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.newBuilder(userInfo_).mergeFrom(value).buildPartial();
           } else {
             userInfo_ = value;
           }
@@ -1469,6 +1578,7 @@ public final class IpcConnectionContextProtos {
         bitField0_ |= 0x00000001;
         return this;
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1487,6 +1597,7 @@ public final class IpcConnectionContextProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1500,6 +1611,7 @@ public final class IpcConnectionContextProtos {
         onChanged();
         return getUserInfoFieldBuilder().getBuilder();
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1516,6 +1628,7 @@ public final class IpcConnectionContextProtos {
               org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.getDefaultInstance() : userInfo_;
         }
       }
+
       /**
        * <pre>
        * UserInfo beyond what is determined as part of security handshake 
@@ -1525,20 +1638,21 @@ public final class IpcConnectionContextProtos {
        * <code>optional .hadoop.common.UserInformationProto userInfo = 2;</code>
        */
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-          org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.Builder, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProtoOrBuilder> 
-          getUserInfoFieldBuilder() {
+          org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.Builder, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProtoOrBuilder>
+      getUserInfoFieldBuilder() {
         if (userInfoBuilder_ == null) {
           userInfoBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
               org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto.Builder, org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProtoOrBuilder>(
-                  getUserInfo(),
-                  getParentForChildren(),
-                  isClean());
+              getUserInfo(),
+              getParentForChildren(),
+              isClean());
           userInfo_ = null;
         }
         return userInfoBuilder_;
       }
 
       private java.lang.Object protocol_ = "";
+
       /**
        * <pre>
        * Protocol name for next rpc layer.
@@ -1550,6 +1664,7 @@ public final class IpcConnectionContextProtos {
       public boolean hasProtocol() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * Protocol name for next rpc layer.
@@ -1572,6 +1687,7 @@ public final class IpcConnectionContextProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <pre>
        * Protocol name for next rpc layer.
@@ -1581,10 +1697,10 @@ public final class IpcConnectionContextProtos {
        * <code>optional string protocol = 3;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getProtocolBytes() {
+      getProtocolBytes() {
         java.lang.Object ref = protocol_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           protocol_ = b;
@@ -1593,6 +1709,7 @@ public final class IpcConnectionContextProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <pre>
        * Protocol name for next rpc layer.
@@ -1604,13 +1721,14 @@ public final class IpcConnectionContextProtos {
       public Builder setProtocol(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         protocol_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Protocol name for next rpc layer.
@@ -1625,6 +1743,7 @@ public final class IpcConnectionContextProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Protocol name for next rpc layer.
@@ -1636,13 +1755,14 @@ public final class IpcConnectionContextProtos {
       public Builder setProtocolBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         protocol_ = value;
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -1661,6 +1781,7 @@ public final class IpcConnectionContextProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.IpcConnectionContextProto)
     private static final org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto();
     }
@@ -1669,7 +1790,8 @@ public final class IpcConnectionContextProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<IpcConnectionContextProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<IpcConnectionContextProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<IpcConnectionContextProto>() {
       @java.lang.Override
       public IpcConnectionContextProto parsePartialFrom(
@@ -1697,34 +1819,36 @@ public final class IpcConnectionContextProtos {
   }
 
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_UserInformationProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_UserInformationProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_UserInformationProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_IpcConnectionContextProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_IpcConnectionContextProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_IpcConnectionContextProto_fieldAccessorTable;
 
   public static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
-  private static  org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
+
+  private static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
       descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n\032IpcConnectionContext.proto\022\rhadoop.com" +
-      "mon\"?\n\024UserInformationProto\022\025\n\reffective" +
-      "User\030\001 \001(\t\022\020\n\010realUser\030\002 \001(\t\"d\n\031IpcConne" +
-      "ctionContextProto\0225\n\010userInfo\030\002 \001(\0132#.ha" +
-      "doop.common.UserInformationProto\022\020\n\010prot" +
-      "ocol\030\003 \001(\tB?\n\036org.apache.hadoop.ipc.prot" +
-      "obufB\032IpcConnectionContextProtos\240\001\001"
+        "\n\032IpcConnectionContext.proto\022\rhadoop.com" +
+            "mon\"?\n\024UserInformationProto\022\025\n\reffective" +
+            "User\030\001 \001(\t\022\020\n\010realUser\030\002 \001(\t\"d\n\031IpcConne" +
+            "ctionContextProto\0225\n\010userInfo\030\002 \001(\0132#.ha" +
+            "doop.common.UserInformationProto\022\020\n\010prot" +
+            "ocol\030\003 \001(\tB?\n\036org.apache.hadoop.ipc.prot" +
+            "obufB\032IpcConnectionContextProtos\240\001\001"
     };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
           public org.apache.hadoop.thirdparty.protobuf.ExtensionRegistry assignDescriptors(
               org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor root) {
             descriptor = root;
@@ -1732,21 +1856,21 @@ public final class IpcConnectionContextProtos {
           }
         };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        .internalBuildGeneratedFileFrom(descriptorData,
+            new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[]{
+            }, assigner);
     internal_static_hadoop_common_UserInformationProto_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+        getDescriptor().getMessageTypes().get(0);
     internal_static_hadoop_common_UserInformationProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_UserInformationProto_descriptor,
-        new java.lang.String[] { "EffectiveUser", "RealUser", });
+        new java.lang.String[]{"EffectiveUser", "RealUser",});
     internal_static_hadoop_common_IpcConnectionContextProto_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+        getDescriptor().getMessageTypes().get(1);
     internal_static_hadoop_common_IpcConnectionContextProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_IpcConnectionContextProto_descriptor,
-        new java.lang.String[] { "UserInfo", "Protocol", });
+        new java.lang.String[]{"UserInfo", "Protocol",});
   }
 
   // @@protoc_insertion_point(outer_class_scope)

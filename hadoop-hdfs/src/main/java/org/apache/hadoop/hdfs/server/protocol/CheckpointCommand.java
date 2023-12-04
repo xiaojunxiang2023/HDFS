@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.protocol;
+
 import org.apache.hadoop.hdfs.server.namenode.CheckpointSignature;
 
 /**
@@ -42,7 +43,7 @@ public class CheckpointCommand extends NamenodeCommand {
   /**
    * Indicates whether the new checkpoint image needs to be transfered 
    * back to the name-node after the checkpoint is done.
-   * 
+   *
    * @return true if the checkpoint should be returned back.
    */
   public boolean needToReturnImage() {

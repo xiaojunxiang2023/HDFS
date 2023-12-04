@@ -30,7 +30,7 @@ public class BlockReaderIoProvider {
   private boolean isWarningLogged = false;
 
   public BlockReaderIoProvider(@Nullable ShortCircuitConf conf,
-      BlockReaderLocalMetrics metrics, Timer timer) {
+                               BlockReaderLocalMetrics metrics, Timer timer) {
     if (conf != null) {
       isEnabled = conf.isScrMetricsEnabled();
       sampleRangeMax = (Integer.MAX_VALUE / 100) *
@@ -46,7 +46,7 @@ public class BlockReaderIoProvider {
   }
 
   public int read(FileChannel dataIn, ByteBuffer dst, long position)
-      throws IOException{
+      throws IOException {
     final int nRead;
     if (isEnabled && (ThreadLocalRandom.current().nextInt() < sampleRangeMax)) {
       long begin = timer.monotonicNow();
@@ -63,8 +63,8 @@ public class BlockReaderIoProvider {
     metrics.addShortCircuitReadLatency(latency);
     if (latency > SLOW_READ_WARNING_THRESHOLD_MS && !isWarningLogged) {
       LOG.warn(String.format("The Short Circuit Local Read latency, %d ms, " +
-          "is higher then the threshold (%d ms). Suppressing further warnings" +
-          " for this BlockReaderLocal.",
+              "is higher then the threshold (%d ms). Suppressing further warnings" +
+              " for this BlockReaderLocal.",
           latency, SLOW_READ_WARNING_THRESHOLD_MS));
       isWarningLogged = true;
     }

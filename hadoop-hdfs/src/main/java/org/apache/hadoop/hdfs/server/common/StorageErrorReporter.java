@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.common;
+
 import org.apache.hadoop.hdfs.server.namenode.JournalManager;
 
 import java.io.File;
@@ -10,10 +11,10 @@ import java.io.File;
  */
 public interface StorageErrorReporter {
 
-    /**
-     * Indicate that some error occurred on the given file.
-     *
-     * @param f the file which had an error.
-     */
-    public void reportErrorOnFile(File f);
+  /**
+   * Indicate that some error occurred on the given file.
+   *
+   * @param f the file which had an error.
+   */
+  public void reportErrorOnFile(File f);
 }

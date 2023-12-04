@@ -15,11 +15,8 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */package org.apache.hadoop.hdfs.web.oauth2;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+ */
+package org.apache.hadoop.hdfs.web.oauth2;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -31,14 +28,13 @@ import org.apache.hadoop.util.JsonSerialization;
 import org.apache.hadoop.util.Timer;
 import org.apache.http.HttpStatus;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.OAUTH_CLIENT_ID_KEY;
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.OAUTH_REFRESH_URL_KEY;
-import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.ACCESS_TOKEN;
-import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.CLIENT_ID;
-import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.EXPIRES_IN;
-import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.GRANT_TYPE;
-import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.REFRESH_TOKEN;
-import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.URLENCODED;
+import static org.apache.hadoop.hdfs.web.oauth2.OAuth2Constants.*;
 import static org.apache.hadoop.hdfs.web.oauth2.Utils.notNull;
 
 /**
@@ -89,7 +85,7 @@ public class ConfRefreshTokenBasedAccessTokenProvider
 
   @Override
   public synchronized String getAccessToken() throws IOException {
-    if(accessTokenTimer.shouldRefresh()) {
+    if (accessTokenTimer.shouldRefresh()) {
       refresh();
     }
 
@@ -99,7 +95,7 @@ public class ConfRefreshTokenBasedAccessTokenProvider
   void refresh() throws IOException {
     OkHttpClient client =
         new OkHttpClient.Builder().connectTimeout(URLConnectionFactory.DEFAULT_SOCKET_TIMEOUT,
-                TimeUnit.MILLISECONDS)
+            TimeUnit.MILLISECONDS)
             .readTimeout(URLConnectionFactory.DEFAULT_SOCKET_TIMEOUT, TimeUnit.MILLISECONDS)
             .build();
 

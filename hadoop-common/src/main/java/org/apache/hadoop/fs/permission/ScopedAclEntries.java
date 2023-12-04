@@ -2,8 +2,6 @@ package org.apache.hadoop.fs.permission;
 
 import java.util.Collections;
 import java.util.List;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclEntryScope;
 
 /**
  * Groups a list of ACL entries into separate lists for access entries vs.
@@ -27,7 +25,7 @@ public final class ScopedAclEntries {
     int pivot = calculatePivotOnDefaultEntries(aclEntries);
     if (pivot != PIVOT_NOT_FOUND) {
       accessEntries = pivot != 0 ? aclEntries.subList(0, pivot) :
-        Collections.<AclEntry>emptyList();
+          Collections.<AclEntry>emptyList();
       defaultEntries = aclEntries.subList(pivot, aclEntries.size());
     } else {
       accessEntries = aclEntries;

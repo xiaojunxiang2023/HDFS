@@ -1,13 +1,13 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
+import org.apache.hadoop.hdfs.util.Canceler;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
-import org.apache.hadoop.hdfs.util.Canceler;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Context for an ongoing SaveNamespace operation. This class
@@ -18,8 +18,8 @@ public class SaveNamespaceContext {
   private final FSNamesystem sourceNamesystem;
   private final long txid;
   private final List<StorageDirectory> errorSDs =
-    Collections.synchronizedList(new ArrayList<StorageDirectory>());
-  
+      Collections.synchronizedList(new ArrayList<StorageDirectory>());
+
   private final Canceler canceller;
   private final CountDownLatch completionLatch = new CountDownLatch(1);
 

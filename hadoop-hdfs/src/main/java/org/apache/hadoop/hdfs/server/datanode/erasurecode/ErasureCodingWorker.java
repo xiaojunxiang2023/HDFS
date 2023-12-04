@@ -1,22 +1,17 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.server.datanode.DataNode;
 import org.apache.hadoop.hdfs.server.protocol.BlockECReconstructionCommand.BlockECReconstructionInfo;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.BlockReadStats;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 
 import java.util.Collection;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -105,10 +100,10 @@ public final class ErasureCodingWorker {
       try {
         StripedReconstructionInfo stripedReconInfo =
             new StripedReconstructionInfo(
-            reconInfo.getExtendedBlock(), reconInfo.getErasureCodingPolicy(),
-            reconInfo.getLiveBlockIndices(), reconInfo.getSourceDnInfos(),
-            reconInfo.getTargetDnInfos(), reconInfo.getTargetStorageTypes(),
-            reconInfo.getTargetStorageIDs());
+                reconInfo.getExtendedBlock(), reconInfo.getErasureCodingPolicy(),
+                reconInfo.getLiveBlockIndices(), reconInfo.getSourceDnInfos(),
+                reconInfo.getTargetDnInfos(), reconInfo.getTargetStorageTypes(),
+                reconInfo.getTargetStorageIDs());
         // It may throw IllegalArgumentException from task#stripedReader
         // constructor.
         final StripedBlockReconstructor task =
@@ -120,7 +115,7 @@ public final class ErasureCodingWorker {
           //   1) NN will not send more tasks than what DN can execute and
           //   2) DN will not throw away reconstruction tasks, and instead keeps
           //      an unbounded number of tasks in the executor's task queue.
-          int xmitsSubmitted = Math.max((int)(task.getXmits() * xmitWeight), 1);
+          int xmitsSubmitted = Math.max((int) (task.getXmits() * xmitWeight), 1);
           getDatanode().incrementXmitsInProcess(xmitsSubmitted);
         } else {
           LOG.warn("No missing internal block. Skip reconstruction for task:{}",

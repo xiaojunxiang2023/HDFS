@@ -1,50 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicyInfo;
-import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
-import org.apache.hadoop.io.compress.CompressionOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CacheDirectiveInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CachePoolInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto;
+import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenSecretManager;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockIdManager;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection;
-import org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary;
-import org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection;
-import org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection;
-import org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection;
-import org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection;
+import org.apache.hadoop.hdfs.server.namenode.FsImageProto.*;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.FSImageFormatPBSnapshot;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.Phase;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress;
@@ -54,12 +20,26 @@ import org.apache.hadoop.hdfs.server.namenode.startupprogress.StepType;
 import org.apache.hadoop.hdfs.util.MD5FileUtils;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.util.LimitInputStream;
-import org.apache.hadoop.util.Time;
-
+import org.apache.hadoop.io.compress.CompressionOutputStream;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.protobuf.CodedOutputStream;
+import org.apache.hadoop.util.LimitInputStream;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * Utility class to read / write fsimage in protobuf format.
@@ -86,7 +66,9 @@ public final class FSImageFormatProtobuf {
   public static final class SaverContext {
     public static class DeduplicationMap<E> {
       private final Map<E, Integer> map = Maps.newHashMap();
-      private DeduplicationMap() {}
+
+      private DeduplicationMap() {
+      }
 
       static <T> DeduplicationMap<T> newMap() {
         return new DeduplicationMap<T>();
@@ -113,6 +95,7 @@ public final class FSImageFormatProtobuf {
         return map.entrySet();
       }
     }
+
     private final ArrayList<INodeReference> refList = Lists.newArrayList();
 
     public ArrayList<INodeReference> getRefList() {
@@ -139,7 +122,7 @@ public final class FSImageFormatProtobuf {
     private File filename;
 
     Loader(Configuration conf, FSNamesystem fsn,
-        boolean requireSameLayoutVersion) {
+           boolean requireSameLayoutVersion) {
       this.conf = conf;
       this.fsn = fsn;
       this.ctx = new LoaderContext();
@@ -253,17 +236,17 @@ public final class FSImageFormatProtobuf {
       FileInputStream fin = new FileInputStream(filename);
       try {
 
-          FileChannel channel = fin.getChannel();
-          channel.position(section.getOffset());
-          InputStream in = new BufferedInputStream(new LimitInputStream(fin,
-                  section.getLength()));
+        FileChannel channel = fin.getChannel();
+        channel.position(section.getOffset());
+        InputStream in = new BufferedInputStream(new LimitInputStream(fin,
+            section.getLength()));
 
-          in = FSImageUtil.wrapInputStreamForCompression(conf,
-                  compressionCodec, in);
-          return in;
+        in = FSImageUtil.wrapInputStreamForCompression(conf,
+            compressionCodec, in);
+        return in;
       } catch (IOException e) {
-          fin.close();
-          throw e;
+        fin.close();
+        throw e;
       }
     }
 
@@ -324,7 +307,7 @@ public final class FSImageFormatProtobuf {
           DFSConfigKeys.DFS_IMAGE_PARALLEL_THREADS_DEFAULT);
       if (threads < 1) {
         LOG.warn("Parallel is enabled and {} is set to {}. Setting to the " +
-            "default value {}", DFSConfigKeys.DFS_IMAGE_PARALLEL_THREADS_KEY,
+                "default value {}", DFSConfigKeys.DFS_IMAGE_PARALLEL_THREADS_KEY,
             threads, DFSConfigKeys.DFS_IMAGE_PARALLEL_THREADS_DEFAULT);
         threads = DFSConfigKeys.DFS_IMAGE_PARALLEL_THREADS_DEFAULT;
       }
@@ -404,72 +387,72 @@ public final class FSImageFormatProtobuf {
 
         ArrayList<FileSummary.Section> stageSubSections;
         switch (sectionName) {
-        case NS_INFO:
-          loadNameSystemSection(in);
-          break;
-        case STRING_TABLE:
-          loadStringTableSection(in);
-          break;
-        case INODE: {
-          currentStep = new Step(StepType.INODES);
-          prog.beginStep(Phase.LOADING_FSIMAGE, currentStep);
-          stageSubSections = getSubSectionsOfName(
-              subSections, SectionName.INODE_SUB);
-          if (loadInParallel && (stageSubSections.size() > 0)) {
-            inodeLoader.loadINodeSectionInParallel(executorService,
-                stageSubSections, summary.getCodec(), prog, currentStep);
-          } else {
-            inodeLoader.loadINodeSection(in, prog, currentStep);
+          case NS_INFO:
+            loadNameSystemSection(in);
+            break;
+          case STRING_TABLE:
+            loadStringTableSection(in);
+            break;
+          case INODE: {
+            currentStep = new Step(StepType.INODES);
+            prog.beginStep(Phase.LOADING_FSIMAGE, currentStep);
+            stageSubSections = getSubSectionsOfName(
+                subSections, SectionName.INODE_SUB);
+            if (loadInParallel && (stageSubSections.size() > 0)) {
+              inodeLoader.loadINodeSectionInParallel(executorService,
+                  stageSubSections, summary.getCodec(), prog, currentStep);
+            } else {
+              inodeLoader.loadINodeSection(in, prog, currentStep);
+            }
           }
-        }
           break;
-        case INODE_REFERENCE:
-          snapshotLoader.loadINodeReferenceSection(in);
-          break;
-        case INODE_DIR:
-          stageSubSections = getSubSectionsOfName(
-              subSections, SectionName.INODE_DIR_SUB);
-          if (loadInParallel && stageSubSections.size() > 0) {
-            inodeLoader.loadINodeDirectorySectionInParallel(executorService,
-                stageSubSections, summary.getCodec());
-          } else {
-            inodeLoader.loadINodeDirectorySection(in);
+          case INODE_REFERENCE:
+            snapshotLoader.loadINodeReferenceSection(in);
+            break;
+          case INODE_DIR:
+            stageSubSections = getSubSectionsOfName(
+                subSections, SectionName.INODE_DIR_SUB);
+            if (loadInParallel && stageSubSections.size() > 0) {
+              inodeLoader.loadINodeDirectorySectionInParallel(executorService,
+                  stageSubSections, summary.getCodec());
+            } else {
+              inodeLoader.loadINodeDirectorySection(in);
+            }
+            inodeLoader.waitBlocksMapAndNameCacheUpdateFinished();
+            break;
+          case FILES_UNDERCONSTRUCTION:
+            inodeLoader.loadFilesUnderConstructionSection(in);
+            break;
+          case SNAPSHOT:
+            snapshotLoader.loadSnapshotSection(in);
+            break;
+          case SNAPSHOT_DIFF:
+            snapshotLoader.loadSnapshotDiffSection(in);
+            break;
+          case SECRET_MANAGER: {
+            prog.endStep(Phase.LOADING_FSIMAGE, currentStep);
+            Step step = new Step(StepType.DELEGATION_TOKENS);
+            prog.beginStep(Phase.LOADING_FSIMAGE, step);
+            loadSecretManagerSection(in, prog, step);
+            prog.endStep(Phase.LOADING_FSIMAGE, step);
           }
-          inodeLoader.waitBlocksMapAndNameCacheUpdateFinished();
           break;
-        case FILES_UNDERCONSTRUCTION:
-          inodeLoader.loadFilesUnderConstructionSection(in);
+          case CACHE_MANAGER: {
+            Step step = new Step(StepType.CACHE_POOLS);
+            prog.beginStep(Phase.LOADING_FSIMAGE, step);
+            loadCacheManagerSection(in, prog, step);
+            prog.endStep(Phase.LOADING_FSIMAGE, step);
+          }
           break;
-        case SNAPSHOT:
-          snapshotLoader.loadSnapshotSection(in);
-          break;
-        case SNAPSHOT_DIFF:
-          snapshotLoader.loadSnapshotDiffSection(in);
-          break;
-        case SECRET_MANAGER: {
-          prog.endStep(Phase.LOADING_FSIMAGE, currentStep);
-          Step step = new Step(StepType.DELEGATION_TOKENS);
-          prog.beginStep(Phase.LOADING_FSIMAGE, step);
-          loadSecretManagerSection(in, prog, step);
-          prog.endStep(Phase.LOADING_FSIMAGE, step);
-        }
-          break;
-        case CACHE_MANAGER: {
-          Step step = new Step(StepType.CACHE_POOLS);
-          prog.beginStep(Phase.LOADING_FSIMAGE, step);
-          loadCacheManagerSection(in, prog, step);
-          prog.endStep(Phase.LOADING_FSIMAGE, step);
-        }
-          break;
-        case ERASURE_CODING:
-          Step step = new Step(StepType.ERASURE_CODING_POLICIES);
-          prog.beginStep(Phase.LOADING_FSIMAGE, step);
-          loadErasureCodingSection(in);
-          prog.endStep(Phase.LOADING_FSIMAGE, step);
-          break;
-        default:
-          LOG.warn("Unrecognized section {}", n);
-          break;
+          case ERASURE_CODING:
+            Step step = new Step(StepType.ERASURE_CODING_POLICIES);
+            prog.beginStep(Phase.LOADING_FSIMAGE, step);
+            loadErasureCodingSection(in);
+            prog.endStep(Phase.LOADING_FSIMAGE, step);
+            break;
+          default:
+            LOG.warn("Unrecognized section {}", n);
+            break;
         }
       }
       if (executorService != null) {
@@ -509,7 +492,7 @@ public final class FSImageFormatProtobuf {
     }
 
     private void loadSecretManagerSection(InputStream in, StartupProgress prog,
-        Step currentStep) throws IOException {
+                                          Step currentStep) throws IOException {
       SecretManagerSection s = SecretManagerSection.parseDelimitedFrom(in);
       int numKeys = s.getNumKeys(), numTokens = s.getNumTokens();
       ArrayList<SecretManagerSection.DelegationKey> keys = Lists
@@ -530,7 +513,7 @@ public final class FSImageFormatProtobuf {
     }
 
     private void loadCacheManagerSection(InputStream in, StartupProgress prog,
-        Step currentStep) throws IOException {
+                                         Step currentStep) throws IOException {
       CacheManagerSection s = CacheManagerSection.parseDelimitedFrom(in);
       int numPools = s.getNumPools();
       ArrayList<CachePoolInfoProto> pools = Lists
@@ -643,7 +626,7 @@ public final class FSImageFormatProtobuf {
      * @throws IOException
      */
     public void commitSectionAndSubSection(FileSummary.Builder summary,
-        SectionName name, SectionName subSectionName) throws IOException {
+                                           SectionName name, SectionName subSectionName) throws IOException {
       commitSubSection(summary, subSectionName);
       commitSection(summary, name);
     }
@@ -734,7 +717,7 @@ public final class FSImageFormatProtobuf {
       if (parallelEnabled) {
         if (targetSections <= 0) {
           LOG.warn("{} is set to {}. It must be greater than zero. Setting to" +
-              " default of {}",
+                  " default of {}",
               DFSConfigKeys.DFS_IMAGE_PARALLEL_TARGET_SECTIONS_KEY,
               targetSections,
               DFSConfigKeys.DFS_IMAGE_PARALLEL_TARGET_SECTIONS_DEFAULT);
@@ -806,7 +789,7 @@ public final class FSImageFormatProtobuf {
      * @throws IOException on fatal error.
      */
     private long saveInternal(FileOutputStream fout,
-        FSImageCompression compression, String filePath) throws IOException {
+                              FSImageCompression compression, String filePath) throws IOException {
       StartupProgress prog = NameNode.getStartupProgress();
       MessageDigest digester = MD5Hash.getDigester();
       int layoutVersion =

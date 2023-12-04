@@ -1,7 +1,7 @@
 package org.apache.hadoop.io;
 
-import java.io.DataOutput;
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 /** A base class for Writables that provides version checking.
@@ -15,7 +15,7 @@ public abstract class VersionedWritable implements Writable {
 
   /** Return the version number of the current implementation. */
   public abstract byte getVersion();
-    
+
   // javadoc from Writable
   @Override
   public void write(DataOutput out) throws IOException {
@@ -30,5 +30,5 @@ public abstract class VersionedWritable implements Writable {
       throw new VersionMismatchException(getVersion(), version);
   }
 
-    
+
 }

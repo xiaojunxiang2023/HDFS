@@ -17,38 +17,20 @@
 
 package org.apache.hadoop.fs.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.hadoop.fs.BBPartHandle;
-import org.apache.hadoop.fs.BBUploadHandle;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FSDataOutputStreamBuilder;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.InternalOperations;
-import org.apache.hadoop.fs.Options;
-import org.apache.hadoop.fs.PartHandle;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathHandle;
-import org.apache.hadoop.fs.UploadHandle;
-import org.apache.hadoop.fs.permission.FsPermission;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static org.apache.hadoop.fs.Path.mergePaths;
 import static org.apache.hadoop.io.IOUtils.cleanupWithLogger;
@@ -106,9 +88,9 @@ public class FileSystemMultipartUploader extends AbstractMultipartUploader {
 
   @Override
   public CompletableFuture<PartHandle> putPart(UploadHandle uploadId,
-      int partNumber, Path filePath,
-      InputStream inputStream,
-      long lengthInBytes)
+                                               int partNumber, Path filePath,
+                                               InputStream inputStream,
+                                               long lengthInBytes)
       throws IOException {
     checkPutArguments(filePath, inputStream, partNumber, uploadId,
         lengthInBytes);
@@ -117,10 +99,10 @@ public class FileSystemMultipartUploader extends AbstractMultipartUploader {
   }
 
   private PartHandle innerPutPart(Path filePath,
-      InputStream inputStream,
-      int partNumber,
-      UploadHandle uploadId,
-      long lengthInBytes)
+                                  InputStream inputStream,
+                                  int partNumber,
+                                  UploadHandle uploadId,
+                                  long lengthInBytes)
       throws IOException {
     byte[] uploadIdByteArray = uploadId.toByteArray();
     checkUploadId(uploadIdByteArray);
@@ -239,7 +221,7 @@ public class FileSystemMultipartUploader extends AbstractMultipartUploader {
 
   @Override
   public CompletableFuture<Void> abort(UploadHandle uploadId,
-      Path filePath)
+                                       Path filePath)
       throws IOException {
     checkPath(filePath);
     byte[] uploadIdByteArray = uploadId.toByteArray();

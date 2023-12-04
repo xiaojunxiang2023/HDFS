@@ -1,28 +1,23 @@
 package org.apache.hadoop.hdfs.qjournal.client;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.SegmentStateProto;
+import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListenableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Wrapper around a set of Loggers, taking care of fanning out
@@ -33,14 +28,14 @@ class AsyncLoggerSet {
   static final Logger LOG = LoggerFactory.getLogger(AsyncLoggerSet.class);
 
   private final List<AsyncLogger> loggers;
-  
+
   private static final long INVALID_EPOCH = -1;
   private long myEpoch = INVALID_EPOCH;
-  
+
   public AsyncLoggerSet(List<AsyncLogger> loggers) {
     this.loggers = ImmutableList.copyOf(loggers);
   }
-  
+
   void setEpoch(long e) {
     Preconditions.checkState(!isEpochEstablished(),
         "Epoch already established: epoch=%s", myEpoch);
@@ -67,7 +62,7 @@ class AsyncLoggerSet {
   boolean isEpochEstablished() {
     return myEpoch != INVALID_EPOCH;
   }
-  
+
   /**
    * @return the epoch number for this writer. This may only be called after
    * a successful call to {@link #createNewUniqueEpoch(NamespaceInfo)}.
@@ -86,7 +81,7 @@ class AsyncLoggerSet {
       logger.close();
     }
   }
-  
+
   void purgeLogsOlderThan(long minTxIdToKeep) {
     for (AsyncLogger logger : loggers) {
       logger.purgeLogsOlderThan(minTxIdToKeep);
@@ -105,7 +100,7 @@ class AsyncLoggerSet {
    * @throws IOException if the thread is interrupted or times out
    */
   <V> Map<AsyncLogger, V> waitForWriteQuorum(QuorumCall<AsyncLogger, V> q,
-      int timeoutMs, String operationName) throws IOException {
+                                             int timeoutMs, String operationName) throws IOException {
     int majority = getMajoritySize();
     try {
       q.waitFor(
@@ -121,22 +116,22 @@ class AsyncLoggerSet {
       throw new IOException("Timed out waiting " + timeoutMs + "ms for a " +
           "quorum of nodes to respond.");
     }
-    
+
     if (q.countSuccesses() < majority) {
       q.rethrowException("Got too many exceptions to achieve quorum size " +
           getMajorityString());
     }
-    
+
     return q.getResults();
   }
-  
+
   /**
    * @return the number of nodes which are required to obtain a quorum.
    */
   int getMajoritySize() {
     return loggers.size() / 2 + 1;
   }
-  
+
   /**
    * @return a textual description of the majority size (eg "2/3" or "3/5")
    */
@@ -150,7 +145,7 @@ class AsyncLoggerSet {
   int size() {
     return loggers.size();
   }
-  
+
   @Override
   public String toString() {
     return "[" + Joiner.on(", ").join(loggers) + "]";
@@ -181,22 +176,22 @@ class AsyncLoggerSet {
   List<AsyncLogger> getLoggersForTests() {
     return loggers;
   }
-  
+
   ///////////////////////////////////////////////////////////////////////////
   // The rest of this file is simply boilerplate wrappers which fan-out the
   // various IPC calls to the underlying AsyncLoggers and wrap the result
   // in a QuorumCall.
   ///////////////////////////////////////////////////////////////////////////
-  
+
   public QuorumCall<AsyncLogger, GetJournalStateResponseProto> getJournalState() {
     Map<AsyncLogger, ListenableFuture<GetJournalStateResponseProto>> calls =
         Maps.newHashMap();
     for (AsyncLogger logger : loggers) {
       calls.put(logger, logger.getJournalState());
     }
-    return QuorumCall.create(calls);    
+    return QuorumCall.create(calls);
   }
-  
+
   public QuorumCall<AsyncLogger, Boolean> isFormatted() {
     Map<AsyncLogger, ListenableFuture<Boolean>> calls = Maps.newHashMap();
     for (AsyncLogger logger : loggers) {
@@ -205,7 +200,7 @@ class AsyncLoggerSet {
     return QuorumCall.create(calls);
   }
 
-  public QuorumCall<AsyncLogger,NewEpochResponseProto> newEpoch(
+  public QuorumCall<AsyncLogger, NewEpochResponseProto> newEpoch(
       NamespaceInfo nsInfo,
       long epoch) {
     Map<AsyncLogger, ListenableFuture<NewEpochResponseProto>> calls =
@@ -213,7 +208,7 @@ class AsyncLoggerSet {
     for (AsyncLogger logger : loggers) {
       calls.put(logger, logger.newEpoch(epoch));
     }
-    return QuorumCall.create(calls);    
+    return QuorumCall.create(calls);
   }
 
   public QuorumCall<AsyncLogger, Void> startLogSegment(
@@ -224,22 +219,22 @@ class AsyncLoggerSet {
     }
     return QuorumCall.create(calls);
   }
-  
+
   public QuorumCall<AsyncLogger, Void> finalizeLogSegment(long firstTxId,
-      long lastTxId) {
+                                                          long lastTxId) {
     Map<AsyncLogger, ListenableFuture<Void>> calls = Maps.newHashMap();
     for (AsyncLogger logger : loggers) {
       calls.put(logger, logger.finalizeLogSegment(firstTxId, lastTxId));
     }
     return QuorumCall.create(calls);
   }
-  
+
   public QuorumCall<AsyncLogger, Void> sendEdits(
       long segmentTxId, long firstTxnId, int numTxns, byte[] data) {
     Map<AsyncLogger, ListenableFuture<Void>> calls = Maps.newHashMap();
     for (AsyncLogger logger : loggers) {
-      ListenableFuture<Void> future = 
-        logger.sendEdits(segmentTxId, firstTxnId, numTxns, data);
+      ListenableFuture<Void> future =
+          logger.sendEdits(segmentTxId, firstTxnId, numTxns, data);
       calls.put(logger, future);
     }
     return QuorumCall.create(calls);
@@ -272,10 +267,10 @@ class AsyncLoggerSet {
   }
 
   QuorumCall<AsyncLogger, PrepareRecoveryResponseProto>
-      prepareRecovery(long segmentTxId) {
+  prepareRecovery(long segmentTxId) {
     Map<AsyncLogger,
-      ListenableFuture<PrepareRecoveryResponseProto>> calls
-      = Maps.newHashMap();
+        ListenableFuture<PrepareRecoveryResponseProto>> calls
+        = Maps.newHashMap();
     for (AsyncLogger logger : loggers) {
       ListenableFuture<PrepareRecoveryResponseProto> future =
           logger.prepareRecovery(segmentTxId);
@@ -284,10 +279,10 @@ class AsyncLoggerSet {
     return QuorumCall.create(calls);
   }
 
-  QuorumCall<AsyncLogger,Void>
-      acceptRecovery(SegmentStateProto log, URL fromURL) {
+  QuorumCall<AsyncLogger, Void>
+  acceptRecovery(SegmentStateProto log, URL fromURL) {
     Map<AsyncLogger, ListenableFuture<Void>> calls
-      = Maps.newHashMap();
+        = Maps.newHashMap();
     for (AsyncLogger logger : loggers) {
       ListenableFuture<Void> future =
           logger.acceptRecovery(log, fromURL);
@@ -306,7 +301,7 @@ class AsyncLoggerSet {
     }
     return QuorumCall.create(calls);
   }
-  
+
   QuorumCall<AsyncLogger, Void> doPreUpgrade() {
     Map<AsyncLogger, ListenableFuture<Void>> calls =
         Maps.newHashMap();
@@ -341,7 +336,7 @@ class AsyncLoggerSet {
   }
 
   public QuorumCall<AsyncLogger, Boolean> canRollBack(StorageInfo storage,
-      StorageInfo prevStorage, int targetLayoutVersion) {
+                                                      StorageInfo prevStorage, int targetLayoutVersion) {
     Map<AsyncLogger, ListenableFuture<Boolean>> calls =
         Maps.newHashMap();
     for (AsyncLogger logger : loggers) {

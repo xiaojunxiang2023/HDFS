@@ -14,7 +14,7 @@ public class DoAsParam extends StringParam {
    * @param str a string representation of the parameter value.
    */
   public DoAsParam(final String str) {
-    super(DOMAIN, str == null || str.equals(DEFAULT)? null: str);
+    super(DOMAIN, str == null || str.equals(DEFAULT) ? null : str);
   }
 
   @Override

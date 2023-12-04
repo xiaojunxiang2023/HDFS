@@ -2,8 +2,9 @@ package org.apache.hadoop.crypto;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
 public interface Encryptor {
-  
+
   /**
    * Initialize the encryptor and the internal encryption context.
    * @param key encryption key.
@@ -11,7 +12,7 @@ public interface Encryptor {
    * @throws IOException if initialization fails
    */
   public void init(byte[] key, byte[] iv) throws IOException;
-  
+
   /**
    * Indicate whether the encryption context is reset.
    * <p>
@@ -22,7 +23,7 @@ public interface Encryptor {
    * @return boolean whether context is reset.
    */
   public boolean isContextReset();
-  
+
   /**
    * This presents a direct interface encrypting with direct ByteBuffers.
    * <p>
@@ -43,6 +44,6 @@ public interface Encryptor {
    * not be null and outBuffer.remaining() must be &gt; 0
    * @throws IOException if encryption fails
    */
-  public void encrypt(ByteBuffer inBuffer, ByteBuffer outBuffer) 
+  public void encrypt(ByteBuffer inBuffer, ByteBuffer outBuffer)
       throws IOException;
 }

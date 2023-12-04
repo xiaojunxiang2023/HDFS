@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.util;
+
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.thirdparty.com.google.common.io.Files;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.Longs;
@@ -21,70 +22,70 @@ import java.nio.channels.FileChannel;
  */
 public class BestEffortLongFile implements Closeable {
 
-    private final File file;
-    private final long defaultVal;
-    private final ByteBuffer buf = ByteBuffer.allocate(Long.SIZE / 8);
-    private long value;
-    private FileChannel ch = null;
+  private final File file;
+  private final long defaultVal;
+  private final ByteBuffer buf = ByteBuffer.allocate(Long.SIZE / 8);
+  private long value;
+  private FileChannel ch = null;
 
-    public BestEffortLongFile(File file, long defaultVal) {
-        this.file = file;
-        this.defaultVal = defaultVal;
+  public BestEffortLongFile(File file, long defaultVal) {
+    this.file = file;
+    this.defaultVal = defaultVal;
+  }
+
+  public long get() throws IOException {
+    lazyOpen();
+    return value;
+  }
+
+  public void set(long newVal) throws IOException {
+    lazyOpen();
+    buf.clear();
+    buf.putLong(newVal);
+    buf.flip();
+    IOUtils.writeFully(ch, buf, 0);
+    value = newVal;
+  }
+
+  private void lazyOpen() throws IOException {
+    if (ch != null) {
+      return;
     }
 
-    public long get() throws IOException {
-        lazyOpen();
-        return value;
+    // Load current value.
+    byte[] data = null;
+    try {
+      data = Files.toByteArray(file);
+    } catch (FileNotFoundException fnfe) {
+      // Expected - this will use default value.
     }
 
-    public void set(long newVal) throws IOException {
-        lazyOpen();
-        buf.clear();
-        buf.putLong(newVal);
-        buf.flip();
-        IOUtils.writeFully(ch, buf, 0);
-        value = newVal;
+    if (data != null && data.length != 0) {
+      if (data.length != Longs.BYTES) {
+        throw new IOException("File " + file + " had invalid length: " +
+            data.length);
+      }
+      value = Longs.fromByteArray(data);
+    } else {
+      value = defaultVal;
     }
 
-    private void lazyOpen() throws IOException {
-        if (ch != null) {
-            return;
-        }
-
-        // Load current value.
-        byte[] data = null;
-        try {
-            data = Files.toByteArray(file);
-        } catch (FileNotFoundException fnfe) {
-            // Expected - this will use default value.
-        }
-
-        if (data != null && data.length != 0) {
-            if (data.length != Longs.BYTES) {
-                throw new IOException("File " + file + " had invalid length: " +
-                        data.length);
-            }
-            value = Longs.fromByteArray(data);
-        } else {
-            value = defaultVal;
-        }
-
-        // Now open file for future writes.
-        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        try {
-            ch = raf.getChannel();
-        } finally {
-            if (ch == null) {
-                IOUtils.closeStream(raf);
-            }
-        }
+    // Now open file for future writes.
+    RandomAccessFile raf = new RandomAccessFile(file, "rw");
+    try {
+      ch = raf.getChannel();
+    } finally {
+      if (ch == null) {
+        IOUtils.closeStream(raf);
+      }
     }
+  }
 
-    @Override
-    public void close() throws IOException {
-        if (ch != null) {
-            ch.close();
-            ch = null;
-        }
+  @Override
+  public void close() throws IOException {
+    if (ch != null) {
+      ch.close();
+      ch = null;
     }
+  }
 }

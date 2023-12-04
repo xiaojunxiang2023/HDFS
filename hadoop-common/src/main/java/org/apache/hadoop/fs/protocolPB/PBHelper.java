@@ -7,7 +7,8 @@ import org.apache.hadoop.util.StringInterner;
 
 import java.io.IOException;
 
-import static org.apache.hadoop.fs.FSProtos.*;
+import static org.apache.hadoop.fs.FSProtos.FileStatusProto;
+import static org.apache.hadoop.fs.FSProtos.FsPermissionProto;
 
 /**
  * Utility methods aiding conversion of fs data structures.
@@ -20,7 +21,7 @@ public final class PBHelper {
 
   public static FsPermission convert(FsPermissionProto proto)
       throws IOException {
-    return new FsPermission((short)proto.getPerm());
+    return new FsPermission((short) proto.getPerm());
   }
 
   public static FsPermissionProto convert(FsPermission p) throws IOException {
@@ -42,34 +43,34 @@ public final class PBHelper {
     final FsPermission permission;
     final Path symlink;
     switch (proto.getFileType()) {
-    case FT_DIR:
-      isdir = true;
-      symlink = null;
-      blocksize = 0;
-      length = 0;
-      blockReplication = 0;
-      break;
-    case FT_SYMLINK:
-      isdir = false;
-      symlink = new Path(proto.getSymlink());
-      blocksize = 0;
-      length = 0;
-      blockReplication = 0;
-      break;
-    case FT_FILE:
-      isdir = false;
-      symlink = null;
-      blocksize = proto.getBlockSize();
-      length = proto.getLength();
-      int brep = proto.getBlockReplication();
-      if ((brep & 0xffff0000) != 0) {
-        throw new IOException(String.format("Block replication 0x%08x " +
-            "doesn't fit in 16 bits.", brep));
-      }
-      blockReplication = (short)brep;
-      break;
-    default:
-      throw new IllegalStateException("Unknown type: " + proto.getFileType());
+      case FT_DIR:
+        isdir = true;
+        symlink = null;
+        blocksize = 0;
+        length = 0;
+        blockReplication = 0;
+        break;
+      case FT_SYMLINK:
+        isdir = false;
+        symlink = new Path(proto.getSymlink());
+        blocksize = 0;
+        length = 0;
+        blockReplication = 0;
+        break;
+      case FT_FILE:
+        isdir = false;
+        symlink = null;
+        blocksize = proto.getBlockSize();
+        length = proto.getLength();
+        int brep = proto.getBlockReplication();
+        if ((brep & 0xffff0000) != 0) {
+          throw new IOException(String.format("Block replication 0x%08x " +
+              "doesn't fit in 16 bits.", brep));
+        }
+        blockReplication = (short) brep;
+        break;
+      default:
+        throw new IllegalStateException("Unknown type: " + proto.getFileType());
     }
     path = new Path(proto.getPath());
     mtime = proto.getModificationTime();
@@ -81,10 +82,10 @@ public final class PBHelper {
     FileStatus fileStatus = new FileStatus(length, isdir, blockReplication,
         blocksize, mtime, atime, permission, owner, group, symlink, path,
         FileStatus.attributes(
-          (flags & FileStatusProto.Flags.HAS_ACL_VALUE) != 0,
-          (flags & FileStatusProto.Flags.HAS_CRYPT_VALUE) != 0,
-          (flags & FileStatusProto.Flags.HAS_EC_VALUE) != 0,
-          (flags & FileStatusProto.Flags.SNAPSHOT_ENABLED_VALUE) != 0));
+            (flags & FileStatusProto.Flags.HAS_ACL_VALUE) != 0,
+            (flags & FileStatusProto.Flags.HAS_CRYPT_VALUE) != 0,
+            (flags & FileStatusProto.Flags.HAS_EC_VALUE) != 0,
+            (flags & FileStatusProto.Flags.SNAPSHOT_ENABLED_VALUE) != 0));
     return fileStatus;
   }
 
@@ -95,22 +96,22 @@ public final class PBHelper {
       bld.setFileType(FileStatusProto.FileType.FT_DIR);
     } else if (stat.isSymlink()) {
       bld.setFileType(FileStatusProto.FileType.FT_SYMLINK)
-         .setSymlink(stat.getSymlink().toString());
+          .setSymlink(stat.getSymlink().toString());
     } else {
       bld.setFileType(FileStatusProto.FileType.FT_FILE)
-         .setLength(stat.getLen())
-         .setBlockReplication(stat.getReplication())
-         .setBlockSize(stat.getBlockSize());
+          .setLength(stat.getLen())
+          .setBlockReplication(stat.getReplication())
+          .setBlockSize(stat.getBlockSize());
     }
     bld.setAccessTime(stat.getAccessTime())
-       .setModificationTime(stat.getModificationTime())
-       .setOwner(stat.getOwner())
-       .setGroup(stat.getGroup())
-       .setPermission(convert(stat.getPermission()));
+        .setModificationTime(stat.getModificationTime())
+        .setOwner(stat.getOwner())
+        .setGroup(stat.getGroup())
+        .setPermission(convert(stat.getPermission()));
     int flags = 0;
-    flags |= stat.hasAcl()         ? FileStatusProto.Flags.HAS_ACL_VALUE   : 0;
-    flags |= stat.isEncrypted()    ? FileStatusProto.Flags.HAS_CRYPT_VALUE : 0;
-    flags |= stat.isErasureCoded() ? FileStatusProto.Flags.HAS_EC_VALUE    : 0;
+    flags |= stat.hasAcl() ? FileStatusProto.Flags.HAS_ACL_VALUE : 0;
+    flags |= stat.isEncrypted() ? FileStatusProto.Flags.HAS_CRYPT_VALUE : 0;
+    flags |= stat.isErasureCoded() ? FileStatusProto.Flags.HAS_EC_VALUE : 0;
     flags |= stat.isSnapshotEnabled() ? FileStatusProto.Flags
         .SNAPSHOT_ENABLED_VALUE : 0;
     bld.setFlags(flags);

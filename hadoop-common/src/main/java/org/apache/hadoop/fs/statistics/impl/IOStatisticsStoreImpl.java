@@ -1,5 +1,11 @@
 package org.apache.hadoop.fs.statistics.impl;
 
+import org.apache.hadoop.fs.statistics.DurationTracker;
+import org.apache.hadoop.fs.statistics.IOStatistics;
+import org.apache.hadoop.fs.statistics.MeanStatistic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.List;
@@ -7,23 +13,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.fs.statistics.DurationTracker;
-import org.apache.hadoop.fs.statistics.IOStatistics;
-import org.apache.hadoop.fs.statistics.MeanStatistic;
-
 import static java.util.Objects.requireNonNull;
 import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.stubDurationTracker;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MAX;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MEAN;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MIN;
-import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.aggregateMaximums;
-import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.aggregateMinimums;
-import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.dynamicIOStatistics;
-import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.maybeUpdateMaximum;
-import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.maybeUpdateMinimum;
+import static org.apache.hadoop.fs.statistics.StoreStatisticNames.*;
+import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.*;
 
 /**
  * Implementation of {@link IOStatisticsStore}.
@@ -140,7 +133,7 @@ final class IOStatisticsStoreImpl extends WrappedIOStatistics
    * @return final value or 0 if the long is null
    */
   private long incAtomicLong(final AtomicLong aLong,
-      final long increment) {
+                             final long increment) {
     if (aLong != null) {
       // optimization: zero is a get rather than addAndGet()
       return increment != 0

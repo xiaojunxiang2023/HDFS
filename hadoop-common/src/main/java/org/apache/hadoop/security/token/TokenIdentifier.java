@@ -1,13 +1,13 @@
 package org.apache.hadoop.security.token;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.security.UserGroupInformation;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * An identifier that identifies a token, may contain public information 
@@ -25,7 +25,7 @@ public abstract class TokenIdentifier implements Writable {
 
   /**
    * Get the Ugi with the username encoded in the token identifier
-   * 
+   *
    * @return the username. null is returned if username in the identifier is
    *         empty or null.
    */

@@ -13,7 +13,8 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.planner;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.planner;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolume;
@@ -191,7 +192,7 @@ public class MoveStep implements Step {
   /**
    * Gets Maximum numbers of errors to be tolerated before this
    * move operation is aborted.
-   * @return  long.
+   * @return long.
    */
   @Override
   public long getMaxDiskErrors() {
@@ -237,7 +238,7 @@ public class MoveStep implements Step {
    * Gets the disk Bandwidth. That is the MB/Sec to copied. We will max out
    * on this amount of throughput. This is useful to prevent too much I/O on
    * datanode while data node is in use.
-   * @return  long.
+   * @return long.
    */
   @Override
   public long getBandwidth() {

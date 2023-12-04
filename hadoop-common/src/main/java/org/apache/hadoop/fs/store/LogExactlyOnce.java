@@ -1,8 +1,8 @@
 package org.apache.hadoop.fs.store;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.slf4j.Logger;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Log exactly once, even across threads.
@@ -16,17 +16,19 @@ public class LogExactlyOnce {
     this.log = log;
   }
 
-  public void warn(String format, Object...args) {
+  public void warn(String format, Object... args) {
     if (!logged.getAndSet(true)) {
       log.warn(format, args);
     }
   }
-  public void info(String format, Object...args) {
+
+  public void info(String format, Object... args) {
     if (!logged.getAndSet(true)) {
       log.info(format, args);
     }
   }
-  public void error(String format, Object...args) {
+
+  public void error(String format, Object... args) {
     if (!logged.getAndSet(true)) {
       log.error(format, args);
     }

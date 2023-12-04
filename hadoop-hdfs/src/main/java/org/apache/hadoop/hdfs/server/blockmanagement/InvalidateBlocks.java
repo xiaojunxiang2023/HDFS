@@ -1,26 +1,20 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.LongAdder;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.hdfs.DFSUtil;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * Keeps a Collection for every named machine containing blocks
@@ -98,7 +92,7 @@ class InvalidateBlocks {
   }
 
   private LightWeightHashSet<Block> getBlocksSet(final DatanodeInfo dn,
-      final Block block) {
+                                                 final Block block) {
     if (blockIdManager.isStripedBlock(block)) {
       return getECBlocksSet(dn);
     } else {
@@ -107,7 +101,7 @@ class InvalidateBlocks {
   }
 
   private void putBlocksSet(final DatanodeInfo dn, final Block block,
-      final LightWeightHashSet set) {
+                            final LightWeightHashSet set) {
     if (blockIdManager.isStripedBlock(block)) {
       assert getECBlocksSet(dn) == null;
       nodeToECBlocks.put(dn, set);
@@ -146,7 +140,7 @@ class InvalidateBlocks {
    * invalidated on the specified datanode.
    */
   synchronized void add(final Block block, final DatanodeInfo datanode,
-      final boolean log) {
+                        final boolean log) {
     LightWeightHashSet<Block> set = getBlocksSet(datanode, block);
     if (set == null) {
       set = new LightWeightHashSet<>();
@@ -194,7 +188,7 @@ class InvalidateBlocks {
 
   private void dumpBlockSet(final Map<DatanodeInfo,
       LightWeightHashSet<Block>> nodeToBlocksMap, final PrintWriter out) {
-    for(Entry<DatanodeInfo, LightWeightHashSet<Block>> entry :
+    for (Entry<DatanodeInfo, LightWeightHashSet<Block>> entry :
         nodeToBlocksMap.entrySet()) {
       final LightWeightHashSet<Block> blocks = entry.getValue();
       if (blocks != null && blocks.size() > 0) {
@@ -203,6 +197,7 @@ class InvalidateBlocks {
       }
     }
   }
+
   /** Print the contents to out. */
   synchronized void dump(final PrintWriter out) {
     final int size = nodeToBlocks.values().size() +
@@ -238,7 +233,7 @@ class InvalidateBlocks {
    * @return the remaining limit
    */
   private int getBlocksToInvalidateByLimit(LightWeightHashSet<Block> blockSet,
-      List<Block> toInvalidate, LongAdder statsAdder, int limit) {
+                                           List<Block> toInvalidate, LongAdder statsAdder, int limit) {
     assert blockSet != null;
     int remainingLimit = limit;
     List<Block> polledBlocks = blockSet.pollN(limit);
@@ -276,7 +271,7 @@ class InvalidateBlocks {
     }
     return toInvalidate;
   }
-  
+
   synchronized void clear() {
     nodeToBlocks.clear();
     nodeToECBlocks.clear();

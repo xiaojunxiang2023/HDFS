@@ -1,19 +1,18 @@
 package org.apache.hadoop.fs.sftp;
 
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import org.apache.hadoop.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.apache.hadoop.util.StringUtils;
-
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Concurrent/Multiple Connections. */
 class SFTPConnectionPool {
@@ -68,7 +67,7 @@ class SFTPConnectionPool {
 
   /** Shutdown the connection pool and close all open connections. */
   synchronized void shutdown() {
-    if (this.con2infoMap == null){
+    if (this.con2infoMap == null) {
       return; // already shutdown in case it is called
     }
     LOG.info("Inside shutdown, con2infoMap size=" + con2infoMap.size());
@@ -104,7 +103,7 @@ class SFTPConnectionPool {
   }
 
   public ChannelSftp connect(String host, int port, String user,
-      String password, String keyFile) throws IOException {
+                             String password, String keyFile) throws IOException {
     // get connection from pool
     ConnectionInfo info = new ConnectionInfo(host, port, user);
     ChannelSftp channel = getFromPool(info);

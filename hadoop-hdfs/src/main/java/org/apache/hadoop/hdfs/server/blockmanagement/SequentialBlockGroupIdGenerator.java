@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
+
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.util.SequentialNumber;
 

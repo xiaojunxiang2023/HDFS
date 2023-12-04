@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.FenceResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.JournalRequestProto;
@@ -13,9 +11,11 @@ import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.ipc.ProtocolMetaInterface;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.RpcClientUtil;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * This class is the client side translator to translate the requests made on
@@ -27,7 +27,7 @@ public class JournalProtocolTranslatorPB implements ProtocolMetaInterface,
   /** RpcController is not used and hence is set to null */
   private final static RpcController NULL_CONTROLLER = null;
   private final JournalProtocolPB rpcProxy;
-  
+
   public JournalProtocolTranslatorPB(JournalProtocolPB rpcProxy) {
     this.rpcProxy = rpcProxy;
   }
@@ -39,7 +39,7 @@ public class JournalProtocolTranslatorPB implements ProtocolMetaInterface,
 
   @Override
   public void journal(JournalInfo journalInfo, long epoch, long firstTxnId,
-      int numTxns, byte[] records) throws IOException {
+                      int numTxns, byte[] records) throws IOException {
     JournalRequestProto req = JournalRequestProto.newBuilder()
         .setJournalInfo(PBHelper.convert(journalInfo))
         .setEpoch(epoch)
@@ -68,10 +68,10 @@ public class JournalProtocolTranslatorPB implements ProtocolMetaInterface,
       throw ProtobufHelper.getRemoteException(e);
     }
   }
-  
+
   @Override
   public FenceResponse fence(JournalInfo journalInfo, long epoch,
-      String fencerInfo) throws IOException {
+                             String fencerInfo) throws IOException {
     FenceRequestProto req = FenceRequestProto.newBuilder().setEpoch(epoch)
         .setJournalInfo(PBHelper.convert(journalInfo)).build();
     try {

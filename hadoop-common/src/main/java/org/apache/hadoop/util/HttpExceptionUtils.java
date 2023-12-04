@@ -64,7 +64,7 @@ public class HttpExceptionUtils {
    * @return the JAX-RPC response with the set error and JSON encoded exception
    */
   public static Response createJerseyExceptionResponse(Response.Status status,
-      Throwable ex) {
+                                                       Throwable ex) {
     Map<String, Object> json = new LinkedHashMap<String, Object>();
     json.put(ERROR_MESSAGE_JSON, getOneLineMessage(ex));
     json.put(ERROR_EXCEPTION_JSON, ex.getClass().getSimpleName());
@@ -114,7 +114,7 @@ public class HttpExceptionUtils {
    */
   @SuppressWarnings("unchecked")
   public static void validateResponse(HttpURLConnection conn,
-      int expectedStatus) throws IOException {
+                                      int expectedStatus) throws IOException {
     if (conn.getResponseCode() != expectedStatus) {
       Exception toThrow;
       InputStream es = null;

@@ -7,7 +7,7 @@ import java.util.TreeSet;
 
 /**
  * This class tracks changes in the layout version of HDFS.
- * 
+ *
  * Layout version is changed for following reasons:
  * <ol>
  * <li>The layout of how namenode or datanode stores information 
@@ -78,22 +78,22 @@ public class LayoutVersion {
     FEDERATION(-35, "Support for namenode federation"),
     LEASE_REASSIGNMENT(-36, "Support for persisting lease holder reassignment"),
     STORED_TXIDS(-37, "Transaction IDs are stored in edits log and image files"),
-    TXID_BASED_LAYOUT(-38, "File names in NN Storage are based on transaction IDs"), 
+    TXID_BASED_LAYOUT(-38, "File names in NN Storage are based on transaction IDs"),
     EDITLOG_OP_OPTIMIZATION(-39,
         "Use LongWritable and ShortWritable directly instead of ArrayWritable of UTF8"),
     OPTIMIZE_PERSIST_BLOCKS(-40,
         "Serialize block lists with delta-encoded variable length ints, " +
-        "add OP_UPDATE_BLOCKS"),
+            "add OP_UPDATE_BLOCKS"),
     RESERVED_REL1_2_0(-41, -32, "Reserved for release 1.2.0", true, CONCAT),
     ADD_INODE_ID(-42, -40, "Assign a unique inode id for each inode", false),
     SNAPSHOT(-43, "Support for snapshot feature"),
     RESERVED_REL1_3_0(-44, -41, "Reserved for release 1.3.0", true,
-    		ADD_INODE_ID, SNAPSHOT, FSIMAGE_NAME_OPTIMIZATION),
+        ADD_INODE_ID, SNAPSHOT, FSIMAGE_NAME_OPTIMIZATION),
     OPTIMIZE_SNAPSHOT_INODES(-45, -43,
         "Reduce snapshot inode memory footprint", false),
     SEQUENTIAL_BLOCK_ID(-46, "Allocate block IDs sequentially and store " +
         "block IDs in the edits log and image files"),
-    EDITLOG_SUPPORT_RETRYCACHE(-47, "Record ClientId and CallId in editlog to " 
+    EDITLOG_SUPPORT_RETRYCACHE(-47, "Record ClientId and CallId in editlog to "
         + "enable rebuilding retry cache in case of HA failover"),
     EDITLOG_ADD_BLOCK(-48, "Add new editlog that only records allocation of "
         + "the new block instead of the entire block list"),
@@ -128,16 +128,16 @@ public class LayoutVersion {
      * @param features set of features that are to be enabled for this version
      */
     Feature(final int lv, final int ancestorLV, final String description,
-        boolean reserved, Feature... features) {
+            boolean reserved, Feature... features) {
       info = new FeatureInfo(lv, ancestorLV, description, reserved, features);
     }
-    
+
     @Override
     public FeatureInfo getInfo() {
       return info;
     }
   }
-  
+
   /** Feature information. */
   public static class FeatureInfo {
     private final int lv;
@@ -148,13 +148,13 @@ public class LayoutVersion {
     private final LayoutFeature[] specialFeatures;
 
     public FeatureInfo(final int lv, final int ancestorLV, final String description,
-        boolean reserved, LayoutFeature... specialFeatures) {
+                       boolean reserved, LayoutFeature... specialFeatures) {
       this(lv, ancestorLV, null, description, reserved, specialFeatures);
     }
 
     public FeatureInfo(final int lv, final int ancestorLV, Integer minCompatLV,
-        final String description, boolean reserved,
-        LayoutFeature... specialFeatures) {
+                       final String description, boolean reserved,
+                       LayoutFeature... specialFeatures) {
       this.lv = lv;
       this.ancestorLV = ancestorLV;
       this.minCompatLV = minCompatLV;
@@ -162,8 +162,8 @@ public class LayoutVersion {
       this.reserved = reserved;
       this.specialFeatures = specialFeatures;
     }
-    
-    /** 
+
+    /**
      * Accessor method for feature layout version 
      * @return int lv value
      */
@@ -171,7 +171,7 @@ public class LayoutVersion {
       return lv;
     }
 
-    /** 
+    /**
      * Accessor method for feature ancestor layout version 
      * @return int ancestor LV value
      */
@@ -199,11 +199,11 @@ public class LayoutVersion {
     public String getDescription() {
       return description;
     }
-    
+
     public boolean isReservedForOldRelease() {
       return reserved;
     }
-    
+
     public LayoutFeature[] getSpecialFeatures() {
       return specialFeatures;
     }
@@ -216,9 +216,9 @@ public class LayoutVersion {
           - arg1.getInfo().getLayoutVersion();
     }
   }
- 
+
   public static void updateMap(Map<Integer, SortedSet<LayoutFeature>> map,
-      LayoutFeature[] features) {
+                               LayoutFeature[] features) {
     // Go through all the enum constants and build a map of
     // LayoutVersion <-> Set of all supported features in that LayoutVersion
     SortedSet<LayoutFeature> existingFeatures = new TreeSet<LayoutFeature>(
@@ -235,7 +235,7 @@ public class LayoutVersion {
           minCompatLV > prevF.getInfo().getMinimumCompatibleLayoutVersion()) {
         throw new AssertionError(String.format(
             "Features must be listed in order of minimum compatible layout " +
-            "version.  Check features %s and %s.", prevF, f));
+                "version.  Check features %s and %s.", prevF, f));
       }
       prevF = f;
       SortedSet<LayoutFeature> ancestorSet = map.get(info.getAncestorLayoutVersion());
@@ -254,12 +254,12 @@ public class LayoutVersion {
       map.put(info.getLayoutVersion(), featureSet);
     }
   }
-  
+
   /**
    * Gets formatted string that describes {@link LayoutVersion} information.
    */
   public String getString(Map<Integer, SortedSet<LayoutFeature>> map,
-      LayoutFeature[] values) {
+                          LayoutFeature[] values) {
     final StringBuilder buf = new StringBuilder();
     buf.append("Feature List:\n");
     for (LayoutFeature f : values) {
@@ -277,7 +277,7 @@ public class LayoutVersion {
     }
     return buf.toString();
   }
-  
+
   /**
    * Returns true if a given feature is supported in the given layout version
    * @param map layout feature map
@@ -286,11 +286,11 @@ public class LayoutVersion {
    * @return true if {@code f} is supported in layout version {@code lv}
    */
   public static boolean supports(Map<Integer, SortedSet<LayoutFeature>> map,
-      final LayoutFeature f, final int lv) {
-    final SortedSet<LayoutFeature> set =  map.get(lv);
+                                 final LayoutFeature f, final int lv) {
+    final SortedSet<LayoutFeature> set = map.get(lv);
     return set != null && set.contains(f);
   }
-  
+
   /**
    * Get the current layout version
    */
@@ -311,7 +311,7 @@ public class LayoutVersion {
   }
 
   static LayoutFeature getLastNonReservedFeature(LayoutFeature[] features) {
-    for (int i = features.length -1; i >= 0; i--) {
+    for (int i = features.length - 1; i >= 0; i--) {
       final FeatureInfo info = features[i].getInfo();
       if (!info.isReservedForOldRelease()) {
         return features[i];

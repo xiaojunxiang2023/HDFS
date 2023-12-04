@@ -1,18 +1,18 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.ContentSummary;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.StringUtils;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.ContentSummary;
 
 /**
  * Get a listing of all files in that match the file patterns.
@@ -40,7 +40,7 @@ class Ls extends FsCommand {
       OPTION_DIRECTORY + "] [-" + OPTION_HUMAN + "] [-" +
       OPTION_HIDENONPRINTABLE + "] [-" + OPTION_RECURSIVE + "] [-" +
       OPTION_MTIME + "] [-" + OPTION_SIZE + "] [-" + OPTION_REVERSE + "] [-" +
-      OPTION_ATIME + "] [-" + OPTION_ECPOLICY +"] [<path> ...]";
+      OPTION_ATIME + "] [-" + OPTION_ECPOLICY + "] [<path> ...]";
 
   public static final String DESCRIPTION =
       "List the contents that match the specified file pattern. If " +
@@ -71,12 +71,12 @@ class Ls extends FsCommand {
           "  Reverse the order of the sort.\n" +
           "  -" + OPTION_ATIME +
           "  Use time of last access instead of modification for\n" +
-          "      display and sorting.\n"+
+          "      display and sorting.\n" +
           "  -" + OPTION_ECPOLICY +
           "  Display the erasure coding policy of files and directories.\n";
 
   protected final SimpleDateFormat dateFormat =
-    new SimpleDateFormat("yyyy-MM-dd HH:mm");
+      new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
   protected int maxRepl = 3, maxLen = 10, maxOwner = 0, maxGroup = 0;
   protected String lineFormat;
@@ -94,7 +94,8 @@ class Ls extends FsCommand {
   /** Whether to print ? instead of non-printable characters. */
   private boolean hideNonPrintable = false;
 
-  protected Ls() {}
+  protected Ls() {
+  }
 
   protected Ls(Configuration conf) {
     super(conf);
@@ -102,13 +103,13 @@ class Ls extends FsCommand {
 
   protected String formatSize(long size) {
     return humanReadable
-      ? StringUtils.TraditionalBinaryPrefix.long2String(size, "", 1)
-      : String.valueOf(size);
+        ? StringUtils.TraditionalBinaryPrefix.long2String(size, "", 1)
+        : String.valueOf(size);
   }
 
   @Override
   protected void processOptions(LinkedList<String> args)
-  throws IOException {
+      throws IOException {
     CommandFormat cf = new CommandFormat(0, Integer.MAX_VALUE,
         OPTION_PATHONLY, OPTION_DIRECTORY, OPTION_HUMAN,
         OPTION_HIDENONPRINTABLE, OPTION_RECURSIVE, OPTION_REVERSE,
@@ -304,29 +305,29 @@ class Ls extends FsCommand {
   private void adjustColumnWidths(PathData items[]) throws IOException {
     for (PathData item : items) {
       FileStatus stat = item.stat;
-      maxRepl  = maxLength(maxRepl, stat.getReplication());
-      maxLen   = maxLength(maxLen, stat.getLen());
+      maxRepl = maxLength(maxRepl, stat.getReplication());
+      maxLen = maxLength(maxLen, stat.getLen());
       maxOwner = maxLength(maxOwner, stat.getOwner());
       maxGroup = maxLength(maxGroup, stat.getGroup());
     }
 
     StringBuilder fmt = new StringBuilder();
     fmt.append("%s%s") // permission string
-        .append("%"  + maxRepl  + "s ")
+        .append("%" + maxRepl + "s ")
         .append((maxOwner > 0) ? "%-" + maxOwner + "s " : "%s")
         .append((maxGroup > 0) ? "%-" + maxGroup + "s " : "%s");
     // Do not use '%-0s' as a formatting conversion, since it will throw a
     // a MissingFormatWidthException if it is used in String.format().
     // http://docs.oracle.com/javase/1.5.0/docs/api/java/util/Formatter.html#intFlags
-    if(displayECPolicy){
+    if (displayECPolicy) {
       int maxEC = 0;
       for (PathData item : items) {
-          ContentSummary contentSummary = item.fs.getContentSummary(item.path);
+        ContentSummary contentSummary = item.fs.getContentSummary(item.path);
         maxEC = maxLength(maxEC, contentSummary.getErasureCodingPolicy());
       }
       fmt.append((maxEC > 0) ? "%-" + maxEC + "s " : "%s");
     }
-    fmt.append("%"  + maxLen   + "s ");
+    fmt.append("%" + maxLen + "s ");
     fmt.append("%s %s"); // mod time & path
     lineFormat = fmt.toString();
   }
@@ -387,7 +388,7 @@ class Ls extends FsCommand {
 
     @Override
     protected void processOptions(LinkedList<String> args)
-    throws IOException {
+        throws IOException {
       args.addFirst("-R");
       super.processOptions(args);
     }

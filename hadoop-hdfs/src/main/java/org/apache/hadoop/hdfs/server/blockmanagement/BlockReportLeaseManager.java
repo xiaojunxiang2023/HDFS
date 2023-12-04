@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,11 +142,11 @@ class BlockReportLeaseManager {
 
   BlockReportLeaseManager(Configuration conf) {
     this(conf.getInt(
-          DFSConfigKeys.DFS_NAMENODE_MAX_FULL_BLOCK_REPORT_LEASES,
-          DFSConfigKeys.DFS_NAMENODE_MAX_FULL_BLOCK_REPORT_LEASES_DEFAULT),
+        DFSConfigKeys.DFS_NAMENODE_MAX_FULL_BLOCK_REPORT_LEASES,
+        DFSConfigKeys.DFS_NAMENODE_MAX_FULL_BLOCK_REPORT_LEASES_DEFAULT),
         conf.getLong(
-          DFSConfigKeys.DFS_NAMENODE_FULL_BLOCK_REPORT_LEASE_LENGTH_MS,
-          DFSConfigKeys.DFS_NAMENODE_FULL_BLOCK_REPORT_LEASE_LENGTH_MS_DEFAULT));
+            DFSConfigKeys.DFS_NAMENODE_FULL_BLOCK_REPORT_LEASE_LENGTH_MS,
+            DFSConfigKeys.DFS_NAMENODE_FULL_BLOCK_REPORT_LEASE_LENGTH_MS_DEFAULT));
   }
 
   BlockReportLeaseManager(int maxPending, long leaseExpiryMs) {
@@ -156,7 +156,7 @@ class BlockReportLeaseManager {
     this.maxPending = maxPending;
     Preconditions.checkArgument(leaseExpiryMs >= 1,
         "Cannot set full block report lease expiry period to a value " +
-         "less than 1.");
+            "less than 1.");
     this.leaseExpiryMs = leaseExpiryMs;
   }
 
@@ -207,7 +207,7 @@ class BlockReportLeaseManager {
     NodeData node = nodes.get(dn.getDatanodeUuid());
     if (node == null) {
       LOG.warn("DN {} ({}) requested a lease even though it wasn't yet " +
-          "registered.  Registering now.", dn.getDatanodeUuid(),
+              "registered.  Registering now.", dn.getDatanodeUuid(),
           dn.getXferAddr());
       node = registerNode(dn);
     }
@@ -216,8 +216,8 @@ class BlockReportLeaseManager {
       // This can happen if the DataNode is restarted in between requesting
       // a lease and using it.
       LOG.debug("Removing existing BR lease 0x{} for DN {} in order to " +
-               "issue a new one.", Long.toHexString(node.leaseId),
-               dn.getDatanodeUuid());
+              "issue a new one.", Long.toHexString(node.leaseId),
+          dn.getDatanodeUuid());
     }
     remove(node);
     long monotonicNowMs = Time.monotonicNow();
@@ -232,8 +232,8 @@ class BlockReportLeaseManager {
           prefix = ", ";
         }
         LOG.debug("Can't create a new BR lease for DN {}, because " +
-              "numPending equals maxPending at {}.  Current leases: {}",
-              dn.getDatanodeUuid(), numPending, allLeases.toString());
+                "numPending equals maxPending at {}.  Current leases: {}",
+            dn.getDatanodeUuid(), numPending, allLeases.toString());
       }
       return 0;
     }
@@ -288,13 +288,13 @@ class BlockReportLeaseManager {
     }
     if (node.leaseId == 0) {
       LOG.warn("BR lease 0x{} is not valid for DN {}, because the DN " +
-               "is not in the pending set.",
-               Long.toHexString(id), dn.getDatanodeUuid());
+              "is not in the pending set.",
+          Long.toHexString(id), dn.getDatanodeUuid());
       return false;
     }
     if (pruneIfExpired(monotonicNowMs, node)) {
       LOG.warn("BR lease 0x{} is not valid for DN {}, because the lease " +
-               "has expired.", Long.toHexString(id), dn.getDatanodeUuid());
+          "has expired.", Long.toHexString(id), dn.getDatanodeUuid());
       return false;
     }
     if (id != node.leaseId) {
@@ -314,7 +314,7 @@ class BlockReportLeaseManager {
     NodeData node = nodes.get(dn.getDatanodeUuid());
     if (node == null) {
       LOG.info("Can't remove lease for unknown datanode {}",
-               dn.getDatanodeUuid());
+          dn.getDatanodeUuid());
       return 0;
     }
     long id = node.leaseId;
@@ -326,7 +326,7 @@ class BlockReportLeaseManager {
     deferredHead.addToEnd(node);
     if (LOG.isTraceEnabled()) {
       LOG.trace("Removed BR lease 0x{} for DN {}.  numPending = {}",
-                Long.toHexString(id), dn.getDatanodeUuid(), numPending);
+          Long.toHexString(id), dn.getDatanodeUuid(), numPending);
     }
     return id;
   }

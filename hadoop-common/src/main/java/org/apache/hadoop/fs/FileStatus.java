@@ -1,19 +1,14 @@
 package org.apache.hadoop.fs;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputValidation;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.apache.hadoop.fs.FSProtos.FileStatusProto;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.protocolPB.PBHelper;
 import org.apache.hadoop.io.Writable;
+
+import java.io.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
 
 /** Interface that represents the client side information for a file.
  */
@@ -83,14 +78,16 @@ public class FileStatus implements Writable, Comparable<Object>,
     return ret;
   }
 
-  public FileStatus() { this(0, false, 0, 0, 0, 0, null, null, null, null); }
-  
+  public FileStatus() {
+    this(0, false, 0, 0, 0, 0, null, null, null, null);
+  }
+
   //We should deprecate this soon?
   public FileStatus(long length, boolean isdir, int block_replication,
                     long blocksize, long modification_time, Path path) {
 
     this(length, isdir, block_replication, blocksize, modification_time,
-         0, null, null, null, path);
+        0, null, null, null, path);
   }
 
   /**
@@ -99,16 +96,16 @@ public class FileStatus implements Writable, Comparable<Object>,
   public FileStatus(long length, boolean isdir,
                     int block_replication,
                     long blocksize, long modification_time, long access_time,
-                    FsPermission permission, String owner, String group, 
+                    FsPermission permission, String owner, String group,
                     Path path) {
     this(length, isdir, block_replication, blocksize, modification_time,
-         access_time, permission, owner, group, null, path);
+        access_time, permission, owner, group, null, path);
   }
 
   public FileStatus(long length, boolean isdir,
                     int block_replication,
                     long blocksize, long modification_time, long access_time,
-                    FsPermission permission, String owner, String group, 
+                    FsPermission permission, String owner, String group,
                     Path symlink,
                     Path path) {
     this(length, isdir, block_replication, blocksize, modification_time,
@@ -117,21 +114,21 @@ public class FileStatus implements Writable, Comparable<Object>,
   }
 
   public FileStatus(long length, boolean isdir, int block_replication,
-      long blocksize, long modification_time, long access_time,
-      FsPermission permission, String owner, String group, Path symlink,
-      Path path, boolean hasAcl, boolean isEncrypted, boolean isErasureCoded) {
+                    long blocksize, long modification_time, long access_time,
+                    FsPermission permission, String owner, String group, Path symlink,
+                    Path path, boolean hasAcl, boolean isEncrypted, boolean isErasureCoded) {
     this(length, isdir, block_replication, blocksize, modification_time,
         access_time, permission, owner, group, symlink, path,
         attributes(hasAcl, isEncrypted, isErasureCoded, false));
   }
 
   public FileStatus(long length, boolean isdir, int block_replication,
-      long blocksize, long modification_time, long access_time,
-      FsPermission permission, String owner, String group, Path symlink,
-      Path path, Set<AttrFlags> attr) {
+                    long blocksize, long modification_time, long access_time,
+                    FsPermission permission, String owner, String group, Path symlink,
+                    Path path, Set<AttrFlags> attr) {
     this.length = length;
     this.isdir = isdir;
-    this.block_replication = (short)block_replication;
+    this.block_replication = (short) block_replication;
     this.blocksize = blocksize;
     this.modification_time = modification_time;
     this.access_time = access_time;
@@ -166,10 +163,10 @@ public class FileStatus implements Writable, Comparable<Object>,
     // It's important to call the getters here instead of directly accessing the
     // members.  Subclasses like ViewFsFileStatus can override the getters.
     this(other.getLen(), other.isDirectory(), other.getReplication(),
-      other.getBlockSize(), other.getModificationTime(), other.getAccessTime(),
-      other.getPermission(), other.getOwner(), other.getGroup(),
-      (other.isSymlink() ? other.getSymlink() : null),
-      other.getPath());
+        other.getBlockSize(), other.getModificationTime(), other.getAccessTime(),
+        other.getPermission(), other.getOwner(), other.getGroup(),
+        (other.isSymlink() ? other.getSymlink() : null),
+        other.getPath());
   }
 
   /**
@@ -304,7 +301,7 @@ public class FileStatus implements Writable, Comparable<Object>,
   public String getOwner() {
     return owner;
   }
-  
+
   /**
    * Get the group associated with the file.
    * @return group for the file. The string could be empty if there is no
@@ -314,42 +311,42 @@ public class FileStatus implements Writable, Comparable<Object>,
   public String getGroup() {
     return group;
   }
-  
+
   public Path getPath() {
     return path;
   }
-  
+
   public void setPath(final Path p) {
     path = p;
   }
 
-  /* These are provided so that these values could be loaded lazily 
+  /* These are provided so that these values could be loaded lazily
    * by a filesystem (e.g. local file system).
    */
-  
+
   /**
    * Sets permission.
    * @param permission if permission is null, default value is set
    */
   protected void setPermission(FsPermission permission) {
-    this.permission = (permission == null) ? 
-                      FsPermission.getFileDefault() : permission;
+    this.permission = (permission == null) ?
+        FsPermission.getFileDefault() : permission;
   }
-  
+
   /**
    * Sets owner.
    * @param owner if it is null, default value is set
-   */  
+   */
   protected void setOwner(String owner) {
     this.owner = (owner == null) ? "" : owner;
   }
-  
+
   /**
    * Sets group.
    * @param group if it is null, default value is set
-   */  
+   */
   protected void setGroup(String group) {
-    this.group = (group == null) ? "" :  group;
+    this.group = (group == null) ? "" : group;
   }
 
   /**
@@ -369,7 +366,7 @@ public class FileStatus implements Writable, Comparable<Object>,
   /**
    * Compare this FileStatus to another FileStatus
    * @param   o the FileStatus to be compared.
-   * @return  a negative integer, zero, or a positive integer as this object
+   * @return a negative integer, zero, or a positive integer as this object
    *   is less than, equal to, or greater than the specified object.
    */
   public int compareTo(FileStatus o) {
@@ -381,7 +378,7 @@ public class FileStatus implements Writable, Comparable<Object>,
    * This method was added back by HADOOP-14683 to keep binary compatibility.
    *
    * @param   o the FileStatus to be compared.
-   * @return  a negative integer, zero, or a positive integer as this object
+   * @return a negative integer, zero, or a positive integer as this object
    *   is less than, equal to, or greater than the specified object.
    * @throws ClassCastException if the specified object is not FileStatus
    */
@@ -393,7 +390,7 @@ public class FileStatus implements Writable, Comparable<Object>,
 
   /** Compare if this object is equal to another object
    * @param   o the object to be compared.
-   * @return  true if two file status has the same path name; false if not.
+   * @return true if two file status has the same path name; false if not.
    */
   @Override
   public boolean equals(Object o) {
@@ -403,21 +400,21 @@ public class FileStatus implements Writable, Comparable<Object>,
     if (this == o) {
       return true;
     }
-    FileStatus other = (FileStatus)o;
+    FileStatus other = (FileStatus) o;
     return this.getPath().equals(other.getPath());
   }
-  
+
   /**
    * Returns a hash code value for the object, which is defined as
    * the hash code of the path name.
    *
-   * @return  a hash code value for the path name.
+   * @return a hash code value for the path name.
    */
   @Override
   public int hashCode() {
     return getPath().hashCode();
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -425,7 +422,7 @@ public class FileStatus implements Writable, Comparable<Object>,
         .append("{")
         .append("path=" + path)
         .append("; isDirectory=" + isdir);
-    if(!isDirectory()){
+    if (!isDirectory()) {
       sb.append("; length=" + length)
           .append("; replication=" + block_replication)
           .append("; blocksize=" + blocksize);
@@ -436,7 +433,7 @@ public class FileStatus implements Writable, Comparable<Object>,
         .append("; group=" + group)
         .append("; permission=" + permission)
         .append("; isSymlink=" + isSymlink());
-    if(isSymlink()) {
+    if (isSymlink()) {
       try {
         sb.append("; symlink=" + getSymlink());
       } catch (IOException e) {
@@ -508,7 +505,6 @@ public class FileStatus implements Writable, Comparable<Object>,
       throw new InvalidObjectException("No type in deserialized FileStatus");
     }
   }
-
 
 
 }

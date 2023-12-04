@@ -1,18 +1,16 @@
 package org.apache.hadoop.fs.statistics;
 
+import org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding;
-
-import static org.apache.hadoop.fs.CommonConfigurationKeys.IOSTATISTICS_LOGGING_LEVEL_ERROR;
-import static org.apache.hadoop.fs.CommonConfigurationKeys.IOSTATISTICS_LOGGING_LEVEL_INFO;
-import static org.apache.hadoop.fs.CommonConfigurationKeys.IOSTATISTICS_LOGGING_LEVEL_WARN;
+import static org.apache.hadoop.fs.CommonConfigurationKeys.*;
 import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStatistics;
 
 /**
@@ -85,7 +83,7 @@ public final class IOStatisticsLogging {
       mapToSortedString(sb, "\ngauges", statistics.gauges(),
           p -> p == 0);
       mapToSortedString(sb, "\nminimums", statistics.minimums(),
-          p -> p  < 0);
+          p -> p < 0);
       mapToSortedString(sb, "\nmaximums", statistics.maximums(),
           p -> p < 0);
       mapToSortedString(sb, "\nmeans", statistics.meanStatistics(),
@@ -108,9 +106,9 @@ public final class IOStatisticsLogging {
    * @param <E> type of values of the map
    */
   private static <E> void mapToString(StringBuilder sb,
-      final String type,
-      final Map<String, E> map,
-      final String separator) {
+                                      final String type,
+                                      final Map<String, E> map,
+                                      final String separator) {
     int count = 0;
     sb.append(type);
     sb.append("=(");
@@ -134,9 +132,9 @@ public final class IOStatisticsLogging {
    * @param <E> type of values of the map
    */
   private static <E> void mapToSortedString(StringBuilder sb,
-      final String type,
-      final Map<String, E> map,
-      final Predicate<E> isEmpty) {
+                                            final String type,
+                                            final Map<String, E> map,
+                                            final Predicate<E> isEmpty) {
     mapToString(sb, type, sortedMap(map, isEmpty), "\n");
   }
 
@@ -238,21 +236,21 @@ public final class IOStatisticsLogging {
    * @param source Source to LOG.
    */
   public static void logIOStatisticsAtLevel(Logger log, String level,
-      Object source) {
+                                            Object source) {
     IOStatistics stats = retrieveIOStatistics(source);
     if (stats != null) {
       switch (level.toLowerCase(Locale.US)) {
-      case IOSTATISTICS_LOGGING_LEVEL_INFO:
-        LOG.info("IOStatistics: {}", ioStatisticsToPrettyString(stats));
-        break;
-      case IOSTATISTICS_LOGGING_LEVEL_ERROR:
-        LOG.error("IOStatistics: {}", ioStatisticsToPrettyString(stats));
-        break;
-      case IOSTATISTICS_LOGGING_LEVEL_WARN:
-        LOG.warn("IOStatistics: {}", ioStatisticsToPrettyString(stats));
-        break;
-      default:
-        logIOStatisticsAtDebug(log, "IOStatistics: {}", source);
+        case IOSTATISTICS_LOGGING_LEVEL_INFO:
+          LOG.info("IOStatistics: {}", ioStatisticsToPrettyString(stats));
+          break;
+        case IOSTATISTICS_LOGGING_LEVEL_ERROR:
+          LOG.error("IOStatistics: {}", ioStatisticsToPrettyString(stats));
+          break;
+        case IOSTATISTICS_LOGGING_LEVEL_WARN:
+          LOG.warn("IOStatistics: {}", ioStatisticsToPrettyString(stats));
+          break;
+        default:
+          logIOStatisticsAtDebug(log, "IOStatistics: {}", source);
       }
     }
   }

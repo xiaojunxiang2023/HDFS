@@ -1,9 +1,14 @@
 package org.apache.hadoop.filter.handler;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Hashtable;
-import java.util.Properties;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
+import org.apache.hadoop.auth.util.HttpConstants;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationToken;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -17,17 +22,10 @@ import javax.net.ssl.SSLSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
-import org.apache.hadoop.auth.util.HttpConstants;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Hashtable;
+import java.util.Properties;
 
 /**
  * The {@link LdapAuthenticationHandler} implements the BASIC authentication
@@ -133,7 +131,7 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
     Preconditions
         .checkNotNull(this.providerUrl, "The LDAP URI can not be null");
     Preconditions.checkArgument((this.baseDN == null)
-        ^ (this.ldapDomain == null),
+            ^ (this.ldapDomain == null),
         "Either LDAP base DN or LDAP domain value needs to be specified");
     if (this.enableStartTls) {
       String tmp = this.providerUrl.toLowerCase();
@@ -155,22 +153,22 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
 
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request,
-      HttpServletResponse response)
-          throws IOException, AuthenticationException {
+                                          HttpServletResponse response)
+      throws IOException, AuthenticationException {
     AuthenticationToken token = null;
     String authorization =
         request.getHeader(HttpConstants.AUTHORIZATION_HEADER);
 
     if (authorization == null
         || !AuthenticationHandlerUtil.matchAuthScheme(HttpConstants.BASIC,
-            authorization)) {
+        authorization)) {
       response.setHeader(WWW_AUTHENTICATE, HttpConstants.BASIC);
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       if (authorization == null) {
         LOG.trace("Basic auth starting");
       } else {
         LOG.warn("'" + HttpConstants.AUTHORIZATION_HEADER
-            + "' does not start with '" + HttpConstants.BASIC + "' :  {}",
+                + "' does not start with '" + HttpConstants.BASIC + "' :  {}",
             authorization);
       }
     } else {
@@ -189,7 +187,7 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
   }
 
   private AuthenticationToken authenticateUser(String userName,
-      String password) throws AuthenticationException {
+                                               String password) throws AuthenticationException {
     if (userName == null || userName.isEmpty()) {
       throw new AuthenticationException("Error validating LDAP user:"
           + " a null or blank username has been provided");

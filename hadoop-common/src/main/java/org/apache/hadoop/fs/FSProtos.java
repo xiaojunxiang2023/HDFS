@@ -3,7 +3,9 @@
 package org.apache.hadoop.fs;
 
 public final class FSProtos {
-  private FSProtos() {}
+  private FSProtos() {
+  }
+
   public static void registerAllExtensions(
       org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite registry) {
   }
@@ -13,6 +15,7 @@ public final class FSProtos {
     registerAllExtensions(
         (org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite) registry);
   }
+
   public interface FsPermissionProtoOrBuilder extends
       // @@protoc_insertion_point(interface_extends:hadoop.fs.FsPermissionProto)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
@@ -25,6 +28,7 @@ public final class FSProtos {
      * <code>required uint32 perm = 1;</code>
      */
     boolean hasPerm();
+
     /**
      * <pre>
      * UNIX-style mode bits
@@ -34,18 +38,21 @@ public final class FSProtos {
      */
     int getPerm();
   }
+
   /**
    * Protobuf type {@code hadoop.fs.FsPermissionProto}
    */
-  public  static final class FsPermissionProto extends
+  public static final class FsPermissionProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.fs.FsPermissionProto)
       FsPermissionProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use FsPermissionProto.newBuilder() to construct.
     private FsPermissionProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private FsPermissionProto() {
     }
 
@@ -54,6 +61,7 @@ public final class FSProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private FsPermissionProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -97,14 +105,15 @@ public final class FSProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FsPermissionProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FsPermissionProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.fs.FSProtos.FsPermissionProto.class, org.apache.hadoop.fs.FSProtos.FsPermissionProto.Builder.class);
@@ -113,6 +122,7 @@ public final class FSProtos {
     private int bitField0_;
     public static final int PERM_FIELD_NUMBER = 1;
     private int perm_;
+
     /**
      * <pre>
      * UNIX-style mode bits
@@ -123,6 +133,7 @@ public final class FSProtos {
     public boolean hasPerm() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <pre>
      * UNIX-style mode bits
@@ -135,6 +146,7 @@ public final class FSProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -151,7 +163,7 @@ public final class FSProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, perm_);
       }
@@ -166,7 +178,7 @@ public final class FSProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, perm_);
+            .computeUInt32Size(1, perm_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -176,7 +188,7 @@ public final class FSProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.fs.FSProtos.FsPermissionProto)) {
         return super.equals(obj);
@@ -213,38 +225,45 @@ public final class FSProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -252,11 +271,13 @@ public final class FSProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -264,12 +285,14 @@ public final class FSProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FsPermissionProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -279,13 +302,18 @@ public final class FSProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.fs.FSProtos.FsPermissionProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -298,6 +326,7 @@ public final class FSProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.fs.FsPermissionProto}
      */
@@ -306,13 +335,13 @@ public final class FSProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.fs.FsPermissionProto)
         org.apache.hadoop.fs.FSProtos.FsPermissionProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FsPermissionProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FsPermissionProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.fs.FSProtos.FsPermissionProto.class, org.apache.hadoop.fs.FSProtos.FsPermissionProto.Builder.class);
@@ -328,11 +357,13 @@ public final class FSProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -343,7 +374,7 @@ public final class FSProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FsPermissionProto_descriptor;
       }
 
@@ -379,38 +410,44 @@ public final class FSProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.fs.FSProtos.FsPermissionProto) {
-          return mergeFrom((org.apache.hadoop.fs.FSProtos.FsPermissionProto)other);
+          return mergeFrom((org.apache.hadoop.fs.FSProtos.FsPermissionProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -453,9 +490,11 @@ public final class FSProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int perm_ ;
+      private int perm_;
+
       /**
        * <pre>
        * UNIX-style mode bits
@@ -466,6 +505,7 @@ public final class FSProtos {
       public boolean hasPerm() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        * UNIX-style mode bits
@@ -476,6 +516,7 @@ public final class FSProtos {
       public int getPerm() {
         return perm_;
       }
+
       /**
        * <pre>
        * UNIX-style mode bits
@@ -489,6 +530,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * UNIX-style mode bits
@@ -502,6 +544,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -520,6 +563,7 @@ public final class FSProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.fs.FsPermissionProto)
     private static final org.apache.hadoop.fs.FSProtos.FsPermissionProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.fs.FSProtos.FsPermissionProto();
     }
@@ -528,7 +572,8 @@ public final class FSProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FsPermissionProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<FsPermissionProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FsPermissionProto>() {
       @java.lang.Override
       public FsPermissionProto parsePartialFrom(
@@ -563,6 +608,7 @@ public final class FSProtos {
      * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
      */
     boolean hasFileType();
+
     /**
      * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
      */
@@ -572,20 +618,23 @@ public final class FSProtos {
      * <code>required string path = 2;</code>
      */
     boolean hasPath();
+
     /**
      * <code>required string path = 2;</code>
      */
     java.lang.String getPath();
+
     /**
      * <code>required string path = 2;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getPathBytes();
+    getPathBytes();
 
     /**
      * <code>optional uint64 length = 3;</code>
      */
     boolean hasLength();
+
     /**
      * <code>optional uint64 length = 3;</code>
      */
@@ -595,10 +644,12 @@ public final class FSProtos {
      * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
      */
     boolean hasPermission();
+
     /**
      * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
      */
     org.apache.hadoop.fs.FSProtos.FsPermissionProto getPermission();
+
     /**
      * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
      */
@@ -608,34 +659,39 @@ public final class FSProtos {
      * <code>optional string owner = 5;</code>
      */
     boolean hasOwner();
+
     /**
      * <code>optional string owner = 5;</code>
      */
     java.lang.String getOwner();
+
     /**
      * <code>optional string owner = 5;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getOwnerBytes();
+    getOwnerBytes();
 
     /**
      * <code>optional string group = 6;</code>
      */
     boolean hasGroup();
+
     /**
      * <code>optional string group = 6;</code>
      */
     java.lang.String getGroup();
+
     /**
      * <code>optional string group = 6;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getGroupBytes();
+    getGroupBytes();
 
     /**
      * <code>optional uint64 modification_time = 7;</code>
      */
     boolean hasModificationTime();
+
     /**
      * <code>optional uint64 modification_time = 7;</code>
      */
@@ -645,6 +701,7 @@ public final class FSProtos {
      * <code>optional uint64 access_time = 8;</code>
      */
     boolean hasAccessTime();
+
     /**
      * <code>optional uint64 access_time = 8;</code>
      */
@@ -654,20 +711,23 @@ public final class FSProtos {
      * <code>optional string symlink = 9;</code>
      */
     boolean hasSymlink();
+
     /**
      * <code>optional string symlink = 9;</code>
      */
     java.lang.String getSymlink();
+
     /**
      * <code>optional string symlink = 9;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getSymlinkBytes();
+    getSymlinkBytes();
 
     /**
      * <code>optional uint32 block_replication = 10;</code>
      */
     boolean hasBlockReplication();
+
     /**
      * <code>optional uint32 block_replication = 10;</code>
      */
@@ -677,6 +737,7 @@ public final class FSProtos {
      * <code>optional uint64 block_size = 11;</code>
      */
     boolean hasBlockSize();
+
     /**
      * <code>optional uint64 block_size = 11;</code>
      */
@@ -692,6 +753,7 @@ public final class FSProtos {
      * <code>optional bytes encryption_data = 15;</code>
      */
     boolean hasEncryptionData();
+
     /**
      * <pre>
      * locations                          = 12
@@ -711,6 +773,7 @@ public final class FSProtos {
      * <code>optional bytes ec_data = 17;</code>
      */
     boolean hasEcData();
+
     /**
      * <pre>
      * storagePolicy                      = 16
@@ -724,11 +787,13 @@ public final class FSProtos {
      * <code>optional uint32 flags = 18 [default = 0];</code>
      */
     boolean hasFlags();
+
     /**
      * <code>optional uint32 flags = 18 [default = 0];</code>
      */
     int getFlags();
   }
+
   /**
    * <pre>
    * FileStatus encoding. Field IDs match those from HdfsFileStatusProto, but
@@ -738,15 +803,17 @@ public final class FSProtos {
    *
    * Protobuf type {@code hadoop.fs.FileStatusProto}
    */
-  public  static final class FileStatusProto extends
+  public static final class FileStatusProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.fs.FileStatusProto)
       FileStatusProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use FileStatusProto.newBuilder() to construct.
     private FileStatusProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private FileStatusProto() {
       fileType_ = 1;
       path_ = "";
@@ -762,6 +829,7 @@ public final class FSProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private FileStatusProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -783,7 +851,7 @@ public final class FSProtos {
               break;
             case 8: {
               int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
+              @SuppressWarnings("deprecation")
               org.apache.hadoop.fs.FSProtos.FileStatusProto.FileType value = org.apache.hadoop.fs.FSProtos.FileStatusProto.FileType.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
@@ -889,14 +957,15 @@ public final class FSProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FileStatusProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FileStatusProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.fs.FSProtos.FileStatusProto.class, org.apache.hadoop.fs.FSProtos.FileStatusProto.Builder.class);
@@ -949,35 +1018,42 @@ public final class FSProtos {
 
       public static FileType forNumber(int value) {
         switch (value) {
-          case 1: return FT_DIR;
-          case 2: return FT_FILE;
-          case 3: return FT_SYMLINK;
-          default: return null;
+          case 1:
+            return FT_DIR;
+          case 2:
+            return FT_FILE;
+          case 3:
+            return FT_SYMLINK;
+          default:
+            return null;
         }
       }
 
       public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<FileType>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
+
       private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
           FileType> internalValueMap =
-            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<FileType>() {
-              public FileType findValueByNumber(int number) {
-                return FileType.forNumber(number);
-              }
-            };
+          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<FileType>() {
+            public FileType findValueByNumber(int number) {
+              return FileType.forNumber(number);
+            }
+          };
 
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
+
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.fs.FSProtos.FileStatusProto.getDescriptor().getEnumTypes().get(0);
       }
 
@@ -987,7 +1063,7 @@ public final class FSProtos {
           org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -1088,36 +1164,44 @@ public final class FSProtos {
 
       public static Flags forNumber(int value) {
         switch (value) {
-          case 1: return HAS_ACL;
-          case 2: return HAS_CRYPT;
-          case 4: return HAS_EC;
-          case 8: return SNAPSHOT_ENABLED;
-          default: return null;
+          case 1:
+            return HAS_ACL;
+          case 2:
+            return HAS_CRYPT;
+          case 4:
+            return HAS_EC;
+          case 8:
+            return SNAPSHOT_ENABLED;
+          default:
+            return null;
         }
       }
 
       public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Flags>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
+
       private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
           Flags> internalValueMap =
-            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Flags>() {
-              public Flags findValueByNumber(int number) {
-                return Flags.forNumber(number);
-              }
-            };
+          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Flags>() {
+            public Flags findValueByNumber(int number) {
+              return Flags.forNumber(number);
+            }
+          };
 
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
+
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.fs.FSProtos.FileStatusProto.getDescriptor().getEnumTypes().get(1);
       }
 
@@ -1127,7 +1211,7 @@ public final class FSProtos {
           org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -1144,12 +1228,14 @@ public final class FSProtos {
     private int bitField0_;
     public static final int FILETYPE_FIELD_NUMBER = 1;
     private int fileType_;
+
     /**
      * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
      */
     public boolean hasFileType() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
      */
@@ -1161,12 +1247,14 @@ public final class FSProtos {
 
     public static final int PATH_FIELD_NUMBER = 2;
     private volatile java.lang.Object path_;
+
     /**
      * <code>required string path = 2;</code>
      */
     public boolean hasPath() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>required string path = 2;</code>
      */
@@ -1175,7 +1263,7 @@ public final class FSProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1184,14 +1272,15 @@ public final class FSProtos {
         return s;
       }
     }
+
     /**
      * <code>required string path = 2;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getPathBytes() {
+    getPathBytes() {
       java.lang.Object ref = path_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         path_ = b;
@@ -1203,12 +1292,14 @@ public final class FSProtos {
 
     public static final int LENGTH_FIELD_NUMBER = 3;
     private long length_;
+
     /**
      * <code>optional uint64 length = 3;</code>
      */
     public boolean hasLength() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <code>optional uint64 length = 3;</code>
      */
@@ -1218,18 +1309,21 @@ public final class FSProtos {
 
     public static final int PERMISSION_FIELD_NUMBER = 4;
     private org.apache.hadoop.fs.FSProtos.FsPermissionProto permission_;
+
     /**
      * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
      */
     public boolean hasPermission() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
      */
     public org.apache.hadoop.fs.FSProtos.FsPermissionProto getPermission() {
       return permission_ == null ? org.apache.hadoop.fs.FSProtos.FsPermissionProto.getDefaultInstance() : permission_;
     }
+
     /**
      * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
      */
@@ -1239,12 +1333,14 @@ public final class FSProtos {
 
     public static final int OWNER_FIELD_NUMBER = 5;
     private volatile java.lang.Object owner_;
+
     /**
      * <code>optional string owner = 5;</code>
      */
     public boolean hasOwner() {
       return ((bitField0_ & 0x00000010) != 0);
     }
+
     /**
      * <code>optional string owner = 5;</code>
      */
@@ -1253,7 +1349,7 @@ public final class FSProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1262,14 +1358,15 @@ public final class FSProtos {
         return s;
       }
     }
+
     /**
      * <code>optional string owner = 5;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getOwnerBytes() {
+    getOwnerBytes() {
       java.lang.Object ref = owner_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         owner_ = b;
@@ -1281,12 +1378,14 @@ public final class FSProtos {
 
     public static final int GROUP_FIELD_NUMBER = 6;
     private volatile java.lang.Object group_;
+
     /**
      * <code>optional string group = 6;</code>
      */
     public boolean hasGroup() {
       return ((bitField0_ & 0x00000020) != 0);
     }
+
     /**
      * <code>optional string group = 6;</code>
      */
@@ -1295,7 +1394,7 @@ public final class FSProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1304,14 +1403,15 @@ public final class FSProtos {
         return s;
       }
     }
+
     /**
      * <code>optional string group = 6;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getGroupBytes() {
+    getGroupBytes() {
       java.lang.Object ref = group_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         group_ = b;
@@ -1323,12 +1423,14 @@ public final class FSProtos {
 
     public static final int MODIFICATION_TIME_FIELD_NUMBER = 7;
     private long modificationTime_;
+
     /**
      * <code>optional uint64 modification_time = 7;</code>
      */
     public boolean hasModificationTime() {
       return ((bitField0_ & 0x00000040) != 0);
     }
+
     /**
      * <code>optional uint64 modification_time = 7;</code>
      */
@@ -1338,12 +1440,14 @@ public final class FSProtos {
 
     public static final int ACCESS_TIME_FIELD_NUMBER = 8;
     private long accessTime_;
+
     /**
      * <code>optional uint64 access_time = 8;</code>
      */
     public boolean hasAccessTime() {
       return ((bitField0_ & 0x00000080) != 0);
     }
+
     /**
      * <code>optional uint64 access_time = 8;</code>
      */
@@ -1353,12 +1457,14 @@ public final class FSProtos {
 
     public static final int SYMLINK_FIELD_NUMBER = 9;
     private volatile java.lang.Object symlink_;
+
     /**
      * <code>optional string symlink = 9;</code>
      */
     public boolean hasSymlink() {
       return ((bitField0_ & 0x00000100) != 0);
     }
+
     /**
      * <code>optional string symlink = 9;</code>
      */
@@ -1367,7 +1473,7 @@ public final class FSProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1376,14 +1482,15 @@ public final class FSProtos {
         return s;
       }
     }
+
     /**
      * <code>optional string symlink = 9;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getSymlinkBytes() {
+    getSymlinkBytes() {
       java.lang.Object ref = symlink_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         symlink_ = b;
@@ -1395,12 +1502,14 @@ public final class FSProtos {
 
     public static final int BLOCK_REPLICATION_FIELD_NUMBER = 10;
     private int blockReplication_;
+
     /**
      * <code>optional uint32 block_replication = 10;</code>
      */
     public boolean hasBlockReplication() {
       return ((bitField0_ & 0x00000200) != 0);
     }
+
     /**
      * <code>optional uint32 block_replication = 10;</code>
      */
@@ -1410,12 +1519,14 @@ public final class FSProtos {
 
     public static final int BLOCK_SIZE_FIELD_NUMBER = 11;
     private long blockSize_;
+
     /**
      * <code>optional uint64 block_size = 11;</code>
      */
     public boolean hasBlockSize() {
       return ((bitField0_ & 0x00000400) != 0);
     }
+
     /**
      * <code>optional uint64 block_size = 11;</code>
      */
@@ -1425,6 +1536,7 @@ public final class FSProtos {
 
     public static final int ENCRYPTION_DATA_FIELD_NUMBER = 15;
     private org.apache.hadoop.thirdparty.protobuf.ByteString encryptionData_;
+
     /**
      * <pre>
      * locations                          = 12
@@ -1437,6 +1549,7 @@ public final class FSProtos {
     public boolean hasEncryptionData() {
       return ((bitField0_ & 0x00000800) != 0);
     }
+
     /**
      * <pre>
      * locations                          = 12
@@ -1452,6 +1565,7 @@ public final class FSProtos {
 
     public static final int EC_DATA_FIELD_NUMBER = 17;
     private org.apache.hadoop.thirdparty.protobuf.ByteString ecData_;
+
     /**
      * <pre>
      * storagePolicy                      = 16
@@ -1462,6 +1576,7 @@ public final class FSProtos {
     public boolean hasEcData() {
       return ((bitField0_ & 0x00001000) != 0);
     }
+
     /**
      * <pre>
      * storagePolicy                      = 16
@@ -1475,12 +1590,14 @@ public final class FSProtos {
 
     public static final int FLAGS_FIELD_NUMBER = 18;
     private int flags_;
+
     /**
      * <code>optional uint32 flags = 18 [default = 0];</code>
      */
     public boolean hasFlags() {
       return ((bitField0_ & 0x00002000) != 0);
     }
+
     /**
      * <code>optional uint32 flags = 18 [default = 0];</code>
      */
@@ -1489,6 +1606,7 @@ public final class FSProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1515,7 +1633,7 @@ public final class FSProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeEnum(1, fileType_);
       }
@@ -1569,18 +1687,18 @@ public final class FSProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeEnumSize(1, fileType_);
+            .computeEnumSize(1, fileType_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(2, path_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(3, length_);
+            .computeUInt64Size(3, length_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(4, getPermission());
+            .computeMessageSize(4, getPermission());
       }
       if (((bitField0_ & 0x00000010) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(5, owner_);
@@ -1590,34 +1708,34 @@ public final class FSProtos {
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(7, modificationTime_);
+            .computeUInt64Size(7, modificationTime_);
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(8, accessTime_);
+            .computeUInt64Size(8, accessTime_);
       }
       if (((bitField0_ & 0x00000100) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(9, symlink_);
       }
       if (((bitField0_ & 0x00000200) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(10, blockReplication_);
+            .computeUInt32Size(10, blockReplication_);
       }
       if (((bitField0_ & 0x00000400) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(11, blockSize_);
+            .computeUInt64Size(11, blockSize_);
       }
       if (((bitField0_ & 0x00000800) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(15, encryptionData_);
+            .computeBytesSize(15, encryptionData_);
       }
       if (((bitField0_ & 0x00001000) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(17, ecData_);
+            .computeBytesSize(17, ecData_);
       }
       if (((bitField0_ & 0x00002000) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(18, flags_);
+            .computeUInt32Size(18, flags_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1627,7 +1745,7 @@ public final class FSProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.fs.FSProtos.FileStatusProto)) {
         return super.equals(obj);
@@ -1784,38 +1902,45 @@ public final class FSProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1823,11 +1948,13 @@ public final class FSProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1835,12 +1962,14 @@ public final class FSProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.FileStatusProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1850,13 +1979,18 @@ public final class FSProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.fs.FSProtos.FileStatusProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -1869,6 +2003,7 @@ public final class FSProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      * FileStatus encoding. Field IDs match those from HdfsFileStatusProto, but
@@ -1883,13 +2018,13 @@ public final class FSProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.fs.FileStatusProto)
         org.apache.hadoop.fs.FSProtos.FileStatusProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FileStatusProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FileStatusProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.fs.FSProtos.FileStatusProto.class, org.apache.hadoop.fs.FSProtos.FileStatusProto.Builder.class);
@@ -1905,12 +2040,14 @@ public final class FSProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
           getPermissionFieldBuilder();
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -1951,7 +2088,7 @@ public final class FSProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_FileStatusProto_descriptor;
       }
 
@@ -2043,38 +2180,44 @@ public final class FSProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.fs.FSProtos.FileStatusProto) {
-          return mergeFrom((org.apache.hadoop.fs.FSProtos.FileStatusProto)other);
+          return mergeFrom((org.apache.hadoop.fs.FSProtos.FileStatusProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2172,15 +2315,18 @@ public final class FSProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
       private int fileType_ = 1;
+
       /**
        * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
        */
       public boolean hasFileType() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
        */
@@ -2189,6 +2335,7 @@ public final class FSProtos {
         org.apache.hadoop.fs.FSProtos.FileStatusProto.FileType result = org.apache.hadoop.fs.FSProtos.FileStatusProto.FileType.valueOf(fileType_);
         return result == null ? org.apache.hadoop.fs.FSProtos.FileStatusProto.FileType.FT_DIR : result;
       }
+
       /**
        * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
        */
@@ -2201,6 +2348,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required .hadoop.fs.FileStatusProto.FileType fileType = 1;</code>
        */
@@ -2212,12 +2360,14 @@ public final class FSProtos {
       }
 
       private java.lang.Object path_ = "";
+
       /**
        * <code>required string path = 2;</code>
        */
       public boolean hasPath() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required string path = 2;</code>
        */
@@ -2235,14 +2385,15 @@ public final class FSProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>required string path = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getPathBytes() {
+      getPathBytes() {
         java.lang.Object ref = path_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           path_ = b;
@@ -2251,19 +2402,21 @@ public final class FSProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>required string path = 2;</code>
        */
       public Builder setPath(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         path_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>required string path = 2;</code>
        */
@@ -2273,33 +2426,37 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required string path = 2;</code>
        */
       public Builder setPathBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         path_ = value;
         onChanged();
         return this;
       }
 
-      private long length_ ;
+      private long length_;
+
       /**
        * <code>optional uint64 length = 3;</code>
        */
       public boolean hasLength() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional uint64 length = 3;</code>
        */
       public long getLength() {
         return length_;
       }
+
       /**
        * <code>optional uint64 length = 3;</code>
        */
@@ -2309,6 +2466,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 length = 3;</code>
        */
@@ -2322,12 +2480,14 @@ public final class FSProtos {
       private org.apache.hadoop.fs.FSProtos.FsPermissionProto permission_;
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
           org.apache.hadoop.fs.FSProtos.FsPermissionProto, org.apache.hadoop.fs.FSProtos.FsPermissionProto.Builder, org.apache.hadoop.fs.FSProtos.FsPermissionProtoOrBuilder> permissionBuilder_;
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
       public boolean hasPermission() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2338,6 +2498,7 @@ public final class FSProtos {
           return permissionBuilder_.getMessage();
         }
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2354,6 +2515,7 @@ public final class FSProtos {
         bitField0_ |= 0x00000008;
         return this;
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2368,6 +2530,7 @@ public final class FSProtos {
         bitField0_ |= 0x00000008;
         return this;
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2377,7 +2540,7 @@ public final class FSProtos {
               permission_ != null &&
               permission_ != org.apache.hadoop.fs.FSProtos.FsPermissionProto.getDefaultInstance()) {
             permission_ =
-              org.apache.hadoop.fs.FSProtos.FsPermissionProto.newBuilder(permission_).mergeFrom(value).buildPartial();
+                org.apache.hadoop.fs.FSProtos.FsPermissionProto.newBuilder(permission_).mergeFrom(value).buildPartial();
           } else {
             permission_ = value;
           }
@@ -2388,6 +2551,7 @@ public final class FSProtos {
         bitField0_ |= 0x00000008;
         return this;
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2401,6 +2565,7 @@ public final class FSProtos {
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2409,6 +2574,7 @@ public final class FSProtos {
         onChanged();
         return getPermissionFieldBuilder().getBuilder();
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
@@ -2420,30 +2586,33 @@ public final class FSProtos {
               org.apache.hadoop.fs.FSProtos.FsPermissionProto.getDefaultInstance() : permission_;
         }
       }
+
       /**
        * <code>optional .hadoop.fs.FsPermissionProto permission = 4;</code>
        */
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-          org.apache.hadoop.fs.FSProtos.FsPermissionProto, org.apache.hadoop.fs.FSProtos.FsPermissionProto.Builder, org.apache.hadoop.fs.FSProtos.FsPermissionProtoOrBuilder> 
-          getPermissionFieldBuilder() {
+          org.apache.hadoop.fs.FSProtos.FsPermissionProto, org.apache.hadoop.fs.FSProtos.FsPermissionProto.Builder, org.apache.hadoop.fs.FSProtos.FsPermissionProtoOrBuilder>
+      getPermissionFieldBuilder() {
         if (permissionBuilder_ == null) {
           permissionBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
               org.apache.hadoop.fs.FSProtos.FsPermissionProto, org.apache.hadoop.fs.FSProtos.FsPermissionProto.Builder, org.apache.hadoop.fs.FSProtos.FsPermissionProtoOrBuilder>(
-                  getPermission(),
-                  getParentForChildren(),
-                  isClean());
+              getPermission(),
+              getParentForChildren(),
+              isClean());
           permission_ = null;
         }
         return permissionBuilder_;
       }
 
       private java.lang.Object owner_ = "";
+
       /**
        * <code>optional string owner = 5;</code>
        */
       public boolean hasOwner() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional string owner = 5;</code>
        */
@@ -2461,14 +2630,15 @@ public final class FSProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string owner = 5;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getOwnerBytes() {
+      getOwnerBytes() {
         java.lang.Object ref = owner_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           owner_ = b;
@@ -2477,19 +2647,21 @@ public final class FSProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string owner = 5;</code>
        */
       public Builder setOwner(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000010;
         owner_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string owner = 5;</code>
        */
@@ -2499,27 +2671,30 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string owner = 5;</code>
        */
       public Builder setOwnerBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000010;
         owner_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object group_ = "";
+
       /**
        * <code>optional string group = 6;</code>
        */
       public boolean hasGroup() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional string group = 6;</code>
        */
@@ -2537,14 +2712,15 @@ public final class FSProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string group = 6;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getGroupBytes() {
+      getGroupBytes() {
         java.lang.Object ref = group_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           group_ = b;
@@ -2553,19 +2729,21 @@ public final class FSProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string group = 6;</code>
        */
       public Builder setGroup(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000020;
         group_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string group = 6;</code>
        */
@@ -2575,33 +2753,37 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string group = 6;</code>
        */
       public Builder setGroupBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000020;
         group_ = value;
         onChanged();
         return this;
       }
 
-      private long modificationTime_ ;
+      private long modificationTime_;
+
       /**
        * <code>optional uint64 modification_time = 7;</code>
        */
       public boolean hasModificationTime() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <code>optional uint64 modification_time = 7;</code>
        */
       public long getModificationTime() {
         return modificationTime_;
       }
+
       /**
        * <code>optional uint64 modification_time = 7;</code>
        */
@@ -2611,6 +2793,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 modification_time = 7;</code>
        */
@@ -2621,19 +2804,22 @@ public final class FSProtos {
         return this;
       }
 
-      private long accessTime_ ;
+      private long accessTime_;
+
       /**
        * <code>optional uint64 access_time = 8;</code>
        */
       public boolean hasAccessTime() {
         return ((bitField0_ & 0x00000080) != 0);
       }
+
       /**
        * <code>optional uint64 access_time = 8;</code>
        */
       public long getAccessTime() {
         return accessTime_;
       }
+
       /**
        * <code>optional uint64 access_time = 8;</code>
        */
@@ -2643,6 +2829,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 access_time = 8;</code>
        */
@@ -2654,12 +2841,14 @@ public final class FSProtos {
       }
 
       private java.lang.Object symlink_ = "";
+
       /**
        * <code>optional string symlink = 9;</code>
        */
       public boolean hasSymlink() {
         return ((bitField0_ & 0x00000100) != 0);
       }
+
       /**
        * <code>optional string symlink = 9;</code>
        */
@@ -2677,14 +2866,15 @@ public final class FSProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string symlink = 9;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getSymlinkBytes() {
+      getSymlinkBytes() {
         java.lang.Object ref = symlink_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           symlink_ = b;
@@ -2693,19 +2883,21 @@ public final class FSProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string symlink = 9;</code>
        */
       public Builder setSymlink(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000100;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000100;
         symlink_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string symlink = 9;</code>
        */
@@ -2715,33 +2907,37 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string symlink = 9;</code>
        */
       public Builder setSymlinkBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000100;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000100;
         symlink_ = value;
         onChanged();
         return this;
       }
 
-      private int blockReplication_ ;
+      private int blockReplication_;
+
       /**
        * <code>optional uint32 block_replication = 10;</code>
        */
       public boolean hasBlockReplication() {
         return ((bitField0_ & 0x00000200) != 0);
       }
+
       /**
        * <code>optional uint32 block_replication = 10;</code>
        */
       public int getBlockReplication() {
         return blockReplication_;
       }
+
       /**
        * <code>optional uint32 block_replication = 10;</code>
        */
@@ -2751,6 +2947,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 block_replication = 10;</code>
        */
@@ -2761,19 +2958,22 @@ public final class FSProtos {
         return this;
       }
 
-      private long blockSize_ ;
+      private long blockSize_;
+
       /**
        * <code>optional uint64 block_size = 11;</code>
        */
       public boolean hasBlockSize() {
         return ((bitField0_ & 0x00000400) != 0);
       }
+
       /**
        * <code>optional uint64 block_size = 11;</code>
        */
       public long getBlockSize() {
         return blockSize_;
       }
+
       /**
        * <code>optional uint64 block_size = 11;</code>
        */
@@ -2783,6 +2983,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 block_size = 11;</code>
        */
@@ -2794,6 +2995,7 @@ public final class FSProtos {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString encryptionData_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <pre>
        * locations                          = 12
@@ -2806,6 +3008,7 @@ public final class FSProtos {
       public boolean hasEncryptionData() {
         return ((bitField0_ & 0x00000800) != 0);
       }
+
       /**
        * <pre>
        * locations                          = 12
@@ -2818,6 +3021,7 @@ public final class FSProtos {
       public org.apache.hadoop.thirdparty.protobuf.ByteString getEncryptionData() {
         return encryptionData_;
       }
+
       /**
        * <pre>
        * locations                          = 12
@@ -2829,13 +3033,14 @@ public final class FSProtos {
        */
       public Builder setEncryptionData(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000800;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000800;
         encryptionData_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * locations                          = 12
@@ -2853,6 +3058,7 @@ public final class FSProtos {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString ecData_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <pre>
        * storagePolicy                      = 16
@@ -2863,6 +3069,7 @@ public final class FSProtos {
       public boolean hasEcData() {
         return ((bitField0_ & 0x00001000) != 0);
       }
+
       /**
        * <pre>
        * storagePolicy                      = 16
@@ -2873,6 +3080,7 @@ public final class FSProtos {
       public org.apache.hadoop.thirdparty.protobuf.ByteString getEcData() {
         return ecData_;
       }
+
       /**
        * <pre>
        * storagePolicy                      = 16
@@ -2882,13 +3090,14 @@ public final class FSProtos {
        */
       public Builder setEcData(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00001000;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00001000;
         ecData_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * storagePolicy                      = 16
@@ -2903,19 +3112,22 @@ public final class FSProtos {
         return this;
       }
 
-      private int flags_ ;
+      private int flags_;
+
       /**
        * <code>optional uint32 flags = 18 [default = 0];</code>
        */
       public boolean hasFlags() {
         return ((bitField0_ & 0x00002000) != 0);
       }
+
       /**
        * <code>optional uint32 flags = 18 [default = 0];</code>
        */
       public int getFlags() {
         return flags_;
       }
+
       /**
        * <code>optional uint32 flags = 18 [default = 0];</code>
        */
@@ -2925,6 +3137,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 flags = 18 [default = 0];</code>
        */
@@ -2934,6 +3147,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -2952,6 +3166,7 @@ public final class FSProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.fs.FileStatusProto)
     private static final org.apache.hadoop.fs.FSProtos.FileStatusProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.fs.FSProtos.FileStatusProto();
     }
@@ -2960,7 +3175,8 @@ public final class FSProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileStatusProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileStatusProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FileStatusProto>() {
       @java.lang.Override
       public FileStatusProto parsePartialFrom(
@@ -2995,6 +3211,7 @@ public final class FSProtos {
      * <code>optional uint64 mtime = 1;</code>
      */
     boolean hasMtime();
+
     /**
      * <code>optional uint64 mtime = 1;</code>
      */
@@ -3004,16 +3221,19 @@ public final class FSProtos {
      * <code>optional string path = 2;</code>
      */
     boolean hasPath();
+
     /**
      * <code>optional string path = 2;</code>
      */
     java.lang.String getPath();
+
     /**
      * <code>optional string path = 2;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getPathBytes();
+    getPathBytes();
   }
+
   /**
    * <pre>
    **
@@ -3022,15 +3242,17 @@ public final class FSProtos {
    *
    * Protobuf type {@code hadoop.fs.LocalFileSystemPathHandleProto}
    */
-  public  static final class LocalFileSystemPathHandleProto extends
+  public static final class LocalFileSystemPathHandleProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.fs.LocalFileSystemPathHandleProto)
       LocalFileSystemPathHandleProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use LocalFileSystemPathHandleProto.newBuilder() to construct.
     private LocalFileSystemPathHandleProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private LocalFileSystemPathHandleProto() {
       path_ = "";
     }
@@ -3040,6 +3262,7 @@ public final class FSProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private LocalFileSystemPathHandleProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3089,14 +3312,15 @@ public final class FSProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_LocalFileSystemPathHandleProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto.class, org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto.Builder.class);
@@ -3105,12 +3329,14 @@ public final class FSProtos {
     private int bitField0_;
     public static final int MTIME_FIELD_NUMBER = 1;
     private long mtime_;
+
     /**
      * <code>optional uint64 mtime = 1;</code>
      */
     public boolean hasMtime() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint64 mtime = 1;</code>
      */
@@ -3120,12 +3346,14 @@ public final class FSProtos {
 
     public static final int PATH_FIELD_NUMBER = 2;
     private volatile java.lang.Object path_;
+
     /**
      * <code>optional string path = 2;</code>
      */
     public boolean hasPath() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>optional string path = 2;</code>
      */
@@ -3134,7 +3362,7 @@ public final class FSProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -3143,14 +3371,15 @@ public final class FSProtos {
         return s;
       }
     }
+
     /**
      * <code>optional string path = 2;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getPathBytes() {
+    getPathBytes() {
       java.lang.Object ref = path_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         path_ = b;
@@ -3161,6 +3390,7 @@ public final class FSProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3173,7 +3403,7 @@ public final class FSProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt64(1, mtime_);
       }
@@ -3191,7 +3421,7 @@ public final class FSProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(1, mtime_);
+            .computeUInt64Size(1, mtime_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(2, path_);
@@ -3204,7 +3434,7 @@ public final class FSProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto)) {
         return super.equals(obj);
@@ -3251,38 +3481,45 @@ public final class FSProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3290,11 +3527,13 @@ public final class FSProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3302,12 +3541,14 @@ public final class FSProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3317,13 +3558,18 @@ public final class FSProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -3336,6 +3582,7 @@ public final class FSProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -3349,13 +3596,13 @@ public final class FSProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.fs.LocalFileSystemPathHandleProto)
         org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_LocalFileSystemPathHandleProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto.class, org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto.Builder.class);
@@ -3371,11 +3618,13 @@ public final class FSProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -3388,7 +3637,7 @@ public final class FSProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.fs.FSProtos.internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor;
       }
 
@@ -3428,38 +3677,44 @@ public final class FSProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto) {
-          return mergeFrom((org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto)other);
+          return mergeFrom((org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -3504,21 +3759,25 @@ public final class FSProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private long mtime_ ;
+      private long mtime_;
+
       /**
        * <code>optional uint64 mtime = 1;</code>
        */
       public boolean hasMtime() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint64 mtime = 1;</code>
        */
       public long getMtime() {
         return mtime_;
       }
+
       /**
        * <code>optional uint64 mtime = 1;</code>
        */
@@ -3528,6 +3787,7 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 mtime = 1;</code>
        */
@@ -3539,12 +3799,14 @@ public final class FSProtos {
       }
 
       private java.lang.Object path_ = "";
+
       /**
        * <code>optional string path = 2;</code>
        */
       public boolean hasPath() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional string path = 2;</code>
        */
@@ -3562,14 +3824,15 @@ public final class FSProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string path = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getPathBytes() {
+      getPathBytes() {
         java.lang.Object ref = path_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           path_ = b;
@@ -3578,19 +3841,21 @@ public final class FSProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string path = 2;</code>
        */
       public Builder setPath(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         path_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string path = 2;</code>
        */
@@ -3600,19 +3865,21 @@ public final class FSProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string path = 2;</code>
        */
       public Builder setPathBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         path_ = value;
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -3631,6 +3898,7 @@ public final class FSProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.fs.LocalFileSystemPathHandleProto)
     private static final org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.fs.FSProtos.LocalFileSystemPathHandleProto();
     }
@@ -3639,7 +3907,8 @@ public final class FSProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<LocalFileSystemPathHandleProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<LocalFileSystemPathHandleProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<LocalFileSystemPathHandleProto>() {
       @java.lang.Override
       public LocalFileSystemPathHandleProto parsePartialFrom(
@@ -3667,49 +3936,51 @@ public final class FSProtos {
   }
 
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_fs_FsPermissionProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_fs_FsPermissionProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_fs_FsPermissionProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_fs_FileStatusProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_fs_FileStatusProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_fs_FileStatusProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_fs_LocalFileSystemPathHandleProto_fieldAccessorTable;
 
   public static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
-  private static  org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
+
+  private static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
       descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n\016FSProtos.proto\022\thadoop.fs\"!\n\021FsPermiss" +
-      "ionProto\022\014\n\004perm\030\001 \002(\r\"\336\003\n\017FileStatusPro" +
-      "to\0225\n\010fileType\030\001 \002(\0162#.hadoop.fs.FileSta" +
-      "tusProto.FileType\022\014\n\004path\030\002 \002(\t\022\016\n\006lengt" +
-      "h\030\003 \001(\004\0220\n\npermission\030\004 \001(\0132\034.hadoop.fs." +
-      "FsPermissionProto\022\r\n\005owner\030\005 \001(\t\022\r\n\005grou" +
-      "p\030\006 \001(\t\022\031\n\021modification_time\030\007 \001(\004\022\023\n\013ac" +
-      "cess_time\030\010 \001(\004\022\017\n\007symlink\030\t \001(\t\022\031\n\021bloc" +
-      "k_replication\030\n \001(\r\022\022\n\nblock_size\030\013 \001(\004\022" +
-      "\027\n\017encryption_data\030\017 \001(\014\022\017\n\007ec_data\030\021 \001(" +
-      "\014\022\020\n\005flags\030\022 \001(\r:\0010\"3\n\010FileType\022\n\n\006FT_DI" +
-      "R\020\001\022\013\n\007FT_FILE\020\002\022\016\n\nFT_SYMLINK\020\003\"E\n\005Flag" +
-      "s\022\013\n\007HAS_ACL\020\001\022\r\n\tHAS_CRYPT\020\002\022\n\n\006HAS_EC\020" +
-      "\004\022\024\n\020SNAPSHOT_ENABLED\020\010\"=\n\036LocalFileSyst" +
-      "emPathHandleProto\022\r\n\005mtime\030\001 \001(\004\022\014\n\004path" +
-      "\030\002 \001(\tB&\n\024org.apache.hadoop.fsB\010FSProtos" +
-      "\210\001\001\240\001\001"
+        "\n\016FSProtos.proto\022\thadoop.fs\"!\n\021FsPermiss" +
+            "ionProto\022\014\n\004perm\030\001 \002(\r\"\336\003\n\017FileStatusPro" +
+            "to\0225\n\010fileType\030\001 \002(\0162#.hadoop.fs.FileSta" +
+            "tusProto.FileType\022\014\n\004path\030\002 \002(\t\022\016\n\006lengt" +
+            "h\030\003 \001(\004\0220\n\npermission\030\004 \001(\0132\034.hadoop.fs." +
+            "FsPermissionProto\022\r\n\005owner\030\005 \001(\t\022\r\n\005grou" +
+            "p\030\006 \001(\t\022\031\n\021modification_time\030\007 \001(\004\022\023\n\013ac" +
+            "cess_time\030\010 \001(\004\022\017\n\007symlink\030\t \001(\t\022\031\n\021bloc" +
+            "k_replication\030\n \001(\r\022\022\n\nblock_size\030\013 \001(\004\022" +
+            "\027\n\017encryption_data\030\017 \001(\014\022\017\n\007ec_data\030\021 \001(" +
+            "\014\022\020\n\005flags\030\022 \001(\r:\0010\"3\n\010FileType\022\n\n\006FT_DI" +
+            "R\020\001\022\013\n\007FT_FILE\020\002\022\016\n\nFT_SYMLINK\020\003\"E\n\005Flag" +
+            "s\022\013\n\007HAS_ACL\020\001\022\r\n\tHAS_CRYPT\020\002\022\n\n\006HAS_EC\020" +
+            "\004\022\024\n\020SNAPSHOT_ENABLED\020\010\"=\n\036LocalFileSyst" +
+            "emPathHandleProto\022\r\n\005mtime\030\001 \001(\004\022\014\n\004path" +
+            "\030\002 \001(\tB&\n\024org.apache.hadoop.fsB\010FSProtos" +
+            "\210\001\001\240\001\001"
     };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
           public org.apache.hadoop.thirdparty.protobuf.ExtensionRegistry assignDescriptors(
               org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor root) {
             descriptor = root;
@@ -3717,27 +3988,27 @@ public final class FSProtos {
           }
         };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        .internalBuildGeneratedFileFrom(descriptorData,
+            new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[]{
+            }, assigner);
     internal_static_hadoop_fs_FsPermissionProto_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+        getDescriptor().getMessageTypes().get(0);
     internal_static_hadoop_fs_FsPermissionProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_fs_FsPermissionProto_descriptor,
-        new java.lang.String[] { "Perm", });
+        new java.lang.String[]{"Perm",});
     internal_static_hadoop_fs_FileStatusProto_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+        getDescriptor().getMessageTypes().get(1);
     internal_static_hadoop_fs_FileStatusProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_fs_FileStatusProto_descriptor,
-        new java.lang.String[] { "FileType", "Path", "Length", "Permission", "Owner", "Group", "ModificationTime", "AccessTime", "Symlink", "BlockReplication", "BlockSize", "EncryptionData", "EcData", "Flags", });
+        new java.lang.String[]{"FileType", "Path", "Length", "Permission", "Owner", "Group", "ModificationTime", "AccessTime", "Symlink", "BlockReplication", "BlockSize", "EncryptionData", "EcData", "Flags",});
     internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+        getDescriptor().getMessageTypes().get(2);
     internal_static_hadoop_fs_LocalFileSystemPathHandleProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_fs_LocalFileSystemPathHandleProto_descriptor,
-        new java.lang.String[] { "Mtime", "Path", });
+        new java.lang.String[]{"Mtime", "Path",});
   }
 
   // @@protoc_insertion_point(outer_class_scope)

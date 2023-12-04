@@ -14,45 +14,45 @@ import java.io.IOException;
  * RefreshMountTableEntriesResponse.
  */
 public class RefreshMountTableEntriesResponsePBImpl
-        extends RefreshMountTableEntriesResponse implements PBRecord {
+    extends RefreshMountTableEntriesResponse implements PBRecord {
 
-    private FederationProtocolPBTranslator<RefreshMountTableEntriesResponseProto,
-            Builder, RefreshMountTableEntriesResponseProtoOrBuilder> translator =
-            new FederationProtocolPBTranslator<>(
-                    RefreshMountTableEntriesResponseProto.class);
+  private FederationProtocolPBTranslator<RefreshMountTableEntriesResponseProto,
+      Builder, RefreshMountTableEntriesResponseProtoOrBuilder> translator =
+      new FederationProtocolPBTranslator<>(
+          RefreshMountTableEntriesResponseProto.class);
 
-    public RefreshMountTableEntriesResponsePBImpl() {
-    }
+  public RefreshMountTableEntriesResponsePBImpl() {
+  }
 
-    public RefreshMountTableEntriesResponsePBImpl(
-            RefreshMountTableEntriesResponseProto proto) {
-        this.translator.setProto(proto);
-    }
+  public RefreshMountTableEntriesResponsePBImpl(
+      RefreshMountTableEntriesResponseProto proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public RefreshMountTableEntriesResponseProto getProto() {
-        return this.translator.build();
-    }
+  @Override
+  public RefreshMountTableEntriesResponseProto getProto() {
+    return this.translator.build();
+  }
 
-    @Override
-    public void setProto(Message proto) {
-        this.translator.setProto(proto);
-    }
+  @Override
+  public void setProto(Message proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public void readInstance(String base64String) throws IOException {
-        this.translator.readInstance(base64String);
-    }
+  @Override
+  public void readInstance(String base64String) throws IOException {
+    this.translator.readInstance(base64String);
+  }
 
-    @Override
-    public boolean getResult() {
-        return this.translator.getProtoOrBuilder().getResult();
-    }
+  @Override
+  public boolean getResult() {
+    return this.translator.getProtoOrBuilder().getResult();
+  }
 
-    ;
+  ;
 
-    @Override
-    public void setResult(boolean result) {
-        this.translator.getBuilder().setResult(result);
-    }
+  @Override
+  public void setResult(boolean result) {
+    this.translator.getBuilder().setResult(result);
+  }
 }

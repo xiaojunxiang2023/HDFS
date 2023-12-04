@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.web;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.DelegationTokenRenewer;
 import org.apache.hadoop.fs.DelegationTokenRenewer.Renewable;
@@ -16,10 +13,13 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenRenewer;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSelector;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
 
 /**
  * This class implements the aspects that relate to delegation tokens for all
@@ -51,14 +51,14 @@ final class TokenAspect<T extends FileSystem & Renewable> {
 
     private TokenManagementDelegator getInstance(Token<?> token,
                                                  Configuration conf)
-            throws IOException {
+        throws IOException {
       final URI uri;
       final String scheme = getSchemeByKind(token.getKind());
       if (HAUtilClient.isTokenForLogicalUri(token)) {
         uri = HAUtilClient.getServiceUriFromToken(scheme, token);
       } else {
         final InetSocketAddress address = SecurityUtil.getTokenServiceAddr
-                (token);
+            (token);
         uri = URI.create(scheme + "://" + NetUtils.getHostPortString(address));
       }
       return (TokenManagementDelegator) FileSystem.get(uri, conf);
@@ -87,6 +87,7 @@ final class TokenAspect<T extends FileSystem & Renewable> {
    */
   interface TokenManagementDelegator {
     void cancelDelegationToken(final Token<?> token) throws IOException;
+
     long renewDelegationToken(final Token<?> token) throws IOException;
   }
 

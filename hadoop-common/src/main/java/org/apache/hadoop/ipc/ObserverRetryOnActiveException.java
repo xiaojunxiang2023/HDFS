@@ -7,6 +7,7 @@ package org.apache.hadoop.ipc;
  */
 public class ObserverRetryOnActiveException extends StandbyException {
   static final long serialVersionUID = 1L;
+
   public ObserverRetryOnActiveException(String msg) {
     super(msg);
   }

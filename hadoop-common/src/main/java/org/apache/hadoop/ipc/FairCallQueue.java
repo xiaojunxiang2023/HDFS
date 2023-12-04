@@ -1,19 +1,5 @@
 package org.apache.hadoop.ipc;
 
-import java.lang.ref.WeakReference;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.AbstractQueue;
-import java.util.HashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -24,8 +10,17 @@ import org.apache.hadoop.metrics2.MetricsSource;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.Interns;
 import org.apache.hadoop.metrics2.util.MBeans;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.ref.WeakReference;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A queue with multiple levels for each priority.
@@ -33,10 +28,10 @@ import org.slf4j.LoggerFactory;
 public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
     implements BlockingQueue<E> {
   @Deprecated
-  public static final int    IPC_CALLQUEUE_PRIORITY_LEVELS_DEFAULT = 4;
+  public static final int IPC_CALLQUEUE_PRIORITY_LEVELS_DEFAULT = 4;
   @Deprecated
   public static final String IPC_CALLQUEUE_PRIORITY_LEVELS_KEY =
-    "faircallqueue.priority-levels";
+      "faircallqueue.priority-levels";
 
   public static final Logger LOG = LoggerFactory.getLogger(FairCallQueue.class);
 
@@ -50,6 +45,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    * while polling.
    */
   private final Semaphore semaphore = new Semaphore(0);
+
   private void signalNotEmpty() {
     semaphore.release();
   }
@@ -62,6 +58,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
 
   /* Failover if queue is filled up */
   private boolean serverFailOverEnabled;
+
   /**
    * Create a FairCallQueue.
    * @param capacity the total size of all sub-queues
@@ -72,8 +69,8 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    * of `capacity % numSubqueues`
    */
   public FairCallQueue(int priorityLevels, int capacity, String ns,
-      Configuration conf) {
-    if(priorityLevels < 1) {
+                       Configuration conf) {
+    if (priorityLevels < 1) {
       throw new IllegalArgumentException("Number of Priority Levels must be " +
           "at least 1");
     }
@@ -85,7 +82,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
     this.overflowedCalls = new ArrayList<AtomicLong>(numQueues);
     int queueCapacity = capacity / numQueues;
     int capacityForFirstQueue = queueCapacity + (capacity % numQueues);
-    for(int i=0; i < numQueues; i++) {
+    for (int i = 0; i < numQueues; i++) {
       if (i == 0) {
         this.queues.add(new LinkedBlockingQueue<E>(capacityForFirstQueue));
       } else {
@@ -95,7 +92,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
     }
     this.serverFailOverEnabled = conf.getBoolean(
         ns + "." +
-        CommonConfigurationKeys.IPC_CALLQUEUE_SERVER_FAILOVER_ENABLE,
+            CommonConfigurationKeys.IPC_CALLQUEUE_SERVER_FAILOVER_ENABLE,
         CommonConfigurationKeys.IPC_CALLQUEUE_SERVER_FAILOVER_ENABLE_DEFAULT);
 
     this.multiplexer = new WeightedRoundRobinMultiplexer(numQueues, ns, conf);
@@ -152,7 +149,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
       if (serverFailOverEnabled) {
         // Signal clients to failover and try a separate server.
         ex = CallQueueOverflowException.FAILOVER;
-      } else if (priorityLevel == queues.size() - 1){
+      } else if (priorityLevel == queues.size() - 1) {
         // only disconnect the lowest priority users that overflow the queue.
         ex = CallQueueOverflowException.DISCONNECT;
       } else {
@@ -207,7 +204,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    */
   private boolean offerQueues(int priority, E e, boolean includeLast) {
     int lastPriority = queues.size() - (includeLast ? 1 : 2);
-    for (int i=priority; i <= lastPriority; i++) {
+    for (int i = priority; i <= lastPriority; i++) {
       if (offerQueue(i, e)) {
         return true;
       }
@@ -266,7 +263,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
   @Override
   public E peek() {
     E e = null;
-    for (int i=0; e == null && i < queues.size(); i++) {
+    for (int i = 0; e == null && i < queues.size(); i++) {
       e = queues.get(i).peek();
     }
     return e;
@@ -304,7 +301,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
     final int permits = semaphore.drainPermits();
     final int numElements = Math.min(maxElements, permits);
     int numRemaining = numElements;
-    for (int i=0; numRemaining > 0 && i < queues.size(); i++) {
+    for (int i = 0; numRemaining > 0 && i < queues.size(); i++) {
       numRemaining -= queues.get(i).drainTo(c, numRemaining);
     }
     int drained = numElements - numRemaining;
@@ -341,7 +338,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
       MetricsSource {
     // One singleton per namespace
     private static final HashMap<String, MetricsProxy> INSTANCES =
-      new HashMap<String, MetricsProxy>();
+        new HashMap<String, MetricsProxy>();
 
     // Weakref for delegate, so we don't retain it forever if it can be GC'd
     private WeakReference<FairCallQueue<? extends Schedulable>> delegate;
@@ -406,7 +403,8 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
       return obj.getOverflowedCalls();
     }
 
-    @Override public int getRevision() {
+    @Override
+    public int getRevision() {
       return revisionNumber;
     }
 
@@ -432,7 +430,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
   public int[] getQueueSizes() {
     int numQueues = queues.size();
     int[] sizes = new int[numQueues];
-    for (int i=0; i < numQueues; i++) {
+    for (int i = 0; i < numQueues; i++) {
       sizes[i] = queues.get(i).size();
     }
     return sizes;
@@ -441,7 +439,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
   public long[] getOverflowedCalls() {
     int numQueues = queues.size();
     long[] calls = new long[numQueues];
-    for (int i=0; i < numQueues; i++) {
+    for (int i = 0; i < numQueues; i++) {
       calls[i] = overflowedCalls.get(i).get();
     }
     return calls;

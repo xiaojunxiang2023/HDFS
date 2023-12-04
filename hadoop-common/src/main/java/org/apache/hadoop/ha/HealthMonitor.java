@@ -1,23 +1,23 @@
 package org.apache.hadoop.ha;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.hadoop.conf.Configuration;
-import static org.apache.hadoop.fs.CommonConfigurationKeys.*;
-
 import org.apache.hadoop.ha.micro.HealthCheckFailedException;
 import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.ha.status.HAServiceStatus;
 import org.apache.hadoop.ha.status.HAServiceTarget;
-import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.util.Daemon;
-
+import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeys.*;
 
 public class HealthMonitor {
   private static final Logger LOG = LoggerFactory.getLogger(
@@ -38,14 +38,14 @@ public class HealthMonitor {
   private final HAServiceTarget targetToMonitor;
 
   private final Configuration conf;
-  
+
   private State state = State.INITIALIZING;
 
   /**
    * Listeners for state changes
    */
   private final List<Callback> callbacks = Collections.synchronizedList(
-          new LinkedList<>());
+      new LinkedList<>());
 
   private final List<ServiceStateCallback> serviceStateCallbacks = Collections
       .synchronizedList(new LinkedList<>());
@@ -62,7 +62,7 @@ public class HealthMonitor {
   public HealthMonitor(Configuration conf, HAServiceTarget target) {
     this.targetToMonitor = target;
     this.conf = conf;
-    
+
     this.sleepAfterDisconnectMillis = conf.getLong(
         HA_HM_SLEEP_AFTER_DISCONNECT_KEY,
         HA_HM_SLEEP_AFTER_DISCONNECT_DEFAULT);
@@ -77,10 +77,10 @@ public class HealthMonitor {
     this.rpcTimeout = conf.getInt(
         HA_HM_RPC_TIMEOUT_KEY,
         HA_HM_RPC_TIMEOUT_DEFAULT);
-    
+
     this.daemon = new MonitorDaemon();
   }
-  
+
   public void addCallback(Callback cb) {
     this.callbacks.add(cb);
   }
@@ -98,7 +98,7 @@ public class HealthMonitor {
   public synchronized HAServiceProtocol getProxy() {
     return proxy;
   }
-  
+
   private void loopUntilConnected() throws InterruptedException {
     tryConnect();
     while (proxy == null) {
@@ -109,7 +109,7 @@ public class HealthMonitor {
 
   private void tryConnect() {
     Preconditions.checkState(proxy == null);
-    
+
     try {
       synchronized (this) {
         proxy = createProxy();
@@ -121,7 +121,7 @@ public class HealthMonitor {
       enterState(State.SERVICE_NOT_RESPONDING);
     }
   }
-  
+
   protected HAServiceProtocol createProxy() throws IOException {
     return targetToMonitor.getHealthMonitorProxy(conf, rpcTimeout, rpcConnectRetries);
   }
@@ -148,7 +148,7 @@ public class HealthMonitor {
           return;
         }
       }
-      
+
       if (status != null) {
         setLastServiceStatus(status);
       }
@@ -163,9 +163,9 @@ public class HealthMonitor {
   private boolean isHealthCheckFailedException(Throwable t) {
     return ((t instanceof HealthCheckFailedException) ||
         (t instanceof RemoteException &&
-        ((RemoteException)t).unwrapRemoteException(
-            HealthCheckFailedException.class) instanceof
-            HealthCheckFailedException));
+            ((RemoteException) t).unwrapRemoteException(
+                HealthCheckFailedException.class) instanceof
+                HealthCheckFailedException));
   }
 
   private synchronized void setLastServiceStatus(HAServiceStatus status) {
@@ -206,11 +206,11 @@ public class HealthMonitor {
         }
       });
     }
-    
+
     @Override
     public void run() {
       while (shouldRun) {
-        try { 
+        try {
           loopUntilConnected();
           doHealthChecks();
         } catch (InterruptedException ie) {
@@ -220,15 +220,15 @@ public class HealthMonitor {
       }
     }
   }
-  
+
   /**
    * Callback interface for state change events.
-   * 
+   *
    * This interface is called from a single thread which also performs
    * the health monitoring. If the callback processing takes a long time,
    * no further health checks will be made during this period, nor will
    * other registered callbacks be called.
-   * 
+   *
    * If the callback itself throws an unchecked exception, no other
    * callbacks following it will be called, and the health monitor
    * will terminate, entering HEALTH_MONITOR_FAILED state.

@@ -1,14 +1,14 @@
 package org.apache.hadoop.hdfs.protocol;
 
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.hdfs.DFSUtilClient;
+
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
-
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.hdfs.DFSUtilClient;
 
 /**
  * Metadata about a snapshottable directory
@@ -19,10 +19,10 @@ public class SnapshottableDirectoryStatus {
       new Comparator<SnapshottableDirectoryStatus>() {
         @Override
         public int compare(SnapshottableDirectoryStatus left,
-            SnapshottableDirectoryStatus right) {
+                           SnapshottableDirectoryStatus right) {
           int d = DFSUtilClient.compareBytes(left.parentFullPath,
               right.parentFullPath);
-          return d != 0? d
+          return d != 0 ? d
               : DFSUtilClient.compareBytes(left.dirStatus.getLocalNameInBytes(),
               right.dirStatus.getLocalNameInBytes());
         }
@@ -41,29 +41,29 @@ public class SnapshottableDirectoryStatus {
   private final byte[] parentFullPath;
 
   public SnapshottableDirectoryStatus(long modification_time, long access_time,
-      FsPermission permission, EnumSet<HdfsFileStatus.Flags> flags,
-      String owner, String group, byte[] localName, long inodeId,
-      int childrenNum, int snapshotNumber, int snapshotQuota,
-      byte[] parentFullPath) {
+                                      FsPermission permission, EnumSet<HdfsFileStatus.Flags> flags,
+                                      String owner, String group, byte[] localName, long inodeId,
+                                      int childrenNum, int snapshotNumber, int snapshotQuota,
+                                      byte[] parentFullPath) {
     this.dirStatus = new HdfsFileStatus.Builder()
-      .isdir(true)
-      .mtime(modification_time)
-      .atime(access_time)
-      .perm(permission)
-      .flags(flags)
-      .owner(owner)
-      .group(group)
-      .path(localName)
-      .fileId(inodeId)
-      .children(childrenNum)
-      .build();
+        .isdir(true)
+        .mtime(modification_time)
+        .atime(access_time)
+        .perm(permission)
+        .flags(flags)
+        .owner(owner)
+        .group(group)
+        .path(localName)
+        .fileId(inodeId)
+        .children(childrenNum)
+        .build();
     this.snapshotNumber = snapshotNumber;
     this.snapshotQuota = snapshotQuota;
     this.parentFullPath = parentFullPath;
   }
 
   public SnapshottableDirectoryStatus(HdfsFileStatus dirStatus,
-      int snapshotNumber, int snapshotQuota, byte[] parentFullPath) {
+                                      int snapshotNumber, int snapshotQuota, byte[] parentFullPath) {
     this.dirStatus = dirStatus;
     this.snapshotNumber = snapshotNumber;
     this.snapshotQuota = snapshotQuota;
@@ -121,7 +121,7 @@ public class SnapshottableDirectoryStatus {
    * @param out The given stream for printing.
    */
   public static void print(SnapshottableDirectoryStatus[] stats,
-      PrintStream out) {
+                           PrintStream out) {
     if (stats == null || stats.length == 0) {
       out.println();
       return;
@@ -138,13 +138,13 @@ public class SnapshottableDirectoryStatus {
     }
 
     String lineFormat = "%s%s " // permission string
-        + "%"  + maxRepl  + "s "
+        + "%" + maxRepl + "s "
         + (maxOwner > 0 ? "%-" + maxOwner + "s " : "%s")
         + (maxGroup > 0 ? "%-" + maxGroup + "s " : "%s")
-        + "%"  + maxLen   + "s "
+        + "%" + maxLen + "s "
         + "%s " // mod time
-        + "%"  + maxSnapshotNum  + "s "
-        + "%"  + maxSnapshotQuota  + "s "
+        + "%" + maxSnapshotNum + "s "
+        + "%" + maxSnapshotQuota + "s "
         + "%s"; // path
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -178,7 +178,7 @@ public class SnapshottableDirectoryStatus {
     private final String group;
 
     public Bean(String path, int snapshotNumber, int snapshotQuota,
-        long modificationTime, short permission, String owner, String group) {
+                long modificationTime, short permission, String owner, String group) {
       this.path = path;
       this.snapshotNumber = snapshotNumber;
       this.snapshotQuota = snapshotQuota;

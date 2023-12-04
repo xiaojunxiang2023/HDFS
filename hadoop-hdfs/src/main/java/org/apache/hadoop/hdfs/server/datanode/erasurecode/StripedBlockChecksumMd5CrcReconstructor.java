@@ -1,9 +1,10 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import java.io.IOException;
-import java.security.MessageDigest;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.MD5Hash;
+
+import java.io.IOException;
+import java.security.MessageDigest;
 
 /**
  * Computes running MD5-of-CRC over reconstructed chunk CRCs.
@@ -14,9 +15,9 @@ public class StripedBlockChecksumMd5CrcReconstructor
   private MessageDigest digester;
 
   public StripedBlockChecksumMd5CrcReconstructor(ErasureCodingWorker worker,
-      StripedReconstructionInfo stripedReconInfo,
-      DataOutputBuffer checksumWriter,
-      long requestedBlockLength) throws IOException {
+                                                 StripedReconstructionInfo stripedReconInfo,
+                                                 DataOutputBuffer checksumWriter,
+                                                 long requestedBlockLength) throws IOException {
     super(worker, stripedReconInfo, checksumWriter, requestedBlockLength);
   }
 
@@ -36,7 +37,7 @@ public class StripedBlockChecksumMd5CrcReconstructor
     if (digester == null) {
       throw new IOException(String.format(
           "Called updatedDigester with checksumBytes.length=%d, "
-          + "dataBytesPerChecksum=%d but digester is null",
+              + "dataBytesPerChecksum=%d but digester is null",
           checksumBytes.length, dataBytesPerChecksum));
     }
     digester.update(checksumBytes, 0, checksumBytes.length);

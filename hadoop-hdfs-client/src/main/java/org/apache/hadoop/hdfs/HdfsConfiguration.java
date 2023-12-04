@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;

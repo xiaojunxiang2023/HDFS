@@ -1,26 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
@@ -28,14 +7,19 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ArrayListMultimap;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ListMultimap;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ArrayListMultimap;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ListMultimap;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Periodically scans the data directories for block and block metadata files.
@@ -158,13 +142,13 @@ public class DirectoryScanner implements Runnable {
      * @param sz initial expected size
      */
     ScanInfoVolumeReport(final FsVolumeSpi volume,
-        final Collection<String> blockPools) {
+                         final Collection<String> blockPools) {
       this.volume = volume;
       this.blockPoolReport = new BlockPoolReport(blockPools);
     }
 
     public void addAll(final String bpid,
-        final Collection<ScanInfo> scanInfos) {
+                       final Collection<ScanInfo> scanInfos) {
       this.blockPoolReport.addAll(bpid, scanInfos);
     }
 
@@ -222,7 +206,7 @@ public class DirectoryScanner implements Runnable {
     }
 
     public void addAll(final String bpid,
-        final Collection<ScanInfo> scanInfos) {
+                       final Collection<ScanInfo> scanInfos) {
       this.blockPools.add(bpid);
       this.map.putAll(bpid, scanInfos);
     }
@@ -544,7 +528,7 @@ public class DirectoryScanner implements Runnable {
    * @param info the differing info
    */
   private void addDifference(Collection<ScanInfo> diffRecord, Stats statsRecord,
-      ScanInfo info) {
+                             ScanInfo info) {
     statsRecord.missingMetaFile += info.getMetaFile() == null ? 1 : 0;
     statsRecord.missingBlockFile += info.getBlockFile() == null ? 1 : 0;
     diffRecord.add(info);
@@ -561,7 +545,7 @@ public class DirectoryScanner implements Runnable {
    * @param vol the volume that contains the missing block
    */
   private void addDifference(Collection<ScanInfo> diffRecord, Stats statsRecord,
-      long blockId, FsVolumeSpi vol) {
+                             long blockId, FsVolumeSpi vol) {
     statsRecord.missingBlockFile++;
     statsRecord.missingMetaFile++;
     diffRecord.add(new ScanInfo(blockId, null, null, null, vol));
@@ -577,7 +561,7 @@ public class DirectoryScanner implements Runnable {
 
     // First get list of data directories
     try (FsDatasetSpi.FsVolumeReferences volumes =
-        dataset.getFsVolumeReferences()) {
+             dataset.getFsVolumeReferences()) {
 
       for (final FsVolumeSpi volume : volumes) {
         // Disable scanning PROVIDED volumes to keep overhead low

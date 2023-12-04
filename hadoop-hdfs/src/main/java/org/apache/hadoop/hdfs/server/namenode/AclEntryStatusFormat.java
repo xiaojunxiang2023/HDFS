@@ -1,14 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.List;
-
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclEntryScope;
 import org.apache.hadoop.fs.permission.AclEntryType;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.util.LongBitFormat;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+import java.util.List;
 
 /**
  * Class to pack an AclEntry into an integer. <br>
@@ -60,7 +58,7 @@ public enum AclEntryStatusFormat implements LongBitFormat.Enum {
                         SerialNumberManager.StringTable stringTable) {
     SerialNumberManager snm = getSerialNumberManager(getType(aclEntry));
     if (snm != null) {
-      int nid = (int)NAME.BITS.retrieve(aclEntry);
+      int nid = (int) NAME.BITS.retrieve(aclEntry);
       return snm.getString(nid, stringTable);
     }
     return null;

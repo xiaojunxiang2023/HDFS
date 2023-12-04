@@ -1,14 +1,14 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
-import org.apache.hadoop.hdfs.util.StripedBlockUtil.StripingChunk;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.AlignedStripe;
+import org.apache.hadoop.hdfs.util.StripedBlockUtil.StripingChunk;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
-import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,9 +21,9 @@ import java.nio.ByteBuffer;
 class StatefulStripeReader extends StripeReader {
 
   StatefulStripeReader(AlignedStripe alignedStripe,
-      ErasureCodingPolicy ecPolicy, LocatedBlock[] targetBlocks,
-      BlockReaderInfo[] readerInfos, CorruptedBlocks corruptedBlocks,
-      RawErasureDecoder decoder, DFSStripedInputStream dfsStripedInputStream) {
+                       ErasureCodingPolicy ecPolicy, LocatedBlock[] targetBlocks,
+                       BlockReaderInfo[] readerInfos, CorruptedBlocks corruptedBlocks,
+                       RawErasureDecoder decoder, DFSStripedInputStream dfsStripedInputStream) {
     super(alignedStripe, ecPolicy, targetBlocks, readerInfos,
         corruptedBlocks, decoder, dfsStripedInputStream);
   }

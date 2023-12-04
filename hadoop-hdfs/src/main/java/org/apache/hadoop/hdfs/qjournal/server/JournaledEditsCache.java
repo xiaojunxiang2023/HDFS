@@ -1,25 +1,18 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogLoader;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.AutoCloseableLock;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * An in-memory cache of edits in their serialized form. This is used to serve
@@ -103,8 +96,8 @@ class JournaledEditsCache {
         DFSConfigKeys.DFS_JOURNALNODE_EDIT_CACHE_SIZE_DEFAULT);
     if (capacity > 0.9 * Runtime.getRuntime().maxMemory()) {
       Journal.LOG.warn(String.format("Cache capacity is set at %d bytes but " +
-          "maximum JVM memory is only %d bytes. It is recommended that you " +
-          "decrease the cache size or increase the heap size.",
+              "maximum JVM memory is only %d bytes. It is recommended that you " +
+              "decrease the cache size or increase the heap size.",
           capacity, Runtime.getRuntime().maxMemory()));
     }
     Journal.LOG.info("Enabling the journaled edits cache with a capacity " +
@@ -142,7 +135,7 @@ class JournaledEditsCache {
    *                     by this cache.
    */
   int retrieveEdits(long requestedStartTxn, int maxTxns,
-      List<ByteBuffer> outputBuffers) throws IOException {
+                    List<ByteBuffer> outputBuffers) throws IOException {
     int txnCount = 0;
 
     try (AutoCloseableLock l = readLock.acquire()) {
@@ -216,10 +209,10 @@ class JournaledEditsCache {
    *                         the edits
    */
   void storeEdits(byte[] inputData, long newStartTxn, long newEndTxn,
-      int newLayoutVersion) {
+                  int newLayoutVersion) {
     if (newStartTxn < 0 || newEndTxn < newStartTxn) {
       Journal.LOG.error(String.format("Attempted to cache data of length %d " +
-          "with newStartTxn %d and newEndTxn %d",
+              "with newStartTxn %d and newEndTxn %d",
           inputData.length, newStartTxn, newEndTxn));
       return;
     }
@@ -229,7 +222,7 @@ class JournaledEditsCache {
           updateLayoutVersion(newLayoutVersion, newStartTxn);
         } catch (IOException ioe) {
           Journal.LOG.error(String.format("Unable to save new edits [%d, %d] " +
-              "due to exception when updating to new layout version %d",
+                  "due to exception when updating to new layout version %d",
               newStartTxn, newEndTxn, newLayoutVersion), ioe);
           return;
         }
@@ -240,8 +233,8 @@ class JournaledEditsCache {
       } else if (highestTxnId + 1 != newStartTxn) {
         // Cache is out of sync; clear to avoid storing noncontiguous regions
         Journal.LOG.error(String.format("Edits cache is out of sync; " +
-            "looked for next txn id at %d but got start txn id for " +
-            "cache put request at %d. Reinitializing at new request.",
+                "looked for next txn id at %d but got start txn id for " +
+                "cache put request at %d. Reinitializing at new request.",
             highestTxnId + 1, newStartTxn));
         initialize(newStartTxn);
       }
@@ -381,7 +374,7 @@ class JournaledEditsCache {
     private final long cacheMissAmount;
 
     CacheMissException(long cacheMissAmount, String msgFormat,
-        Object... msgArgs) {
+                       Object... msgArgs) {
       super(String.format(msgFormat, msgArgs));
       this.cacheMissAmount = cacheMissAmount;
     }

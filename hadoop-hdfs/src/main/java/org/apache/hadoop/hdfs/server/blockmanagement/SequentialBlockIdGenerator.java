@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
+
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.namenode.INodeId;
 import org.apache.hadoop.util.SequentialNumber;
@@ -31,7 +32,7 @@ public class SequentialBlockIdGenerator extends SequentialNumber {
 
     // There may be an occasional conflict with randomly generated
     // block IDs. Skip over the conflicts.
-    while(isValidBlock(b)) {
+    while (isValidBlock(b)) {
       b.setBlockId(super.nextValue());
     }
     if (b.getBlockId() < 0) {

@@ -1,7 +1,5 @@
 package org.apache.hadoop.io.serializer;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -10,6 +8,9 @@ import org.apache.hadoop.io.serializer.avro.AvroSpecificSerialization;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -34,10 +35,10 @@ public class SerializationFactory extends Configured {
   public SerializationFactory(Configuration conf) {
     super(conf);
     for (String serializerName : conf.getTrimmedStrings(
-            CommonConfigurationKeys.IO_SERIALIZATIONS_KEY,
-            new String[]{WritableSerialization.class.getName(),
-                    AvroSpecificSerialization.class.getName(),
-                    AvroReflectSerialization.class.getName()})) {
+        CommonConfigurationKeys.IO_SERIALIZATIONS_KEY,
+        new String[]{WritableSerialization.class.getName(),
+            AvroSpecificSerialization.class.getName(),
+            AvroReflectSerialization.class.getName()})) {
       add(conf, serializerName);
     }
   }
@@ -46,9 +47,9 @@ public class SerializationFactory extends Configured {
   private void add(Configuration conf, String serializationName) {
     try {
       Class<? extends Serialization> serializionClass =
-        (Class<? extends Serialization>) conf.getClassByName(serializationName);
+          (Class<? extends Serialization>) conf.getClassByName(serializationName);
       serializations.add((Serialization)
-      ReflectionUtils.newInstance(serializionClass, getConf()));
+          ReflectionUtils.newInstance(serializionClass, getConf()));
     } catch (ClassNotFoundException e) {
       LOG.warn("Serialization class not found: ", e);
     }

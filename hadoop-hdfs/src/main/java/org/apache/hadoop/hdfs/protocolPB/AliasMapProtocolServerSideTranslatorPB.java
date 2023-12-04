@@ -13,19 +13,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.protocolPB;
+ */
+package org.apache.hadoop.hdfs.protocolPB;
 
-import org.apache.hadoop.thirdparty.protobuf.RpcController;
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.ProvidedStorageLocation;
-import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.KeyValueProto;
-import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.ReadResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.WriteRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.WriteResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto;
 import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMapProtocol;
 import org.apache.hadoop.hdfs.server.common.FileRegion;
+import org.apache.hadoop.thirdparty.protobuf.RpcController;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.*;
-import static org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap.*;
+import static org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap.IterationResult;
 
 /**
  * AliasMapProtocolServerSideTranslatorPB is responsible for translating RPC
@@ -54,7 +52,7 @@ public class AliasMapProtocolServerSideTranslatorPB
 
   @Override
   public WriteResponseProto write(RpcController controller,
-      WriteRequestProto request) throws ServiceException {
+                                  WriteRequestProto request) throws ServiceException {
     try {
       FileRegion toWrite =
           PBHelper.convert(request.getKeyValuePair());
@@ -68,9 +66,9 @@ public class AliasMapProtocolServerSideTranslatorPB
 
   @Override
   public ReadResponseProto read(RpcController controller,
-      ReadRequestProto request) throws ServiceException {
+                                ReadRequestProto request) throws ServiceException {
     try {
-      Block toRead =  PBHelperClient.convert(request.getKey());
+      Block toRead = PBHelperClient.convert(request.getKey());
 
       Optional<ProvidedStorageLocation> optionalResult =
           aliasMap.read(toRead);
@@ -89,7 +87,7 @@ public class AliasMapProtocolServerSideTranslatorPB
 
   @Override
   public ListResponseProto list(RpcController controller,
-      ListRequestProto request) throws ServiceException {
+                                ListRequestProto request) throws ServiceException {
     try {
       BlockProto marker = request.getMarker();
       IterationResult iterationResult;
@@ -118,7 +116,7 @@ public class AliasMapProtocolServerSideTranslatorPB
   }
 
   public BlockPoolResponseProto getBlockPoolId(RpcController controller,
-      BlockPoolRequestProto req) throws ServiceException {
+                                               BlockPoolRequestProto req) throws ServiceException {
     try {
       String bpid = aliasMap.getBlockPoolId();
       return BlockPoolResponseProto.newBuilder().setBlockPoolId(bpid).build();

@@ -1,15 +1,10 @@
 package org.apache.hadoop.fs.impl;
 
+import org.apache.hadoop.fs.*;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileContext;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FutureDataInputStreamBuilder;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathHandle;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
@@ -52,7 +47,7 @@ public abstract class FutureDataInputStreamBuilderImpl
    * @throws IOException failure
    */
   protected FutureDataInputStreamBuilderImpl(@Nonnull FileContext fc,
-      @Nonnull Path path) throws IOException {
+                                             @Nonnull Path path) throws IOException {
     super(requireNonNull(path, "path"));
     requireNonNull(fc, "file context");
     this.fileSystem = null;
@@ -65,7 +60,7 @@ public abstract class FutureDataInputStreamBuilderImpl
    * @param path path
    */
   protected FutureDataInputStreamBuilderImpl(@Nonnull FileSystem fileSystem,
-      @Nonnull Path path) {
+                                             @Nonnull Path path) {
     super(requireNonNull(path, "path"));
     this.fileSystem = requireNonNull(fileSystem, "fileSystem");
     initFromFS();
@@ -77,7 +72,7 @@ public abstract class FutureDataInputStreamBuilderImpl
    * @param pathHandle path handle
    */
   public FutureDataInputStreamBuilderImpl(@Nonnull FileSystem fileSystem,
-      @Nonnull PathHandle pathHandle) {
+                                          @Nonnull PathHandle pathHandle) {
     super(pathHandle);
     this.fileSystem = fileSystem;
     initFromFS();

@@ -1,12 +1,13 @@
 package org.apache.hadoop.fs.local;
 
-import java.io.IOException;
 import org.apache.hadoop.fs.ChecksumFileSystem;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FsServerDefaults;
 import org.apache.hadoop.util.DataChecksum;
 
-/** 
+import java.io.IOException;
+
+/**
  * This class contains constants for configuration keys used
  * in the local file system, raw local fs and checksum fs.
  *
@@ -17,16 +18,16 @@ import org.apache.hadoop.util.DataChecksum;
  */
 public class LocalConfigKeys extends CommonConfigurationKeys {
   public static final String BLOCK_SIZE_KEY = "file.blocksize";
-  public static final long BLOCK_SIZE_DEFAULT = 64*1024*1024;
-  public static final String  REPLICATION_KEY = "file.replication";
+  public static final long BLOCK_SIZE_DEFAULT = 64 * 1024 * 1024;
+  public static final String REPLICATION_KEY = "file.replication";
   public static final short REPLICATION_DEFAULT = 1;
   public static final String STREAM_BUFFER_SIZE_KEY = "file.stream-buffer-size";
   public static final int STREAM_BUFFER_SIZE_DEFAULT = 4096;
   public static final String BYTES_PER_CHECKSUM_KEY = "file.bytes-per-checksum";
   public static final int BYTES_PER_CHECKSUM_DEFAULT = 512;
   public static final String CLIENT_WRITE_PACKET_SIZE_KEY =
-                                                "file.client-write-packet-size";
-  public static final int CLIENT_WRITE_PACKET_SIZE_DEFAULT = 64*1024;
+      "file.client-write-packet-size";
+  public static final int CLIENT_WRITE_PACKET_SIZE_DEFAULT = 64 * 1024;
   public static final boolean ENCRYPT_DATA_TRANSFER_DEFAULT = false;
   public static final long FS_TRASH_INTERVAL_DEFAULT = 0;
   public static final DataChecksum.Type CHECKSUM_TYPE_DEFAULT =

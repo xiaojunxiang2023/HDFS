@@ -13,20 +13,20 @@ public abstract class PolicyProvider {
   /**
    * Configuration key for the {@link PolicyProvider} implementation.
    */
-  public static final String POLICY_PROVIDER_CONFIG = 
-    "hadoop.security.authorization.policyprovider";
-  
+  public static final String POLICY_PROVIDER_CONFIG =
+      "hadoop.security.authorization.policyprovider";
+
   /**
    * A default {@link PolicyProvider} without any defined services.
    */
   public static final PolicyProvider DEFAULT_POLICY_PROVIDER =
-    new PolicyProvider() {
-    @Override
-    public Service[] getServices() {
-      return null;
-    }
-  };
-  
+      new PolicyProvider() {
+        @Override
+        public Service[] getServices() {
+          return null;
+        }
+      };
+
   /**
    * Get the {@link Service} definitions from the {@link PolicyProvider}.
    * @return the {@link Service} definitions

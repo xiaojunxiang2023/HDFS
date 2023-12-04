@@ -1,27 +1,28 @@
 package org.apache.hadoop.fs.shell;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.StringUtils;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /** class to search for and register commands */
 
 public class CommandFactory extends Configured {
   private Map<String, Class<? extends Command>> classMap =
-    new HashMap<String, Class<? extends Command>>();
+      new HashMap<String, Class<? extends Command>>();
 
   private Map<String, Command> objectMap =
-    new HashMap<String, Command>();
+      new HashMap<String, Command>();
 
   /** Factory constructor for commands */
   public CommandFactory() {
     this(null);
   }
-  
+
   /**
    * Factory constructor for commands
    * @param conf the hadoop configuration
@@ -53,10 +54,10 @@ public class CommandFactory extends Configured {
    * @param cmdClass the class implementing the command names
    * @param names one or more command names that will invoke this class
    */
-  public void addClass(Class<? extends Command> cmdClass, String ... names) {
+  public void addClass(Class<? extends Command> cmdClass, String... names) {
     for (String name : names) classMap.put(name, cmdClass);
   }
-  
+
   /**
    * Register the given object as handling the given list of command
    * names.  Avoid calling this method and use
@@ -67,7 +68,7 @@ public class CommandFactory extends Configured {
    * @param cmdObject the object implementing the command names
    * @param names one or more command names that will invoke this class
    */
-  public void addObject(Command cmdObject, String ... names) {
+  public void addObject(Command cmdObject, String... names) {
     for (String name : names) {
       objectMap.put(name, cmdObject);
       classMap.put(name, null); // just so it shows up in the list of commands
@@ -93,7 +94,7 @@ public class CommandFactory extends Configured {
    */
   public Command getInstance(String cmdName, Configuration conf) {
     if (conf == null) throw new NullPointerException("configuration is null");
-    
+
     Command instance = objectMap.get(cmdName);
     if (instance == null) {
       Class<? extends Command> cmdClass = classMap.get(cmdName);
@@ -105,7 +106,7 @@ public class CommandFactory extends Configured {
     }
     return instance;
   }
-  
+
   /**
    * Gets all of the registered commands
    * @return a sorted list of command names

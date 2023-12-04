@@ -8,7 +8,7 @@ import java.net.URI;
 public interface FsConstants {
   // URI for local filesystem
   public static final URI LOCAL_FS_URI = URI.create("file:///");
-  
+
   // URI scheme for FTP
   public static final String FTP_SCHEME = "ftp";
 

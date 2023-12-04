@@ -1,10 +1,10 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.DumpUtil;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.GF256;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class RSRawDecoder extends RawErasureDecoder {
     int numAllUnits = getNumAllUnits();
     if (getNumAllUnits() >= RSUtil.GF.getFieldSize()) {
       throw new HadoopIllegalArgumentException(
-              "Invalid getNumDataUnits() and numParityUnits");
+          "Invalid getNumDataUnits() and numParityUnits");
     }
 
     encodeMatrix = new byte[numAllUnits * getNumDataUnits()];
@@ -88,9 +88,9 @@ public class RSRawDecoder extends RawErasureDecoder {
       return; // Optimization. Nothing to do
     }
     this.cachedErasedIndexes =
-            Arrays.copyOf(erasedIndexes, erasedIndexes.length);
+        Arrays.copyOf(erasedIndexes, erasedIndexes.length);
     this.validIndexes =
-            Arrays.copyOf(tmpValidIndexes, tmpValidIndexes.length);
+        Arrays.copyOf(tmpValidIndexes, tmpValidIndexes.length);
 
     processErasures(erasedIndexes);
   }
@@ -131,7 +131,7 @@ public class RSRawDecoder extends RawErasureDecoder {
       r = validIndexes[i];
       for (j = 0; j < getNumDataUnits(); j++) {
         tmpMatrix[getNumDataUnits() * i + j] =
-                encodeMatrix[getNumDataUnits() * r + j];
+            encodeMatrix[getNumDataUnits() * r + j];
       }
     }
 
@@ -140,7 +140,7 @@ public class RSRawDecoder extends RawErasureDecoder {
     for (i = 0; i < numErasedDataUnits; i++) {
       for (j = 0; j < getNumDataUnits(); j++) {
         decodeMatrix[getNumDataUnits() * i + j] =
-                invertMatrix[getNumDataUnits() * erasedIndexes[i] + j];
+            invertMatrix[getNumDataUnits() * erasedIndexes[i] + j];
       }
     }
 
@@ -149,7 +149,7 @@ public class RSRawDecoder extends RawErasureDecoder {
         s = 0;
         for (j = 0; j < getNumDataUnits(); j++) {
           s ^= GF256.gfMul(invertMatrix[j * getNumDataUnits() + i],
-                  encodeMatrix[getNumDataUnits() * erasedIndexes[p] + j]);
+              encodeMatrix[getNumDataUnits() * erasedIndexes[p] + j]);
         }
         decodeMatrix[getNumDataUnits() * p + i] = s;
       }

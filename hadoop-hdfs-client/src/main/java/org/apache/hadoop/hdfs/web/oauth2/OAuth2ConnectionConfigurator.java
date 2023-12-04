@@ -44,7 +44,7 @@ public class OAuth2ConnectionConfigurator implements ConnectionConfigurator {
   @Override
   public HttpURLConnection configure(HttpURLConnection conn)
       throws IOException {
-    if(sslConfigurator != null) {
+    if (sslConfigurator != null) {
       sslConfigurator.configure(conn);
     }
 

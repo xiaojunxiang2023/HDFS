@@ -1,22 +1,22 @@
 package org.apache.hadoop.io.compress.bzip2;
 
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 import org.apache.hadoop.io.compress.Decompressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 /**
  * A {@link Decompressor} based on the popular 
  * bzip2 compression algorithm.
  * http://www.bzip2.org/
- * 
+ *
  */
 public class Bzip2Decompressor implements Decompressor {
-  private static final int DEFAULT_DIRECT_BUFFER_SIZE = 64*1024;
-  
+  private static final int DEFAULT_DIRECT_BUFFER_SIZE = 64 * 1024;
+
   private static final Logger LOG =
       LoggerFactory.getLogger(Bzip2Decompressor.class);
 
@@ -39,10 +39,10 @@ public class Bzip2Decompressor implements Decompressor {
     compressedDirectBuf = ByteBuffer.allocateDirect(directBufferSize);
     uncompressedDirectBuf = ByteBuffer.allocateDirect(directBufferSize);
     uncompressedDirectBuf.position(directBufferSize);
-    
+
     stream = init(conserveMemory ? 1 : 0);
   }
-  
+
   public Bzip2Decompressor() {
     this(false, DEFAULT_DIRECT_BUFFER_SIZE);
   }
@@ -55,18 +55,18 @@ public class Bzip2Decompressor implements Decompressor {
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
-  
+
     this.userBuf = b;
     this.userBufOff = off;
     this.userBufLen = len;
-    
+
     setInputFromSavedData();
-    
+
     // Reinitialize bzip2's output direct buffer.
     uncompressedDirectBuf.limit(directBufferSize);
     uncompressedDirectBuf.position(directBufferSize);
   }
-  
+
   synchronized void setInputFromSavedData() {
     compressedDirectBufOff = 0;
     compressedDirectBufLen = userBufLen;
@@ -76,9 +76,9 @@ public class Bzip2Decompressor implements Decompressor {
 
     // Reinitialize bzip2's input direct buffer.
     compressedDirectBuf.rewind();
-    ((ByteBuffer)compressedDirectBuf).put(userBuf, userBufOff, 
-                                          compressedDirectBufLen);
-    
+    ((ByteBuffer) compressedDirectBuf).put(userBuf, userBufOff,
+        compressedDirectBufLen);
+
     // Note how much data is being fed to bzip2.
     userBufOff += compressedDirectBufLen;
     userBufLen -= compressedDirectBufLen;
@@ -95,7 +95,7 @@ public class Bzip2Decompressor implements Decompressor {
     if (uncompressedDirectBuf.remaining() > 0) {
       return false;
     }
-    
+
     // Check if bzip2 has consumed all input.
     if (compressedDirectBufLen <= 0) {
       // Check if we have consumed all user-input.
@@ -105,7 +105,7 @@ public class Bzip2Decompressor implements Decompressor {
         setInputFromSavedData();
       }
     }
-    
+
     return false;
   }
 
@@ -122,23 +122,23 @@ public class Bzip2Decompressor implements Decompressor {
   }
 
   @Override
-  public synchronized int decompress(byte[] b, int off, int len) 
-    throws IOException {
+  public synchronized int decompress(byte[] b, int off, int len)
+      throws IOException {
     if (b == null) {
       throw new NullPointerException();
     }
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    
+
     // Check if there is uncompressed data.
     int n = uncompressedDirectBuf.remaining();
     if (n > 0) {
       n = Math.min(n, len);
-      ((ByteBuffer)uncompressedDirectBuf).get(b, off, n);
+      ((ByteBuffer) uncompressedDirectBuf).get(b, off, n);
       return n;
     }
-    
+
     // Re-initialize bzip2's output direct buffer.
     uncompressedDirectBuf.rewind();
     uncompressedDirectBuf.limit(directBufferSize);
@@ -149,11 +149,11 @@ public class Bzip2Decompressor implements Decompressor {
 
     // Get at most 'len' bytes.
     n = Math.min(n, len);
-    ((ByteBuffer)uncompressedDirectBuf).get(b, off, n);
+    ((ByteBuffer) uncompressedDirectBuf).get(b, off, n);
 
     return n;
   }
-  
+
   /**
    * Returns the total number of uncompressed bytes output so far.
    *
@@ -218,12 +218,18 @@ public class Bzip2Decompressor implements Decompressor {
     if (stream == 0)
       throw new NullPointerException();
   }
-  
+
   private native static void initIDs(String libname);
+
   private native static long init(int conserveMemory);
+
   private native int inflateBytesDirect();
+
   private native static long getBytesRead(long strm);
+
   private native static long getBytesWritten(long strm);
+
   private native static int getRemaining(long strm);
+
   private native static void end(long strm);
 }

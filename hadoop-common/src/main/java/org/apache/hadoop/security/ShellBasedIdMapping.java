@@ -1,5 +1,13 @@
 package org.apache.hadoop.security;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.BiMap;
+import org.apache.hadoop.thirdparty.com.google.common.collect.HashBiMap;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -12,20 +20,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.Time;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.BiMap;
-import org.apache.hadoop.thirdparty.com.google.common.collect.HashBiMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * A simple shell-based implementation of {@link IdMappingServiceProvider} 
+ * A simple shell-based implementation of {@link IdMappingServiceProvider}
  * Map id to user name or group name. It does update every 15 minutes. Only a
  * single instance of this class is expected to be on the server.
- * 
+ *
  * The maps are incrementally updated as described below:
  *   1. Initialize the maps as empty. 
  *   2. Incrementally update the maps
@@ -61,7 +60,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
   // Last time the static map was modified, measured time difference in
   // milliseconds since midnight, January 1, 1970 UTC
   private long lastModificationTimeStaticMap = 0;
-  
+
   private boolean constructFullMapAtInit = false;
 
   // Used for parsing the static mapping file.
@@ -71,7 +70,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
       Pattern.compile("^(uid|gid)\\s+(\\d+)\\s+(0|-?[1-9]\\d*)\\s*(#.*)?$");
 
   final private long timeout;
-  
+
   // Maps for id to name map. Guarded by this object monitor lock
   private BiMap<Integer, String> uidNameMap = HashBiMap.create();
   private BiMap<Integer, String> gidNameMap = HashBiMap.create();
@@ -86,7 +85,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
    */
   @VisibleForTesting
   public ShellBasedIdMapping(Configuration conf,
-      boolean constructFullMapAtInit) throws IOException {
+                             boolean constructFullMapAtInit) throws IOException {
     this.constructFullMapAtInit = constructFullMapAtInit;
     long updateTime = conf.getLong(
         IdMappingConstant.USERGROUPID_UPDATE_MILLIS_KEY,
@@ -99,8 +98,8 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     } else {
       timeout = updateTime;
     }
-    
-    String staticFilePath = 
+
+    String staticFilePath =
         conf.get(IdMappingConstant.STATIC_ID_MAPPING_FILE_KEY,
             IdMappingConstant.STATIC_ID_MAPPING_FILE_DEFAULT);
     staticMappingFile = new File(staticFilePath);
@@ -132,12 +131,12 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     return gidNameMap;
   }
 
-  @VisibleForTesting  
+  @VisibleForTesting
   synchronized public void clearNameMaps() {
     uidNameMap.clear();
     gidNameMap.clear();
     lastUpdateTime = Time.monotonicNow();
-  }  
+  }
 
   synchronized private boolean isExpired() {
     return Time.monotonicNow() - lastUpdateTime > timeout;
@@ -158,21 +157,21 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
 
   private static final String DUPLICATE_NAME_ID_DEBUG_INFO =
       "NFS gateway could have problem starting with duplicate name or id on the host system.\n"
-      + "This is because HDFS (non-kerberos cluster) uses name as the only way to identify a user or group.\n"
-      + "The host system with duplicated user/group name or id might work fine most of the time by itself.\n"
-      + "However when NFS gateway talks to HDFS, HDFS accepts only user and group name.\n"
-      + "Therefore, same name means the same user or same group. To find the duplicated names/ids, one can do:\n"
-      + "<getent passwd | cut -d: -f1,3> and <getent group | cut -d: -f1,3> on Linux, BSD and Solaris systems,\n"
-      + "<dscl . -list /Users UniqueID> and <dscl . -list /Groups PrimaryGroupID> on MacOS.";
-  
+          + "This is because HDFS (non-kerberos cluster) uses name as the only way to identify a user or group.\n"
+          + "The host system with duplicated user/group name or id might work fine most of the time by itself.\n"
+          + "However when NFS gateway talks to HDFS, HDFS accepts only user and group name.\n"
+          + "Therefore, same name means the same user or same group. To find the duplicated names/ids, one can do:\n"
+          + "<getent passwd | cut -d: -f1,3> and <getent group | cut -d: -f1,3> on Linux, BSD and Solaris systems,\n"
+          + "<dscl . -list /Users UniqueID> and <dscl . -list /Groups PrimaryGroupID> on MacOS.";
+
   private static void reportDuplicateEntry(final String header,
-      final Integer key, final String value,
-      final Integer ekey, final String evalue) {    
-      LOG.warn("\n" + header + String.format(
-          "new entry (%d, %s), existing entry: (%d, %s).%n%s%n%s",
-          key, value, ekey, evalue,
-          "The new entry is to be ignored for the following reason.",
-          DUPLICATE_NAME_ID_DEBUG_INFO));
+                                           final Integer key, final String value,
+                                           final Integer ekey, final String evalue) {
+    LOG.warn("\n" + header + String.format(
+        "new entry (%d, %s), existing entry: (%d, %s).%n%s%n%s",
+        key, value, ekey, evalue,
+        "The new entry is to be ignored for the following reason.",
+        DUPLICATE_NAME_ID_DEBUG_INFO));
   }
 
   /**
@@ -187,26 +186,26 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
    */
   private static Integer parseId(final String idStr) {
     long longVal = Long.parseLong(idStr);
-    return Integer.valueOf((int)longVal);
+    return Integer.valueOf((int) longVal);
   }
-  
+
   /**
    * Get the list of users or groups returned by the specified command,
    * and save them in the corresponding map.
-   * @throws IOException 
+   * @throws IOException
    */
   @VisibleForTesting
   public static boolean updateMapInternal(BiMap<Integer, String> map,
-      String mapName, String command, String regex,
-      Map<Integer, Integer> staticMapping) throws IOException  {
+                                          String mapName, String command, String regex,
+                                          Map<Integer, Integer> staticMapping) throws IOException {
     boolean updated = false;
     BufferedReader br = null;
     try {
       Process process = Runtime.getRuntime().exec(
-          new String[] { "bash", "-c", command });
+          new String[]{"bash", "-c", command});
       br = new BufferedReader(
           new InputStreamReader(process.getInputStream(),
-                                Charset.defaultCharset()));
+              Charset.defaultCharset()));
       String line = null;
       while ((line = br.readLine()) != null) {
         String[] nameId = line.split(regex);
@@ -225,7 +224,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
           }
           reportDuplicateEntry(
               "Got multiple names associated with the same id: ",
-              key, value, key, prevValue);           
+              key, value, key, prevValue);
           continue;
         }
         if (map.containsValue(value)) {
@@ -239,7 +238,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
         updated = true;
       }
       LOG.debug("Updated " + mapName + " map size: " + map.size());
-      
+
     } catch (IOException e) {
       LOG.error("Can't update " + mapName + " map");
       throw e;
@@ -267,10 +266,10 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
   }
 
   private static boolean isInteger(final String s) {
-    try { 
-      Integer.parseInt(s); 
-    } catch(NumberFormatException e) { 
-      return false; 
+    try {
+      Integer.parseInt(s);
+    } catch (NumberFormatException e) {
+      return false;
     }
     // only got here if we didn't return false
     return true;
@@ -289,10 +288,10 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
       // time changed since prior load.
       long lmTime = staticMappingFile.lastModified();
       if (lmTime != lastModificationTimeStaticMap) {
-        LOG.info(init? "Using " : "Reloading " + "'" + staticMappingFile
+        LOG.info(init ? "Using " : "Reloading " + "'" + staticMappingFile
             + "' for static UID/GID mapping...");
         lastModificationTimeStaticMap = lmTime;
-        staticMapping = parseStaticMap(staticMappingFile);        
+        staticMapping = parseStaticMap(staticMappingFile);
       }
     } else {
       if (init) {
@@ -330,7 +329,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
       clearNameMaps();
     }
   }
-  
+
   synchronized private void loadFullUserMap() throws IOException {
     BiMap<Integer, String> uMap = HashBiMap.create();
     if (OS.startsWith("Mac")) {
@@ -372,17 +371,17 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
   private String getName2IdCmdNIX(final String name, final boolean isGrp) {
     String cmd;
     if (isGrp) {
-      cmd = "getent group " + name + " | cut -d: -f1,3";   
+      cmd = "getent group " + name + " | cut -d: -f1,3";
     } else {
       cmd = "id -u " + name + " | awk '{print \"" + name + ":\"$1 }'";
     }
     return cmd;
   }
-  
+
   // search for name with given id, return "<name>:<id>"
   private String getId2NameCmdNIX(final int id, final boolean isGrp) {
     String cmd = "getent ";
-    cmd += isGrp? "group " : "passwd ";
+    cmd += isGrp ? "group " : "passwd ";
     cmd += String.valueOf(id) + " | cut -d: -f1,3";
     return cmd;
   }
@@ -429,16 +428,16 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
   //
   private String getId2NameCmdMac(final int id, final boolean isGrp) {
     String cmd = "dscl . -search /";
-    cmd += isGrp? "Groups PrimaryGroupID " : "Users UniqueID ";
+    cmd += isGrp ? "Groups PrimaryGroupID " : "Users UniqueID ";
     cmd += String.valueOf(id);
     cmd += " | sed 'N;s/\\n//g;N;s/\\n//g' | sed 's/";
-    cmd += isGrp? "PrimaryGroupID" : "UniqueID";
+    cmd += isGrp ? "PrimaryGroupID" : "UniqueID";
     cmd += " = (//g' | sed 's/)//g' | sed 's/\\\"//g'";
     return cmd;
   }
 
   synchronized private void updateMapIncr(final String name,
-      final boolean isGrp) throws IOException {
+                                          final boolean isGrp) throws IOException {
     if (!checkSupportedPlatform()) {
       return;
     }
@@ -462,7 +461,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
       }
     } else {
       // Mac
-      if (isGrp) {        
+      if (isGrp) {
         updated = updateMapInternal(gidNameMap, "group",
             getName2IdCmdMac(name, true), "\\s+",
             staticMapping.gidMapping);
@@ -478,11 +477,11 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
   }
 
   synchronized private void updateMapIncr(final int id,
-      final boolean isGrp) throws IOException {
+                                          final boolean isGrp) throws IOException {
     if (!checkSupportedPlatform()) {
       return;
     }
-    
+
     boolean updated = false;
     updateStaticMapping();
 
@@ -515,11 +514,11 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
 
   @SuppressWarnings("serial")
   static final class PassThroughMap<K> extends HashMap<K, K> {
-    
+
     public PassThroughMap() {
       this(new HashMap<K, K>());
     }
-    
+
     public PassThroughMap(Map<K, K> mapping) {
       super();
       for (Map.Entry<K, K> entry : mapping.entrySet()) {
@@ -537,14 +536,14 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
       }
     }
   }
-  
+
   @VisibleForTesting
   static final class StaticMapping {
     final Map<Integer, Integer> uidMapping;
     final Map<Integer, Integer> gidMapping;
-    
+
     public StaticMapping(Map<Integer, Integer> uidMapping,
-        Map<Integer, Integer> gidMapping) {
+                         Map<Integer, Integer> gidMapping) {
       this.uidMapping = new PassThroughMap<Integer>(uidMapping);
       this.gidMapping = new PassThroughMap<Integer>(gidMapping);
     }
@@ -558,16 +557,16 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
       return uidMapping.size() > 0 || gidMapping.size() > 0;
     }
   }
-  
+
   static StaticMapping parseStaticMap(File staticMapFile)
       throws IOException {
-    
+
     Map<Integer, Integer> uidMapping = new HashMap<Integer, Integer>();
     Map<Integer, Integer> gidMapping = new HashMap<Integer, Integer>();
-    
+
     BufferedReader in = new BufferedReader(new InputStreamReader(
         Files.newInputStream(staticMapFile.toPath()), StandardCharsets.UTF_8));
-    
+
     try {
       String line = null;
       while ((line = in.readLine()) != null) {
@@ -576,7 +575,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
             COMMENT_LINE.matcher(line).matches()) {
           continue;
         }
-        
+
         Matcher lineMatcher = MAPPING_LINE.matcher(line);
         if (!lineMatcher.matches()) {
           LOG.warn("Could not parse line '" + line + "'. Lines should be of " +
@@ -584,7 +583,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
               "everything following a '#' on a line will be ignored.");
           continue;
         }
-        
+
         // We know the line is fine to parse without error checking like this
         // since it matched the regex above.
         String firstComponent = lineMatcher.group(1);
@@ -599,7 +598,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     } finally {
       in.close();
     }
-    
+
     return new StaticMapping(uidMapping, gidMapping);
   }
 
@@ -637,10 +636,10 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     if (uname == null) {
       try {
         updateMapIncr(uid, false);
-      } catch (Exception e) {        
+      } catch (Exception e) {
       }
       uname = uidNameMap.get(uid);
-      if (uname == null) {     
+      if (uname == null) {
         LOG.warn("Can't find user name for uid " + uid
             + ". Use default user name " + unknown);
         uname = unknown;
@@ -655,7 +654,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     if (gname == null) {
       try {
         updateMapIncr(gid, true);
-      } catch (Exception e) {        
+      } catch (Exception e) {
       }
       gname = gidNameMap.get(gid);
       if (gname == null) {

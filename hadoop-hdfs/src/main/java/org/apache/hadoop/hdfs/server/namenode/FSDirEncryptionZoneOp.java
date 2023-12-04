@@ -1,32 +1,17 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.CRYPTO_XATTR_FILE_ENCRYPTION_INFO;
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.PrivilegedExceptionAction;
-import java.util.AbstractMap;
-import java.util.concurrent.ExecutorService;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.hadoop.crypto.CipherSuite;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension.EncryptedKeyVersion;
-import org.apache.hadoop.fs.FileEncryptionInfo;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.UnresolvedLinkException;
-import org.apache.hadoop.fs.XAttr;
-import org.apache.hadoop.fs.XAttrSetFlag;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.XAttrHelper;
 import org.apache.hadoop.hdfs.protocol.EncryptionZone;
-import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus;
 import org.apache.hadoop.hdfs.protocol.SnapshotAccessControlException;
+import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ZoneEncryptionInfoProto;
@@ -34,13 +19,22 @@ import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.FileEdekInfo;
 import org.apache.hadoop.security.SecurityUtil;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
 import org.apache.hadoop.util.Time;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.PrivilegedExceptionAction;
+import java.util.AbstractMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+
 import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.CRYPTO_XATTR_ENCRYPTION_ZONE;
+import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.CRYPTO_XATTR_FILE_ENCRYPTION_INFO;
 import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
@@ -52,7 +46,8 @@ final class FSDirEncryptionZoneOp {
    * Private constructor for preventing FSDirEncryptionZoneOp object creation.
    * Static-only class.
    */
-  private FSDirEncryptionZoneOp() {}
+  private FSDirEncryptionZoneOp() {
+  }
 
   /**
    * Invoke KeyProvider APIs to generate an encrypted data encryption key for
@@ -94,7 +89,7 @@ final class FSDirEncryptionZoneOp {
   }
 
   static KeyProvider.Metadata ensureKeyIsInitialized(final FSDirectory fsd,
-      final String keyName, final String src) throws IOException {
+                                                     final String keyName, final String src) throws IOException {
     KeyProviderCryptoExtension provider = fsd.getProvider();
     if (provider == null) {
       throw new IOException("Can't create an encryption zone for " + src
@@ -138,8 +133,8 @@ final class FSDirEncryptionZoneOp {
    * @throws IOException
    */
   static FileStatus createEncryptionZone(final FSDirectory fsd,
-      final String srcArg, final FSPermissionChecker pc, final String cipher,
-      final String keyName, final boolean logRetryCache) throws IOException {
+                                         final String srcArg, final FSPermissionChecker pc, final String cipher,
+                                         final String keyName, final boolean logRetryCache) throws IOException {
     final CipherSuite suite = CipherSuite.convert(cipher);
     List<XAttr> xAttrs = Lists.newArrayListWithCapacity(1);
     // For now this is hard coded, as we only support one method.
@@ -188,7 +183,7 @@ final class FSDirEncryptionZoneOp {
   }
 
   static EncryptionZone getEZForPath(final FSDirectory fsd,
-      final INodesInPath iip) throws IOException {
+                                     final INodesInPath iip) throws IOException {
     fsd.readLock();
     try {
       return fsd.ezManager.getEZINodeForPath(iip);
@@ -208,13 +203,13 @@ final class FSDirEncryptionZoneOp {
   }
 
   static List<XAttr> reencryptEncryptionZone(final FSDirectory fsd,
-      final INodesInPath iip, final String keyVersionName) throws IOException {
+                                             final INodesInPath iip, final String keyVersionName) throws IOException {
     assert keyVersionName != null;
     return fsd.ezManager.reencryptEncryptionZone(iip, keyVersionName);
   }
 
   static List<XAttr> cancelReencryptEncryptionZone(final FSDirectory fsd,
-      final INodesInPath iip) throws IOException {
+                                                   final INodesInPath iip) throws IOException {
     return fsd.ezManager.cancelReencryptEncryptionZone(iip);
   }
 
@@ -236,7 +231,7 @@ final class FSDirEncryptionZoneOp {
    * The reencryption status is updated during SetXAttrs.
    */
   static XAttr updateReencryptionSubmitted(final FSDirectory fsd,
-      final INodesInPath iip, final String ezKeyVersionName)
+                                           final INodesInPath iip, final String ezKeyVersionName)
       throws IOException {
     assert fsd.hasWriteLock();
     Preconditions.checkNotNull(ezKeyVersionName, "ezKeyVersionName is null.");
@@ -268,8 +263,8 @@ final class FSDirEncryptionZoneOp {
    * such as ezkeyVersionName and submissionTime.
    */
   static XAttr updateReencryptionProgress(final FSDirectory fsd,
-      final INode zoneNode, final ZoneReencryptionStatus origStatus,
-      final String lastFile, final long numReencrypted, final long numFailures)
+                                          final INode zoneNode, final ZoneReencryptionStatus origStatus,
+                                          final String lastFile, final long numReencrypted, final long numFailures)
       throws IOException {
     assert fsd.hasWriteLock();
     Preconditions.checkNotNull(zoneNode, "Zone node is null");
@@ -308,7 +303,7 @@ final class FSDirEncryptionZoneOp {
    * The reencryption status is updated during SetXAttrs for completion time.
    */
   static List<XAttr> updateReencryptionFinish(final FSDirectory fsd,
-      final INodesInPath zoneIIP, final ZoneReencryptionStatus origStatus)
+                                              final INodesInPath zoneIIP, final ZoneReencryptionStatus origStatus)
       throws IOException {
     assert origStatus != null;
     assert fsd.hasWriteLock();
@@ -324,7 +319,7 @@ final class FSDirEncryptionZoneOp {
   }
 
   static XAttr generateNewXAttrForReencryptionFinish(final INodesInPath iip,
-      final ZoneReencryptionStatus status) throws IOException {
+                                                     final ZoneReencryptionStatus status) throws IOException {
     final ZoneEncryptionInfoProto zoneProto = getZoneEncryptionInfoProto(iip);
     final ReencryptionInfoProto newRiProto = PBHelperClient
         .convert(status.getEzKeyVersionName(), status.getSubmissionTime(),
@@ -363,7 +358,7 @@ final class FSDirEncryptionZoneOp {
    * Save the batch's edeks to file xattrs.
    */
   static void saveFileXAttrsForBatch(FSDirectory fsd,
-      List<FileEdekInfo> batch) {
+                                     List<FileEdekInfo> batch) {
     assert fsd.getFSNamesystem().hasWriteLock();
     if (batch != null && !batch.isEmpty()) {
       for (FileEdekInfo entry : batch) {
@@ -389,8 +384,8 @@ final class FSDirEncryptionZoneOp {
    * @throws IOException
    */
   static void setFileEncryptionInfo(final FSDirectory fsd,
-      final INodesInPath iip, final FileEncryptionInfo info,
-      final XAttrSetFlag flag) throws IOException {
+                                    final INodesInPath iip, final FileEncryptionInfo info,
+                                    final XAttrSetFlag flag) throws IOException {
     // Make the PB for the xattr
     final HdfsProtos.PerFileEncryptionInfoProto proto =
         PBHelperClient.convertPerFileEncInfo(info);
@@ -419,7 +414,7 @@ final class FSDirEncryptionZoneOp {
    * @return consolidated file encryption info; null for non-encrypted files
    */
   static FileEncryptionInfo getFileEncryptionInfo(final FSDirectory fsd,
-      final INodesInPath iip) throws IOException {
+                                                  final INodesInPath iip) throws IOException {
     if (iip.isRaw() ||
         !fsd.ezManager.hasCreatedEncryptionZone() ||
         !iip.getLastINode().isFile()) {
@@ -431,7 +426,7 @@ final class FSDirEncryptionZoneOp {
       if (encryptionZone == null) {
         // not an encrypted file
         return null;
-      } else if(encryptionZone.getPath() == null
+      } else if (encryptionZone.getPath() == null
           || encryptionZone.getPath().isEmpty()) {
         if (NameNode.LOG.isDebugEnabled()) {
           NameNode.LOG.debug("Encryption zone " +
@@ -477,8 +472,8 @@ final class FSDirEncryptionZoneOp {
    * @throws RetryStartFileException if key is inconsistent with current zone
    */
   static FileEncryptionInfo getFileEncryptionInfo(FSDirectory dir,
-      INodesInPath iip, EncryptionKeyInfo ezInfo)
-          throws RetryStartFileException, IOException {
+                                                  INodesInPath iip, EncryptionKeyInfo ezInfo)
+      throws RetryStartFileException, IOException {
     FileEncryptionInfo feInfo = null;
     final EncryptionZone zone = getEZForPath(dir, iip);
     if (zone != null) {
@@ -519,10 +514,10 @@ final class FSDirEncryptionZoneOp {
    * then launch up a separate thread to warm them up.
    */
   static void warmUpEdekCache(final ExecutorService executor,
-      final FSDirectory fsd, final int delay, final int interval) {
+                              final FSDirectory fsd, final int delay, final int interval) {
     fsd.readLock();
     try {
-      String[] edeks  = fsd.ezManager.getKeyNames();
+      String[] edeks = fsd.ezManager.getKeyNames();
       executor.execute(
           new EDEKCacheLoader(edeks, fsd.getProvider(), delay, interval));
     } finally {
@@ -541,7 +536,7 @@ final class FSDirEncryptionZoneOp {
     private int retryInterval;
 
     EDEKCacheLoader(final String[] names, final KeyProviderCryptoExtension kp,
-        final int delay, final int interval) {
+                    final int delay, final int interval) {
       this.keyNames = names;
       this.kp = kp;
       this.initialDelay = delay;
@@ -617,7 +612,7 @@ final class FSDirEncryptionZoneOp {
    * @return EncryptionKeyInfo if the path is in an EZ, else null
    */
   static EncryptionKeyInfo getEncryptionKeyInfo(FSNamesystem fsn,
-      INodesInPath iip, CryptoProtocolVersion[] supportedVersions)
+                                                INodesInPath iip, CryptoProtocolVersion[] supportedVersions)
       throws IOException {
     FSDirectory fsd = fsn.getFSDirectory();
     // Nothing to do if the path is not within an EZ
@@ -634,7 +629,7 @@ final class FSDirEncryptionZoneOp {
     Preconditions.checkNotNull(protocolVersion);
     Preconditions.checkNotNull(suite);
     Preconditions.checkArgument(!suite.equals(CipherSuite.UNKNOWN),
-                                "Chose an UNKNOWN CipherSuite!");
+        "Chose an UNKNOWN CipherSuite!");
     Preconditions.checkNotNull(ezKeyName);
 
     // Generate EDEK while not holding the fsn lock.
@@ -679,7 +674,7 @@ final class FSDirEncryptionZoneOp {
    * rather use the generate ACL it already has.
    */
   static String getCurrentKeyVersion(final FSDirectory dir,
-      final FSPermissionChecker pc, final String zone) throws IOException {
+                                     final FSPermissionChecker pc, final String zone) throws IOException {
     assert dir.getProvider() != null;
     assert !dir.hasReadLock();
     final String keyName = FSDirEncryptionZoneOp.getKeyNameForZone(dir,
@@ -706,7 +701,7 @@ final class FSDirEncryptionZoneOp {
    * that inode, and return the key name. Does not contact the KMS.
    */
   static String getKeyNameForZone(final FSDirectory dir,
-      final FSPermissionChecker pc, final String zone) throws IOException {
+                                  final FSPermissionChecker pc, final String zone) throws IOException {
     assert dir.getProvider() != null;
     final INodesInPath iip;
     dir.getFSNamesystem().readLock();

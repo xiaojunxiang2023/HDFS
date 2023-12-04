@@ -15,18 +15,21 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */package org.apache.hadoop.hdfs.web.oauth2;
+ */
+package org.apache.hadoop.hdfs.web.oauth2;
+
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
 final class Utils {
   private Utils() { /* Private constructor */ }
 
   public static String notNull(Configuration conf, String key) {
     String value = conf.get(key);
 
-    if(value == null) {
+    if (value == null) {
       throw new IllegalArgumentException("No value for " + key +
           " found in conf file.");
     }
@@ -34,16 +37,16 @@ final class Utils {
     return value;
   }
 
-  public static String postBody(String ... kv)
+  public static String postBody(String... kv)
       throws UnsupportedEncodingException {
-    if(kv.length % 2 != 0) {
+    if (kv.length % 2 != 0) {
       throw new IllegalArgumentException("Arguments must be key value pairs");
     }
     StringBuilder sb = new StringBuilder();
     int i = 0;
 
-    while(i < kv.length) {
-      if(i > 0) {
+    while (i < kv.length) {
+      if (i > 0) {
         sb.append("&");
       }
       sb.append(URLEncoder.encode(kv[i++], "UTF-8"));

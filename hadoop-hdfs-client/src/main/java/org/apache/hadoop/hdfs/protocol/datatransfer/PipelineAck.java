@@ -1,18 +1,17 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
-import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
+import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.PipelineAckProto;
+import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status;
+import org.apache.hadoop.hdfs.util.LongBitFormat;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.protobuf.TextFormat;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.PipelineAckProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status;
-import org.apache.hadoop.thirdparty.protobuf.TextFormat;
-import org.apache.hadoop.hdfs.util.LongBitFormat;
+import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
 
 /** Pipeline Acknowledgment **/
 public class PipelineAck {
@@ -29,6 +28,7 @@ public class PipelineAck {
 
     private final int value;
     private static final ECN[] VALUES = values();
+
     static ECN valueOf(int value) {
       return VALUES[value];
     }
@@ -98,11 +98,11 @@ public class PipelineAck {
       flagList.add(r);
     }
     proto = PipelineAckProto.newBuilder()
-      .setSeqno(seqno)
-      .addAllReply(statusList)
-      .addAllFlag(flagList)
-      .setDownstreamAckTimeNanos(downstreamAckTimeNanos)
-      .build();
+        .setSeqno(seqno)
+        .addAllReply(statusList)
+        .addAllFlag(flagList)
+        .setDownstreamAckTimeNanos(downstreamAckTimeNanos)
+        .build();
   }
 
   /**
@@ -118,7 +118,7 @@ public class PipelineAck {
    * @return the number of replies
    */
   public short getNumOfReplies() {
-    return (short)proto.getReplyCount();
+    return (short) proto.getReplyCount();
   }
 
   /**

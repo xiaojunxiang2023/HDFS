@@ -1,5 +1,31 @@
 package org.apache.hadoop.hdfs;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
+import org.apache.hadoop.hdfs.client.impl.DfsClientConf;
+import org.apache.hadoop.hdfs.protocol.ClientProtocol;
+import org.apache.hadoop.hdfs.protocol.HdfsConstants;
+import org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolPB;
+import org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolTranslatorPB;
+import org.apache.hadoop.hdfs.server.namenode.SafeModeException;
+import org.apache.hadoop.hdfs.server.namenode.ha.AbstractNNFailoverProxyProvider;
+import org.apache.hadoop.hdfs.server.namenode.ha.ClientHAProxyFactory;
+import org.apache.hadoop.hdfs.server.namenode.ha.HAProxyFactory;
+import org.apache.hadoop.hdfs.server.namenode.ha.WrappedFailoverProxyProvider;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.retry.*;
+import org.apache.hadoop.ipc.AlignmentContext;
+import org.apache.hadoop.ipc.ProtobufRpcEngine2;
+import org.apache.hadoop.ipc.RPC;
+import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -9,45 +35,12 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.hadoop.ha.status.HAServiceProtocol;
-import org.apache.hadoop.hdfs.server.namenode.ha.ClientHAProxyFactory;
-import org.apache.hadoop.hdfs.server.namenode.ha.HAProxyFactory;
-import org.apache.hadoop.ipc.AlignmentContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
-import org.apache.hadoop.hdfs.client.impl.DfsClientConf;
-import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolTranslatorPB;
-import org.apache.hadoop.hdfs.server.namenode.SafeModeException;
-import org.apache.hadoop.hdfs.server.namenode.ha.AbstractNNFailoverProxyProvider;
-import org.apache.hadoop.hdfs.server.namenode.ha.WrappedFailoverProxyProvider;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.retry.DefaultFailoverProxyProvider;
-import org.apache.hadoop.io.retry.FailoverProxyProvider;
-import org.apache.hadoop.io.retry.LossyRetryInvocationHandler;
-import org.apache.hadoop.io.retry.RetryPolicies;
-import org.apache.hadoop.io.retry.RetryPolicy;
-import org.apache.hadoop.io.retry.RetryProxy;
-import org.apache.hadoop.io.retry.RetryUtils;
-import org.apache.hadoop.ipc.ProtobufRpcEngine2;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.net.NetUtils;
-import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.security.UserGroupInformation;
 
 /**
  * Create proxy objects with {@link ClientProtocol} and
  * {@link HAServiceProtocol} to communicate with a remote NN. For the former,
  * generally use {@link NameNodeProxiesClient#createProxyWithClientProtocol(
- * Configuration, URI, AtomicBoolean)}, which will create either an HA- or
+ *Configuration, URI, AtomicBoolean)}, which will create either an HA- or
  * non-HA-enabled client proxy as appropriate.
  *
  * For creating proxy objects with other protocols, please see
@@ -164,11 +157,11 @@ public class NameNodeProxiesClient {
           HdfsClientConfigKeys.Retry.MAX_ATTEMPTS_KEY,
           HdfsClientConfigKeys.Retry.MAX_ATTEMPTS_DEFAULT);
       InvocationHandler dummyHandler = new LossyRetryInvocationHandler<>(
-              numResponseToDrop, failoverProxyProvider,
-              RetryPolicies.failoverOnNetworkException(
-                  RetryPolicies.TRY_ONCE_THEN_FAIL, maxFailoverAttempts,
-                  Math.max(numResponseToDrop + 1, maxRetryAttempts), delay,
-                  maxCap));
+          numResponseToDrop, failoverProxyProvider,
+          RetryPolicies.failoverOnNetworkException(
+              RetryPolicies.TRY_ONCE_THEN_FAIL, maxFailoverAttempts,
+              Math.max(numResponseToDrop + 1, maxRetryAttempts), delay,
+              maxCap));
 
       @SuppressWarnings("unchecked")
       T proxy = (T) Proxy.newProxyInstance(
@@ -197,7 +190,7 @@ public class NameNodeProxiesClient {
       Configuration conf, URI nameNodeUri, Class<T> xface, boolean checkPort,
       AtomicBoolean fallbackToSimpleAuth) throws IOException {
     return createFailoverProxyProvider(conf, nameNodeUri, xface, checkPort,
-      fallbackToSimpleAuth, new ClientHAProxyFactory<T>());
+        fallbackToSimpleAuth, new ClientHAProxyFactory<T>());
   }
 
   protected static <T> AbstractNNFailoverProxyProvider<T> createFailoverProxyProvider(
@@ -224,7 +217,7 @@ public class NameNodeProxiesClient {
       if (!(provider instanceof AbstractNNFailoverProxyProvider)) {
         providerNN = new WrappedFailoverProxyProvider<>(provider);
       } else {
-        providerNN = (AbstractNNFailoverProxyProvider<T>)provider;
+        providerNN = (AbstractNNFailoverProxyProvider<T>) provider;
       }
     } catch (Exception e) {
       final String message = "Couldn't create proxy provider " +

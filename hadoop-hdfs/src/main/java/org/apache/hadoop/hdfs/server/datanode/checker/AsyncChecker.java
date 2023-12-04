@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 package org.apache.hadoop.hdfs.server.datanode.checker;
+
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.Optional;
@@ -30,29 +31,29 @@ import java.util.concurrent.TimeUnit;
  */
 public interface AsyncChecker<K, V> {
 
-    /**
-     * Schedule an asynchronous check for the given object.
-     *
-     * @param target object to be checked.
-     *
-     * @param context the interpretation of the context depends on the
-     *                target.
-     *
-     * @return returns a {@link Optional of ListenableFuture} that can be used to
-     *         retrieve the result of the asynchronous check.
-     */
-    Optional<ListenableFuture<V>> schedule(Checkable<K, V> target, K context);
+  /**
+   * Schedule an asynchronous check for the given object.
+   *
+   * @param target object to be checked.
+   *
+   * @param context the interpretation of the context depends on the
+   *                target.
+   *
+   * @return returns a {@link Optional of ListenableFuture} that can be used to
+   *         retrieve the result of the asynchronous check.
+   */
+  Optional<ListenableFuture<V>> schedule(Checkable<K, V> target, K context);
 
-    /**
-     * Cancel all executing checks and wait for them to complete.
-     * First attempts a graceful cancellation, then cancels forcefully.
-     * Waits for the supplied timeout after both attempts.
-     *
-     * See {@link ExecutorService#awaitTermination} for a description of
-     * the parameters.
-     *
-     * @throws InterruptedException
-     */
-    void shutdownAndWait(long timeout, TimeUnit timeUnit)
-            throws InterruptedException;
+  /**
+   * Cancel all executing checks and wait for them to complete.
+   * First attempts a graceful cancellation, then cancels forcefully.
+   * Waits for the supplied timeout after both attempts.
+   *
+   * See {@link ExecutorService#awaitTermination} for a description of
+   * the parameters.
+   *
+   * @throws InterruptedException
+   */
+  void shutdownAndWait(long timeout, TimeUnit timeUnit)
+      throws InterruptedException;
 }

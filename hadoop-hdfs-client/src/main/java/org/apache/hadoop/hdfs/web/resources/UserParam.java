@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.web.resources;
 
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_USER_PATTERN_DEFAULT;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
+
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_USER_PATTERN_DEFAULT;
 
 /** User parameter. */
 public class UserParam extends StringParam {
@@ -34,12 +35,12 @@ public class UserParam extends StringParam {
   private static String validateLength(String str) {
     if (str == null) {
       throw new IllegalArgumentException(
-        MessageFormat.format("Parameter [{0}], cannot be NULL", NAME));
+          MessageFormat.format("Parameter [{0}], cannot be NULL", NAME));
     }
     int len = str.length();
     if (len < 1) {
       throw new IllegalArgumentException(MessageFormat.format(
-        "Parameter [{0}], it's length must be at least 1", NAME));
+          "Parameter [{0}], it's length must be at least 1", NAME));
     }
     return str;
   }

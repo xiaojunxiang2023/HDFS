@@ -6,14 +6,14 @@ package org.apache.hadoop.hdfs.util;
  * collection without having to do the &quot;lookup&quot; of the value twice.
  */
 public class Holder<T> {
-    public T held;
+  public T held;
 
-    public Holder(T held) {
-        this.held = held;
-    }
+  public Holder(T held) {
+    this.held = held;
+  }
 
-    @Override
-    public String toString() {
-        return String.valueOf(held);
-    }
+  @Override
+  public String toString() {
+    return String.valueOf(held);
+  }
 }

@@ -35,7 +35,7 @@ public class Metrics2Util {
     @Override
     public boolean equals(Object other) {
       if (other instanceof NameValuePair) {
-        return compareTo((NameValuePair)other) == 0;
+        return compareTo((NameValuePair) other) == 0;
       }
       return false;
     }

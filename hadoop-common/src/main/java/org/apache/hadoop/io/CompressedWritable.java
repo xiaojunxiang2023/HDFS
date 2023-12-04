@@ -1,12 +1,6 @@
 package org.apache.hadoop.io;
 
-import java.io.IOException;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -20,7 +14,8 @@ public abstract class CompressedWritable implements Writable {
   // if non-null, the compressed field data of this instance.
   private byte[] compressed;
 
-  public CompressedWritable() {}
+  public CompressedWritable() {
+  }
 
   @Override
   public final void readFields(DataInput in) throws IOException {
@@ -35,7 +30,7 @@ public abstract class CompressedWritable implements Writable {
       try {
         ByteArrayInputStream deflated = new ByteArrayInputStream(compressed);
         DataInput inflater =
-          new DataInputStream(new InflaterInputStream(deflated));
+            new DataInputStream(new InflaterInputStream(deflated));
         readFieldsCompressed(inflater);
         compressed = null;
       } catch (IOException e) {
@@ -46,7 +41,7 @@ public abstract class CompressedWritable implements Writable {
 
   /** Subclasses implement this instead of {@link #readFields(DataInput)}. */
   protected abstract void readFieldsCompressed(DataInput in)
-    throws IOException;
+      throws IOException;
 
   @Override
   public final void write(DataOutput out) throws IOException {
@@ -54,7 +49,7 @@ public abstract class CompressedWritable implements Writable {
       ByteArrayOutputStream deflated = new ByteArrayOutputStream();
       Deflater deflater = new Deflater(Deflater.BEST_SPEED);
       DataOutputStream dout =
-        new DataOutputStream(new DeflaterOutputStream(deflated, deflater));
+          new DataOutputStream(new DeflaterOutputStream(deflated, deflater));
       writeCompressed(dout);
       dout.close();
       deflater.end();

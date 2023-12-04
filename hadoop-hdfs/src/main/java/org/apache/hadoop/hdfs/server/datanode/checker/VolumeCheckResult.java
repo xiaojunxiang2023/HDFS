@@ -22,17 +22,17 @@ package org.apache.hadoop.hdfs.server.datanode.checker;
  * volume.
  */
 public enum VolumeCheckResult {
-    HEALTHY(1),
-    DEGRADED(2),
-    FAILED(3);
+  HEALTHY(1),
+  DEGRADED(2),
+  FAILED(3);
 
-    private final int value;
+  private final int value;
 
-    VolumeCheckResult(int value) {
-        this.value = value;
-    }
+  VolumeCheckResult(int value) {
+    this.value = value;
+  }
 
-    int getValue() {
-        return value;
-    }
+  int getValue() {
+    return value;
+  }
 }

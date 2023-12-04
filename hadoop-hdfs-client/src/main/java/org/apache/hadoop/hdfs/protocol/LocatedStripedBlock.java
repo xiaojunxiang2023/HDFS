@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.security.token.Token;
@@ -19,8 +20,8 @@ public class LocatedStripedBlock extends LocatedBlock {
 
   @SuppressWarnings({"unchecked"})
   public LocatedStripedBlock(ExtendedBlock b, DatanodeInfo[] locs,
-      String[] storageIDs, StorageType[] storageTypes, byte[] indices,
-      long startOffset, boolean corrupt, DatanodeInfo[] cachedLocs) {
+                             String[] storageIDs, StorageType[] storageTypes, byte[] indices,
+                             long startOffset, boolean corrupt, DatanodeInfo[] cachedLocs) {
     super(b, locs, storageIDs, storageTypes, startOffset, corrupt, cachedLocs);
 
     if (indices == null) {

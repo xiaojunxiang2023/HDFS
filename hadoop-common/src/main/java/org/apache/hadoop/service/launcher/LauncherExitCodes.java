@@ -150,10 +150,10 @@ public interface LauncherExitCodes {
    * The service instance could not be created: {@value}.
    */
   int EXIT_SERVICE_CREATION_FAILURE = 56;
- 
+
   /**
    * The service instance could not be created: {@value}.
    */
   int EXIT_SERVICE_LIFECYCLE_EXCEPTION = 57;
-  
+
 }

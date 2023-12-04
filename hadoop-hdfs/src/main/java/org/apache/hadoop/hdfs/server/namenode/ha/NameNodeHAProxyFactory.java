@@ -15,18 +15,18 @@ public class NameNodeHAProxyFactory<T> implements HAProxyFactory<T> {
 
   @Override
   public T createProxy(Configuration conf, InetSocketAddress nnAddr,
-      Class<T> xface, UserGroupInformation ugi, boolean withRetries,
-      AtomicBoolean fallbackToSimpleAuth) throws IOException {
+                       Class<T> xface, UserGroupInformation ugi, boolean withRetries,
+                       AtomicBoolean fallbackToSimpleAuth) throws IOException {
     return NameNodeProxies.createNonHAProxy(conf, nnAddr, xface,
         ugi, withRetries, fallbackToSimpleAuth, alignmentContext).getProxy();
   }
 
   @Override
   public T createProxy(Configuration conf, InetSocketAddress nnAddr,
-      Class<T> xface, UserGroupInformation ugi, boolean withRetries)
+                       Class<T> xface, UserGroupInformation ugi, boolean withRetries)
       throws IOException {
     return NameNodeProxies.createNonHAProxy(conf, nnAddr, xface,
-      ugi, withRetries).getProxy();
+        ugi, withRetries).getProxy();
   }
 
   public void setAlignmentContext(AlignmentContext alignmentContext) {

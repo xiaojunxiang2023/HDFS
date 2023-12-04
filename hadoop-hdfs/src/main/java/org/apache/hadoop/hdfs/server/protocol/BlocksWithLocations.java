@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Maintains an array of blocks and their corresponding storage IDs.
@@ -17,21 +17,21 @@ public class BlocksWithLocations {
     final String[] datanodeUuids;
     final String[] storageIDs;
     final StorageType[] storageTypes;
-    
+
     /** constructor */
     public BlockWithLocations(Block block, String[] datanodeUuids,
-        String[] storageIDs, StorageType[] storageTypes) {
+                              String[] storageIDs, StorageType[] storageTypes) {
       this.block = block;
       this.datanodeUuids = datanodeUuids;
       this.storageIDs = storageIDs;
       this.storageTypes = storageTypes;
     }
-    
+
     /** get the block */
     public Block getBlock() {
       return block;
     }
-    
+
     /** get the block's datanode locations */
     public String[] getDatanodeUuids() {
       return datanodeUuids;
@@ -54,18 +54,18 @@ public class BlocksWithLocations {
       if (datanodeUuids.length == 0) {
         return b.append("[]").toString();
       }
-      
+
       appendString(0, b.append("["));
-      for(int i = 1; i < datanodeUuids.length; i++) {
+      for (int i = 1; i < datanodeUuids.length; i++) {
         appendString(i, b.append(","));
       }
       return b.append("]").toString();
     }
-    
+
     private StringBuilder appendString(int i, StringBuilder b) {
       return b.append("[").append(storageTypes[i]).append("]")
-              .append(storageIDs[i])
-              .append("@").append(datanodeUuids[i]);
+          .append(storageIDs[i])
+          .append("@").append(datanodeUuids[i]);
     }
   }
 
@@ -75,7 +75,7 @@ public class BlocksWithLocations {
     final int cellSize;
 
     public StripedBlockWithLocations(BlockWithLocations blk, byte[] indices,
-         short dataBlockNum, int cellSize) {
+                                     short dataBlockNum, int cellSize) {
       super(blk.getBlock(), blk.getDatanodeUuids(), blk.getStorageIDs(),
           blk.getStorageTypes());
       Preconditions.checkArgument(

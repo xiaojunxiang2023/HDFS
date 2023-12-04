@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
 import org.apache.hadoop.fs.CachingGetSpaceUsed;
 import org.apache.hadoop.fs.GetSpaceUsed;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.FsVolumeImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Fast and accurate class to tell how much space HDFS is using.

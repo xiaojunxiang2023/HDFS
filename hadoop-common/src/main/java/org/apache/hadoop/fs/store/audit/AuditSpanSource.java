@@ -21,7 +21,7 @@ public interface AuditSpanSource<T extends AuditSpan> {
    * @throws IOException failure
    */
   T createSpan(String operation,
-      @Nullable String path1,
-      @Nullable String path2)
+               @Nullable String path1,
+               @Nullable String path2)
       throws IOException;
 }

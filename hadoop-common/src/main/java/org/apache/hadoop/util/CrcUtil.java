@@ -91,15 +91,15 @@ public final class CrcUtil {
    */
   public static void writeInt(byte[] buf, int offset, int value)
       throws IOException {
-    if (offset + 4  > buf.length) {
+    if (offset + 4 > buf.length) {
       throw new IOException(String.format(
           "writeInt out of bounds: buf.length=%d, offset=%d",
           buf.length, offset));
     }
-    buf[offset + 0] = (byte)((value >>> 24) & 0xff);
-    buf[offset + 1] = (byte)((value >>> 16) & 0xff);
-    buf[offset + 2] = (byte)((value >>> 8) & 0xff);
-    buf[offset + 3] = (byte)(value & 0xff);
+    buf[offset + 0] = (byte) ((value >>> 24) & 0xff);
+    buf[offset + 1] = (byte) ((value >>> 16) & 0xff);
+    buf[offset + 2] = (byte) ((value >>> 8) & 0xff);
+    buf[offset + 3] = (byte) (value & 0xff);
   }
 
   /**
@@ -108,15 +108,15 @@ public final class CrcUtil {
    */
   public static int readInt(byte[] buf, int offset)
       throws IOException {
-    if (offset + 4  > buf.length) {
+    if (offset + 4 > buf.length) {
       throw new IOException(String.format(
           "readInt out of bounds: buf.length=%d, offset=%d",
           buf.length, offset));
     }
     int value = ((buf[offset + 0] & 0xff) << 24) |
-                ((buf[offset + 1] & 0xff) << 16) |
-                ((buf[offset + 2] & 0xff) << 8)  |
-                ((buf[offset + 3] & 0xff));
+        ((buf[offset + 1] & 0xff) << 16) |
+        ((buf[offset + 2] & 0xff) << 8) |
+        ((buf[offset + 3] & 0xff));
     return value;
   }
 

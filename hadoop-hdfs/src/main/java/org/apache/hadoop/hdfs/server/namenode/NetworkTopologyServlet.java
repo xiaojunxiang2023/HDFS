@@ -15,12 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A servlet to print out the network topology.
@@ -51,11 +46,11 @@ public class NetworkTopologyServlet extends DfsServlet {
         .getLeaves(NodeBase.ROOT);
 
     try (PrintStream out = new PrintStream(
-            response.getOutputStream(), false, "UTF-8")) {
+        response.getOutputStream(), false, "UTF-8")) {
       printTopology(out, leaves, format);
     } catch (Throwable t) {
       String errMsg = "Print network topology failed. "
-              + StringUtils.stringifyException(t);
+          + StringUtils.stringifyException(t);
       response.sendError(HttpServletResponse.SC_GONE, errMsg);
       throw new IOException(errMsg);
     } finally {
@@ -73,7 +68,7 @@ public class NetworkTopologyServlet extends DfsServlet {
    * @param format the response format
    */
   protected void printTopology(PrintStream stream, List<Node> leaves,
-      String format) throws BadFormatException, IOException {
+                               String format) throws BadFormatException, IOException {
     if (leaves.isEmpty()) {
       stream.print("No DataNodes");
       return;
@@ -81,7 +76,7 @@ public class NetworkTopologyServlet extends DfsServlet {
 
     // Build a map of rack -> nodes
     Map<String, TreeSet<String>> tree = new HashMap<>();
-    for(Node dni : leaves) {
+    for (Node dni : leaves) {
       String location = dni.getNetworkLocation();
       String name = dni.getName();
 
@@ -108,17 +103,17 @@ public class NetworkTopologyServlet extends DfsServlet {
     JsonGenerator dumpGenerator = dumpFactory.createGenerator(stream);
     dumpGenerator.writeStartArray();
 
-    for(String r : racks) {
+    for (String r : racks) {
       dumpGenerator.writeStartObject();
       dumpGenerator.writeFieldName(r);
       TreeSet<String> nodes = tree.get(r);
       dumpGenerator.writeStartArray();
 
-      for(String n : nodes) {
+      for (String n : nodes) {
         dumpGenerator.writeStartObject();
         dumpGenerator.writeStringField("ip", n);
         String hostname = NetUtils.getHostNameOfIP(n);
-        if(hostname != null) {
+        if (hostname != null) {
           dumpGenerator.writeStringField("hostname", hostname);
         }
         dumpGenerator.writeEndObject();
@@ -136,14 +131,14 @@ public class NetworkTopologyServlet extends DfsServlet {
 
   protected void printTextFormat(PrintStream stream, Map<String,
       TreeSet<String>> tree, ArrayList<String> racks) {
-    for(String r : racks) {
+    for (String r : racks) {
       stream.println("Rack: " + r);
       TreeSet<String> nodes = tree.get(r);
 
-      for(String n : nodes) {
+      for (String n : nodes) {
         stream.print("   " + n);
         String hostname = NetUtils.getHostNameOfIP(n);
-        if(hostname != null) {
+        if (hostname != null) {
           stream.print(" (" + hostname + ")");
         }
         stream.println();
@@ -156,7 +151,7 @@ public class NetworkTopologyServlet extends DfsServlet {
   protected static String parseAcceptHeader(HttpServletRequest request) {
     String format = request.getHeader(HttpHeaders.ACCEPT);
     return format != null && format.contains(FORMAT_JSON) ?
-            FORMAT_JSON : FORMAT_TEXT;
+        FORMAT_JSON : FORMAT_TEXT;
   }
 
   public static class BadFormatException extends Exception {

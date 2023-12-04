@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public class ConnectionNullException extends IOException {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public ConnectionNullException(String msg) {
-        super(msg);
-    }
+  public ConnectionNullException(String msg) {
+    super(msg);
+  }
 }

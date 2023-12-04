@@ -4,7 +4,7 @@ package org.apache.hadoop.hdfs.server.protocol;
  * Base class for a server command.
  * Issued by the name-node to notify other servers what should be done.
  * Commands are defined by actions defined in respective protocols.
- * 
+ *
  * @see DatanodeProtocol
  * @see NamenodeProtocol
  */
@@ -14,7 +14,7 @@ public abstract class ServerCommand {
   /**
    * Create a command for the specified action.
    * Actions are protocol specific.
-   * 
+   *
    * @see DatanodeProtocol
    * @see NamenodeProtocol
    * @param action protocol specific action

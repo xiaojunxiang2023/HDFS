@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.codec;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.erasurecode.ErasureCodecOptions;
 import org.apache.hadoop.io.erasurecode.coder.ErasureDecoder;
@@ -13,7 +14,7 @@ public class XORErasureCodec extends ErasureCodec {
 
   public XORErasureCodec(Configuration conf, ErasureCodecOptions options) {
     super(conf, options);
-    assert(options.getSchema().getNumParityUnits() == 1);
+    assert (options.getSchema().getNumParityUnits() == 1);
   }
 
   @Override

@@ -14,25 +14,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.blockmanagement;
+ */
+package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.net.DFSNetworkTopology;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.net.Node;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Random;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_AVAILABLE_SPACE_RACK_FAULT_TOLERANT_BLOCK_PLACEMENT_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_AVAILABLE_SPACE_RACK_FAULT_TOLERANT_BLOCK_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_KEY;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
 
 /**
  * Space balanced rack fault tolerant block placement policy.
@@ -46,18 +44,19 @@ public class AvailableSpaceRackFaultTolerantBlockPlacementPolicy
   private int balancedPreference = (int) (100
       * DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT);
   private int balancedSpaceTolerance =
-        DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT;
+      DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT;
+
   @Override
   public void initialize(Configuration conf, FSClusterStats stats,
-      NetworkTopology clusterMap, Host2NodesMap host2datanodeMap) {
+                         NetworkTopology clusterMap, Host2NodesMap host2datanodeMap) {
     super.initialize(conf, stats, clusterMap, host2datanodeMap);
     float balancedPreferencePercent = conf.getFloat(
         DFS_NAMENODE_AVAILABLE_SPACE_RACK_FAULT_TOLERANT_BLOCK_PLACEMENT_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY,
         DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT);
 
     balancedSpaceTolerance = conf.getInt(
-            DFS_NAMENODE_AVAILABLE_SPACE_RACK_FAULT_TOLERANT_BLOCK_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_KEY,
-            DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT);
+        DFS_NAMENODE_AVAILABLE_SPACE_RACK_FAULT_TOLERANT_BLOCK_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_KEY,
+        DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT);
 
     LOG.info("Available space rack fault tolerant block placement policy "
         + "initialized: "
@@ -81,10 +80,10 @@ public class AvailableSpaceRackFaultTolerantBlockPlacementPolicy
       LOG.warn("The value of "
           + DFS_NAMENODE_AVAILABLE_SPACE_RACK_FAULT_TOLERANT_BLOCK_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_KEY
           + " is invalid, Current value is " + balancedSpaceTolerance + ", Default value " +
-            DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT
+          DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT
           + " will be used instead.");
       balancedSpaceTolerance =
-            DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT;
+          DFS_NAMENODE_AVAILABLE_SPACE_BLOCK_RACK_FAULT_TOLERANT_PLACEMENT_POLICY_BALANCED_SPACE_TOLERANCE_DEFAULT;
     }
 
     balancedPreference = (int) (100 * balancedPreferencePercent);
@@ -92,7 +91,7 @@ public class AvailableSpaceRackFaultTolerantBlockPlacementPolicy
 
   @Override
   protected DatanodeDescriptor chooseDataNode(final String scope,
-      final Collection<Node> excludedNode, StorageType type) {
+                                              final Collection<Node> excludedNode, StorageType type) {
     // only the code that uses DFSNetworkTopology should trigger this code path.
     Preconditions.checkArgument(clusterMap instanceof DFSNetworkTopology);
     DFSNetworkTopology dfsClusterMap = (DFSNetworkTopology) clusterMap;
@@ -105,7 +104,7 @@ public class AvailableSpaceRackFaultTolerantBlockPlacementPolicy
 
   @Override
   protected DatanodeDescriptor chooseDataNode(final String scope,
-      final Collection<Node> excludedNode) {
+                                              final Collection<Node> excludedNode) {
     DatanodeDescriptor a =
         (DatanodeDescriptor) clusterMap.chooseRandom(scope, excludedNode);
     DatanodeDescriptor b =
@@ -114,7 +113,7 @@ public class AvailableSpaceRackFaultTolerantBlockPlacementPolicy
   }
 
   private DatanodeDescriptor select(DatanodeDescriptor a,
-      DatanodeDescriptor b) {
+                                    DatanodeDescriptor b) {
     if (a != null && b != null) {
       int ret = compareDataNode(a, b);
       if (ret == 0) {
@@ -133,7 +132,7 @@ public class AvailableSpaceRackFaultTolerantBlockPlacementPolicy
    * Compare the two data nodes.
    */
   protected int compareDataNode(final DatanodeDescriptor a,
-      final DatanodeDescriptor b) {
+                                final DatanodeDescriptor b) {
     if (a.equals(b)
         || Math.abs(a.getDfsUsedPercent() - b.getDfsUsedPercent()) < balancedSpaceTolerance) {
       return 0;

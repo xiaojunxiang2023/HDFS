@@ -16,7 +16,7 @@ public class ReconfigurationException extends Exception {
   /**
    * Construct the exception message.
    */
-  private static String constructMessage(String property, 
+  private static String constructMessage(String property,
                                          String newVal, String oldVal) {
     String message = "Could not change property " + property;
     if (oldVal != null) {
@@ -28,7 +28,7 @@ public class ReconfigurationException extends Exception {
     return message;
   }
 
-  
+
   /**
    * Create a new instance of {@link ReconfigurationException}.
    */
@@ -42,7 +42,7 @@ public class ReconfigurationException extends Exception {
   /**
    * Create a new instance of {@link ReconfigurationException}.
    */
-  public ReconfigurationException(String property, 
+  public ReconfigurationException(String property,
                                   String newVal, String oldVal,
                                   Throwable cause) {
     super(constructMessage(property, newVal, oldVal), cause);
@@ -54,7 +54,7 @@ public class ReconfigurationException extends Exception {
   /**
    * Create a new instance of {@link ReconfigurationException}.
    */
-  public ReconfigurationException(String property, 
+  public ReconfigurationException(String property,
                                   String newVal, String oldVal) {
     super(constructMessage(property, newVal, oldVal));
     this.property = property;

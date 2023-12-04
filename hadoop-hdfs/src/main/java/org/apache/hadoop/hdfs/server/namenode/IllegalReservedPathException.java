@@ -9,10 +9,11 @@ import java.io.IOException;
  */
 public class IllegalReservedPathException extends IOException {
   private static final long serialVersionUID = 1L;
-  
+
   public IllegalReservedPathException(String message, Throwable cause) {
     super(message, cause);
   }
+
   public IllegalReservedPathException(String message) {
     super(message);
   }

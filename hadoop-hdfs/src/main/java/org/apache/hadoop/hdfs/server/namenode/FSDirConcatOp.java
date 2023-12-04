@@ -1,21 +1,20 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
 import org.apache.hadoop.hdfs.protocol.SnapshotException;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.hadoop.util.Time.now;
 
@@ -32,7 +31,7 @@ import static org.apache.hadoop.util.Time.now;
 class FSDirConcatOp {
 
   static FileStatus concat(FSDirectory fsd, FSPermissionChecker pc,
-      String target, String[] srcs, boolean logRetryCache) throws IOException {
+                           String target, String[] srcs, boolean logRetryCache) throws IOException {
     validatePath(target, srcs);
     assert srcs != null;
     NameNode.stateChangeLog.debug("DIR* NameSystem.concat: {} to {}",
@@ -80,7 +79,7 @@ class FSDirConcatOp {
   }
 
   private static void verifyTargetFile(FSDirectory fsd, final String target,
-      final INodesInPath targetIIP) throws IOException {
+                                       final INodesInPath targetIIP) throws IOException {
     // check the target
     if (FSDirEncryptionZoneOp.getEZForPath(fsd, targetIIP) != null) {
       throw new HadoopIllegalArgumentException(
@@ -88,20 +87,20 @@ class FSDirConcatOp {
     }
     final INodeFile targetINode = INodeFile.valueOf(targetIIP.getLastINode(),
         target);
-    if(targetINode.isUnderConstruction()) {
+    if (targetINode.isUnderConstruction()) {
       throw new HadoopIllegalArgumentException("concat: target file "
           + target + " is under construction");
     }
   }
 
   private static INodeFile[] verifySrcFiles(FSDirectory fsd, String[] srcs,
-      INodesInPath targetIIP, FSPermissionChecker pc) throws IOException {
+                                            INodesInPath targetIIP, FSPermissionChecker pc) throws IOException {
     // to make sure no two files are the same
     Set<INodeFile> si = new LinkedHashSet<>();
     final INodeFile targetINode = targetIIP.getLastINode().asFile();
     final INodeDirectory targetParent = targetINode.getParent();
     // now check the srcs
-    for(String src : srcs) {
+    for (String src : srcs) {
       final INodesInPath iip = fsd.resolvePath(pc, src, DirOp.WRITE);
       // permission check for srcs
       if (pc != null) {
@@ -133,7 +132,7 @@ class FSDirConcatOp {
             + " is the same with the target file " + targetIIP.getPath());
       }
       // source file cannot be under construction or empty
-      if(srcINodeFile.isUnderConstruction() || srcINodeFile.numBlocks() == 0) {
+      if (srcINodeFile.isUnderConstruction() || srcINodeFile.numBlocks() == 0) {
         throw new HadoopIllegalArgumentException("concat: source file " + src
             + " is invalid or empty or underConstruction");
       }
@@ -147,7 +146,7 @@ class FSDirConcatOp {
             + " which is greater than the target file's preferred block size "
             + targetINode.getPreferredBlockSize());
       }
-      if(srcINodeFile.getErasureCodingPolicyID() !=
+      if (srcINodeFile.getErasureCodingPolicyID() !=
           targetINode.getErasureCodingPolicyID()) {
         throw new HadoopIllegalArgumentException("Source file " + src
             + " and target file " + targetIIP.getPath()
@@ -157,7 +156,7 @@ class FSDirConcatOp {
     }
 
     // make sure no two files are the same
-    if(si.size() < srcs.length) {
+    if (si.size() < srcs.length) {
       // it means at least two files are the same
       throw new HadoopIllegalArgumentException(
           "concat: at least two of the source files are the same");
@@ -166,7 +165,7 @@ class FSDirConcatOp {
   }
 
   private static QuotaCounts computeQuotaDeltas(FSDirectory fsd,
-      INodeFile target, INodeFile[] srcList) {
+                                                INodeFile target, INodeFile[] srcList) {
     QuotaCounts deltas = new QuotaCounts.Builder().build();
     final short targetRepl = target.getPreferredBlockReplication();
     for (INodeFile src : srcList) {
@@ -197,7 +196,7 @@ class FSDirConcatOp {
   }
 
   private static void verifyQuota(FSDirectory fsd, INodesInPath targetIIP,
-      QuotaCounts deltas) throws QuotaExceededException {
+                                  QuotaCounts deltas) throws QuotaExceededException {
     if (!fsd.getFSNamesystem().isImageLoaded() || fsd.shouldSkipQuotaChecks()) {
       // Do not check quota if editlog is still being processed
       return;
@@ -210,7 +209,7 @@ class FSDirConcatOp {
    * @param fsd FSDirectory
    */
   static void unprotectedConcat(FSDirectory fsd, INodesInPath targetIIP,
-      INodeFile[] srcList, long timestamp) throws IOException {
+                                INodeFile[] srcList, long timestamp) throws IOException {
     assert fsd.hasWriteLock();
     NameNode.stateChangeLog.debug("DIR* NameSystem.concat to {}",
         targetIIP.getPath());
@@ -227,7 +226,7 @@ class FSDirConcatOp {
     // since we are in the same dir - we can use same parent to remove files
     int count = 0;
     for (INodeFile nodeToRemove : srcList) {
-      if(nodeToRemove != null) {
+      if (nodeToRemove != null) {
         nodeToRemove.clearBlocks();
         // Ensure the nodeToRemove is cleared from snapshot diff list
         nodeToRemove.getParent().removeChild(nodeToRemove,

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 // 刷新 superUserGroup的配置
 public interface RouterGenericManager {
-    
-    boolean refreshSuperUserGroupsConfiguration() throws IOException;
-    
+
+  boolean refreshSuperUserGroupsConfiguration() throws IOException;
+
 }

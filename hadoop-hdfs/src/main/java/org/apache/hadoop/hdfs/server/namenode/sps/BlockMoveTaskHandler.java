@@ -1,7 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockMovingInfo;
+
+import java.io.IOException;
 
 /**
  * Interface for implementing different ways of block moving approaches. One can

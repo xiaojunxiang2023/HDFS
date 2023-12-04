@@ -1,23 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.INVALID_TXID;
-import static org.apache.hadoop.util.ExitUtil.terminate;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.SortedSet;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
@@ -27,6 +9,15 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.INVALID_TXID;
+import static org.apache.hadoop.util.ExitUtil.terminate;
 
 /**
  * Manages a collection of Journals. None of the methods are synchronized, it is
@@ -52,7 +43,7 @@ public class JournalSet implements JournalManager {
   /**
    * Container for a JournalManager paired with its currently
    * active stream.
-   * 
+   *
    * If a Journal gets disabled due to an error writing to its
    * stream, then the stream will be aborted and set to null.
    */
@@ -62,9 +53,9 @@ public class JournalSet implements JournalManager {
     private EditLogOutputStream stream;
     private final boolean required;
     private final boolean shared;
-    
+
     public JournalAndStream(JournalManager manager, boolean required,
-        boolean shared) {
+                            boolean shared) {
       this.journal = manager;
       this.required = required;
       this.shared = shared;
@@ -93,7 +84,7 @@ public class JournalSet implements JournalManager {
 
       journal.close();
     }
-    
+
     /**
      * Aborts the stream, also sets it to null.
      */
@@ -110,18 +101,18 @@ public class JournalSet implements JournalManager {
     boolean isActive() {
       return stream != null;
     }
-    
+
     /**
      * Should be used outside JournalSet only for testing.
      */
     EditLogOutputStream getCurrentStream() {
       return stream;
     }
-    
+
     @Override
     public String toString() {
       return "JournalAndStream(mgr=" + journal +
-        ", " + "stream=" + stream + ")";
+          ", " + "stream=" + stream + ")";
     }
 
     void setCurrentStreamForTests(EditLogOutputStream stream) {
@@ -144,22 +135,22 @@ public class JournalSet implements JournalManager {
     private void setDisabled(boolean disabled) {
       this.disabled = disabled;
     }
-    
+
     @Override
     public boolean isResourceAvailable() {
       return !isDisabled();
     }
-    
+
     @Override
     public boolean isRequired() {
       return required;
     }
-    
+
     public boolean isShared() {
       return shared;
     }
   }
- 
+
   // COW implementation is necessary since some users (eg the web ui) call
   // getAllJournalStreams() and then iterate. Since this is rarely
   // mutated, there is no performance concern.
@@ -174,7 +165,7 @@ public class JournalSet implements JournalManager {
     this.minimumRedundantJournals = minimumRedundantResources;
     lastJournalledTxId = INVALID_TXID;
   }
-  
+
   @Override
   public void format(NamespaceInfo nsInfo, boolean force) throws IOException {
     // The operation is done by FSEditLog itself
@@ -188,10 +179,10 @@ public class JournalSet implements JournalManager {
     throw new UnsupportedOperationException();
   }
 
-  
+
   @Override
   public EditLogOutputStream startLogSegment(final long txId,
-      final int layoutVersion) throws IOException {
+                                             final int layoutVersion) throws IOException {
     mapJournalsAndReportErrors(new JournalClosure() {
       @Override
       public void apply(JournalAndStream jas) throws IOException {
@@ -200,7 +191,7 @@ public class JournalSet implements JournalManager {
     }, "starting log segment " + txId);
     return new JournalSetOutputStream();
   }
-  
+
   @Override
   public void finalizeLogSegment(final long firstTxId, final long lastTxId)
       throws IOException {
@@ -214,7 +205,7 @@ public class JournalSet implements JournalManager {
       }
     }, "finalize log segment " + firstTxId + ", " + lastTxId);
   }
-   
+
   @Override
   public void close() throws IOException {
     mapJournalsAndReportErrors(new JournalClosure() {
@@ -233,7 +224,7 @@ public class JournalSet implements JournalManager {
   /**
    * In this function, we get a bunch of streams from all of our JournalManager
    * objects.  Then we add these to the collection one by one.
-   * 
+   *
    * @param streams          The collection to add the streams to.  It may or 
    *                         may not be sorted-- this is up to the caller.
    * @param fromTxId         The transaction ID to start looking for streams at
@@ -244,8 +235,8 @@ public class JournalSet implements JournalManager {
    */
   @Override
   public void selectInputStreams(Collection<EditLogInputStream> streams,
-      long fromTxId, boolean inProgressOk, boolean onlyDurableTxns) {
-    final PriorityQueue<EditLogInputStream> allStreams = 
+                                 long fromTxId, boolean inProgressOk, boolean onlyDurableTxns) {
+    final PriorityQueue<EditLogInputStream> allStreams =
         new PriorityQueue<EditLogInputStream>(64,
             EDIT_LOG_INPUT_STREAM_COMPARATOR);
     for (JournalAndStream jas : journals) {
@@ -263,7 +254,7 @@ public class JournalSet implements JournalManager {
     }
     chainAndMakeRedundantStreams(streams, allStreams, fromTxId);
   }
-  
+
   public static void chainAndMakeRedundantStreams(
       Collection<EditLogInputStream> outStreams,
       PriorityQueue<EditLogInputStream> allStreams, long fromTxId) {
@@ -319,7 +310,7 @@ public class JournalSet implements JournalManager {
   /**
    * Returns true if there are no journals, all redundant journals are disabled,
    * or any required journals are disabled.
-   * 
+   *
    * @return True if there no journals, all redundant journals are disabled,
    * or any required journals are disabled.
    */
@@ -327,7 +318,7 @@ public class JournalSet implements JournalManager {
     return !NameNodeResourcePolicy.areResourcesAvailable(journals,
         minimumRedundantJournals);
   }
-  
+
   /**
    * Called when some journals experience an error in some operation.
    */
@@ -335,7 +326,7 @@ public class JournalSet implements JournalManager {
     if (badJournals == null || badJournals.isEmpty()) {
       return; // nothing to do
     }
- 
+
     for (JournalAndStream j : badJournals) {
       LOG.error("Disabling journal " + j);
       j.abort();
@@ -356,7 +347,7 @@ public class JournalSet implements JournalManager {
      */
     public void apply(JournalAndStream jas) throws IOException;
   }
-  
+
   /**
    * Apply the given operation across all of the journal managers, disabling
    * any for which the closure throws an IOException.
@@ -365,7 +356,7 @@ public class JournalSet implements JournalManager {
    * @throws IOException If the operation fails on all the journals.
    */
   private void mapJournalsAndReportErrors(
-      JournalClosure closure, String status) throws IOException{
+      JournalClosure closure, String status) throws IOException {
 
     List<JournalAndStream> badJAS = Lists.newLinkedList();
     for (JournalAndStream jas : journals) {
@@ -374,7 +365,7 @@ public class JournalSet implements JournalManager {
       } catch (Throwable t) {
         if (jas.isRequired()) {
           final String msg = "Error: " + status + " failed for required journal ("
-            + jas + ")";
+              + jas + ")";
           LOG.error(msg, t);
           // If we fail on *any* of the required journals, then we must not
           // continue on any of the other journals. Abort them to ensure that
@@ -388,7 +379,7 @@ public class JournalSet implements JournalManager {
           terminate(1, msg);
         } else {
           LOG.error("Error: " + status + " failed for (journal " + jas + ")", t);
-          badJAS.add(jas);          
+          badJAS.add(jas);
         }
       }
     }
@@ -400,7 +391,7 @@ public class JournalSet implements JournalManager {
       throw new IOException(message);
     }
   }
-  
+
   /**
    * Abort all of the underlying streams.
    */
@@ -445,7 +436,7 @@ public class JournalSet implements JournalManager {
       }, "write op");
 
       assert lastJournalledTxId < op.txid : "TxId order violation for op=" +
-        op + ", lastJournalledTxId=" + lastJournalledTxId;
+          op + ", lastJournalledTxId=" + lastJournalledTxId;
       lastJournalledTxId = op.txid;
     }
 
@@ -517,7 +508,7 @@ public class JournalSet implements JournalManager {
         }
       }, "flushAndSync");
     }
-    
+
     @Override
     public void flush() throws IOException {
       mapJournalsAndReportErrors(new JournalClosure() {
@@ -529,7 +520,7 @@ public class JournalSet implements JournalManager {
         }
       }, "flush");
     }
-    
+
     @Override
     public boolean shouldForceSync() {
       for (JournalAndStream js : journals) {
@@ -539,7 +530,7 @@ public class JournalSet implements JournalManager {
       }
       return false;
     }
-    
+
     @Override
     protected long getNumSync() {
       for (JournalAndStream jas : journals) {
@@ -557,14 +548,14 @@ public class JournalSet implements JournalManager {
       mapJournalsAndReportErrors(new JournalClosure() {
         @Override
         public void apply(JournalAndStream jas) throws IOException {
-            jas.getManager().setOutputBufferCapacity(size);
+          jas.getManager().setOutputBufferCapacity(size);
         }
       }, "setOutputBufferCapacity");
     } catch (IOException e) {
       LOG.error("Error in setting outputbuffer capacity");
     }
   }
-  
+
   List<JournalAndStream> getAllJournalStreams() {
     return journals;
   }
@@ -576,19 +567,19 @@ public class JournalSet implements JournalManager {
     }
     return jList;
   }
-  
+
   void add(JournalManager j, boolean required) {
     add(j, required, false);
   }
-  
+
   void add(JournalManager j, boolean required, boolean shared) {
     JournalAndStream jas = new JournalAndStream(j, required, shared);
     journals.add(jas);
   }
-  
+
   void remove(JournalManager j) {
     JournalAndStream jasToRemove = null;
-    for (JournalAndStream jas: journals) {
+    for (JournalAndStream jas : journals) {
       if (jas.getManager().equals(j)) {
         jasToRemove = jas;
         break;
@@ -619,12 +610,12 @@ public class JournalSet implements JournalManager {
       }
     }, "recoverUnfinalizedSegments");
   }
-  
+
   /**
    * Return a manifest of what finalized edit logs are available. All available
    * edit logs are returned starting from the transaction id passed. If
    * 'fromTxId' falls in the middle of a log, that log is returned as well.
-   * 
+   *
    * @param fromTxId Starting transaction id to read the logs.
    * @return RemoteEditLogManifest object.
    */
@@ -633,7 +624,7 @@ public class JournalSet implements JournalManager {
     List<RemoteEditLog> allLogs = new ArrayList<>();
     for (JournalAndStream j : journals) {
       if (j.getManager() instanceof FileJournalManager) {
-        FileJournalManager fjm = (FileJournalManager)j.getManager();
+        FileJournalManager fjm = (FileJournalManager) j.getManager();
         try {
           allLogs.addAll(fjm.getRemoteEditLogs(fromTxId, false));
         } catch (Throwable t) {
@@ -645,7 +636,7 @@ public class JournalSet implements JournalManager {
     final Map<Long, List<RemoteEditLog>> logsByStartTxId = new HashMap<>();
     allLogs.forEach(input -> {
       long key = RemoteEditLog.GET_START_TXID.apply(input);
-      logsByStartTxId.computeIfAbsent(key, k-> new ArrayList<>()).add(input);
+      logsByStartTxId.computeIfAbsent(key, k -> new ArrayList<>()).add(input);
     });
     long curStartTxId = fromTxId;
     List<RemoteEditLog> logs = new ArrayList<>();
@@ -680,10 +671,10 @@ public class JournalSet implements JournalManager {
     }
     RemoteEditLogManifest ret = new RemoteEditLogManifest(logs,
         curStartTxId - 1);
-    
+
     if (LOG.isDebugEnabled()) {
       LOG.debug("Generated manifest for logs since " + fromTxId + ":"
-          + ret);      
+          + ret);
     }
     return ret;
   }
@@ -713,7 +704,7 @@ public class JournalSet implements JournalManager {
     // This operation is handled by FSEditLog directly.
     throw new UnsupportedOperationException();
   }
-  
+
   @Override
   public void doFinalize() throws IOException {
     // This operation is handled by FSEditLog directly.

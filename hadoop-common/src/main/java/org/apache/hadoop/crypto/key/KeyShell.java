@@ -1,21 +1,19 @@
 package org.apache.hadoop.crypto.key;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.crypto.key.KeyProvider.Metadata;
+import org.apache.hadoop.crypto.key.KeyProvider.Options;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.tools.CommandShell;
+import org.apache.hadoop.util.ToolRunner;
+
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.crypto.key.KeyProvider.Metadata;
-import org.apache.hadoop.crypto.key.KeyProvider.Options;
-import org.apache.hadoop.tools.CommandShell;
-import org.apache.hadoop.util.ToolRunner;
 
 /**
  * This program is the CLI utility for the KeyProvider facilities in Hadoop.
@@ -25,18 +23,18 @@ public class KeyShell extends CommandShell {
       "[generic options]\n";
   final static private String COMMANDS =
       "   [-help]\n" +
-      "   [" + CreateCommand.USAGE + "]\n" +
-      "   [" + RollCommand.USAGE + "]\n" +
-      "   [" + DeleteCommand.USAGE + "]\n" +
-      "   [" + ListCommand.USAGE + "]\n" +
-      "   [" + InvalidateCacheCommand.USAGE + "]\n";
+          "   [" + CreateCommand.USAGE + "]\n" +
+          "   [" + RollCommand.USAGE + "]\n" +
+          "   [" + DeleteCommand.USAGE + "]\n" +
+          "   [" + ListCommand.USAGE + "]\n" +
+          "   [" + InvalidateCacheCommand.USAGE + "]\n";
   private static final String LIST_METADATA = "keyShell.list.metadata";
   @VisibleForTesting
   public static final String NO_VALID_PROVIDERS =
       "There are no valid (non-transient) providers configured.\n" +
-      "No action has been taken. Use the -provider option to specify\n" +
-      "a provider. If you want to use a transient provider then you\n" +
-      "MUST use the -provider argument.";
+          "No action has been taken. Use the -provider option to specify\n" +
+          "a provider. If you want to use a transient provider then you\n" +
+          "MUST use the -provider argument.";
 
   private boolean interactive = true;
 
@@ -214,10 +212,10 @@ public class KeyShell extends CommandShell {
         "list [-provider <provider>] [-strict] [-metadata] [-help]";
     public static final String DESC =
         "The list subcommand displays the keynames contained within\n" +
-        "a particular provider as configured in core-site.xml or\n" +
-        "specified with the -provider argument. -metadata displays\n" +
-        "the metadata. If -strict is supplied, fail immediately if\n" +
-        "the provider requires a password and none is given.";
+            "a particular provider as configured in core-site.xml or\n" +
+            "specified with the -provider argument. -metadata displays\n" +
+            "the metadata. If -strict is supplied, fail immediately if\n" +
+            "the provider requires a password and none is given.";
 
     private boolean metadata = false;
 
@@ -237,7 +235,7 @@ public class KeyShell extends CommandShell {
         getOut().println("Listing keys for KeyProvider: " + provider);
         if (metadata) {
           final Metadata[] meta =
-            provider.getKeysMetadata(keys.toArray(new String[keys.size()]));
+              provider.getKeysMetadata(keys.toArray(new String[keys.size()]));
           for (int i = 0; i < meta.length; ++i) {
             getOut().println(keys.get(i) + " : " + meta[i]);
           }
@@ -263,9 +261,9 @@ public class KeyShell extends CommandShell {
         "roll <keyname> [-provider <provider>] [-strict] [-help]";
     public static final String DESC =
         "The roll subcommand creates a new version for the specified key\n" +
-        "within the provider indicated using the -provider argument.\n" +
-        "If -strict is supplied, fail immediately if the provider requires\n" +
-        "a password and none is given.";
+            "within the provider indicated using the -provider argument.\n" +
+            "If -strict is supplied, fail immediately if the provider requires\n" +
+            "a password and none is given.";
 
     private String keyName = null;
 
@@ -320,11 +318,11 @@ public class KeyShell extends CommandShell {
         "delete <keyname> [-provider <provider>] [-strict] [-f] [-help]";
     public static final String DESC =
         "The delete subcommand deletes all versions of the key\n" +
-        "specified by the <keyname> argument from within the\n" +
-        "provider specified by -provider. The command asks for\n" +
-        "user confirmation unless -f is specified. If -strict is\n" +
-        "supplied, fail immediately if the provider requires a\n" +
-        "password and none is given.";
+            "specified by the <keyname> argument from within the\n" +
+            "provider specified by -provider. The command asks for\n" +
+            "user confirmation unless -f is specified. If -strict is\n" +
+            "supplied, fail immediately if the provider requires a\n" +
+            "password and none is given.";
 
     private String keyName = null;
     private boolean cont = true;
@@ -388,19 +386,19 @@ public class KeyShell extends CommandShell {
   private class CreateCommand extends Command {
     public static final String USAGE =
         "create <keyname> [-cipher <cipher>] [-size <size>]\n" +
-        "                     [-description <description>]\n" +
-        "                     [-attr <attribute=value>]\n" +
-        "                     [-provider <provider>] [-strict]\n" +
-        "                     [-help]";
+            "                     [-description <description>]\n" +
+            "                     [-attr <attribute=value>]\n" +
+            "                     [-provider <provider>] [-strict]\n" +
+            "                     [-help]";
     public static final String DESC =
         "The create subcommand creates a new key for the name specified\n" +
-        "by the <keyname> argument within the provider specified by the\n" +
-        "-provider argument. You may specify a cipher with the -cipher\n" +
-        "argument. The default cipher is currently \"AES/CTR/NoPadding\".\n" +
-        "The default keysize is 128. You may specify the requested key\n" +
-        "length using the -size argument. Arbitrary attribute=value\n" +
-        "style attributes may be specified using the -attr argument.\n" +
-        "-attr may be specified multiple times, once per attribute.\n";
+            "by the <keyname> argument within the provider specified by the\n" +
+            "-provider argument. You may specify a cipher with the -cipher\n" +
+            "argument. The default cipher is currently \"AES/CTR/NoPadding\".\n" +
+            "The default keysize is 128. You may specify the requested key\n" +
+            "length using the -size argument. Arbitrary attribute=value\n" +
+            "style attributes may be specified using the -attr argument.\n" +
+            "-attr may be specified multiple times, once per attribute.\n";
 
     private final String keyName;
     private final Options options;
@@ -513,7 +511,7 @@ public class KeyShell extends CommandShell {
   }
 
   @Override
-  protected void printException(Exception e){
+  protected void printException(Exception e) {
     getErr().println("Executing command failed with " +
         "the following exception: " + prettifyException(e));
   }

@@ -18,9 +18,10 @@
 
 package org.apache.hadoop.fs.impl;
 
+import org.apache.hadoop.fs.StreamCapabilities;
+
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.hadoop.fs.StreamCapabilities;
 
 import static org.apache.hadoop.fs.StreamCapabilities.HFLUSH;
 import static org.apache.hadoop.fs.StreamCapabilities.HSYNC;

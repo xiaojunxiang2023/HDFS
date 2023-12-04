@@ -1,9 +1,9 @@
 package org.apache.hadoop.tools;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class implements a "table listing" with column headers.
@@ -65,7 +65,7 @@ public class TableListing {
       // Else we need to traverse through and find the real maxWidth
       else {
         maxWidth = 0;
-        for (int i=0; i<rows.size(); i++) {
+        for (int i = 0; i < rows.size(); i++) {
           int length = rows.get(i).length();
           if (length > maxWidth) {
             maxWidth = length;
@@ -81,12 +81,12 @@ public class TableListing {
     String[] getRow(int idx) {
       String raw = rows.get(idx);
       // Line-wrap if it's too long
-      String[] lines = new String[] {raw};
+      String[] lines = new String[]{raw};
       if (wrap) {
         lines = org.apache.hadoop.util.StringUtils.wrap(lines[0], wrapWidth,
             "\n", true).split("\n");
       }
-      for (int i=0; i<lines.length; i++) {
+      for (int i = 0; i < lines.length; i++) {
         if (justification == Justification.LEFT) {
           lines[i] = StringUtils.rightPad(lines[i], maxWidth);
         } else if (justification == Justification.RIGHT) {
@@ -130,7 +130,7 @@ public class TableListing {
      * @return This Builder object
      */
     public Builder addField(String title, Justification justification,
-        boolean wrap) {
+                            boolean wrap) {
       columns.add(new Column(title, justification, wrap));
       return this;
     }
@@ -190,7 +190,7 @@ public class TableListing {
   public void addRow(String... row) {
     if (row.length != columns.length) {
       throw new RuntimeException("trying to add a row with " + row.length +
-            " columns, but we have " + columns.length + " columns.");
+          " columns, but we have " + columns.length + " columns.");
     }
     for (int i = 0; i < columns.length; i++) {
       columns[i].addRow(row[i]);
@@ -203,20 +203,20 @@ public class TableListing {
     StringBuilder builder = new StringBuilder();
     // Calculate the widths of each column based on their maxWidths and
     // the wrapWidth for the entire table
-    int width = (columns.length-1)*2; // inter-column padding
-    for (int i=0; i<columns.length; i++) {
+    int width = (columns.length - 1) * 2; // inter-column padding
+    for (int i = 0; i < columns.length; i++) {
       width += columns[i].maxWidth;
     }
     // Decrease the column size of wrappable columns until the goal width
     // is reached, or we can't decrease anymore
     while (width > wrapWidth) {
       boolean modified = false;
-      for (int i=0; i<columns.length; i++) {
+      for (int i = 0; i < columns.length; i++) {
         Column column = columns[i];
         if (column.wrap) {
           int maxWidth = column.getMaxWidth();
           if (maxWidth > 10) {
-            column.setWrapWidth(maxWidth-1);
+            column.setWrapWidth(maxWidth - 1);
             modified = true;
             width -= 1;
             if (width <= wrapWidth) {

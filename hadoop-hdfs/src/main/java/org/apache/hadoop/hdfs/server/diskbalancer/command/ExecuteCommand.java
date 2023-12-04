@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */package org.apache.hadoop.hdfs.server.diskbalancer.command;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.command;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -28,6 +28,7 @@ import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
 import org.apache.hadoop.hdfs.server.diskbalancer.DiskBalancerException;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.NodePlan;
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -71,7 +72,7 @@ public class ExecuteCommand extends Command {
     }
 
     boolean skipDateCheck = false;
-    if(cmd.hasOption(DiskBalancerCLI.SKIPDATECHECK)) {
+    if (cmd.hasOption(DiskBalancerCLI.SKIPDATECHECK)) {
       skipDateCheck = true;
       LOG.warn("Skipping date check on this plan. This could mean we are " +
           "executing an old plan and may not be the right plan for this " +
@@ -91,7 +92,7 @@ public class ExecuteCommand extends Command {
    */
   private void submitPlan(final String planFile, final String planData,
                           boolean skipDateCheck)
-          throws IOException {
+      throws IOException {
     Preconditions.checkNotNull(planData);
     NodePlan plan = NodePlan.parseJson(planData);
     String dataNodeAddress = plan.getNodeName() + ":" + plan.getPort();
@@ -100,7 +101,7 @@ public class ExecuteCommand extends Command {
     String planHash = DigestUtils.shaHex(planData);
     try {
       dataNode.submitDiskBalancerPlan(planHash, DiskBalancerCLI.PLAN_VERSION,
-                                      planFile, planData, skipDateCheck);
+          planFile, planData, skipDateCheck);
     } catch (DiskBalancerException ex) {
       LOG.error("Submitting plan on  {} failed. Result: {}, Message: {}",
           plan.getNodeName(), ex.getResult().toString(), ex.getMessage());

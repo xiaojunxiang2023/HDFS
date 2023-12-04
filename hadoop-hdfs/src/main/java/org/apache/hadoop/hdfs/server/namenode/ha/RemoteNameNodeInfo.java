@@ -1,19 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.DFSUtil;
+import org.apache.hadoop.hdfs.HAUtil;
+import org.apache.hadoop.hdfs.server.namenode.NameNode;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.HAUtil;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Information about a single remote NameNode
@@ -55,7 +52,7 @@ public class RemoteNameNodeInfo {
   private final URL httpAddress;
 
   private RemoteNameNodeInfo(Configuration conf, String nnId, InetSocketAddress ipcAddress,
-      URL httpAddress) {
+                             URL httpAddress) {
     this.conf = conf;
     this.nnId = nnId;
     this.ipcAddress = ipcAddress;
@@ -100,7 +97,7 @@ public class RemoteNameNodeInfo {
     // convert to the standard strings since URL.equals does address resolution, which is a
     // blocking call and a a FindBugs issue.
     String httpString = httpAddress.toString();
-    String thatHttpString  = that.httpAddress.toString();
+    String thatHttpString = that.httpAddress.toString();
     return httpString.equals(thatHttpString);
 
   }

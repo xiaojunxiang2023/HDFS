@@ -1,15 +1,16 @@
 package org.apache.hadoop.security.alias;
 
+import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
+
 import java.io.IOException;
 import java.util.List;
-import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
 /**
  * A provider of credentials or password for Hadoop applications. Provides an
  * abstraction to separate credential storage from users of them. It
  * is intended to support getting or storing passwords in a variety of ways,
  * including third party bindings.
- * 
+ *
  * <code>CredentialProvider</code> implementations must be thread safe.
  */
 public abstract class CredentialProvider {
@@ -25,7 +26,7 @@ public abstract class CredentialProvider {
     private final char[] credential;
 
     protected CredentialEntry(String alias,
-                         char[] credential) {
+                              char[] credential) {
       this.alias = alias;
       this.credential = credential;
     }
@@ -46,7 +47,7 @@ public abstract class CredentialProvider {
       if (credential == null) {
         buf.append("null");
       } else {
-        for(char c: credential) {
+        for (char c : credential) {
           buf.append(c);
         }
       }
@@ -78,7 +79,7 @@ public abstract class CredentialProvider {
    * @return the credentialEntry
    * @throws IOException
    */
-  public abstract CredentialEntry getCredentialEntry(String alias) 
+  public abstract CredentialEntry getCredentialEntry(String alias)
       throws IOException;
 
   /**
@@ -94,8 +95,8 @@ public abstract class CredentialProvider {
    * @param credential the credential value for the alias.
    * @throws IOException
    */
-  public abstract CredentialEntry createCredentialEntry(String name, 
-      char[] credential) throws IOException;
+  public abstract CredentialEntry createCredentialEntry(String name,
+                                                        char[] credential) throws IOException;
 
   /**
    * Delete the given credential.

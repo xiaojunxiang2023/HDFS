@@ -1,11 +1,11 @@
 package org.apache.hadoop.security;
 
-import org.apache.hadoop.http.HttpServer2;
-import org.apache.hadoop.filter.AuthenticationFilter;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.filter.AuthenticationFilter;
+import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
 import org.apache.hadoop.http.FilterContainer;
 import org.apache.hadoop.http.FilterInitializer;
-import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
+import org.apache.hadoop.http.HttpServer2;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,12 +42,12 @@ public class AuthenticationFilterInitializer extends FilterInitializer {
     Map<String, String> filterConfig = getFilterConfigMap(conf, PREFIX);
 
     container.addFilter("authentication",
-                        AuthenticationFilter.class.getName(),
-                        filterConfig);
+        AuthenticationFilter.class.getName(),
+        filterConfig);
   }
 
   public static Map<String, String> getFilterConfigMap(Configuration conf,
-      String prefix) {
+                                                       String prefix) {
     Map<String, String> filterConfig = new HashMap<String, String>();
 
     //setting the cookie path to root '/' so it is used for all resources.
@@ -64,8 +64,7 @@ public class AuthenticationFilterInitializer extends FilterInitializer {
     if (principal != null) {
       try {
         principal = SecurityUtil.getServerPrincipal(principal, bindAddress);
-      }
-      catch (IOException ex) {
+      } catch (IOException ex) {
         throw new RuntimeException("Could not resolve Kerberos principal name: " + ex.toString(), ex);
       }
       filterConfig.put(KerberosAuthenticationHandler.PRINCIPAL, principal);

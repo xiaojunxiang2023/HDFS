@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
+import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeStorageInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class BlockECReconstructionCommand extends DatanodeCommand {
    * task
    */
   public BlockECReconstructionCommand(int action,
-      Collection<BlockECReconstructionInfo> blockECReconstructionInfoList) {
+                                      Collection<BlockECReconstructionInfo> blockECReconstructionInfoList) {
     super(action);
     this.ecTasks = blockECReconstructionInfoList;
   }
@@ -57,8 +57,8 @@ public class BlockECReconstructionCommand extends DatanodeCommand {
     private final ErasureCodingPolicy ecPolicy;
 
     public BlockECReconstructionInfo(ExtendedBlock block,
-        DatanodeInfo[] sources, DatanodeStorageInfo[] targetDnStorageInfo,
-        byte[] liveBlockIndices, ErasureCodingPolicy ecPolicy) {
+                                     DatanodeInfo[] sources, DatanodeStorageInfo[] targetDnStorageInfo,
+                                     byte[] liveBlockIndices, ErasureCodingPolicy ecPolicy) {
       this(block, sources, DatanodeStorageInfo
           .toDatanodeInfos(targetDnStorageInfo), DatanodeStorageInfo
           .toStorageIDs(targetDnStorageInfo), DatanodeStorageInfo
@@ -66,9 +66,9 @@ public class BlockECReconstructionCommand extends DatanodeCommand {
     }
 
     public BlockECReconstructionInfo(ExtendedBlock block,
-        DatanodeInfo[] sources, DatanodeInfo[] targets,
-        String[] targetStorageIDs, StorageType[] targetStorageTypes,
-        byte[] liveBlockIndices, ErasureCodingPolicy ecPolicy) {
+                                     DatanodeInfo[] sources, DatanodeInfo[] targets,
+                                     String[] targetStorageIDs, StorageType[] targetStorageTypes,
+                                     byte[] liveBlockIndices, ErasureCodingPolicy ecPolicy) {
       this.block = block;
       this.sources = sources;
       this.targets = targets;

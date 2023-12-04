@@ -42,7 +42,7 @@ public enum Quota {
    * usage + delta &gt; quota.
    */
   static boolean isViolated(final long quota, final long usage,
-      final long delta) {
+                            final long delta) {
     return quota >= 0 && delta > 0 && usage > quota - delta;
   }
 }

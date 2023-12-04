@@ -1,14 +1,14 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.IOException;
-import org.apache.hadoop.hdfs.protocol.proto.DatanodeProtocolProtos.HeartbeatRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.DatanodeLifelineProtocolProtos.LifelineResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.DatanodeProtocolProtos.HeartbeatRequestProto;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeLifelineProtocol;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
 import org.apache.hadoop.hdfs.server.protocol.VolumeFailureSummary;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
 
 /**
  * Implementation for protobuf service that forwards requests
@@ -30,7 +30,7 @@ public class DatanodeLifelineProtocolServerSideTranslatorPB implements
 
   @Override
   public LifelineResponseProto sendLifeline(RpcController controller,
-      HeartbeatRequestProto request) throws ServiceException {
+                                            HeartbeatRequestProto request) throws ServiceException {
     try {
       final StorageReport[] report = PBHelperClient.convertStorageReports(
           request.getReportsList());

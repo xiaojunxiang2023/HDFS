@@ -1,9 +1,10 @@
 package org.apache.hadoop.fs;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.hadoop.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Defines the types of supported storage media. The default storage
@@ -64,7 +65,7 @@ public enum StorageType {
   private static List<StorageType> getNonTransientTypes() {
     List<StorageType> nonTransientTypes = new ArrayList<>();
     for (StorageType t : VALUES) {
-      if ( t.isTransient == false ) {
+      if (t.isTransient == false) {
         nonTransientTypes.add(t);
       }
     }

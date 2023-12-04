@@ -1,15 +1,10 @@
 package org.apache.hadoop.util;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This ExecutorService blocks the submission of new tasks when its queue is
@@ -82,7 +77,7 @@ public final class BlockingThreadPoolExecutorService
   }
 
   private BlockingThreadPoolExecutorService(int permitCount,
-      ThreadPoolExecutor eventProcessingExecutor) {
+                                            ThreadPoolExecutor eventProcessingExecutor) {
     super(eventProcessingExecutor, permitCount, false);
     this.eventProcessingExecutor = eventProcessingExecutor;
   }
@@ -115,7 +110,7 @@ public final class BlockingThreadPoolExecutorService
             new RejectedExecutionHandler() {
               @Override
               public void rejectedExecution(Runnable r,
-                  ThreadPoolExecutor executor) {
+                                            ThreadPoolExecutor executor) {
                 // This is not expected to happen.
                 LOG.error("Could not submit task to executor {}",
                     executor.toString());

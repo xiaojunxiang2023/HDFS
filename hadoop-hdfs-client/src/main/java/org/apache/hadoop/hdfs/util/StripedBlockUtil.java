@@ -1,29 +1,19 @@
 package org.apache.hadoop.hdfs.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedStripedBlock;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.DFSStripedOutputStream;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.io.IOException;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * When accessing a file in striped layout, operations on logical byte ranges
@@ -34,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * range-related calculations are inclusive (the end offset of the previous
  * range should be 1 byte lower than the start offset of the next one).
  */
- /*
+/*
  *  | <----  Block Group ----> |   <- Block Group: logical unit composing
  *  |                          |        striped HDFS files.
  *  blk_0      blk_1       blk_2   <- Internal Blocks: each internal block
@@ -67,7 +57,7 @@ public class StripedBlockUtil {
     private final int networkDistance;
 
     public BlockReadStats(int numBytesRead, boolean shortCircuit,
-        int distance) {
+                          int distance) {
       bytesRead = numBytesRead;
       isShortCircuit = shortCircuit;
       networkDistance = distance;
@@ -106,7 +96,7 @@ public class StripedBlockUtil {
    * @return An array containing the blocks in the group
    */
   public static LocatedBlock[] parseStripedBlockGroup(LocatedStripedBlock bg,
-      int cellSize, int dataBlkNum, int parityBlkNum) {
+                                                      int cellSize, int dataBlkNum, int parityBlkNum) {
     int locatedBGSize = bg.getBlockIndices().length;
     LocatedBlock[] lbs = new LocatedBlock[dataBlkNum + parityBlkNum];
     for (short i = 0; i < locatedBGSize; i++) {
@@ -129,8 +119,8 @@ public class StripedBlockUtil {
    * @return The constructed internal block
    */
   public static LocatedBlock constructInternalBlock(LocatedStripedBlock bg,
-      int idxInReturnedLocs, int cellSize, int dataBlkNum,
-      int idxInBlockGroup) {
+                                                    int idxInReturnedLocs, int cellSize, int dataBlkNum,
+                                                    int idxInBlockGroup) {
     final ExtendedBlock blk = constructInternalBlock(
         bg.getBlock(), cellSize, dataBlkNum, idxInBlockGroup);
     final LocatedBlock locatedBlock;
@@ -157,12 +147,13 @@ public class StripedBlockUtil {
     return constructInternalBlock(blockGroup, ecPolicy.getCellSize(),
         ecPolicy.getNumDataUnits(), idxInBlockGroup);
   }
+
   /**
    * This method creates an internal {@link ExtendedBlock} at the given index
    * of a block group.
    */
   public static ExtendedBlock constructInternalBlock(ExtendedBlock blockGroup,
-      int cellSize, int dataBlkNum, int idxInBlockGroup) {
+                                                     int cellSize, int dataBlkNum, int idxInBlockGroup) {
     ExtendedBlock block = new ExtendedBlock(blockGroup);
     block.setBlockId(blockGroup.getBlockId() + idxInBlockGroup);
     block.setNumBytes(getInternalBlockLength(blockGroup.getNumBytes(),
@@ -187,7 +178,7 @@ public class StripedBlockUtil {
    * @return The size of the internal block at the specified index
    */
   public static long getInternalBlockLength(long dataSize,
-      int cellSize, int numDataBlocks, int idxInBlockGroup) {
+                                            int cellSize, int numDataBlocks, int idxInBlockGroup) {
     Preconditions.checkArgument(dataSize >= 0);
     Preconditions.checkArgument(cellSize > 0);
     Preconditions.checkArgument(numDataBlocks > 0);
@@ -196,13 +187,13 @@ public class StripedBlockUtil {
     final int stripeSize = cellSize * numDataBlocks;
     // If block group ends at stripe boundary, each internal block has an equal
     // share of the group
-    final int lastStripeDataLen = (int)(dataSize % stripeSize);
+    final int lastStripeDataLen = (int) (dataSize % stripeSize);
     if (lastStripeDataLen == 0) {
       return dataSize / numDataBlocks;
     }
 
     final int numStripes = (int) ((dataSize - 1) / stripeSize + 1);
-    return (numStripes - 1L)*cellSize
+    return (numStripes - 1L) * cellSize
         + lastCellSize(lastStripeDataLen, cellSize,
         numDataBlocks, idxInBlockGroup);
   }
@@ -215,7 +206,7 @@ public class StripedBlockUtil {
    * @return The safe length
    */
   public static long getSafeLength(ErasureCodingPolicy ecPolicy,
-      long[] blockLens) {
+                                   long[] blockLens) {
     final int cellSize = ecPolicy.getCellSize();
     final int dataBlkNum = ecPolicy.getNumDataUnits();
     Preconditions.checkArgument(blockLens.length >= dataBlkNum);
@@ -231,16 +222,16 @@ public class StripedBlockUtil {
   }
 
   private static int lastCellSize(int size, int cellSize, int numDataBlocks,
-      int i) {
+                                  int i) {
     if (i < numDataBlocks) {
       // parity block size (i.e. i >= numDataBlocks) is the same as
       // the first data block size (i.e. i = 0).
-      size -= i*cellSize;
+      size -= i * cellSize;
       if (size < 0) {
         size = 0;
       }
     }
-    return size > cellSize? cellSize: size;
+    return size > cellSize ? cellSize : size;
   }
 
   /**
@@ -248,10 +239,10 @@ public class StripedBlockUtil {
    * the block group.
    */
   public static long offsetInBlkToOffsetInBG(int cellSize, int dataBlkNum,
-      long offsetInBlk, int idxInBlockGroup) {
+                                             long offsetInBlk, int idxInBlockGroup) {
     long cellIdxInBlk = offsetInBlk / cellSize;
     return cellIdxInBlk * cellSize * dataBlkNum // n full stripes before offset
-        + (long)idxInBlockGroup * cellSize // m full cells before offset
+        + (long) idxInBlockGroup * cellSize // m full cells before offset
         + offsetInBlk % cellSize; // partial cell
   }
 
@@ -309,7 +300,7 @@ public class StripedBlockUtil {
    * @return The total usage of data blocks and parity blocks
    */
   public static long spaceConsumedByStripedBlock(long numDataBlkBytes,
-      int dataBlkNum, int parityBlkNum, int cellSize) {
+                                                 int dataBlkNum, int parityBlkNum, int cellSize) {
     int parityIndex = dataBlkNum + 1;
     long numParityBlkBytes = getInternalBlockLength(numDataBlkBytes, cellSize,
         dataBlkNum, parityIndex) * parityBlkNum;
@@ -322,8 +313,8 @@ public class StripedBlockUtil {
    * read range is within a single stripe thus the calculation logic is simpler.
    */
   public static AlignedStripe[] divideOneStripe(ErasureCodingPolicy ecPolicy,
-      int cellSize, LocatedStripedBlock blockGroup, long rangeStartInBlockGroup,
-      long rangeEndInBlockGroup, ByteBuffer buf) {
+                                                int cellSize, LocatedStripedBlock blockGroup, long rangeStartInBlockGroup,
+                                                long rangeEndInBlockGroup, ByteBuffer buf) {
     final int dataBlkNum = ecPolicy.getNumDataUnits();
     // Step 1: map the byte range to StripingCells
     StripingCell[] cells = getStripingCellsOfByteRange(ecPolicy, cellSize,
@@ -510,7 +501,7 @@ public class StripedBlockUtil {
     // offset range.
     int lastCellIdxInBG = (int) (blockGroup.getBlockSize() / cellSize);
     int idxInInternalBlk = lastCellIdxInBG / ecPolicy.getNumDataUnits();
-    long lastCellEndOffset = (idxInInternalBlk * (long)cellSize)
+    long lastCellEndOffset = (idxInInternalBlk * (long) cellSize)
         + (blockGroup.getBlockSize() % cellSize);
     if (stripePoints.first() < lastCellEndOffset
         && stripePoints.last() > lastCellEndOffset) {
@@ -532,7 +523,7 @@ public class StripedBlockUtil {
    * Cell indexing convention defined in {@link StripingCell}.
    */
   private static void calcualteChunkPositionsInBuf(int cellSize,
-      AlignedStripe[] stripes, StripingCell[] cells, ByteBuffer buf) {
+                                                   AlignedStripe[] stripes, StripingCell[] cells, ByteBuffer buf) {
     /*
      *     | <--------------- AlignedStripe --------------->|
      *
@@ -578,7 +569,7 @@ public class StripedBlockUtil {
    * size, the chunk should be treated as zero bytes in decoding.
    */
   private static void prepareAllZeroChunks(LocatedStripedBlock blockGroup,
-      AlignedStripe[] stripes, int cellSize, int dataBlkNum) {
+                                           AlignedStripe[] stripes, int cellSize, int dataBlkNum) {
     for (AlignedStripe s : stripes) {
       for (int i = 0; i < dataBlkNum; i++) {
         long internalBlkLen = getInternalBlockLength(blockGroup.getBlockSize(),
@@ -631,11 +622,11 @@ public class StripedBlockUtil {
     private final int size;
 
     StripingCell(ErasureCodingPolicy ecPolicy, int cellSize, long idxInBlkGroup,
-        long offset) {
+                 long offset) {
       this.ecPolicy = ecPolicy;
       this.idxInBlkGroup = idxInBlkGroup;
       this.idxInInternalBlk = idxInBlkGroup / ecPolicy.getNumDataUnits();
-      this.idxInStripe = (int)(idxInBlkGroup -
+      this.idxInStripe = (int) (idxInBlkGroup -
           this.idxInInternalBlk * ecPolicy.getNumDataUnits());
       this.offset = offset;
       this.size = cellSize;
@@ -648,7 +639,7 @@ public class StripedBlockUtil {
     @Override
     public String toString() {
       return String.format("StripingCell(idxInBlkGroup=%d, " +
-          "idxInInternalBlk=%d, idxInStrip=%d, offset=%d, size=%d)",
+              "idxInInternalBlk=%d, idxInStrip=%d, offset=%d, size=%d)",
           idxInBlkGroup, idxInInternalBlk, idxInStripe, offset, size);
     }
   }
@@ -835,7 +826,7 @@ public class StripedBlockUtil {
       this.state = state;
     }
 
-    public boolean useByteBuffer(){
+    public boolean useByteBuffer() {
       return byteBuffer != null;
     }
 
@@ -984,7 +975,7 @@ public class StripedBlockUtil {
    * match the block group.
    */
   public static void checkBlocks(ExtendedBlock blockGroup,
-      int i, ExtendedBlock blocki) throws IOException {
+                                 int i, ExtendedBlock blocki) throws IOException {
     if (!blocki.getBlockPoolId().equals(blockGroup.getBlockPoolId())) {
       throw new IOException("Block pool IDs mismatched: block" + i + "="
           + blocki + ", expected block group=" + blockGroup);

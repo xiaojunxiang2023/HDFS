@@ -1,17 +1,5 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.net.DomainPeer;
@@ -24,12 +12,17 @@ import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.ShmId;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.net.unix.DomainSocketWatcher;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Manages short-circuit memory segments for an HDFS client.
@@ -85,7 +78,7 @@ public class DfsClientShmManager implements Closeable {
      */
     private boolean loading = false;
 
-    EndpointShmManager (DatanodeInfo datanode) {
+    EndpointShmManager(DatanodeInfo datanode) {
       this.datanode = datanode;
     }
 
@@ -96,7 +89,7 @@ public class DfsClientShmManager implements Closeable {
      *
      * @param blockId     The blockId to put inside the Slot object.
      *
-     * @return            null if none of our shared memory segments contain a
+     * @return null if none of our shared memory segments contain a
      *                      free slot; the slot object otherwise.
      */
     private Slot allocSlotFromExistingShm(ExtendedBlockId blockId) {
@@ -127,7 +120,7 @@ public class DfsClientShmManager implements Closeable {
      * @param clientName    The current client name.
      * @param peer          The peer to use to talk to the DataNode.
      *
-     * @return              Null if the DataNode does not support shared memory
+     * @return Null if the DataNode does not support shared memory
      *                        segments, or experienced an error creating the
      *                        shm.  The shared memory segment itself on success.
      * @throws IOException  If there was an error communicating over the socket.
@@ -142,47 +135,47 @@ public class DfsClientShmManager implements Closeable {
       new Sender(out).requestShortCircuitShm(clientName);
       ShortCircuitShmResponseProto resp =
           ShortCircuitShmResponseProto.parseFrom(
-            PBHelperClient.vintPrefixed(peer.getInputStream()));
+              PBHelperClient.vintPrefixed(peer.getInputStream()));
       String error = resp.hasError() ? resp.getError() : "(unknown)";
       switch (resp.getStatus()) {
-      case SUCCESS:
-        DomainSocket sock = peer.getDomainSocket();
-        byte buf[] = new byte[1];
-        FileInputStream[] fis = new FileInputStream[1];
-        if (sock.recvFileInputStreams(fis, buf, 0, buf.length) < 0) {
-          throw new EOFException("got EOF while trying to transfer the " +
-              "file descriptor for the shared memory segment.");
-        }
-        if (fis[0] == null) {
-          throw new IOException("the datanode " + datanode + " failed to " +
-              "pass a file descriptor for the shared memory segment.");
-        }
-        try {
-          DfsClientShm shm =
-              new DfsClientShm(PBHelperClient.convert(resp.getId()),
-                  fis[0], this, peer);
-          LOG.trace("{}: createNewShm: created {}", this, shm);
-          return shm;
-        } finally {
-          try {
-            fis[0].close();
-          } catch (Throwable e) {
-            LOG.debug("Exception in closing " + fis[0], e);
+        case SUCCESS:
+          DomainSocket sock = peer.getDomainSocket();
+          byte buf[] = new byte[1];
+          FileInputStream[] fis = new FileInputStream[1];
+          if (sock.recvFileInputStreams(fis, buf, 0, buf.length) < 0) {
+            throw new EOFException("got EOF while trying to transfer the " +
+                "file descriptor for the shared memory segment.");
           }
-        }
-      case ERROR_UNSUPPORTED:
-        // The DataNode just does not support short-circuit shared memory
-        // access, and we should stop asking.
-        LOG.info(this + ": datanode does not support short-circuit " +
-            "shared memory access: " + error);
-        disabled = true;
-        return null;
-      default:
-        // The datanode experienced some kind of unexpected error when trying to
-        // create the short-circuit shared memory segment.
-        LOG.warn(this + ": error requesting short-circuit shared memory " +
-            "access: " + error);
-        return null;
+          if (fis[0] == null) {
+            throw new IOException("the datanode " + datanode + " failed to " +
+                "pass a file descriptor for the shared memory segment.");
+          }
+          try {
+            DfsClientShm shm =
+                new DfsClientShm(PBHelperClient.convert(resp.getId()),
+                    fis[0], this, peer);
+            LOG.trace("{}: createNewShm: created {}", this, shm);
+            return shm;
+          } finally {
+            try {
+              fis[0].close();
+            } catch (Throwable e) {
+              LOG.debug("Exception in closing " + fis[0], e);
+            }
+          }
+        case ERROR_UNSUPPORTED:
+          // The DataNode just does not support short-circuit shared memory
+          // access, and we should stop asking.
+          LOG.info(this + ": datanode does not support short-circuit " +
+              "shared memory access: " + error);
+          disabled = true;
+          return null;
+        default:
+          // The datanode experienced some kind of unexpected error when trying to
+          // create the short-circuit shared memory segment.
+          LOG.warn(this + ": error requesting short-circuit shared memory " +
+              "access: " + error);
+          return null;
       }
     }
 
@@ -197,13 +190,13 @@ public class DfsClientShmManager implements Closeable {
      *
      * @param clientName    The client name.
      * @param blockId       The block ID to use.
-     * @return              null if the DataNode does not support shared memory
+     * @return null if the DataNode does not support shared memory
      *                        segments, or experienced an error creating the
      *                        shm.  The shared memory segment itself on success.
      * @throws IOException  If there was an error communicating over the socket.
      */
     Slot allocSlot(DomainPeer peer, MutableBoolean usedPeer,
-        String clientName, ExtendedBlockId blockId) throws IOException {
+                   String clientName, ExtendedBlockId blockId) throws IOException {
       while (true) {
         if (closed) {
           LOG.trace("{}: the DfsClientShmManager has been closed.", this);
@@ -266,7 +259,7 @@ public class DfsClientShmManager implements Closeable {
      * @param slot          The slot to release.
      */
     void freeSlot(Slot slot) {
-      DfsClientShm shm = (DfsClientShm)slot.getShm();
+      DfsClientShm shm = (DfsClientShm) slot.getShm();
       shm.unregisterSlot(slot.getSlotIdx());
       if (shm.isDisconnected()) {
         // Stale shared memory segments should not be tracked here.
@@ -382,8 +375,8 @@ public class DfsClientShmManager implements Closeable {
   }
 
   public Slot allocSlot(DatanodeInfo datanode, DomainPeer peer,
-      MutableBoolean usedPeer, ExtendedBlockId blockId,
-      String clientName) throws IOException {
+                        MutableBoolean usedPeer, ExtendedBlockId blockId,
+                        String clientName) throws IOException {
     lock.lock();
     try {
       if (closed) {
@@ -404,7 +397,7 @@ public class DfsClientShmManager implements Closeable {
   public void freeSlot(Slot slot) {
     lock.lock();
     try {
-      DfsClientShm shm = (DfsClientShm)slot.getShm();
+      DfsClientShm shm = (DfsClientShm) slot.getShm();
       shm.getEndpointShmManager().freeSlot(slot);
     } finally {
       lock.unlock();
@@ -418,7 +411,7 @@ public class DfsClientShmManager implements Closeable {
     public final boolean disabled;
 
     PerDatanodeVisitorInfo(TreeMap<ShmId, DfsClientShm> full,
-        TreeMap<ShmId, DfsClientShm> notFull, boolean disabled) {
+                           TreeMap<ShmId, DfsClientShm> notFull, boolean disabled) {
       this.full = full;
       this.notFull = notFull;
       this.disabled = disabled;
@@ -437,7 +430,7 @@ public class DfsClientShmManager implements Closeable {
     try {
       HashMap<DatanodeInfo, PerDatanodeVisitorInfo> info = new HashMap<>();
       for (Entry<DatanodeInfo, EndpointShmManager> entry :
-            datanodes.entrySet()) {
+          datanodes.entrySet()) {
         info.put(entry.getKey(), entry.getValue().getVisitorInfo());
       }
       visitor.visit(info);

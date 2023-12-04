@@ -6,7 +6,7 @@ import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.util.SampleStat;
 import org.apache.hadoop.util.Time;
 
-import static org.apache.hadoop.metrics2.lib.Interns.*;
+import static org.apache.hadoop.metrics2.lib.Interns.info;
 
 /**
  * A mutable metric with stats.
@@ -47,18 +47,18 @@ public class MutableStat extends MutableMetric {
     String desc = StringUtils.uncapitalize(description);
     String lsName = StringUtils.uncapitalize(sampleName);
     String lvName = StringUtils.uncapitalize(valueName);
-    numInfo = info(ucName +"Num"+ usName, "Number of "+ lsName +" for "+ desc);
-    iNumInfo = info(ucName +"INum"+ usName,
-                    "Interval number of "+ lsName +" for "+ desc);
-    avgInfo = info(ucName +"Avg"+ uvName, "Average "+ lvName +" for "+ desc);
-    stdevInfo = info(ucName +"Stdev"+ uvName,
-                     "Standard deviation of "+ lvName +" for "+ desc);
-    iMinInfo = info(ucName +"IMin"+ uvName,
-                    "Interval min "+ lvName +" for "+ desc);
-    iMaxInfo = info(ucName + "IMax"+ uvName,
-                    "Interval max "+ lvName +" for "+ desc);
-    minInfo = info(ucName +"Min"+ uvName, "Min "+ lvName +" for "+ desc);
-    maxInfo = info(ucName +"Max"+ uvName, "Max "+ lvName +" for "+ desc);
+    numInfo = info(ucName + "Num" + usName, "Number of " + lsName + " for " + desc);
+    iNumInfo = info(ucName + "INum" + usName,
+        "Interval number of " + lsName + " for " + desc);
+    avgInfo = info(ucName + "Avg" + uvName, "Average " + lvName + " for " + desc);
+    stdevInfo = info(ucName + "Stdev" + uvName,
+        "Standard deviation of " + lvName + " for " + desc);
+    iMinInfo = info(ucName + "IMin" + uvName,
+        "Interval min " + lvName + " for " + desc);
+    iMaxInfo = info(ucName + "IMax" + uvName,
+        "Interval max " + lvName + " for " + desc);
+    minInfo = info(ucName + "Min" + uvName, "Min " + lvName + " for " + desc);
+    maxInfo = info(ucName + "Max" + uvName, "Max " + lvName + " for " + desc);
     this.extended = extended;
   }
 
@@ -89,6 +89,7 @@ public class MutableStat extends MutableMetric {
   public synchronized void setUpdateTimeStamp(boolean updateTimeStamp) {
     this.updateTimeStamp = updateTimeStamp;
   }
+
   /**
    * Add a number of samples and their sum to the running stat
    *
@@ -118,14 +119,14 @@ public class MutableStat extends MutableMetric {
     if (all || changed()) {
       numSamples += intervalStat.numSamples();
       builder.addCounter(numInfo, numSamples)
-             .addGauge(avgInfo, lastStat().mean());
+          .addGauge(avgInfo, lastStat().mean());
       if (extended) {
         builder.addGauge(stdevInfo, lastStat().stddev())
-               .addGauge(iMinInfo, lastStat().min())
-               .addGauge(iMaxInfo, lastStat().max())
-               .addGauge(minInfo, minMax.min())
-               .addGauge(maxInfo, minMax.max())
-               .addGauge(iNumInfo, lastStat().numSamples());
+            .addGauge(iMinInfo, lastStat().min())
+            .addGauge(iMaxInfo, lastStat().max())
+            .addGauge(minInfo, minMax.min())
+            .addGauge(maxInfo, minMax.max())
+            .addGauge(iNumInfo, lastStat().numSamples());
       }
       if (changed()) {
         if (numSamples > 0) {
@@ -162,6 +163,7 @@ public class MutableStat extends MutableMetric {
   public long getSnapshotTimeStamp() {
     return snapshotTimeStamp;
   }
+
   @Override
   public String toString() {
     return lastStat().toString();

@@ -18,5 +18,5 @@ public class AnnotatedSecurityInfo extends SecurityInfo {
     return protocol.getAnnotation(TokenInfo.class);
   }
 
-  
+
 }

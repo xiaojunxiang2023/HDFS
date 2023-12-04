@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2005, European Commission project OneLab under contract 034819 
  * (http://www.one-lab.org)
- * 
+ *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the following 
@@ -16,7 +16,7 @@
  *    nor the names of its contributors may be used to endorse or 
  *    promote products derived from this software without specific prior 
  *    written permission.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,11 +32,12 @@
  */
 
 package org.apache.hadoop.util.bloom;
+
 import org.apache.hadoop.util.hash.Hash;
 
 /**
  * Implements a hash object that returns a certain number of hashed values.
- * 
+ *
  * @see Key The general behavior of a key being stored in a filter
  * @see Filter The general behavior of a filter
  */
@@ -49,7 +50,7 @@ public final class HashFunction {
 
   /** Hashing algorithm to use. */
   private Hash hashFunction;
-  
+
   /**
    * Constructor.
    * <p>
@@ -62,7 +63,7 @@ public final class HashFunction {
     if (maxValue <= 0) {
       throw new IllegalArgumentException("maxValue must be > 0");
     }
-    
+
     if (nbHash <= 0) {
       throw new IllegalArgumentException("nbHash must be > 0");
     }
@@ -83,19 +84,19 @@ public final class HashFunction {
    * @param k The specified key.
    * @return The array of hashed values.
    */
-  public int[] hash(Key k){
-      byte[] b = k.getBytes();
-      if (b == null) {
-        throw new NullPointerException("buffer reference is null");
-      }
-      if (b.length == 0) {
-        throw new IllegalArgumentException("key length must be > 0");
-      }
-      int[] result = new int[nbHash];
-      for (int i = 0, initval = 0; i < nbHash; i++) {
-	  initval = hashFunction.hash(b, initval);
-	  result[i] = Math.abs(initval % maxValue);
-      }
-      return result;
+  public int[] hash(Key k) {
+    byte[] b = k.getBytes();
+    if (b == null) {
+      throw new NullPointerException("buffer reference is null");
+    }
+    if (b.length == 0) {
+      throw new IllegalArgumentException("key length must be > 0");
+    }
+    int[] result = new int[nbHash];
+    for (int i = 0, initval = 0; i < nbHash; i++) {
+      initval = hashFunction.hash(b, initval);
+      result[i] = Math.abs(initval % maxValue);
+    }
+    return result;
   }
 }

@@ -39,7 +39,7 @@ public class CachedDNSToSwitchMapping extends AbstractDNSToSwitchMapping {
     for (String name : names) {
       if (cache.get(name) == null) {
         unCachedHosts.add(name);
-      } 
+      }
     }
     return unCachedHosts;
   }
@@ -52,11 +52,11 @@ public class CachedDNSToSwitchMapping extends AbstractDNSToSwitchMapping {
    * @param resolvedHosts a list of resolved host entries where the element
    * at index(i) is the resolved value for the entry in uncachedHosts[i]
    */
-  private void cacheResolvedHosts(List<String> uncachedHosts, 
-      List<String> resolvedHosts) {
+  private void cacheResolvedHosts(List<String> uncachedHosts,
+                                  List<String> resolvedHosts) {
     // Cache the result
     if (resolvedHosts != null) {
-      for (int i=0; i<uncachedHosts.size(); i++) {
+      for (int i = 0; i < uncachedHosts.size(); i++) {
         cache.put(uncachedHosts.get(i), resolvedHosts.get(i));
       }
     }
@@ -86,7 +86,7 @@ public class CachedDNSToSwitchMapping extends AbstractDNSToSwitchMapping {
     // normalize all input names to be in the form of IP addresses
     names = NetUtils.normalizeHostNames(names);
 
-    List <String> result = new ArrayList<String>(names.size());
+    List<String> result = new ArrayList<String>(names.size());
     if (names.isEmpty()) {
       return result;
     }
@@ -108,7 +108,7 @@ public class CachedDNSToSwitchMapping extends AbstractDNSToSwitchMapping {
    */
   @Override
   public Map<String, String> getSwitchMap() {
-    Map<String, String > switchMap = new HashMap<String, String>(cache);
+    Map<String, String> switchMap = new HashMap<String, String>(cache);
     return switchMap;
   }
 
@@ -127,7 +127,7 @@ public class CachedDNSToSwitchMapping extends AbstractDNSToSwitchMapping {
   public boolean isSingleSwitch() {
     return isMappingSingleSwitch(rawMapping);
   }
-  
+
   @Override
   public void reloadCachedMappings() {
     cache.clear();

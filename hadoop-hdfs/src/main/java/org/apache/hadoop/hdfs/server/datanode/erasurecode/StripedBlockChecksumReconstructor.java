@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
+import org.apache.hadoop.hdfs.server.datanode.DataNodeFaultInjector;
+import org.apache.hadoop.io.DataOutputBuffer;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.apache.hadoop.hdfs.server.datanode.DataNodeFaultInjector;
-import org.apache.hadoop.io.DataOutputBuffer;
 
 /**
  * StripedBlockChecksumReconstructor reconstruct one or more missed striped
@@ -24,9 +25,9 @@ public abstract class StripedBlockChecksumReconstructor
   private long requestedLen;
 
   protected StripedBlockChecksumReconstructor(ErasureCodingWorker worker,
-      StripedReconstructionInfo stripedReconInfo,
-      DataOutputBuffer checksumWriter,
-      long requestedBlockLength) throws IOException {
+                                              StripedReconstructionInfo stripedReconInfo,
+                                              DataOutputBuffer checksumWriter,
+                                              long requestedBlockLength) throws IOException {
     super(worker, stripedReconInfo);
     this.targetIndices = stripedReconInfo.getTargetIndices();
     assert targetIndices != null;

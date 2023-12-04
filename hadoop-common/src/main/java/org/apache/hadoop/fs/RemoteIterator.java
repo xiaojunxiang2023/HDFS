@@ -2,6 +2,7 @@ package org.apache.hadoop.fs;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+
 /**
  * An iterator over a collection whose elements need to be fetched remotely
  */

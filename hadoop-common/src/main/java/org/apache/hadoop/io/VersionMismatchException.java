@@ -10,15 +10,15 @@ public class VersionMismatchException extends IOException {
   private byte expectedVersion;
   private byte foundVersion;
 
-  public VersionMismatchException(byte expectedVersionIn, byte foundVersionIn){
+  public VersionMismatchException(byte expectedVersionIn, byte foundVersionIn) {
     expectedVersion = expectedVersionIn;
     foundVersion = foundVersionIn;
   }
 
   /** Returns a string representation of this object. */
   @Override
-  public String toString(){
+  public String toString() {
     return "A record version mismatch occurred. Expecting v"
-      + expectedVersion + ", found v" + foundVersion; 
+        + expectedVersion + ", found v" + foundVersion;
   }
 }

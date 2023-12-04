@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_FAILURES;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MAX;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MEAN;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MIN;
+import static org.apache.hadoop.fs.statistics.StoreStatisticNames.*;
 
 /**
  * Builder for an IOStatistics store..

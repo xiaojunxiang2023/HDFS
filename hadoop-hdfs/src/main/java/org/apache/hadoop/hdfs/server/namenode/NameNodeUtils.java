@@ -14,16 +14,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.namenode;
+ */
+package org.apache.hadoop.hdfs.server.namenode;
 
-import javax.annotation.Nullable;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSUtilClient;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.Collection;
 
@@ -108,7 +108,7 @@ public final class NameNodeUtils {
     }
 
     if (port > 0) {
-       return currentNnAddress;
+      return currentNnAddress;
     } else {
       // the port is missing or 0. Figure out real bind address later.
       return null;

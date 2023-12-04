@@ -1,34 +1,27 @@
 package org.apache.hadoop.filter;
 
-import org.apache.hadoop.filter.handler.AuthenticationHandler;
-import org.apache.hadoop.filter.handler.CompositeAuthenticationHandler;
-import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
-import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
+import org.apache.hadoop.auth.client.AuthenticatedURL;
+import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
 import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
 import org.apache.hadoop.auth.util.Signer;
-import org.apache.hadoop.auth.client.AuthenticatedURL;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
 import org.apache.hadoop.auth.util.micro.SignerException;
 import org.apache.hadoop.auth.util.provider.FileSignerSecretProvider;
 import org.apache.hadoop.auth.util.provider.RandomSignerSecretProvider;
 import org.apache.hadoop.auth.util.provider.SignerSecretProvider;
 import org.apache.hadoop.auth.util.provider.ZKSignerSecretProvider;
+import org.apache.hadoop.filter.handler.AuthenticationHandler;
+import org.apache.hadoop.filter.handler.CompositeAuthenticationHandler;
+import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
+import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
@@ -115,7 +108,7 @@ public class AuthenticationFilter implements Filter {
    * implementation will be used.
    */
   public static final String SIGNER_SECRET_PROVIDER =
-          "signer.secret.provider";
+      "signer.secret.provider";
 
   /**
    * Constant for the ServletContext attribute that can be used for providing a
@@ -155,7 +148,7 @@ public class AuthenticationFilter implements Filter {
     String authHandlerClassName;
     if (authHandlerName == null) {
       throw new ServletException("Authentication type must be specified: " +
-          PseudoAuthenticationHandler.TYPE + "|" + 
+          PseudoAuthenticationHandler.TYPE + "|" +
           KerberosAuthenticationHandler.TYPE + "|<class>");
     }
     authHandlerClassName =
@@ -175,7 +168,7 @@ public class AuthenticationFilter implements Filter {
     cookieDomain = config.getProperty(COOKIE_DOMAIN, null);
     cookiePath = config.getProperty(COOKIE_PATH, null);
     isCookiePersistent = Boolean.parseBoolean(
-            config.getProperty(COOKIE_PERSISTENT, "false"));
+        config.getProperty(COOKIE_PERSISTENT, "false"));
 
   }
 
@@ -215,7 +208,7 @@ public class AuthenticationFilter implements Filter {
       boolean disallowFallbackToRandomSecretProvider) throws Exception {
     String name = config.getProperty(SIGNER_SECRET_PROVIDER, "file");
     long validity = Long.parseLong(config.getProperty(AUTH_TOKEN_VALIDITY,
-                                                      "36000")) * 1000;
+        "36000")) * 1000;
 
     if (!disallowFallbackToRandomSecretProvider
         && "file".equals(name)
@@ -466,8 +459,8 @@ public class AuthenticationFilter implements Filter {
    *         false  Otherwise
    */
   protected boolean verifyTokenType(AuthenticationHandler handler,
-      AuthenticationToken token) {
-    if(!(handler instanceof CompositeAuthenticationHandler)) {
+                                    AuthenticationToken token) {
+    if (!(handler instanceof CompositeAuthenticationHandler)) {
       return handler.getType().equals(token.getType());
     }
     boolean match = false;
@@ -497,7 +490,7 @@ public class AuthenticationFilter implements Filter {
   public void doFilter(ServletRequest request,
                        ServletResponse response,
                        FilterChain filterChain)
-                           throws IOException, ServletException {
+      throws IOException, ServletException {
     boolean unauthorizedResponse = true;
     int errCode = HttpServletResponse.SC_UNAUTHORIZED;
     AuthenticationException authenticationEx = null;
@@ -513,8 +506,7 @@ public class AuthenticationFilter implements Filter {
           LOG.debug("Got token {} from httpRequest {}", token,
               getRequestURL(httpRequest));
         }
-      }
-      catch (AuthenticationException ex) {
+      } catch (AuthenticationException ex) {
         LOG.warn("AuthenticationToken ignored: " + ex.getMessage());
         // will be sent back in a 401 unless filter authenticates
         authenticationEx = ex;
@@ -579,15 +571,15 @@ public class AuthenticationFilter implements Filter {
               && token != AuthenticationToken.ANONYMOUS) {
             String signedToken = signer.sign(token.toString());
             createAuthCookie(httpResponse, signedToken, getCookieDomain(),
-                    getCookiePath(), token.getExpires(),
-                    isCookiePersistent(), isHttps);
+                getCookiePath(), token.getExpires(),
+                isCookiePersistent(), isHttps);
           }
           doFilter(filterChain, httpRequest, httpResponse);
         }
       } else {
         if (LOG.isDebugEnabled()) {
           LOG.debug("managementOperation returned false for request {}."
-                  + " token: {}", getRequestURL(httpRequest), token);
+              + " token: {}", getRequestURL(httpRequest), token);
         }
         unauthorizedResponse = false;
       }
@@ -604,12 +596,12 @@ public class AuthenticationFilter implements Filter {
     if (unauthorizedResponse) {
       if (!httpResponse.isCommitted()) {
         createAuthCookie(httpResponse, "", getCookieDomain(),
-                getCookiePath(), 0, isCookiePersistent(), isHttps);
+            getCookiePath(), 0, isCookiePersistent(), isHttps);
         // If response code is 401. Then WWW-Authenticate Header should be
         // present.. reset to 403 if not found..
         if ((errCode == HttpServletResponse.SC_UNAUTHORIZED)
             && (!httpResponse.containsHeader(
-                KerberosAuthenticator.WWW_AUTHENTICATE))) {
+            KerberosAuthenticator.WWW_AUTHENTICATE))) {
           errCode = HttpServletResponse.SC_FORBIDDEN;
         }
         // After Jetty 9.4.21, sendError() no longer allows a custom message.
@@ -639,7 +631,7 @@ public class AuthenticationFilter implements Filter {
    * @throws ServletException thrown if a processing error occurred.
    */
   protected void doFilter(FilterChain filterChain, HttpServletRequest request,
-      HttpServletResponse response) throws IOException, ServletException {
+                          HttpServletResponse response) throws IOException, ServletException {
     filterChain.doFilter(request, response);
   }
 
@@ -664,7 +656,7 @@ public class AuthenticationFilter implements Filter {
                                       boolean isCookiePersistent,
                                       boolean isSecure) {
     StringBuilder sb = new StringBuilder(AuthenticatedURL.AUTH_COOKIE)
-                           .append("=");
+        .append("=");
     if (token != null && token.length() > 0) {
       sb.append("\"").append(token).append("\"");
     }
@@ -680,7 +672,7 @@ public class AuthenticationFilter implements Filter {
     if (expires >= 0 && isCookiePersistent) {
       Date date = new Date(expires);
       SimpleDateFormat df = new SimpleDateFormat("EEE, " +
-              "dd-MMM-yyyy HH:mm:ss zzz", Locale.US);
+          "dd-MMM-yyyy HH:mm:ss zzz", Locale.US);
       df.setTimeZone(TimeZone.getTimeZone("GMT"));
       sb.append("; Expires=").append(df.format(date));
     }

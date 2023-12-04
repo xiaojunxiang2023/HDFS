@@ -12,23 +12,23 @@ import java.io.IOException;
  */
 public abstract class UpdateNamenodeRegistrationResponse {
 
-    public static UpdateNamenodeRegistrationResponse newInstance() {
-        return StateStoreSerializer.newRecord(
-                UpdateNamenodeRegistrationResponse.class);
-    }
+  public static UpdateNamenodeRegistrationResponse newInstance() {
+    return StateStoreSerializer.newRecord(
+        UpdateNamenodeRegistrationResponse.class);
+  }
 
-    public static UpdateNamenodeRegistrationResponse newInstance(boolean status)
-            throws IOException {
-        UpdateNamenodeRegistrationResponse response = newInstance();
-        response.setResult(status);
-        return response;
-    }
+  public static UpdateNamenodeRegistrationResponse newInstance(boolean status)
+      throws IOException {
+    UpdateNamenodeRegistrationResponse response = newInstance();
+    response.setResult(status);
+    return response;
+  }
 
-    @Private
-    @Unstable
-    public abstract boolean getResult();
+  @Private
+  @Unstable
+  public abstract boolean getResult();
 
-    @Private
-    @Unstable
-    public abstract void setResult(boolean result);
+  @Private
+  @Unstable
+  public abstract void setResult(boolean result);
 }

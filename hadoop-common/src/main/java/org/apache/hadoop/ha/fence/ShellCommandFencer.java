@@ -1,22 +1,21 @@
 package org.apache.hadoop.ha.fence;
 
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
+import org.apache.hadoop.ha.micro.StreamPumper;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceTarget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.hadoop.conf.Configured;
-
-import org.apache.hadoop.ha.status.HAServiceProtocol;
-import org.apache.hadoop.ha.status.HAServiceTarget;
-import org.apache.hadoop.ha.micro.StreamPumper;
-import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ShellCommandFencer
-  extends Configured implements FenceMethod {
-  
+    extends Configured implements FenceMethod {
+
   public static Logger LOG = LoggerFactory.getLogger(ShellCommandFencer.class);
 
   private static final int ABBREV_LENGTH = 20;
@@ -54,27 +53,27 @@ public class ShellCommandFencer
       LOG.warn("Unable to execute " + cmd, e);
       return false;
     }
-    
+
     String pid = tryGetPid(p);
     LOG.info("Launched fencing command '" + cmd + "' with "
         + ((pid != null) ? ("pid " + pid) : "unknown pid"));
-    
+
     String logPrefix = abbreviate(cmd, ABBREV_LENGTH);
     if (pid != null) {
       logPrefix = "[PID " + pid + "] " + logPrefix;
     }
-    
+
     // Pump logs to stderr
     StreamPumper errPumper = new StreamPumper(
         LOG, logPrefix, p.getErrorStream(),
         StreamPumper.StreamType.STDERR);
     errPumper.start();
-    
+
     StreamPumper outPumper = new StreamPumper(
         LOG, logPrefix, p.getInputStream(),
         StreamPumper.StreamType.STDOUT);
     outPumper.start();
-    
+
     int rc;
     try {
       rc = p.waitFor();
@@ -84,7 +83,7 @@ public class ShellCommandFencer
       LOG.warn("Interrupted while waiting for fencing command: " + cmd);
       return false;
     }
-    
+
     return rc == 0;
   }
 
@@ -121,14 +120,14 @@ public class ShellCommandFencer
     if (cmd.length() > len && len >= 5) {
       int firstHalf = (len - 3) / 2;
       int rem = len - firstHalf - 3;
-      
-      return cmd.substring(0, firstHalf) + 
-        "..." + cmd.substring(cmd.length() - rem);
+
+      return cmd.substring(0, firstHalf) +
+          "..." + cmd.substring(cmd.length() - rem);
     } else {
       return cmd;
     }
   }
-  
+
   /**
    * Attempt to use evil reflection tricks to determine the
    * pid of a launched process. This is helpful to ops
@@ -167,12 +166,12 @@ public class ShellCommandFencer
   /**
    * Add information about the target to the the environment of the
    * subprocess.
-   * 
+   *
    * @param target
    * @param environment
    */
   private void addTargetInfoAsEnvVars(HAServiceTarget target,
-      Map<String, String> environment) {
+                                      Map<String, String> environment) {
     String prefix;
     HAServiceProtocol.HAServiceState targetState =
         target.getTransitionTargetHAStatus();
@@ -189,7 +188,7 @@ public class ShellCommandFencer
           "Unexpected HA service state:" + targetState);
     }
     for (Map.Entry<String, String> e :
-         target.getFencingParameters().entrySet()) {
+        target.getFencingParameters().entrySet()) {
       String key = prefix + e.getKey();
       key = key.replace('.', '_');
       environment.put(key, e.getValue());

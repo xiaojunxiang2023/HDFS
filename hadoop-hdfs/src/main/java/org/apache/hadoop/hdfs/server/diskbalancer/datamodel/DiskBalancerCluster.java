@@ -13,38 +13,28 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.datamodel;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.datamodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.hdfs.server.diskbalancer.connectors.ClusterConnector;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.NodePlan;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.Planner;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.PlannerFactory;
 import org.apache.hadoop.hdfs.web.JsonUtil;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * DiskBalancerCluster represents the nodes that we are working against.
@@ -85,7 +75,7 @@ public class DiskBalancerCluster {
   @JsonIgnore
   private final Map<String, DiskBalancerDataNode> hostNames;
   @JsonIgnore
-  private final Map<String, DiskBalancerDataNode>  hostUUID;
+  private final Map<String, DiskBalancerDataNode> hostUUID;
 
   private float threshold;
 
@@ -130,22 +120,22 @@ public class DiskBalancerCluster {
    */
   public void readClusterInfo() throws Exception {
     Preconditions.checkNotNull(clusterConnector);
-    LOG.debug("Using connector : {}" , clusterConnector.getConnectorInfo());
+    LOG.debug("Using connector : {}", clusterConnector.getConnectorInfo());
     nodes = clusterConnector.getNodes();
-    for(DiskBalancerDataNode node : nodes) {
+    for (DiskBalancerDataNode node : nodes) {
 
-      if(node.getDataNodeIP()!= null && !node.getDataNodeIP().isEmpty()) {
+      if (node.getDataNodeIP() != null && !node.getDataNodeIP().isEmpty()) {
         ipList.put(node.getDataNodeIP(), node);
       }
 
-      if(node.getDataNodeName() != null && !node.getDataNodeName().isEmpty()) {
+      if (node.getDataNodeName() != null && !node.getDataNodeName().isEmpty()) {
         // TODO : should we support Internationalized Domain Names ?
         // Disk balancer assumes that host names are ascii. If not
         // end user can always balance the node via IP address or DataNode UUID.
         hostNames.put(node.getDataNodeName().toLowerCase(Locale.US), node);
       }
 
-      if(node.getDataNodeUUID() != null && !node.getDataNodeUUID().isEmpty()) {
+      if (node.getDataNodeUUID() != null && !node.getDataNodeUUID().isEmpty()) {
         hostUUID.put(node.getDataNodeUUID(), node);
       }
     }

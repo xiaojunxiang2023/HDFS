@@ -14,16 +14,17 @@ public class ReceivedDeletedBlockInfo {
     RECEIVING_BLOCK(1),
     RECEIVED_BLOCK(2),
     DELETED_BLOCK(3);
-    
+
     private final int code;
+
     BlockStatus(int code) {
       this.code = code;
     }
-    
+
     public int getCode() {
       return code;
     }
-    
+
     public static BlockStatus fromCode(int code) {
       for (BlockStatus bs : BlockStatus.values()) {
         if (bs.code == code) {
@@ -79,7 +80,7 @@ public class ReceivedDeletedBlockInfo {
   @Override
   public int hashCode() {
     assert false : "hashCode not designed";
-    return 0; 
+    return 0;
   }
 
   public boolean blockEquals(Block b) {
@@ -93,6 +94,6 @@ public class ReceivedDeletedBlockInfo {
   @Override
   public String toString() {
     return block.toString() + ", status: " + status +
-      ", delHint: " + delHints;
+        ", delHint: " + delHints;
   }
 }

@@ -1,44 +1,19 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsServerProtos.NamenodeCommandProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsServerProtos.VersionRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.EndCheckpointRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.ErrorReportRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlockKeysRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlockKeysResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlocksRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetEditLogManifestRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetMostRecentCheckpointTxIdRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetNextSPSPathRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetNextSPSPathResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetTransactionIdRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsRollingUpgradeRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsRollingUpgradeResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsUpgradeFinalizedRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsUpgradeFinalizedResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.RegisterRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.RollEditLogRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.StartCheckpointRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.*;
 import org.apache.hadoop.hdfs.security.token.block.ExportedBlockKeys;
 import org.apache.hadoop.hdfs.server.namenode.CheckpointSignature;
-import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeCommand;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeRegistration;
-import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
-import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
-import org.apache.hadoop.ipc.ProtobufHelper;
-import org.apache.hadoop.ipc.ProtocolMetaInterface;
-import org.apache.hadoop.ipc.ProtocolTranslator;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RpcClientUtil;
-
+import org.apache.hadoop.hdfs.server.protocol.*;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * This class is the client side translator to translate the requests made on
@@ -49,21 +24,21 @@ public class NamenodeProtocolTranslatorPB implements NamenodeProtocol,
     ProtocolMetaInterface, Closeable, ProtocolTranslator {
   /** RpcController is not used and hence is set to null */
   private final static RpcController NULL_CONTROLLER = null;
-  
+
   /*
    * Protobuf requests with no parameters instantiated only once
    */
-  private static final GetBlockKeysRequestProto VOID_GET_BLOCKKEYS_REQUEST = 
+  private static final GetBlockKeysRequestProto VOID_GET_BLOCKKEYS_REQUEST =
       GetBlockKeysRequestProto.newBuilder().build();
-  private static final GetTransactionIdRequestProto VOID_GET_TRANSACTIONID_REQUEST = 
+  private static final GetTransactionIdRequestProto VOID_GET_TRANSACTIONID_REQUEST =
       GetTransactionIdRequestProto.newBuilder().build();
-  private static final RollEditLogRequestProto VOID_ROLL_EDITLOG_REQUEST = 
+  private static final RollEditLogRequestProto VOID_ROLL_EDITLOG_REQUEST =
       RollEditLogRequestProto.newBuilder().build();
-  private static final VersionRequestProto VOID_VERSION_REQUEST = 
+  private static final VersionRequestProto VOID_VERSION_REQUEST =
       VersionRequestProto.newBuilder().build();
 
   final private NamenodeProtocolPB rpcProxy;
-  
+
   public NamenodeProtocolTranslatorPB(NamenodeProtocolPB rpcProxy) {
     this.rpcProxy = rpcProxy;
   }
@@ -83,7 +58,7 @@ public class NamenodeProtocolTranslatorPB implements NamenodeProtocol,
       minBlockSize)
       throws IOException {
     GetBlocksRequestProto req = GetBlocksRequestProto.newBuilder()
-        .setDatanode(PBHelperClient.convert((DatanodeID)datanode)).setSize(size)
+        .setDatanode(PBHelperClient.convert((DatanodeID) datanode)).setSize(size)
         .setMinBlockSize(minBlockSize).build();
     try {
       return PBHelper.convert(rpcProxy.getBlocks(NULL_CONTROLLER, req)
@@ -146,7 +121,7 @@ public class NamenodeProtocolTranslatorPB implements NamenodeProtocol,
 
   @Override
   public void errorReport(NamenodeRegistration registration, int errorCode,
-      String msg) throws IOException {
+                          String msg) throws IOException {
     ErrorReportRequestProto req = ErrorReportRequestProto.newBuilder()
         .setErrorCode(errorCode).setMsg(msg)
         .setRegistration(PBHelper.convert(registration)).build();
@@ -165,7 +140,7 @@ public class NamenodeProtocolTranslatorPB implements NamenodeProtocol,
     try {
       return PBHelper.convert(
           rpcProxy.registerSubordinateNamenode(NULL_CONTROLLER, req)
-          .getRegistration());
+              .getRegistration());
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
@@ -187,7 +162,7 @@ public class NamenodeProtocolTranslatorPB implements NamenodeProtocol,
 
   @Override
   public void endCheckpoint(NamenodeRegistration registration,
-      CheckpointSignature sig) throws IOException {
+                            CheckpointSignature sig) throws IOException {
     EndCheckpointRequestProto req = EndCheckpointRequestProto.newBuilder()
         .setRegistration(PBHelper.convert(registration))
         .setSignature(PBHelper.convert(sig)).build();

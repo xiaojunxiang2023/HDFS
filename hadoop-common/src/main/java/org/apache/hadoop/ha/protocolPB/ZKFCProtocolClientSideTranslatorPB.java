@@ -1,11 +1,5 @@
 package org.apache.hadoop.ha.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-
-import javax.net.SocketFactory;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.fc.ZKFCProtocol;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.CedeActiveRequestProto;
@@ -16,13 +10,17 @@ import org.apache.hadoop.ipc.ProtocolTranslator;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
+import javax.net.SocketFactory;
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
 
 public class ZKFCProtocolClientSideTranslatorPB implements
-  ZKFCProtocol, Closeable, ProtocolTranslator {
+    ZKFCProtocol, Closeable, ProtocolTranslator {
 
   private final static RpcController NULL_CONTROLLER = null;
   private final ZKFCProtocolPB rpcProxy;
@@ -44,7 +42,7 @@ public class ZKFCProtocolClientSideTranslatorPB implements
       CedeActiveRequestProto req = CedeActiveRequestProto.newBuilder()
           .setMillisToCede(millisToCede)
           .build();
-      rpcProxy.cedeActive(NULL_CONTROLLER, req);      
+      rpcProxy.cedeActive(NULL_CONTROLLER, req);
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }

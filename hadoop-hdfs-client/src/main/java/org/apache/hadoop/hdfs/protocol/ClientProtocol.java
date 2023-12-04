@@ -1,27 +1,14 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedEntries;
-import org.apache.hadoop.fs.PathIsNotEmptyDirectoryException;
-import org.apache.hadoop.ha.status.HAServiceProtocol;
-import org.apache.hadoop.hdfs.AddBlockFlag;
-import org.apache.hadoop.fs.CacheFlag;
-import org.apache.hadoop.fs.ContentSummary;
-import org.apache.hadoop.fs.CreateFlag;
-import org.apache.hadoop.fs.FsServerDefaults;
-import org.apache.hadoop.fs.Options;
-import org.apache.hadoop.fs.QuotaUsage;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.fs.XAttr;
-import org.apache.hadoop.fs.XAttrSetFlag;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclStatus;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.hdfs.inotify.EventBatchList;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.ReencryptAction;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.RollingUpgradeAction;
@@ -39,6 +26,11 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.KerberosInfo;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenInfo;
+
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY;
 
@@ -79,6 +71,7 @@ public interface ClientProtocol {
   ///////////////////////////////////////
   // File contents
   ///////////////////////////////////////
+
   /**
    * Get locations of the blocks of the specified file
    * within the specified range.
@@ -186,10 +179,10 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   HdfsFileStatus create(String src, FsPermission masked,
-      String clientName, EnumSetWritable<CreateFlag> flag,
-      boolean createParent, short replication, long blockSize,
-      CryptoProtocolVersion[] supportedVersions, String ecPolicyName,
-      String storagePolicy)
+                        String clientName, EnumSetWritable<CreateFlag> flag,
+                        boolean createParent, short replication, long blockSize,
+                        CryptoProtocolVersion[] supportedVersions, String ecPolicyName,
+                        String storagePolicy)
       throws IOException;
 
   /**
@@ -224,7 +217,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   LastBlockWithStatus append(String src, String clientName,
-      EnumSetWritable<CreateFlag> flag) throws IOException;
+                             EnumSetWritable<CreateFlag> flag) throws IOException;
 
   /**
    * Set replication for an existing file.
@@ -366,7 +359,7 @@ public interface ClientProtocol {
    */
   @Idempotent
   void abandonBlock(ExtendedBlock b, long fileId,
-      String src, String holder)
+                    String src, String holder)
       throws IOException;
 
   /**
@@ -408,8 +401,8 @@ public interface ClientProtocol {
    */
   @Idempotent
   LocatedBlock addBlock(String src, String clientName,
-      ExtendedBlock previous, DatanodeInfo[] excludeNodes, long fileId,
-      String[] favoredNodes, EnumSet<AddBlockFlag> addBlockFlags)
+                        ExtendedBlock previous, DatanodeInfo[] excludeNodes, long fileId,
+                        String[] favoredNodes, EnumSet<AddBlockFlag> addBlockFlags)
       throws IOException;
 
   /**
@@ -436,12 +429,12 @@ public interface ClientProtocol {
    */
   @Idempotent
   LocatedBlock getAdditionalDatanode(final String src,
-      final long fileId, final ExtendedBlock blk,
-      final DatanodeInfo[] existings,
-      final String[] existingStorageIDs,
-      final DatanodeInfo[] excludes,
-      final int numAdditionalNodes, final String clientName
-      ) throws IOException;
+                                     final long fileId, final ExtendedBlock blk,
+                                     final DatanodeInfo[] existings,
+                                     final String[] existingStorageIDs,
+                                     final DatanodeInfo[] excludes,
+                                     final int numAdditionalNodes, final String clientName
+  ) throws IOException;
 
   /**
    * The client is done writing data to the given filename, and would
@@ -477,7 +470,7 @@ public interface ClientProtocol {
    */
   @Idempotent
   boolean complete(String src, String clientName,
-                          ExtendedBlock last, long fileId)
+                   ExtendedBlock last, long fileId)
       throws IOException;
 
   /**
@@ -491,6 +484,7 @@ public interface ClientProtocol {
   ///////////////////////////////////////
   // Namespace management
   ///////////////////////////////////////
+
   /**
    * Rename an item in the file system namespace.
    * @param src existing file or directory name.
@@ -673,7 +667,7 @@ public interface ClientProtocol {
   @Idempotent
   @ReadOnly(isCoordinated = true)
   DirectoryListing getListing(String src, byte[] startAfter,
-      boolean needLocation) throws IOException;
+                              boolean needLocation) throws IOException;
 
   /**
    * Get a partial listing of the input directories
@@ -843,7 +837,7 @@ public interface ClientProtocol {
    * <p>
    * Safe mode is entered automatically at name node startup.
    * Safe mode can also be entered manually using
-   * {@link #setSafeMode(HdfsConstants.SafeModeAction,boolean)
+   * {@link #setSafeMode(HdfsConstants.SafeModeAction, boolean)
    * setSafeMode(SafeModeAction.SAFEMODE_ENTER,false)}.
    * <p>
    * At startup the name node accepts data node reports collecting
@@ -860,13 +854,13 @@ public interface ClientProtocol {
    * Then the name node leaves safe mode.
    * <p>
    * If safe mode is turned on manually using
-   * {@link #setSafeMode(HdfsConstants.SafeModeAction,boolean)
+   * {@link #setSafeMode(HdfsConstants.SafeModeAction, boolean)
    * setSafeMode(SafeModeAction.SAFEMODE_ENTER,false)}
    * then the name node stays in safe mode until it is manually turned off
-   * using {@link #setSafeMode(HdfsConstants.SafeModeAction,boolean)
+   * using {@link #setSafeMode(HdfsConstants.SafeModeAction, boolean)
    * setSafeMode(SafeModeAction.SAFEMODE_LEAVE,false)}.
    * Current state of the name node can be verified using
-   * {@link #setSafeMode(HdfsConstants.SafeModeAction,boolean)
+   * {@link #setSafeMode(HdfsConstants.SafeModeAction, boolean)
    * setSafeMode(SafeModeAction.SAFEMODE_GET,false)}
    *
    * <p><b>Configuration parameters:</b></p>
@@ -1116,7 +1110,7 @@ public interface ClientProtocol {
    */
   @Idempotent
   void setQuota(String path, long namespaceQuota, long storagespaceQuota,
-      StorageType type) throws IOException;
+                StorageType type) throws IOException;
 
   /**
    * Write all metadata for this file into persistent storage.
@@ -1180,7 +1174,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   void createSymlink(String target, String link, FsPermission dirPerm,
-      boolean createParent) throws IOException;
+                     boolean createParent) throws IOException;
 
   /**
    * Return the target of the given symlink. If there is an intermediate
@@ -1212,7 +1206,7 @@ public interface ClientProtocol {
    */
   @Idempotent
   LocatedBlock updateBlockForPipeline(ExtendedBlock block,
-      String clientName) throws IOException;
+                                      String clientName) throws IOException;
 
   /**
    * Update a pipeline for a block under construction.
@@ -1225,7 +1219,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   void updatePipeline(String clientName, ExtendedBlock oldBlock,
-      ExtendedBlock newBlock, DatanodeID[] newNodes, String[] newStorageIDs)
+                      ExtendedBlock newBlock, DatanodeID[] newNodes, String[] newStorageIDs)
       throws IOException;
 
   /**
@@ -1298,7 +1292,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   void renameSnapshot(String snapshotRoot, String snapshotOldName,
-      String snapshotNewName) throws IOException;
+                      String snapshotNewName) throws IOException;
 
   /**
    * Allow snapshot on a directory.
@@ -1336,7 +1330,7 @@ public interface ClientProtocol {
   @Idempotent
   @ReadOnly(isCoordinated = true)
   SnapshotDiffReport getSnapshotDiffReport(String snapshotRoot,
-      String fromSnapshot, String toSnapshot) throws IOException;
+                                           String fromSnapshot, String toSnapshot) throws IOException;
 
   /**
    * Get the difference between two snapshots of a directory iteratively.
@@ -1364,7 +1358,7 @@ public interface ClientProtocol {
   @Idempotent
   @ReadOnly(isCoordinated = true)
   SnapshotDiffReportListing getSnapshotDiffReportListing(String snapshotRoot,
-      String fromSnapshot, String toSnapshot, byte[] startPath, int index)
+                                                         String fromSnapshot, String toSnapshot, byte[] startPath, int index)
       throws IOException;
 
   /**
@@ -1377,7 +1371,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   long addCacheDirective(CacheDirectiveInfo directive,
-      EnumSet<CacheFlag> flags) throws IOException;
+                         EnumSet<CacheFlag> flags) throws IOException;
 
   /**
    * Modify a CacheDirective in the CacheManager.
@@ -1387,7 +1381,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   void modifyCacheDirective(CacheDirectiveInfo directive,
-      EnumSet<CacheFlag> flags) throws IOException;
+                            EnumSet<CacheFlag> flags) throws IOException;
 
   /**
    * Remove a CacheDirectiveInfo from the CacheManager.
@@ -1506,7 +1500,7 @@ public interface ClientProtocol {
    */
   @AtMostOnce
   void createEncryptionZone(String src, String keyName)
-    throws IOException;
+      throws IOException;
 
   /**
    * Get the encryption zone for a path.
@@ -1514,7 +1508,7 @@ public interface ClientProtocol {
   @Idempotent
   @ReadOnly(isCoordinated = true)
   EncryptionZone getEZForPath(String src)
-    throws IOException;
+      throws IOException;
 
   /**
    * Used to implement cursor-based batched listing of {@link EncryptionZone}s.
@@ -1798,7 +1792,7 @@ public interface ClientProtocol {
   @Idempotent
   @ReadOnly(isCoordinated = true)
   BatchedEntries<OpenFileEntry> listOpenFiles(long prevId,
-      EnumSet<OpenFilesType> openFilesTypes, String path) throws IOException;
+                                              EnumSet<OpenFilesType> openFilesTypes, String path) throws IOException;
 
   /**
    * Get HA service state of the server.

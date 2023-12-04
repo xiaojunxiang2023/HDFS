@@ -20,7 +20,7 @@ public class IOUtilsClient {
       if (c != null) {
         try {
           c.close();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
           if (log != null && log.isDebugEnabled()) {
             log.debug("Exception in closing " + c, e);
           }
@@ -30,13 +30,13 @@ public class IOUtilsClient {
   }
 
   public static void updateReadStatistics(ReadStatistics readStatistics,
-                                      int nRead, BlockReader blockReader) {
+                                          int nRead, BlockReader blockReader) {
     updateReadStatistics(readStatistics, nRead, blockReader.isShortCircuit(),
         blockReader.getNetworkDistance());
   }
 
   public static void updateReadStatistics(ReadStatistics readStatistics,
-      int nRead, boolean isShortCircuit, int networkDistance) {
+                                          int nRead, boolean isShortCircuit, int networkDistance) {
     if (nRead <= 0) {
       return;
     }

@@ -1,13 +1,13 @@
 package org.apache.hadoop.hdfs.net;
 
+import org.apache.hadoop.net.unix.DomainSocket;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.channels.ReadableByteChannel;
-
-import org.apache.hadoop.net.unix.DomainSocket;
 
 /**
  * Represents a peer that we communicate with by using a basic Socket
@@ -52,17 +52,17 @@ public class BasicInetPeer implements Peer {
 
   @Override
   public void setWriteTimeout(int timeoutMs) {
-   /*
-    * We can't implement write timeouts. :(
-    *
-    * Java provides no facility to set a blocking write timeout on a Socket.
-    * You can simulate a blocking write with a timeout by using
-    * non-blocking I/O.  However, we can't use nio here, because this Socket
-    * doesn't have an associated Channel.
-    *
-    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4031100 for
-    * more details.
-    */
+    /*
+     * We can't implement write timeouts. :(
+     *
+     * Java provides no facility to set a blocking write timeout on a Socket.
+     * You can simulate a blocking write with a timeout by using
+     * non-blocking I/O.  However, we can't use nio here, because this Socket
+     * doesn't have an associated Channel.
+     *
+     * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4031100 for
+     * more details.
+     */
   }
 
   @Override

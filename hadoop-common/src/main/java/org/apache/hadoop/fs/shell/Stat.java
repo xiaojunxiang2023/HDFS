@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.FileStatus;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.TimeZone;
-import org.apache.hadoop.fs.FileStatus;
 
 /**
  * Print statistics about path in specified format.
@@ -36,18 +37,19 @@ class Stat extends FsCommand {
   public static final String NAME = "stat";
   public static final String USAGE = "[format] <path> ...";
   public static final String DESCRIPTION =
-    "Print statistics about the file/directory at <path>" + NEWLINE +
-    "in the specified format. Format accepts permissions in" + NEWLINE +
-    "octal (%a) and symbolic (%A), filesize in" + NEWLINE +
-    "bytes (%b), type (%F), group name of owner (%g)," + NEWLINE +
-    "name (%n), block size (%o), replication (%r), user name" + NEWLINE +
-    "of owner (%u), access date (%x, %X)." + NEWLINE +
-    "modification date (%y, %Y)." + NEWLINE +
-    "%x and %y show UTC date as \"yyyy-MM-dd HH:mm:ss\" and" + NEWLINE +
-    "%X and %Y show milliseconds since January 1, 1970 UTC." + NEWLINE +
-    "If the format is not specified, %y is used by default." + NEWLINE;
+      "Print statistics about the file/directory at <path>" + NEWLINE +
+          "in the specified format. Format accepts permissions in" + NEWLINE +
+          "octal (%a) and symbolic (%A), filesize in" + NEWLINE +
+          "bytes (%b), type (%F), group name of owner (%g)," + NEWLINE +
+          "name (%n), block size (%o), replication (%r), user name" + NEWLINE +
+          "of owner (%u), access date (%x, %X)." + NEWLINE +
+          "modification date (%y, %Y)." + NEWLINE +
+          "%x and %y show UTC date as \"yyyy-MM-dd HH:mm:ss\" and" + NEWLINE +
+          "%X and %Y show milliseconds since January 1, 1970 UTC." + NEWLINE +
+          "If the format is not specified, %y is used by default." + NEWLINE;
 
   protected final SimpleDateFormat timeFmt;
+
   {
     timeFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     timeFmt.setTimeZone(TimeZone.getTimeZone("UTC"));

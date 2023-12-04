@@ -1,19 +1,19 @@
 package org.apache.hadoop.security.token.delegation;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.security.HadoopKerberosName;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.TokenIdentifier;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-public abstract class AbstractDelegationTokenIdentifier 
-extends TokenIdentifier {
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+public abstract class AbstractDelegationTokenIdentifier
+    extends TokenIdentifier {
   private static final byte VERSION = 0;
 
   private Text owner;
@@ -23,11 +23,11 @@ extends TokenIdentifier {
   private long maxDate;
   private int sequenceNumber;
   private int masterKeyId = 0;
-  
+
   public AbstractDelegationTokenIdentifier() {
     this(null, null, null);
   }
-  
+
   public AbstractDelegationTokenIdentifier(Text owner, Text renewer, Text realUser) {
     setOwner(owner);
     setRenewer(renewer);
@@ -38,15 +38,15 @@ extends TokenIdentifier {
 
   @Override
   public abstract Text getKind();
-  
+
   /**
    * Get the username encoded in the token identifier
-   * 
+   *
    * @return the username or owner
    */
   @Override
   public UserGroupInformation getUser() {
-    if ( (owner == null) || (owner.toString().isEmpty())) {
+    if ((owner == null) || (owner.toString().isEmpty())) {
       return null;
     }
     final UserGroupInformation realUgi;
@@ -106,15 +106,15 @@ extends TokenIdentifier {
   public void setIssueDate(long issueDate) {
     this.issueDate = issueDate;
   }
-  
+
   public long getIssueDate() {
     return issueDate;
   }
-  
+
   public void setMaxDate(long maxDate) {
     this.maxDate = maxDate;
   }
-  
+
   public long getMaxDate() {
     return maxDate;
   }
@@ -122,7 +122,7 @@ extends TokenIdentifier {
   public void setSequenceNumber(int seqNum) {
     this.sequenceNumber = seqNum;
   }
-  
+
   public int getSequenceNumber() {
     return sequenceNumber;
   }
@@ -138,7 +138,7 @@ extends TokenIdentifier {
   protected static boolean isEqual(Object a, Object b) {
     return a == null ? b == null : a.equals(b);
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
@@ -146,11 +146,11 @@ extends TokenIdentifier {
     }
     if (obj instanceof AbstractDelegationTokenIdentifier) {
       AbstractDelegationTokenIdentifier that = (AbstractDelegationTokenIdentifier) obj;
-      return this.sequenceNumber == that.sequenceNumber 
-          && this.issueDate == that.issueDate 
+      return this.sequenceNumber == that.sequenceNumber
+          && this.issueDate == that.issueDate
           && this.maxDate == that.maxDate
           && this.masterKeyId == that.masterKeyId
-          && isEqual(this.owner, that.owner) 
+          && isEqual(this.owner, that.owner)
           && isEqual(this.renewer, that.renewer)
           && isEqual(this.realUser, that.realUser);
     }
@@ -161,13 +161,13 @@ extends TokenIdentifier {
   public int hashCode() {
     return this.sequenceNumber;
   }
-  
+
   @Override
   public void readFields(DataInput in) throws IOException {
     byte version = in.readByte();
     if (version != VERSION) {
-	throw new IOException("Unknown version of delegation token " + 
-                              version);
+      throw new IOException("Unknown version of delegation token " +
+          version);
     }
     owner.readFields(in, Text.DEFAULT_MAX_LEN);
     renewer.readFields(in, Text.DEFAULT_MAX_LEN);
@@ -189,7 +189,7 @@ extends TokenIdentifier {
     WritableUtils.writeVInt(out, sequenceNumber);
     WritableUtils.writeVInt(out, masterKeyId);
   }
-  
+
   @Override
   public void write(DataOutput out) throws IOException {
     if (owner.getLength() > Text.DEFAULT_MAX_LEN) {
@@ -203,7 +203,7 @@ extends TokenIdentifier {
     }
     writeImpl(out);
   }
-  
+
   @Override
   public String toString() {
     StringBuilder buffer = new StringBuilder();
@@ -218,6 +218,7 @@ extends TokenIdentifier {
         .append(", masterKeyId=").append(masterKeyId);
     return buffer.toString();
   }
+
   /*
    * A frozen version of toString() to be used to be backward compatible.
    * When backward compatibility is not needed, use toString(), which provides

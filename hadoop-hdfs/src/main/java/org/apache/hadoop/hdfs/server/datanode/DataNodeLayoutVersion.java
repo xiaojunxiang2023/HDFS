@@ -1,24 +1,26 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.FeatureInfo;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.LayoutFeature;
-public class DataNodeLayoutVersion {  
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedSet;
+
+public class DataNodeLayoutVersion {
   /** Build layout version and corresponding feature matrix */
-  public final static Map<Integer, SortedSet<LayoutFeature>> FEATURES = 
-    new HashMap<Integer, SortedSet<LayoutFeature>>();
-  
+  public final static Map<Integer, SortedSet<LayoutFeature>> FEATURES =
+      new HashMap<Integer, SortedSet<LayoutFeature>>();
+
   public static final int CURRENT_LAYOUT_VERSION
       = LayoutVersion.getCurrentLayoutVersion(Feature.values());
 
-  static{
+  static {
     LayoutVersion.updateMap(FEATURES, LayoutVersion.Feature.values());
     LayoutVersion.updateMap(FEATURES, DataNodeLayoutVersion.Feature.values());
   }
-  
+
   public static SortedSet<LayoutFeature> getFeatures(int lv) {
     return FEATURES.get(lv);
   }
@@ -44,11 +46,11 @@ public class DataNodeLayoutVersion {
     FIRST_LAYOUT(-55, -53, "First datanode layout", false),
     BLOCKID_BASED_LAYOUT(-56,
         "The block ID of a finalized block uniquely determines its position " +
-        "in the directory structure"),
+            "in the directory structure"),
     BLOCKID_BASED_LAYOUT_32_by_32(-57,
         "Identical to the block id based layout (-56) except it uses a smaller"
-        + " directory structure (32x32)");
-   
+            + " directory structure (32x32)");
+
     private final FeatureInfo info;
 
     /**
@@ -70,10 +72,10 @@ public class DataNodeLayoutVersion {
      * @param features set of features that are to be enabled for this version
      */
     Feature(final int lv, final int ancestorLV, final String description,
-        boolean reserved, Feature... features) {
+            boolean reserved, Feature... features) {
       info = new FeatureInfo(lv, ancestorLV, description, reserved, features);
     }
-    
+
     @Override
     public FeatureInfo getInfo() {
       return info;

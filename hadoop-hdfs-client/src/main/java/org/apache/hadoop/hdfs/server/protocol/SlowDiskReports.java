@@ -14,7 +14,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.protocol;
+ */
+package org.apache.hadoop.hdfs.server.protocol;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 

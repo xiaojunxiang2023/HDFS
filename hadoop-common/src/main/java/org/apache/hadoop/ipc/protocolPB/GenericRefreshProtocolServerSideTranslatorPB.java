@@ -1,17 +1,16 @@
 package org.apache.hadoop.ipc.protocolPB;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.hadoop.ipc.GenericRefreshProtocol;
 import org.apache.hadoop.ipc.RefreshResponse;
 import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshRequestProto;
-import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseProto;
 import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseCollectionProto;
-
+import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseProto;
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 public class GenericRefreshProtocolServerSideTranslatorPB implements
     GenericRefreshProtocolPB {
@@ -46,13 +45,13 @@ public class GenericRefreshProtocolServerSideTranslatorPB implements
   // Convert a collection of RefreshResponse objects to a
   // RefreshResponseCollection proto
   private GenericRefreshResponseCollectionProto pack(
-    Collection<RefreshResponse> responses) {
+      Collection<RefreshResponse> responses) {
     GenericRefreshResponseCollectionProto.Builder b =
-      GenericRefreshResponseCollectionProto.newBuilder();
+        GenericRefreshResponseCollectionProto.newBuilder();
 
     for (RefreshResponse response : responses) {
       GenericRefreshResponseProto.Builder respBuilder =
-        GenericRefreshResponseProto.newBuilder();
+          GenericRefreshResponseProto.newBuilder();
       respBuilder.setExitStatus(response.getReturnCode());
       respBuilder.setUserMessage(response.getMessage());
       respBuilder.setSenderName(response.getSenderName());

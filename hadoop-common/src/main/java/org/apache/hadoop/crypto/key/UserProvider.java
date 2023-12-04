@@ -1,16 +1,13 @@
 package org.apache.hadoop.crypto.key;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.*;
 
 /**
  * A KeyProvider factory for UGIs. It uses the credentials object associated
@@ -60,7 +57,7 @@ public class UserProvider extends KeyProvider {
 
   @Override
   public synchronized KeyVersion createKey(String name, byte[] material,
-                               Options options) throws IOException {
+                                           Options options) throws IOException {
     Text nameT = new Text(name);
     if (credentials.getSecretKey(nameT) != null) {
       throw new IOException("Key " + name + " already exists in " + this);
@@ -84,7 +81,7 @@ public class UserProvider extends KeyProvider {
     if (meta == null) {
       throw new IOException("Key " + name + " does not exist in " + this);
     }
-    for(int v=0; v < meta.getVersions(); ++v) {
+    for (int v = 0; v < meta.getVersions(); ++v) {
       credentials.removeSecretKey(new Text(buildVersionName(name, v)));
     }
     credentials.removeSecretKey(new Text(name));
@@ -93,7 +90,7 @@ public class UserProvider extends KeyProvider {
 
   @Override
   public synchronized KeyVersion rollNewVersion(String name,
-                                    byte[] material) throws IOException {
+                                                byte[] material) throws IOException {
     Metadata meta = getMetadata(name);
     if (meta == null) {
       throw new IOException("Key " + name + " not found");
@@ -145,17 +142,17 @@ public class UserProvider extends KeyProvider {
 
   @Override
   public synchronized List<KeyVersion> getKeyVersions(String name) throws IOException {
-      List<KeyVersion> list = new ArrayList<KeyVersion>();
-      Metadata km = getMetadata(name);
-      if (km != null) {
-        int latestVersion = km.getVersions();
-        for (int i = 0; i < latestVersion; i++) {
-          KeyVersion v = getKeyVersion(buildVersionName(name, i));
-          if (v != null) {
-            list.add(v);
-          }
+    List<KeyVersion> list = new ArrayList<KeyVersion>();
+    Metadata km = getMetadata(name);
+    if (km != null) {
+      int latestVersion = km.getVersions();
+      for (int i = 0; i < latestVersion; i++) {
+        KeyVersion v = getKeyVersion(buildVersionName(name, i));
+        if (v != null) {
+          list.add(v);
         }
       }
-      return list;
+    }
+    return list;
   }
 }

@@ -1,12 +1,13 @@
 package org.apache.hadoop.fs;
 
-import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
+import java.io.IOException;
+
+/**
  * Provides a trash facility which supports pluggable Trash policies. 
  *
  * See the implementation of the configured TrashPolicy for more
@@ -18,7 +19,7 @@ public class Trash extends Configured {
 
   private TrashPolicy trashPolicy; // configured trash policy instance
 
-  /** 
+  /**
    * Construct a trash can accessor.
    * @param conf a Configuration
    */
@@ -49,7 +50,7 @@ public class Trash extends Configured {
    * @throws IOException on error
    */
   public static boolean moveToAppropriateTrash(FileSystem fs, Path p,
-      Configuration conf) throws IOException {
+                                               Configuration conf) throws IOException {
     Path fullyResolvedPath = fs.resolvePath(p);
     FileSystem fullyResolvedFs =
         FileSystem.get(fullyResolvedPath.toUri(), conf);
@@ -73,7 +74,7 @@ public class Trash extends Configured {
     Trash trash = new Trash(fullyResolvedFs, conf);
     return trash.moveToTrash(fullyResolvedPath);
   }
-  
+
   /**
    * Returns whether the trash is enabled for this filesystem
    */
@@ -83,7 +84,7 @@ public class Trash extends Configured {
 
   /** Move a file or directory to the current trash directory.
    * @return false if the item is already in the trash or trash is disabled
-   */ 
+   */
   public boolean moveToTrash(Path path) throws IOException {
     return trashPolicy.moveToTrash(path);
   }

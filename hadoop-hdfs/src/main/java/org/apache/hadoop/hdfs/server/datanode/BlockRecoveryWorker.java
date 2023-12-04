@@ -1,14 +1,7 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.protocol.DatanodeID;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.RecoveryInProgressException;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
@@ -18,16 +11,14 @@ import org.apache.hadoop.hdfs.server.protocol.InterDatanodeProtocol;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
 import org.apache.hadoop.ipc.RemoteException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BLOCK_GROUP_INDEX_MASK;
 import static org.apache.hadoop.hdfs.util.StripedBlockUtil.getInternalBlockLength;
@@ -57,20 +48,20 @@ public class BlockRecoveryWorker {
     private String storageID;
 
     BlockRecord(DatanodeID id, InterDatanodeProtocol datanode,
-        ReplicaRecoveryInfo rInfo) {
+                ReplicaRecoveryInfo rInfo) {
       this.id = id;
       this.datanode = datanode;
       this.rInfo = rInfo;
     }
 
     private void updateReplicaUnderRecovery(String bpid, long recoveryId,
-        long newBlockId, long newLength) throws IOException {
+                                            long newBlockId, long newLength) throws IOException {
       final ExtendedBlock b = new ExtendedBlock(bpid, rInfo);
       storageID = datanode.updateReplicaUnderRecovery(b, recoveryId, newBlockId,
           newLength);
     }
 
-    public ReplicaRecoveryInfo getReplicaRecoveryInfo(){
+    public ReplicaRecoveryInfo getReplicaRecoveryInfo() {
       return rInfo;
     }
 
@@ -107,11 +98,11 @@ public class BlockRecoveryWorker {
       // - Valid generation stamp
       // - Non-zero length
       // - Original state is RWR or better
-      for(DatanodeID id : locs) {
+      for (DatanodeID id : locs) {
         try {
           DatanodeID bpReg = getDatanodeID(bpid);
-          InterDatanodeProtocol proxyDN = bpReg.equals(id)?
-              datanode: DataNode.createInterDataNodeProtocolProxy(id, conf,
+          InterDatanodeProtocol proxyDN = bpReg.equals(id) ?
+              datanode : DataNode.createInterDataNodeProtocolProxy(id, conf,
               dnConf.socketTimeout, dnConf.connectToDnViaHostname);
           ReplicaRecoveryInfo info = callInitReplicaRecovery(proxyDN, rBlock);
           if (info != null &&
@@ -206,7 +197,7 @@ public class BlockRecoveryWorker {
         if (rState.getValue() < bestState.getValue()) {
           bestState = rState;
         }
-        if(rState == ReplicaState.FINALIZED) {
+        if (rState == ReplicaState.FINALIZED) {
           if (finalizedLength > 0 && finalizedLength != r.rInfo.getNumBytes()) {
             throw new IOException("Inconsistent size of finalized replicas. " +
                 "Replica " + r.rInfo + " expected size: " + finalizedLength);
@@ -220,53 +211,53 @@ public class BlockRecoveryWorker {
       List<BlockRecord> participatingList = new ArrayList<>();
       final ExtendedBlock newBlock = new ExtendedBlock(bpid, blockId,
           -1, recoveryId);
-      switch(bestState) {
-      case FINALIZED:
-        assert finalizedLength > 0 : "finalizedLength is not positive";
-        for(BlockRecord r : syncList) {
-          ReplicaState rState = r.rInfo.getOriginalReplicaState();
-          if (rState == ReplicaState.FINALIZED ||
-              rState == ReplicaState.RBW &&
-                  r.rInfo.getNumBytes() == finalizedLength) {
-            participatingList.add(r);
+      switch (bestState) {
+        case FINALIZED:
+          assert finalizedLength > 0 : "finalizedLength is not positive";
+          for (BlockRecord r : syncList) {
+            ReplicaState rState = r.rInfo.getOriginalReplicaState();
+            if (rState == ReplicaState.FINALIZED ||
+                rState == ReplicaState.RBW &&
+                    r.rInfo.getNumBytes() == finalizedLength) {
+              participatingList.add(r);
+            }
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("syncBlock replicaInfo: block=" + block +
+                  ", from datanode " + r.id + ", receivedState=" + rState.name() +
+                  ", receivedLength=" + r.rInfo.getNumBytes() +
+                  ", bestState=FINALIZED, finalizedLength=" + finalizedLength);
+            }
           }
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("syncBlock replicaInfo: block=" + block +
-                ", from datanode " + r.id + ", receivedState=" + rState.name() +
-                ", receivedLength=" + r.rInfo.getNumBytes() +
-                ", bestState=FINALIZED, finalizedLength=" + finalizedLength);
+          newBlock.setNumBytes(finalizedLength);
+          break;
+        case RBW:
+        case RWR:
+          long minLength = Long.MAX_VALUE;
+          for (BlockRecord r : syncList) {
+            ReplicaState rState = r.rInfo.getOriginalReplicaState();
+            if (rState == bestState) {
+              minLength = Math.min(minLength, r.rInfo.getNumBytes());
+              participatingList.add(r);
+            }
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("syncBlock replicaInfo: block=" + block +
+                  ", from datanode " + r.id + ", receivedState=" + rState.name() +
+                  ", receivedLength=" + r.rInfo.getNumBytes() + ", bestState=" +
+                  bestState.name());
+            }
           }
-        }
-        newBlock.setNumBytes(finalizedLength);
-        break;
-      case RBW:
-      case RWR:
-        long minLength = Long.MAX_VALUE;
-        for(BlockRecord r : syncList) {
-          ReplicaState rState = r.rInfo.getOriginalReplicaState();
-          if(rState == bestState) {
-            minLength = Math.min(minLength, r.rInfo.getNumBytes());
-            participatingList.add(r);
+          // recover() guarantees syncList will have at least one replica with RWR
+          // or better state.
+          if (minLength == Long.MAX_VALUE) {
+            throw new IOException("Incorrect block size");
           }
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("syncBlock replicaInfo: block=" + block +
-                ", from datanode " + r.id + ", receivedState=" + rState.name() +
-                ", receivedLength=" + r.rInfo.getNumBytes() + ", bestState=" +
-                bestState.name());
-          }
-        }
-        // recover() guarantees syncList will have at least one replica with RWR
-        // or better state.
-        if (minLength == Long.MAX_VALUE) {
-          throw new IOException("Incorrect block size");
-        }
-        newBlock.setNumBytes(minLength);
-        break;
-      case RUR:
-      case TEMPORARY:
-        assert false : "bad replica state: " + bestState;
-      default:
-        break; // we have 'case' all enum values
+          newBlock.setNumBytes(minLength);
+          break;
+        case RUR:
+        case TEMPORARY:
+          assert false : "bad replica state: " + bestState;
+        default:
+          break; // we have 'case' all enum values
       }
       if (isTruncateRecovery) {
         newBlock.setNumBytes(rBlock.getNewBlock().getNumBytes());
@@ -467,7 +458,7 @@ public class BlockRecoveryWorker {
     }
 
     private void truncatePartialBlock(List<BlockRecord> rurList,
-        long safeLength) throws IOException {
+                                      long safeLength) throws IOException {
       int cellSize = ecPolicy.getCellSize();
       int dataBlkNum = ecPolicy.getNumDataUnits();
       List<DatanodeID> failedList = new ArrayList<>();
@@ -550,7 +541,7 @@ public class BlockRecoveryWorker {
       throws IOException {
     try {
       return datanode.initReplicaRecovery(rBlock);
-    } catch(RemoteException re) {
+    } catch (RemoteException re) {
       throw re.unwrapRemoteException();
     }
   }
@@ -578,7 +569,7 @@ public class BlockRecoveryWorker {
   }
 
   public Daemon recoverBlocks(final String who,
-      final Collection<RecoveringBlock> blocks) {
+                              final Collection<RecoveringBlock> blocks) {
     Daemon d = new Daemon(datanode.threadGroup, new Runnable() {
       @Override
       public void run() {

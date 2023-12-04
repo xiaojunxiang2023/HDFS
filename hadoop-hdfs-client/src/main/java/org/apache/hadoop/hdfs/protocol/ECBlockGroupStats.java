@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.util.Collection;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.Collection;
 
 /**
  * Get statistics pertaining to blocks of type {@link BlockType#STRIPED}
@@ -20,16 +20,16 @@ public final class ECBlockGroupStats {
   private final Long highestPriorityLowRedundancyBlocks;
 
   public ECBlockGroupStats(long lowRedundancyBlockGroups,
-      long corruptBlockGroups, long missingBlockGroups,
-      long bytesInFutureBlockGroups, long pendingDeletionBlocks) {
+                           long corruptBlockGroups, long missingBlockGroups,
+                           long bytesInFutureBlockGroups, long pendingDeletionBlocks) {
     this(lowRedundancyBlockGroups, corruptBlockGroups, missingBlockGroups,
         bytesInFutureBlockGroups, pendingDeletionBlocks, null);
   }
 
   public ECBlockGroupStats(long lowRedundancyBlockGroups,
-      long corruptBlockGroups, long missingBlockGroups,
-      long bytesInFutureBlockGroups, long pendingDeletionBlocks,
-      Long highestPriorityLowRedundancyBlocks) {
+                           long corruptBlockGroups, long missingBlockGroups,
+                           long bytesInFutureBlockGroups, long pendingDeletionBlocks,
+                           Long highestPriorityLowRedundancyBlocks) {
     this.lowRedundancyBlockGroups = lowRedundancyBlockGroups;
     this.corruptBlockGroups = corruptBlockGroups;
     this.missingBlockGroups = missingBlockGroups;
@@ -72,13 +72,13 @@ public final class ECBlockGroupStats {
     StringBuilder statsBuilder = new StringBuilder();
     statsBuilder.append("ECBlockGroupStats=[")
         .append("LowRedundancyBlockGroups=").append(
-            getLowRedundancyBlockGroups())
+        getLowRedundancyBlockGroups())
         .append(", CorruptBlockGroups=").append(getCorruptBlockGroups())
         .append(", MissingBlockGroups=").append(getMissingBlockGroups())
         .append(", BytesInFutureBlockGroups=").append(
-            getBytesInFutureBlockGroups())
+        getBytesInFutureBlockGroups())
         .append(", PendingDeletionBlocks=").append(
-            getPendingDeletionBlocks());
+        getPendingDeletionBlocks());
     if (hasHighestPriorityLowRedundancyBlocks()) {
       statsBuilder.append(", HighestPriorityLowRedundancyBlocks=")
           .append(getHighestPriorityLowRedundancyBlocks());
@@ -107,7 +107,7 @@ public final class ECBlockGroupStats {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ECBlockGroupStats other = (ECBlockGroupStats)o;
+    ECBlockGroupStats other = (ECBlockGroupStats) o;
     return new EqualsBuilder()
         .append(lowRedundancyBlockGroups, other.lowRedundancyBlockGroups)
         .append(corruptBlockGroups, other.corruptBlockGroups)

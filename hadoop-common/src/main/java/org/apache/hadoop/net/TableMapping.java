@@ -1,6 +1,10 @@
 package org.apache.hadoop.net;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.NET_TOPOLOGY_TABLE_MAPPING_FILE_KEY;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,11 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.NET_TOPOLOGY_TABLE_MAPPING_FILE_KEY;
 
 /**
  * <p>
@@ -37,11 +37,11 @@ import org.slf4j.LoggerFactory;
 public class TableMapping extends CachedDNSToSwitchMapping {
 
   private static final Logger LOG = LoggerFactory.getLogger(TableMapping.class);
-  
+
   public TableMapping() {
     super(new RawTableMapping());
   }
-  
+
   private RawTableMapping getRawMapping() {
     return (RawTableMapping) rawMapping;
   }
@@ -56,32 +56,32 @@ public class TableMapping extends CachedDNSToSwitchMapping {
     super.setConf(conf);
     getRawMapping().setConf(conf);
   }
-  
+
   @Override
   public void reloadCachedMappings() {
     super.reloadCachedMappings();
     getRawMapping().reloadCachedMappings();
   }
-  
+
   private static final class RawTableMapping extends Configured
       implements DNSToSwitchMapping {
-    
+
     private Map<String, String> map;
-  
+
     private Map<String, String> load() {
       Map<String, String> loadMap = new HashMap<String, String>();
-  
+
       String filename = getConf().get(NET_TOPOLOGY_TABLE_MAPPING_FILE_KEY, null);
       if (StringUtils.isBlank(filename)) {
         LOG.warn(NET_TOPOLOGY_TABLE_MAPPING_FILE_KEY + " not configured. ");
         return null;
       }
-  
+
 
       try (BufferedReader reader =
                new BufferedReader(new InputStreamReader(
-              Files.newInputStream(Paths.get(filename)),
-              StandardCharsets.UTF_8))) {
+                   Files.newInputStream(Paths.get(filename)),
+                   StandardCharsets.UTF_8))) {
         String line = reader.readLine();
         while (line != null) {
           line = line.trim();
@@ -101,14 +101,14 @@ public class TableMapping extends CachedDNSToSwitchMapping {
       }
       return loadMap;
     }
-  
+
     @Override
     public synchronized List<String> resolve(List<String> names) {
       if (map == null) {
         map = load();
         if (map == null) {
           LOG.warn("Failed to read topology table. " +
-            NetworkTopology.DEFAULT_RACK + " will be used for all nodes.");
+              NetworkTopology.DEFAULT_RACK + " will be used for all nodes.");
           map = new HashMap<String, String>();
         }
       }
@@ -131,7 +131,7 @@ public class TableMapping extends CachedDNSToSwitchMapping {
         LOG.error("Failed to reload the topology table.  The cached " +
             "mappings will not be cleared.");
       } else {
-        synchronized(this) {
+        synchronized (this) {
           map = newMap;
         }
       }

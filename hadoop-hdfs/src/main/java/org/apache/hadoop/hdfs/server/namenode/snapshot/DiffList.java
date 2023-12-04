@@ -71,7 +71,7 @@ public interface DiffList<T extends Comparable<Integer>> extends Iterable<T> {
 
       @Override
       public List<T> getMinListForRange(int startIndex, int endIndex,
-          INodeDirectory dir) {
+                                        INodeDirectory dir) {
         return diffs.getMinListForRange(startIndex, endIndex, dir);
       }
     };

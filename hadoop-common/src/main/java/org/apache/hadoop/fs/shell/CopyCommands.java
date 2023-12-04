@@ -1,5 +1,11 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.PathIsDirectoryException;
+import org.apache.hadoop.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -8,15 +14,10 @@ import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathIsDirectoryException;
-import org.apache.hadoop.io.IOUtils;
 
 /** Various commands for copy files */
 
-class CopyCommands {  
+class CopyCommands {
   public static void registerCommands(CommandFactory factory) {
     factory.addClass(Merge.class, "-getmerge");
     factory.addClass(Cp.class, "-cp");
@@ -29,15 +30,15 @@ class CopyCommands {
 
   /** merge multiple files together */
   public static class Merge extends FsCommand {
-    public static final String NAME = "getmerge";    
+    public static final String NAME = "getmerge";
     public static final String USAGE = "[-nl] [-skip-empty-file] "
         + "<src> <localdst>";
     public static final String DESCRIPTION =
         "Get all the files in the directories that "
-        + "match the source file pattern and merge and sort them to only "
-        + "one file on local fs. <src> is kept.\n"
-        + "-nl: Add a newline character at the end of each file.\n"
-        + "-skip-empty-file: Do not add new line character for empty file.";
+            + "match the source file pattern and merge and sort them to only "
+            + "one file on local fs. <src> is kept.\n"
+            + "-nl: Add a newline character at the end of each file.\n"
+            + "-skip-empty-file: Do not add new line character for empty file.";
 
     protected PathData dst = null;
     protected String delimiter = null;
@@ -66,7 +67,7 @@ class CopyCommands {
 
     @Override
     protected void processArguments(LinkedList<PathData> items)
-    throws IOException {
+        throws IOException {
       super.processArguments(items);
       if (exitCode != 0) { // check for error collecting paths
         return;
@@ -104,7 +105,7 @@ class CopyCommands {
     // are batched up instead of actually being processed.  this avoids
     // unnecessarily streaming into the merge file and then encountering
     // a path error that should abort the merge
-    
+
     @Override
     protected void processPath(PathData src) throws IOException {
       // for directories, recurse one level to get its files, else skip it
@@ -162,7 +163,7 @@ class CopyCommands {
       setRecursive(true);
       getRemoteDestination(args);
     }
-    
+
     private void popPreserveOption(List<String> args) {
       for (Iterator<String> iter = args.iterator(); iter.hasNext(); ) {
         String cur = iter.next();
@@ -184,8 +185,8 @@ class CopyCommands {
       }
     }
   }
-  
-  /** 
+
+  /**
    * Copy local files to a remote filesystem
    */
   public static class Get extends CopyCommandWithMultiThread {
@@ -235,18 +236,18 @@ class CopyCommands {
             + " <localsrc> ... <dst>";
     public static final String DESCRIPTION =
         "Copy files from the local file system " +
-        "into fs. Copying fails if the file already " +
-        "exists, unless the -f flag is given.\n" +
-        "Flags:\n" +
-        "  -p : Preserves timestamps, ownership and the mode.\n" +
-        "  -f : Overwrites the destination if it already exists.\n" +
-        "  -t <thread count> : Number of threads to be used, default is 1.\n" +
-        "  -q <thread pool queue size> : Thread pool queue size to be used, " +
-        "default is 1024.\n" +
-        "  -l : Allow DataNode to lazily persist the file to disk. Forces " +
-        "replication factor of 1. This flag will result in reduced " +
-        "durability. Use with care.\n" +
-        "  -d : Skip creation of temporary file(<dst>._COPYING_).\n";
+            "into fs. Copying fails if the file already " +
+            "exists, unless the -f flag is given.\n" +
+            "Flags:\n" +
+            "  -p : Preserves timestamps, ownership and the mode.\n" +
+            "  -f : Overwrites the destination if it already exists.\n" +
+            "  -t <thread count> : Number of threads to be used, default is 1.\n" +
+            "  -q <thread pool queue size> : Thread pool queue size to be used, " +
+            "default is 1024.\n" +
+            "  -l : Allow DataNode to lazily persist the file to disk. Forces " +
+            "replication factor of 1. This flag will result in reduced " +
+            "durability. Use with care.\n" +
+            "  -d : Skip creation of temporary file(<dst>._COPYING_).\n";
 
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {
@@ -280,7 +281,7 @@ class CopyCommands {
 
     @Override
     protected void processArguments(LinkedList<PathData> args)
-    throws IOException {
+        throws IOException {
       // NOTE: this logic should be better, mimics previous implementation
       if (args.size() == 1 && args.get(0).toString().equals("-")) {
         copyStreamToTarget(System.in, getTargetPath(args.get(0)));
@@ -296,7 +297,7 @@ class CopyCommands {
     public static final String USAGE = Put.USAGE;
     public static final String DESCRIPTION = "Identical to the -put command.";
   }
- 
+
   public static class CopyToLocal extends Get {
     public static final String NAME = "copyToLocal";
     public static final String USAGE = Get.USAGE;

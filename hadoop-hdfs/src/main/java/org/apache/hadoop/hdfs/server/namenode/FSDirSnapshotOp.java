@@ -1,16 +1,10 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.fs.InvalidPathException;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.protocol.FSLimitException;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport;
-import org.apache.hadoop.hdfs.protocol.SnapshotDiffReportListing;
-import org.apache.hadoop.hdfs.protocol.SnapshotException;
-import org.apache.hadoop.hdfs.protocol.SnapshottableDirectoryStatus;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectorySnapshottableFeature;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
@@ -18,6 +12,7 @@ import org.apache.hadoop.hdfs.server.namenode.snapshot.SnapshotManager;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.util.ChunkedArrayList;
 import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +22,7 @@ import java.util.List;
 class FSDirSnapshotOp {
   /** Verify if the snapshot name is legal. */
   static void verifySnapshotName(FSDirectory fsd, String snapshotName,
-      String path)
+                                 String path)
       throws FSLimitException.PathComponentTooLongException {
     if (snapshotName.contains(Path.SEPARATOR)) {
       throw new HadoopIllegalArgumentException(
@@ -105,8 +100,8 @@ class FSDirSnapshotOp {
   }
 
   static void renameSnapshot(FSDirectory fsd, FSPermissionChecker pc,
-      SnapshotManager snapshotManager, String path, String snapshotOldName,
-      String snapshotNewName, boolean logRetryCache) throws IOException {
+                             SnapshotManager snapshotManager, String path, String snapshotOldName,
+                             String snapshotNewName, boolean logRetryCache) throws IOException {
     final INodesInPath iip = fsd.resolvePath(pc, path, DirOp.WRITE);
     if (fsd.isPermissionEnabled()) {
       fsd.checkOwner(pc, iip);
@@ -130,7 +125,7 @@ class FSDirSnapshotOp {
       throws IOException {
     fsd.readLock();
     try {
-      final String user = pc.isSuperUser()? null : pc.getUser();
+      final String user = pc.isSuperUser() ? null : pc.getUser();
       return snapshotManager.getSnapshottableDirListing(user);
     } finally {
       fsd.readUnlock();
@@ -138,8 +133,8 @@ class FSDirSnapshotOp {
   }
 
   static SnapshotDiffReport getSnapshotDiffReport(FSDirectory fsd,
-      FSPermissionChecker pc, SnapshotManager snapshotManager, String path,
-      String fromSnapshot, String toSnapshot) throws IOException {
+                                                  FSPermissionChecker pc, SnapshotManager snapshotManager, String path,
+                                                  String fromSnapshot, String toSnapshot) throws IOException {
     SnapshotDiffReport diffs;
     fsd.readLock();
     try {
@@ -156,9 +151,9 @@ class FSDirSnapshotOp {
   }
 
   static SnapshotDiffReportListing getSnapshotDiffReportListing(FSDirectory fsd,
-      FSPermissionChecker pc, SnapshotManager snapshotManager, String path,
-      String fromSnapshot, String toSnapshot, byte[] startPath, int index,
-      int snapshotDiffReportLimit) throws IOException {
+                                                                FSPermissionChecker pc, SnapshotManager snapshotManager, String path,
+                                                                String fromSnapshot, String toSnapshot, byte[] startPath, int index,
+                                                                int snapshotDiffReportLimit) throws IOException {
     SnapshotDiffReportListing diffs;
     fsd.readLock();
     try {
@@ -177,14 +172,15 @@ class FSDirSnapshotOp {
     }
     return diffs;
   }
+
   /** Get a collection of full snapshot paths given file and snapshot dir.
    * @param lsf a list of snapshottable features
    * @param file full path of the file
    * @return collection of full paths of snapshot of the file
    */
   static Collection<String> getSnapshotFiles(FSDirectory fsd,
-      List<DirectorySnapshottableFeature> lsf,
-      String file) throws IOException {
+                                             List<DirectorySnapshottableFeature> lsf,
+                                             String file) throws IOException {
     ArrayList<String> snaps = new ArrayList<>();
     for (DirectorySnapshottableFeature sf : lsf) {
       // for each snapshottable dir e.g. /dir1, /dir2
@@ -244,7 +240,7 @@ class FSDirSnapshotOp {
       fsd.updateCount(iip, context.quotaDelta(), false);
       fsd.removeFromInodeMap(removedINodes);
       fsd.updateReplicationFactor(context.collectedBlocks()
-                                      .toUpdateReplicationInfo());
+          .toUpdateReplicationInfo());
     } finally {
       fsd.writeUnlock();
     }
@@ -309,7 +305,7 @@ class FSDirSnapshotOp {
    *                          but do not have snapshots yet
    */
   static void checkSnapshot(FSDirectory fsd, INodesInPath iip,
-      List<INodeDirectory> snapshottableDirs) throws SnapshotException {
+                            List<INodeDirectory> snapshottableDirs) throws SnapshotException {
     // avoid the performance penalty of recursing the tree if snapshots
     // are not in use
     SnapshotManager sm = fsd.getFSNamesystem().getSnapshotManager();

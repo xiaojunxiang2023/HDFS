@@ -1,17 +1,13 @@
 package org.apache.hadoop.metrics2.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsRecord;
 import org.apache.hadoop.metrics2.MetricsTag;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * A metrics cache for sinks that don't support sparse updates.
@@ -30,10 +26,10 @@ public class MetricsCache {
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<Collection<MetricsTag>,
-                                                  Record> eldest) {
+        Record> eldest) {
       boolean overflow = size() > maxRecsPerName;
       if (overflow && !gotOverflow) {
-        LOG.warn("Metrics cache overflow at "+ size() +" for "+ eldest);
+        LOG.warn("Metrics cache overflow at " + size() + " for " + eldest);
         gotOverflow = true;
       }
       return overflow;
@@ -103,7 +99,8 @@ public class MetricsCache {
       return metrics.entrySet();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
           .add("tags=" + tags)
           .add("metrics=" + metrics)

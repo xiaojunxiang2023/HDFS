@@ -1,21 +1,5 @@
 package org.apache.hadoop.metrics2.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLClassLoader;
-import static java.security.AccessController.*;
-import java.security.PrivilegedAction;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
-import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Iterables;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.SubsetConfiguration;
@@ -25,9 +9,25 @@ import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.hadoop.metrics2.MetricsFilter;
 import org.apache.hadoop.metrics2.MetricsPlugin;
 import org.apache.hadoop.metrics2.filter.GlobFilter;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Iterables;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.PrivilegedAction;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.security.AccessController.doPrivileged;
 
 /**
  * Metrics configuration for MetricsSystemImpl
@@ -88,7 +88,7 @@ class MetricsConfig extends SubsetConfiguration {
    * Load configuration from a list of files until the first successful load
    * @param conf  the configuration object
    * @param files the list of filenames to try
-   * @return  the configuration object
+   * @return the configuration object
    */
   static MetricsConfig loadFirst(String prefix, String... fileNames) {
     for (String fname : fileNames) {
@@ -116,7 +116,7 @@ class MetricsConfig extends SubsetConfiguration {
       }
     }
     LOG.warn("Cannot locate configuration: tried " +
-             Joiner.on(",").join(fileNames));
+        Joiner.on(",").join(fileNames));
     // default to an empty configuration
     return new MetricsConfig(new PropertiesConfiguration(), prefix);
   }
@@ -132,7 +132,7 @@ class MetricsConfig extends SubsetConfiguration {
    * [type].[instance].[option] = [value]</pre>
    * Note, '*' is a special default instance, which is excluded in the result.
    * @param type  of the instance
-   * @return  a map with [instance] as key and config object as value
+   * @return a map with [instance] as key and config object as value
    */
   Map<String, MetricsConfig> getInstanceConfigs(String type) {
     Map<String, MetricsConfig> map = Maps.newHashMap();
@@ -162,7 +162,7 @@ class MetricsConfig extends SubsetConfiguration {
   /**
    * Will poke parents for defaults
    * @param key to lookup
-   * @return  the value or null
+   * @return the value or null
    */
   @Override
   public Object getPropertyInternal(String key) {
@@ -170,10 +170,10 @@ class MetricsConfig extends SubsetConfiguration {
     if (value == null) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("poking parent '" + getParent().getClass().getSimpleName() +
-                  "' for key: " + key);
+            "' for key: " + key);
       }
       return getParent().getProperty(key.startsWith(PREFIX_DEFAULT) ? key
-                                     : PREFIX_DEFAULT + key);
+          : PREFIX_DEFAULT + key);
     }
     LOG.debug("Returning '{}' for key: {}", value, key);
     return value;
@@ -191,7 +191,7 @@ class MetricsConfig extends SubsetConfiguration {
       plugin.init(name.isEmpty() ? this : subset(name));
       return plugin;
     } catch (Exception e) {
-      throw new MetricsConfigException("Error creating plugin: "+ clsName, e);
+      throw new MetricsConfigException("Error creating plugin: " + clsName, e);
     }
   }
 
@@ -231,7 +231,8 @@ class MetricsConfig extends SubsetConfiguration {
         LOG.debug("Using plugin jars: {}", Iterables.toString(jars));
       }
       pluginLoader = doPrivileged(new PrivilegedAction<ClassLoader>() {
-        @Override public ClassLoader run() {
+        @Override
+        public ClassLoader run() {
           return new URLClassLoader(urls, defaultLoader);
         }
       });

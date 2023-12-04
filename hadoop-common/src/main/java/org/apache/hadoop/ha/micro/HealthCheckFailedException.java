@@ -8,7 +8,7 @@ public class HealthCheckFailedException extends IOException {
   public HealthCheckFailedException(final String message) {
     super(message);
   }
-  
+
   public HealthCheckFailedException(String message, Throwable cause) {
     super(message, cause);
   }

@@ -1,10 +1,10 @@
 package org.apache.hadoop.fs;
 
-import java.io.Serializable;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.hadoop.crypto.CipherSuite;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
+
+import java.io.Serializable;
 
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
@@ -35,8 +35,8 @@ public class FileEncryptionInfo implements Serializable {
    *                         encrypted data encryption key.
    */
   public FileEncryptionInfo(final CipherSuite suite,
-      final CryptoProtocolVersion version, final byte[] edek,
-      final byte[] iv, final String keyName, final String ezKeyVersionName) {
+                            final CryptoProtocolVersion version, final byte[] edek,
+                            final byte[] iv, final String keyName, final String ezKeyVersionName) {
     checkNotNull(suite);
     checkNotNull(version);
     checkNotNull(edek);
@@ -86,13 +86,17 @@ public class FileEncryptionInfo implements Serializable {
   /**
    * @return name of the encryption zone key.
    */
-  public String getKeyName() { return keyName; }
+  public String getKeyName() {
+    return keyName;
+  }
 
   /**
    * @return name of the encryption zone KeyVersion used to encrypt the
    * encrypted data encryption key (EDEK).
    */
-  public String getEzKeyVersionName() { return ezKeyVersionName; }
+  public String getEzKeyVersionName() {
+    return ezKeyVersionName;
+  }
 
   @Override
   public String toString() {

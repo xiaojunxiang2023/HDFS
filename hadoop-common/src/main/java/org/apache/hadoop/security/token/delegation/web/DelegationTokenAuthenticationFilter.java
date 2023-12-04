@@ -1,22 +1,21 @@
 package org.apache.hadoop.security.token.delegation.web;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.hadoop.auth.util.provider.ZKSignerSecretProvider;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.security.SaslRpcServer;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.filter.handler.AuthenticationHandler;
 import org.apache.hadoop.filter.AuthenticationToken;
+import org.apache.hadoop.filter.handler.AuthenticationHandler;
 import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
 import org.apache.hadoop.filter.handler.MultiSchemeAuthenticationHandler;
 import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
-import org.apache.hadoop.auth.util.provider.ZKSignerSecretProvider;
+import org.apache.hadoop.security.SaslRpcServer;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.AuthorizationException;
 import org.apache.hadoop.security.authorize.ProxyUsers;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
 import org.apache.hadoop.security.token.delegation.ZKDelegationTokenSecretManager;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.HttpExceptionUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -30,7 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.Principal;
@@ -60,7 +58,7 @@ public class DelegationTokenAuthenticationFilter
   private static final String ERROR_MESSAGE_JSON = "message";
 
   private static final Logger LOG = LoggerFactory.getLogger(
-          DelegationTokenAuthenticationFilter.class);
+      DelegationTokenAuthenticationFilter.class);
 
   /**
    * Sets an external <code>DelegationTokenSecretManager</code> instance to
@@ -94,7 +92,7 @@ public class DelegationTokenAuthenticationFilter
    */
   @Override
   protected Properties getConfiguration(String configPrefix,
-      FilterConfig filterConfig) throws ServletException {
+                                        FilterConfig filterConfig) throws ServletException {
     Properties props = super.getConfiguration(configPrefix, filterConfig);
     setAuthHandlerClass(props);
     return props;
@@ -183,7 +181,7 @@ public class DelegationTokenAuthenticationFilter
 
   @Override
   protected void initializeAuthHandler(String authHandlerClassName,
-      FilterConfig filterConfig) throws ServletException {
+                                       FilterConfig filterConfig) throws ServletException {
     // A single CuratorFramework should be used for a ZK cluster.
     // If the ZKSignerSecretProvider has already created it, it has to
     // be set here... to be used by the ZKDelegationTokenSecretManager
@@ -222,7 +220,7 @@ public class DelegationTokenAuthenticationFilter
 
   @Override
   protected void doFilter(FilterChain filterChain, HttpServletRequest request,
-      HttpServletResponse response) throws IOException, ServletException {
+                          HttpServletResponse response) throws IOException, ServletException {
     boolean requestCompleted = false;
     UserGroupInformation ugi = null;
     AuthenticationToken authToken = (AuthenticationToken)

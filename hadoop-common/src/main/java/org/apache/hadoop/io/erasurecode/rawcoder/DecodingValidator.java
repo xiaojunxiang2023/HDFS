@@ -1,6 +1,7 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import org.apache.hadoop.io.erasurecode.ECChunk;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -51,7 +52,7 @@ public class DecodingValidator {
    * @throws IOException
    */
   public void validate(ByteBuffer[] inputs, int[] erasedIndexes,
-      ByteBuffer[] outputs) throws IOException {
+                       ByteBuffer[] outputs) throws IOException {
     markBuffers(outputs);
 
     try {
@@ -132,7 +133,7 @@ public class DecodingValidator {
   }
 
   private static void markBuffers(ByteBuffer[] buffers) {
-    for (ByteBuffer buffer: buffers) {
+    for (ByteBuffer buffer : buffers) {
       if (buffer != null) {
         buffer.mark();
       }
@@ -140,7 +141,7 @@ public class DecodingValidator {
   }
 
   private static void resetBuffers(ByteBuffer[] buffers) {
-    for (ByteBuffer buffer: buffers) {
+    for (ByteBuffer buffer : buffers) {
       if (buffer != null) {
         buffer.reset();
       }
@@ -148,7 +149,7 @@ public class DecodingValidator {
   }
 
   private static void toLimits(ByteBuffer[] buffers) {
-    for (ByteBuffer buffer: buffers) {
+    for (ByteBuffer buffer : buffers) {
       if (buffer != null) {
         buffer.position(buffer.limit());
       }

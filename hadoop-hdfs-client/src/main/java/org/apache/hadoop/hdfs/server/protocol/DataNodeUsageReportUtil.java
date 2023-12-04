@@ -14,7 +14,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.protocol;
+ */
+package org.apache.hadoop.hdfs.server.protocol;
+
 import org.apache.hadoop.util.Time;
 
 /**
@@ -34,7 +36,7 @@ public final class DataNodeUsageReportUtil {
 
   public DataNodeUsageReport getUsageReport(long bWritten, long
       bRead, long wTime, long rTime, long wBlockOp, long
-      rBlockOp, long timeSinceLastReport) {
+                                                rBlockOp, long timeSinceLastReport) {
     if (timeSinceLastReport == 0) {
       if (lastReport == null) {
         lastReport = DataNodeUsageReport.EMPTY_REPORT;
@@ -69,7 +71,7 @@ public final class DataNodeUsageReportUtil {
   }
 
   private long getBytesWrittenPerSec(long
-      bWritten, long timeInSec) {
+                                         bWritten, long timeInSec) {
     return (bWritten - this.bytesWritten) / timeInSec;
   }
 
@@ -79,7 +81,7 @@ public final class DataNodeUsageReportUtil {
   }
 
   private long getReadBlockOpPerSec(long totalReadBlockOp,
-      long timeInSec) {
+                                    long timeInSec) {
     return (totalReadBlockOp - this.blocksRead) / timeInSec;
   }
 

@@ -1,20 +1,19 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.Writer;
+import org.apache.hadoop.io.DataOutputBuffer;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-
-import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.Writer;
-import org.apache.hadoop.io.DataOutputBuffer;
-import org.apache.hadoop.io.IOUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A double-buffer for edits. New edits are written into the first buffer
@@ -45,7 +44,7 @@ public class EditsDoubleBuffer {
   public void writeRaw(byte[] bytes, int offset, int length) throws IOException {
     bufCurrent.write(bytes, offset, length);
   }
-  
+
   public void close() throws IOException {
     Preconditions.checkNotNull(bufCurrent);
     Preconditions.checkNotNull(bufReady);
@@ -60,14 +59,14 @@ public class EditsDoubleBuffer {
     IOUtils.cleanupWithLogger(null, bufCurrent, bufReady);
     bufCurrent = bufReady = null;
   }
-  
+
   public void setReadyToFlush() {
     assert isFlushed() : "previous data not flushed yet";
     TxnBuffer tmp = bufReady;
     bufReady = bufCurrent;
     bufCurrent = tmp;
   }
-  
+
   /**
    * Writes the content of the "ready" buffer to the given output stream,
    * and resets it. Does not swap any buffers.
@@ -76,7 +75,7 @@ public class EditsDoubleBuffer {
     bufReady.writeTo(out); // write data to file
     bufReady.reset(); // erase all data in the buffer
   }
-  
+
   public boolean shouldForceSync() {
     return bufCurrent.size() >= initBufferSize;
   }
@@ -84,7 +83,7 @@ public class EditsDoubleBuffer {
   DataOutputBuffer getReadyBuf() {
     return bufReady;
   }
-  
+
   DataOutputBuffer getCurrentBuf() {
     return bufCurrent;
   }
@@ -118,12 +117,12 @@ public class EditsDoubleBuffer {
   public int countReadyBytes() {
     return bufReady.size();
   }
-  
+
   private static class TxnBuffer extends DataOutputBuffer {
     long firstTxId;
     int numTxns;
     private final Writer writer;
-    
+
     public TxnBuffer(int initBufferSize) {
       super(initBufferSize);
       writer = new FSEditLogOp.Writer(this);
@@ -139,7 +138,7 @@ public class EditsDoubleBuffer {
       writer.writeOp(op, logVersion);
       numTxns++;
     }
-    
+
     @Override
     public DataOutputBuffer reset() {
       super.reset();

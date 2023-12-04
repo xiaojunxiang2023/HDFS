@@ -1,12 +1,12 @@
 package org.apache.hadoop.io.nativeio;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.FileDescriptor;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * A factory for creating shared file descriptors inside a given directory.
@@ -47,11 +47,11 @@ public class SharedFileDescriptorFactory {
    * @param paths        An array of paths to use.  We will try each path in 
    *                       succession, and return a factory using the first 
    *                       usable path.
-   * @return             The factory.
+   * @return The factory.
    * @throws IOException If a factory could not be created for any reason.
    */
   public static SharedFileDescriptorFactory create(String prefix,
-      String paths[]) throws IOException {
+                                                   String paths[]) throws IOException {
     String loadingFailureReason = getLoadingFailureReason();
     if (loadingFailureReason != null) {
       throw new IOException(loadingFailureReason);
@@ -64,14 +64,14 @@ public class SharedFileDescriptorFactory {
     String strPrefix = "";
     for (String path : paths) {
       try {
-        FileInputStream fis = 
+        FileInputStream fis =
             new FileInputStream(createDescriptor0(prefix + "test", path, 1));
         fis.close();
         deleteStaleTemporaryFiles0(prefix, path);
         return new SharedFileDescriptorFactory(prefix, path);
       } catch (IOException e) {
         errors.append(strPrefix).append("Error creating file descriptor in ").
-               append(path).append(": ").append(e.getMessage());
+            append(path).append(": ").append(e.getMessage());
         strPrefix = ", ";
       }
     }
@@ -100,7 +100,7 @@ public class SharedFileDescriptorFactory {
    *                         generated descriptor.
    * @param length         The starting file length.
    *
-   * @return               The file descriptor, wrapped in a FileInputStream.
+   * @return The file descriptor, wrapped in a FileInputStream.
    * @throws IOException   If there was an I/O or configuration error creating
    *                         the descriptor.
    */
@@ -114,11 +114,11 @@ public class SharedFileDescriptorFactory {
    * Delete temporary files in the directory, NOT following symlinks.
    */
   private static native void deleteStaleTemporaryFiles0(String prefix,
-      String path) throws IOException;
+                                                        String path) throws IOException;
 
   /**
    * Create a file with O_EXCL, and then resize it to the desired size.
    */
   private static native FileDescriptor createDescriptor0(String prefix,
-      String path, int length) throws IOException;
+                                                         String path, int length) throws IOException;
 }

@@ -23,74 +23,74 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import static org.apache.hadoop.hdfs.server.datanode.web.webhdfs.WebHdfsHandler.APPLICATION_JSON_UTF8;
 
 class ExceptionHandler {
-    private static final Logger LOG = WebHdfsHandler.LOG;
+  private static final Logger LOG = WebHdfsHandler.LOG;
 
-    static DefaultFullHttpResponse exceptionCaught(Throwable cause) {
-        Exception e = cause instanceof Exception ? (Exception) cause : new Exception(cause);
+  static DefaultFullHttpResponse exceptionCaught(Throwable cause) {
+    Exception e = cause instanceof Exception ? (Exception) cause : new Exception(cause);
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("GOT EXCEPTION", e);
-        }
-
-        //Convert exception
-        if (e instanceof ParamException) {
-            final ParamException paramexception = (ParamException) e;
-            e = new IllegalArgumentException("Invalid value for webhdfs parameter \""
-                    + paramexception.getParameterName() + "\": "
-                    + e.getCause().getMessage(), e);
-        } else if (e instanceof ContainerException || e instanceof SecurityException) {
-            e = toCause(e);
-        } else if (e instanceof RemoteException) {
-            e = ((RemoteException) e).unwrapRemoteException();
-        }
-
-        //Map response status
-        final HttpResponseStatus s;
-        if (e instanceof SecurityException) {
-            s = FORBIDDEN;
-        } else if (e instanceof AuthorizationException) {
-            s = FORBIDDEN;
-        } else if (e instanceof FileNotFoundException) {
-            s = NOT_FOUND;
-        } else if (e instanceof IOException) {
-            s = FORBIDDEN;
-        } else if (e instanceof UnsupportedOperationException) {
-            s = BAD_REQUEST;
-        } else if (e instanceof IllegalArgumentException) {
-            s = BAD_REQUEST;
-        } else {
-            LOG.warn("INTERNAL_SERVER_ERROR", e);
-            s = INTERNAL_SERVER_ERROR;
-        }
-
-        final byte[] js = JsonUtil.toJsonString(e).getBytes(Charsets.UTF_8);
-        DefaultFullHttpResponse resp =
-                new DefaultFullHttpResponse(HTTP_1_1, s, Unpooled.wrappedBuffer(js));
-
-        resp.headers().set(CONTENT_TYPE, APPLICATION_JSON_UTF8);
-        resp.headers().set(CONTENT_LENGTH, js.length);
-        return resp;
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("GOT EXCEPTION", e);
     }
 
-    private static Exception toCause(Exception e) {
-        final Throwable t = e.getCause();
-        if (e instanceof SecurityException) {
-            // For the issue reported in HDFS-6475, if SecurityException's cause
-            // is InvalidToken, and the InvalidToken's cause is StandbyException,
-            // return StandbyException; Otherwise, leave the exception as is,
-            // since they are handled elsewhere. See HDFS-6588.
-            if (t != null && t instanceof SecretManager.InvalidToken) {
-                final Throwable t1 = t.getCause();
-                if (t1 != null && t1 instanceof StandbyException) {
-                    e = (StandbyException) t1;
-                }
-            }
-        } else {
-            if (t != null && t instanceof Exception) {
-                e = (Exception) t;
-            }
-        }
-        return e;
+    //Convert exception
+    if (e instanceof ParamException) {
+      final ParamException paramexception = (ParamException) e;
+      e = new IllegalArgumentException("Invalid value for webhdfs parameter \""
+          + paramexception.getParameterName() + "\": "
+          + e.getCause().getMessage(), e);
+    } else if (e instanceof ContainerException || e instanceof SecurityException) {
+      e = toCause(e);
+    } else if (e instanceof RemoteException) {
+      e = ((RemoteException) e).unwrapRemoteException();
     }
+
+    //Map response status
+    final HttpResponseStatus s;
+    if (e instanceof SecurityException) {
+      s = FORBIDDEN;
+    } else if (e instanceof AuthorizationException) {
+      s = FORBIDDEN;
+    } else if (e instanceof FileNotFoundException) {
+      s = NOT_FOUND;
+    } else if (e instanceof IOException) {
+      s = FORBIDDEN;
+    } else if (e instanceof UnsupportedOperationException) {
+      s = BAD_REQUEST;
+    } else if (e instanceof IllegalArgumentException) {
+      s = BAD_REQUEST;
+    } else {
+      LOG.warn("INTERNAL_SERVER_ERROR", e);
+      s = INTERNAL_SERVER_ERROR;
+    }
+
+    final byte[] js = JsonUtil.toJsonString(e).getBytes(Charsets.UTF_8);
+    DefaultFullHttpResponse resp =
+        new DefaultFullHttpResponse(HTTP_1_1, s, Unpooled.wrappedBuffer(js));
+
+    resp.headers().set(CONTENT_TYPE, APPLICATION_JSON_UTF8);
+    resp.headers().set(CONTENT_LENGTH, js.length);
+    return resp;
+  }
+
+  private static Exception toCause(Exception e) {
+    final Throwable t = e.getCause();
+    if (e instanceof SecurityException) {
+      // For the issue reported in HDFS-6475, if SecurityException's cause
+      // is InvalidToken, and the InvalidToken's cause is StandbyException,
+      // return StandbyException; Otherwise, leave the exception as is,
+      // since they are handled elsewhere. See HDFS-6588.
+      if (t != null && t instanceof SecretManager.InvalidToken) {
+        final Throwable t1 = t.getCause();
+        if (t1 != null && t1 instanceof StandbyException) {
+          e = (StandbyException) t1;
+        }
+      }
+    } else {
+      if (t != null && t instanceof Exception) {
+        e = (Exception) t;
+      }
+    }
+    return e;
+  }
 
 }

@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 package org.apache.hadoop.fs;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,7 @@ public abstract class CachingGetSpaceUsed implements Closeable, GetSpaceUsed {
    * RunImmediately should set true, if we skip the first refresh.
    * @param runImmediately The param default should be false.
    */
-  private void initRefeshThread (boolean runImmediately) {
+  private void initRefeshThread(boolean runImmediately) {
     if (refreshInterval > 0) {
       refreshUsed = new Thread(new RefreshThread(this, runImmediately),
           "refreshUsed-" + dirPath);
@@ -122,7 +123,8 @@ public abstract class CachingGetSpaceUsed implements Closeable, GetSpaceUsed {
   /**
    * @return an estimate of space used in the directory path.
    */
-  @Override public long getUsed() throws IOException {
+  @Override
+  public long getUsed() throws IOException {
     return Math.max(used.get(), 0);
   }
 
@@ -193,7 +195,7 @@ public abstract class CachingGetSpaceUsed implements Closeable, GetSpaceUsed {
             // add/subtract the jitter.
             refreshInterval +=
                 ThreadLocalRandom.current()
-                                 .nextLong(-jitter, jitter);
+                    .nextLong(-jitter, jitter);
           }
           // Make sure that after the jitter we didn't end up at 0.
           refreshInterval = Math.max(refreshInterval, 1);

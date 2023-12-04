@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.statistics;
 
+import org.apache.hadoop.fs.StreamCapabilities;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-
-import org.apache.hadoop.fs.StreamCapabilities;
 
 import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStatistics;
 

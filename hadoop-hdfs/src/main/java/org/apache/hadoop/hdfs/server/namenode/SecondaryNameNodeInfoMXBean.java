@@ -36,6 +36,7 @@ public interface SecondaryNameNodeInfoMXBean extends VersionInfoMXBean {
    * @return the directories that store the checkpoint images
    */
   public String[] getCheckpointDirectories();
+
   /**
    * @return the directories that store the edit logs
    */

@@ -1,11 +1,5 @@
 package org.apache.hadoop.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -14,8 +8,9 @@ import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.apache.hadoop.io.nativeio.NativeIO.POSIX.Stat;
 import org.apache.hadoop.security.UserGroupInformation;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.io.*;
 
 /**
  * This class provides secure APIs for opening and creating files on the local
@@ -52,7 +47,7 @@ public class SecureIOUtils {
 
     if (!canBeSecure && shouldBeSecure) {
       throw new RuntimeException(
-        "Secure IO is not possible without native code extensions.");
+          "Secure IO is not possible without native code extensions.");
     }
 
     // Pre-cache an instance of the raw FileSystem since we sometimes
@@ -61,7 +56,7 @@ public class SecureIOUtils {
       rawFilesystem = FileSystem.getLocal(new Configuration()).getRaw();
     } catch (IOException ie) {
       throw new RuntimeException(
-      "Couldn't obtain an instance of RawLocalFileSystem.");
+          "Couldn't obtain an instance of RawLocalFileSystem.");
     }
 
     // SecureIO just skips security checks in the case that security is
@@ -75,11 +70,11 @@ public class SecureIOUtils {
   /**
    * Open the given File for random read access, verifying the expected user/
    * group constraints if security is enabled.
-   * 
+   *
    * Note that this function provides no additional security checks if hadoop
    * security is disabled, since doing the checks would be too expensive when
    * native libraries are not available.
-   * 
+   *
    * @param f file that we are trying to open
    * @param mode mode in which we want to open the random access file
    * @param expectedOwner the expected user owner for the file
@@ -88,7 +83,7 @@ public class SecureIOUtils {
    * not match when security is enabled.
    */
   public static RandomAccessFile openForRandomRead(File f,
-      String mode, String expectedOwner, String expectedGroup)
+                                                   String mode, String expectedOwner, String expectedGroup)
       throws IOException {
     if (!UserGroupInformation.isSecurityEnabled()) {
       return new RandomAccessFile(f, mode);
@@ -102,7 +97,7 @@ public class SecureIOUtils {
    */
   @VisibleForTesting
   protected static RandomAccessFile forceSecureOpenForRandomRead(File f,
-      String mode, String expectedOwner, String expectedGroup)
+                                                                 String mode, String expectedOwner, String expectedGroup)
       throws IOException {
     RandomAccessFile raf = new RandomAccessFile(f, mode);
     boolean success = false;
@@ -130,7 +125,7 @@ public class SecureIOUtils {
    * match if security is enabled
    */
   public static FSDataInputStream openFSDataInputStream(File file,
-      String expectedOwner, String expectedGroup) throws IOException {
+                                                        String expectedOwner, String expectedGroup) throws IOException {
     if (!UserGroupInformation.isSecurityEnabled()) {
       return rawFilesystem.open(new Path(file.getAbsolutePath()));
     }
@@ -175,8 +170,8 @@ public class SecureIOUtils {
    * @throws IOException if an IO Error occurred, or security is enabled and
    * the user/group does not match
    */
-  public static FileInputStream openForRead(File f, String expectedOwner, 
-      String expectedGroup) throws IOException {
+  public static FileInputStream openForRead(File f, String expectedOwner,
+                                            String expectedGroup) throws IOException {
     if (!UserGroupInformation.isSecurityEnabled()) {
       return new FileInputStream(f);
     }
@@ -189,7 +184,7 @@ public class SecureIOUtils {
    */
   @VisibleForTesting
   protected static FileInputStream forceSecureOpenForRead(File f, String expectedOwner,
-      String expectedGroup) throws IOException {
+                                                          String expectedGroup) throws IOException {
 
     FileInputStream fis = new FileInputStream(f);
     boolean success = false;
@@ -207,7 +202,7 @@ public class SecureIOUtils {
   }
 
   private static FileOutputStream insecureCreateForWrite(File f,
-      int permissions) throws IOException {
+                                                         int permissions) throws IOException {
     // If we can't do real security, do a racy exists check followed by an
     // open and chmod
     if (f.exists()) {
@@ -217,7 +212,7 @@ public class SecureIOUtils {
     boolean success = false;
     try {
       rawFilesystem.setPermission(new Path(f.getAbsolutePath()),
-        new FsPermission((short)permissions));
+          new FsPermission((short) permissions));
       success = true;
       return fos;
     } finally {
@@ -236,7 +231,7 @@ public class SecureIOUtils {
    * @throws IOException if any other error occurred
    */
   public static FileOutputStream createForWrite(File f, int permissions)
-  throws IOException {
+      throws IOException {
     if (skipSecurity) {
       return insecureCreateForWrite(f, permissions);
     } else {
@@ -244,9 +239,9 @@ public class SecureIOUtils {
     }
   }
 
-  private static void checkStat(File f, String owner, String group, 
-      String expectedOwner, 
-      String expectedGroup) throws IOException {
+  private static void checkStat(File f, String owner, String group,
+                                String expectedOwner,
+                                String expectedGroup) throws IOException {
     boolean success = true;
     if (expectedOwner != null &&
         !expectedOwner.equals(owner)) {

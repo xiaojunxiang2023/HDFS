@@ -5,6 +5,7 @@ package org.apache.hadoop.fs;
  */
 public class PathPermissionException extends PathIOException {
   static final long serialVersionUID = 0L;
+
   /** @param path for the exception */
   public PathPermissionException(String path) {
     super(path, "Operation not permitted");
@@ -19,8 +20,8 @@ public class PathPermissionException extends PathIOException {
   }
 
   public PathPermissionException(String path,
-      String error,
-      Throwable cause) {
+                                 String error,
+                                 Throwable cause) {
     super(path, error, cause);
   }
 }

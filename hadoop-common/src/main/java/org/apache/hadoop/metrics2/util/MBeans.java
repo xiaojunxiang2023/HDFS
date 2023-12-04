@@ -1,22 +1,20 @@
 package org.apache.hadoop.metrics2.util;
 
+import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This util class provides a method to register an MBean using
@@ -31,7 +29,7 @@ public final class MBeans {
 
   private static final Pattern MBEAN_NAME_PATTERN = Pattern.compile(
       "^" + DOMAIN_PREFIX + SERVICE_PREFIX + "([^,]+)," +
-      NAME_PREFIX + "(.+)$");
+          NAME_PREFIX + "(.+)$");
 
   private MBeans() {
   }
@@ -114,7 +112,7 @@ public final class MBeans {
   }
 
   static public void unregister(ObjectName mbeanName) {
-    LOG.debug("Unregistering "+ mbeanName);
+    LOG.debug("Unregistering " + mbeanName);
     final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
     if (mbeanName == null) {
       LOG.debug("Stacktrace: ", new Throwable());
@@ -123,14 +121,14 @@ public final class MBeans {
     try {
       mbs.unregisterMBean(mbeanName);
     } catch (Exception e) {
-      LOG.warn("Error unregistering "+ mbeanName, e);
+      LOG.warn("Error unregistering " + mbeanName, e);
     }
     DefaultMetricsSystem.removeMBeanName(mbeanName);
   }
 
   @VisibleForTesting
   static ObjectName getMBeanName(String serviceName, String nameName,
-      Map<String, String> additionalParameters) {
+                                 Map<String, String> additionalParameters) {
 
     String additionalKeys = additionalParameters.entrySet()
         .stream()
@@ -143,7 +141,7 @@ public final class MBeans {
     try {
       return DefaultMetricsSystem.newMBeanName(nameStr);
     } catch (Exception e) {
-      LOG.warn("Error creating MBean object name: "+ nameStr, e);
+      LOG.warn("Error creating MBean object name: " + nameStr, e);
       return null;
     }
   }

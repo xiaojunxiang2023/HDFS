@@ -1,20 +1,29 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /** A WritableComparable for floats. */
 public class FloatWritable implements WritableComparable<FloatWritable> {
   private float value;
 
-  public FloatWritable() {}
+  public FloatWritable() {
+  }
 
-  public FloatWritable(float value) { set(value); }
+  public FloatWritable(float value) {
+    set(value);
+  }
 
   /** Set the value of this FloatWritable. */
-  public void set(float value) { this.value = value; }
+  public void set(float value) {
+    this.value = value;
+  }
 
   /** Return the value of this FloatWritable. */
-  public float get() { return value; }
+  public float get() {
+    return value;
+  }
 
   @Override
   public void readFields(DataInput in) throws IOException {
@@ -31,7 +40,7 @@ public class FloatWritable implements WritableComparable<FloatWritable> {
   public boolean equals(Object o) {
     if (!(o instanceof FloatWritable))
       return false;
-    FloatWritable other = (FloatWritable)o;
+    FloatWritable other = (FloatWritable) o;
     return this.value == other.value;
   }
 
@@ -51,11 +60,12 @@ public class FloatWritable implements WritableComparable<FloatWritable> {
     return Float.toString(value);
   }
 
-  /** A Comparator optimized for FloatWritable. */ 
+  /** A Comparator optimized for FloatWritable. */
   public static class Comparator extends WritableComparator {
     public Comparator() {
       super(FloatWritable.class);
     }
+
     @Override
     public int compare(byte[] b1, int s1, int l1,
                        byte[] b2, int s2, int l2) {

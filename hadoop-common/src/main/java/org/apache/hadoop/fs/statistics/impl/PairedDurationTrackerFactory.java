@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.statistics.impl;
 
-import java.time.Duration;
-
 import org.apache.hadoop.fs.statistics.DurationTracker;
 import org.apache.hadoop.fs.statistics.DurationTrackerFactory;
+
+import java.time.Duration;
 
 /**
  * A duration tracker factory which aggregates two other trackers
@@ -24,7 +24,7 @@ final class PairedDurationTrackerFactory implements DurationTrackerFactory {
   private final DurationTrackerFactory global;
 
   PairedDurationTrackerFactory(final DurationTrackerFactory local,
-      final DurationTrackerFactory global) {
+                               final DurationTrackerFactory global) {
     this.local = local;
     this.global = global;
   }

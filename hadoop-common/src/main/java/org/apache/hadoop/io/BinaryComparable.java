@@ -18,14 +18,14 @@ public abstract class BinaryComparable implements Comparable<BinaryComparable> {
 
   /**
    * Compare bytes from {#getBytes()}.
-   * @see org.apache.hadoop.io.WritableComparator#compareBytes(byte[],int,int,byte[],int,int)
+   * @see org.apache.hadoop.io.WritableComparator#compareBytes(byte[], int, int, byte[], int, int)
    */
   @Override
   public int compareTo(BinaryComparable other) {
     if (this == other)
       return 0;
     return WritableComparator.compareBytes(getBytes(), 0, getLength(),
-             other.getBytes(), 0, other.getLength());
+        other.getBytes(), 0, other.getLength());
   }
 
   /**
@@ -33,7 +33,7 @@ public abstract class BinaryComparable implements Comparable<BinaryComparable> {
    */
   public int compareTo(byte[] other, int off, int len) {
     return WritableComparator.compareBytes(getBytes(), 0, getLength(),
-             other, off, len);
+        other, off, len);
   }
 
   /**
@@ -43,7 +43,7 @@ public abstract class BinaryComparable implements Comparable<BinaryComparable> {
   public boolean equals(Object other) {
     if (!(other instanceof BinaryComparable))
       return false;
-    BinaryComparable that = (BinaryComparable)other;
+    BinaryComparable that = (BinaryComparable) other;
     if (this.getLength() != that.getLength())
       return false;
     return this.compareTo(that) == 0;
@@ -51,7 +51,7 @@ public abstract class BinaryComparable implements Comparable<BinaryComparable> {
 
   /**
    * Return a hash of the bytes returned from {#getBytes()}.
-   * @see org.apache.hadoop.io.WritableComparator#hashBytes(byte[],int)
+   * @see org.apache.hadoop.io.WritableComparator#hashBytes(byte[], int)
    */
   @Override
   public int hashCode() {

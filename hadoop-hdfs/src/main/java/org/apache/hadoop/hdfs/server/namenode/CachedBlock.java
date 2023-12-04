@@ -1,20 +1,21 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.CachedBlocksList;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.CachedBlocksList.Type;
 import org.apache.hadoop.util.IntrusiveCollection;
-import org.apache.hadoop.util.LightWeightGSet;
 import org.apache.hadoop.util.IntrusiveCollection.Element;
+import org.apache.hadoop.util.LightWeightGSet;
 import org.apache.hadoop.util.LightWeightGSet.LinkedElement;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents a cached block.
  */
-public final class CachedBlock implements Element, 
+public final class CachedBlock implements Element,
     LightWeightGSet.LinkedElement {
   private static final Object[] EMPTY_ARRAY = new Object[0];
 
@@ -58,23 +59,27 @@ public final class CachedBlock implements Element,
 
   @Override
   public int hashCode() {
-    return (int)(blockId^(blockId>>>32));
+    return (int) (blockId ^ (blockId >>> 32));
   }
 
   @Override
   public boolean equals(Object o) {
-    if (o == null) { return false; }
-    if (o == this) { return true; }
+    if (o == null) {
+      return false;
+    }
+    if (o == this) {
+      return true;
+    }
     if (o.getClass() != this.getClass()) {
       return false;
     }
-    CachedBlock other = (CachedBlock)o;
+    CachedBlock other = (CachedBlock) o;
     return other.blockId == blockId;
   }
 
   public void setReplicationAndMark(short replication, boolean mark) {
     assert replication >= 0;
-    replicationAndMark = (short)((replication << 1) | (mark ? 0x1 : 0x0));
+    replicationAndMark = (short) ((replication << 1) | (mark ? 0x1 : 0x0));
   }
 
   public boolean getMark() {
@@ -90,7 +95,7 @@ public final class CachedBlock implements Element,
    */
   public boolean isPresent(CachedBlocksList cachedBlocksList) {
     for (int i = 0; i < triplets.length; i += 3) {
-      CachedBlocksList list = (CachedBlocksList)triplets[i];
+      CachedBlocksList list = (CachedBlocksList) triplets[i];
       if (list == cachedBlocksList) {
         return true;
       }
@@ -107,14 +112,14 @@ public final class CachedBlock implements Element,
    *                  have it on this list.
    *                  See {@link DatanodeDescriptor.CachedBlocksList.Type}
    *                  for a description of all the lists.
-   *                  
-   * @return          The list of datanodes.  Modifying this list does not
+   *
+   * @return The list of datanodes.  Modifying this list does not
    *                  alter the state of the CachedBlock.
    */
   public List<DatanodeDescriptor> getDatanodes(Type type) {
     List<DatanodeDescriptor> nodes = new LinkedList<DatanodeDescriptor>();
     for (int i = 0; i < triplets.length; i += 3) {
-      CachedBlocksList list = (CachedBlocksList)triplets[i];
+      CachedBlocksList list = (CachedBlocksList) triplets[i];
       if ((type == null) || (list.getType() == type)) {
         nodes.add(list.getDatanode());
       }
@@ -124,7 +129,7 @@ public final class CachedBlock implements Element,
 
   @Override
   public void insertInternal(IntrusiveCollection<? extends Element> list, Element prev,
-      Element next) {
+                             Element next) {
     for (int i = 0; i < triplets.length; i += 3) {
       if (triplets[i] == list) {
         throw new RuntimeException("Trying to re-insert an element that " +
@@ -137,7 +142,7 @@ public final class CachedBlock implements Element,
     newTriplets[triplets.length + 2] = next;
     triplets = newTriplets;
   }
-  
+
   @Override
   public void setPrev(IntrusiveCollection<? extends Element> list, Element prev) {
     for (int i = 0; i < triplets.length; i += 3) {
@@ -182,7 +187,7 @@ public final class CachedBlock implements Element,
   public Element getPrev(IntrusiveCollection<? extends Element> list) {
     for (int i = 0; i < triplets.length; i += 3) {
       if (triplets[i] == list) {
-        return (Element)triplets[i + 1];
+        return (Element) triplets[i + 1];
       }
     }
     throw new RuntimeException("Called getPrev on an element that wasn't " +
@@ -193,7 +198,7 @@ public final class CachedBlock implements Element,
   public Element getNext(IntrusiveCollection<? extends Element> list) {
     for (int i = 0; i < triplets.length; i += 3) {
       if (triplets[i] == list) {
-        return (Element)triplets[i + 2];
+        return (Element) triplets[i + 2];
       }
     }
     throw new RuntimeException("Called getNext on an element that wasn't " +
@@ -209,7 +214,7 @@ public final class CachedBlock implements Element,
     }
     return false;
   }
-  
+
   @Override
   public String toString() {
     return new StringBuilder().append("{").

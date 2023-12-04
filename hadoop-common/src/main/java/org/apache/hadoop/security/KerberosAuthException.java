@@ -1,8 +1,8 @@
 package org.apache.hadoop.security;
 
-import static org.apache.hadoop.security.UGIExceptionMessages.*;
-
 import java.io.IOException;
+
+import static org.apache.hadoop.security.UGIExceptionMessages.*;
 
 /**
  * Thrown when {@link UserGroupInformation} failed with an unrecoverable error,
@@ -89,7 +89,7 @@ public class KerberosAuthException extends IOException {
       sb.append(FROM_KEYTAB + keytabFile);
     }
     if (ticketCacheFile != null) {
-      sb.append(USING_TICKET_CACHE_FILE+ ticketCacheFile);
+      sb.append(USING_TICKET_CACHE_FILE + ticketCacheFile);
     }
     sb.append(" " + super.getMessage());
     return sb.toString();

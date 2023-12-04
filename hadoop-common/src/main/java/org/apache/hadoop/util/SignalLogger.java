@@ -1,9 +1,8 @@
 package org.apache.hadoop.util;
 
+import org.apache.commons.logging.Log;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
-
-import org.apache.commons.logging.Log;
 
 /**
  * This class logs a message whenever we're about to exit on a UNIX signal.
@@ -57,7 +56,7 @@ public enum SignalLogger {
     registered = true;
     StringBuilder bld = new StringBuilder();
     bld.append("registered UNIX signal handlers for [");
-    final String SIGNALS[] = { "TERM", "HUP", "INT" };
+    final String SIGNALS[] = {"TERM", "HUP", "INT"};
     String separator = "";
     for (String signalName : SIGNALS) {
       try {

@@ -1,27 +1,21 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.hdfs.DFSClient;
 import org.apache.hadoop.hdfs.DFSClientFaultInjector;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p>
@@ -58,14 +52,14 @@ import org.slf4j.LoggerFactory;
 public class LeaseRenewer {
   public static final Logger LOG = LoggerFactory.getLogger(LeaseRenewer.class);
 
-  private static long leaseRenewerGraceDefault = 60*1000L;
+  private static long leaseRenewerGraceDefault = 60 * 1000L;
   static final long LEASE_RENEWER_SLEEP_DEFAULT = 1000L;
 
   private AtomicBoolean isLSRunning = new AtomicBoolean(false);
 
   /** Get a {@link LeaseRenewer} instance */
   public static LeaseRenewer getInstance(final String authority,
-      final UserGroupInformation ugi, final DFSClient dfsc) {
+                                         final UserGroupInformation ugi, final DFSClient dfsc) {
     final LeaseRenewer r = Factory.INSTANCE.get(authority, ugi);
     r.addClient(dfsc);
     return r;
@@ -118,9 +112,9 @@ public class LeaseRenewer {
           return true;
         }
         if (obj != null && obj instanceof Key) {
-          final Key that = (Key)obj;
+          final Key that = (Key) obj;
           return this.authority.equals(that.authority)
-                 && this.ugi.equals(that.ugi);
+              && this.ugi.equals(that.ugi);
         }
         return false;
       }
@@ -136,7 +130,7 @@ public class LeaseRenewer {
 
     /** Get a renewer. */
     private synchronized LeaseRenewer get(final String authority,
-        final UserGroupInformation ugi) {
+                                          final UserGroupInformation ugi) {
       final Key k = new Key(authority, ugi);
       LeaseRenewer r = renewers.get(k);
       if (r == null) {
@@ -201,7 +195,7 @@ public class LeaseRenewer {
 
     if (LOG.isTraceEnabled()) {
       instantiationTrace = StringUtils.stringifyException(
-        new Throwable("TRACE"));
+          new Throwable("TRACE"));
     } else {
       instantiationTrace = null;
     }
@@ -220,7 +214,7 @@ public class LeaseRenewer {
 
   /** Add a client. */
   private synchronized void addClient(final DFSClient dfsc) {
-    for(DFSClient c : dfsclients) {
+    for (DFSClient c : dfsclients) {
       if (c == dfsc) {
         //client already exists, nothing to do.
         return;
@@ -232,7 +226,7 @@ public class LeaseRenewer {
     //update renewal time
     final int hdfsTimeout = dfsc.getConf().getHdfsTimeout();
     if (hdfsTimeout > 0) {
-      final long half = hdfsTimeout/2;
+      final long half = hdfsTimeout / 2;
       if (half < renewal) {
         this.renewal = half;
       }
@@ -244,7 +238,7 @@ public class LeaseRenewer {
   }
 
   private synchronized boolean clientsRunning() {
-    for(Iterator<DFSClient> i = dfsclients.iterator(); i.hasNext(); ) {
+    for (Iterator<DFSClient> i = dfsclients.iterator(); i.hasNext(); ) {
       if (!i.next().isClientRunning()) {
         i.remove();
       }
@@ -267,9 +261,9 @@ public class LeaseRenewer {
           + " = gracePeriod < 100ms is too small.");
     }
     this.gracePeriod = gracePeriod;
-    final long half = gracePeriod/2;
-    this.sleepPeriod = half < LEASE_RENEWER_SLEEP_DEFAULT?
-        half: LEASE_RENEWER_SLEEP_DEFAULT;
+    final long half = gracePeriod / 2;
+    this.sleepPeriod = half < LEASE_RENEWER_SLEEP_DEFAULT ?
+        half : LEASE_RENEWER_SLEEP_DEFAULT;
   }
 
   @VisibleForTesting
@@ -315,10 +309,10 @@ public class LeaseRenewer {
                     + " with renew id " + id + " started");
               }
               LeaseRenewer.this.run(id);
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
               LOG.debug("LeaseRenewer is interrupted.", e);
             } finally {
-              synchronized(LeaseRenewer.this) {
+              synchronized (LeaseRenewer.this) {
                 Factory.INSTANCE.remove(LeaseRenewer.this);
               }
               if (LOG.isDebugEnabled()) {
@@ -360,15 +354,15 @@ public class LeaseRenewer {
     }
 
     //update renewal time
-    if (renewal == dfsc.getConf().getHdfsTimeout()/2) {
+    if (renewal == dfsc.getConf().getHdfsTimeout() / 2) {
       long min = HdfsConstants.LEASE_SOFTLIMIT_PERIOD;
-      for(DFSClient c : dfsclients) {
+      for (DFSClient c : dfsclients) {
         final int timeout = c.getConf().getHdfsTimeout();
         if (timeout > 0 && timeout < min) {
           min = timeout;
         }
       }
-      renewal = min/2;
+      renewal = min / 2;
     }
   }
 
@@ -389,7 +383,7 @@ public class LeaseRenewer {
 
   private void renew() throws IOException {
     final List<DFSClient> copies;
-    synchronized(this) {
+    synchronized (this) {
       copies = new ArrayList<>(dfsclients);
     }
     //sort the client names for finding out repeated names.
@@ -418,8 +412,8 @@ public class LeaseRenewer {
    * when the lease period is half over.
    */
   private void run(final int id) throws InterruptedException {
-    for(long lastRenewed = Time.monotonicNow(); !Thread.interrupted();
-        Thread.sleep(getSleepPeriod())) {
+    for (long lastRenewed = Time.monotonicNow(); !Thread.interrupted();
+         Thread.sleep(getSleepPeriod())) {
       final long elapsed = Time.monotonicNow() - lastRenewed;
       if (elapsed >= getRenewalTime()) {
         try {
@@ -431,7 +425,7 @@ public class LeaseRenewer {
           lastRenewed = Time.monotonicNow();
         } catch (SocketTimeoutException ie) {
           LOG.warn("Failed to renew lease for " + clientsString() + " for "
-              + (elapsed/1000) + " seconds.  Aborting ...", ie);
+              + (elapsed / 1000) + " seconds.  Aborting ...", ie);
           List<DFSClient> dfsclientsCopy;
           synchronized (this) {
             DFSClientFaultInjector.get().delayWhenRenewLeaseTimeout();
@@ -444,11 +438,11 @@ public class LeaseRenewer {
           break;
         } catch (IOException ie) {
           LOG.warn("Failed to renew lease for " + clientsString() + " for "
-              + (elapsed/1000) + " seconds.  Will retry shortly ...", ie);
+              + (elapsed / 1000) + " seconds.  Will retry shortly ...", ie);
         }
       }
 
-      synchronized(this) {
+      synchronized (this) {
         if (id != currentId || isRenewerExpired()) {
           if (LOG.isDebugEnabled()) {
             if (id != currentId) {
@@ -477,8 +471,8 @@ public class LeaseRenewer {
   public String toString() {
     String s = getClass().getSimpleName() + ":" + factorykey;
     if (LOG.isTraceEnabled()) {
-      return s + ", clients=" +  clientsString()
-        + ", created at " + instantiationTrace;
+      return s + ", clients=" + clientsString()
+          + ", created at " + instantiationTrace;
     }
     return s;
   }
@@ -490,7 +484,7 @@ public class LeaseRenewer {
     } else {
       final StringBuilder b = new StringBuilder("[").append(
           dfsclients.get(0).getClientName());
-      for(int i = 1; i < dfsclients.size(); i++) {
+      for (int i = 1; i < dfsclients.size(); i++) {
         b.append(", ").append(dfsclients.get(i).getClientName());
       }
       return b.append("]").toString();

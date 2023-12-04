@@ -1,5 +1,13 @@
 package org.apache.hadoop.ipc;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolSignatureRequestProto;
+import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolSignatureResponseProto;
+import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.ProtocolSignatureProto;
+import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.protobuf.RpcController;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -9,15 +17,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolSignatureRequestProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.GetProtocolSignatureResponseProto;
-import org.apache.hadoop.ipc.protobuf.ProtocolInfoProtos.ProtocolSignatureProto;
-import org.apache.hadoop.net.NetUtils;
-
-import org.apache.hadoop.thirdparty.protobuf.RpcController;
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
-
 /**
  * This class maintains a cache of protocol versions and corresponding protocol
  * signatures, keyed by server address, protocol and rpc kind.
@@ -26,18 +25,18 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 public class RpcClientUtil {
   private static RpcController NULL_CONTROLLER = null;
   private static final int PRIME = 16777619;
-  
+
   private static class ProtoSigCacheKey {
     private InetSocketAddress serverAddress;
     private String protocol;
     private String rpcKind;
-    
+
     ProtoSigCacheKey(InetSocketAddress addr, String p, String rk) {
       this.serverAddress = addr;
       this.protocol = p;
       this.rpcKind = rk;
     }
-    
+
     @Override //Object
     public int hashCode() {
       int result = 1;
@@ -47,7 +46,7 @@ public class RpcClientUtil {
       result = PRIME * result + ((rpcKind == null) ? 0 : rpcKind.hashCode());
       return result;
     }
-    
+
     @Override //Object
     public boolean equals(Object other) {
       if (other == this) {
@@ -62,15 +61,15 @@ public class RpcClientUtil {
       return false;
     }
   }
-  
-  private static ConcurrentHashMap<ProtoSigCacheKey, Map<Long, ProtocolSignature>> 
-  signatureMap = new ConcurrentHashMap<ProtoSigCacheKey, Map<Long, ProtocolSignature>>();
+
+  private static ConcurrentHashMap<ProtoSigCacheKey, Map<Long, ProtocolSignature>>
+      signatureMap = new ConcurrentHashMap<ProtoSigCacheKey, Map<Long, ProtocolSignature>>();
 
   private static void putVersionSignatureMap(InetSocketAddress addr,
-      String protocol, String rpcKind, Map<Long, ProtocolSignature> map) {
+                                             String protocol, String rpcKind, Map<Long, ProtocolSignature> map) {
     signatureMap.put(new ProtoSigCacheKey(addr, protocol, rpcKind), map);
   }
-  
+
   private static Map<Long, ProtocolSignature> getVersionSignatureMap(
       InetSocketAddress addr, String protocol, String rpcKind) {
     return signatureMap.get(new ProtoSigCacheKey(addr, protocol, rpcKind));
@@ -89,7 +88,7 @@ public class RpcClientUtil {
    * @throws IOException
    */
   public static boolean isMethodSupported(Object rpcProxy, Class<?> protocol,
-      RPC.RpcKind rpcKind, long version, String methodName) throws IOException {
+                                          RPC.RpcKind rpcKind, long version, String methodName) throws IOException {
     InetSocketAddress serverAddress = RPC.getServerAddress(rpcProxy);
     Map<Long, ProtocolSignature> versionMap = getVersionSignatureMap(
         serverAddress, protocol.getName(), rpcKind.toString());
@@ -100,7 +99,7 @@ public class RpcClientUtil {
           ProtobufRpcEngine2.class);
       ProtocolMetaInfoPB protocolInfoProxy = getProtocolMetaInfoProxy(rpcProxy,
           conf);
-      GetProtocolSignatureRequestProto.Builder builder = 
+      GetProtocolSignatureRequestProto.Builder builder =
           GetProtocolSignatureRequestProto.newBuilder();
       builder.setProtocol(protocol.getName());
       builder.setRpcKind(rpcKind.toString());
@@ -132,13 +131,13 @@ public class RpcClientUtil {
     int methodHash = ProtocolSignature.getFingerprint(desiredMethod);
     return methodExists(methodHash, version, versionMap);
   }
-  
-  private static Map<Long, ProtocolSignature> 
+
+  private static Map<Long, ProtocolSignature>
   convertProtocolSignatureProtos(List<ProtocolSignatureProto> protoList) {
     Map<Long, ProtocolSignature> map = new TreeMap<Long, ProtocolSignature>();
     for (ProtocolSignatureProto p : protoList) {
-      int [] methods = new int[p.getMethodsList().size()];
-      int index=0;
+      int[] methods = new int[p.getMethodsList().size()];
+      int index = 0;
       for (int m : p.getMethodsList()) {
         methods[index++] = m;
       }
@@ -148,7 +147,7 @@ public class RpcClientUtil {
   }
 
   private static boolean methodExists(int methodHash, long version,
-      Map<Long, ProtocolSignature> versionMap) {
+                                      Map<Long, ProtocolSignature> versionMap) {
     ProtocolSignature sig = versionMap.get(version);
     if (sig != null) {
       for (int m : sig.getMethods()) {
@@ -159,12 +158,12 @@ public class RpcClientUtil {
     }
     return false;
   }
-  
+
   // The proxy returned re-uses the underlying connection. This is a special 
   // mechanism for ProtocolMetaInfoPB.
   // Don't do this for any other protocol, it might cause a security hole.
   private static ProtocolMetaInfoPB getProtocolMetaInfoProxy(Object proxy,
-      Configuration conf) throws IOException {
+                                                             Configuration conf) throws IOException {
     RpcInvocationHandler inv = (RpcInvocationHandler) Proxy
         .getInvocationHandler(proxy);
     return RPC

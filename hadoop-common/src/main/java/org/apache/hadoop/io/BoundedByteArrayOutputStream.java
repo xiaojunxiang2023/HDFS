@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,7 +55,7 @@ public class BoundedByteArrayOutputStream extends OutputStream {
   protected BoundedByteArrayOutputStream(byte[] buf, int offset, int limit) {
     resetBuffer(buf, offset, limit);
   }
-  
+
   protected void resetBuffer(byte[] buf, int offset, int limit) {
     int capacity = buf.length - offset;
     if ((capacity < limit) || (capacity | limit) < 0) {
@@ -66,7 +66,7 @@ public class BoundedByteArrayOutputStream extends OutputStream {
     this.currentPointer = offset;
     this.limit = offset + limit;
   }
-  
+
   @Override
   public void write(int b) throws IOException {
     if (currentPointer >= limit) {
@@ -128,7 +128,7 @@ public class BoundedByteArrayOutputStream extends OutputStream {
   public int size() {
     return currentPointer - startOffset;
   }
-  
+
   public int available() {
     return limit - currentPointer;
   }

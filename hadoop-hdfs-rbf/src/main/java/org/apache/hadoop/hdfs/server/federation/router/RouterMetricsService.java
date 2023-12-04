@@ -9,60 +9,60 @@ import org.apache.hadoop.service.AbstractService;
 // 管理多个 Metrcis
 public class RouterMetricsService extends AbstractService {
 
-    private final Router router;
+  private final Router router;
 
-    private RouterMetrics routerMetrics;
-    private RBFMetrics rbfMetrics;
-    private NamenodeBeanMetrics nnMetrics;
+  private RouterMetrics routerMetrics;
+  private RBFMetrics rbfMetrics;
+  private NamenodeBeanMetrics nnMetrics;
 
 
-    public RouterMetricsService(final Router router) {
-        super(RouterMetricsService.class.getName());
-        this.router = router;
+  public RouterMetricsService(final Router router) {
+    super(RouterMetricsService.class.getName());
+    this.router = router;
+  }
+
+  @Override
+  protected void serviceInit(Configuration configuration) throws Exception {
+    this.routerMetrics = RouterMetrics.create(configuration);
+  }
+
+  @Override
+  protected void serviceStart() throws Exception {
+    this.nnMetrics = new NamenodeBeanMetrics(this.router);
+    this.rbfMetrics = new RBFMetrics(this.router);
+  }
+
+  @Override
+  protected void serviceStop() throws Exception {
+    if (this.rbfMetrics != null) {
+      this.rbfMetrics.close();
     }
 
-    @Override
-    protected void serviceInit(Configuration configuration) throws Exception {
-        this.routerMetrics = RouterMetrics.create(configuration);
+    if (this.nnMetrics != null) {
+      this.nnMetrics.close();
     }
 
-    @Override
-    protected void serviceStart() throws Exception {
-        this.nnMetrics = new NamenodeBeanMetrics(this.router);
-        this.rbfMetrics = new RBFMetrics(this.router);
+    if (this.routerMetrics != null) {
+      this.routerMetrics.shutdown();
     }
+  }
 
-    @Override
-    protected void serviceStop() throws Exception {
-        if (this.rbfMetrics != null) {
-            this.rbfMetrics.close();
-        }
+  public RouterMetrics getRouterMetrics() {
+    return this.routerMetrics;
+  }
 
-        if (this.nnMetrics != null) {
-            this.nnMetrics.close();
-        }
+  public RBFMetrics getRBFMetrics() {
+    return this.rbfMetrics;
+  }
 
-        if (this.routerMetrics != null) {
-            this.routerMetrics.shutdown();
-        }
+  public NamenodeBeanMetrics getNamenodeMetrics() {
+    return this.nnMetrics;
+  }
+
+  public JvmMetrics getJvmMetrics() {
+    if (this.routerMetrics == null) {
+      return null;
     }
-
-    public RouterMetrics getRouterMetrics() {
-        return this.routerMetrics;
-    }
-
-    public RBFMetrics getRBFMetrics() {
-        return this.rbfMetrics;
-    }
-
-    public NamenodeBeanMetrics getNamenodeMetrics() {
-        return this.nnMetrics;
-    }
-
-    public JvmMetrics getJvmMetrics() {
-        if (this.routerMetrics == null) {
-            return null;
-        }
-        return this.routerMetrics.getJvmMetrics();
-    }
+    return this.routerMetrics.getJvmMetrics();
+  }
 }

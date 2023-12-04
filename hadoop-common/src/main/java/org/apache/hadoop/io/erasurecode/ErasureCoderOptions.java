@@ -16,7 +16,7 @@ public final class ErasureCoderOptions {
   }
 
   public ErasureCoderOptions(int numDataUnits, int numParityUnits,
-                        boolean allowChangeInputs, boolean allowVerboseDump) {
+                             boolean allowChangeInputs, boolean allowVerboseDump) {
     this.numDataUnits = numDataUnits;
     this.numParityUnits = numParityUnits;
     this.numAllUnits = numDataUnits + numParityUnits;

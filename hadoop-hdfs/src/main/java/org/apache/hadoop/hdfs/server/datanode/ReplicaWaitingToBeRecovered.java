@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.File;
-
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
+
+import java.io.File;
 
 /**
  * This class represents a replica that is waiting to be recovered.
@@ -27,10 +27,10 @@ public class ReplicaWaitingToBeRecovered extends LocalReplica {
    * @param dir directory path where block and meta files are located
    */
   public ReplicaWaitingToBeRecovered(long blockId, long len, long genStamp,
-      FsVolumeSpi vol, File dir) {
+                                     FsVolumeSpi vol, File dir) {
     super(blockId, len, genStamp, vol, dir);
   }
-  
+
   /**
    * Constructor
    * @param block a block
@@ -40,7 +40,7 @@ public class ReplicaWaitingToBeRecovered extends LocalReplica {
   public ReplicaWaitingToBeRecovered(Block block, FsVolumeSpi vol, File dir) {
     super(block, vol, dir);
   }
-  
+
   /**
    * Copy constructor.
    * @param from where to copy from
@@ -53,12 +53,12 @@ public class ReplicaWaitingToBeRecovered extends LocalReplica {
   public ReplicaState getState() {
     return ReplicaState.RWR;
   }
-  
+
   @Override //ReplicaInfo
   public long getVisibleLength() {
     return -1;  //no bytes are visible
   }
-  
+
   @Override
   public long getBytesOnDisk() {
     return getNumBytes();
@@ -68,7 +68,7 @@ public class ReplicaWaitingToBeRecovered extends LocalReplica {
   public boolean equals(Object o) {
     return super.equals(o);
   }
-  
+
   @Override  // Object
   public int hashCode() {
     return super.hashCode();

@@ -1,20 +1,19 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 import org.apache.hadoop.hdfs.server.sps.ExternalStoragePolicySatisfier;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * This manages satisfy storage policy invoked path ids and expose methods to
@@ -48,7 +47,7 @@ public class StoragePolicySatisfyManager {
   private final Namesystem namesystem;
 
   public StoragePolicySatisfyManager(Configuration conf,
-      Namesystem namesystem) {
+                                     Namesystem namesystem) {
     // StoragePolicySatisfier(SPS) configs
     storagePolicyEnabled = conf.getBoolean(
         DFSConfigKeys.DFS_STORAGE_POLICY_ENABLED_KEY,
@@ -87,16 +86,16 @@ public class StoragePolicySatisfyManager {
     }
 
     switch (mode) {
-    case EXTERNAL:
-      LOG.info("Storage policy satisfier is configured as external, "
-          + "please start external sps service explicitly to satisfy policy");
-      break;
-    case NONE:
-      LOG.info("Storage policy satisfier is disabled");
-      break;
-    default:
-      LOG.info("Given mode: {} is invalid", mode);
-      break;
+      case EXTERNAL:
+        LOG.info("Storage policy satisfier is configured as external, "
+            + "please start external sps service explicitly to satisfy policy");
+        break;
+      case NONE:
+        LOG.info("Storage policy satisfier is disabled");
+        break;
+      default:
+        LOG.info("Given mode: {} is invalid", mode);
+        break;
     }
   }
 
@@ -121,24 +120,24 @@ public class StoragePolicySatisfyManager {
     }
 
     switch (mode) {
-    case EXTERNAL:
-      removeAllPathIds();
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(
-            "Storage policy satisfier service is running outside namenode"
-            + ", ignoring");
-      }
-      break;
-    case NONE:
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Storage policy satisfier is not enabled, ignoring");
-      }
-      break;
-    default:
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Invalid mode:{}, ignoring", mode);
-      }
-      break;
+      case EXTERNAL:
+        removeAllPathIds();
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(
+              "Storage policy satisfier service is running outside namenode"
+                  + ", ignoring");
+        }
+        break;
+      case NONE:
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Storage policy satisfier is not enabled, ignoring");
+        }
+        break;
+      default:
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Invalid mode:{}, ignoring", mode);
+        }
+        break;
     }
   }
 
@@ -158,29 +157,29 @@ public class StoragePolicySatisfyManager {
     }
 
     switch (newMode) {
-    case EXTERNAL:
-      if (mode == newMode) {
-        LOG.info("Storage policy satisfier is already in mode:{},"
-            + " so ignoring change mode event.", newMode);
-        return;
-      }
-      spsService.stopGracefully();
-      break;
-    case NONE:
-      if (mode == newMode) {
-        LOG.info("Storage policy satisfier is already disabled, mode:{}"
-            + " so ignoring change mode event.", newMode);
-        return;
-      }
-      LOG.info("Disabling StoragePolicySatisfier, mode:{}", newMode);
-      spsService.stop(true);
-      clearPathIds();
-      break;
-    default:
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Given mode: {} is invalid", newMode);
-      }
-      break;
+      case EXTERNAL:
+        if (mode == newMode) {
+          LOG.info("Storage policy satisfier is already in mode:{},"
+              + " so ignoring change mode event.", newMode);
+          return;
+        }
+        spsService.stopGracefully();
+        break;
+      case NONE:
+        if (mode == newMode) {
+          LOG.info("Storage policy satisfier is already disabled, mode:{}"
+              + " so ignoring change mode event.", newMode);
+          return;
+        }
+        LOG.info("Disabling StoragePolicySatisfier, mode:{}", newMode);
+        spsService.stop(true);
+        clearPathIds();
+        break;
+      default:
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Given mode: {} is invalid", newMode);
+        }
+        break;
     }
 
     // update sps mode
@@ -226,7 +225,7 @@ public class StoragePolicySatisfyManager {
    *
    * @throws IOException
    */
-  private void clearPathIds(){
+  private void clearPathIds() {
     synchronized (pathsToBeTraveresed) {
       Iterator<Long> iterator = pathsToBeTraveresed.iterator();
       while (iterator.hasNext()) {

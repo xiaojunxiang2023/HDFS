@@ -1,14 +1,13 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetReconfigurationStatusConfigChangeProto;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetReconfigurationStatusResponseProto;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * This is a client side utility class that handles

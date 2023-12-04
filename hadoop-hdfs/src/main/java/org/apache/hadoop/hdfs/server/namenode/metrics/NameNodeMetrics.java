@@ -1,50 +1,58 @@
 package org.apache.hadoop.hdfs.server.namenode.metrics;
 
-import static org.apache.hadoop.metrics2.impl.MsInfo.ProcessName;
-import static org.apache.hadoop.metrics2.impl.MsInfo.SessionId;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
-import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
-import org.apache.hadoop.metrics2.lib.MetricsRegistry;
-import org.apache.hadoop.metrics2.lib.MutableCounterLong;
-import org.apache.hadoop.metrics2.lib.MutableGaugeInt;
-import org.apache.hadoop.metrics2.lib.MutableQuantiles;
-import org.apache.hadoop.metrics2.lib.MutableRate;
-import org.apache.hadoop.metrics2.lib.MutableStat;
+import org.apache.hadoop.metrics2.lib.*;
 import org.apache.hadoop.metrics2.source.JvmMetrics;
+
+import static org.apache.hadoop.metrics2.impl.MsInfo.ProcessName;
+import static org.apache.hadoop.metrics2.impl.MsInfo.SessionId;
 
 /**
  * This class is for maintaining  the various NameNode activity statistics
  * and publishing them through the metrics interfaces.
  */
-@Metrics(name="NameNodeActivity", about="NameNode metrics", context="dfs")
+@Metrics(name = "NameNodeActivity", about = "NameNode metrics", context = "dfs")
 public class NameNodeMetrics {
   final MetricsRegistry registry = new MetricsRegistry("namenode");
 
-  @Metric MutableCounterLong createFileOps;
-  @Metric MutableCounterLong filesCreated;
-  @Metric MutableCounterLong filesAppended;
-  @Metric MutableCounterLong getBlockLocations;
-  @Metric MutableCounterLong filesRenamed;
-  @Metric MutableCounterLong filesTruncated;
-  @Metric MutableCounterLong getListingOps;
-  @Metric MutableCounterLong deleteFileOps;
+  @Metric
+  MutableCounterLong createFileOps;
+  @Metric
+  MutableCounterLong filesCreated;
+  @Metric
+  MutableCounterLong filesAppended;
+  @Metric
+  MutableCounterLong getBlockLocations;
+  @Metric
+  MutableCounterLong filesRenamed;
+  @Metric
+  MutableCounterLong filesTruncated;
+  @Metric
+  MutableCounterLong getListingOps;
+  @Metric
+  MutableCounterLong deleteFileOps;
   @Metric("Number of files/dirs deleted by delete or rename operations")
   MutableCounterLong filesDeleted;
-  @Metric MutableCounterLong fileInfoOps;
-  @Metric MutableCounterLong addBlockOps;
-  @Metric MutableCounterLong getAdditionalDatanodeOps;
-  @Metric MutableCounterLong createSymlinkOps;
-  @Metric MutableCounterLong getLinkTargetOps;
-  @Metric MutableCounterLong filesInGetListingOps;
-  @Metric ("Number of successful re-replications")
+  @Metric
+  MutableCounterLong fileInfoOps;
+  @Metric
+  MutableCounterLong addBlockOps;
+  @Metric
+  MutableCounterLong getAdditionalDatanodeOps;
+  @Metric
+  MutableCounterLong createSymlinkOps;
+  @Metric
+  MutableCounterLong getLinkTargetOps;
+  @Metric
+  MutableCounterLong filesInGetListingOps;
+  @Metric("Number of successful re-replications")
   MutableCounterLong successfulReReplications;
-  @Metric ("Number of times we failed to schedule a block re-replication.")
+  @Metric("Number of times we failed to schedule a block re-replication.")
   MutableCounterLong numTimesReReplicationNotScheduled;
   @Metric("Number of timed out block re-replications")
   MutableCounterLong timeoutReReplications;
@@ -76,32 +84,34 @@ public class NameNodeMetrics {
   MutableGaugeInt pendingDeleteBlocksCount;
 
   @Metric("Number of file system operations")
-  public long totalFileOps(){
+  public long totalFileOps() {
     return
-      getBlockLocations.value() +
-      createFileOps.value() +
-      filesAppended.value() +
-      addBlockOps.value() +
-      getAdditionalDatanodeOps.value() +
-      filesRenamed.value() +
-      filesTruncated.value() +
-      deleteFileOps.value() +
-      getListingOps.value() +
-      fileInfoOps.value() +
-      getLinkTargetOps.value() +
-      createSnapshotOps.value() +
-      deleteSnapshotOps.value() +
-      allowSnapshotOps.value() +
-      disallowSnapshotOps.value() +
-      renameSnapshotOps.value() +
-      listSnapshottableDirOps.value() +
-      createSymlinkOps.value() +
-      snapshotDiffReportOps.value();
+        getBlockLocations.value() +
+            createFileOps.value() +
+            filesAppended.value() +
+            addBlockOps.value() +
+            getAdditionalDatanodeOps.value() +
+            filesRenamed.value() +
+            filesTruncated.value() +
+            deleteFileOps.value() +
+            getListingOps.value() +
+            fileInfoOps.value() +
+            getLinkTargetOps.value() +
+            createSnapshotOps.value() +
+            deleteSnapshotOps.value() +
+            allowSnapshotOps.value() +
+            disallowSnapshotOps.value() +
+            renameSnapshotOps.value() +
+            listSnapshottableDirOps.value() +
+            createSymlinkOps.value() +
+            snapshotDiffReportOps.value();
   }
 
 
-  @Metric("Journal transactions") MutableRate transactions;
-  @Metric("Journal syncs") MutableRate syncs;
+  @Metric("Journal transactions")
+  MutableRate transactions;
+  @Metric("Journal syncs")
+  MutableRate syncs;
   final MutableQuantiles[] syncsQuantiles;
   @Metric("Journal transactions batched in sync")
   MutableCounterLong transactionsBatchedInSync;
@@ -110,13 +120,17 @@ public class NameNodeMetrics {
   @Metric("Number of blockReports from individual storages")
   MutableRate storageBlockReport;
   final MutableQuantiles[] storageBlockReportQuantiles;
-  @Metric("Cache report") MutableRate cacheReport;
+  @Metric("Cache report")
+  MutableRate cacheReport;
   final MutableQuantiles[] cacheReportQuantiles;
-  @Metric("Generate EDEK time") private MutableRate generateEDEKTime;
+  @Metric("Generate EDEK time")
+  private MutableRate generateEDEKTime;
   private final MutableQuantiles[] generateEDEKTimeQuantiles;
-  @Metric("Warm-up EDEK time") private MutableRate warmUpEDEKTime;
+  @Metric("Warm-up EDEK time")
+  private MutableRate warmUpEDEKTime;
   private final MutableQuantiles[] warmUpEDEKTimeQuantiles;
-  @Metric("Resource check time") private MutableRate resourceCheckTime;
+  @Metric("Resource check time")
+  private MutableRate resourceCheckTime;
   private final MutableQuantiles[] resourceCheckTimeQuantiles;
 
   @Metric("Duration in SafeMode at startup in msec")
@@ -127,7 +141,8 @@ public class NameNodeMetrics {
   @Metric("Time tailing edit logs in msec")
   MutableRate editLogTailTime;
   private final MutableQuantiles[] editLogTailTimeQuantiles;
-  @Metric MutableRate editLogFetchTime;
+  @Metric
+  MutableRate editLogFetchTime;
   private final MutableQuantiles[] editLogFetchTimeQuantiles;
   @Metric(value = "Number of edits loaded", valueName = "Count")
   MutableStat numEditLogLoaded;
@@ -146,12 +161,12 @@ public class NameNodeMetrics {
   MutableRate putImage;
 
   JvmMetrics jvmMetrics = null;
-  
+
   NameNodeMetrics(String processName, String sessionId, int[] intervals,
-      final JvmMetrics jvmMetrics) {
+                  final JvmMetrics jvmMetrics) {
     this.jvmMetrics = jvmMetrics;
     registry.tag(ProcessName, processName).tag(SessionId, sessionId);
-    
+
     final int len = intervals.length;
     syncsQuantiles = new MutableQuantiles[len];
     numTransactionsBatchedInSync = new MutableQuantiles[len];
@@ -209,9 +224,9 @@ public class NameNodeMetrics {
     String processName = r.toString();
     MetricsSystem ms = DefaultMetricsSystem.instance();
     JvmMetrics jm = JvmMetrics.create(processName, sessionId, ms);
-    
+
     // Percentile measurement is off by default, by watching no intervals
-    int[] intervals = 
+    int[] intervals =
         conf.getInts(DFSConfigKeys.DFS_METRICS_PERCENTILES_INTERVALS_KEY);
     return ms.register(new NameNodeMetrics(processName, sessionId,
         intervals, jm));
@@ -220,7 +235,7 @@ public class NameNodeMetrics {
   public JvmMetrics getJvmMetrics() {
     return jvmMetrics;
   }
-  
+
   public void shutdown() {
     DefaultMetricsSystem.shutdown();
   }
@@ -244,7 +259,7 @@ public class NameNodeMetrics {
   public void incrAddBlockOps() {
     addBlockOps.incr();
   }
-  
+
   public void incrGetAdditionalDatanodeOps() {
     getAdditionalDatanodeOps.incr();
   }
@@ -288,31 +303,31 @@ public class NameNodeMetrics {
   public void incrAllowSnapshotOps() {
     allowSnapshotOps.incr();
   }
-  
+
   public void incrDisAllowSnapshotOps() {
     disallowSnapshotOps.incr();
   }
-  
+
   public void incrCreateSnapshotOps() {
     createSnapshotOps.incr();
   }
-  
+
   public void incrDeleteSnapshotOps() {
     deleteSnapshotOps.incr();
   }
-  
+
   public void incrRenameSnapshotOps() {
     renameSnapshotOps.incr();
   }
-  
+
   public void incrListSnapshottableDirOps() {
     listSnapshottableDirOps.incr();
   }
-  
+
   public void incrSnapshotDiffReportOps() {
     snapshotDiffReportOps.incr();
   }
-  
+
   public void incrBlockReceivedAndDeletedOps() {
     blockReceivedAndDeletedOps.incr();
   }

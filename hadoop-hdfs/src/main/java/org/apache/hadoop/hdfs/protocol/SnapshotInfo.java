@@ -1,6 +1,6 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.hdfs.protocol.proto.AclProtos.FsPermissionProto;
-import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 
 /**
  * SnapshotInfo maintains information for a snapshot
@@ -14,7 +14,7 @@ public class SnapshotInfo {
   private final String group;
 
   public SnapshotInfo(String sname, String sroot, String ctime,
-      FsPermissionProto permission, String owner, String group) {
+                      FsPermissionProto permission, String owner, String group) {
     this.snapshotName = sname;
     this.snapshotRoot = sroot;
     this.createTime = ctime;
@@ -34,19 +34,19 @@ public class SnapshotInfo {
   final public String getCreateTime() {
     return createTime;
   }
-  
+
   final public FsPermissionProto getPermission() {
     return permission;
   }
-  
+
   final public String getOwner() {
     return owner;
   }
-  
+
   final public String getGroup() {
     return group;
   }
-  
+
   @Override
   public String toString() {
     return getClass().getSimpleName()
@@ -65,7 +65,7 @@ public class SnapshotInfo {
     private final long modificationTime;
 
     public Bean(String snapshotID, String snapshotDirectory,
-        long modificationTime) {
+                long modificationTime) {
       this.snapshotID = snapshotID;
       this.snapshotDirectory = snapshotDirectory;
       this.modificationTime = modificationTime;

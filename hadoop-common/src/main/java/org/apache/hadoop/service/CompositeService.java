@@ -1,13 +1,13 @@
 package org.apache.hadoop.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.classification.InterfaceStability.Evolving;
 import org.apache.hadoop.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Composition of services.
@@ -136,8 +136,8 @@ public class CompositeService extends AbstractService {
       }
       STATE state = service.getServiceState();
       //depending on the stop police
-      if (state == STATE.STARTED 
-         || (!stopOnlyStartedServices && state == STATE.INITED)) {
+      if (state == STATE.STARTED
+          || (!stopOnlyStartedServices && state == STATE.INITED)) {
         Exception ex = ServiceOperations.stopQuietly(LOG, service);
         if (ex != null && firstException == null) {
           firstException = ex;

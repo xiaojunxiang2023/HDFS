@@ -1,7 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.Map;
 import org.apache.hadoop.hdfs.protocol.RollingUpgradeInfo;
+
+import java.util.Map;
 
 /**
  * This is the JMX management interface for namenode information.
@@ -12,7 +13,7 @@ public interface NameNodeMXBean {
 
   /**
    * Gets the version of Hadoop.
-   * 
+   *
    * @return the version.
    */
   String getVersion();
@@ -26,21 +27,21 @@ public interface NameNodeMXBean {
 
   /**
    * Gets the used space by data nodes.
-   * 
+   *
    * @return the used space by data nodes.
    */
   long getUsed();
-  
+
   /**
    * Gets total non-used raw bytes.
-   * 
+   *
    * @return total non-used raw bytes.
    */
   long getFree();
-  
+
   /**
    * Gets total raw bytes including non-dfs used space.
-   * 
+   *
    * @return the total raw bytes including non-dfs used space.
    */
   long getTotal();
@@ -54,14 +55,14 @@ public interface NameNodeMXBean {
 
   /**
    * Gets the safemode status.
-   * 
+   *
    * @return the safemode status.
    */
   String getSafemode();
-  
+
   /**
    * Checks if upgrade is finalized.
-   * 
+   *
    * @return true, if upgrade is finalized.
    */
   boolean isUpgradeFinalized();
@@ -77,22 +78,22 @@ public interface NameNodeMXBean {
   /**
    * Gets total used space by data nodes for non DFS purposes such as storing
    * temporary files on the local file system.
-   * 
+   *
    * @return the non dfs space of the cluster.
    */
   long getNonDfsUsedSpace();
-  
+
   /**
    * Gets the total used space by data nodes as percentage of total capacity.
-   * 
+   *
    * @return the percentage of used space on the cluster.
    */
   float getPercentUsed();
-  
+
   /**
    * Gets the total remaining space by data nodes as percentage of total 
    * capacity.
-   * 
+   *
    * @return the percentage of the remaining space on the cluster.
    */
   float getPercentRemaining();
@@ -110,14 +111,14 @@ public interface NameNodeMXBean {
    * @return the total cache capacity of the datanode (in bytes).
    */
   long getCacheCapacity();
-  
+
   /**
    * Get the total space used by the block pools of this namenode.
    *
    * @return the total space used by the block pools of this namenode.
    */
   long getBlockPoolUsedSpace();
-  
+
   /**
    * Get the total space used by the block pool as percentage of total capacity.
    *
@@ -125,21 +126,21 @@ public interface NameNodeMXBean {
    * capacity.
    */
   float getPercentBlockPoolUsed();
-    
+
   /**
    * Gets the total numbers of blocks on the cluster.
-   * 
+   *
    * @return the total number of blocks of the cluster.
    */
   long getTotalBlocks();
-  
+
   /**
    * Gets the total number of missing blocks on the cluster.
-   * 
+   *
    * @return the total number of missing blocks on the cluster.
    */
   long getNumberOfMissingBlocks();
-  
+
   /**
    * Gets the total number of missing blocks on the cluster with
    * replication factor 1.
@@ -176,28 +177,28 @@ public interface NameNodeMXBean {
 
   /**
    * Gets the number of threads.
-   * 
+   *
    * @return the number of threads.
    */
   int getThreads();
 
   /**
    * Gets the live node information of the cluster.
-   * 
+   *
    * @return the live node information.
    */
   String getLiveNodes();
-  
+
   /**
    * Gets the dead node information of the cluster.
-   * 
+   *
    * @return the dead node information.
    */
   String getDeadNodes();
-  
+
   /**
    * Gets the decommissioning node information of the cluster.
-   * 
+   *
    * @return the decommissioning node information.
    */
   String getDecomNodes();
@@ -211,14 +212,14 @@ public interface NameNodeMXBean {
 
   /**
    * Gets the cluster id.
-   * 
+   *
    * @return the cluster id.
    */
   String getClusterId();
-  
+
   /**
    * Gets the block pool id.
-   * 
+   *
    * @return the block pool id.
    */
   String getBlockPoolId();
@@ -226,7 +227,7 @@ public interface NameNodeMXBean {
   /**
    * Get status information about the directories storing image and edits logs
    * of the NN.
-   * 
+   *
    * @return the name dir status information, as a JSON string.
    */
   String getNameDirStatuses();
@@ -244,7 +245,7 @@ public interface NameNodeMXBean {
    * @return the name journal status information, as a JSON string.
    */
   String getNameJournalStatus();
-  
+
   /**
    * Get information about the transaction ID, including the last applied 
    * transaction ID and the most recent checkpoint's transaction ID.
@@ -283,18 +284,18 @@ public interface NameNodeMXBean {
 
   /**
    * Get the number of distinct versions of live datanodes.
-   * 
+   *
    * @return the number of distinct versions of live datanodes.
    */
   int getDistinctVersionCount();
 
   /**
    * Get the number of live datanodes for each distinct versions.
-   * 
+   *
    * @return the number of live datanodes for each distinct versions.
    */
   Map<String, Integer> getDistinctVersions();
-  
+
   /**
    * Get namenode directory size.
    *

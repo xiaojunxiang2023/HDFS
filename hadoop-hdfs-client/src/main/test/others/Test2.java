@@ -14,15 +14,15 @@ import java.net.InetAddress;
  */
 public class Test2 {
 
-    public static void main(String[] args) throws IOException {
-        Configuration conf = new Configuration();
-        conf.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
-        conf.addResource(new Path("/etc/hadoop/conf/hdfs-rbf-site.xml"));
-        String dfsrouterPrincipal = conf.get("dfs.federation.router.kerberos.principal");
-        String hostName = InetAddress.getLocalHost().getHostName();
-        dfsrouterPrincipal=dfsrouterPrincipal.replace("_HOST",hostName);
-        String dfsrouterKeytab = conf.get("dfs.federation.router.keytab.file");
-        UserGroupInformation.loginUserFromKeytab(dfsrouterPrincipal, dfsrouterKeytab);
-    }
+  public static void main(String[] args) throws IOException {
+    Configuration conf = new Configuration();
+    conf.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
+    conf.addResource(new Path("/etc/hadoop/conf/hdfs-rbf-site.xml"));
+    String dfsrouterPrincipal = conf.get("dfs.federation.router.kerberos.principal");
+    String hostName = InetAddress.getLocalHost().getHostName();
+    dfsrouterPrincipal = dfsrouterPrincipal.replace("_HOST", hostName);
+    String dfsrouterKeytab = conf.get("dfs.federation.router.keytab.file");
+    UserGroupInformation.loginUserFromKeytab(dfsrouterPrincipal, dfsrouterKeytab);
+  }
 
 }

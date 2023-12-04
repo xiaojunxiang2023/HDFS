@@ -1,18 +1,18 @@
 package org.apache.hadoop.crypto;
 
+import org.apache.hadoop.fs.CanSetDropBehind;
+import org.apache.hadoop.fs.StreamCapabilities;
+import org.apache.hadoop.fs.Syncable;
+import org.apache.hadoop.fs.impl.StoreImplementationUtils;
+import org.apache.hadoop.fs.statistics.IOStatistics;
+import org.apache.hadoop.fs.statistics.IOStatisticsSource;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import org.apache.hadoop.fs.CanSetDropBehind;
-import org.apache.hadoop.fs.StreamCapabilities;
-import org.apache.hadoop.fs.Syncable;
-import org.apache.hadoop.fs.statistics.IOStatistics;
-import org.apache.hadoop.fs.statistics.IOStatisticsSource;
-import org.apache.hadoop.fs.impl.StoreImplementationUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStatistics;
 
@@ -30,28 +30,28 @@ import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStat
  * Note that while some of this class' methods are synchronized, this is just to
  * match the threadsafety behavior of DFSOutputStream. See HADOOP-11710.
  */
-public class CryptoOutputStream extends FilterOutputStream implements 
+public class CryptoOutputStream extends FilterOutputStream implements
     Syncable, CanSetDropBehind, StreamCapabilities, IOStatisticsSource {
   private final byte[] oneByteBuf = new byte[1];
   private final CryptoCodec codec;
   private final Encryptor encryptor;
   private final int bufferSize;
-  
+
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at 
    * inBuffer.limit().
    */
   private ByteBuffer inBuffer;
-  
+
   /**
    * Encrypted data buffer. The data starts at outBuffer.position() and ends at 
    * outBuffer.limit();
    */
   private ByteBuffer outBuffer;
   private long streamOffset = 0; // Underlying stream offset.
-  
+
   /**
-   * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer} 
+   * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
    * before any other data goes in. The purpose of padding is to put input data
    * at proper position.
    */
@@ -61,21 +61,21 @@ public class CryptoOutputStream extends FilterOutputStream implements
   private final byte[] initIV;
   private byte[] iv;
   private boolean closeOutputStream;
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+
+  public CryptoOutputStream(OutputStream out, CryptoCodec codec,
+                            int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(out, codec, bufferSize, key, iv, 0);
   }
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) 
+
+  public CryptoOutputStream(OutputStream out, CryptoCodec codec,
+                            int bufferSize, byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(out, codec, bufferSize, key, iv, streamOffset, true);
   }
 
   public CryptoOutputStream(OutputStream out, CryptoCodec codec,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset,
-      boolean closeOutputStream)
+                            int bufferSize, byte[] key, byte[] iv, long streamOffset,
+                            boolean closeOutputStream)
       throws IOException {
     super(out);
     CryptoStreamUtils.checkCodec(codec);
@@ -95,28 +95,28 @@ public class CryptoOutputStream extends FilterOutputStream implements
     }
     updateEncryptor();
   }
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
-      byte[] key, byte[] iv) throws IOException {
+
+  public CryptoOutputStream(OutputStream out, CryptoCodec codec,
+                            byte[] key, byte[] iv) throws IOException {
     this(out, codec, key, iv, 0);
   }
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
-      byte[] key, byte[] iv, long streamOffset) throws IOException {
+
+  public CryptoOutputStream(OutputStream out, CryptoCodec codec,
+                            byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(out, codec, key, iv, streamOffset, true);
   }
 
   public CryptoOutputStream(OutputStream out, CryptoCodec codec,
-      byte[] key, byte[] iv, long streamOffset, boolean closeOutputStream)
+                            byte[] key, byte[] iv, long streamOffset, boolean closeOutputStream)
       throws IOException {
-    this(out, codec, CryptoStreamUtils.getBufferSize(codec.getConf()), 
+    this(out, codec, CryptoStreamUtils.getBufferSize(codec.getConf()),
         key, iv, streamOffset, closeOutputStream);
   }
-  
+
   public OutputStream getWrappedStream() {
     return out;
   }
-  
+
   /**
    * Encryption is buffer based.
    * If there is enough room in {@link #inBuffer}, then write to this buffer.
@@ -132,7 +132,7 @@ public class CryptoOutputStream extends FilterOutputStream implements
     checkStream();
     if (b == null) {
       throw new NullPointerException();
-    } else if (off < 0 || len < 0 || off > b.length || 
+    } else if (off < 0 || len < 0 || off > b.length ||
         len > b.length - off) {
       throw new IndexOutOfBoundsException();
     }
@@ -149,7 +149,7 @@ public class CryptoOutputStream extends FilterOutputStream implements
       }
     }
   }
-  
+
   /**
    * Do the encryption, input is {@link #inBuffer} and output is 
    * {@link #outBuffer}.
@@ -167,22 +167,22 @@ public class CryptoOutputStream extends FilterOutputStream implements
     outBuffer.flip();
     if (padding > 0) {
       /*
-       * The plain text and cipher text have a 1:1 mapping, they start at the 
+       * The plain text and cipher text have a 1:1 mapping, they start at the
        * same position.
        */
       outBuffer.position(padding);
       padding = 0;
     }
     final int len = outBuffer.remaining();
-    
+
     /*
      * If underlying stream supports {@link ByteBuffer} write in future, needs
-     * refine here. 
+     * refine here.
      */
     final byte[] tmp = getTmpBuf();
     outBuffer.get(tmp, 0, len);
     out.write(tmp, 0, len);
-    
+
     streamOffset += len;
     if (encryptor.isContextReset()) {
       /*
@@ -194,26 +194,27 @@ public class CryptoOutputStream extends FilterOutputStream implements
       updateEncryptor();
     }
   }
-  
+
   /** Update the {@link #encryptor}: calculate counter and {@link #padding}. */
   private void updateEncryptor() throws IOException {
     final long counter =
         streamOffset / codec.getCipherSuite().getAlgorithmBlockSize();
     padding =
-        (byte)(streamOffset % codec.getCipherSuite().getAlgorithmBlockSize());
+        (byte) (streamOffset % codec.getCipherSuite().getAlgorithmBlockSize());
     inBuffer.position(padding); // Set proper position for input data.
     codec.calculateIV(initIV, counter, iv);
     encryptor.init(key, iv);
   }
-  
+
   private byte[] tmpBuf;
+
   private byte[] getTmpBuf() {
     if (tmpBuf == null) {
       tmpBuf = new byte[bufferSize];
     }
     return tmpBuf;
   }
-  
+
   @Override
   public synchronized void close() throws IOException {
     if (closed) {
@@ -230,7 +231,7 @@ public class CryptoOutputStream extends FilterOutputStream implements
       closed = true;
     }
   }
-  
+
   /**
    * To flush, we need to encrypt the data in the buffer and write to the 
    * underlying stream, then do the flush.
@@ -243,19 +244,19 @@ public class CryptoOutputStream extends FilterOutputStream implements
     encrypt();
     super.flush();
   }
-  
+
   @Override
   public void write(int b) throws IOException {
-    oneByteBuf[0] = (byte)(b & 0xff);
+    oneByteBuf[0] = (byte) (b & 0xff);
     write(oneByteBuf, 0, oneByteBuf.length);
   }
-  
+
   private void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
     }
   }
-  
+
   @Override
   public void setDropBehind(Boolean dropCache) throws IOException,
       UnsupportedOperationException {
@@ -271,7 +272,7 @@ public class CryptoOutputStream extends FilterOutputStream implements
   public void hflush() throws IOException {
     flush();
     if (out instanceof Syncable) {
-      ((Syncable)out).hflush();
+      ((Syncable) out).hflush();
     }
   }
 
@@ -279,10 +280,10 @@ public class CryptoOutputStream extends FilterOutputStream implements
   public void hsync() throws IOException {
     flush();
     if (out instanceof Syncable) {
-      ((Syncable)out).hsync();
+      ((Syncable) out).hsync();
     }
   }
-  
+
   /** Forcibly free the direct buffers. */
   private void freeBuffers() {
     CryptoStreamUtils.freeDB(inBuffer);

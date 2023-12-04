@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.HostsFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -53,8 +53,9 @@ public class HostFileManager extends HostConfigManager {
     refresh(conf.get(DFSConfigKeys.DFS_HOSTS, ""),
         conf.get(DFSConfigKeys.DFS_HOSTS_EXCLUDE, ""));
   }
+
   private static HostSet readFile(String type, String filename)
-          throws IOException {
+      throws IOException {
     HostSet res = new HostSet();
     if (!filename.isEmpty()) {
       HashSet<String> entrySet = new HashSet<String>();
@@ -77,13 +78,13 @@ public class HostFileManager extends HostConfigManager {
       InetSocketAddress addr = new InetSocketAddress(uri.getHost(), port);
       if (addr.isUnresolved()) {
         LOG.warn(String.format("Failed to resolve address `%s` in `%s`. " +
-                "Ignoring in the %s list.", line, fn, type));
+            "Ignoring in the %s list.", line, fn, type));
         return null;
       }
       return addr;
     } catch (URISyntaxException e) {
       LOG.warn(String.format("Failed to parse `%s` in `%s`. " + "Ignoring in " +
-              "the %s list.", line, fn, type));
+          "the %s list.", line, fn, type));
     }
     return null;
   }

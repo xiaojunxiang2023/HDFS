@@ -1,43 +1,19 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.DatanodeLocalInfo;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.*;
+import java.util.concurrent.*;
 
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_CONNECTION_TIMEOUT_MS_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_CONNECTION_TIMEOUT_MS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_DEAD_NODE_INTERVAL_MS_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_DEAD_NODE_INTERVAL_MS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_DEAD_NODE_THREADS_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_DEAD_NODE_THREADS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_SUSPECT_NODE_INTERVAL_MS_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_SUSPECT_NODE_INTERVAL_MS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_SUSPECT_NODE_THREADS_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_PROBE_SUSPECT_NODE_THREADS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_RPC_THREADS_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_RPC_THREADS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_SOCKET_TIMEOUT_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_IDLE_SLEEP_MS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_CLIENT_DEAD_NODE_DETECTION_IDLE_SLEEP_MS_DEFAULT;
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.*;
 
 /**
  * Detect the dead nodes in advance, and share this information among all the
@@ -76,7 +52,7 @@ public class DeadNodeDetector extends Daemon {
    * suspectAndDeadNodes.
    */
   private final Map<DFSInputStream, HashSet<DatanodeInfo>>
-          suspectAndDeadNodes;
+      suspectAndDeadNodes;
 
   /**
    * Datanodes that is being probed.
@@ -239,25 +215,25 @@ public class DeadNodeDetector extends Daemon {
       LOG.debug("Current detector state {}, the detected nodes: {}.", state,
           deadNodes.values());
       switch (state) {
-      case INIT:
-        init();
-        break;
-      case CHECK_DEAD:
-        checkDeadNodes();
-        break;
-      case IDLE:
-        idle();
-        break;
-      case ERROR:
-        try {
-          Thread.sleep(ERROR_SLEEP_MS);
-        } catch (InterruptedException e) {
-          LOG.debug("Got interrupted while DeadNodeDetector is error.", e);
-          Thread.currentThread().interrupt();
-        }
-        return;
-      default:
-        break;
+        case INIT:
+          init();
+          break;
+        case CHECK_DEAD:
+          checkDeadNodes();
+          break;
+        case IDLE:
+          idle();
+          break;
+        case ERROR:
+          try {
+            Thread.sleep(ERROR_SLEEP_MS);
+          } catch (InterruptedException e) {
+            LOG.debug("Got interrupted while DeadNodeDetector is error.", e);
+            Thread.currentThread().interrupt();
+          }
+          return;
+        default:
+          break;
       }
     }
   }
@@ -305,12 +281,12 @@ public class DeadNodeDetector extends Daemon {
   @VisibleForTesting
   void startProbeScheduler() {
     probeDeadNodesSchedulerThr =
-            new Thread(new ProbeScheduler(this, ProbeType.CHECK_DEAD));
+        new Thread(new ProbeScheduler(this, ProbeType.CHECK_DEAD));
     probeDeadNodesSchedulerThr.setDaemon(true);
     probeDeadNodesSchedulerThr.start();
 
     probeSuspectNodesSchedulerThr =
-            new Thread(new ProbeScheduler(this, ProbeType.CHECK_SUSPECT));
+        new Thread(new ProbeScheduler(this, ProbeType.CHECK_SUSPECT));
     probeSuspectNodesSchedulerThr.setDaemon(true);
     probeSuspectNodesSchedulerThr.start();
   }
@@ -354,7 +330,7 @@ public class DeadNodeDetector extends Daemon {
     private ProbeType type;
 
     Probe(DeadNodeDetector deadNodeDetector, DatanodeInfo datanodeInfo,
-           ProbeType type) {
+          ProbeType type) {
       this.deadNodeDetector = deadNodeDetector;
       this.datanodeInfo = datanodeInfo;
       this.type = type;
@@ -438,7 +414,7 @@ public class DeadNodeDetector extends Daemon {
     for (DatanodeInfo datanodeInfo : datanodeInfos) {
       if (!deadNodesProbeQueue.offer(datanodeInfo)) {
         LOG.debug("Skip to add dead node {} to check " +
-                "since the node is already in the probe queue.", datanodeInfo);
+            "since the node is already in the probe queue.", datanodeInfo);
       } else {
         LOG.debug("Add dead node to check: {}.", datanodeInfo);
       }
@@ -495,7 +471,7 @@ public class DeadNodeDetector extends Daemon {
    * Add datanode to suspectNodes and suspectAndDeadNodes.
    */
   public synchronized void addNodeToDetect(DFSInputStream dfsInputStream,
-      DatanodeInfo datanodeInfo) {
+                                           DatanodeInfo datanodeInfo) {
     HashSet<DatanodeInfo> datanodeInfos =
         suspectAndDeadNodes.get(dfsInputStream);
     if (datanodeInfos == null) {
@@ -517,10 +493,10 @@ public class DeadNodeDetector extends Daemon {
     return suspectNodesProbeQueue.offer(datanodeInfo);
   }
 
-    /**
-     * Remove dead node which is not used by any DFSInputStream from deadNodes.
-     * @return new dead node shared by all DFSInputStreams.
-     */
+  /**
+   * Remove dead node which is not used by any DFSInputStream from deadNodes.
+   * @return new dead node shared by all DFSInputStreams.
+   */
   public synchronized Set<DatanodeInfo> clearAndGetDetectedDeadNodes() {
     // remove the dead nodes who doesn't have any inputstream first
     Set<DatanodeInfo> newDeadNodes = new HashSet<DatanodeInfo>();
@@ -559,7 +535,7 @@ public class DeadNodeDetector extends Daemon {
   private synchronized void removeNodeFromDeadNodeDetector(
       DatanodeInfo datanodeInfo) {
     for (Map.Entry<DFSInputStream, HashSet<DatanodeInfo>> entry :
-            suspectAndDeadNodes.entrySet()) {
+        suspectAndDeadNodes.entrySet()) {
       Set<DatanodeInfo> datanodeInfos = entry.getValue();
       if (datanodeInfos.remove(datanodeInfo)) {
         DFSInputStream dfsInputStream = entry.getKey();

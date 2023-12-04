@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.statistics;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A mean statistic represented as the sum and the sample count;
@@ -132,7 +132,7 @@ public final class MeanStatistic implements Serializable, Cloneable {
    * @param newSum new sum
    */
   public synchronized void setSamplesAndSum(long sampleCount,
-      long newSum) {
+                                            long newSum) {
     setSamples(sampleCount);
     setSum(newSum);
   }

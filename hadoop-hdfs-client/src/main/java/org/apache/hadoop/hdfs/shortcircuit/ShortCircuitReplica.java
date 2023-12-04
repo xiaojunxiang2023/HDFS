@@ -1,22 +1,21 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileChannel.MapMode;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
 import org.apache.hadoop.hdfs.util.IOUtilsClient;
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.util.Time;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
+import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
 
 /**
  * A ShortCircuitReplica object contains file descriptors for a block that
@@ -100,13 +99,13 @@ public class ShortCircuitReplica {
   private Long evictableTimeNs = null;
 
   public ShortCircuitReplica(ExtendedBlockId key,
-      FileInputStream dataStream, FileInputStream metaStream,
-      ShortCircuitCache cache, long creationTimeMs, Slot slot) throws IOException {
+                             FileInputStream dataStream, FileInputStream metaStream,
+                             ShortCircuitCache cache, long creationTimeMs, Slot slot) throws IOException {
     this.key = key;
     this.dataStream = dataStream;
     this.metaStream = metaStream;
     this.metaHeader =
-          BlockMetadataHeader.preadHeader(metaStream.getChannel());
+        BlockMetadataHeader.preadHeader(metaStream.getChannel());
     if (metaHeader.getVersion() != 1) {
       throw new IOException("invalid metadata header version " +
           metaHeader.getVersion() + ".  Can only handle version 1.");
@@ -145,7 +144,7 @@ public class ShortCircuitReplica {
         return true;
       } else {
         LOG.trace("{} is not stale because it's only {} ms old "
-            + "and staleThresholdMs={}",  this, deltaMs, staleThresholdMs);
+            + "and staleThresholdMs={}", this, deltaMs, staleThresholdMs);
         return false;
       }
     }
@@ -160,7 +159,7 @@ public class ShortCircuitReplica {
    *
    * This method does not require any synchronization.
    *
-   * @return     True if we successfully added a no-checksum anchor.
+   * @return True if we successfully added a no-checksum anchor.
    */
   public boolean addNoChecksumAnchor() {
     if (slot == null) {
@@ -199,7 +198,7 @@ public class ShortCircuitReplica {
    * Must be called with the cache lock held.
    */
   void munmap() {
-    MappedByteBuffer mmap = (MappedByteBuffer)mmapData;
+    MappedByteBuffer mmap = (MappedByteBuffer) mmapData;
     NativeIO.POSIX.munmap(mmap);
     mmapData = null;
   }

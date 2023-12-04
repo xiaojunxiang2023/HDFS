@@ -10,6 +10,7 @@ public class HttpConfig {
     HTTP_AND_HTTPS;
 
     private static final Policy[] VALUES = values();
+
     public static Policy fromString(String value) {
       for (Policy p : VALUES) {
         if (p.name().equalsIgnoreCase(value)) {

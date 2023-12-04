@@ -1,14 +1,14 @@
 package org.apache.hadoop.io.compress.snappy;
 
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 import org.apache.hadoop.io.compress.Decompressor;
 import org.apache.hadoop.io.compress.DirectDecompressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
+
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 /**
  * A {@link Decompressor} based on the snappy compression algorithm.
@@ -247,7 +247,7 @@ public class SnappyDecompressor implements Decompressor {
       // Set the position and limit of `compressedDirectBuf` for reading
       compressedDirectBuf.limit(compressedDirectBufLen).position(0);
       int size = Snappy.uncompress((ByteBuffer) compressedDirectBuf,
-              (ByteBuffer) uncompressedDirectBuf);
+          (ByteBuffer) uncompressedDirectBuf);
       compressedDirectBufLen = 0;
       compressedDirectBuf.clear();
       return size;
@@ -256,7 +256,7 @@ public class SnappyDecompressor implements Decompressor {
 
   int decompressDirect(ByteBuffer src, ByteBuffer dst) throws IOException {
     assert (this instanceof SnappyDirectDecompressor);
-    
+
     ByteBuffer presliced = dst;
     if (dst.position() > 0) {
       presliced = dst;
@@ -285,10 +285,10 @@ public class SnappyDecompressor implements Decompressor {
     }
     return n;
   }
-  
+
   public static class SnappyDirectDecompressor extends SnappyDecompressor implements
       DirectDecompressor {
-    
+
     @Override
     public boolean finished() {
       return (endOfInput && super.finished());

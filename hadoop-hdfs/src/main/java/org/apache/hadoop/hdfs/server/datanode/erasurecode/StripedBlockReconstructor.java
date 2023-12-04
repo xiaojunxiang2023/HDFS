@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import org.apache.hadoop.hdfs.server.datanode.DataNodeFaultInjector;
 import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
 import org.apache.hadoop.io.erasurecode.rawcoder.InvalidDecodingException;
 import org.apache.hadoop.util.Time;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * StripedBlockReconstructor reconstruct one or more missed striped block in
@@ -18,7 +19,7 @@ class StripedBlockReconstructor extends StripedReconstructor
   private StripedWriter stripedWriter;
 
   StripedBlockReconstructor(ErasureCodingWorker worker,
-      StripedReconstructionInfo stripedReconInfo) {
+                            StripedReconstructionInfo stripedReconInfo) {
     super(worker, stripedReconInfo);
 
     stripedWriter = new StripedWriter(this, getDatanode(),
@@ -136,7 +137,7 @@ class StripedBlockReconstructor extends StripedReconstructor
   }
 
   private void decode(ByteBuffer[] inputs, int[] erasedIndices,
-      ByteBuffer[] outputs) throws IOException {
+                      ByteBuffer[] outputs) throws IOException {
     long start = System.nanoTime();
     getDecoder().decode(inputs, erasedIndices, outputs);
     long end = System.nanoTime();

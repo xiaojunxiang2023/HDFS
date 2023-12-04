@@ -1,5 +1,13 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.DF;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.server.common.Util;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -8,17 +16,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.DF;
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.server.common.Util;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
- * 
+ *
  * NameNodeResourceChecker provides a method -
  * <code>hasAvailableDiskSpace</code> - which will return true if and only if
  * the NameNode has disk space available on all required volumes, and any volume
@@ -35,24 +35,24 @@ public class NameNodeResourceChecker {
   private final Configuration conf;
   private Map<String, CheckedVolume> volumes;
   private int minimumRedundantVolumes;
-  
+
   @VisibleForTesting
   class CheckedVolume implements CheckableNameNodeResource {
     private DF df;
     private boolean required;
     private String volume;
-    
+
     public CheckedVolume(File dirToCheck, boolean required)
         throws IOException {
       df = new DF(dirToCheck, conf);
       this.required = required;
       volume = df.getFilesystem();
     }
-    
+
     public String getVolume() {
       return volume;
     }
-    
+
     @Override
     public boolean isRequired() {
       return required;
@@ -74,7 +74,7 @@ public class NameNodeResourceChecker {
         return true;
       }
     }
-    
+
     @Override
     public String toString() {
       return "volume: " + volume + " required: " + required +
@@ -92,7 +92,7 @@ public class NameNodeResourceChecker {
 
     duReserved = conf.getLongBytes(DFSConfigKeys.DFS_NAMENODE_DU_RESERVED_KEY,
         DFSConfigKeys.DFS_NAMENODE_DU_RESERVED_DEFAULT);
-    
+
     Collection<URI> extraCheckedVolumes = Util.stringCollectionAsURIs(conf
         .getTrimmedStringCollection(DFSConfigKeys.DFS_NAMENODE_CHECKED_VOLUMES_KEY));
 
@@ -117,7 +117,7 @@ public class NameNodeResourceChecker {
     for (URI extraDirToCheck : extraCheckedVolumes) {
       addDirToCheck(extraDirToCheck, true);
     }
-    
+
     minimumRedundantVolumes = conf.getInt(
         DFSConfigKeys.DFS_NAMENODE_CHECKED_VOLUMES_MINIMUM_KEY,
         DFSConfigKeys.DFS_NAMENODE_CHECKED_VOLUMES_MINIMUM_DEFAULT);
@@ -128,7 +128,7 @@ public class NameNodeResourceChecker {
    * If <code>required</code> is true, and this volume is already present, but
    * is marked redundant, it will be marked required. If the volume is already
    * present but marked required then this method is a no-op.
-   * 
+   *
    * @param directoryToCheck
    *          The directory whose volume will be checked for available space.
    */
@@ -136,9 +136,9 @@ public class NameNodeResourceChecker {
       throws IOException {
     File dir = new File(directoryToCheck.getPath());
     if (!dir.exists()) {
-      throw new IOException("Missing directory "+dir.getAbsolutePath());
+      throw new IOException("Missing directory " + dir.getAbsolutePath());
     }
-    
+
     CheckedVolume newVolume = new CheckedVolume(dir, required);
     CheckedVolume volume = volumes.get(newVolume.getVolume());
     if (volume == null || !volume.isRequired()) {
@@ -149,7 +149,7 @@ public class NameNodeResourceChecker {
   /**
    * Return true if disk space is available on at least one of the configured
    * redundant volumes, and all of the configured required volumes.
-   * 
+   *
    * @return True if the configured amount of disk space is available on at
    *         least one redundant volume and all of the required volumes, false
    *         otherwise.
@@ -161,7 +161,7 @@ public class NameNodeResourceChecker {
 
   /**
    * Return the set of directories which are low on space.
-   * 
+   *
    * @return the set of directories whose free space is below the threshold.
    */
   @VisibleForTesting
@@ -175,12 +175,12 @@ public class NameNodeResourceChecker {
     }
     return lowVolumes;
   }
-  
+
   @VisibleForTesting
   void setVolumes(Map<String, CheckedVolume> volumes) {
     this.volumes = volumes;
   }
-  
+
   @VisibleForTesting
   void setMinimumReduntdantVolumes(int minimumRedundantVolumes) {
     this.minimumRedundantVolumes = minimumRedundantVolumes;

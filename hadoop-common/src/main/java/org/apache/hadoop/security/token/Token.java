@@ -1,23 +1,18 @@
 package org.apache.hadoop.security.token;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Bytes;
-
 import org.apache.commons.codec.binary.Base64;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.*;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Bytes;
 import org.apache.hadoop.util.ReflectionUtils;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.security.MessageDigest;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The client-side form of the token.
@@ -62,10 +57,10 @@ public class Token<T extends TokenIdentifier> implements Writable {
    * @param service the service for this token
    */
   public Token(byte[] identifier, byte[] password, Text kind, Text service) {
-    this.identifier = (identifier == null)? new byte[0] : identifier;
-    this.password = (password == null)? new byte[0] : password;
-    this.kind = (kind == null)? new Text() : kind;
-    this.service = (service == null)? new Text() : service;
+    this.identifier = (identifier == null) ? new byte[0] : identifier;
+    this.password = (password == null) ? new byte[0] : password;
+    this.kind = (kind == null) ? new Text() : kind;
+    this.service = (service == null) ? new Text() : service;
   }
 
   /**
@@ -102,7 +97,7 @@ public class Token<T extends TokenIdentifier> implements Writable {
   }
 
   private static Class<? extends TokenIdentifier>
-      getClassForIdentifier(Text kind) {
+  getClassForIdentifier(Text kind) {
     Class<? extends TokenIdentifier> cls = null;
     synchronized (Token.class) {
       if (tokenKindMap == null) {
@@ -332,7 +327,7 @@ public class Token<T extends TokenIdentifier> implements Writable {
                                      String newValue) throws IOException {
     if (newValue == null) {
       throw new HadoopIllegalArgumentException(
-              "Invalid argument, newValue is null");
+          "Invalid argument, newValue is null");
     }
     Base64 decoder = new Base64(0, null, true);
     DataInputBuffer buf = new DataInputBuffer();
@@ -369,9 +364,9 @@ public class Token<T extends TokenIdentifier> implements Writable {
     } else {
       Token<T> r = (Token<T>) right;
       return MessageDigest.isEqual(identifier, r.identifier) &&
-             MessageDigest.isEqual(password, r.password) &&
-             kind.equals(r.kind) &&
-             service.equals(r.service);
+          MessageDigest.isEqual(password, r.password) &&
+          kind.equals(r.kind) &&
+          service.equals(r.service);
     }
   }
 
@@ -470,7 +465,7 @@ public class Token<T extends TokenIdentifier> implements Writable {
    * @throws InterruptedException
    */
   public long renew(Configuration conf
-                    ) throws IOException, InterruptedException {
+  ) throws IOException, InterruptedException {
     return getRenewer().renew(this, conf);
   }
 
@@ -480,7 +475,7 @@ public class Token<T extends TokenIdentifier> implements Writable {
    * @throws InterruptedException
    */
   public void cancel(Configuration conf
-                     ) throws IOException, InterruptedException {
+  ) throws IOException, InterruptedException {
     getRenewer().cancel(this, conf);
   }
 
@@ -507,8 +502,8 @@ public class Token<T extends TokenIdentifier> implements Writable {
 
     @Override
     public long renew(Token<?> token, Configuration conf) {
-      throw new UnsupportedOperationException("Token renewal is not supported "+
-                                              " for " + token.kind + " tokens");
+      throw new UnsupportedOperationException("Token renewal is not supported " +
+          " for " + token.kind + " tokens");
     }
 
     @Override
@@ -519,5 +514,6 @@ public class Token<T extends TokenIdentifier> implements Writable {
     }
 
   }
+
   private static final TokenRenewer TRIVIAL_RENEWER = new TrivialRenewer();
 }

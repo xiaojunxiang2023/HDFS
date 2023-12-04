@@ -1,21 +1,21 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.security.PrivilegedExceptionAction;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.slf4j.Logger;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.security.PrivilegedExceptionAction;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manages the BPOfferService objects for the data node.
@@ -24,11 +24,11 @@ import org.slf4j.Logger;
  */
 class BlockPoolManager {
   private static final Logger LOG = DataNode.LOG;
-  
+
   private final Map<String, BPOfferService> bpByNameserviceId =
-    Maps.newHashMap();
+      Maps.newHashMap();
   private final Map<String, BPOfferService> bpByBlockPoolId =
-    Maps.newHashMap();
+      Maps.newHashMap();
   private final List<BPOfferService> offerServices =
       new CopyOnWriteArrayList<>();
 
@@ -36,11 +36,11 @@ class BlockPoolManager {
 
   //This lock is used only to ensure exclusion of refreshNamenodes
   private final Object refreshNamenodesLock = new Object();
-  
+
   BlockPoolManager(DataNode dn) {
     this.dn = dn;
   }
-  
+
   synchronized void addBlockPool(BPOfferService bpos) {
     Preconditions.checkArgument(offerServices.contains(bpos),
         "Unknown BPOS: %s", bpos);
@@ -49,7 +49,7 @@ class BlockPoolManager {
     }
     bpByBlockPoolId.put(bpos.getBlockPoolId(), bpos);
   }
-  
+
   /**
    * Returns a list of BPOfferService objects. The underlying list
    * implementation is a CopyOnWriteArrayList so it can be safely
@@ -60,11 +60,11 @@ class BlockPoolManager {
   synchronized List<BPOfferService> getAllNamenodeThreads() {
     return Collections.unmodifiableList(offerServices);
   }
-      
+
   synchronized BPOfferService get(String bpid) {
     return bpByBlockPoolId.get(bpid);
   }
-  
+
   synchronized void remove(BPOfferService t) {
     offerServices.remove(t);
     if (t.hasBlockPoolId()) {
@@ -72,10 +72,10 @@ class BlockPoolManager {
       // with any NN, so it was never added it to this map
       bpByBlockPoolId.remove(t.getBlockPoolId());
     }
-    
+
     boolean removed = false;
     for (Iterator<BPOfferService> it = bpByNameserviceId.values().iterator();
-         it.hasNext() && !removed;) {
+         it.hasNext() && !removed; ) {
       BPOfferService bpos = it.next();
       if (bpos == t) {
         it.remove();
@@ -83,12 +83,12 @@ class BlockPoolManager {
         removed = true;
       }
     }
-    
+
     if (!removed) {
       LOG.warn("Couldn't remove BPOS " + t + " from bpByNameserviceId map");
     }
   }
-  
+
   void shutDownAll(List<BPOfferService> bposList) throws InterruptedException {
     for (BPOfferService bpos : bposList) {
       bpos.stop(); //interrupts the threads
@@ -98,7 +98,7 @@ class BlockPoolManager {
       bpos.join();
     }
   }
-  
+
   synchronized void startAll() throws IOException {
     try {
       UserGroupInformation.getLoginUser().doAs(
@@ -117,13 +117,13 @@ class BlockPoolManager {
       throw ioe;
     }
   }
-  
+
   void joinAll() {
-    for (BPOfferService bpos: this.getAllNamenodeThreads()) {
+    for (BPOfferService bpos : this.getAllNamenodeThreads()) {
       bpos.join();
     }
   }
-  
+
   void refreshNamenodes(Configuration conf)
       throws IOException {
     LOG.info("Refresh request received for nameservices: " +
@@ -150,7 +150,7 @@ class BlockPoolManager {
       doRefreshNamenodes(newAddressMap, newLifelineAddressMap);
     }
   }
-  
+
   private void doRefreshNamenodes(
       Map<String, Map<String, InetSocketAddress>> addrMap,
       Map<String, Map<String, InetSocketAddress>> lifelineAddrMap)
@@ -160,7 +160,7 @@ class BlockPoolManager {
     Set<String> toRefresh = Sets.newLinkedHashSet();
     Set<String> toAdd = Sets.newLinkedHashSet();
     Set<String> toRemove;
-    
+
     synchronized (this) {
       // Step 1. For each of the new nameservices, figure out whether
       // it's an update of the set of NNs for an existing NS,
@@ -172,24 +172,24 @@ class BlockPoolManager {
           toAdd.add(nameserviceId);
         }
       }
-      
+
       // Step 2. Any nameservices we currently have but are no longer present
       // need to be removed.
       toRemove = Sets.newHashSet(Sets.difference(
           bpByNameserviceId.keySet(), addrMap.keySet()));
-      
-      assert toRefresh.size() + toAdd.size() ==
-        addrMap.size() :
-          "toAdd: " + Joiner.on(",").useForNull("<default>").join(toAdd) +
-          "  toRemove: " + Joiner.on(",").useForNull("<default>").join(toRemove) +
-          "  toRefresh: " + Joiner.on(",").useForNull("<default>").join(toRefresh);
 
-      
+      assert toRefresh.size() + toAdd.size() ==
+          addrMap.size() :
+          "toAdd: " + Joiner.on(",").useForNull("<default>").join(toAdd) +
+              "  toRemove: " + Joiner.on(",").useForNull("<default>").join(toRemove) +
+              "  toRefresh: " + Joiner.on(",").useForNull("<default>").join(toRefresh);
+
+
       // Step 3. Start new nameservices
       if (!toAdd.isEmpty()) {
         LOG.info("Starting BPOfferServices for nameservices: " +
             Joiner.on(",").useForNull("<default>").join(toAdd));
-      
+
         for (String nsToAdd : toAdd) {
           Map<String, InetSocketAddress> nnIdToAddr = addrMap.get(nsToAdd);
           Map<String, InetSocketAddress> nnIdToLifelineAddr =
@@ -221,7 +221,7 @@ class BlockPoolManager {
     if (!toRemove.isEmpty()) {
       LOG.info("Stopping BPOfferServices for nameservices: " +
           Joiner.on(",").useForNull("<default>").join(toRemove));
-      
+
       for (String nsToRemove : toRemove) {
         BPOfferService bpos = bpByNameserviceId.get(nsToRemove);
         bpos.stop();
@@ -229,12 +229,12 @@ class BlockPoolManager {
         // they will call remove on their own
       }
     }
-    
+
     // Step 5. Update nameservices whose NN list has changed
     if (!toRefresh.isEmpty()) {
       LOG.info("Refreshing list of NNs for nameservices: " +
           Joiner.on(",").useForNull("<default>").join(toRefresh));
-      
+
       for (String nsToRefresh : toRefresh) {
         BPOfferService bpos = bpByNameserviceId.get(nsToRefresh);
         Map<String, InetSocketAddress> nnIdToAddr = addrMap.get(nsToRefresh);

@@ -1,13 +1,13 @@
 package org.apache.hadoop.ipc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Used to registry custom methods to refresh at runtime.
@@ -75,17 +75,17 @@ public class RefreshRegistry {
 
     if (handlers.size() == 0) {
       String msg = "Identifier '" + identifier +
-        "' does not exist in RefreshRegistry. Valid options are: " +
-        Joiner.on(", ").join(handlerTable.keySet());
+          "' does not exist in RefreshRegistry. Valid options are: " +
+          Joiner.on(", ").join(handlerTable.keySet());
 
       throw new IllegalArgumentException(msg);
     }
 
     ArrayList<RefreshResponse> responses =
-      new ArrayList<RefreshResponse>(handlers.size());
+        new ArrayList<RefreshResponse>(handlers.size());
 
     // Dispatch to each handler and store response
-    for(RefreshHandler handler : handlers) {
+    for (RefreshHandler handler : handlers) {
       RefreshResponse response;
 
       // Run the handler
@@ -96,8 +96,8 @@ public class RefreshRegistry {
         }
 
         LOG.info(handlerName(handler) + " responds to '" + identifier +
-          "', says: '" + response.getMessage() + "', returns " +
-          response.getReturnCode());
+            "', says: '" + response.getMessage() + "', returns " +
+            response.getReturnCode());
       } catch (Exception e) {
         response = new RefreshResponse(-1, e.getLocalizedMessage());
       }

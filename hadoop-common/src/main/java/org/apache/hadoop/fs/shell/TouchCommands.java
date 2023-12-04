@@ -1,16 +1,16 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.PathIOException;
+import org.apache.hadoop.fs.PathIsDirectoryException;
+import org.apache.hadoop.fs.PathNotFoundException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.StringUtils;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.fs.PathIsDirectoryException;
-import org.apache.hadoop.fs.PathNotFoundException;
-import org.apache.hadoop.util.StringUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * Unix touch like commands
@@ -31,9 +31,9 @@ public class TouchCommands extends FsCommand {
     public static final String NAME = "touchz";
     public static final String USAGE = "<path> ...";
     public static final String DESCRIPTION =
-      "Creates a file of zero length " +
-      "at <path> with current time as the timestamp of that <path>. " +
-      "An error is returned if the file exists with non-zero length\n";
+        "Creates a file of zero length " +
+            "at <path> with current time as the timestamp of that <path>. " +
+            "An error is returned if the file exists with non-zero length\n";
 
     @Override
     protected void processOptions(LinkedList<String> args) {
@@ -101,6 +101,7 @@ public class TouchCommands extends FsCommand {
     private String timestamp;
     private final SimpleDateFormat dateFormat =
         new SimpleDateFormat("yyyyMMdd:HHmmss");
+
     @VisibleForTesting
     public DateFormat getDateFormat() {
       return dateFormat;
@@ -159,8 +160,8 @@ public class TouchCommands extends FsCommand {
           time = dateFormat.parse(timestamp).getTime();
         } catch (ParseException e) {
           throw new IllegalArgumentException(
-              "Unable to parse the specified timestamp "+ timestamp
-              + ". The expected format is " + dateFormat.toPattern(), e);
+              "Unable to parse the specified timestamp " + timestamp
+                  + ". The expected format is " + dateFormat.toPattern(), e);
         }
       }
       if (changeModTime ^ changeAccessTime) {

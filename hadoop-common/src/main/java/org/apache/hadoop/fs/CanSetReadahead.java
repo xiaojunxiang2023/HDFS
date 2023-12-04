@@ -1,6 +1,7 @@
 package org.apache.hadoop.fs;
 
 import java.io.IOException;
+
 public interface CanSetReadahead {
   /**
    * Set the readahead on this stream.
@@ -12,5 +13,5 @@ public interface CanSetReadahead {
    *                                        setting readahead. 
    */
   public void setReadahead(Long readahead)
-    throws IOException, UnsupportedOperationException;
+      throws IOException, UnsupportedOperationException;
 }

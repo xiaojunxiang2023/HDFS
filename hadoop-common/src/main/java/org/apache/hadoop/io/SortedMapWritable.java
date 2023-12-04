@@ -1,33 +1,29 @@
 package org.apache.hadoop.io;
 
+import org.apache.hadoop.util.ReflectionUtils;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import org.apache.hadoop.util.ReflectionUtils;
+import java.util.*;
 
 /**
  * A Writable SortedMap.
  */
 public class SortedMapWritable<K extends WritableComparable<? super K>> extends AbstractMapWritable
-  implements SortedMap<K, Writable> {
-  
+    implements SortedMap<K, Writable> {
+
   private SortedMap<K, Writable> instance;
-  
+
   /** default constructor. */
   public SortedMapWritable() {
     super();
     this.instance = new TreeMap<K, Writable>();
   }
-  
+
   /**
    * Copy constructor.
-   * 
+   *
    * @param other the map to copy from
    */
   public SortedMapWritable(SortedMapWritable<K> other) {
@@ -110,8 +106,8 @@ public class SortedMapWritable<K extends WritableComparable<? super K>> extends 
 
   @Override
   public void putAll(Map<? extends K, ? extends Writable> t) {
-    for (Map.Entry<? extends K, ? extends Writable> e:
-      t.entrySet()) {
+    for (Map.Entry<? extends K, ? extends Writable> e :
+        t.entrySet()) {
       put(e.getKey(), e.getValue());
     }
   }
@@ -135,23 +131,23 @@ public class SortedMapWritable<K extends WritableComparable<? super K>> extends 
   @Override
   public void readFields(DataInput in) throws IOException {
     super.readFields(in);
-    
+
     // Read the number of entries in the map
-    
+
     int entries = in.readInt();
-    
+
     // Then read each key/value pair
-    
+
     for (int i = 0; i < entries; i++) {
       K key =
-        (K) ReflectionUtils.newInstance(getClass(
-            in.readByte()), getConf());
-      
+          (K) ReflectionUtils.newInstance(getClass(
+              in.readByte()), getConf());
+
       key.readFields(in);
-      
+
       Writable value = (Writable) ReflectionUtils.newInstance(getClass(
           in.readByte()), getConf());
-      
+
       value.readFields(in);
       instance.put(key, value);
     }
@@ -160,14 +156,14 @@ public class SortedMapWritable<K extends WritableComparable<? super K>> extends 
   @Override
   public void write(DataOutput out) throws IOException {
     super.write(out);
-    
+
     // Write out the number of entries in the map
-    
+
     out.writeInt(instance.size());
-    
+
     // Then write out each key/value pair
-    
-    for (Map.Entry<K, Writable> e: instance.entrySet()) {
+
+    for (Map.Entry<K, Writable> e : instance.entrySet()) {
       out.writeByte(getId(e.getKey().getClass()));
       e.getKey().write(out);
       out.writeByte(getId(e.getValue().getClass()));
@@ -182,7 +178,7 @@ public class SortedMapWritable<K extends WritableComparable<? super K>> extends 
     }
 
     if (obj instanceof SortedMapWritable) {
-      Map<?,?> map = (Map<?,?>) obj;
+      Map<?, ?> map = (Map<?, ?>) obj;
       if (size() != map.size()) {
         return false;
       }

@@ -1,16 +1,16 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.tracing.TraceScope;
+import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.DurationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.hadoop.util.DurationInfo;
-
-import org.apache.hadoop.tracing.TraceScope;
-import org.apache.hadoop.tracing.Tracer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,7 +57,7 @@ public class Globber {
    * @param resolveSymlinks should symlinks be resolved.
    */
   private Globber(FileSystem fs, Path pathPattern, PathFilter filter,
-      boolean resolveSymlinks) {
+                  boolean resolveSymlinks) {
     this.fs = fs;
     this.fc = null;
     this.pathPattern = pathPattern;
@@ -76,7 +76,7 @@ public class Globber {
    * @param resolveSymlinks should symlinks be resolved.
    */
   private Globber(FileContext fc, Path pathPattern, PathFilter filter,
-      boolean resolveSymlinks) {
+                  boolean resolveSymlinks) {
     this.fs = null;
     this.fc = fc;
     this.pathPattern = pathPattern;
@@ -153,7 +153,7 @@ public class Globber {
         scheme = fs.getUri().getScheme();
       } else {
         scheme = fc.getFSofPath(fc.fixRelativePart(path)).
-                    getUri().getScheme();
+            getUri().getScheme();
       }
     }
     return scheme;
@@ -166,10 +166,10 @@ public class Globber {
         authority = fs.getUri().getAuthority();
       } else {
         authority = fc.getFSofPath(fc.fixRelativePart(path)).
-                      getUri().getAuthority();
+            getUri().getAuthority();
       }
     }
-    return authority ;
+    return authority;
   }
 
   public FileStatus[] glob() throws IOException {
@@ -198,7 +198,7 @@ public class Globber {
     LOG.debug("Filesystem glob {}", pathPatternString);
     // Now loop over all flattened patterns.  In every case, we'll be trying to
     // match them to entries in the filesystem.
-    ArrayList<FileStatus> results = 
+    ArrayList<FileStatus> results =
         new ArrayList<>(flattenedPatterns.size());
     boolean sawWildcard = false;
     for (String flatPattern : flattenedPatterns) {
@@ -235,9 +235,9 @@ public class Globber {
             new Path(scheme, authority, Path.SEPARATOR));
       }
       candidates.add(rootPlaceholder);
-      
+
       for (int componentIdx = 0; componentIdx < components.size();
-          componentIdx++) {
+           componentIdx++) {
         ArrayList<FileStatus> newCandidates =
             new ArrayList<>(candidates.size());
         GlobFilter globFilter = new GlobFilter(components.get(componentIdx));
@@ -287,9 +287,9 @@ public class Globber {
                 if (status == null) {
                   // null means the file was not found
                   LOG.warn("File/directory {} not found:"
-                      + " it may have been deleted."
-                      + " If this is an object store, this can be a sign of"
-                      + " eventual consistency problems.",
+                          + " it may have been deleted."
+                          + " If this is an object store, this can be a sign of"
+                          + " eventual consistency problems.",
                       path);
                   continue;
                 }
@@ -309,11 +309,11 @@ public class Globber {
             for (FileStatus child : children) {
               if (componentIdx < components.size() - 1) {
                 // Don't try to recurse into non-directories.  See HADOOP-10957.
-                if (!child.isDirectory()) continue; 
+                if (!child.isDirectory()) continue;
               }
               // Set the child path based on the parent path.
               child.setPath(new Path(candidate.getPath(),
-                      child.getPath().getName()));
+                  child.getPath().getName()));
               if (globFilter.accept(child.getPath())) {
                 newCandidates.add(child);
               }

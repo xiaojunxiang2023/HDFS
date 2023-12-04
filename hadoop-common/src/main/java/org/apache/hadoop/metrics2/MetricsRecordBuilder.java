@@ -90,5 +90,7 @@ public abstract class MetricsRecordBuilder {
    * Syntactic sugar to add multiple records in a collector in a one liner.
    * @return the parent metrics collector object
    */
-  public MetricsCollector endRecord() { return parent(); }
+  public MetricsCollector endRecord() {
+    return parent();
+  }
 }

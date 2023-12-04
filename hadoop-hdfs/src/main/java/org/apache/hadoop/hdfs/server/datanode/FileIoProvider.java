@@ -14,7 +14,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.datanode;
+ */
+package org.apache.hadoop.hdfs.server.datanode;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -34,15 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.Flushable;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -211,7 +204,7 @@ public class FileIoProvider {
    * Delete a file.
    * @param volume  target volume. null if unavailable.
    * @param f  File to delete.
-   * @return  true if the file was successfully deleted.
+   * @return true if the file was successfully deleted.
    */
   public boolean delete(@Nullable FsVolumeSpi volume, File f) {
     final long begin = profilingEventHook.beforeMetadataOp(volume, DELETE);
@@ -230,7 +223,7 @@ public class FileIoProvider {
    * Delete a file, first checking to see if it exists.
    * @param volume  target volume. null if unavailable.
    * @param f  File to delete
-   * @return  true if the file was successfully deleted or if it never
+   * @return true if the file was successfully deleted or if it never
    *          existed.
    */
   public boolean deleteWithExistsCheck(@Nullable FsVolumeSpi volume, File f) {
@@ -290,7 +283,7 @@ public class FileIoProvider {
    * Create a file.
    * @param volume  target volume. null if unavailable.
    * @param f  File to be created.
-   * @return  true if the file does not exist and was successfully created.
+   * @return true if the file does not exist and was successfully created.
    *          false if the file already exists.
    * @throws IOException
    */
@@ -317,8 +310,8 @@ public class FileIoProvider {
    *
    * @param volume  target volume. null if unavailable.
    * @param f  File object.
-   * @return  FileInputStream to the given file.
-   * @throws  FileNotFoundException
+   * @return FileInputStream to the given file.
+   * @throws FileNotFoundException
    */
   public FileInputStream getFileInputStream(
       @Nullable FsVolumeSpi volume, File f) throws FileNotFoundException {
@@ -329,7 +322,7 @@ public class FileIoProvider {
       fis = new WrappedFileInputStream(volume, f);
       profilingEventHook.afterMetadataOp(volume, OPEN, begin);
       return fis;
-    } catch(Exception e) {
+    } catch (Exception e) {
       org.apache.commons.io.IOUtils.closeQuietly(fis);
       onFailure(volume, begin);
       throw e;
@@ -347,7 +340,7 @@ public class FileIoProvider {
    * @param f  File object.
    * @param append  if true, then bytes will be written to the end of the
    *                file rather than the beginning.
-   * @return  FileOutputStream to the given file object.
+   * @return FileOutputStream to the given file object.
    * @throws FileNotFoundException
    */
   public FileOutputStream getFileOutputStream(
@@ -360,7 +353,7 @@ public class FileIoProvider {
       fos = new WrappedFileOutputStream(volume, f, append);
       profilingEventHook.afterMetadataOp(volume, OPEN, begin);
       return fos;
-    } catch(Exception e) {
+    } catch (Exception e) {
       org.apache.commons.io.IOUtils.closeQuietly(fos);
       onFailure(volume, begin);
       throw e;
@@ -376,8 +369,8 @@ public class FileIoProvider {
    *
    * @param volume  target volume. null if unavailable.
    * @param f  File object.
-   * @return  FileOutputStream to the given file object.
-   * @throws  FileNotFoundException
+   * @return FileOutputStream to the given file object.
+   * @throws FileNotFoundException
    */
   public FileOutputStream getFileOutputStream(
       @Nullable FsVolumeSpi volume, File f) throws FileNotFoundException {
@@ -393,7 +386,7 @@ public class FileIoProvider {
    *
    * @param volume  target volume. null if unavailable.
    * @param fd  File descriptor object.
-   * @return  FileOutputStream to the given file object.
+   * @return FileOutputStream to the given file object.
    */
   public FileOutputStream getFileOutputStream(
       @Nullable FsVolumeSpi volume, FileDescriptor fd) {
@@ -425,7 +418,7 @@ public class FileIoProvider {
           NativeIO.getShareDeleteFileDescriptor(f, offset));
       profilingEventHook.afterMetadataOp(volume, OPEN, begin);
       return fis;
-    } catch(Exception e) {
+    } catch (Exception e) {
       org.apache.commons.io.IOUtils.closeQuietly(fis);
       onFailure(volume, begin);
       throw e;
@@ -457,7 +450,7 @@ public class FileIoProvider {
           FsDatasetUtil.openAndSeek(f, offset));
       profilingEventHook.afterMetadataOp(volume, OPEN, begin);
       return fis;
-    } catch(Exception e) {
+    } catch (Exception e) {
       org.apache.commons.io.IOUtils.closeQuietly(fis);
       onFailure(volume, begin);
       throw e;
@@ -488,7 +481,7 @@ public class FileIoProvider {
       raf = new WrappedRandomAccessFile(volume, f, mode);
       profilingEventHook.afterMetadataOp(volume, OPEN, begin);
       return raf;
-    } catch(Exception e) {
+    } catch (Exception e) {
       org.apache.commons.io.IOUtils.closeQuietly(raf);
       onFailure(volume, begin);
       throw e;
@@ -509,7 +502,7 @@ public class FileIoProvider {
       boolean deleted = FileUtil.fullyDelete(dir);
       profilingEventHook.afterMetadataOp(volume, DELETE, begin);
       return deleted;
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -531,7 +524,7 @@ public class FileIoProvider {
       faultInjectorEventHook.beforeMetadataOp(volume, MOVE);
       FileUtil.replaceFile(src, target);
       profilingEventHook.afterMetadataOp(volume, MOVE, begin);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -554,7 +547,7 @@ public class FileIoProvider {
       faultInjectorEventHook.beforeMetadataOp(volume, MOVE);
       Storage.rename(src, target);
       profilingEventHook.afterMetadataOp(volume, MOVE, begin);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -577,7 +570,7 @@ public class FileIoProvider {
       faultInjectorEventHook.beforeMetadataOp(volume, MOVE);
       FileUtils.moveFile(src, target);
       profilingEventHook.afterMetadataOp(volume, MOVE, begin);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -602,7 +595,7 @@ public class FileIoProvider {
       faultInjectorEventHook.beforeMetadataOp(volume, MOVE);
       Files.move(src, target, options);
       profilingEventHook.afterMetadataOp(volume, MOVE, begin);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -628,7 +621,7 @@ public class FileIoProvider {
       faultInjectorEventHook.beforeFileIo(volume, NATIVE_COPY, length);
       Storage.nativeCopyFileUnbuffered(src, target, preserveFileDate);
       profilingEventHook.afterFileIo(volume, NATIVE_COPY, begin, length);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -639,7 +632,7 @@ public class FileIoProvider {
    *
    * @param volume target volume. null if unavailable.
    * @param dir  directory to be created.
-   * @return  true only if the directory was created. false if
+   * @return true only if the directory was created. false if
    *          the directory already exists.
    * @throws IOException if a directory with the given name does
    *                     not exist and could not be created.
@@ -654,7 +647,7 @@ public class FileIoProvider {
       created = dir.mkdirs();
       isDirectory = !created && dir.isDirectory();
       profilingEventHook.afterMetadataOp(volume, MKDIRS, begin);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -681,7 +674,7 @@ public class FileIoProvider {
       faultInjectorEventHook.beforeMetadataOp(volume, MKDIRS);
       succeeded = dir.isDirectory() || dir.mkdirs();
       profilingEventHook.afterMetadataOp(volume, MKDIRS, begin);
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -697,7 +690,7 @@ public class FileIoProvider {
    *
    * @param volume  target volume. null if unavailable.
    * @param dir  Directory to be listed.
-   * @return  array of file objects representing the directory entries.
+   * @return array of file objects representing the directory entries.
    * @throws IOException
    */
   public File[] listFiles(
@@ -708,7 +701,7 @@ public class FileIoProvider {
       File[] children = FileUtil.listFiles(dir);
       profilingEventHook.afterMetadataOp(volume, LIST, begin);
       return children;
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -720,7 +713,7 @@ public class FileIoProvider {
    *
    * @param volume  target volume. null if unavailable.
    * @param   dir directory to be listed.
-   * @return  array of strings representing the directory entries.
+   * @return array of strings representing the directory entries.
    * @throws IOException
    */
   public String[] list(
@@ -731,7 +724,7 @@ public class FileIoProvider {
       String[] children = FileUtil.list(dir);
       profilingEventHook.afterMetadataOp(volume, LIST, begin);
       return children;
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -755,7 +748,7 @@ public class FileIoProvider {
       List<String> children = IOUtils.listDirectory(dir, filter);
       profilingEventHook.afterMetadataOp(volume, LIST, begin);
       return children;
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -778,7 +771,7 @@ public class FileIoProvider {
       int count = HardLink.getLinkCount(f);
       profilingEventHook.afterMetadataOp(volume, LIST, begin);
       return count;
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -798,7 +791,7 @@ public class FileIoProvider {
       boolean exists = f.exists();
       profilingEventHook.afterMetadataOp(volume, EXISTS, begin);
       return exists;
-    } catch(Exception e) {
+    } catch (Exception e) {
       onFailure(volume, begin);
       throw e;
     }
@@ -809,7 +802,8 @@ public class FileIoProvider {
    * instrumenting disk IO.
    */
   private final class WrappedFileInputStream extends FileInputStream {
-    private @Nullable final FsVolumeSpi volume;
+    private @Nullable
+    final FsVolumeSpi volume;
 
     /**
      * {@inheritDoc}.
@@ -840,7 +834,7 @@ public class FileIoProvider {
         int b = super.read();
         profilingEventHook.afterFileIo(volume, READ, begin, LEN_INT);
         return b;
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -858,7 +852,7 @@ public class FileIoProvider {
         int numBytesRead = super.read(b);
         profilingEventHook.afterFileIo(volume, READ, begin, numBytesRead);
         return numBytesRead;
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -875,7 +869,7 @@ public class FileIoProvider {
         int numBytesRead = super.read(b, off, len);
         profilingEventHook.afterFileIo(volume, READ, begin, numBytesRead);
         return numBytesRead;
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -887,7 +881,8 @@ public class FileIoProvider {
    * instrumenting disk IO.
    */
   private final class WrappedFileOutputStream extends FileOutputStream {
-    private @Nullable final FsVolumeSpi volume;
+    private @Nullable
+    final FsVolumeSpi volume;
 
     /**
      * {@inheritDoc}.
@@ -919,7 +914,7 @@ public class FileIoProvider {
         faultInjectorEventHook.beforeFileIo(volume, WRITE, LEN_INT);
         super.write(b);
         profilingEventHook.afterFileIo(volume, WRITE, begin, LEN_INT);
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -936,7 +931,7 @@ public class FileIoProvider {
         faultInjectorEventHook.beforeFileIo(volume, WRITE, b.length);
         super.write(b);
         profilingEventHook.afterFileIo(volume, WRITE, begin, b.length);
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -952,7 +947,7 @@ public class FileIoProvider {
         faultInjectorEventHook.beforeFileIo(volume, WRITE, len);
         super.write(b, off, len);
         profilingEventHook.afterFileIo(volume, WRITE, begin, len);
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -964,7 +959,8 @@ public class FileIoProvider {
    * instrumenting IO.
    */
   private final class WrappedRandomAccessFile extends RandomAccessFile {
-    private @Nullable final FsVolumeSpi volume;
+    private @Nullable
+    final FsVolumeSpi volume;
 
     public WrappedRandomAccessFile(
         @Nullable FsVolumeSpi volume, File f, String mode)
@@ -981,7 +977,7 @@ public class FileIoProvider {
         int b = super.read();
         profilingEventHook.afterFileIo(volume, READ, begin, LEN_INT);
         return b;
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -995,7 +991,7 @@ public class FileIoProvider {
         int numBytesRead = super.read(b, off, len);
         profilingEventHook.afterFileIo(volume, READ, begin, numBytesRead);
         return numBytesRead;
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -1010,7 +1006,7 @@ public class FileIoProvider {
         int numBytesRead = super.read(b);
         profilingEventHook.afterFileIo(volume, READ, begin, numBytesRead);
         return numBytesRead;
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -1024,7 +1020,7 @@ public class FileIoProvider {
         faultInjectorEventHook.beforeFileIo(volume, WRITE, LEN_INT);
         super.write(b);
         profilingEventHook.afterFileIo(volume, WRITE, begin, LEN_INT);
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -1038,7 +1034,7 @@ public class FileIoProvider {
         faultInjectorEventHook.beforeFileIo(volume, WRITE, b.length);
         super.write(b);
         profilingEventHook.afterFileIo(volume, WRITE, begin, b.length);
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }
@@ -1051,7 +1047,7 @@ public class FileIoProvider {
         faultInjectorEventHook.beforeFileIo(volume, WRITE, len);
         super.write(b, off, len);
         profilingEventHook.afterFileIo(volume, WRITE, begin, len);
-      } catch(Exception e) {
+      } catch (Exception e) {
         onFailure(volume, begin);
         throw e;
       }

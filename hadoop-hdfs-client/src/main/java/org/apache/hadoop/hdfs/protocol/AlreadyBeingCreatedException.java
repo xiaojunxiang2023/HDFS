@@ -8,6 +8,7 @@ import java.io.IOException;
  */
 public class AlreadyBeingCreatedException extends IOException {
   static final long serialVersionUID = 0x12308AD009L;
+
   public AlreadyBeingCreatedException(String msg) {
     super(msg);
   }

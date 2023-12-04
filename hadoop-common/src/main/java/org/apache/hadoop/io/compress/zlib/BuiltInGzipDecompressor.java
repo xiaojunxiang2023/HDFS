@@ -1,13 +1,13 @@
 package org.apache.hadoop.io.compress.zlib;
 
+import org.apache.hadoop.io.compress.Decompressor;
+import org.apache.hadoop.io.compress.DoNotPool;
+import org.apache.hadoop.util.DataChecksum;
+
 import java.io.IOException;
 import java.util.zip.Checksum;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
-
-import org.apache.hadoop.io.compress.Decompressor;
-import org.apache.hadoop.io.compress.DoNotPool;
-import org.apache.hadoop.util.DataChecksum;
 
 /**
  * A {@link Decompressor} based on the popular gzip compressed file format.
@@ -18,11 +18,11 @@ import org.apache.hadoop.util.DataChecksum;
 public class BuiltInGzipDecompressor implements Decompressor {
   private static final int GZIP_MAGIC_ID = 0x8b1f;  // if read as LE short int
   private static final int GZIP_DEFLATE_METHOD = 8;
-  private static final int GZIP_FLAGBIT_HEADER_CRC  = 0x02;
+  private static final int GZIP_FLAGBIT_HEADER_CRC = 0x02;
   private static final int GZIP_FLAGBIT_EXTRA_FIELD = 0x04;
-  private static final int GZIP_FLAGBIT_FILENAME    = 0x08;
-  private static final int GZIP_FLAGBIT_COMMENT     = 0x10;
-  private static final int GZIP_FLAGBITS_RESERVED   = 0xe0;
+  private static final int GZIP_FLAGBIT_FILENAME = 0x08;
+  private static final int GZIP_FLAGBIT_COMMENT = 0x10;
+  private static final int GZIP_FLAGBITS_RESERVED = 0xe0;
 
   // 'true' (nowrap) => Inflater will handle raw deflate stream only
   private Inflater inflater = new Inflater(true);
@@ -161,7 +161,7 @@ public class BuiltInGzipDecompressor implements Decompressor {
    */
   @Override
   public synchronized int decompress(byte[] b, int off, int len)
-  throws IOException {
+      throws IOException {
     int numAvailBytes = 0;
 
     if (state != GzipStateLabel.DEFLATE_STREAM) {
@@ -195,10 +195,10 @@ public class BuiltInGzipDecompressor implements Decompressor {
         state = GzipStateLabel.TRAILER_CRC;
         int bytesRemaining = inflater.getRemaining();
         assert (bytesRemaining >= 0) :
-          "logic error: Inflater finished; byte-count is inconsistent";
-          // could save a copy of userBufLen at call to inflater.setInput() and
-          // verify that bytesRemaining <= origUserBufLen, but would have to
-          // be a (class) member variable...seems excessive for a sanity check
+            "logic error: Inflater finished; byte-count is inconsistent";
+        // could save a copy of userBufLen at call to inflater.setInput() and
+        // verify that bytesRemaining <= origUserBufLen, but would have to
+        // be a (class) member variable...seems excessive for a sanity check
         userBufOff -= bytesRemaining;
         userBufLen = bytesRemaining;   // or "+=", but guaranteed 0 coming in
       } else {
@@ -233,7 +233,7 @@ public class BuiltInGzipDecompressor implements Decompressor {
 
     // "basic"/required header:  somewhere in first 10 bytes
     if (state == GzipStateLabel.HEADER_BASIC) {
-      int n = Math.min(userBufLen, 10-localBufOff);  // (or 10-headerBytesRead)
+      int n = Math.min(userBufLen, 10 - localBufOff);  // (or 10-headerBytesRead)
       checkAndCopyBytesToLocal(n);  // modifies userBufLen, etc.
       if (localBufOff >= 10) {      // should be strictly ==
         processBasicHeader();       // sig, compression method, flagbits
@@ -253,7 +253,7 @@ public class BuiltInGzipDecompressor implements Decompressor {
         // 2 substates:  waiting for 2 bytes => get numExtraFieldBytesRemaining,
         // or already have 2 bytes & waiting to finish skipping specified length
         if (numExtraFieldBytesRemaining < 0) {
-          int n = Math.min(userBufLen, 2-localBufOff);
+          int n = Math.min(userBufLen, 2 - localBufOff);
           checkAndCopyBytesToLocal(n);
           if (localBufOff >= 2) {
             numExtraFieldBytesRemaining = readUShortLE(localBuf, 0);
@@ -308,7 +308,7 @@ public class BuiltInGzipDecompressor implements Decompressor {
     if (state == GzipStateLabel.HEADER_CRC) {
       if (hasHeaderCRC) {
         assert (localBufOff < 2);
-        int n = Math.min(userBufLen, 2-localBufOff);
+        int n = Math.min(userBufLen, 2 - localBufOff);
         copyBytesToLocal(n);
         if (localBufOff >= 2) {
           long headerCRC = readUShortLE(localBuf, 0);
@@ -345,7 +345,7 @@ public class BuiltInGzipDecompressor implements Decompressor {
       // localBuf was empty before we handed off to Inflater, so we handle this
       // exactly like header fields
       assert (localBufOff < 4);  // initially 0, but may need multiple calls
-      int n = Math.min(userBufLen, 4-localBufOff);
+      int n = Math.min(userBufLen, 4 - localBufOff);
       copyBytesToLocal(n);
       if (localBufOff >= 4) {
         long streamCRC = readUIntLE(localBuf, 0);
@@ -366,13 +366,13 @@ public class BuiltInGzipDecompressor implements Decompressor {
     // stored in the gzip trailer
     if (state == GzipStateLabel.TRAILER_SIZE) {
       assert (localBufOff < 4);  // initially 0, but may need multiple calls
-      int n = Math.min(userBufLen, 4-localBufOff);
+      int n = Math.min(userBufLen, 4 - localBufOff);
       copyBytesToLocal(n);       // modifies userBufLen, etc.
       if (localBufOff >= 4) {    // should be strictly ==
         long inputSize = readUIntLE(localBuf, 0);
         if (inputSize != (inflater.getBytesWritten() & 0xffffffffL)) {
           throw new IOException(
-            "stored gzip size doesn't match decompressed size");
+              "stored gzip size doesn't match decompressed size");
         }
         localBufOff = 0;
         state = GzipStateLabel.FINISHED;
@@ -485,9 +485,9 @@ public class BuiltInGzipDecompressor implements Decompressor {
       throw new IOException("unknown gzip format (reserved flagbits set)");
     }
     hasExtraField = ((flg & GZIP_FLAGBIT_EXTRA_FIELD) != 0);
-    hasFilename   = ((flg & GZIP_FLAGBIT_FILENAME)    != 0);
-    hasComment    = ((flg & GZIP_FLAGBIT_COMMENT)     != 0);
-    hasHeaderCRC  = ((flg & GZIP_FLAGBIT_HEADER_CRC)  != 0);
+    hasFilename = ((flg & GZIP_FLAGBIT_FILENAME) != 0);
+    hasComment = ((flg & GZIP_FLAGBIT_COMMENT) != 0);
+    hasHeaderCRC = ((flg & GZIP_FLAGBIT_HEADER_CRC) != 0);
   }
 
   private void checkAndCopyBytesToLocal(int len) {
@@ -540,21 +540,21 @@ public class BuiltInGzipDecompressor implements Decompressor {
   }
 
   private int readUByte(byte[] b, int off) {
-    return ((int)b[off] & 0xff);
+    return ((int) b[off] & 0xff);
   }
 
   // caller is responsible for not overrunning buffer
   private int readUShortLE(byte[] b, int off) {
-    return ((((b[off+1] & 0xff) << 8) |
-             ((b[off]   & 0xff)     )) & 0xffff);
+    return ((((b[off + 1] & 0xff) << 8) |
+        ((b[off] & 0xff))) & 0xffff);
   }
 
   // caller is responsible for not overrunning buffer
   private long readUIntLE(byte[] b, int off) {
-    return ((((long)(b[off+3] & 0xff) << 24) |
-             ((long)(b[off+2] & 0xff) << 16) |
-             ((long)(b[off+1] & 0xff) <<  8) |
-             ((long)(b[off]   & 0xff)      )) & 0xffffffffL);
+    return ((((long) (b[off + 3] & 0xff) << 24) |
+        ((long) (b[off + 2] & 0xff) << 16) |
+        ((long) (b[off + 1] & 0xff) << 8) |
+        ((long) (b[off] & 0xff))) & 0xffffffffL);
   }
 
 }

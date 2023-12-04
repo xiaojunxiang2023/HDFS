@@ -1,10 +1,5 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-
-import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto;
@@ -14,15 +9,15 @@ import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.UpdateR
 import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringBlock;
 import org.apache.hadoop.hdfs.server.protocol.InterDatanodeProtocol;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
-import org.apache.hadoop.ipc.ProtobufHelper;
-import org.apache.hadoop.ipc.ProtobufRpcEngine2;
-import org.apache.hadoop.ipc.ProtocolMetaInterface;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RpcClientUtil;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.security.UserGroupInformation;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import javax.net.SocketFactory;
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 
 /**
  * This class is the client side translator to translate the requests made on
@@ -36,8 +31,8 @@ public class InterDatanodeProtocolTranslatorPB implements
   final private InterDatanodeProtocolPB rpcProxy;
 
   public InterDatanodeProtocolTranslatorPB(InetSocketAddress addr,
-      UserGroupInformation ugi, Configuration conf, SocketFactory factory,
-      int socketTimeout)
+                                           UserGroupInformation ugi, Configuration conf, SocketFactory factory,
+                                           int socketTimeout)
       throws IOException {
     RPC.setProtocolEngine(conf, InterDatanodeProtocolPB.class,
         ProtobufRpcEngine2.class);
@@ -72,7 +67,7 @@ public class InterDatanodeProtocolTranslatorPB implements
             "Resp: " + resp);
       }
     }
-    
+
     BlockProto b = resp.getBlock();
     return new ReplicaRecoveryInfo(b.getBlockId(), b.getNumBytes(),
         b.getGenStamp(), PBHelper.convert(resp.getState()));
@@ -80,15 +75,15 @@ public class InterDatanodeProtocolTranslatorPB implements
 
   @Override
   public String updateReplicaUnderRecovery(ExtendedBlock oldBlock,
-      long recoveryId, long newBlockId, long newLength) throws IOException {
-    UpdateReplicaUnderRecoveryRequestProto req = 
+                                           long recoveryId, long newBlockId, long newLength) throws IOException {
+    UpdateReplicaUnderRecoveryRequestProto req =
         UpdateReplicaUnderRecoveryRequestProto.newBuilder()
-        .setBlock(PBHelperClient.convert(oldBlock))
-        .setNewLength(newLength).setNewBlockId(newBlockId)
-        .setRecoveryId(recoveryId).build();
+            .setBlock(PBHelperClient.convert(oldBlock))
+            .setNewLength(newLength).setNewBlockId(newBlockId)
+            .setRecoveryId(recoveryId).build();
     try {
       return rpcProxy.updateReplicaUnderRecovery(NULL_CONTROLLER, req
-          ).getStorageUuid();
+      ).getStorageUuid();
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }

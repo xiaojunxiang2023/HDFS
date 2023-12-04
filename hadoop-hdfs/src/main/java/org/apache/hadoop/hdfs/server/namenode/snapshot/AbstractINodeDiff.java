@@ -1,13 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
-import java.io.DataOutput;
-import java.io.IOException;
-
 import org.apache.hadoop.hdfs.server.namenode.INode;
 import org.apache.hadoop.hdfs.server.namenode.INodeAttributes;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.SnapshotFSImageFormat.ReferenceMap;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * The difference of an inode between in two snapshots.
@@ -28,8 +27,8 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
  * </pre>
  */
 abstract class AbstractINodeDiff<N extends INode,
-                                 A extends INodeAttributes,
-                                 D extends AbstractINodeDiff<N, A, D>>
+    A extends INodeAttributes,
+    D extends AbstractINodeDiff<N, A, D>>
     implements Comparable<Integer> {
 
   /** The id of the corresponding snapshot. */
@@ -60,7 +59,7 @@ abstract class AbstractINodeDiff<N extends INode,
   public final int getSnapshotId() {
     return snapshotId;
   }
-  
+
   final void setSnapshotId(int snapshot) {
     this.snapshotId = snapshot;
   }
@@ -84,7 +83,7 @@ abstract class AbstractINodeDiff<N extends INode,
   A getSnapshotINode() {
     // get from this diff, then the posterior diff
     // and then null for the current inode
-    for(AbstractINodeDiff<N, A, D> d = this; ; d = d.posteriorDiff) {
+    for (AbstractINodeDiff<N, A, D> d = this; ; d = d.posteriorDiff) {
       if (d.snapshotINode != null) {
         return d.snapshotINode;
       } else if (d.posteriorDiff == null) {
@@ -97,19 +96,19 @@ abstract class AbstractINodeDiff<N extends INode,
   abstract void combinePosteriorAndCollectBlocks(
       INode.ReclaimContext reclaimContext, final N currentINode,
       final D posterior);
-  
+
   /**
    * Delete and clear self.
    * @param reclaimContext blocks and inodes that need to be reclaimed
    * @param currentINode The inode where the deletion happens.
    */
   abstract void destroyDiffAndCollectBlocks(INode.ReclaimContext reclaimContext,
-      final N currentINode);
+                                            final N currentINode);
 
   @Override
   public String toString() {
     return getClass().getSimpleName() + ": " + this.getSnapshotId() + " (post="
-        + (posteriorDiff == null? null: posteriorDiff.getSnapshotId()) + ")";
+        + (posteriorDiff == null ? null : posteriorDiff.getSnapshotId()) + ")";
   }
 
   void writeSnapshot(DataOutput out) throws IOException {
@@ -117,5 +116,5 @@ abstract class AbstractINodeDiff<N extends INode,
   }
 
   abstract void write(DataOutput out, ReferenceMap referenceMap
-      ) throws IOException;
+  ) throws IOException;
 }

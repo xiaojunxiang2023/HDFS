@@ -15,43 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */package org.apache.hadoop.hdfs.server.datanode;
+ */
+package org.apache.hadoop.hdfs.server.datanode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi
-    .FsVolumeReferences;
-import org.apache.hadoop.util.AutoCloseableLock;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus
-    .DiskBalancerWorkEntry;
+import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus.DiskBalancerWorkEntry;
 import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus.Result;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
+import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi.FsVolumeReferences;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.diskbalancer.DiskBalancerConstants;
 import org.apache.hadoop.hdfs.server.diskbalancer.DiskBalancerException;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.NodePlan;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.Step;
 import org.apache.hadoop.hdfs.web.JsonUtil;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.AutoCloseableLock;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -177,7 +168,7 @@ public class DiskBalancer {
    */
   public void submitPlan(String planId, long planVersion, String planFileName,
                          String planData, boolean force)
-          throws DiskBalancerException {
+      throws DiskBalancerException {
     lock.lock();
     try {
       checkDiskBalancerEnabled();
@@ -204,10 +195,10 @@ public class DiskBalancer {
    * @return FsVolumeSpi
    */
   private static FsVolumeSpi getFsVolume(final FsDatasetSpi<?> fsDataset,
-      final String volUuid) {
+                                         final String volUuid) {
     FsVolumeSpi fsVolume = null;
     try (FsVolumeReferences volumeReferences =
-           fsDataset.getFsVolumeReferences()) {
+             fsDataset.getFsVolumeReferences()) {
       for (int i = 0; i < volumeReferences.size(); i++) {
         if (volumeReferences.get(i).getStorageID().equals(volUuid)) {
           fsVolume = volumeReferences.get(i);
@@ -239,7 +230,7 @@ public class DiskBalancer {
 
       DiskBalancerWorkStatus status =
           new DiskBalancerWorkStatus(this.currentResult, this.planID,
-                  this.planFile);
+              this.planFile);
       for (Map.Entry<VolumePair, DiskBalancerWorkItem> entry :
           workMap.entrySet()) {
         DiskBalancerWorkEntry workEntry = new DiskBalancerWorkEntry(
@@ -501,7 +492,7 @@ public class DiskBalancer {
     Map<String, String> storageIDToVolBasePathMap = new HashMap<>();
     FsDatasetSpi.FsVolumeReferences references;
     try {
-      try(AutoCloseableLock lock = this.dataset.acquireDatasetReadLock()) {
+      try (AutoCloseableLock lock = this.dataset.acquireDatasetReadLock()) {
         references = this.dataset.getFsVolumeReferences();
         for (int ndx = 0; ndx < references.size(); ndx++) {
           FsVolumeSpi vol = references.get(ndx);
@@ -638,8 +629,8 @@ public class DiskBalancer {
      * @param destVolBasePath   - Destination Volume Base Path
      */
     public VolumePair(final String sourceVolUuid,
-        final String sourceVolBasePath, final String destVolUuid,
-        final String destVolBasePath) {
+                      final String sourceVolBasePath, final String destVolUuid,
+                      final String destVolBasePath) {
       this.sourceVolUuid = sourceVolUuid;
       this.sourceVolBasePath = sourceVolBasePath;
       this.destVolUuid = destVolUuid;
@@ -662,6 +653,7 @@ public class DiskBalancer {
     public String getSourceVolBasePath() {
       return sourceVolBasePath;
     }
+
     /**
      * Gets destination volume UUID.
      *
@@ -860,7 +852,7 @@ public class DiskBalancer {
      */
     @VisibleForTesting
     public long computeDelay(long bytesCopied, long timeUsed,
-                              DiskBalancerWorkItem item) {
+                             DiskBalancerWorkItem item) {
 
       // we had an overflow, ignore this reading and continue.
       if (timeUsed == 0) {
@@ -902,7 +894,7 @@ public class DiskBalancer {
       while (!iter.atEnd() && item.getErrorCount() <= getMaxError(item)) {
         try {
           ExtendedBlock block = iter.nextBlock();
-          if(null == block){
+          if (null == block) {
             LOG.info("NextBlock call returned null. No valid block to copy. {}",
                 item.toJson());
             return null;
@@ -1023,7 +1015,7 @@ public class DiskBalancer {
 
       if (source.isTransientStorage() || dest.isTransientStorage()) {
         final String errMsg = "Disk Balancer - Unable to support " +
-                "transient storage type.";
+            "transient storage type.";
         LOG.error(errMsg);
         item.setErrMsg(errMsg);
         return;

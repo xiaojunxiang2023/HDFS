@@ -10,15 +10,15 @@ import java.io.IOException;
 public class DoubleWritable implements WritableComparable<DoubleWritable> {
 
   private double value = 0.0;
-  
+
   public DoubleWritable() {
-    
+
   }
-  
+
   public DoubleWritable(double value) {
     set(value);
   }
-  
+
   @Override
   public void readFields(DataInput in) throws IOException {
     value = in.readDouble();
@@ -28,10 +28,14 @@ public class DoubleWritable implements WritableComparable<DoubleWritable> {
   public void write(DataOutput out) throws IOException {
     out.writeDouble(value);
   }
-  
-  public void set(double value) { this.value = value; }
-  
-  public double get() { return value; }
+
+  public void set(double value) {
+    this.value = value;
+  }
+
+  public double get() {
+    return value;
+  }
 
   /**
    * Returns true iff <code>o</code> is a DoubleWritable with the same value.
@@ -41,26 +45,26 @@ public class DoubleWritable implements WritableComparable<DoubleWritable> {
     if (!(o instanceof DoubleWritable)) {
       return false;
     }
-    DoubleWritable other = (DoubleWritable)o;
+    DoubleWritable other = (DoubleWritable) o;
     return this.value == other.value;
   }
-  
+
   @Override
   public int hashCode() {
-    return (int)Double.doubleToLongBits(value);
+    return (int) Double.doubleToLongBits(value);
   }
-  
+
   @Override
   public int compareTo(DoubleWritable o) {
     return Double.compare(value, o.value);
   }
-  
+
   @Override
   public String toString() {
     return Double.toString(value);
   }
 
-  /** A Comparator optimized for DoubleWritable. */ 
+  /** A Comparator optimized for DoubleWritable. */
   public static class Comparator extends WritableComparator {
     public Comparator() {
       super(DoubleWritable.class);

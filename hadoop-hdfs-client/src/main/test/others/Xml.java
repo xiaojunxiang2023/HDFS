@@ -10,11 +10,11 @@ import javax.xml.transform.TransformerFactory;
  * @Description:
  */
 public class Xml {
-    
-    public static void main(String[] args) throws TransformerConfigurationException {
-        TransformerFactory transFactory = TransformerFactory.newInstance();
-        Transformer transformer = transFactory.newTransformer();
-        System.out.println(transformer);
-    }
+
+  public static void main(String[] args) throws TransformerConfigurationException {
+    TransformerFactory transFactory = TransformerFactory.newInstance();
+    Transformer transformer = transFactory.newTransformer();
+    System.out.println(transformer);
+  }
 
 }

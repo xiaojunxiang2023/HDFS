@@ -8,7 +8,7 @@ import java.io.IOException;
  */
 public class FencedException extends IOException {
   private static final long serialVersionUID = 1L;
-  
+
   public FencedException(String errorMsg) {
     super(errorMsg);
   }

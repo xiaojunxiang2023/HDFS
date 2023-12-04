@@ -1,15 +1,5 @@
 package org.apache.hadoop.fs;
 
-import java.io.EOFException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.channels.ClosedChannelException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-
-import java.util.NoSuchElementException;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.security.AccessControlException;
@@ -18,6 +8,16 @@ import org.apache.hadoop.util.Progressable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.EOFException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.channels.ClosedChannelException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.NoSuchElementException;
+
 /**
  * Abstract Checksumed Fs.
  * It provide a basic implementation of a Checksumed Fs,
@@ -25,21 +25,21 @@ import org.slf4j.LoggerFactory;
  * It generates &amp; verifies checksums at the client side.
  */ /*Evolving for a release,to be changed to Stable */
 public abstract class ChecksumFs extends FilterFs {
-  private static final byte[] CHECKSUM_VERSION = new byte[] {'c', 'r', 'c', 0};
+  private static final byte[] CHECKSUM_VERSION = new byte[]{'c', 'r', 'c', 0};
   private int defaultBytesPerChecksum = 512;
   private boolean verifyChecksum = true;
 
   public static double getApproxChkSumLength(long size) {
     return ChecksumFSOutputSummer.CHKSUM_AS_FRACTION * size;
   }
-  
+
   public ChecksumFs(AbstractFileSystem theFs)
-    throws IOException, URISyntaxException {
+      throws IOException, URISyntaxException {
     super(theFs);
-    defaultBytesPerChecksum = 
-      getMyFs().getServerDefaults(new Path("/")).getBytesPerChecksum();
+    defaultBytesPerChecksum =
+        getMyFs().getServerDefaults(new Path("/")).getBytesPerChecksum();
   }
-  
+
   /**
    * Set whether to verify checksum.
    */
@@ -77,12 +77,12 @@ public abstract class ChecksumFs extends FilterFs {
   }
 
   private int getSumBufferSize(int bytesPerSum, int bufferSize, Path file)
-    throws IOException {
+      throws IOException {
     int defaultBufferSize = getMyFs().getServerDefaults(file)
         .getFileBufferSize();
     int proportionalBufferSize = bufferSize / bytesPerSum;
     return Math.max(bytesPerSum,
-                    Math.max(proportionalBufferSize, defaultBufferSize));
+        Math.max(proportionalBufferSize, defaultBufferSize));
   }
 
   /*******************************************************
@@ -93,20 +93,20 @@ public abstract class ChecksumFs extends FilterFs {
     public static final Logger LOG =
         LoggerFactory.getLogger(FSInputChecker.class);
     private static final int HEADER_LENGTH = 8;
-    
+
     private ChecksumFs fs;
     private FSDataInputStream datas;
     private FSDataInputStream sums;
     private int bytesPerSum = 1;
     private long fileLen = -1L;
-    
+
     public ChecksumFSInputChecker(ChecksumFs fs, Path file)
-      throws IOException, UnresolvedLinkException {
+        throws IOException, UnresolvedLinkException {
       this(fs, file, fs.getServerDefaults(file).getFileBufferSize());
     }
-    
+
     public ChecksumFSInputChecker(ChecksumFs fs, Path file, int bufferSize)
-      throws IOException, UnresolvedLinkException {
+        throws IOException, UnresolvedLinkException {
       super(file, fs.getFileStatus(file).getReplication());
       this.datas = fs.getRawFs().open(file, bufferSize);
       this.fs = fs;
@@ -119,28 +119,28 @@ public abstract class ChecksumFs extends FilterFs {
         byte[] version = new byte[CHECKSUM_VERSION.length];
         sums.readFully(version);
         if (!Arrays.equals(version, CHECKSUM_VERSION)) {
-          throw new IOException("Not a checksum file: "+sumFile);
+          throw new IOException("Not a checksum file: " + sumFile);
         }
         this.bytesPerSum = sums.readInt();
         set(fs.verifyChecksum, DataChecksum.newCrc32(), bytesPerSum, 4);
       } catch (FileNotFoundException e) {         // quietly ignore
         set(fs.verifyChecksum, null, 1, 0);
       } catch (IOException e) {                   // loudly ignore
-        LOG.warn("Problem opening checksum file: "+ file + 
-                 ".  Ignoring exception: " , e); 
+        LOG.warn("Problem opening checksum file: " + file +
+            ".  Ignoring exception: ", e);
         set(fs.verifyChecksum, null, 1, 0);
       }
     }
-    
+
     private long getChecksumFilePos(long dataPos) {
-      return HEADER_LENGTH + 4*(dataPos/bytesPerSum);
+      return HEADER_LENGTH + 4 * (dataPos / bytesPerSum);
     }
-    
+
     @Override
     protected long getChunkPosition(long dataPos) {
-      return dataPos/bytesPerSum*bytesPerSum;
+      return dataPos / bytesPerSum * bytesPerSum;
     }
-    
+
     @Override
     public int available() throws IOException {
       return datas.available() + super.available();
@@ -148,7 +148,7 @@ public abstract class ChecksumFs extends FilterFs {
 
     @Override
     public int read(long position, byte[] b, int off, int len)
-      throws IOException, UnresolvedLinkException {
+        throws IOException, UnresolvedLinkException {
       // parameter check
       validatePositionedReadArgs(position, b, off, len);
       if (len == 0) {
@@ -172,7 +172,7 @@ public abstract class ChecksumFs extends FilterFs {
       }
       set(fs.verifyChecksum, null, 1, 0);
     }
-    
+
     @Override
     public boolean seekToNewSource(long targetPos) throws IOException {
       final long sumsPos = getChecksumFilePos(targetPos);
@@ -183,7 +183,7 @@ public abstract class ChecksumFs extends FilterFs {
 
     @Override
     protected int readChunk(long pos, byte[] buf, int offset, int len,
-        byte[] checksum) throws IOException {
+                            byte[] checksum) throws IOException {
       boolean eof = false;
       if (needChecksum()) {
         assert checksum != null; // we have a checksum buffer
@@ -191,18 +191,18 @@ public abstract class ChecksumFs extends FilterFs {
         assert len >= bytesPerSum; // we must read at least one chunk
 
         final int checksumsToRead = Math.min(
-          len/bytesPerSum, // number of checksums based on len to read
-          checksum.length / CHECKSUM_SIZE); // size of checksum buffer
-        long checksumPos = getChecksumFilePos(pos); 
-        if(checksumPos != sums.getPos()) {
+            len / bytesPerSum, // number of checksums based on len to read
+            checksum.length / CHECKSUM_SIZE); // size of checksum buffer
+        long checksumPos = getChecksumFilePos(pos);
+        if (checksumPos != sums.getPos()) {
           sums.seek(checksumPos);
         }
 
         int sumLenRead = sums.read(checksum, 0, CHECKSUM_SIZE * checksumsToRead);
         if (sumLenRead >= 0 && sumLenRead % CHECKSUM_SIZE != 0) {
           throw new EOFException("Checksum file not a length multiple of checksum size " +
-                                 "in " + file + " at " + pos + " checksumpos: " + checksumPos +
-                                 " sumLenread: " + sumLenRead );
+              "in " + file + " at " + pos + " checksumpos: " + checksumPos +
+              " sumLenread: " + sumLenRead);
         }
         if (sumLenRead <= 0) { // we're at the end of the file
           eof = true;
@@ -216,19 +216,19 @@ public abstract class ChecksumFs extends FilterFs {
       }
       int nread = readFully(datas, buf, offset, len);
       if (eof && nread > 0) {
-        throw new ChecksumException("Checksum error: "+file+" at "+pos, pos);
+        throw new ChecksumException("Checksum error: " + file + " at " + pos, pos);
       }
       return nread;
     }
-    
+
     /* Return the file length */
     private long getFileLength() throws IOException, UnresolvedLinkException {
-      if (fileLen==-1L) {
+      if (fileLen == -1L) {
         fileLen = fs.getFileStatus(file).getLen();
       }
       return fileLen;
     }
-    
+
     /**
      * Skips over and discards <code>n</code> bytes of data from the
      * input stream.
@@ -239,35 +239,35 @@ public abstract class ChecksumFs extends FilterFs {
      * negative, no bytes are skipped.
      *
      * @param      n   the number of bytes to be skipped.
-     * @return     the actual number of bytes skipped.
-     * @exception  IOException  if an I/O error occurs.
+     * @return the actual number of bytes skipped.
+     * @exception IOException  if an I/O error occurs.
      *             ChecksumException if the chunk to skip to is corrupted
      */
     @Override
-    public synchronized long skip(long n) throws IOException { 
+    public synchronized long skip(long n) throws IOException {
       final long curPos = getPos();
       final long fileLength = getFileLength();
-      if (n+curPos > fileLength) {
+      if (n + curPos > fileLength) {
         n = fileLength - curPos;
       }
       return super.skip(n);
     }
-    
+
     /**
      * Seek to the given position in the stream.
      * The next read() will be from that position.
-     * 
+     *
      * <p>This method does not allow seek past the end of the file.
      * This produces IOException.
      *
      * @param      pos   the postion to seek to.
-     * @exception  IOException  if an I/O error occurs or seeks after EOF
+     * @exception IOException  if an I/O error occurs or seeks after EOF
      *             ChecksumException if the chunk to seek to is corrupted
      */
 
     @Override
-    public synchronized void seek(long pos) throws IOException { 
-      if (pos>getFileLength()) {
+    public synchronized void seek(long pos) throws IOException {
+      if (pos > getFileLength()) {
         throw new IOException("Cannot seek after EOF");
       }
       super.seek(pos);
@@ -287,8 +287,8 @@ public abstract class ChecksumFs extends FilterFs {
    * @param bufferSize the size of the buffer to be used.
    */
   @Override
-  public FSDataInputStream open(Path f, int bufferSize) 
-    throws IOException, UnresolvedLinkException {
+  public FSDataInputStream open(Path f, int bufferSize)
+      throws IOException, UnresolvedLinkException {
     return new FSDataInputStream(
         new ChecksumFSInputChecker(this, f, bufferSize));
   }
@@ -303,24 +303,24 @@ public abstract class ChecksumFs extends FilterFs {
     //the checksum length is equal to size passed divided by bytesPerSum +
     //bytes written in the beginning of the checksum file.  
     return ((size + bytesPerSum - 1) / bytesPerSum) * 4 +
-             CHECKSUM_VERSION.length + 4;  
+        CHECKSUM_VERSION.length + 4;
   }
 
   /** This class provides an output stream for a checksummed file.
    * It generates checksums for data. */
   private static class ChecksumFSOutputSummer extends FSOutputSummer {
-    private FSDataOutputStream datas;    
+    private FSDataOutputStream datas;
     private FSDataOutputStream sums;
     private static final float CHKSUM_AS_FRACTION = 0.01f;
     private boolean isClosed = false;
-    
-    
-    public ChecksumFSOutputSummer(final ChecksumFs fs, final Path file, 
-      final EnumSet<CreateFlag> createFlag,
-      final FsPermission absolutePermission, final int bufferSize,
-      final short replication, final long blockSize, 
-      final Progressable progress, final ChecksumOpt checksumOpt,
-      final boolean createParent) throws IOException {
+
+
+    public ChecksumFSOutputSummer(final ChecksumFs fs, final Path file,
+                                  final EnumSet<CreateFlag> createFlag,
+                                  final FsPermission absolutePermission, final int bufferSize,
+                                  final short replication, final long blockSize,
+                                  final Progressable progress, final ChecksumOpt checksumOpt,
+                                  final boolean createParent) throws IOException {
       super(DataChecksum.newDataChecksum(DataChecksum.Type.CRC32,
           fs.getBytesPerSum()));
 
@@ -330,8 +330,8 @@ public abstract class ChecksumFs extends FilterFs {
       // two layers of checksumming. i.e. checksumming checksum file.
       this.datas = fs.getRawFs().createInternal(file, createFlag,
           absolutePermission, bufferSize, replication, blockSize, progress,
-           checksumOpt,  createParent);
-      
+          checksumOpt, createParent);
+
       // Now create the chekcsumfile; adjust the buffsize
       int bytesPerSum = fs.getBytesPerSum();
       int sumBufferSize = fs.getSumBufferSize(bytesPerSum, bufferSize, file);
@@ -342,7 +342,7 @@ public abstract class ChecksumFs extends FilterFs {
       sums.write(CHECKSUM_VERSION, 0, CHECKSUM_VERSION.length);
       sums.writeInt(bytesPerSum);
     }
-    
+
     @Override
     public void close() throws IOException {
       try {
@@ -353,11 +353,11 @@ public abstract class ChecksumFs extends FilterFs {
         isClosed = true;
       }
     }
-    
+
     @Override
     protected void writeChunk(byte[] b, int offset, int len, byte[] checksum,
-        int ckoff, int cklen)
-      throws IOException {
+                              int ckoff, int cklen)
+        throws IOException {
       datas.write(b, offset, len);
       sums.write(checksum, ckoff, cklen);
     }
@@ -372,40 +372,41 @@ public abstract class ChecksumFs extends FilterFs {
 
   @Override
   public FSDataOutputStream createInternal(Path f,
-      EnumSet<CreateFlag> createFlag, FsPermission absolutePermission,
-      int bufferSize, short replication, long blockSize, Progressable progress,
-      ChecksumOpt checksumOpt, boolean createParent) throws IOException {
+                                           EnumSet<CreateFlag> createFlag, FsPermission absolutePermission,
+                                           int bufferSize, short replication, long blockSize, Progressable progress,
+                                           ChecksumOpt checksumOpt, boolean createParent) throws IOException {
     final FSDataOutputStream out = new FSDataOutputStream(
         new ChecksumFSOutputSummer(this, f, createFlag, absolutePermission,
             bufferSize, replication, blockSize, progress,
-            checksumOpt,  createParent), null);
+            checksumOpt, createParent), null);
     return out;
   }
 
   /** Check if exists.
    * @param f source file
    */
-  private boolean exists(Path f) 
-    throws IOException, UnresolvedLinkException {
+  private boolean exists(Path f)
+      throws IOException, UnresolvedLinkException {
     try {
       return getMyFs().getFileStatus(f) != null;
     } catch (FileNotFoundException e) {
       return false;
     }
   }
-  
+
   /** True iff the named path is a directory.
    * Note: Avoid using this method. Instead reuse the FileStatus 
    * returned by getFileStatus() or listStatus() methods.
    */
-  private boolean isDirectory(Path f) 
-    throws IOException, UnresolvedLinkException {
+  private boolean isDirectory(Path f)
+      throws IOException, UnresolvedLinkException {
     try {
       return getMyFs().getFileStatus(f).isDirectory();
     } catch (FileNotFoundException e) {
       return false;               // f does not exist
     }
   }
+
   /**
    * Set replication for an existing file.
    * Implement the abstract <tt>setReplication</tt> of <tt>FileSystem</tt>
@@ -417,7 +418,7 @@ public abstract class ChecksumFs extends FilterFs {
    */
   @Override
   public boolean setReplication(Path src, short replication)
-    throws IOException, UnresolvedLinkException {
+      throws IOException, UnresolvedLinkException {
     boolean value = getMyFs().setReplication(src, replication);
     if (!value) {
       return false;
@@ -433,8 +434,8 @@ public abstract class ChecksumFs extends FilterFs {
    * Rename files/dirs.
    */
   @Override
-  public void renameInternal(Path src, Path dst) 
-    throws IOException, UnresolvedLinkException {
+  public void renameInternal(Path src, Path dst)
+      throws IOException, UnresolvedLinkException {
     if (isDirectory(src)) {
       getMyFs().rename(src, dst);
     } else {
@@ -482,12 +483,12 @@ public abstract class ChecksumFs extends FilterFs {
    * file system.
    */
   @Override
-  public boolean delete(Path f, boolean recursive) 
-    throws IOException, UnresolvedLinkException {
+  public boolean delete(Path f, boolean recursive)
+      throws IOException, UnresolvedLinkException {
     FileStatus fstatus = null;
     try {
       fstatus = getMyFs().getFileStatus(f);
-    } catch(FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       return false;
     }
     if (fstatus.isDirectory()) {
@@ -515,7 +516,7 @@ public abstract class ChecksumFs extends FilterFs {
    * @return if retry is necessary
    */
   public boolean reportChecksumFailure(Path f, FSDataInputStream in,
-    long inPos, FSDataInputStream sums, long sumsPos) {
+                                       long inPos, FSDataInputStream sums, long sumsPos) {
     return false;
   }
 
@@ -537,7 +538,7 @@ public abstract class ChecksumFs extends FilterFs {
   @Override
   public RemoteIterator<LocatedFileStatus> listLocatedStatus(final Path f)
       throws AccessControlException, FileNotFoundException,
-             UnresolvedLinkException, IOException {
+      UnresolvedLinkException, IOException {
     final RemoteIterator<LocatedFileStatus> iter =
         getMyFs().listLocatedStatus(f);
     return new RemoteIterator<LocatedFileStatus>() {

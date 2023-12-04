@@ -8,7 +8,7 @@ import org.apache.hadoop.hdfs.protocol.BlockListAsLongs;
 public class StorageBlockReport {
   private final DatanodeStorage storage;
   private final BlockListAsLongs blocks;
-  
+
   public StorageBlockReport(DatanodeStorage storage, BlockListAsLongs blocks) {
     this.storage = storage;
     this.blocks = blocks;

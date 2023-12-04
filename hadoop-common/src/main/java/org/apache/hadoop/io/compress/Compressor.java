@@ -1,35 +1,36 @@
 package org.apache.hadoop.io.compress;
 
-import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
+
+import java.io.IOException;
 
 /**
  * Specification of a stream-based 'compressor' which can be  
  * plugged into a {@link CompressionOutputStream} to compress data.
  * This is modelled after {@link java.util.zip.Deflater}
- * 
+ *
  */
 public interface Compressor {
   /**
    * Sets input data for compression. 
    * This should be called whenever #needsInput() returns 
    * <code>true</code> indicating that more input data is required.
-   * 
+   *
    * @param b Input data
    * @param off Start offset
    * @param len Length
    */
   public void setInput(byte[] b, int off, int len);
-  
+
   /**
    * Returns true if the input data buffer is empty and 
    * #setInput() should be called to provide more input. 
-   * 
+   *
    * @return <code>true</code> if the input data buffer is empty and 
    * #setInput() should be called in order to provide more input.
    */
   public boolean needsInput();
-  
+
   /**
    * Sets preset dictionary for compression. A preset dictionary 
    * is used when the history buffer can be predetermined. 
@@ -55,7 +56,7 @@ public interface Compressor {
    * with the current contents of the input buffer.
    */
   public void finish();
-  
+
   /**
    * Returns true if the end of the compressed 
    * data output stream has been reached.
@@ -63,25 +64,25 @@ public interface Compressor {
    * data output stream has been reached.
    */
   public boolean finished();
-  
+
   /**
    * Fills specified buffer with compressed data. Returns actual number
    * of bytes of compressed data. A return value of 0 indicates that
    * needsInput() should be called in order to determine if more input
    * data is required.
-   * 
+   *
    * @param b Buffer for the compressed data
    * @param off Start offset of the data
    * @param len Size of the buffer
    * @return The actual number of bytes of compressed data.
    */
   public int compress(byte[] b, int off, int len) throws IOException;
-  
+
   /**
    * Resets compressor so that a new set of input data can be processed.
    */
   public void reset();
-  
+
   /**
    * Closes the compressor and discards any unprocessed input.
    */
@@ -90,7 +91,7 @@ public interface Compressor {
   /**
    * Prepare the compressor to be used in a new stream with settings defined in
    * the given Configuration
-   * 
+   *
    * @param conf Configuration from which new setting are fetched
    */
   public void reinit(Configuration conf);

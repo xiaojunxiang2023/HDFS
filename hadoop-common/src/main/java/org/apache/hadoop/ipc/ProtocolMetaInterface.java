@@ -8,7 +8,7 @@ import java.io.IOException;
  * supported on the server side.
  */
 public interface ProtocolMetaInterface {
-  
+
   /**
    * Checks whether the given method name is supported by the server.
    * It is assumed that all method names are unique for a protocol.

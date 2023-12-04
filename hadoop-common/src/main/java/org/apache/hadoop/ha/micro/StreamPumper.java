@@ -11,13 +11,13 @@ import java.nio.charset.StandardCharsets;
 
 // stdout给予 INFO，stderr给与 WARN
 public class StreamPumper {
-  
+
   public enum StreamType {
     STDOUT, STDERR;
   }
 
   private final Logger log;
-  
+
   public final Thread thread;
   public final String logPrefix;
   public final StreamPumper.StreamType type;
@@ -29,19 +29,19 @@ public class StreamPumper {
     this.logPrefix = logPrefix;
     this.stream = stream;
     this.type = type;
-    
+
     thread = new Thread(() -> {
       try {
         pump();
       } catch (Throwable t) {
         ShellCommandFencer.LOG.warn(logPrefix +
-            ": Unable to pump output from " + type,
+                ": Unable to pump output from " + type,
             t);
       }
     }, logPrefix + ": StreamPumper for " + type);
     thread.setDaemon(true);
   }
-  
+
   public void join() throws InterruptedException {
     thread.join();
   }
@@ -60,7 +60,7 @@ public class StreamPumper {
       if (type == StreamType.STDOUT) {
         log.info(logPrefix + ": " + line);
       } else {
-        log.warn(logPrefix + ": " + line);          
+        log.warn(logPrefix + ": " + line);
       }
     }
   }

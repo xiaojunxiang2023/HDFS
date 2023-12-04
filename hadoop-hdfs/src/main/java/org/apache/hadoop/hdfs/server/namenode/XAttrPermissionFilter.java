@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.List;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.XAttrHelper;
 import org.apache.hadoop.security.AccessControlException;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
+import java.util.List;
 
 import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.SECURITY_XATTR_UNREADABLE_BY_SUPERUSER;
 
@@ -39,12 +39,12 @@ import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.SECURITY_
  * <br>
  */
 public class XAttrPermissionFilter {
-  
+
   static void checkPermissionForApi(FSPermissionChecker pc, XAttr xAttr,
-      boolean isRawPath)
+                                    boolean isRawPath)
       throws AccessControlException {
     final boolean isSuperUser = pc.isSuperUser();
-    if (xAttr.getNameSpace() == XAttr.NameSpace.USER || 
+    if (xAttr.getNameSpace() == XAttr.NameSpace.USER ||
         (xAttr.getNameSpace() == XAttr.NameSpace.TRUSTED && isSuperUser)) {
       return;
     }
@@ -65,7 +65,7 @@ public class XAttrPermissionFilter {
   }
 
   static void checkPermissionForApi(FSPermissionChecker pc,
-      List<XAttr> xAttrs, boolean isRawPath) throws AccessControlException {
+                                    List<XAttr> xAttrs, boolean isRawPath) throws AccessControlException {
     Preconditions.checkArgument(xAttrs != null);
     if (xAttrs.isEmpty()) {
       return;
@@ -77,18 +77,18 @@ public class XAttrPermissionFilter {
   }
 
   static List<XAttr> filterXAttrsForApi(FSPermissionChecker pc,
-      List<XAttr> xAttrs, boolean isRawPath) {
+                                        List<XAttr> xAttrs, boolean isRawPath) {
     assert xAttrs != null : "xAttrs can not be null";
     if (xAttrs.isEmpty()) {
       return xAttrs;
     }
-    
+
     List<XAttr> filteredXAttrs = Lists.newArrayListWithCapacity(xAttrs.size());
     final boolean isSuperUser = pc.isSuperUser();
     for (XAttr xAttr : xAttrs) {
       if (xAttr.getNameSpace() == XAttr.NameSpace.USER) {
         filteredXAttrs.add(xAttr);
-      } else if (xAttr.getNameSpace() == XAttr.NameSpace.TRUSTED && 
+      } else if (xAttr.getNameSpace() == XAttr.NameSpace.TRUSTED &&
           isSuperUser) {
         filteredXAttrs.add(xAttr);
       } else if (xAttr.getNameSpace() == XAttr.NameSpace.RAW && isRawPath) {

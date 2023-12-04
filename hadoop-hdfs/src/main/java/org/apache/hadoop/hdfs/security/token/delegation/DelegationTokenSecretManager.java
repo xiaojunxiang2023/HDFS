@@ -1,16 +1,5 @@
 package org.apache.hadoop.hdfs.security.token.delegation;
 
-import java.io.DataInput;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
 import org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
@@ -29,10 +18,20 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.DataInput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * A HDFS specific delegation token secret manager.
@@ -44,13 +43,13 @@ public class DelegationTokenSecretManager
 
   private static final Logger LOG = LoggerFactory
       .getLogger(DelegationTokenSecretManager.class);
-  
+
   private final FSNamesystem namesystem;
   private final SerializerCompat serializerCompat = new SerializerCompat();
 
   public DelegationTokenSecretManager(long delegationKeyUpdateInterval,
-      long delegationTokenMaxLifetime, long delegationTokenRenewInterval,
-      long delegationTokenRemoverScanInterval, FSNamesystem namesystem) {
+                                      long delegationTokenMaxLifetime, long delegationTokenRenewInterval,
+                                      long delegationTokenRemoverScanInterval, FSNamesystem namesystem) {
     this(delegationKeyUpdateInterval, delegationTokenMaxLifetime,
         delegationTokenRenewInterval, delegationTokenRemoverScanInterval, false,
         namesystem);
@@ -69,9 +68,9 @@ public class DelegationTokenSecretManager
    * @param storeTokenTrackingId whether to store the token's tracking id
    */
   public DelegationTokenSecretManager(long delegationKeyUpdateInterval,
-      long delegationTokenMaxLifetime, long delegationTokenRenewInterval,
-      long delegationTokenRemoverScanInterval, boolean storeTokenTrackingId,
-      FSNamesystem namesystem) {
+                                      long delegationTokenMaxLifetime, long delegationTokenRenewInterval,
+                                      long delegationTokenRemoverScanInterval, boolean storeTokenTrackingId,
+                                      FSNamesystem namesystem) {
     super(delegationKeyUpdateInterval, delegationTokenMaxLifetime,
         delegationTokenRenewInterval, delegationTokenRemoverScanInterval);
     this.namesystem = namesystem;
@@ -82,7 +81,7 @@ public class DelegationTokenSecretManager
   public DelegationTokenIdentifier createIdentifier() {
     return new DelegationTokenIdentifier();
   }
-  
+
   @Override
   public byte[] retrievePassword(
       DelegationTokenIdentifier identifier) throws InvalidToken {
@@ -104,7 +103,7 @@ public class DelegationTokenSecretManager
     }
     return super.retrievePassword(identifier);
   }
-  
+
   @Override
   public byte[] retriableRetrievePassword(DelegationTokenIdentifier identifier)
       throws InvalidToken, StandbyException, RetriableException, IOException {
@@ -122,10 +121,10 @@ public class DelegationTokenSecretManager
       }
     }
   }
-  
+
   /**
    * Returns expiry time of a token given its identifier.
-   * 
+   *
    * @param dtId DelegationTokenIdentifier of a token
    * @return Expiry time of the token
    * @throws IOException
@@ -142,7 +141,7 @@ public class DelegationTokenSecretManager
 
   /**
    * Load SecretManager state from fsimage.
-   * 
+   *
    * @param in input stream to read fsimage
    * @throws IOException
    */
@@ -203,7 +202,7 @@ public class DelegationTokenSecretManager
    * @throws IOException
    */
   public synchronized void saveSecretManagerStateCompat(DataOutputStream out,
-      String sdPath) throws IOException {
+                                                        String sdPath) throws IOException {
     serializerCompat.save(out, sdPath);
   }
 
@@ -245,10 +244,10 @@ public class DelegationTokenSecretManager
 
   /**
    * This method is intended to be used only while reading edit logs.
-   * 
+   *
    * @param identifier DelegationTokenIdentifier read from the edit logs or
    * fsimage
-   * 
+   *
    * @param expiryTime token expiry time
    * @throws IOException
    */
@@ -282,7 +281,7 @@ public class DelegationTokenSecretManager
 
   /**
    * Add a MasterKey to the list of keys.
-   * 
+   *
    * @param key DelegationKey
    * @throws IOException
    */
@@ -290,10 +289,10 @@ public class DelegationTokenSecretManager
       throws IOException {
     addKey(key);
   }
-  
+
   /**
    * Update the token cache with renewal record in edit logs.
-   * 
+   *
    * @param identifier DelegationTokenIdentifier of the renewed token
    * @param expiryTime expirty time in milliseconds
    * @throws IOException
@@ -318,7 +317,7 @@ public class DelegationTokenSecretManager
 
   /**
    *  Update the token cache with the cancel record in edit logs
-   *  
+   *
    *  @param identifier DelegationTokenIdentifier of the canceled token
    *  @throws IOException
    */
@@ -331,7 +330,7 @@ public class DelegationTokenSecretManager
     }
     currentTokens.remove(identifier);
   }
-  
+
   /**
    * Returns the number of delegation keys currently stored.
    * @return number of delegation keys
@@ -371,7 +370,7 @@ public class DelegationTokenSecretManager
       Thread.currentThread().interrupt();
     }
   }
-  
+
   @Override //AbstractDelegationTokenManager
   protected void logExpireToken(final DelegationTokenIdentifier dtId)
       throws IOException {
@@ -403,9 +402,9 @@ public class DelegationTokenSecretManager
 
   /** A utility method for creating credentials. */
   public static Credentials createCredentials(final NameNode namenode,
-      final UserGroupInformation ugi, final String renewer) throws IOException {
+                                              final UserGroupInformation ugi, final String renewer) throws IOException {
     final Token<DelegationTokenIdentifier> token = namenode.getRpcServer(
-        ).getDelegationToken(new Text(renewer));
+    ).getDelegationToken(new Text(renewer));
     if (token == null) {
       return null;
     }
@@ -436,7 +435,7 @@ public class DelegationTokenSecretManager
      * Private helper methods to save delegation keys and tokens in fsimage
      */
     private synchronized void saveCurrentTokens(DataOutputStream out,
-        String sdPath) throws IOException {
+                                                String sdPath) throws IOException {
       StartupProgress prog = NameNode.getStartupProgress();
       Step step = new Step(StepType.DELEGATION_TOKENS, sdPath);
       prog.beginStep(Phase.SAVING_CHECKPOINT, step);

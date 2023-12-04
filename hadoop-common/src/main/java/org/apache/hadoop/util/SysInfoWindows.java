@@ -1,14 +1,13 @@
 package org.apache.hadoop.util;
 
-import java.io.IOException;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell.ShellCommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Plugin to calculate resource information on Windows systems.
@@ -64,8 +63,8 @@ public class SysInfoWindows extends SysInfo {
   String getSystemInfoInfoFromShell() {
     try {
       ShellCommandExecutor shellExecutor = new ShellCommandExecutor(
-          new String[] {Shell.getWinUtilsFile().getCanonicalPath(),
-              "systeminfo" });
+          new String[]{Shell.getWinUtilsFile().getCanonicalPath(),
+              "systeminfo"});
       shellExecutor.execute();
       return shellExecutor.getOutput();
     } catch (IOException e) {

@@ -1,17 +1,16 @@
 package org.apache.hadoop.fs.sftp;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
-
 import org.apache.hadoop.fs.FSExceptionMessages;
 import org.apache.hadoop.fs.FSInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /** SFTP FileSystem input stream. */
 class SFTPInputStream extends FSInputStream {

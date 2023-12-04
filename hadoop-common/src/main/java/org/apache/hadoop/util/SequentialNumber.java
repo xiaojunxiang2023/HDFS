@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Sequential number generator.
- * 
+ *
  * This class is thread safe.
  */
 public abstract class SequentialNumber implements IdGenerator {
@@ -26,12 +26,12 @@ public abstract class SequentialNumber implements IdGenerator {
   }
 
   public boolean setIfGreater(long value) {
-    while(true) {
+    while (true) {
       long local = currentValue.get();
-      if(value <= local) {
+      if (value <= local) {
         return false; // swap failed
       }
-      if(currentValue.compareAndSet(local, value)) {
+      if (currentValue.compareAndSet(local, value)) {
         return true;  // swap successful
       }
       // keep trying
@@ -45,12 +45,12 @@ public abstract class SequentialNumber implements IdGenerator {
 
   /** Skip to the new value. */
   public void skipTo(long newValue) throws IllegalStateException {
-    for(;;) {
+    for (; ; ) {
       final long c = getCurrentValue();
       if (newValue < c) {
         throw new IllegalStateException(
             "Cannot skip to less than the current value (="
-            + c + "), where newValue=" + newValue);
+                + c + "), where newValue=" + newValue);
       }
 
       if (currentValue.compareAndSet(c, newValue)) {
@@ -64,13 +64,13 @@ public abstract class SequentialNumber implements IdGenerator {
     if (that == null || this.getClass() != that.getClass()) {
       return false;
     }
-    final AtomicLong thatValue = ((SequentialNumber)that).currentValue;
+    final AtomicLong thatValue = ((SequentialNumber) that).currentValue;
     return currentValue.equals(thatValue);
   }
 
   @Override
   public int hashCode() {
     final long v = currentValue.get();
-    return (int)v ^ (int)(v >>> 32);
+    return (int) v ^ (int) (v >>> 32);
   }
 }

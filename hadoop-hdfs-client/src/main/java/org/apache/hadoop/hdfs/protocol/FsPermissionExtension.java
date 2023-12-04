@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.fs.permission.FsPermission;
 
 /**
@@ -29,7 +30,7 @@ public class FsPermissionExtension extends FsPermission {
    * @param perm FsPermission containing permission bits
    */
   public FsPermissionExtension(FsPermission perm, boolean hasAcl,
-      boolean isEncrypted, boolean isErasureCoded) {
+                               boolean isEncrypted, boolean isErasureCoded) {
     super(perm.toShort());
     aclBit = hasAcl;
     encryptedBit = isEncrypted;
@@ -50,7 +51,7 @@ public class FsPermissionExtension extends FsPermission {
 
   @Override
   public short toExtendedShort() {
-    return (short)(toShort()
+    return (short) (toShort()
         | (aclBit ? ACL_BIT : 0)
         | (encryptedBit ? ENCRYPTED_BIT : 0)
         | (erasureCodedBit ? ERASURE_CODED_BIT : 0));

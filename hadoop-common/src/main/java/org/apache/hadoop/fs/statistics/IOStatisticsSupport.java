@@ -1,4 +1,5 @@
 package org.apache.hadoop.fs.statistics;
+
 import org.apache.hadoop.fs.statistics.impl.StubDurationTracker;
 import org.apache.hadoop.fs.statistics.impl.StubDurationTrackerFactory;
 
@@ -21,7 +22,7 @@ public final class IOStatisticsSupport {
    * @return a snapshot of the current values.
    */
   public static IOStatisticsSnapshot
-      snapshotIOStatistics(IOStatistics statistics) {
+  snapshotIOStatistics(IOStatistics statistics) {
 
     return new IOStatisticsSnapshot(statistics);
   }
@@ -34,7 +35,7 @@ public final class IOStatisticsSupport {
    * @return an empty snapshot
    */
   public static IOStatisticsSnapshot
-      snapshotIOStatistics() {
+  snapshotIOStatistics() {
 
     return new IOStatisticsSnapshot();
   }

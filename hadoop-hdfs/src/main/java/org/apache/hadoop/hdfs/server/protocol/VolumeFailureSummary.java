@@ -17,7 +17,7 @@ public class VolumeFailureSummary {
    * @param estimatedCapacityLostTotal estimate of capacity lost in bytes
    */
   public VolumeFailureSummary(String[] failedStorageLocations,
-      long lastVolumeFailureDate, long estimatedCapacityLostTotal) {
+                              long lastVolumeFailureDate, long estimatedCapacityLostTotal) {
     this.failedStorageLocations = failedStorageLocations;
     this.lastVolumeFailureDate = lastVolumeFailureDate;
     this.estimatedCapacityLostTotal = estimatedCapacityLostTotal;

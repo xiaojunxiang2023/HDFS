@@ -41,7 +41,7 @@ public class CorruptFileBlocks {
     }
     CorruptFileBlocks other = (CorruptFileBlocks) obj;
     return cookie.equals(other.cookie) &&
-      Arrays.equals(files, other.files);
+        Arrays.equals(files, other.files);
   }
 
 

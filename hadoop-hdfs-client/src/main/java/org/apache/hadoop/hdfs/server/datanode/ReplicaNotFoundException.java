@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.IOException;
-
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
+
+import java.io.IOException;
 
 /**
  * Exception indicating that DataNode does not have a replica
@@ -23,9 +23,9 @@ public class ReplicaNotFoundException extends IOException {
       "Cannot append to a replica with unexpected generation stamp ";
   public final static String POSSIBLE_ROOT_CAUSE_MSG =
       ". The block may have been removed recently by the balancer " +
-      "or by intentionally reducing the replication factor. " +
-      "This condition is usually harmless. To be certain, please check the " +
-      "preceding datanode log messages for signs of a more serious issue.";
+          "or by intentionally reducing the replication factor. " +
+          "This condition is usually harmless. To be certain, please check the " +
+          "preceding datanode log messages for signs of a more serious issue.";
 
 
   public ReplicaNotFoundException() {

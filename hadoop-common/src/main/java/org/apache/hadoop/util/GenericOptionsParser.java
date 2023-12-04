@@ -1,4 +1,17 @@
 package org.apache.hadoop.util;
+
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.security.Credentials;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,34 +23,16 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.security.Credentials;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * <code>GenericOptionsParser</code> is a utility to parse command line
  * arguments generic to the Hadoop framework. 
- * 
+ *
  * <code>GenericOptionsParser</code> recognizes several standard command
  * line arguments, enabling applications to easily specify a namenode, a 
  * ResourceManager, additional configuration resources etc.
- * 
+ *
  * <h3 id="GenericOptions">Generic Options</h3>
- * 
+ *
  * <p>The supported generic options are:
  * <p><blockquote><pre>
  *     -conf &lt;configuration file&gt;     specify a configuration file
@@ -50,27 +45,26 @@ import org.slf4j.LoggerFactory;
  *                            jar files to include in the classpath.
  *     -archives &lt;comma separated list of archives&gt;    specify comma
  *             separated archives to be unarchived on the compute machines.
-
  * </pre></blockquote><p>
- * 
+ *
  * <p>The general command line syntax is:</p>
  * <p><pre><code>
  * bin/hadoop command [genericOptions] [commandOptions]
  * </code></pre><p>
- * 
+ *
  * <p>Generic command line arguments <strong>might</strong> modify 
  * <code>Configuration </code> objects, given to constructors.</p>
- * 
+ *
  * <p>The functionality is implemented using Commons CLI.</p>
  *
  * <p>Examples:</p>
  * <p><blockquote><pre>
  * $ bin/hadoop dfs -fs darwin:8020 -ls /data
  * list /data directory in dfs with namenode darwin:8020
- * 
+ *
  * $ bin/hadoop dfs -D fs.default.name=darwin:8020 -ls /data
  * list /data directory in dfs with namenode darwin:8020
- *     
+ *
  * $ bin/hadoop dfs -conf core-site.xml -conf hdfs-site.xml -ls /data
  * list /data directory in dfs with multiple conf files specified.
  *
@@ -82,7 +76,7 @@ import org.slf4j.LoggerFactory;
  *
  * $ bin/hadoop job -jt local -submit job.xml
  * submit a job to local runner
- * 
+ *
  * $ bin/hadoop jar -libjars testlib.jar 
  * -archives test.tgz -files file.txt inputjar args
  * job submission with libjars, files and archives
@@ -103,9 +97,9 @@ public class GenericOptionsParser {
    * Create an options parser with the given options to parse the args.
    * @param opts the options
    * @param args the command line arguments
-   * @throws IOException 
+   * @throws IOException
    */
-  public GenericOptionsParser(Options opts, String[] args) 
+  public GenericOptionsParser(Options opts, String[] args)
       throws IOException {
     this(new Configuration(), opts, args);
   }
@@ -113,50 +107,50 @@ public class GenericOptionsParser {
   /**
    * Create an options parser to parse the args.
    * @param args the command line arguments
-   * @throws IOException 
+   * @throws IOException
    */
-  public GenericOptionsParser(String[] args) 
+  public GenericOptionsParser(String[] args)
       throws IOException {
     this(new Configuration(), new Options(), args);
   }
-  
-  /** 
+
+  /**
    * Create a <code>GenericOptionsParser</code> to parse only the generic
    * Hadoop arguments.
-   * 
+   *
    * The array of string arguments other than the generic arguments can be 
    * obtained by {@link #getRemainingArgs()}.
-   * 
+   *
    * @param conf the <code>Configuration</code> to modify.
    * @param args command-line arguments.
-   * @throws IOException 
+   * @throws IOException
    */
-  public GenericOptionsParser(Configuration conf, String[] args) 
+  public GenericOptionsParser(Configuration conf, String[] args)
       throws IOException {
-    this(conf, new Options(), args); 
+    this(conf, new Options(), args);
   }
 
-  /** 
+  /**
    * Create a <code>GenericOptionsParser</code> to parse given options as well 
    * as generic Hadoop options. 
-   * 
+   *
    * The resulting <code>CommandLine</code> object can be obtained by 
    * {@link #getCommandLine()}.
-   * 
+   *
    * @param conf the configuration to modify  
    * @param options options built by the caller 
    * @param args User-specified arguments
-   * @throws IOException 
+   * @throws IOException
    */
   public GenericOptionsParser(Configuration conf,
-      Options options, String[] args) throws IOException {
+                              Options options, String[] args) throws IOException {
     this.conf = conf;
     parseSuccessful = parseGeneralOptions(options, args);
   }
 
   /**
    * Returns an array of Strings containing only application-specific arguments.
-   * 
+   *
    * @return array of <code>String</code>s containing the un-parsed arguments
    * or <strong>empty array</strong> if commandLine was not defined.
    */
@@ -175,11 +169,11 @@ public class GenericOptionsParser {
   /**
    * Returns the commons-cli <code>CommandLine</code> object 
    * to process the parsed arguments. 
-   * 
+   *
    * Note: If the object is created with 
    * {@link #GenericOptionsParser(Configuration, String[])}, then returned 
    * object will only contain parsed generic options.
-   * 
+   *
    * @return <code>CommandLine</code> representing list of arguments 
    *         parsed against Options descriptor.
    */
@@ -206,7 +200,7 @@ public class GenericOptionsParser {
       Option fs = OptionBuilder.withArgName("file:///|hdfs://namenode:port")
           .hasArg()
           .withDescription("specify default filesystem URL to use, "
-          + "overrides 'fs.defaultFS' property from configurations.")
+              + "overrides 'fs.defaultFS' property from configurations.")
           .create("fs");
       Option jt = OptionBuilder.withArgName("local|resourcemanager:port")
           .hasArg()
@@ -272,19 +266,19 @@ public class GenericOptionsParser {
         conf.set("mapreduce.framework.name", optionValue);
       }
 
-      conf.set("yarn.resourcemanager.address", optionValue, 
+      conf.set("yarn.resourcemanager.address", optionValue,
           "from -jt command line option");
     }
     if (line.hasOption("conf")) {
       String[] values = line.getOptionValues("conf");
-      for(String value : values) {
+      for (String value : values) {
         conf.addResource(new Path(value));
       }
     }
 
     if (line.hasOption('D')) {
       String[] property = line.getOptionValues('D');
-      for(String prop : property) {
+      for (String prop : property) {
         String[] keyval = prop.split("=", 2);
         if (keyval.length == 2) {
           conf.set(keyval[0], keyval[1], "from command line");
@@ -295,47 +289,47 @@ public class GenericOptionsParser {
     if (line.hasOption("libjars")) {
       // for libjars, we allow expansion of wildcards
       conf.set("tmpjars",
-               validateFiles(line.getOptionValue("libjars"), true),
-               "from -libjars command line option");
+          validateFiles(line.getOptionValue("libjars"), true),
+          "from -libjars command line option");
       //setting libjars in client classpath
       URL[] libjars = getLibJars(conf);
-      if(libjars!=null && libjars.length>0) {
+      if (libjars != null && libjars.length > 0) {
         conf.setClassLoader(new URLClassLoader(libjars, conf.getClassLoader()));
         Thread.currentThread().setContextClassLoader(
-            new URLClassLoader(libjars, 
+            new URLClassLoader(libjars,
                 Thread.currentThread().getContextClassLoader()));
       }
     }
     if (line.hasOption("files")) {
-      conf.set("tmpfiles", 
-               validateFiles(line.getOptionValue("files")),
-               "from -files command line option");
+      conf.set("tmpfiles",
+          validateFiles(line.getOptionValue("files")),
+          "from -files command line option");
     }
     if (line.hasOption("archives")) {
-      conf.set("tmparchives", 
-                validateFiles(line.getOptionValue("archives")),
-                "from -archives command line option");
+      conf.set("tmparchives",
+          validateFiles(line.getOptionValue("archives")),
+          "from -archives command line option");
     }
     conf.setBoolean("mapreduce.client.genericoptionsparser.used", true);
-    
+
     // tokensFile
-    if(line.hasOption("tokenCacheFile")) {
+    if (line.hasOption("tokenCacheFile")) {
       String fileName = line.getOptionValue("tokenCacheFile");
       // check if the local file exists
       FileSystem localFs = FileSystem.getLocal(conf);
       Path p = localFs.makeQualified(new Path(fileName));
       localFs.getFileStatus(p);
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("setting conf tokensFile: " + fileName);
       }
       UserGroupInformation.getCurrentUser().addCredentials(
           Credentials.readTokenStorageFile(p, conf));
       conf.set("mapreduce.job.credentials.binary", p.toString(),
-               "from -tokenCacheFile command line option");
+          "from -tokenCacheFile command line option");
 
     }
   }
-  
+
   /**
    * If libjars are set in the conf, parse the libjars.
    * @param conf
@@ -405,7 +399,7 @@ public class GenericOptionsParser {
       throw new IllegalArgumentException("File name can't be empty string");
     }
     List<String> finalPaths = new ArrayList<>(fileArr.length);
-    for (int i =0; i < fileArr.length; i++) {
+    for (int i = 0; i < fileArr.length; i++) {
       String tmp = fileArr[i];
       if (tmp.isEmpty()) {
         throw new IllegalArgumentException("File name can't be empty string");
@@ -477,7 +471,7 @@ public class GenericOptionsParser {
     if (jars.isEmpty()) {
       LOG.warn(path + " does not have jars in it. It will be ignored.");
     } else {
-      for (Path jar: jars) {
+      for (Path jar : jars) {
         finalPaths.add(jar.makeQualified(fs.getUri(),
             fs.getWorkingDirectory()).toString());
       }
@@ -504,7 +498,7 @@ public class GenericOptionsParser {
       return null;
     }
     List<String> newArgs = new ArrayList<String>(args.length);
-    for (int i=0; i < args.length; i++) {
+    for (int i = 0; i < args.length; i++) {
       if (args[i] == null) {
         continue;
       }
@@ -551,8 +545,8 @@ public class GenericOptionsParser {
       commandLine = parser.parse(opts, preProcessForWindows(args), true);
       processGeneralOptions(commandLine);
       parsed = true;
-    } catch(ParseException e) {
-      LOG.warn("options parsing failed: "+e.getMessage());
+    } catch (ParseException e) {
+      LOG.warn("options parsing failed: " + e.getMessage());
 
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp("general options are: ", opts);
@@ -562,7 +556,7 @@ public class GenericOptionsParser {
 
   /**
    * Print the usage message for generic command-line options supported.
-   * 
+   *
    * @param out stream to print the usage message to.
    */
   public static void printGenericCommandUsage(PrintStream out) {
@@ -590,5 +584,5 @@ public class GenericOptionsParser {
     out.println("command [genericOptions] [commandOptions]");
     out.println();
   }
-  
+
 }

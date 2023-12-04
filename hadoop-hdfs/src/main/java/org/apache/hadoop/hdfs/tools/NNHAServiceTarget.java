@@ -1,8 +1,9 @@
 package org.apache.hadoop.hdfs.tools;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.ha.status.HAServiceTarget;
-import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -19,144 +20,144 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMESERVICES;
 
 public class NNHAServiceTarget extends HAServiceTarget {
 
-    // Keys added to the fencing script environment
-    private static final String NAMESERVICE_ID_KEY = "nameserviceid";
-    private static final String NAMENODE_ID_KEY = "namenodeid";
+  // Keys added to the fencing script environment
+  private static final String NAMESERVICE_ID_KEY = "nameserviceid";
+  private static final String NAMENODE_ID_KEY = "namenodeid";
 
-    private final InetSocketAddress addr;
-    private final InetSocketAddress lifelineAddr;
-    private final String nnId;
-    private final String nsId;
-    private final boolean autoFailoverEnabled;
-    private InetSocketAddress zkfcAddr;
-    private NodeFencer fencer;
-    private BadFencingConfigurationException fenceConfigError;
+  private final InetSocketAddress addr;
+  private final InetSocketAddress lifelineAddr;
+  private final String nnId;
+  private final String nsId;
+  private final boolean autoFailoverEnabled;
+  private InetSocketAddress zkfcAddr;
+  private NodeFencer fencer;
+  private BadFencingConfigurationException fenceConfigError;
 
-    public NNHAServiceTarget(Configuration conf,
-                             String nsId, String nnId) {
-        Preconditions.checkNotNull(nnId);
+  public NNHAServiceTarget(Configuration conf,
+                           String nsId, String nnId) {
+    Preconditions.checkNotNull(nnId);
 
-        if (nsId == null) {
-            nsId = DFSUtil.getOnlyNameServiceIdOrNull(conf);
-            if (nsId == null) {
-                String errorString = "Unable to determine the name service ID.";
-                String[] dfsNames = conf.getStrings(DFS_NAMESERVICES);
-                if ((dfsNames != null) && (dfsNames.length > 1)) {
-                    errorString = "Unable to determine the name service ID. " +
-                            "This is an HA configuration with multiple name services " +
-                            "configured. " + DFS_NAMESERVICES + " is set to " +
-                            Arrays.toString(dfsNames) + ". Please re-run with the -ns option.";
-                }
-                throw new IllegalArgumentException(errorString);
-            }
+    if (nsId == null) {
+      nsId = DFSUtil.getOnlyNameServiceIdOrNull(conf);
+      if (nsId == null) {
+        String errorString = "Unable to determine the name service ID.";
+        String[] dfsNames = conf.getStrings(DFS_NAMESERVICES);
+        if ((dfsNames != null) && (dfsNames.length > 1)) {
+          errorString = "Unable to determine the name service ID. " +
+              "This is an HA configuration with multiple name services " +
+              "configured. " + DFS_NAMESERVICES + " is set to " +
+              Arrays.toString(dfsNames) + ". Please re-run with the -ns option.";
         }
-
-        // Make a copy of the conf, and override configs based on the
-        // target node -- not the node we happen to be running on.
-        HdfsConfiguration targetConf = new HdfsConfiguration(conf);
-        NameNode.initializeGenericKeys(targetConf, nsId, nnId);
-
-        String serviceAddr =
-                DFSUtil.getNamenodeServiceAddr(targetConf, nsId, nnId);
-        if (serviceAddr == null) {
-            throw new IllegalArgumentException(
-                    "Unable to determine service address for namenode '" + nnId + "'");
-        }
-        this.addr = NetUtils.createSocketAddr(serviceAddr,
-                HdfsClientConfigKeys.DFS_NAMENODE_RPC_PORT_DEFAULT);
-
-        String lifelineAddrStr =
-                DFSUtil.getNamenodeLifelineAddr(targetConf, nsId, nnId);
-        this.lifelineAddr = (lifelineAddrStr != null) ?
-                NetUtils.createSocketAddr(lifelineAddrStr) : null;
-
-        this.autoFailoverEnabled = targetConf.getBoolean(
-                DFSConfigKeys.DFS_HA_AUTO_FAILOVER_ENABLED_KEY,
-                DFSConfigKeys.DFS_HA_AUTO_FAILOVER_ENABLED_DEFAULT);
-        if (autoFailoverEnabled) {
-            int port = DFSZKFailoverController.getZkfcPort(targetConf);
-            if (port != 0) {
-                setZkfcPort(port);
-            }
-        }
-
-        try {
-            this.fencer = NodeFencer.create(targetConf,
-                    DFSConfigKeys.DFS_HA_FENCE_METHODS_KEY);
-        } catch (BadFencingConfigurationException e) {
-            this.fenceConfigError = e;
-        }
-
-        this.nnId = nnId;
-        this.nsId = nsId;
+        throw new IllegalArgumentException(errorString);
+      }
     }
 
-    @Override
-    public InetSocketAddress getAddress() {
-        return addr;
+    // Make a copy of the conf, and override configs based on the
+    // target node -- not the node we happen to be running on.
+    HdfsConfiguration targetConf = new HdfsConfiguration(conf);
+    NameNode.initializeGenericKeys(targetConf, nsId, nnId);
+
+    String serviceAddr =
+        DFSUtil.getNamenodeServiceAddr(targetConf, nsId, nnId);
+    if (serviceAddr == null) {
+      throw new IllegalArgumentException(
+          "Unable to determine service address for namenode '" + nnId + "'");
+    }
+    this.addr = NetUtils.createSocketAddr(serviceAddr,
+        HdfsClientConfigKeys.DFS_NAMENODE_RPC_PORT_DEFAULT);
+
+    String lifelineAddrStr =
+        DFSUtil.getNamenodeLifelineAddr(targetConf, nsId, nnId);
+    this.lifelineAddr = (lifelineAddrStr != null) ?
+        NetUtils.createSocketAddr(lifelineAddrStr) : null;
+
+    this.autoFailoverEnabled = targetConf.getBoolean(
+        DFSConfigKeys.DFS_HA_AUTO_FAILOVER_ENABLED_KEY,
+        DFSConfigKeys.DFS_HA_AUTO_FAILOVER_ENABLED_DEFAULT);
+    if (autoFailoverEnabled) {
+      int port = DFSZKFailoverController.getZkfcPort(targetConf);
+      if (port != 0) {
+        setZkfcPort(port);
+      }
     }
 
-    @Override
-    public InetSocketAddress getHealthMonitorAddress() {
-        return lifelineAddr;
+    try {
+      this.fencer = NodeFencer.create(targetConf,
+          DFSConfigKeys.DFS_HA_FENCE_METHODS_KEY);
+    } catch (BadFencingConfigurationException e) {
+      this.fenceConfigError = e;
     }
 
-    @Override
-    public InetSocketAddress getZKFCAddress() {
-        Preconditions.checkState(autoFailoverEnabled,
-                "ZKFC address not relevant when auto failover is off");
-        assert zkfcAddr != null;
-        return zkfcAddr;
-    }
+    this.nnId = nnId;
+    this.nsId = nsId;
+  }
 
-    void setZkfcPort(int port) {
-        assert autoFailoverEnabled;
-        this.zkfcAddr = new InetSocketAddress(addr.getAddress(), port);
-    }
+  @Override
+  public InetSocketAddress getAddress() {
+    return addr;
+  }
 
-    @Override
-    public void checkFencingConfigured() throws BadFencingConfigurationException {
-        if (fenceConfigError != null) {
-            throw fenceConfigError;
-        }
-        if (fencer == null) {
-            throw new BadFencingConfigurationException("No fencer configured for " + this);
-        }
-    }
+  @Override
+  public InetSocketAddress getHealthMonitorAddress() {
+    return lifelineAddr;
+  }
 
-    @Override
-    public NodeFencer getFencer() {
-        return fencer;
-    }
+  @Override
+  public InetSocketAddress getZKFCAddress() {
+    Preconditions.checkState(autoFailoverEnabled,
+        "ZKFC address not relevant when auto failover is off");
+    assert zkfcAddr != null;
+    return zkfcAddr;
+  }
 
-    @Override
-    public String toString() {
-        return "NameNode at " + (lifelineAddr != null ? lifelineAddr : addr);
-    }
+  void setZkfcPort(int port) {
+    assert autoFailoverEnabled;
+    this.zkfcAddr = new InetSocketAddress(addr.getAddress(), port);
+  }
 
-    public String getNameServiceId() {
-        return this.nsId;
+  @Override
+  public void checkFencingConfigured() throws BadFencingConfigurationException {
+    if (fenceConfigError != null) {
+      throw fenceConfigError;
     }
-
-    public String getNameNodeId() {
-        return this.nnId;
+    if (fencer == null) {
+      throw new BadFencingConfigurationException("No fencer configured for " + this);
     }
+  }
 
-    @Override
-    protected void addFencingParameters(Map<String, String> ret) {
-        super.addFencingParameters(ret);
+  @Override
+  public NodeFencer getFencer() {
+    return fencer;
+  }
 
-        ret.put(NAMESERVICE_ID_KEY, getNameServiceId());
-        ret.put(NAMENODE_ID_KEY, getNameNodeId());
-    }
+  @Override
+  public String toString() {
+    return "NameNode at " + (lifelineAddr != null ? lifelineAddr : addr);
+  }
 
-    @Override
-    public boolean isAutoFailoverEnabled() {
-        return autoFailoverEnabled;
-    }
+  public String getNameServiceId() {
+    return this.nsId;
+  }
 
-    @Override
-    public boolean supportObserver() {
-        return true;
-    }
+  public String getNameNodeId() {
+    return this.nnId;
+  }
+
+  @Override
+  protected void addFencingParameters(Map<String, String> ret) {
+    super.addFencingParameters(ret);
+
+    ret.put(NAMESERVICE_ID_KEY, getNameServiceId());
+    ret.put(NAMENODE_ID_KEY, getNameNodeId());
+  }
+
+  @Override
+  public boolean isAutoFailoverEnabled() {
+    return autoFailoverEnabled;
+  }
+
+  @Override
+  public boolean supportObserver() {
+    return true;
+  }
 }

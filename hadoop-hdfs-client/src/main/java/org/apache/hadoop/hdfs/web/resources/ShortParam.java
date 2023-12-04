@@ -3,7 +3,7 @@ package org.apache.hadoop.hdfs.web.resources;
 /** Short parameter. */
 abstract class ShortParam extends Param<Short, ShortParam.Domain> {
   ShortParam(final Domain domain, final Short value,
-      final Short min, final Short max) {
+             final Short min, final Short max) {
     super(domain, value);
     checkRange(min, max);
   }
@@ -56,8 +56,8 @@ abstract class ShortParam extends Param<Short, ShortParam.Domain> {
     Short parse(final String str) {
       try {
         return NULL.equals(str) || str == null ? null : Short.parseShort(str,
-          radix);
-      } catch(NumberFormatException e) {
+            radix);
+      } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Failed to parse \"" + str
             + "\" as a radix-" + radix + " short integer.", e);
       }
@@ -65,7 +65,7 @@ abstract class ShortParam extends Param<Short, ShortParam.Domain> {
 
     /** Convert a Short to a String. */
     String toString(final Short n) {
-      return n == null? NULL: Integer.toString(n, radix);
+      return n == null ? NULL : Integer.toString(n, radix);
     }
   }
 }

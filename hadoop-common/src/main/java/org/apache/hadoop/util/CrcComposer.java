@@ -1,4 +1,5 @@
 package org.apache.hadoop.util;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +65,7 @@ public class CrcComposer {
       long stripeLength) {
     LOG.debug(
         "crcPolynomial=0x{}, precomputedMonomialForHint=0x{}, "
-        + "bytesPerCrcHint={}, stripeLength={}",
+            + "bytesPerCrcHint={}, stripeLength={}",
         Integer.toString(crcPolynomial, 16),
         Integer.toString(precomputedMonomialForHint, 16),
         bytesPerCrcHint,
@@ -88,7 +89,7 @@ public class CrcComposer {
     if (length % CRC_SIZE_BYTES != 0) {
       throw new IOException(String.format(
           "Trying to update CRC from byte array with length '%d' at offset "
-          + "'%d' which is not a multiple of %d!",
+              + "'%d' which is not a multiple of %d!",
           length, offset, CRC_SIZE_BYTES));
     }
     int limit = offset + length;
@@ -133,7 +134,7 @@ public class CrcComposer {
     if (curPositionInStripe > stripeLength) {
       throw new IOException(String.format(
           "Current position in stripe '%d' after advancing by bytesPerCrc '%d' "
-          + "exceeds stripeLength '%d' without stripe alignment.",
+              + "exceeds stripeLength '%d' without stripe alignment.",
           curPositionInStripe, bytesPerCrc, stripeLength));
     } else if (curPositionInStripe == stripeLength) {
       // Hit a stripe boundary; flush the curCompositeCrc and reset for next

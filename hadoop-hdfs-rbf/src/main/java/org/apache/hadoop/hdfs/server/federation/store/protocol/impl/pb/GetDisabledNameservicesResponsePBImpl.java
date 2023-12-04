@@ -17,50 +17,50 @@ import java.util.TreeSet;
  * GetDisabledNameservicesResponse.
  */
 public class GetDisabledNameservicesResponsePBImpl
-        extends GetDisabledNameservicesResponse implements PBRecord {
+    extends GetDisabledNameservicesResponse implements PBRecord {
 
-    private FederationProtocolPBTranslator<GetDisabledNameservicesResponseProto,
-            Builder, GetDisabledNameservicesResponseProtoOrBuilder> translator =
-            new FederationProtocolPBTranslator<
-                    GetDisabledNameservicesResponseProto, Builder,
-                    GetDisabledNameservicesResponseProtoOrBuilder>(
-                    GetDisabledNameservicesResponseProto.class);
+  private FederationProtocolPBTranslator<GetDisabledNameservicesResponseProto,
+      Builder, GetDisabledNameservicesResponseProtoOrBuilder> translator =
+      new FederationProtocolPBTranslator<
+          GetDisabledNameservicesResponseProto, Builder,
+          GetDisabledNameservicesResponseProtoOrBuilder>(
+          GetDisabledNameservicesResponseProto.class);
 
-    public GetDisabledNameservicesResponsePBImpl() {
+  public GetDisabledNameservicesResponsePBImpl() {
+  }
+
+  public GetDisabledNameservicesResponsePBImpl(
+      GetDisabledNameservicesResponseProto proto) {
+    this.translator.setProto(proto);
+  }
+
+  @Override
+  public GetDisabledNameservicesResponseProto getProto() {
+    return this.translator.build();
+  }
+
+  @Override
+  public void setProto(Message proto) {
+    this.translator.setProto(proto);
+  }
+
+  @Override
+  public void readInstance(String base64String) throws IOException {
+    this.translator.readInstance(base64String);
+  }
+
+  @Override
+  public Set<String> getNameservices() {
+    List<String> nsIds =
+        this.translator.getProtoOrBuilder().getNameServiceIdsList();
+    return new TreeSet<>(nsIds);
+  }
+
+  @Override
+  public void setNameservices(Set<String> nameservices) {
+    this.translator.getBuilder().clearNameServiceIds();
+    for (String nsId : nameservices) {
+      this.translator.getBuilder().addNameServiceIds(nsId);
     }
-
-    public GetDisabledNameservicesResponsePBImpl(
-            GetDisabledNameservicesResponseProto proto) {
-        this.translator.setProto(proto);
-    }
-
-    @Override
-    public GetDisabledNameservicesResponseProto getProto() {
-        return this.translator.build();
-    }
-
-    @Override
-    public void setProto(Message proto) {
-        this.translator.setProto(proto);
-    }
-
-    @Override
-    public void readInstance(String base64String) throws IOException {
-        this.translator.readInstance(base64String);
-    }
-
-    @Override
-    public Set<String> getNameservices() {
-        List<String> nsIds =
-                this.translator.getProtoOrBuilder().getNameServiceIdsList();
-        return new TreeSet<>(nsIds);
-    }
-
-    @Override
-    public void setNameservices(Set<String> nameservices) {
-        this.translator.getBuilder().clearNameServiceIds();
-        for (String nsId : nameservices) {
-            this.translator.getBuilder().addNameServiceIds(nsId);
-        }
-    }
+  }
 }

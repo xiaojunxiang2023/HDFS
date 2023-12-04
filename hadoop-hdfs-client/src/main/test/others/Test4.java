@@ -9,17 +9,17 @@ import org.slf4j.LoggerFactory;
  * @Description:
  */
 public class Test4 {
-    public static void main(String[] args) throws ClassNotFoundException {
-        Logger LOG = LoggerFactory.getLogger(Test4.class);
+  public static void main(String[] args) throws ClassNotFoundException {
+    Logger LOG = LoggerFactory.getLogger(Test4.class);
 //        Class.forName("org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolPB");
 //        Class.forName("com.google.protobuf.Service");
 //        Class.forName("org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos");
 //        Class.forName("org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos$ClientNamenodeProtocol");
-        try {
-            System.out.println(1/0);
-        } catch (Exception e) {
-            LOG.error("meet with Exception when getProtocolEngine()", e);
-        } 
+    try {
+      System.out.println(1 / 0);
+    } catch (Exception e) {
+      LOG.error("meet with Exception when getProtocolEngine()", e);
     }
+  }
 
 }

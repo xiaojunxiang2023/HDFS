@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */package org.apache.hadoop.hdfs.server.diskbalancer.command;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.command;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.hadoop.conf.Configuration;
@@ -27,6 +27,7 @@ import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus;
 import org.apache.hadoop.hdfs.server.diskbalancer.DiskBalancerException;
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
 import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Gets the current status of disk balancer command.
@@ -74,9 +75,9 @@ public class QueryCommand extends Command {
     try {
       DiskBalancerWorkStatus workStatus = dataNode.queryDiskBalancerPlan();
       System.out.printf("Plan File: %s%nPlan ID: %s%nResult: %s%n",
-              workStatus.getPlanFile(),
-              workStatus.getPlanID(),
-              workStatus.getResult().toString());
+          workStatus.getPlanFile(),
+          workStatus.getPlanID(),
+          workStatus.getResult().toString());
 
       if (cmd.hasOption(DiskBalancerCLI.VERBOSE)) {
         System.out.printf("%s", workStatus.currentStateString());

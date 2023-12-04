@@ -1,11 +1,12 @@
 package org.apache.hadoop.io.erasurecode.coder;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.coder.util.HHUtil;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Hitchhiker-XOR Erasure encoding step, a wrapper of all the necessary
@@ -33,7 +34,7 @@ public class HHXORErasureEncodingStep extends HHErasureCodingStep {
     this.rsRawEncoder = rsRawEncoder;
     this.xorRawEncoder = xorRawEncoder;
     piggyBackIndex = HHUtil.initPiggyBackIndexWithoutPBVec(
-            rsRawEncoder.getNumDataUnits(), rsRawEncoder.getNumParityUnits());
+        rsRawEncoder.getNumDataUnits(), rsRawEncoder.getNumParityUnits());
   }
 
   @Override
@@ -84,7 +85,7 @@ public class HHXORErasureEncodingStep extends HHErasureCodingStep {
 
     // calc piggyBacks using first sub-packet
     ByteBuffer[] piggyBacks = HHUtil.getPiggyBacksFromInput(inputs[0],
-            piggyBackIndex, numParityUnits, 0, xorRawEncoder);
+        piggyBackIndex, numParityUnits, 0, xorRawEncoder);
 
     // Step1: RS encode each byte-stripe of sub-packets
     for (int i = 0; i < getSubPacketSize(); ++i) {
@@ -94,7 +95,7 @@ public class HHXORErasureEncodingStep extends HHErasureCodingStep {
     // Step2: Adding piggybacks to the parities
     // Only second sub-packet is added with a piggyback.
     encodeWithPiggyBacks(piggyBacks, outputs, numParityUnits,
-            inputs[0][0].isDirect());
+        inputs[0][0].isDirect());
   }
 
   private void encodeWithPiggyBacks(ByteBuffer[] piggyBacks,
@@ -107,7 +108,7 @@ public class HHXORErasureEncodingStep extends HHErasureCodingStep {
         int bufSize = piggyBacks[i].remaining();
         byte[] newOut = outputs[1][parityIndex].array();
         int offset = outputs[1][parityIndex].arrayOffset()
-                + outputs[1][parityIndex].position();
+            + outputs[1][parityIndex].position();
 
         for (int k = offset, j = 0; j < bufSize; k++, j++) {
           newOut[k] = (byte) (newOut[k] ^ piggyBacks[i].get(j));
@@ -122,7 +123,7 @@ public class HHXORErasureEncodingStep extends HHErasureCodingStep {
            m = outputs[1][parityIndex].position();
            k < piggyBacks[i].limit(); k++, m++) {
         outputs[1][parityIndex].put(m,
-                (byte) (outputs[1][parityIndex].get(m) ^ piggyBacks[i].get(k)));
+            (byte) (outputs[1][parityIndex].get(m) ^ piggyBacks[i].get(k)));
       }
     }
   }

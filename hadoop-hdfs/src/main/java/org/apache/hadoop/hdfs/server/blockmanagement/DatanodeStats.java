@@ -162,7 +162,7 @@ class DatanodeStats {
     }
 
     private void addNode(StorageType storageType,
-        final DatanodeDescriptor node) {
+                         final DatanodeDescriptor node) {
       StorageTypeStats storageTypeStats =
           storageTypeStatsMap.get(storageType);
       if (storageTypeStats == null) {
@@ -173,7 +173,7 @@ class DatanodeStats {
     }
 
     private void addStorage(final DatanodeStorageInfo info,
-        final DatanodeDescriptor node) {
+                            final DatanodeDescriptor node) {
       StorageTypeStats storageTypeStats =
           storageTypeStatsMap.get(info.getStorageType());
       if (storageTypeStats == null) {
@@ -184,7 +184,7 @@ class DatanodeStats {
     }
 
     private void subtractStorage(final DatanodeStorageInfo info,
-        final DatanodeDescriptor node) {
+                                 final DatanodeDescriptor node) {
       StorageTypeStats storageTypeStats =
           storageTypeStatsMap.get(info.getStorageType());
       if (storageTypeStats != null) {
@@ -193,7 +193,7 @@ class DatanodeStats {
     }
 
     private void subtractNode(StorageType storageType,
-        final DatanodeDescriptor node) {
+                              final DatanodeDescriptor node) {
       StorageTypeStats storageTypeStats = storageTypeStatsMap.get(storageType);
       if (storageTypeStats != null) {
         storageTypeStats.subtractNode(node);

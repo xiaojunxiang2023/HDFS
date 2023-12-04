@@ -49,5 +49,6 @@ public abstract class DirectoryDiffListFactory {
   }
 
 
-  private DirectoryDiffListFactory() {}
+  private DirectoryDiffListFactory() {
+  }
 }

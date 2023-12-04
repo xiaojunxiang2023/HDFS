@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
-import java.io.IOException;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
@@ -11,9 +10,10 @@ import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.DataChecksum;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Transfer data to/from datanode using a streaming protocol.
@@ -44,12 +44,12 @@ public interface DataTransferProtocol {
    * @param cachingStrategy  The caching strategy to use.
    */
   void readBlock(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String clientName,
-      final long blockOffset,
-      final long length,
-      final boolean sendChecksum,
-      final CachingStrategy cachingStrategy) throws IOException;
+                 final Token<BlockTokenIdentifier> blockToken,
+                 final String clientName,
+                 final long blockOffset,
+                 final long length,
+                 final boolean sendChecksum,
+                 final CachingStrategy cachingStrategy) throws IOException;
 
   /**
    * Write a block to a datanode pipeline.
@@ -87,24 +87,25 @@ public interface DataTransferProtocol {
    *                         datanodes.
    */
   void writeBlock(final ExtendedBlock blk,
-      final StorageType storageType,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String clientName,
-      final DatanodeInfo[] targets,
-      final StorageType[] targetStorageTypes,
-      final DatanodeInfo source,
-      final BlockConstructionStage stage,
-      final int pipelineSize,
-      final long minBytesRcvd,
-      final long maxBytesRcvd,
-      final long latestGenerationStamp,
-      final DataChecksum requestedChecksum,
-      final CachingStrategy cachingStrategy,
-      final boolean allowLazyPersist,
-      final boolean pinning,
-      final boolean[] targetPinnings,
-      final String storageID,
-      final String[] targetStorageIDs) throws IOException;
+                  final StorageType storageType,
+                  final Token<BlockTokenIdentifier> blockToken,
+                  final String clientName,
+                  final DatanodeInfo[] targets,
+                  final StorageType[] targetStorageTypes,
+                  final DatanodeInfo source,
+                  final BlockConstructionStage stage,
+                  final int pipelineSize,
+                  final long minBytesRcvd,
+                  final long maxBytesRcvd,
+                  final long latestGenerationStamp,
+                  final DataChecksum requestedChecksum,
+                  final CachingStrategy cachingStrategy,
+                  final boolean allowLazyPersist,
+                  final boolean pinning,
+                  final boolean[] targetPinnings,
+                  final String storageID,
+                  final String[] targetStorageIDs) throws IOException;
+
   /**
    * Transfer a block to another datanode.
    * The block stage must be
@@ -119,11 +120,11 @@ public interface DataTransferProtocol {
    *                     block.
    */
   void transferBlock(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String clientName,
-      final DatanodeInfo[] targets,
-      final StorageType[] targetStorageTypes,
-      final String[] targetStorageIDs) throws IOException;
+                     final Token<BlockTokenIdentifier> blockToken,
+                     final String clientName,
+                     final DatanodeInfo[] targets,
+                     final StorageType[] targetStorageTypes,
+                     final String[] targetStorageIDs) throws IOException;
 
   /**
    * Request short circuit access file descriptors from a DataNode.
@@ -138,9 +139,9 @@ public interface DataTransferProtocol {
    *                          receipt verification.
    */
   void requestShortCircuitFds(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken,
-      SlotId slotId, int maxVersion, boolean supportsReceiptVerification)
-        throws IOException;
+                              final Token<BlockTokenIdentifier> blockToken,
+                              SlotId slotId, int maxVersion, boolean supportsReceiptVerification)
+      throws IOException;
 
   /**
    * Release a pair of short-circuit FDs requested earlier.
@@ -172,11 +173,11 @@ public interface DataTransferProtocol {
    *                  replaced to.
    */
   void replaceBlock(final ExtendedBlock blk,
-      final StorageType storageType,
-      final Token<BlockTokenIdentifier> blockToken,
-      final String delHint,
-      final DatanodeInfo source,
-      final String storageId) throws IOException;
+                    final StorageType storageType,
+                    final Token<BlockTokenIdentifier> blockToken,
+                    final String delHint,
+                    final DatanodeInfo source,
+                    final String storageId) throws IOException;
 
   /**
    * Copy a block.
@@ -186,7 +187,7 @@ public interface DataTransferProtocol {
    * @param blockToken security token for accessing the block.
    */
   void copyBlock(final ExtendedBlock blk,
-      final Token<BlockTokenIdentifier> blockToken) throws IOException;
+                 final Token<BlockTokenIdentifier> blockToken) throws IOException;
 
   /**
    * Get block checksum (MD5 of CRC32).
@@ -198,8 +199,8 @@ public interface DataTransferProtocol {
    * @throws IOException
    */
   void blockChecksum(ExtendedBlock blk,
-      Token<BlockTokenIdentifier> blockToken,
-      BlockChecksumOptions blockChecksumOptions) throws IOException;
+                     Token<BlockTokenIdentifier> blockToken,
+                     BlockChecksumOptions blockChecksumOptions) throws IOException;
 
   /**
    * Get striped block group checksum (MD5 of CRC32).
@@ -213,7 +214,7 @@ public interface DataTransferProtocol {
    * @throws IOException
    */
   void blockGroupChecksum(StripedBlockInfo stripedBlockInfo,
-          Token<BlockTokenIdentifier> blockToken,
-          long requestedNumBytes,
-          BlockChecksumOptions blockChecksumOptions) throws IOException;
+                          Token<BlockTokenIdentifier> blockToken,
+                          long requestedNumBytes,
+                          BlockChecksumOptions blockChecksumOptions) throws IOException;
 }

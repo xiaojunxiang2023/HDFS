@@ -1,16 +1,14 @@
 package org.apache.hadoop.fs.shell;
 
-import java.io.IOException;
-import java.util.LinkedList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FsShellPermissions;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.find.Find;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_DEFAULT;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SHELL_MISSING_DEFAULT_FS_WARNING_DEFAULT;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SHELL_MISSING_DEFAULT_FS_WARNING_KEY;
+import java.io.IOException;
+import java.util.LinkedList;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 
 /**
  * Base class for all "hadoop fs" commands.
@@ -49,25 +47,26 @@ abstract public class FsCommand extends Command {
     factory.registerCommands(Concat.class);
   }
 
-  protected FsCommand() {}
-  
+  protected FsCommand() {
+  }
+
   protected FsCommand(Configuration conf) {
     super(conf);
   }
 
   // historical abstract method in Command
   @Override
-  public String getCommandName() { 
-    return getName(); 
+  public String getCommandName() {
+    return getName();
   }
-  
+
   // abstract method that normally is invoked by runall() which is
   // overridden below
   @Override
   protected void run(Path path) throws IOException {
     throw new RuntimeException("not supposed to get here");
   }
-  
+
   /** @deprecated use {@link Command#run(String...argv)} */
   @Deprecated
   @Override

@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.net.InetAddress;
-import java.security.Principal;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
+
+import java.net.InetAddress;
 
 /**
  * Interface defining an audit logger.
@@ -33,7 +33,7 @@ public interface AuditLogger {
    *             metadata (permissions, owner, times, etc).
    */
   void logAuditEvent(boolean succeeded, String userName,
-      InetAddress addr, String cmd, String src, String dst,
-      FileStatus stat);
+                     InetAddress addr, String cmd, String src, String dst,
+                     FileStatus stat);
 
 }

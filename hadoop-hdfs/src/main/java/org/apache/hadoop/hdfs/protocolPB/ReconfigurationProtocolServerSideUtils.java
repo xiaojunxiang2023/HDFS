@@ -1,14 +1,14 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetReconfigurationStatusConfigChangeProto;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetReconfigurationStatusResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.ListReconfigurablePropertiesResponseProto;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * This is a server side utility class that handles
@@ -19,8 +19,8 @@ public final class ReconfigurationProtocolServerSideUtils {
   }
 
   public static ListReconfigurablePropertiesResponseProto
-      listReconfigurableProperties(
-          List<String> reconfigurableProperties) {
+  listReconfigurableProperties(
+      List<String> reconfigurableProperties) {
     ListReconfigurablePropertiesResponseProto.Builder builder =
         ListReconfigurablePropertiesResponseProto.newBuilder();
     builder.addAllName(reconfigurableProperties);

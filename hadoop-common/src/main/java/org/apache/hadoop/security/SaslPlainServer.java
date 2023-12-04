@@ -1,14 +1,13 @@
 package org.apache.hadoop.security;
 
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.sasl.*;
 import java.security.Provider;
 import java.util.Map;
 
-import javax.security.auth.callback.*;
-import javax.security.sasl.AuthorizeCallback;
-import javax.security.sasl.Sasl;
-import javax.security.sasl.SaslException;
-import javax.security.sasl.SaslServer;
-import javax.security.sasl.SaslServerFactory;
 public class SaslPlainServer implements SaslServer {
   @SuppressWarnings("serial")
   public static class SecurityProvider extends Provider {
@@ -22,22 +21,23 @@ public class SaslPlainServer implements SaslServer {
   public static class SaslPlainServerFactory implements SaslServerFactory {
     @Override
     public SaslServer createSaslServer(String mechanism, String protocol,
-        String serverName, Map<String,?> props, CallbackHandler cbh)
-            throws SaslException {
-      return "PLAIN".equals(mechanism) ? new SaslPlainServer(cbh) : null; 
+                                       String serverName, Map<String, ?> props, CallbackHandler cbh)
+        throws SaslException {
+      return "PLAIN".equals(mechanism) ? new SaslPlainServer(cbh) : null;
     }
+
     @Override
-    public String[] getMechanismNames(Map<String,?> props){
+    public String[] getMechanismNames(Map<String, ?> props) {
       return (props == null) || "false".equals(props.get(Sasl.POLICY_NOPLAINTEXT))
           ? new String[]{"PLAIN"}
           : new String[0];
     }
   }
-  
+
   private CallbackHandler cbh;
   private boolean completed;
   private String authz;
-  
+
   SaslPlainServer(CallbackHandler callback) {
     this.cbh = callback;
   }
@@ -46,7 +46,7 @@ public class SaslPlainServer implements SaslServer {
   public String getMechanismName() {
     return "PLAIN";
   }
-  
+
   @Override
   public byte[] evaluateResponse(byte[] response) throws SaslException {
     if (completed) {
@@ -70,13 +70,13 @@ public class SaslPlainServer implements SaslServer {
       if (parts[0].isEmpty()) { // authz = authn
         parts[0] = parts[1];
       }
-      
+
       NameCallback nc = new NameCallback("SASL PLAIN");
       nc.setName(parts[1]);
       PasswordCallback pc = new PasswordCallback("SASL PLAIN", false);
       pc.setPassword(parts[2].toCharArray());
       AuthorizeCallback ac = new AuthorizeCallback(parts[1], parts[0]);
-      cbh.handle(new Callback[]{nc, pc, ac});      
+      cbh.handle(new Callback[]{nc, pc, ac});
       if (ac.isAuthorized()) {
         authz = ac.getAuthorizedID();
       }
@@ -93,7 +93,7 @@ public class SaslPlainServer implements SaslServer {
       throw new IllegalStateException("PLAIN authentication not completed");
     }
   }
-  
+
   @Override
   public boolean isComplete() {
     return completed;
@@ -104,29 +104,29 @@ public class SaslPlainServer implements SaslServer {
     throwIfNotComplete();
     return authz;
   }
-  
+
   @Override
   public Object getNegotiatedProperty(String propName) {
-    throwIfNotComplete();      
+    throwIfNotComplete();
     return Sasl.QOP.equals(propName) ? "auth" : null;
   }
-  
+
   @Override
   public byte[] wrap(byte[] outgoing, int offset, int len)
       throws SaslException {
     throwIfNotComplete();
     throw new IllegalStateException(
-        "PLAIN supports neither integrity nor privacy");      
+        "PLAIN supports neither integrity nor privacy");
   }
-  
+
   @Override
   public byte[] unwrap(byte[] incoming, int offset, int len)
       throws SaslException {
     throwIfNotComplete();
     throw new IllegalStateException(
-        "PLAIN supports neither integrity nor privacy");      
+        "PLAIN supports neither integrity nor privacy");
   }
-  
+
   @Override
   public void dispose() throws SaslException {
     cbh = null;

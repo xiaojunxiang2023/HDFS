@@ -54,7 +54,7 @@ public class PutOpParam extends HttpOpParam<PutOpParam.Op> {
     }
 
     Op(final boolean doOutputAndRedirect, final int expectedHttpResponseCode,
-        final boolean requireAuth) {
+       final boolean requireAuth) {
       this.doOutputAndRedirect = doOutputAndRedirect;
       this.expectedHttpResponseCode = expectedHttpResponseCode;
       this.requireAuth = requireAuth;

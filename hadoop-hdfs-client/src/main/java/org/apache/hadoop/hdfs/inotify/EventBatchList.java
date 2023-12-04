@@ -17,7 +17,7 @@ public class EventBatchList {
   private long syncTxid;
 
   public EventBatchList(List<EventBatch> batches, long firstTxid,
-                         long lastTxid, long syncTxid) {
+                        long lastTxid, long syncTxid) {
     this.batches = batches;
     this.firstTxid = firstTxid;
     this.lastTxid = lastTxid;

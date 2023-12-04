@@ -1,12 +1,12 @@
 package org.apache.hadoop.fs.statistics.impl;
 
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicLong;
-
+import org.apache.hadoop.fs.statistics.DurationTrackerFactory;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsAggregator;
-import org.apache.hadoop.fs.statistics.DurationTrackerFactory;
 import org.apache.hadoop.fs.statistics.MeanStatistic;
+
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Interface of an IOStatistics store intended for

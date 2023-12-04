@@ -28,132 +28,132 @@ import static org.apache.hadoop.hdfs.server.datanode.web.webhdfs.WebHdfsHandler.
  * Implement the read-only WebHDFS API for fsimage.
  */
 class FSImageHandler extends SimpleChannelInboundHandler<HttpRequest> {
-    public static final Logger LOG =
-            LoggerFactory.getLogger(FSImageHandler.class);
-    private final FSImageLoader image;
-    private final ChannelGroup activeChannels;
+  public static final Logger LOG =
+      LoggerFactory.getLogger(FSImageHandler.class);
+  private final FSImageLoader image;
+  private final ChannelGroup activeChannels;
 
-    FSImageHandler(FSImageLoader image, ChannelGroup activeChannels) throws IOException {
-        this.image = image;
-        this.activeChannels = activeChannels;
+  FSImageHandler(FSImageLoader image, ChannelGroup activeChannels) throws IOException {
+    this.image = image;
+    this.activeChannels = activeChannels;
+  }
+
+  private static String getOp(QueryStringDecoder decoder) {
+    Map<String, List<String>> parameters = decoder.parameters();
+    return parameters.containsKey("op")
+        ? StringUtils.toUpperCase(parameters.get("op").get(0)) : null;
+  }
+
+  private static List<String> getXattrNames(QueryStringDecoder decoder) {
+    Map<String, List<String>> parameters = decoder.parameters();
+    return parameters.get("xattr.name");
+  }
+
+  private static String getEncoder(QueryStringDecoder decoder) {
+    Map<String, List<String>> parameters = decoder.parameters();
+    return parameters.containsKey("encoding") ? parameters.get("encoding").get(
+        0) : null;
+  }
+
+  private static String getPath(QueryStringDecoder decoder)
+      throws FileNotFoundException {
+    String path = decoder.path();
+    if (path.startsWith(WEBHDFS_PREFIX)) {
+      return path.substring(WEBHDFS_PREFIX_LENGTH);
+    } else {
+      throw new FileNotFoundException("Path: " + path + " should " +
+          "start with " + WEBHDFS_PREFIX);
+    }
+  }
+
+  @Override
+  public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    activeChannels.add(ctx.channel());
+  }
+
+  @Override
+  public void channelRead0(ChannelHandlerContext ctx, HttpRequest request)
+      throws Exception {
+    if (request.getMethod() != HttpMethod.GET) {
+      DefaultHttpResponse resp = new DefaultHttpResponse(HTTP_1_1,
+          METHOD_NOT_ALLOWED);
+      resp.headers().set(CONNECTION, CLOSE);
+      ctx.write(resp).addListener(ChannelFutureListener.CLOSE);
+      return;
     }
 
-    private static String getOp(QueryStringDecoder decoder) {
-        Map<String, List<String>> parameters = decoder.parameters();
-        return parameters.containsKey("op")
-                ? StringUtils.toUpperCase(parameters.get("op").get(0)) : null;
+    QueryStringDecoder decoder = new QueryStringDecoder(request.getUri());
+    // check path. throw exception if path doesn't start with WEBHDFS_PREFIX
+    String path = getPath(decoder);
+    final String op = getOp(decoder);
+    // check null op
+    if (op == null) {
+      throw new IllegalArgumentException("Param op must be specified.");
     }
 
-    private static List<String> getXattrNames(QueryStringDecoder decoder) {
-        Map<String, List<String>> parameters = decoder.parameters();
-        return parameters.get("xattr.name");
+    final String content;
+    switch (op) {
+      case "GETFILESTATUS":
+        content = image.getFileStatus(path);
+        break;
+      case "LISTSTATUS":
+        content = image.listStatus(path);
+        break;
+      case "GETACLSTATUS":
+        content = image.getAclStatus(path);
+        break;
+      case "GETXATTRS":
+        List<String> names = getXattrNames(decoder);
+        String encoder = getEncoder(decoder);
+        content = image.getXAttrs(path, names, encoder);
+        break;
+      case "LISTXATTRS":
+        content = image.listXAttrs(path);
+        break;
+      case "GETCONTENTSUMMARY":
+        content = image.getContentSummary(path);
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid value for webhdfs parameter"
+            + " \"op\"");
     }
 
-    private static String getEncoder(QueryStringDecoder decoder) {
-        Map<String, List<String>> parameters = decoder.parameters();
-        return parameters.containsKey("encoding") ? parameters.get("encoding").get(
-                0) : null;
+    LOG.info("op=" + op + " target=" + path);
+
+    DefaultFullHttpResponse resp = new DefaultFullHttpResponse(HTTP_1_1,
+        HttpResponseStatus.OK, Unpooled.wrappedBuffer(content
+        .getBytes(Charsets.UTF_8)));
+    resp.headers().set(CONTENT_TYPE, APPLICATION_JSON_UTF8);
+    resp.headers().set(CONTENT_LENGTH, resp.content().readableBytes());
+    resp.headers().set(CONNECTION, CLOSE);
+    ctx.write(resp).addListener(ChannelFutureListener.CLOSE);
+  }
+
+  @Override
+  public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+    ctx.flush();
+  }
+
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+      throws Exception {
+    Exception e = cause instanceof Exception ? (Exception) cause : new
+        Exception(cause);
+    final String output = JsonUtil.toJsonString(e);
+    ByteBuf content = Unpooled.wrappedBuffer(output.getBytes(Charsets.UTF_8));
+    final DefaultFullHttpResponse resp = new DefaultFullHttpResponse(
+        HTTP_1_1, INTERNAL_SERVER_ERROR, content);
+
+    resp.headers().set(CONTENT_TYPE, APPLICATION_JSON_UTF8);
+    if (e instanceof IllegalArgumentException) {
+      resp.setStatus(BAD_REQUEST);
+    } else if (e instanceof FileNotFoundException) {
+      resp.setStatus(NOT_FOUND);
+    } else if (e instanceof IOException) {
+      resp.setStatus(FORBIDDEN);
     }
-
-    private static String getPath(QueryStringDecoder decoder)
-            throws FileNotFoundException {
-        String path = decoder.path();
-        if (path.startsWith(WEBHDFS_PREFIX)) {
-            return path.substring(WEBHDFS_PREFIX_LENGTH);
-        } else {
-            throw new FileNotFoundException("Path: " + path + " should " +
-                    "start with " + WEBHDFS_PREFIX);
-        }
-    }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        activeChannels.add(ctx.channel());
-    }
-
-    @Override
-    public void channelRead0(ChannelHandlerContext ctx, HttpRequest request)
-            throws Exception {
-        if (request.getMethod() != HttpMethod.GET) {
-            DefaultHttpResponse resp = new DefaultHttpResponse(HTTP_1_1,
-                    METHOD_NOT_ALLOWED);
-            resp.headers().set(CONNECTION, CLOSE);
-            ctx.write(resp).addListener(ChannelFutureListener.CLOSE);
-            return;
-        }
-
-        QueryStringDecoder decoder = new QueryStringDecoder(request.getUri());
-        // check path. throw exception if path doesn't start with WEBHDFS_PREFIX
-        String path = getPath(decoder);
-        final String op = getOp(decoder);
-        // check null op
-        if (op == null) {
-            throw new IllegalArgumentException("Param op must be specified.");
-        }
-
-        final String content;
-        switch (op) {
-            case "GETFILESTATUS":
-                content = image.getFileStatus(path);
-                break;
-            case "LISTSTATUS":
-                content = image.listStatus(path);
-                break;
-            case "GETACLSTATUS":
-                content = image.getAclStatus(path);
-                break;
-            case "GETXATTRS":
-                List<String> names = getXattrNames(decoder);
-                String encoder = getEncoder(decoder);
-                content = image.getXAttrs(path, names, encoder);
-                break;
-            case "LISTXATTRS":
-                content = image.listXAttrs(path);
-                break;
-            case "GETCONTENTSUMMARY":
-                content = image.getContentSummary(path);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid value for webhdfs parameter"
-                        + " \"op\"");
-        }
-
-        LOG.info("op=" + op + " target=" + path);
-
-        DefaultFullHttpResponse resp = new DefaultFullHttpResponse(HTTP_1_1,
-                HttpResponseStatus.OK, Unpooled.wrappedBuffer(content
-                .getBytes(Charsets.UTF_8)));
-        resp.headers().set(CONTENT_TYPE, APPLICATION_JSON_UTF8);
-        resp.headers().set(CONTENT_LENGTH, resp.content().readableBytes());
-        resp.headers().set(CONNECTION, CLOSE);
-        ctx.write(resp).addListener(ChannelFutureListener.CLOSE);
-    }
-
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        ctx.flush();
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-            throws Exception {
-        Exception e = cause instanceof Exception ? (Exception) cause : new
-                Exception(cause);
-        final String output = JsonUtil.toJsonString(e);
-        ByteBuf content = Unpooled.wrappedBuffer(output.getBytes(Charsets.UTF_8));
-        final DefaultFullHttpResponse resp = new DefaultFullHttpResponse(
-                HTTP_1_1, INTERNAL_SERVER_ERROR, content);
-
-        resp.headers().set(CONTENT_TYPE, APPLICATION_JSON_UTF8);
-        if (e instanceof IllegalArgumentException) {
-            resp.setStatus(BAD_REQUEST);
-        } else if (e instanceof FileNotFoundException) {
-            resp.setStatus(NOT_FOUND);
-        } else if (e instanceof IOException) {
-            resp.setStatus(FORBIDDEN);
-        }
-        resp.headers().set(CONTENT_LENGTH, resp.content().readableBytes());
-        resp.headers().set(CONNECTION, CLOSE);
-        ctx.write(resp).addListener(ChannelFutureListener.CLOSE);
-    }
+    resp.headers().set(CONTENT_LENGTH, resp.content().readableBytes());
+    resp.headers().set(CONNECTION, CLOSE);
+    ctx.write(resp).addListener(ChannelFutureListener.CLOSE);
+  }
 }

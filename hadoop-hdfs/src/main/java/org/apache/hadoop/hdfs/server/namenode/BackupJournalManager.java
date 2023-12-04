@@ -1,13 +1,13 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
-import java.util.Collection;
-
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.JournalInfo;
 import org.apache.hadoop.hdfs.server.protocol.NamenodeRegistration;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
+
+import java.io.IOException;
+import java.util.Collection;
 
 /**
  * A JournalManager implementation that uses RPCs to log transactions
@@ -16,9 +16,9 @@ import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 class BackupJournalManager implements JournalManager {
   private final NamenodeRegistration bnReg;
   private final JournalInfo journalInfo;
-  
+
   BackupJournalManager(NamenodeRegistration bnReg,
-      NamenodeRegistration nnReg) {
+                       NamenodeRegistration nnReg) {
     journalInfo = new JournalInfo(nnReg.getLayoutVersion(),
         nnReg.getClusterID(), nnReg.getNamespaceID());
     this.bnReg = bnReg;
@@ -31,13 +31,13 @@ class BackupJournalManager implements JournalManager {
     throw new UnsupportedOperationException(
         "BackupNode journal should never get formatted");
   }
-  
+
   @Override
   public boolean hasSomeData() {
     throw new UnsupportedOperationException();
   }
 
-  
+
   @Override
   public EditLogOutputStream startLogSegment(long txId, int layoutVersion)
       throws IOException {
@@ -63,7 +63,7 @@ class BackupJournalManager implements JournalManager {
 
   @Override
   public void selectInputStreams(Collection<EditLogInputStream> streams,
-      long fromTxnId, boolean inProgressOk, boolean onlyDurableTxns) {
+                                 long fromTxnId, boolean inProgressOk, boolean onlyDurableTxns) {
     // This JournalManager is never used for input. Therefore it cannot
     // return any transactions
   }
@@ -72,8 +72,9 @@ class BackupJournalManager implements JournalManager {
   public void recoverUnfinalizedSegments() throws IOException {
   }
 
-  @Override 
-  public void close() throws IOException {}
+  @Override
+  public void close() throws IOException {
+  }
 
   public boolean matchesRegistration(NamenodeRegistration bnReg) {
     return bnReg.getAddress().equals(this.bnReg.getAddress());
@@ -83,7 +84,7 @@ class BackupJournalManager implements JournalManager {
   public String toString() {
     return "BackupJournalManager";
   }
-  
+
   @Override
   public void doPreUpgrade() throws IOException {
     throw new UnsupportedOperationException();
@@ -93,7 +94,7 @@ class BackupJournalManager implements JournalManager {
   public void doUpgrade(Storage storage) throws IOException {
     throw new UnsupportedOperationException();
   }
-  
+
   @Override
   public void doFinalize() throws IOException {
     throw new UnsupportedOperationException();
@@ -101,7 +102,7 @@ class BackupJournalManager implements JournalManager {
 
   @Override
   public boolean canRollBack(StorageInfo storage, StorageInfo prevStorage,
-      int targetLayoutVersion) throws IOException {
+                             int targetLayoutVersion) throws IOException {
     throw new UnsupportedOperationException();
   }
 

@@ -2,18 +2,14 @@ package org.apache.hadoop.auth.client;
 
 import org.apache.hadoop.auth.client.ticator.Authenticator;
 import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
-import org.apache.hadoop.filter.AuthenticationFilter;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
+import java.net.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +69,7 @@ public class AuthenticatedURL {
     // 获得 cookieHeaders
     @Override
     public synchronized Map<String, List<String>> get(URI uri,
-        Map<String, List<String>> requestHeaders) throws IOException {
+                                                      Map<String, List<String>> requestHeaders) throws IOException {
       getAuthCookie();
       return cookieHeaders;
     }
@@ -123,7 +119,7 @@ public class AuthenticatedURL {
         // prevent clients unnecessarily receiving a 401.
         long maxAge = cookie.getMaxAge();
         if (maxAge != -1) {
-          cookie.setMaxAge(maxAge * 9/10);
+          cookie.setMaxAge(maxAge * 9 / 10);
           valid = !cookie.hasExpired();
         }
       }
@@ -181,13 +177,13 @@ public class AuthenticatedURL {
     }
 
     public HttpURLConnection openConnection(URL url,
-           ConnectionConfigurator connConfigurator) throws IOException {
+                                            ConnectionConfigurator connConfigurator) throws IOException {
       final HttpURLConnection conn;
-      synchronized(CookieHandler.class) {
+      synchronized (CookieHandler.class) {
         CookieHandler.setDefault(cookieHandler);
         try {
           // url.openConnection()
-          conn = (HttpURLConnection)url.openConnection();
+          conn = (HttpURLConnection) url.openConnection();
         } finally {
           CookieHandler.setDefault(CookieHandler.getDefault());
         }
@@ -205,7 +201,7 @@ public class AuthenticatedURL {
       if (authCookie != null) {
         value = authCookie.getValue();
         if (value.startsWith("\"")) { // tests don't want the quotes.
-          value = value.substring(1, value.length()-1);
+          value = value.substring(1, value.length() - 1);
         }
       }
       return value;

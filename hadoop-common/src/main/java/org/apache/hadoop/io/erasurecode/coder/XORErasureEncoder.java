@@ -1,9 +1,6 @@
 package org.apache.hadoop.io.erasurecode.coder;
-import org.apache.hadoop.io.erasurecode.CodecUtil;
-import org.apache.hadoop.io.erasurecode.ECBlock;
-import org.apache.hadoop.io.erasurecode.ECBlockGroup;
-import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
-import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
+
+import org.apache.hadoop.io.erasurecode.*;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
 
 /**

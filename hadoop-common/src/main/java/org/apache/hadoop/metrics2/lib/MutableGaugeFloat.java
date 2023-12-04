@@ -1,9 +1,9 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A mutable float gauge.
@@ -61,7 +61,7 @@ public class MutableGaugeFloat extends MutableGauge {
   }
 
   /**
-   * @return  the value of the metric
+   * @return the value of the metric
    */
   public String toString() {
     return value.toString();

@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
+
 import org.apache.hadoop.io.erasurecode.ErasureCodeNative;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
@@ -50,8 +51,8 @@ public class NativeRSRawDecoder extends AbstractNativeRawDecoder {
   private native void initImpl(int numDataUnits, int numParityUnits);
 
   private native void decodeImpl(
-          ByteBuffer[] inputs, int[] inputOffsets, int dataLen, int[] erased,
-          ByteBuffer[] outputs, int[] outputOffsets) throws IOException;
+      ByteBuffer[] inputs, int[] inputOffsets, int dataLen, int[] erased,
+      ByteBuffer[] outputs, int[] outputOffsets) throws IOException;
 
   private native void destroyImpl();
 

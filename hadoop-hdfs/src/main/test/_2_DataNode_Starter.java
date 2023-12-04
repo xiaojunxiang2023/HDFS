@@ -7,10 +7,10 @@ import org.junit.Test;
  * @Description:
  */
 public class _2_DataNode_Starter {
-    @Test
-    public void startDataNode() throws Exception {
-        String[] args = new String[]{};
-        DataNode.main(args);
-        Thread.sleep(System.currentTimeMillis());
-    }
+  @Test
+  public void startDataNode() throws Exception {
+    String[] args = new String[]{};
+    DataNode.main(args);
+    Thread.sleep(System.currentTimeMillis());
+  }
 }

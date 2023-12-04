@@ -1,13 +1,13 @@
 package org.apache.hadoop.fs.statistics.impl;
 
+import org.apache.hadoop.fs.statistics.IOStatistics;
+import org.apache.hadoop.fs.statistics.MeanStatistic;
+import org.apache.hadoop.metrics2.lib.MutableCounterLong;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.ToLongFunction;
-
-import org.apache.hadoop.fs.statistics.IOStatistics;
-import org.apache.hadoop.fs.statistics.MeanStatistic;
-import org.apache.hadoop.metrics2.lib.MutableCounterLong;
 
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkState;
 
@@ -54,7 +54,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withLongFunctionCounter(String key,
-      ToLongFunction<String> eval) {
+                                                            ToLongFunction<String> eval) {
     activeInstance().addCounterFunction(key, eval::applyAsLong);
     return this;
   }
@@ -67,7 +67,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicLongCounter(String key,
-      AtomicLong source) {
+                                                          AtomicLong source) {
     withLongFunctionCounter(key, s -> source.get());
     return this;
   }
@@ -80,7 +80,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicIntegerCounter(String key,
-      AtomicInteger source) {
+                                                             AtomicInteger source) {
     withLongFunctionCounter(key, s -> source.get());
     return this;
   }
@@ -93,7 +93,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withMutableCounter(String key,
-      MutableCounterLong source) {
+                                                       MutableCounterLong source) {
     withLongFunctionCounter(key, s -> source.value());
     return this;
   }
@@ -105,7 +105,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withLongFunctionGauge(String key,
-      ToLongFunction<String> eval) {
+                                                          ToLongFunction<String> eval) {
     activeInstance().addGaugeFunction(key, eval::applyAsLong);
     return this;
   }
@@ -118,7 +118,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicLongGauge(String key,
-      AtomicLong source) {
+                                                        AtomicLong source) {
     withLongFunctionGauge(key, s -> source.get());
     return this;
   }
@@ -131,7 +131,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicIntegerGauge(String key,
-      AtomicInteger source) {
+                                                           AtomicInteger source) {
     withLongFunctionGauge(key, s -> source.get());
     return this;
   }
@@ -143,7 +143,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withLongFunctionMinimum(String key,
-      ToLongFunction<String> eval) {
+                                                            ToLongFunction<String> eval) {
     activeInstance().addMinimumFunction(key, eval::applyAsLong);
     return this;
   }
@@ -156,7 +156,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicLongMinimum(String key,
-      AtomicLong source) {
+                                                          AtomicLong source) {
     withLongFunctionMinimum(key, s -> source.get());
     return this;
   }
@@ -169,7 +169,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicIntegerMinimum(String key,
-      AtomicInteger source) {
+                                                             AtomicInteger source) {
     withLongFunctionMinimum(key, s -> source.get());
     return this;
   }
@@ -182,7 +182,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withLongFunctionMaximum(String key,
-      ToLongFunction<String> eval) {
+                                                            ToLongFunction<String> eval) {
     activeInstance().addMaximumFunction(key, eval::applyAsLong);
     return this;
   }
@@ -195,7 +195,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicLongMaximum(String key,
-      AtomicLong source) {
+                                                          AtomicLong source) {
     withLongFunctionMaximum(key, s -> source.get());
     return this;
   }
@@ -208,7 +208,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withAtomicIntegerMaximum(String key,
-      AtomicInteger source) {
+                                                             AtomicInteger source) {
     withLongFunctionMaximum(key, s -> source.get());
     return this;
   }
@@ -222,7 +222,7 @@ public class DynamicIOStatisticsBuilder {
    * @return the builder.
    */
   public DynamicIOStatisticsBuilder withMeanStatisticFunction(String key,
-      Function<String, MeanStatistic> eval) {
+                                                              Function<String, MeanStatistic> eval) {
     activeInstance().addMeanStatisticFunction(key, eval);
     return this;
   }

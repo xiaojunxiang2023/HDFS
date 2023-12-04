@@ -1,5 +1,23 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
+import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.hdfs.protocol.BlockLocalPathInfo;
+import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
+import org.apache.hadoop.hdfs.server.datanode.BlockScanner.Conf;
+import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
+import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
+import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.BlockIterator;
+import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
+import org.apache.hadoop.hdfs.util.DataTransferThrottler;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,24 +29,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.BlockLocalPathInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.server.datanode.BlockScanner.Conf;
-import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
-import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.BlockIterator;
-import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
-import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
-import org.apache.hadoop.hdfs.util.DataTransferThrottler;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.util.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * VolumeScanner scans a single volume.  Each VolumeScanner has its own thread.
@@ -126,7 +126,7 @@ public class VolumeScanner extends Thread {
    */
   private final Cache<ExtendedBlock, Boolean> recentSuspectBlocks =
       CacheBuilder.newBuilder().maximumSize(1000)
-        .expireAfterAccess(10, TimeUnit.MINUTES).build();
+          .expireAfterAccess(10, TimeUnit.MINUTES).build();
 
   /**
    * The current block iterator, or null if there is none.
@@ -188,9 +188,9 @@ public class VolumeScanner extends Thread {
           append("Statistics{").
           append("bytesScannedInPastHour=").append(bytesScannedInPastHour).
           append(", blocksScannedInCurrentPeriod=").
-              append(blocksScannedInCurrentPeriod).
+          append(blocksScannedInCurrentPeriod).
           append(", blocksScannedSinceRestart=").
-              append(blocksScannedSinceRestart).
+          append(blocksScannedSinceRestart).
           append(", scansSinceRestart=").append(scansSinceRestart).
           append(", scanErrorsSinceRestart=").append(scanErrorsSinceRestart).
           append(", nextBlockPoolScanStartMs=").append(nextBlockPoolScanStartMs).
@@ -235,7 +235,7 @@ public class VolumeScanner extends Thread {
       }
       p.append(String.format("Last block scanned                : %57s%n",
           ((stats.lastBlockScanned == null) ? "none" :
-          stats.lastBlockScanned.toString())));
+              stats.lastBlockScanned.toString())));
       p.append(String.format("More blocks to scan in period     : %57s%n",
           !stats.eof));
       p.append(System.lineSeparator());
@@ -269,7 +269,7 @@ public class VolumeScanner extends Thread {
       // file before BlockReceiver updated the VolumeMap. The state of the
       // block can be changed again now, so ignore this error here. If there
       // is a block really deleted by mistake, DirectoryScan should catch it.
-      if (e instanceof FileNotFoundException ) {
+      if (e instanceof FileNotFoundException) {
         LOG.info("Volume {}: verification failed for {} because of " +
                 "FileNotFoundException.  This may be due to a race with write.",
             volume, block);
@@ -315,10 +315,10 @@ public class VolumeScanner extends Thread {
     // If a minute or more has gone past since we last updated the scannedBytes
     // array, zero out the slots corresponding to those minutes.
     for (long m = curMinute + 1; m <= newMinute; m++) {
-      int slotIdx = (int)(m % MINUTES_PER_HOUR);
+      int slotIdx = (int) (m % MINUTES_PER_HOUR);
       LOG.trace("{}: updateScannedBytes is zeroing out slotIdx {}.  " +
               "curMinute = {}; newMinute = {}", this, slotIdx,
-              curMinute, newMinute);
+          curMinute, newMinute);
       scannedBytesSum -= scannedBytes[slotIdx];
       scannedBytes[slotIdx] = 0;
     }
@@ -337,7 +337,7 @@ public class VolumeScanner extends Thread {
    * conf.scanPeriodMs milliseconds have elapsed since the iterator was last
    * rewound.<p/>
    *
-   * @return                     0 if we found a usable block iterator; the
+   * @return 0 if we found a usable block iterator; the
    *                               length of time we should delay before
    *                               checking again otherwise.
    */
@@ -374,7 +374,7 @@ public class VolumeScanner extends Thread {
       if (waitMs <= 0) {
         iter.rewind();
         LOG.info("Now rescanning bpid {} on volume {}, after more than " +
-            "{} hour(s)", iter.getBlockPoolId(), volume,
+                "{} hour(s)", iter.getBlockPoolId(), volume,
             TimeUnit.HOURS.convert(conf.scanPeriodMs, TimeUnit.MILLISECONDS));
         curBlockIter = iter;
         return 0L;
@@ -392,7 +392,7 @@ public class VolumeScanner extends Thread {
    * @param cblock               The block to scan.
    * @param bytesPerSec          The bytes per second to scan at.
    *
-   * @return                     The length of the block that was scanned, or
+   * @return The length of the block that was scanned, or
    *                               -1 if the block could not be scanned.
    */
   private long scanBlock(ExtendedBlock cblock, long bytesPerSec) {
@@ -414,7 +414,7 @@ public class VolumeScanner extends Thread {
           cblock, volume);
     } catch (IOException e) {
       LOG.warn("I/O error while finding block {} on volume {}",
-            cblock, volume);
+          cblock, volume);
     }
     if (block == null) {
       return -1; // block not found.
@@ -441,7 +441,7 @@ public class VolumeScanner extends Thread {
 
   @VisibleForTesting
   static boolean calculateShouldScan(String storageId, long targetBytesPerSec,
-                   long scannedBytesSum, long startMinute, long curMinute) {
+                                     long scannedBytesSum, long startMinute, long curMinute) {
     long runMinutes = curMinute - startMinute;
     long effectiveBytesPerSec;
     if (runMinutes <= 0) {
@@ -458,8 +458,8 @@ public class VolumeScanner extends Thread {
 
     boolean shouldScan = effectiveBytesPerSec <= targetBytesPerSec;
     LOG.trace("{}: calculateShouldScan: effectiveBytesPerSec = {}, and " +
-        "targetBytesPerSec = {}.  startMinute = {}, curMinute = {}, " +
-        "shouldScan = {}",
+            "targetBytesPerSec = {}.  startMinute = {}, curMinute = {}, " +
+            "shouldScan = {}",
         storageId, effectiveBytesPerSec, targetBytesPerSec,
         startMinute, curMinute, shouldScan);
     return shouldScan;
@@ -468,7 +468,7 @@ public class VolumeScanner extends Thread {
   /**
    * Get next block and check if it's needed to scan.
    *
-   * @return  the candidate block.
+   * @return the candidate block.
    */
   ExtendedBlock getNextBlockToScan() {
     ExtendedBlock block;
@@ -515,7 +515,7 @@ public class VolumeScanner extends Thread {
    * @param suspectBlock   A suspect block which we should scan, or null to
    *                       scan the next regularly scheduled block.
    *
-   * @return     The number of milliseconds to delay before running the loop
+   * @return The number of milliseconds to delay before running the loop
    *               again, or 0 to re-run the loop immediately.
    */
   private long runLoop(ExtendedBlock suspectBlock) {
@@ -570,7 +570,7 @@ public class VolumeScanner extends Thread {
       bytesScanned = scanBlock(block, conf.targetBytesPerSec);
       if (bytesScanned >= 0) {
         scannedBytesSum += bytesScanned;
-        scannedBytes[(int)(curMinute % MINUTES_PER_HOUR)] += bytesScanned;
+        scannedBytes[(int) (curMinute % MINUTES_PER_HOUR)] += bytesScanned;
       } else {
         scanError = true;
       }

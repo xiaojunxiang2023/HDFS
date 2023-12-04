@@ -1,20 +1,19 @@
 package org.apache.hadoop.hdfs.web;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
 import org.apache.hadoop.auth.client.AuthenticatedURL;
 import org.apache.hadoop.auth.client.ConnectionConfigurator;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.web.oauth2.OAuth2ConnectionConfigurator;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Utilities for handling URLs
@@ -31,15 +30,15 @@ public class URLConnectionFactory {
 
   private static final ConnectionConfigurator DEFAULT_TIMEOUT_CONN_CONFIGURATOR
       = new ConnectionConfigurator() {
-        @Override
-        public HttpURLConnection configure(HttpURLConnection conn)
-            throws IOException {
-          URLConnectionFactory.setTimeouts(conn,
-                                           DEFAULT_SOCKET_TIMEOUT,
-                                           DEFAULT_SOCKET_TIMEOUT);
-          return conn;
-        }
-      };
+    @Override
+    public HttpURLConnection configure(HttpURLConnection conn)
+        throws IOException {
+      URLConnectionFactory.setTimeouts(conn,
+          DEFAULT_SOCKET_TIMEOUT,
+          DEFAULT_SOCKET_TIMEOUT);
+      return conn;
+    }
+  };
 
   /**
    * The URLConnectionFactory that sets the default timeout and it only trusts

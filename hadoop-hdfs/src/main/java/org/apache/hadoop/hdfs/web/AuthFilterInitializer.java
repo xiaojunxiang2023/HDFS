@@ -16,37 +16,37 @@ import java.util.Map;
  */
 public class AuthFilterInitializer extends FilterInitializer {
 
-    private String configPrefix;
+  private String configPrefix;
 
-    public AuthFilterInitializer() {
-        this.configPrefix = "hadoop.http.authentication.";
+  public AuthFilterInitializer() {
+    this.configPrefix = "hadoop.http.authentication.";
+  }
+
+  protected Map<String, String> createFilterConfig(Configuration conf) {
+    Map<String, String> filterConfig = AuthenticationFilterInitializer
+        .getFilterConfigMap(conf, configPrefix);
+
+    for (Map.Entry<String, String> entry : conf.getPropsWithPrefix(
+        ProxyUsers.CONF_HADOOP_PROXYUSER).entrySet()) {
+      filterConfig.put("proxyuser" + entry.getKey(), entry.getValue());
     }
 
-    protected Map<String, String> createFilterConfig(Configuration conf) {
-        Map<String, String> filterConfig = AuthenticationFilterInitializer
-                .getFilterConfigMap(conf, configPrefix);
-
-        for (Map.Entry<String, String> entry : conf.getPropsWithPrefix(
-                ProxyUsers.CONF_HADOOP_PROXYUSER).entrySet()) {
-            filterConfig.put("proxyuser" + entry.getKey(), entry.getValue());
-        }
-
-        if (filterConfig.get("type") == null) {
-            filterConfig.put("type", UserGroupInformation.isSecurityEnabled() ?
-                    KerberosAuthenticationHandler.TYPE :
-                    PseudoAuthenticationHandler.TYPE);
-        }
-
-        //set cookie path
-        filterConfig.put("cookie.path", "/");
-        return filterConfig;
+    if (filterConfig.get("type") == null) {
+      filterConfig.put("type", UserGroupInformation.isSecurityEnabled() ?
+          KerberosAuthenticationHandler.TYPE :
+          PseudoAuthenticationHandler.TYPE);
     }
 
-    @Override
-    public void initFilter(FilterContainer container, Configuration conf) {
-        Map<String, String> filterConfig = createFilterConfig(conf);
-        container.addFilter("AuthFilter", AuthFilter.class.getName(),
-                filterConfig);
-    }
+    //set cookie path
+    filterConfig.put("cookie.path", "/");
+    return filterConfig;
+  }
+
+  @Override
+  public void initFilter(FilterContainer container, Configuration conf) {
+    Map<String, String> filterConfig = createFilterConfig(conf);
+    container.addFilter("AuthFilter", AuthFilter.class.getName(),
+        filterConfig);
+  }
 
 }

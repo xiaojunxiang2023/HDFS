@@ -1,15 +1,14 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.statistics.IOStatisticsLogging;
+import org.apache.hadoop.fs.statistics.IOStatisticsSource;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.fs.statistics.IOStatisticsLogging;
-import org.apache.hadoop.fs.statistics.IOStatisticsSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /****************************************************************
  * FSInputStream is a generic old InputStream with a little bit
@@ -44,7 +43,7 @@ public abstract class FSInputStream extends InputStream
 
   @Override
   public int read(long position, byte[] buffer, int offset, int length)
-    throws IOException {
+      throws IOException {
     validatePositionedReadArgs(position, buffer, offset, length);
     if (length == 0) {
       return 0;
@@ -79,7 +78,7 @@ public abstract class FSInputStream extends InputStream
    * @throws IllegalArgumentException other arguments are invalid.
    */
   protected void validatePositionedReadArgs(long position,
-      byte[] buffer, int offset, int length) throws EOFException {
+                                            byte[] buffer, int offset, int length) throws EOFException {
     Preconditions.checkArgument(length >= 0, "length is negative");
     if (position < 0) {
       throw new EOFException("position is negative");
@@ -89,14 +88,14 @@ public abstract class FSInputStream extends InputStream
       throw new IndexOutOfBoundsException(
           FSExceptionMessages.TOO_MANY_BYTES_FOR_DEST_BUFFER
               + ": request length=" + length
-              + ", with offset ="+ offset
+              + ", with offset =" + offset
               + "; buffer capacity =" + (buffer.length - offset));
     }
   }
 
   @Override
   public void readFully(long position, byte[] buffer, int offset, int length)
-    throws IOException {
+      throws IOException {
     validatePositionedReadArgs(position, buffer, offset, length);
     int nread = 0;
     while (nread < length) {
@@ -113,7 +112,7 @@ public abstract class FSInputStream extends InputStream
 
   @Override
   public void readFully(long position, byte[] buffer)
-    throws IOException {
+      throws IOException {
     readFully(position, buffer, 0, buffer.length);
   }
 

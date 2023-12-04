@@ -1,5 +1,21 @@
 package org.apache.hadoop.ha;
 
+import org.apache.hadoop.ha.micro.ServiceFailedException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.ZKUtil.ZKAuthInfo;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+import org.apache.zookeeper.AsyncCallback.StatCallback;
+import org.apache.zookeeper.AsyncCallback.StringCallback;
+import org.apache.zookeeper.*;
+import org.apache.zookeeper.KeeperException.Code;
+import org.apache.zookeeper.Watcher.Event;
+import org.apache.zookeeper.data.ACL;
+import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -8,29 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.hadoop.ha.micro.ServiceFailedException;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.util.ZKUtil.ZKAuthInfo;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.zookeeper.data.ACL;
-import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher.Event;
-import org.apache.zookeeper.ZKUtil;
-import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.AsyncCallback.*;
-import org.apache.zookeeper.data.Stat;
-import org.apache.zookeeper.KeeperException.Code;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * 
+ *
  * This class implements a simple library to perform leader election on top of
  * Apache Zookeeper. Using Zookeeper as a coordination service, leader election
  * can be performed by atomically creating an ephemeral lock file (znode) on
@@ -67,7 +62,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
      * If the service fails to become active, it should throw
      * ServiceFailedException. This will cause the elector to
      * sleep for a short period, then re-join the election.
-     * 
+     *
      * Callback implementations are expected to manage their own
      * timeouts (e.g. when making an RPC to a remote node).
      */
@@ -105,7 +100,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
      * If an old active has failed, rather than exited gracefully, then
      * the new active may need to take some fencing actions against it
      * before proceeding with failover.
-     * 
+     *
      * @param oldActiveData the application data provided by the prior active
      */
     void fenceOldActive(byte[] oldActiveData) throws IOException;
@@ -127,11 +122,15 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
 
   private enum ConnectionState {
     DISCONNECTED, CONNECTED, TERMINATED
-  };
+  }
+
+  ;
 
   enum State {
     INIT, ACTIVE, STANDBY, NEUTRAL
-  };
+  }
+
+  ;
 
   private State state = State.INIT;
   private int createRetryCount = 0;
@@ -170,7 +169,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * value to enable Zookeeper to retry transient disconnections. Setting a very
    * short session timeout may result in frequent transitions between active and
    * standby states during issues like network outages/GS pauses.
-   * 
+   *
    * @param zookeeperHostPorts
    *          ZooKeeper hostPort for all ZooKeeper servers
    * @param zookeeperSessionTimeout
@@ -187,12 +186,12 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * @throws HadoopIllegalArgumentException
    */
   public ActiveStandbyElector(String zookeeperHostPorts,
-      int zookeeperSessionTimeout, String parentZnodeName, List<ACL> acl,
-      List<ZKAuthInfo> authInfo, ActiveStandbyElectorCallback app,
-      int maxRetryNum) throws IOException, HadoopIllegalArgumentException,
+                              int zookeeperSessionTimeout, String parentZnodeName, List<ACL> acl,
+                              List<ZKAuthInfo> authInfo, ActiveStandbyElectorCallback app,
+                              int maxRetryNum) throws IOException, HadoopIllegalArgumentException,
       KeeperException {
     this(zookeeperHostPorts, zookeeperSessionTimeout, parentZnodeName, acl,
-      authInfo, app, maxRetryNum, true);
+        authInfo, app, maxRetryNum, true);
   }
 
   /**
@@ -209,7 +208,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * value to enable Zookeeper to retry transient disconnections. Setting a very
    * short session timeout may result in frequent transitions between active and
    * standby states during issues like network outages/GS pauses.
-   * 
+   *
    * @param zookeeperHostPorts
    *          ZooKeeper hostPort for all ZooKeeper servers
    * @param zookeeperSessionTimeout
@@ -228,9 +227,9 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * @throws HadoopIllegalArgumentException
    */
   public ActiveStandbyElector(String zookeeperHostPorts,
-      int zookeeperSessionTimeout, String parentZnodeName, List<ACL> acl,
-      List<ZKAuthInfo> authInfo, ActiveStandbyElectorCallback app,
-      int maxRetryNum, boolean failFast) throws IOException,
+                              int zookeeperSessionTimeout, String parentZnodeName, List<ACL> acl,
+                              List<ZKAuthInfo> authInfo, ActiveStandbyElectorCallback app,
+                              int maxRetryNum, boolean failFast) throws IOException,
       HadoopIllegalArgumentException, KeeperException {
     if (app == null || acl == null || parentZnodeName == null
         || zookeeperHostPorts == null || zookeeperSessionTimeout <= 0) {
@@ -262,7 +261,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * perform re-election if necessary<br>
    * The app could potentially start off in standby mode and ignore the
    * becomeStandby call.
-   * 
+   *
    * @param data
    *          to be set by the app. non-null data must be set.
    * @throws HadoopIllegalArgumentException
@@ -270,11 +269,11 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    */
   public synchronized void joinElection(byte[] data)
       throws HadoopIllegalArgumentException {
-    
+
     if (data == null) {
       throw new HadoopIllegalArgumentException("data cannot be null");
     }
-    
+
     if (wantToBeInElection) {
       LOG.info("Already in election. Not re-connecting.");
       return;
@@ -288,7 +287,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     }
     joinElectionInternal();
   }
-  
+
   /**
    * @return true if the configured parent znode exists
    */
@@ -317,9 +316,9 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
 
     String pathParts[] = znodeWorkingDir.split("/");
     Preconditions.checkArgument(pathParts.length >= 1 &&
-        pathParts[0].isEmpty(),
+            pathParts[0].isEmpty(),
         "Invalid path: %s", znodeWorkingDir);
-    
+
     StringBuilder sb = new StringBuilder();
     for (int i = 1; i < pathParts.length; i++) {
       sb.append("/").append(pathParts[i]);
@@ -341,10 +340,10 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
         }
       }
     }
-    
+
     LOG.info("Successfully created " + znodeWorkingDir + " in ZK.");
   }
-  
+
   /**
    * Clear all of the state held within the parent ZNode.
    * This recursively deletes everything within the znode as well as the
@@ -383,7 +382,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * call joinElection(). <br>
    * This allows service instances to take themselves out of rotation for known
    * impending unavailable states (e.g. long GC pause or software upgrade).
-   * 
+   *
    * @param needFence true if the underlying daemon may need to be fenced
    * if a failover occurs due to dropping out of the election.
    */
@@ -407,7 +406,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
 
   /**
    * get data set by the active leader
-   * 
+   *
    * @return data set by the active instance
    * @throws ActiveNotFoundException
    *           when there is no active leader
@@ -425,7 +424,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       }
       Stat stat = new Stat();
       return getDataWithRetries(zkLockFilePath, false, stat);
-    } catch(KeeperException e) {
+    } catch (KeeperException e) {
       Code code = e.code();
       if (isNodeDoesNotExist(code)) {
         // handle the commonly expected cases that make sense for us
@@ -441,7 +440,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    */
   @Override
   public synchronized void processResult(int rc, String path, Object ctx,
-      String name) {
+                                         String name) {
     if (isStaleClient(ctx)) return;
     if (LOG.isDebugEnabled()) {
       LOG.debug("CreateNode result: " + rc + " for path: " + path
@@ -501,7 +500,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    */
   @Override
   public synchronized void processResult(int rc, String path, Object ctx,
-      Stat stat) {
+                                         Stat stat) {
     if (isStaleClient(ctx)) return;
     monitorLockNodePending = false;
 
@@ -591,39 +590,39 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     if (eventType == Event.EventType.None) {
       // the connection state has changed
       switch (event.getState()) {
-      case SyncConnected:
-        LOG.info("Session connected.");
-        // if the listener was asked to move to safe state then it needs to
-        // be undone
-        ConnectionState prevConnectionState = zkConnectionState;
-        zkConnectionState = ConnectionState.CONNECTED;
-        if (prevConnectionState == ConnectionState.DISCONNECTED &&
-            wantToBeInElection) {
-          monitorActiveStatus();
-        }
-        break;
-      case Disconnected:
-        LOG.info("Session disconnected. Entering neutral mode...");
+        case SyncConnected:
+          LOG.info("Session connected.");
+          // if the listener was asked to move to safe state then it needs to
+          // be undone
+          ConnectionState prevConnectionState = zkConnectionState;
+          zkConnectionState = ConnectionState.CONNECTED;
+          if (prevConnectionState == ConnectionState.DISCONNECTED &&
+              wantToBeInElection) {
+            monitorActiveStatus();
+          }
+          break;
+        case Disconnected:
+          LOG.info("Session disconnected. Entering neutral mode...");
 
-        // ask the app to move to safe state because zookeeper connection
-        // is not active and we dont know our state
-        zkConnectionState = ConnectionState.DISCONNECTED;
-        enterNeutralMode();
-        break;
-      case Expired:
-        // the connection got terminated because of session timeout
-        // call listener to reconnect
-        LOG.info("Session expired. Entering neutral mode and rejoining...");
-        enterNeutralMode();
-        reJoinElection(0);
-        break;
-      case SaslAuthenticated:
-        LOG.info("Successfully authenticated to ZooKeeper using SASL.");
-        break;
-      default:
-        fatalError("Unexpected Zookeeper watch event state: "
-            + event.getState());
-        break;
+          // ask the app to move to safe state because zookeeper connection
+          // is not active and we dont know our state
+          zkConnectionState = ConnectionState.DISCONNECTED;
+          enterNeutralMode();
+          break;
+        case Expired:
+          // the connection got terminated because of session timeout
+          // call listener to reconnect
+          LOG.info("Session expired. Entering neutral mode and rejoining...");
+          enterNeutralMode();
+          reJoinElection(0);
+          break;
+        case SaslAuthenticated:
+          LOG.info("Successfully authenticated to ZooKeeper using SASL.");
+          break;
+        default:
+          fatalError("Unexpected Zookeeper watch event state: "
+              + event.getState());
+          break;
       }
 
       return;
@@ -635,20 +634,20 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     String path = event.getPath();
     if (path != null) {
       switch (eventType) {
-      case NodeDeleted:
-        if (state == State.ACTIVE) {
-          enterNeutralMode();
-        }
-        joinElectionInternal();
-        break;
-      case NodeDataChanged:
-        monitorActiveStatus();
-        break;
-      default:
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Unexpected node event: " + eventType + " for path: " + path);
-        }
-        monitorActiveStatus();
+        case NodeDeleted:
+          if (state == State.ACTIVE) {
+            enterNeutralMode();
+          }
+          joinElectionInternal();
+          break;
+        case NodeDataChanged:
+          monitorActiveStatus();
+          break;
+        default:
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Unexpected node event: " + eventType + " for path: " + path);
+          }
+          monitorActiveStatus();
       }
 
       return;
@@ -661,14 +660,14 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   /**
    * Get a new zookeeper client instance. protected so that test class can
    * inherit and mock out the zookeeper instance
-   * 
+   *
    * @return new zookeeper client instance
    * @throws IOException
    * @throws KeeperException zookeeper connectionloss exception
    */
   protected synchronized ZooKeeper connectToZooKeeper() throws IOException,
       KeeperException {
-    
+
     // Unfortunately, the ZooKeeper constructor connects to ZooKeeper and
     // may trigger the Connected event immediately. So, if we register the
     // watcher after constructing ZooKeeper, we may miss that event. Instead,
@@ -681,7 +680,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     // Wait for the asynchronous success/failure. This may throw an exception
     // if we don't connect within the session timeout.
     watcher.waitForZKConnectionEvent(zkSessionTimeout);
-    
+
     for (ZKAuthInfo auth : zkAuthInfo) {
       zk.addAuthInfo(auth.getScheme(), auth.getAuth());
     }
@@ -732,7 +731,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
 
   private void reJoinElection(int sleepTime) {
     LOG.info("Trying to re-establish ZK session");
-    
+
     // Some of the test cases rely on expiring the ZK sessions and
     // ensuring that the other node takes over. But, there's a race
     // where the original lease holder could reconnect faster than the other
@@ -777,12 +776,12 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   void preventSessionReestablishmentForTests() {
     sessionReestablishLockForTests.lock();
   }
-  
+
   @VisibleForTesting
   void allowSessionReestablishmentForTests() {
     sessionReestablishLockForTests.unlock();
   }
-  
+
   @VisibleForTesting
   synchronized long getZKSessionIdForTests() {
     if (zkClient != null) {
@@ -791,7 +790,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       return -1;
     }
   }
-  
+
   @VisibleForTesting
   synchronized State getStateForTests() {
     return state;
@@ -805,17 +804,17 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   private boolean reEstablishSession() {
     int connectionRetryCount = 0;
     boolean success = false;
-    while(!success && connectionRetryCount < maxRetryNum) {
+    while (!success && connectionRetryCount < maxRetryNum) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Establishing zookeeper connection for " + this);
       }
       try {
         createConnection();
         success = true;
-      } catch(IOException e) {
+      } catch (IOException e) {
         LOG.warn(e.toString());
         sleepFor(5000);
-      } catch(KeeperException e) {
+      } catch (KeeperException e) {
         LOG.warn(e.toString());
         sleepFor(5000);
       }
@@ -840,6 +839,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       LOG.debug("Created new connection for " + this);
     }
   }
+
   public synchronized void terminateConnection() {
     if (zkClient == null) {
       return;
@@ -852,7 +852,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     watcher = null;
     try {
       tempZk.close();
-    } catch(InterruptedException e) {
+    } catch (InterruptedException e) {
       LOG.warn(e.toString());
     }
     zkConnectionState = ConnectionState.TERMINATED;
@@ -889,24 +889,24 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   /**
    * Write the "ActiveBreadCrumb" node, indicating that this node may need
    * to be fenced on failover.
-   * @param oldBreadcrumbStat 
+   * @param oldBreadcrumbStat
    */
   private void writeBreadCrumbNode(Stat oldBreadcrumbStat)
       throws KeeperException, InterruptedException {
     Preconditions.checkState(appData != null, "no appdata");
-    
+
     LOG.info("Writing znode {} to indicate that the local " +
         "node is the most recent active...", zkBreadCrumbPath);
     if (oldBreadcrumbStat == null) {
       // No previous active, just create the node
       createWithRetries(zkBreadCrumbPath, appData, zkAcl,
-        CreateMode.PERSISTENT);
+          CreateMode.PERSISTENT);
     } else {
       // There was a previous active, update the node
       setDataWithRetries(zkBreadCrumbPath, appData, oldBreadcrumbStat.getVersion());
     }
   }
-  
+
   /**
    * Try to delete the "ActiveBreadCrumb" node when gracefully giving up
    * active status.
@@ -916,7 +916,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   private void tryDeleteOwnBreadCrumbNode() {
     assert state == State.ACTIVE;
     LOG.info("Deleting bread-crumb of active node...");
-    
+
     // Sanity check the data. This shouldn't be strictly necessary,
     // but better to play it safe.
     Stat stat = new Stat();
@@ -927,10 +927,10 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       if (!Arrays.equals(data, appData)) {
         throw new IllegalStateException(
             "We thought we were active, but in fact " +
-            "the active znode had the wrong data: " +
-            StringUtils.byteToHexString(data) + " (stat=" + stat + ")");
+                "the active znode had the wrong data: " +
+                StringUtils.byteToHexString(data) + " (stat=" + stat + ")");
       }
-      
+
       deleteWithRetries(zkBreadCrumbPath, stat.getVersion());
     } catch (Exception e) {
       LOG.warn("Unable to delete our own bread-crumb of being active at {}." +
@@ -960,7 +960,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
         LOG.info("No old node to fence");
         return null;
       }
-      
+
       // If we failed to read for any other reason, then likely we lost
       // our session, or we don't have permissions, etc. In any case,
       // we probably shouldn't become active, and failing the whole
@@ -1011,7 +1011,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   }
 
   private String createWithRetries(final String path, final byte[] data,
-      final List<ACL> acl, final CreateMode mode)
+                                   final List<ACL> acl, final CreateMode mode)
       throws InterruptedException, KeeperException {
     return zkDoWithRetries(new ZKAction<String>() {
       @Override
@@ -1022,7 +1022,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   }
 
   private byte[] getDataWithRetries(final String path, final boolean watch,
-      final Stat stat) throws InterruptedException, KeeperException {
+                                    final Stat stat) throws InterruptedException, KeeperException {
     return zkDoWithRetries(new ZKAction<byte[]>() {
       @Override
       public byte[] run() throws KeeperException, InterruptedException {
@@ -1032,7 +1032,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   }
 
   private Stat setDataWithRetries(final String path, final byte[] data,
-      final int version) throws InterruptedException, KeeperException {
+                                  final int version) throws InterruptedException, KeeperException {
     return zkDoWithRetries(new ZKAction<Stat>() {
       @Override
       public Stat run() throws KeeperException, InterruptedException {
@@ -1040,7 +1040,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       }
     });
   }
-  
+
   private void deleteWithRetries(final String path, final int version)
       throws KeeperException, InterruptedException {
     zkDoWithRetries(new ZKAction<Void>() {
@@ -1090,9 +1090,9 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   }
 
   private interface ZKAction<T> {
-    T run() throws KeeperException, InterruptedException; 
+    T run() throws KeeperException, InterruptedException;
   }
-  
+
   /**
    * The callbacks and watchers pass a reference to the ZK client
    * which made the original call. We don't want to take action
@@ -1103,9 +1103,9 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    */
   private synchronized boolean isStaleClient(Object ctx) {
     Preconditions.checkNotNull(ctx);
-    if (zkClient != (ZooKeeper)ctx) {
+    if (zkClient != (ZooKeeper) ctx) {
       LOG.warn("Ignoring stale result from old client with sessionId {}",
-          String.format("0x%08x", ((ZooKeeper)ctx).getSessionId()));
+          String.format("0x%08x", ((ZooKeeper) ctx).getSessionId()));
       return true;
     }
     return false;
@@ -1118,7 +1118,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    */
   private final class WatcherWithClientRef implements Watcher {
     private ZooKeeper zk;
-    
+
     /**
      * Latch fired whenever any event arrives. This is used in order
      * to wait for the Connected event when the client is first created.
@@ -1132,7 +1132,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
 
     /**
      * Waits for the next event from ZooKeeper to arrive.
-     * 
+     *
      * @param connectionTimeoutMs zookeeper connection timeout in milliseconds
      * @throws KeeperException if the connection attempt times out. This will
      * be a ZooKeeper ConnectionLoss exception code.
@@ -1173,7 +1173,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
       } catch (Throwable t) {
         fatalError(
             "Failed to process watcher event " + event + ": " +
-            StringUtils.stringifyException(t));
+                StringUtils.stringifyException(t));
       }
     }
   }
@@ -1189,7 +1189,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   private static boolean isNodeDoesNotExist(Code code) {
     return (code == Code.NONODE);
   }
-  
+
   private static boolean isSessionExpired(Code code) {
     return (code == Code.SESSIONEXPIRED);
   }
@@ -1201,13 +1201,13 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
   private static boolean shouldRetry(Code code, Code retryIfCode) {
     return (retryIfCode == null ? false : retryIfCode == code);
   }
-  
+
   @Override
   public String toString() {
     return "elector id=" + System.identityHashCode(this) +
-      " appData=" +
-      ((appData == null) ? "null" : StringUtils.byteToHexString(appData)) + 
-      " cb=" + appClient;
+        " appData=" +
+        ((appData == null) ? "null" : StringUtils.byteToHexString(appData)) +
+        " cb=" + appClient;
   }
 
   public String getHAZookeeperConnectionState() {

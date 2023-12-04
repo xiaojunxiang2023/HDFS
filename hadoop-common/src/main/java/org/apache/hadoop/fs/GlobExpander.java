@@ -3,18 +3,20 @@ package org.apache.hadoop.fs;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 public class GlobExpander {
-  
+
   static class StringWithOffset {
     String string;
     int offset;
+
     public StringWithOffset(String string, int offset) {
       super();
       this.string = string;
       this.offset = offset;
     }
   }
-  
+
   /**
    * Expand globs in the given <code>filePattern</code> into a collection of
    * file patterns so that in the expanded set no file pattern has a slash
@@ -32,7 +34,7 @@ public class GlobExpander {
    * {a,b}/{b,{c/d,e/f}} - {a,b}/b, {a,b}/c/d, {a,b}/e/f
    * {a,b}/{c/\d}        - {a,b}/c/d
    * </pre>
-   * 
+   *
    * @param filePattern
    * @return expanded file patterns
    * @throws IOException
@@ -52,17 +54,17 @@ public class GlobExpander {
     }
     return fullyExpanded;
   }
-  
+
   /**
    * Expand the leftmost outer curly bracket pair containing a
    * slash character ("/") in <code>filePattern</code>.
    * @param filePatternWithOffset
    * @return expanded file patterns
-   * @throws IOException 
+   * @throws IOException
    */
   private static List<StringWithOffset> expandLeftmost(StringWithOffset
-      filePatternWithOffset) throws IOException {
-    
+                                                           filePatternWithOffset) throws IOException {
+
     String filePattern = filePatternWithOffset.string;
     int leftmost = leftmostOuterCurlyContainingSlash(filePattern,
         filePatternWithOffset.offset);
@@ -121,17 +123,17 @@ public class GlobExpander {
     }
     return exp;
   }
-  
+
   /**
    * Finds the index of the leftmost opening curly bracket containing a
    * slash character ("/") in <code>filePattern</code>.
    * @param filePattern
    * @return the index of the leftmost opening curly bracket containing a
    * slash character ("/"), or -1 if there is no such bracket
-   * @throws IOException 
+   * @throws IOException
    */
   private static int leftmostOuterCurlyContainingSlash(String filePattern,
-      int offset) throws IOException {
+                                                       int offset) throws IOException {
     int curlyOpen = 0;
     int leftmost = -1;
     boolean seenSlash = false;

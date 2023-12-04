@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode.startupprogress;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
-
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * StartupProgress is used in various parts of the namenode codebase to indicate
@@ -14,23 +14,23 @@ import java.util.concurrent.ConcurrentMap;
  * to associate a step or phase with optional information, such as a file name or
  * file size.  It also provides counters, which can be incremented by the  caller
  * to indicate progress through a long-running task.
- * 
+ *
  * This class is thread-safe.  Any number of threads may call any methods, even
  * for the same phase or step, without risk of corrupting internal state.  For
  * all begin/end methods and set methods, the last one in wins, overwriting any
  * prior writes.  Instances of {@link Counter} provide an atomic increment
  * operation to prevent lost updates.
- * 
+ *
  * After startup completes, the tracked data is frozen.  Any subsequent updates
  * or counter increments are no-ops.
- * 
+ *
  * For read access, call {@link #createView()} to create a consistent view with
  * a clone of the data.
  */
 public class StartupProgress {
   // package-private for access by StartupProgressView
   final Map<Phase, PhaseTracking> phases =
-    new ConcurrentHashMap<Phase, PhaseTracking>();
+      new ConcurrentHashMap<Phase, PhaseTracking>();
 
   /**
    * Allows a caller to increment a counter for tracking progress.
@@ -47,14 +47,14 @@ public class StartupProgress {
    * tracking progress of all defined phases.
    */
   public StartupProgress() {
-    for (Phase phase: EnumSet.allOf(Phase.class)) {
+    for (Phase phase : EnumSet.allOf(Phase.class)) {
       phases.put(phase, new PhaseTracking());
     }
   }
 
   /**
    * Begins execution of the specified phase.
-   * 
+   *
    * @param phase Phase to begin
    */
   public void beginPhase(Phase phase) {
@@ -66,7 +66,7 @@ public class StartupProgress {
   /**
    * Begins execution of the specified step within the specified phase. This is
    * a no-op if the phase is already completed.
-   * 
+   *
    * @param phase Phase within which the step should be started
    * @param step Step to begin
    */
@@ -78,7 +78,7 @@ public class StartupProgress {
 
   /**
    * Ends execution of the specified phase.
-   * 
+   *
    * @param phase Phase to end
    */
   public void endPhase(Phase phase) {
@@ -102,7 +102,7 @@ public class StartupProgress {
 
   /**
    * Returns the current run status of the specified phase.
-   * 
+   *
    * @param phase Phase to get
    * @return Status run status of phase
    */
@@ -125,7 +125,7 @@ public class StartupProgress {
    * creation within the tight loop.  Incrementing the counter is an atomic
    * operation, so there is no risk of lost updates even if multiple threads
    * increment the same counter.
-   * 
+   *
    * @param phase Phase to get
    * @param step Step to get
    * @return Counter associated with phase and step
@@ -151,7 +151,7 @@ public class StartupProgress {
 
   /**
    * Sets counter to the specified value.
-   * 
+   *
    * @param phase Phase to set
    * @param step Step to set
    * @param count long to set
@@ -164,7 +164,7 @@ public class StartupProgress {
    * Sets the optional file name associated with the specified phase.  For
    * example, this can be used while loading fsimage to indicate the full path to
    * the fsimage file.
-   * 
+   *
    * @param phase Phase to set
    * @param file String file name to set
    */
@@ -178,7 +178,7 @@ public class StartupProgress {
    * Sets the optional size in bytes associated with the specified phase.  For
    * example, this can be used while loading fsimage to indicate the size of the
    * fsimage file.
-   * 
+   *
    * @param phase Phase to set
    * @param size long to set
    */
@@ -192,7 +192,7 @@ public class StartupProgress {
    * Sets the total associated with the specified phase and step.  For example,
    * this can be used while loading edits to indicate the number of operations to
    * be applied.
-   * 
+   *
    * @param phase Phase to set
    * @param step Step to set
    * @param total long to set
@@ -210,7 +210,7 @@ public class StartupProgress {
    * that need to perform multiple related read operations.  Calculations that
    * require aggregation, such as overall percent complete, will not be impacted
    * by mutations performed in other threads mid-way through the calculation.
-   * 
+   *
    * @return StartupProgressView containing cloned data
    */
   public StartupProgressView createView() {
@@ -220,7 +220,7 @@ public class StartupProgress {
   /**
    * Returns true if the entire startup process has completed, determined by
    * checking if each phase is complete.
-   * 
+   *
    * @return boolean true if the entire startup process has completed
    */
   private boolean isComplete() {
@@ -242,7 +242,7 @@ public class StartupProgress {
    * phase and step.  Returns either the newly initialized data structure or the
    * existing one.  Initialization is atomic, so there is no risk of lost updates
    * even if multiple threads attempt to initialize the same step simultaneously.
-   * 
+   *
    * @param phase Phase to initialize
    * @param step Step to initialize
    * @return StepTracking newly initialized, or existing if found

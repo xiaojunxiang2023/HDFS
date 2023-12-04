@@ -99,7 +99,7 @@ public class GcTimeMonitor extends Thread {
    *   time percentage exceeds the specified limit.
    */
   public GcTimeMonitor(long observationWindowMs, long sleepIntervalMs,
-      int maxGcTimePercentage, GcTimeAlertHandler alertHandler) {
+                       int maxGcTimePercentage, GcTimeAlertHandler alertHandler) {
     Preconditions.checkArgument(observationWindowMs > 0);
     Preconditions.checkArgument(
         sleepIntervalMs > 0 && sleepIntervalMs < observationWindowMs);
@@ -193,7 +193,7 @@ public class GcTimeMonitor extends Thread {
 
     curData.update(ts, gcMonitorRunTime, totalGcTime, totalGcCount,
         (int) (gcTimeWithinObservationWindow * 100 /
-          Math.min(observationWindowMs, gcMonitorRunTime)));
+            Math.min(observationWindowMs, gcMonitorRunTime)));
   }
 
   /**
@@ -240,7 +240,7 @@ public class GcTimeMonitor extends Thread {
     }
 
     private synchronized void update(long inTimestamp, long inGcMonitorRunTime,
-        long inTotalGcTime, long inTotalGcCount, int inGcTimePercentage) {
+                                     long inTotalGcTime, long inTotalGcCount, int inGcTimePercentage) {
       this.timestamp = inTimestamp;
       this.gcMonitorRunTime = inGcMonitorRunTime;
       this.totalGcTime = inTotalGcTime;
@@ -261,7 +261,7 @@ public class GcTimeMonitor extends Thread {
   private static class TsAndData {
     private long ts;      // Timestamp when this measurement was taken
     private long gcPause; // Total GC pause time within the interval between ts
-                          // and the timestamp of the previous measurement.
+    // and the timestamp of the previous measurement.
 
     void setValues(long inTs, long inGcPause) {
       this.ts = inTs;

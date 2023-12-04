@@ -3,12 +3,8 @@ package org.apache.hadoop.hdfs;
 import org.apache.hadoop.fs.StorageStatistics;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -100,6 +96,7 @@ public class DFSOpsCountStatistics extends StorageStatistics {
 
     private static final Map<String, OpType> SYMBOL_MAP =
         new HashMap<>(OpType.values().length);
+
     static {
       for (OpType opType : values()) {
         SYMBOL_MAP.put(opType.getSymbol(), opType);

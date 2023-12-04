@@ -1,25 +1,19 @@
 package org.apache.hadoop.filter.handler;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
+import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
+import org.apache.hadoop.auth.util.HttpConstants;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationToken;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
-import org.apache.hadoop.auth.util.HttpConstants;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The {@link MultiSchemeAuthenticationHandler} supports configuring multiple
@@ -48,7 +42,7 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
  * multi-scheme-auth-handler.schemes.Negotiate.handler is invalid.
  */
 public class MultiSchemeAuthenticationHandler implements
-        CompositeAuthenticationHandler {
+    CompositeAuthenticationHandler {
   private static Logger logger = LoggerFactory
       .getLogger(MultiSchemeAuthenticationHandler.class);
   public static final String SCHEMES_PROPERTY =
@@ -167,8 +161,8 @@ public class MultiSchemeAuthenticationHandler implements
 
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request,
-      HttpServletResponse response)
-          throws IOException, AuthenticationException {
+                                          HttpServletResponse response)
+      throws IOException, AuthenticationException {
     String authorization =
         request.getHeader(HttpConstants.AUTHORIZATION_HEADER);
     if (authorization != null) {

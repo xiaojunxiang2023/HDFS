@@ -1,43 +1,44 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 /** Context data for an ongoing NameNode metadata recovery process. */
-public final class MetaRecoveryContext  {
+public final class MetaRecoveryContext {
   public static final Logger LOG =
       LoggerFactory.getLogger(MetaRecoveryContext.class.getName());
   public final static int FORCE_NONE = 0;
   public final static int FORCE_FIRST_CHOICE = 1;
   public final static int FORCE_ALL = 2;
   private int force;
-  
+
   /** Exception thrown when the user has requested processing to stop. */
   static public class RequestStopException extends IOException {
     private static final long serialVersionUID = 1L;
+
     public RequestStopException(String msg) {
       super(msg);
     }
   }
-  
+
   public MetaRecoveryContext(int force) {
     this.force = force;
   }
 
   /**
    * Display a prompt to the user and get his or her choice.
-   *  
+   *
    * @param prompt      The prompt to display
    * @param firstChoice First choice (will be taken if autoChooseDefault is
    *                    true)
    * @param choices     Other choies
    *
-   * @return            The choice that was taken
+   * @return The choice that was taken
    * @throws IOException
    */
-  public String ask(String prompt, String firstChoice, String... choices) 
+  public String ask(String prompt, String firstChoice, String... choices)
       throws IOException {
     while (true) {
       System.err.print(prompt);
@@ -51,7 +52,7 @@ public final class MetaRecoveryContext  {
         if (c == -1 || c == '\r' || c == '\n') {
           break;
         }
-        responseBuilder.append((char)c);
+        responseBuilder.append((char) c);
       }
       String response = responseBuilder.toString();
       if (response.equalsIgnoreCase(firstChoice))
@@ -66,20 +67,19 @@ public final class MetaRecoveryContext  {
   }
 
   public static void editLogLoaderPrompt(String prompt,
-        MetaRecoveryContext recovery, String contStr)
-        throws IOException, RequestStopException
-  {
+                                         MetaRecoveryContext recovery, String contStr)
+      throws IOException, RequestStopException {
     if (recovery == null) {
       throw new IOException(prompt);
     }
     LOG.error(prompt);
     String answer = recovery.ask("\nEnter 'c' to continue, " + contStr + "\n" +
-      "Enter 's' to stop reading the edit log here, abandoning any later " +
+        "Enter 's' to stop reading the edit log here, abandoning any later " +
         "edits\n" +
-      "Enter 'q' to quit without saving\n" +
-      "Enter 'a' to always select the first choice in the future " +
-      "without prompting. " + 
-      "(c/s/q/a)\n", "c", "s", "q", "a");
+        "Enter 'q' to quit without saving\n" +
+        "Enter 'a' to always select the first choice in the future " +
+        "without prompting. " +
+        "(c/s/q/a)\n", "c", "s", "q", "a");
     if (answer.equals("c")) {
       LOG.info("Continuing");
       return;

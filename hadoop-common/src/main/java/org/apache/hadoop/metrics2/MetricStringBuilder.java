@@ -26,9 +26,9 @@ public class MetricStringBuilder extends MetricsRecordBuilder {
    * @param suffix suffix after each entry
    */
   public MetricStringBuilder(MetricsCollector parent,
-      String prefix,
-      String separator,
-      String suffix) {
+                             String prefix,
+                             String separator,
+                             String suffix) {
     this.parent = parent;
     this.prefix = prefix;
     this.suffix = suffix;

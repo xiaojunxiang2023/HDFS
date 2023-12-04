@@ -14,13 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.protocol.datatransfer;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+ */
+package org.apache.hadoop.hdfs.protocol.datatransfer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.CombinedIPList;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Implements {@link TrustedChannelResolver}

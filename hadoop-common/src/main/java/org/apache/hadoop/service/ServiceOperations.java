@@ -1,13 +1,13 @@
 package org.apache.hadoop.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.classification.InterfaceStability.Evolving;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class contains a set of methods to work with services, especially
@@ -100,7 +100,7 @@ public final class ServiceOperations {
      * that it will never be null.
      */
     private final List<ServiceStateChangeListener> listeners =
-      new ArrayList<ServiceStateChangeListener>();
+        new ArrayList<ServiceStateChangeListener>();
 
     /**
      * Thread-safe addition of a new listener to the end of a list.
@@ -109,7 +109,7 @@ public final class ServiceOperations {
      * @param l listener
      */
     public synchronized void add(ServiceStateChangeListener l) {
-      if(!listeners.contains(l)) {
+      if (!listeners.contains(l)) {
         listeners.add(l);
       }
     }

@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.security.token.block;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableFactories;
 import org.apache.hadoop.io.WritableFactory;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Object for passing block keys
@@ -23,7 +24,7 @@ public class ExportedBlockKeys implements Writable {
   }
 
   public ExportedBlockKeys(boolean isBlockTokenEnabled, long keyUpdateInterval,
-      long tokenLifetime, BlockKey currentKey, BlockKey[] allKeys) {
+                           long tokenLifetime, BlockKey currentKey, BlockKey[] allKeys) {
     this.isBlockTokenEnabled = isBlockTokenEnabled;
     this.keyUpdateInterval = keyUpdateInterval;
     this.tokenLifetime = tokenLifetime;
@@ -50,7 +51,7 @@ public class ExportedBlockKeys implements Writable {
   public BlockKey[] getAllKeys() {
     return allKeys;
   }
-  
+
   // ///////////////////////////////////////////////
   // Writable
   // ///////////////////////////////////////////////

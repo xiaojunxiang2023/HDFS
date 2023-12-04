@@ -3,15 +3,15 @@ package org.apache.hadoop.hdfs;
 import java.io.IOException;
 
 /**
-  * This exception is thrown when a read encounters a block that has no
-  * locations associated with it.
-  */
+ * This exception is thrown when a read encounters a block that has no
+ * locations associated with it.
+ */
 public class BlockMissingException extends IOException {
 
   private static final long serialVersionUID = 1L;
 
   private final String filename;
-  private final long   offset;
+  private final long offset;
 
   /**
    * An exception that indicates that file was corrupted.
@@ -19,7 +19,7 @@ public class BlockMissingException extends IOException {
    * @param description a description of the corruption details
    */
   public BlockMissingException(String filename, String description,
-      long offset) {
+                               long offset) {
     super(description);
     this.filename = filename;
     this.offset = offset;

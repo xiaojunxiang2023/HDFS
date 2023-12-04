@@ -1,32 +1,30 @@
 package org.apache.hadoop.crypto;
 
-import java.io.Closeable;
-import java.security.GeneralSecurityException;
-import java.util.List;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
+import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.PerformanceAdvisory;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import java.io.Closeable;
+import java.security.GeneralSecurityException;
+import java.util.List;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_CRYPTO_CIPHER_SUITE_KEY;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_CRYPTO_CIPHER_SUITE_DEFAULT;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 
 /**
  * Crypto codec class, encapsulates encryptor/decryptor pair.
  */
 public abstract class CryptoCodec implements Configurable, Closeable {
   public static Logger LOG = LoggerFactory.getLogger(CryptoCodec.class);
-  
+
   /**
    * Get crypto codec for specified algorithm/mode/padding.
-   * 
+   *
    * @param conf
    *          the configuration
    * @param cipherSuite
@@ -34,8 +32,8 @@ public abstract class CryptoCodec implements Configurable, Closeable {
    * @return CryptoCodec the codec object. Null value will be returned if no
    *         crypto codec classes with cipher suite configured.
    */
-  public static CryptoCodec getInstance(Configuration conf, 
-      CipherSuite cipherSuite) {
+  public static CryptoCodec getInstance(Configuration conf,
+                                        CipherSuite cipherSuite) {
     List<Class<? extends CryptoCodec>> klasses = getCodecClasses(
         conf, cipherSuite);
     if (klasses == null) {
@@ -61,29 +59,29 @@ public abstract class CryptoCodec implements Configurable, Closeable {
             klass.getName());
       }
     }
-    
+
     return codec;
   }
-  
+
   /**
    * Get crypto codec for algorithm/mode/padding in config value
    * hadoop.security.crypto.cipher.suite
-   * 
+   *
    * @param conf
    *          the configuration
    * @return CryptoCodec the codec object Null value will be returned if no
    *         crypto codec classes with cipher suite configured.
    */
   public static CryptoCodec getInstance(Configuration conf) {
-    String name = conf.get(HADOOP_SECURITY_CRYPTO_CIPHER_SUITE_KEY, 
+    String name = conf.get(HADOOP_SECURITY_CRYPTO_CIPHER_SUITE_KEY,
         HADOOP_SECURITY_CRYPTO_CIPHER_SUITE_DEFAULT);
     return getInstance(conf, CipherSuite.convert(name));
   }
-  
+
   private static List<Class<? extends CryptoCodec>> getCodecClasses(
       Configuration conf, CipherSuite cipherSuite) {
     List<Class<? extends CryptoCodec>> result = Lists.newArrayList();
-    String configName = HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX + 
+    String configName = HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX +
         cipherSuite.getConfigSuffix();
     String codecString;
     if (configName.equals(CommonConfigurationKeysPublic
@@ -109,7 +107,7 @@ public abstract class CryptoCodec implements Configurable, Closeable {
         PerformanceAdvisory.LOG.debug("Crypto codec {} not found.", c);
       }
     }
-    
+
     return result;
   }
 
@@ -123,13 +121,13 @@ public abstract class CryptoCodec implements Configurable, Closeable {
    * @return Encryptor the encryptor
    */
   public abstract Encryptor createEncryptor() throws GeneralSecurityException;
-  
+
   /**
    * Create a {@link org.apache.hadoop.crypto.Decryptor}.
    * @return Decryptor the decryptor
    */
   public abstract Decryptor createDecryptor() throws GeneralSecurityException;
-  
+
   /**
    * This interface is only for Counter (CTR) mode. Generally the Encryptor
    * or Decryptor calculates the IV and maintain encryption context internally. 
@@ -145,13 +143,13 @@ public abstract class CryptoCodec implements Configurable, Closeable {
    * a lossless operation (concatenation, addition, or XOR).
    * See http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_
    * .28CTR.29
-   * 
+   *
    * @param initIV initial IV
    * @param counter counter for input stream position 
    * @param IV the IV for input stream position
    */
   public abstract void calculateIV(byte[] initIV, long counter, byte[] IV);
-  
+
   /**
    * Generate a number of secure, random bytes suitable for cryptographic use.
    * This method needs to be thread-safe.

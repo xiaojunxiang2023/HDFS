@@ -1,30 +1,26 @@
 package org.apache.hadoop.metrics2.util;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.util.*;
 
 /**
  * Implementation of the Cormode, Korn, Muthukrishnan, and Srivastava algorithm
  * for streaming calculation of targeted high-percentile epsilon-approximate
  * quantiles.
- * 
+ *
  * This is a generalization of the earlier work by Greenwald and Khanna (GK),
  * which essentially allows different error bounds on the targeted quantiles,
  * which allows for far more efficient calculation of high-percentiles.
- * 
+ *
  * See: Cormode, Korn, Muthukrishnan, and Srivastava
  * "Effective Computation of Biased Quantiles over Data Streams" in ICDE 2005
- * 
+ *
  * Greenwald and Khanna,
  * "Space-efficient online computation of quantile summaries" in SIGMOD 2001
- * 
+ *
  */
 public class SampleQuantiles implements QuantileEstimator {
 
@@ -59,10 +55,10 @@ public class SampleQuantiles implements QuantileEstimator {
   /**
    * Specifies the allowable error for this rank, depending on which quantiles
    * are being targeted.
-   * 
+   *
    * This is the f(r_i, n) function from the CKMS paper. It's basically how wide
    * the range of this rank can be.
-   * 
+   *
    * @param rank
    *          the index in the list of samples
    */
@@ -86,7 +82,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
   /**
    * Add a new value from the stream.
-   * 
+   *
    * @param v
    */
   synchronized public void insert(long v) {
@@ -178,7 +174,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
   /**
    * Get the estimated value at the specified quantile.
-   * 
+   *
    * @param quantile Queried quantile, e.g. 0.50 or 0.99.
    * @return Estimated value at that quantile.
    */
@@ -208,18 +204,18 @@ public class SampleQuantiles implements QuantileEstimator {
 
   /**
    * Get a snapshot of the current values of all the tracked quantiles.
-   * 
+   *
    * @return snapshot of the tracked quantiles. If no items are added
    * to the estimator, returns null.
    */
   synchronized public Map<Quantile, Long> snapshot() {
     // flush the buffer first for best results
     insertBatch();
-    
+
     if (samples.isEmpty()) {
       return null;
     }
-    
+
     Map<Quantile, Long> values = new TreeMap<Quantile, Long>();
     for (int i = 0; i < quantiles.length; i++) {
       values.put(quantiles[i], query(quantiles[i].quantile));
@@ -230,7 +226,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
   /**
    * Returns the number of items that the estimator has processed
-   * 
+   *
    * @return count total number of items processed
    */
   synchronized public long getCount() {
@@ -239,7 +235,7 @@ public class SampleQuantiles implements QuantileEstimator {
 
   /**
    * Returns the number of samples kept by the estimator
-   * 
+   *
    * @return count current number of samples
    */
   @VisibleForTesting
@@ -255,7 +251,7 @@ public class SampleQuantiles implements QuantileEstimator {
     bufferCount = 0;
     samples.clear();
   }
-  
+
   @Override
   synchronized public String toString() {
     Map<Quantile, Long> data = snapshot();
@@ -271,20 +267,20 @@ public class SampleQuantiles implements QuantileEstimator {
    * metadata required by the CKMS algorithm.
    */
   private static class SampleItem {
-    
+
     /**
      * Value of the sampled item (e.g. a measured latency value)
      */
     public final long value;
-    
+
     /**
      * Difference between the lowest possible rank of the previous item, and 
      * the lowest possible rank of this item.
-     * 
+     *
      * The sum of the g of all previous items yields this item's lower bound. 
      */
     public int g;
-    
+
     /**
      * Difference between the item's greatest possible rank and lowest possible
      * rank.

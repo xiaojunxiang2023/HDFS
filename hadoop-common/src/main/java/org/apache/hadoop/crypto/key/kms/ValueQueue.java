@@ -1,13 +1,13 @@
 package org.apache.hadoop.crypto.key.kms;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
+import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -15,12 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
-import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
  * A Utility class that maintains a Queue of entries for a given key. It tries
@@ -32,12 +26,12 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFact
  * <code>QueueRefiller</code> interface that exposes a method to refill the
  * queue, when empty
  */
-public class ValueQueue <E> {
+public class ValueQueue<E> {
 
   /**
    * QueueRefiller interface a client must implement to use this class
    */
-  public interface QueueRefiller <E> {
+  public interface QueueRefiller<E> {
     /**
      * Method that has to be implemented by implementing classes to fill the
      * Queue.
@@ -47,7 +41,7 @@ public class ValueQueue <E> {
      * @throws IOException
      */
     public void fillQueueForKey(String keyName,
-        Queue<E> keyQueue, int numValues) throws IOException;
+                                Queue<E> keyQueue, int numValues) throws IOException;
   }
 
   private static final String REFILL_THREAD =
@@ -79,6 +73,7 @@ public class ValueQueue <E> {
   private abstract static class NamedRunnable implements Runnable {
     final String name;
     private AtomicBoolean canceled = new AtomicBoolean(false);
+
     private NamedRunnable(String keyName) {
       this.name = keyName;
     }
@@ -139,8 +134,8 @@ public class ValueQueue <E> {
 
     @Override
     public synchronized void put(Runnable e) throws InterruptedException {
-      if (!keysInProgress.containsKey(((NamedRunnable)e).name)) {
-        keysInProgress.put(((NamedRunnable)e).name, e);
+      if (!keysInProgress.containsKey(((NamedRunnable) e).name)) {
+        keysInProgress.put(((NamedRunnable) e).name, e);
         super.put(e);
       }
     }
@@ -149,7 +144,7 @@ public class ValueQueue <E> {
     public Runnable take() throws InterruptedException {
       Runnable k = super.take();
       if (k != null) {
-        keysInProgress.remove(((NamedRunnable)k).name);
+        keysInProgress.remove(((NamedRunnable) k).name);
       }
       return k;
     }
@@ -159,7 +154,7 @@ public class ValueQueue <E> {
         throws InterruptedException {
       Runnable k = super.poll(timeout, unit);
       if (k != null) {
-        keysInProgress.remove(((NamedRunnable)k).name);
+        keysInProgress.remove(((NamedRunnable) k).name);
       }
       return k;
     }
@@ -200,10 +195,10 @@ public class ValueQueue <E> {
    * @param refiller implementation of the QueueRefiller
    */
   public ValueQueue(final int numValues, final float lowWatermark,
-      long expiry, int numFillerThreads, SyncGenerationPolicy policy,
-      final QueueRefiller<E> refiller) {
+                    long expiry, int numFillerThreads, SyncGenerationPolicy policy,
+                    final QueueRefiller<E> refiller) {
     Preconditions.checkArgument(numValues > 0, "\"numValues\" must be > 0");
-    Preconditions.checkArgument(((lowWatermark > 0)&&(lowWatermark <= 1)),
+    Preconditions.checkArgument(((lowWatermark > 0) && (lowWatermark <= 1)),
         "\"lowWatermark\" must be > 0 and <= 1");
     final int watermarkValue = (int) (numValues * lowWatermark);
     Preconditions.checkArgument(watermarkValue > 0,
@@ -220,27 +215,27 @@ public class ValueQueue <E> {
       lockArray.add(i, new ReentrantReadWriteLock());
     }
     keyQueues = CacheBuilder.newBuilder()
-            .expireAfterAccess(expiry, TimeUnit.MILLISECONDS)
-            .build(new CacheLoader<String, LinkedBlockingQueue<E>>() {
-                  @Override
-                  public LinkedBlockingQueue<E> load(String keyName)
-                      throws Exception {
-                    LinkedBlockingQueue<E> keyQueue =
-                        new LinkedBlockingQueue<E>();
-                    refiller.fillQueueForKey(keyName, keyQueue, watermarkValue);
-                    return keyQueue;
-                  }
-                });
+        .expireAfterAccess(expiry, TimeUnit.MILLISECONDS)
+        .build(new CacheLoader<String, LinkedBlockingQueue<E>>() {
+          @Override
+          public LinkedBlockingQueue<E> load(String keyName)
+              throws Exception {
+            LinkedBlockingQueue<E> keyQueue =
+                new LinkedBlockingQueue<E>();
+            refiller.fillQueueForKey(keyName, keyQueue, watermarkValue);
+            return keyQueue;
+          }
+        });
 
     executor =
         new ThreadPoolExecutor(numFillerThreads, numFillerThreads, 0L,
             TimeUnit.MILLISECONDS, queue, new ThreadFactoryBuilder()
-                .setDaemon(true)
-                .setNameFormat(REFILL_THREAD).build());
+            .setDaemon(true)
+            .setNameFormat(REFILL_THREAD).build());
   }
 
   public ValueQueue(final int numValues, final float lowWaterMark, long expiry,
-      int numFillerThreads, QueueRefiller<E> fetcher) {
+                    int numFillerThreads, QueueRefiller<E> fetcher) {
     this(numValues, lowWaterMark, expiry, numFillerThreads,
         SyncGenerationPolicy.ALL, fetcher);
   }
@@ -345,16 +340,16 @@ public class ValueQueue <E> {
           // Synchronous call to get remaining values
           int numToFill = 0;
           switch (policy) {
-          case ATLEAST_ONE:
-            numToFill = (ekvs.size() < 1) ? 1 : 0;
-            break;
-          case LOW_WATERMARK:
-            numToFill =
-                Math.min(num, (int) (lowWatermark * numValues)) - ekvs.size();
-            break;
-          case ALL:
-            numToFill = num - ekvs.size();
-            break;
+            case ATLEAST_ONE:
+              numToFill = (ekvs.size() < 1) ? 1 : 0;
+              break;
+            case LOW_WATERMARK:
+              numToFill =
+                  Math.min(num, (int) (lowWatermark * numValues)) - ekvs.size();
+              break;
+            case ALL:
+              numToFill = num - ekvs.size();
+              break;
           }
           // Synchronous fill if not enough values found
           if (numToFill > 0) {
@@ -377,7 +372,7 @@ public class ValueQueue <E> {
   }
 
   private void submitRefillTask(final String keyName,
-      final Queue<E> keyQueue) throws InterruptedException {
+                                final Queue<E> keyQueue) throws InterruptedException {
     if (!executorThreadsStarted) {
       synchronized (this) {
         if (!executorThreadsStarted) {
@@ -417,7 +412,7 @@ public class ValueQueue <E> {
             }
           }
         }
-        );
+    );
   }
 
   /**

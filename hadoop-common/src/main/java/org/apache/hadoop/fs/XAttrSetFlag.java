@@ -1,9 +1,10 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
 import java.io.IOException;
 import java.util.EnumSet;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 public enum XAttrSetFlag {
   /**
    * Create a new xattr.
@@ -28,7 +29,7 @@ public enum XAttrSetFlag {
   }
 
   public static void validate(String xAttrName, boolean xAttrExists,
-      EnumSet<XAttrSetFlag> flag) throws IOException {
+                              EnumSet<XAttrSetFlag> flag) throws IOException {
     if (flag == null || flag.isEmpty()) {
       throw new HadoopIllegalArgumentException("A flag must be specified.");
     }

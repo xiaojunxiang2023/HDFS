@@ -32,13 +32,26 @@ public class RefreshResponse {
   public void setSenderName(String name) {
     senderName = name;
   }
-  public String getSenderName() { return senderName; }
 
-  public int getReturnCode() { return returnCode; }
-  public void setReturnCode(int rc) { returnCode = rc; }
+  public String getSenderName() {
+    return senderName;
+  }
 
-  public void setMessage(String m) { message = m; }
-  public String getMessage() { return message; }
+  public int getReturnCode() {
+    return returnCode;
+  }
+
+  public void setReturnCode(int rc) {
+    returnCode = rc;
+  }
+
+  public void setMessage(String m) {
+    message = m;
+  }
+
+  public String getMessage() {
+    return message;
+  }
 
   @Override
   public String toString() {

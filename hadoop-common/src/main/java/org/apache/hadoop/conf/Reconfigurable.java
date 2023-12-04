@@ -19,7 +19,7 @@ public interface Reconfigurable extends Configurable {
    * {@link ReconfigurationException}.
    */
   void reconfigureProperty(String property, String newVal)
-    throws ReconfigurationException;
+      throws ReconfigurationException;
 
   /**
    * Return whether a given property is changeable at run time.

@@ -45,7 +45,7 @@ public final class IdentityHashStore<K, V> {
       this.buffer = null;
     } else {
       // Round the capacity we need up to a power of 2.
-      realloc((int)Math.pow(2,
+      realloc((int) Math.pow(2,
           Math.ceil(Math.log(capacity) / Math.log(2))));
     }
   }
@@ -70,9 +70,9 @@ public final class IdentityHashStore<K, V> {
 
   private void putInternal(Object k, Object v) {
     final int hash = System.identityHashCode(k);
-    final int numEntries = buffer.length >>  1;
+    final int numEntries = buffer.length >> 1;
     //computing modulo with the assumption buffer.length is power of 2
-    int index = hash & (numEntries-1);
+    int index = hash & (numEntries - 1);
     while (true) {
       if (buffer[2 * index] == null) {
         buffer[2 * index] = k;
@@ -108,7 +108,7 @@ public final class IdentityHashStore<K, V> {
     final int numEntries = buffer.length >> 1;
     final int hash = System.identityHashCode(k);
     //computing modulo with the assumption buffer.length is power of 2
-    int index = hash & (numEntries -1);
+    int index = hash & (numEntries - 1);
     int firstIndex = index;
     do {
       if (buffer[2 * index] == k) {
@@ -127,7 +127,7 @@ public final class IdentityHashStore<K, V> {
     if (index < 0) {
       return null;
     }
-    return (V)buffer[1 + (2 * index)];
+    return (V) buffer[1 + (2 * index)];
   }
 
   /**
@@ -139,7 +139,7 @@ public final class IdentityHashStore<K, V> {
     if (index < 0) {
       return null;
     }
-    V val = (V)buffer[1 + (2 * index)];
+    V val = (V) buffer[1 + (2 * index)];
     buffer[2 * index] = null;
     buffer[1 + (2 * index)] = null;
     numInserted--;
@@ -169,7 +169,7 @@ public final class IdentityHashStore<K, V> {
     int length = buffer == null ? 0 : buffer.length;
     for (int i = 0; i < length; i += 2) {
       if (buffer[i] != null) {
-        visitor.accept((K)buffer[i], (V)buffer[i + 1]);
+        visitor.accept((K) buffer[i], (V) buffer[i + 1]);
       }
     }
   }

@@ -1,32 +1,9 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_DOMAIN_SOCKET_DISABLE_INTERVAL_SECOND_KEY;
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ShortCircuitFdResponse.USE_RECEIPT_VERIFICATION;
-
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.net.InetSocketAddress;
-import java.nio.channels.UnresolvedAddressException;
-import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.io.ByteArrayDataOutput;
-import org.apache.hadoop.thirdparty.com.google.common.io.ByteStreams;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.BlockReader;
-import org.apache.hadoop.hdfs.ClientContext;
-import org.apache.hadoop.hdfs.DFSClient;
-import org.apache.hadoop.hdfs.DFSInputStream;
-import org.apache.hadoop.hdfs.DFSUtilClient;
-import org.apache.hadoop.hdfs.ExtendedBlockId;
-import org.apache.hadoop.hdfs.RemotePeerFactory;
-import org.apache.hadoop.hdfs.ReplicaAccessor;
-import org.apache.hadoop.hdfs.ReplicaAccessorBuilder;
+import org.apache.hadoop.hdfs.*;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf.ShortCircuitConf;
 import org.apache.hadoop.hdfs.net.DomainPeer;
 import org.apache.hadoop.hdfs.net.Peer;
@@ -53,14 +30,23 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.util.PerformanceAdvisory;
-import org.apache.hadoop.util.Time;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
+import org.apache.hadoop.thirdparty.com.google.common.io.ByteArrayDataOutput;
+import org.apache.hadoop.thirdparty.com.google.common.io.ByteStreams;
+import org.apache.hadoop.util.PerformanceAdvisory;
+import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.net.InetSocketAddress;
+import java.nio.channels.UnresolvedAddressException;
+import java.util.List;
+
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_DOMAIN_SOCKET_DISABLE_INTERVAL_SECOND_KEY;
+import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ShortCircuitFdResponse.USE_RECEIPT_VERIFICATION;
 
 
 /**
@@ -74,6 +60,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     public void injectRequestFileDescriptorsFailure() throws IOException {
       // do nothing
     }
+
     public boolean getSupportsReceiptVerification() {
       return true;
     }
@@ -251,7 +238,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     return this;
   }
 
-  public BlockReaderFactory setInetSocketAddress (
+  public BlockReaderFactory setInetSocketAddress(
       InetSocketAddress inetSocketAddress) {
     this.inetSocketAddress = inetSocketAddress;
     return this;
@@ -358,7 +345,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     }
     Preconditions.checkState(!DFSInputStream.tcpReadsDisabledForTesting,
         "TCP reads were disabled for testing, but we failed to " +
-        "do a non-TCP read.");
+            "do a non-TCP read.");
     return getRemoteBlockReaderFromTcp();
   }
 
@@ -426,7 +413,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
           datanode, startOffset, length, storageType);
     } catch (RemoteException remoteException) {
       ioe = remoteException.unwrapRemoteException(
-                InvalidToken.class, AccessControlException.class);
+          InvalidToken.class, AccessControlException.class);
     } catch (IOException e) {
       ioe = e;
     }
@@ -454,7 +441,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     }
     if (!pathInfo.getPathState().getUsableForShortCircuit()) {
       PerformanceAdvisory.LOG.debug("{}: {} is not usable for short circuit; " +
-              "giving up on BlockReaderLocal.", this, pathInfo);
+          "giving up on BlockReaderLocal.", this, pathInfo);
       return null;
     }
     ShortCircuitCache cache =
@@ -488,7 +475,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
   /**
    * Fetch a pair of short-circuit block descriptors from a local DataNode.
    *
-   * @return    Null if we could not communicate with the datanode,
+   * @return Null if we could not communicate with the datanode,
    *            a new ShortCircuitReplicaInfo object otherwise.
    *            ShortCircuitReplicaInfo objects may contain either an
    *            InvalidToken exception, or a ShortCircuitReplica object ready to
@@ -507,7 +494,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
       curPeer = nextDomainPeer();
       if (curPeer == null) break;
       if (curPeer.fromCache) remainingCacheTries--;
-      DomainPeer peer = (DomainPeer)curPeer.peer;
+      DomainPeer peer = (DomainPeer) curPeer.peer;
       Slot slot = null;
       ShortCircuitCache cache =
           clientContext.getShortCircuitCache(block.getBlockId());
@@ -521,7 +508,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
               + "Allocating a new one...", this, peer.getDomainSocket());
           curPeer = nextDomainPeer();
           if (curPeer == null) break;
-          peer = (DomainPeer)curPeer.peer;
+          peer = (DomainPeer) curPeer.peer;
         }
         ShortCircuitReplicaInfo info = requestFileDescriptors(peer, slot);
         clientContext.getPeerCache().put(datanode, peer);
@@ -558,13 +545,13 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
    * @param slot   If non-null, the shared memory slot to associate with the
    *               new ShortCircuitReplica.
    *
-   * @return  A ShortCircuitReplica object if we could communicate with the
+   * @return A ShortCircuitReplica object if we could communicate with the
    *          datanode; null, otherwise.
-   * @throws  IOException If we encountered an I/O exception while communicating
+   * @throws IOException If we encountered an I/O exception while communicating
    *          with the datanode.
    */
   private ShortCircuitReplicaInfo requestFileDescriptors(DomainPeer peer,
-          Slot slot) throws IOException {
+                                                         Slot slot) throws IOException {
     ShortCircuitCache cache =
         clientContext.getShortCircuitCache(block.getBlockId());
     final DataOutputStream out =
@@ -578,73 +565,73 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     DomainSocket sock = peer.getDomainSocket();
     failureInjector.injectRequestFileDescriptorsFailure();
     switch (resp.getStatus()) {
-    case SUCCESS:
-      byte buf[] = new byte[1];
-      FileInputStream[] fis = new FileInputStream[2];
-      sock.recvFileInputStreams(fis, buf, 0, buf.length);
-      ShortCircuitReplica replica = null;
-      try {
-        if (fis[0] == null || fis[1] == null) {
-          throw new IOException("the datanode " + datanode + " failed to " +
-              "pass a file descriptor (might have reached open file limit).");
-        }
+      case SUCCESS:
+        byte buf[] = new byte[1];
+        FileInputStream[] fis = new FileInputStream[2];
+        sock.recvFileInputStreams(fis, buf, 0, buf.length);
+        ShortCircuitReplica replica = null;
+        try {
+          if (fis[0] == null || fis[1] == null) {
+            throw new IOException("the datanode " + datanode + " failed to " +
+                "pass a file descriptor (might have reached open file limit).");
+          }
 
-        ExtendedBlockId key =
-            new ExtendedBlockId(block.getBlockId(), block.getBlockPoolId());
-        if (buf[0] == USE_RECEIPT_VERIFICATION.getNumber()) {
-          LOG.trace("Sending receipt verification byte for slot {}", slot);
-          sock.getOutputStream().write(0);
+          ExtendedBlockId key =
+              new ExtendedBlockId(block.getBlockId(), block.getBlockPoolId());
+          if (buf[0] == USE_RECEIPT_VERIFICATION.getNumber()) {
+            LOG.trace("Sending receipt verification byte for slot {}", slot);
+            sock.getOutputStream().write(0);
+          }
+          replica = new ShortCircuitReplica(key, fis[0], fis[1], cache,
+              Time.monotonicNow(), slot);
+          return new ShortCircuitReplicaInfo(replica);
+        } catch (IOException e) {
+          // This indicates an error reading from disk, or a format error.  Since
+          // it's not a socket communication problem, we return null rather than
+          // throwing an exception.
+          LOG.warn(this + ": error creating ShortCircuitReplica.", e);
+          return null;
+        } finally {
+          if (replica == null) {
+            IOUtilsClient.cleanupWithLogger(DFSClient.LOG, fis[0], fis[1]);
+          }
         }
-        replica = new ShortCircuitReplica(key, fis[0], fis[1], cache,
-            Time.monotonicNow(), slot);
-        return new ShortCircuitReplicaInfo(replica);
-      } catch (IOException e) {
-        // This indicates an error reading from disk, or a format error.  Since
-        // it's not a socket communication problem, we return null rather than
-        // throwing an exception.
-        LOG.warn(this + ": error creating ShortCircuitReplica.", e);
+      case ERROR_UNSUPPORTED:
+        if (!resp.hasShortCircuitAccessVersion()) {
+          LOG.warn("short-circuit read access is disabled for " +
+              "DataNode " + datanode + ".  reason: " + resp.getMessage());
+          clientContext.getDomainSocketFactory()
+              .disableShortCircuitForPath(pathInfo.getPath());
+        } else {
+          LOG.warn("short-circuit read access for the file " +
+              fileName + " is disabled for DataNode " + datanode +
+              ".  reason: " + resp.getMessage());
+        }
         return null;
-      } finally {
-        if (replica == null) {
-          IOUtilsClient.cleanupWithLogger(DFSClient.LOG, fis[0], fis[1]);
+      case ERROR_ACCESS_TOKEN:
+        String msg = "access control error while " +
+            "attempting to set up short-circuit access to " +
+            fileName + resp.getMessage();
+        LOG.debug("{}:{}", this, msg);
+        if (slot != null) {
+          cache.freeSlot(slot);
         }
-      }
-    case ERROR_UNSUPPORTED:
-      if (!resp.hasShortCircuitAccessVersion()) {
-        LOG.warn("short-circuit read access is disabled for " +
-            "DataNode " + datanode + ".  reason: " + resp.getMessage());
+        return new ShortCircuitReplicaInfo(new InvalidToken(msg));
+      default:
+        final long expiration =
+            clientContext.getDomainSocketFactory().getPathExpireSeconds();
+        String disableMsg = "disabled temporarily for " + expiration + " seconds";
+        if (expiration == 0) {
+          disableMsg = "not disabled";
+        }
+        LOG.warn("{}: unknown response code {} while attempting to set up "
+                + "short-circuit access. {}. Short-circuit read for "
+                + "DataNode {} is {} based on {}.",
+            this, resp.getStatus(), resp.getMessage(), datanode,
+            disableMsg, DFS_DOMAIN_SOCKET_DISABLE_INTERVAL_SECOND_KEY);
         clientContext.getDomainSocketFactory()
             .disableShortCircuitForPath(pathInfo.getPath());
-      } else {
-        LOG.warn("short-circuit read access for the file " +
-            fileName + " is disabled for DataNode " + datanode +
-            ".  reason: " + resp.getMessage());
-      }
-      return null;
-    case ERROR_ACCESS_TOKEN:
-      String msg = "access control error while " +
-          "attempting to set up short-circuit access to " +
-          fileName + resp.getMessage();
-      LOG.debug("{}:{}", this, msg);
-      if (slot != null) {
-        cache.freeSlot(slot);
-      }
-      return new ShortCircuitReplicaInfo(new InvalidToken(msg));
-    default:
-      final long expiration =
-          clientContext.getDomainSocketFactory().getPathExpireSeconds();
-      String disableMsg = "disabled temporarily for " + expiration + " seconds";
-      if (expiration == 0) {
-        disableMsg = "not disabled";
-      }
-      LOG.warn("{}: unknown response code {} while attempting to set up "
-              + "short-circuit access. {}. Short-circuit read for "
-              + "DataNode {} is {} based on {}.",
-          this, resp.getStatus(), resp.getMessage(), datanode,
-          disableMsg, DFS_DOMAIN_SOCKET_DISABLE_INTERVAL_SECOND_KEY);
-      clientContext.getDomainSocketFactory()
-          .disableShortCircuitForPath(pathInfo.getPath());
-      return null;
+        return null;
     }
   }
 
@@ -665,7 +652,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     if (!pathInfo.getPathState().getUsableForDataTransfer()) {
       PerformanceAdvisory.LOG.debug("{}: not trying to create a " +
           "remote block reader because the UNIX domain socket at {}" +
-           " is not usable.", this, pathInfo);
+          " is not usable.", this, pathInfo);
       return null;
     }
     LOG.trace("{}: trying to create a remote block reader from the UNIX domain "
@@ -675,7 +662,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
       BlockReaderPeer curPeer = nextDomainPeer();
       if (curPeer == null) break;
       if (curPeer.fromCache) remainingCacheTries--;
-      DomainPeer peer = (DomainPeer)curPeer.peer;
+      DomainPeer peer = (DomainPeer) curPeer.peer;
       BlockReader blockReader = null;
       try {
         blockReader = getRemoteBlockReader(peer);
@@ -827,13 +814,13 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
    * renewing encryption keys, etc.
    *
    * @param ioe    The exception
-   * @return       True only if the exception is security-related.
+   * @return True only if the exception is security-related.
    */
   private static boolean isSecurityException(IOException ioe) {
     return (ioe instanceof InvalidToken) ||
-            (ioe instanceof InvalidEncryptionKeyException) ||
-            (ioe instanceof InvalidBlockTokenException) ||
-            (ioe instanceof AccessControlException);
+        (ioe instanceof InvalidEncryptionKeyException) ||
+        (ioe instanceof InvalidBlockTokenException) ||
+        (ioe instanceof AccessControlException);
   }
 
   @SuppressWarnings("deprecation")
@@ -859,7 +846,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
    * @return string that has a file name for debug purposes
    */
   public static String getFileName(final InetSocketAddress s,
-      final String poolId, final long blockId) {
+                                   final String poolId, final long blockId) {
     return s.toString() + ":" + poolId + ":" + blockId;
   }
 }

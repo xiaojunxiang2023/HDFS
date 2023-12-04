@@ -7,12 +7,12 @@ package org.apache.hadoop.io.retry;
  * </p>
  */
 public interface RetryPolicy {
-  
+
   /**
    * Returned by {@link RetryPolicy#shouldRetry(Exception, int, int, boolean)}.
    */
   public static class RetryAction {
-    
+
     // A few common retry policies, with no delays.
     public static final RetryAction FAIL =
         new RetryAction(RetryDecision.FAIL);
@@ -20,31 +20,31 @@ public interface RetryPolicy {
         new RetryAction(RetryDecision.RETRY);
     public static final RetryAction FAILOVER_AND_RETRY =
         new RetryAction(RetryDecision.FAILOVER_AND_RETRY);
-    
+
     public final RetryDecision action;
     public final long delayMillis;
     public final String reason;
-    
+
     public RetryAction(RetryDecision action) {
       this(action, 0, null);
     }
-    
+
     public RetryAction(RetryDecision action, long delayTime) {
       this(action, delayTime, null);
     }
-    
+
     public RetryAction(RetryDecision action, long delayTime, String reason) {
       this.action = action;
       this.delayMillis = delayTime;
       this.reason = reason;
     }
-    
+
     @Override
     public String toString() {
       return getClass().getSimpleName() + "(action=" + action
           + ", delayMillis=" + delayMillis + ", reason=" + reason + ")";
     }
-    
+
     public enum RetryDecision {
       // Ordering: FAIL < RETRY < FAILOVER_AND_RETRY.
       FAIL,
@@ -52,14 +52,14 @@ public interface RetryPolicy {
       FAILOVER_AND_RETRY
     }
   }
-  
+
   /**
    * <p>
    * Determines whether the framework should retry a method for the given
    * exception, and the number of retries that have been made for that operation
    * so far.
    * </p>
-   * 
+   *
    * @param e The exception that caused the method to fail
    * @param retries The number of times the method has been retried
    * @param failovers The number of times the method has failed over to a
@@ -76,5 +76,5 @@ public interface RetryPolicy {
    *           the method failed and should not be retried further
    */
   public RetryAction shouldRetry(Exception e, int retries, int failovers,
-      boolean isIdempotentOrAtMostOnce) throws Exception;
+                                 boolean isIdempotentOrAtMostOnce) throws Exception;
 }

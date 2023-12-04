@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.Arrays;
 
 /**
  * XAttr is the POSIX Extended Attribute model similar to that found in
@@ -104,8 +104,12 @@ public class XAttr {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == null) { return false; }
-    if (obj == this) { return true; }
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
     if (obj.getClass() != getClass()) {
       return false;
     }
@@ -124,8 +128,12 @@ public class XAttr {
    * @return if the XAttrs are equal, ignoring the XAttr value
    */
   public boolean equalsIgnoreValue(Object obj) {
-    if (obj == null) { return false; }
-    if (obj == this) { return true; }
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
     if (obj.getClass() != getClass()) {
       return false;
     }

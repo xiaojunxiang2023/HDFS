@@ -1,6 +1,11 @@
 package org.apache.hadoop.crypto;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SECURE_RANDOM_IMPL_KEY;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.crypto.random.OpensslSecureRandom;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -8,13 +13,8 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Random;
-import org.apache.hadoop.conf.Configuration;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.crypto.random.OpensslSecureRandom;
-import org.apache.hadoop.util.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SECURE_RANDOM_IMPL_KEY;
 
 /**
  * Implement the AES-CTR crypto codec using JNI into OpenSSL.
@@ -25,7 +25,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
 
   private Configuration conf;
   private Random random;
-  
+
   public OpensslAesCtrCryptoCodec() {
     String loadingFailureReason = OpensslCipher.getLoadingFailureReason();
     if (loadingFailureReason != null) {
@@ -65,7 +65,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
   public Decryptor createDecryptor() throws GeneralSecurityException {
     return new OpensslAesCtrCipher(OpensslCipher.DECRYPT_MODE);
   }
-  
+
   @Override
   public void generateSecureRandom(byte[] bytes) {
     random.nextBytes(bytes);
@@ -85,7 +85,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
     private final OpensslCipher cipher;
     private final int mode;
     private boolean contextReset = false;
-    
+
     public OpensslAesCtrCipher(int mode) throws GeneralSecurityException {
       this.mode = mode;
       cipher = OpensslCipher.getInstance(SUITE.getName());
@@ -98,7 +98,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
       contextReset = false;
       cipher.init(mode, key, iv);
     }
-    
+
     /**
      * AES-CTR will consume all of the input data. It requires enough space in 
      * the destination buffer to encrypt entire input buffer.
@@ -108,7 +108,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
         throws IOException {
       process(inBuffer, outBuffer);
     }
-    
+
     /**
      * AES-CTR will consume all of the input data. It requires enough space in
      * the destination buffer to decrypt entire input buffer.
@@ -118,7 +118,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
         throws IOException {
       process(inBuffer, outBuffer);
     }
-    
+
     private void process(ByteBuffer inBuffer, ByteBuffer outBuffer)
         throws IOException {
       try {
@@ -138,7 +138,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
         throw new IOException(e);
       }
     }
-    
+
     @Override
     public boolean isContextReset() {
       return contextReset;

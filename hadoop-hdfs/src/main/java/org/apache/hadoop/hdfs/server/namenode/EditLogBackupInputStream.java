@@ -1,16 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.DataInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * An implementation of the abstract class {@link EditLogInputStream},
  * which is used to updates HDFS meta-data state on a backup node.
- * 
+ *
  * @see org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol#journal
  * (org.apache.hadoop.hdfs.server.protocol.NamenodeRegistration,
  *  int, int, byte[])

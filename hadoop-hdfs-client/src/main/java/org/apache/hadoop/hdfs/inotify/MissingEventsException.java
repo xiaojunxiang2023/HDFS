@@ -1,11 +1,13 @@
 package org.apache.hadoop.hdfs.inotify;
+
 public class MissingEventsException extends Exception {
   private static final long serialVersionUID = 1L;
 
   private long expectedTxid;
   private long actualTxid;
 
-  public MissingEventsException() {}
+  public MissingEventsException() {
+  }
 
   public MissingEventsException(long expectedTxid, long actualTxid) {
     this.expectedTxid = expectedTxid;

@@ -1,13 +1,5 @@
 package org.apache.hadoop.metrics2.sink.ganglia;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.configuration2.SubsetConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.hadoop.metrics2.AbstractMetric;
@@ -20,20 +12,23 @@ import org.apache.hadoop.metrics2.util.MetricsCache.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.*;
+
 /**
  * This code supports Ganglia 3.0
- * 
+ *
  */
 public class GangliaSink30 extends AbstractGangliaSink {
 
   public final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
   private static final String TAGS_FOR_PREFIX_PROPERTY_PREFIX = "tagsForPrefix.";
-  
+
   private MetricsCache metricsCache = new MetricsCache();
 
   // a key with a NULL value means ALL
-  private Map<String,Set<String>> useTagsMap = new HashMap<String,Set<String>>();
+  private Map<String, Set<String>> useTagsMap = new HashMap<String, Set<String>>();
 
   @Override
   @SuppressWarnings("unchecked")
@@ -63,6 +58,7 @@ public class GangliaSink30 extends AbstractGangliaSink {
       }
     }
   }
+
   public void appendPrefix(MetricsRecord record, StringBuilder sb) {
     String contextName = record.context();
     Collection<MetricsTag> tags = record.tags();
@@ -72,7 +68,7 @@ public class GangliaSink30 extends AbstractGangliaSink {
         if (useTags == null || useTags.contains(t.name())) {
 
           // the context is always skipped here because it is always added
-          
+
           // the hostname is always skipped to avoid case-mismatches 
           // from different DNSes.
 
@@ -81,9 +77,9 @@ public class GangliaSink30 extends AbstractGangliaSink {
           }
         }
       }
-    }          
+    }
   }
-  
+
   @Override
   public void putMetrics(MetricsRecord record) {
     // The method handles both cases whether Ganglia support dense publish
@@ -98,7 +94,7 @@ public class GangliaSink30 extends AbstractGangliaSink {
       sb.append(recordName);
 
       appendPrefix(record, sb);
-      
+
       String groupName = sb.toString();
       sb.append('.');
       int sbBaseLen = sb.length();
@@ -173,7 +169,7 @@ public class GangliaSink30 extends AbstractGangliaSink {
 
   // Calculate the slope from properties and metric
   private GangliaSlope calculateSlope(GangliaConf gConf,
-      GangliaSlope slopeFromMetric) {
+                                      GangliaSlope slopeFromMetric) {
     if (gConf.getSlope() != null) {
       // if slope has been specified in properties, use that
       return gConf.getSlope();
@@ -198,7 +194,7 @@ public class GangliaSink30 extends AbstractGangliaSink {
    * @throws IOException
    */
   protected void emitMetric(String groupName, String name, String type,
-      String value, GangliaConf gConf, GangliaSlope gSlope) throws IOException {
+                            String value, GangliaConf gConf, GangliaSlope gSlope) throws IOException {
 
     if (name == null) {
       LOG.warn("Metric was emitted with no name.");

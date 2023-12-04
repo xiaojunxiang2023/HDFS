@@ -1,33 +1,17 @@
 package org.apache.hadoop.hdfs.client;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
-import org.apache.hadoop.fs.BlockStoragePolicySpi;
-import org.apache.hadoop.fs.CacheFlag;
-import org.apache.hadoop.fs.FileEncryptionInfo;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RemoteIterator;
-import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSInotifyEventInputStream;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
-import org.apache.hadoop.hdfs.protocol.AddErasureCodingPolicyResponse;
-import org.apache.hadoop.hdfs.protocol.CacheDirectiveEntry;
-import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo;
-import org.apache.hadoop.hdfs.protocol.CachePoolEntry;
-import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
-import org.apache.hadoop.hdfs.protocol.EncryptionZone;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicyInfo;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.ReencryptAction;
-import org.apache.hadoop.hdfs.protocol.OpenFileEntry;
 import org.apache.hadoop.hdfs.protocol.OpenFilesIterator.OpenFilesType;
-import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -62,7 +46,7 @@ public class HdfsAdmin {
     if (!(fs instanceof DistributedFileSystem)) {
       throw new IllegalArgumentException("'" + uri + "' is not an HDFS URI.");
     } else {
-      dfs = (DistributedFileSystem)fs;
+      dfs = (DistributedFileSystem) fs;
     }
   }
 
@@ -163,8 +147,8 @@ public class HdfsAdmin {
    * @throws IOException if the directive could not be added
    */
   public long addCacheDirective(CacheDirectiveInfo info,
-      EnumSet<CacheFlag> flags) throws IOException {
-  return dfs.addCacheDirective(info, flags);
+                                EnumSet<CacheFlag> flags) throws IOException {
+    return dfs.addCacheDirective(info, flags);
   }
 
   /**
@@ -176,7 +160,7 @@ public class HdfsAdmin {
    * @throws IOException if the directive could not be modified
    */
   public void modifyCacheDirective(CacheDirectiveInfo info,
-      EnumSet<CacheFlag> flags) throws IOException {
+                                   EnumSet<CacheFlag> flags) throws IOException {
     dfs.modifyCacheDirective(info, flags);
   }
 
@@ -298,9 +282,9 @@ public class HdfsAdmin {
    * @throws HadoopIllegalArgumentException if the flags are invalid
    */
   public void createEncryptionZone(Path path, String keyName,
-      EnumSet<CreateEncryptionZoneFlag> flags)
+                                   EnumSet<CreateEncryptionZoneFlag> flags)
       throws IOException, AccessControlException, FileNotFoundException,
-      HadoopIllegalArgumentException{
+      HadoopIllegalArgumentException {
     dfs.createEncryptionZone(path, keyName);
     if (flags.contains(CreateEncryptionZoneFlag.PROVISION_TRASH)) {
       if (flags.contains(CreateEncryptionZoneFlag.NO_TRASH)) {
@@ -313,7 +297,6 @@ public class HdfsAdmin {
 
   /**
    * Provision a trash directory for a given encryption zone.
-
    * @param path the root of the encryption zone
    * @throws IOException if the trash directory can not be created.
    */
@@ -358,7 +341,7 @@ public class HdfsAdmin {
    * @throws IOException If any error occurs when handling re-encrypt action.
    */
   public void reencryptEncryptionZone(final Path zone,
-      final ReencryptAction action) throws IOException {
+                                      final ReencryptAction action) throws IOException {
     dfs.reencryptEncryptionZone(zone, action);
   }
 
@@ -494,7 +477,7 @@ public class HdfsAdmin {
    * enabled on the cluster
    */
   public void setErasureCodingPolicy(final Path path,
-      final String ecPolicyName) throws IOException {
+                                     final String ecPolicyName) throws IOException {
     dfs.setErasureCodingPolicy(path, ecPolicyName);
   }
 
@@ -553,7 +536,7 @@ public class HdfsAdmin {
    * @throws IOException
    */
   public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies)  throws IOException {
+      ErasureCodingPolicy[] policies) throws IOException {
     return dfs.addErasureCodingPolicies(policies);
   }
 

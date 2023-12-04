@@ -19,8 +19,8 @@ class ReplicaUnderConstruction extends Block {
   private boolean chosenAsPrimary;
 
   ReplicaUnderConstruction(Block block,
-      DatanodeStorageInfo target,
-      HdfsServerConstants.ReplicaState state) {
+                           DatanodeStorageInfo target,
+                           HdfsServerConstants.ReplicaState state) {
     super(block);
     this.expectedLocation = target;
     this.state = state;

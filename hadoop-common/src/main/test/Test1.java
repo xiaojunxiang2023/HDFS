@@ -7,9 +7,9 @@ import org.apache.hadoop.conf.Configuration;
  */
 public class Test1 {
 
-    public static void main(String[] args) {
-        Configuration conf = new Configuration();
-        System.out.println(conf.get("fs.defaultFS"));
-    }
+  public static void main(String[] args) {
+    Configuration conf = new Configuration();
+    System.out.println(conf.get("fs.defaultFS"));
+  }
 
 }

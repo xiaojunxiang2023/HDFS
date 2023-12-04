@@ -89,7 +89,7 @@ public class CacheDirectiveStats {
   private final boolean hasExpired;
 
   private CacheDirectiveStats(long bytesNeeded, long bytesCached,
-      long filesNeeded, long filesCached, boolean hasExpired) {
+                              long filesNeeded, long filesCached, boolean hasExpired) {
     this.bytesNeeded = bytesNeeded;
     this.bytesCached = bytesCached;
     this.filesNeeded = filesNeeded;

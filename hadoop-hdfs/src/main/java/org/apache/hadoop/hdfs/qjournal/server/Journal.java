@@ -1,37 +1,11 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import org.apache.hadoop.thirdparty.protobuf.ByteString;
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.Range;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.qjournal.protocol.JournalNotFormattedException;
-import org.apache.hadoop.hdfs.qjournal.protocol.JournalOutOfSyncException;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocol;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PersistedRecoveryPaxosData;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.SegmentStateProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.RequestInfo;
+import org.apache.hadoop.hdfs.qjournal.protocol.*;
+import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.StartupOption;
 import org.apache.hadoop.hdfs.server.common.StorageErrorReporter;
@@ -51,14 +25,27 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.util.StopWatch;
-import org.apache.hadoop.util.Time;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.thirdparty.protobuf.TextFormat;
+import org.apache.hadoop.util.StopWatch;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A JournalNode can manage journals for several clusters at once.
@@ -75,9 +62,9 @@ public class Journal implements Closeable {
   private int curSegmentLayoutVersion = 0;
   private long nextTxId = HdfsServerConstants.INVALID_TXID;
   private long highestWrittenTxId = 0;
-  
+
   private final String journalId;
-  
+
   private final JNStorage storage;
 
   /**
@@ -98,7 +85,7 @@ public class Journal implements Closeable {
    * request to resurface and confuse things.
    */
   private long currentEpochIpcSerial = -1;
-  
+
   /**
    * The epoch number of the last writer to actually write a transaction.
    * This is used to differentiate log segments after a crash at the very
@@ -106,7 +93,7 @@ public class Journal implements Closeable {
    * test case.
    */
   private PersistentLongFile lastWriterEpoch;
-  
+
   /**
    * Lower-bound on the last committed transaction ID. This is not
    * depended upon for correctness, but acts as a sanity check
@@ -114,11 +101,11 @@ public class Journal implements Closeable {
    * for clients reading in-progress logs.
    */
   private BestEffortLongFile committedTxnId;
-  
+
   public static final String LAST_PROMISED_FILENAME = "last-promised-epoch";
   public static final String LAST_WRITER_EPOCH = "last-writer-epoch";
   private static final String COMMITTED_TXID_FILENAME = "committed-txid";
-  
+
   private final FileJournalManager fjm;
 
   private JournaledEditsCache cache;
@@ -140,20 +127,20 @@ public class Journal implements Closeable {
   private static final int WARN_SYNC_MILLIS_THRESHOLD = 1000;
 
   Journal(Configuration conf, File logDir, String journalId,
-      StartupOption startOpt, StorageErrorReporter errorReporter)
+          StartupOption startOpt, StorageErrorReporter errorReporter)
       throws IOException {
     this.conf = conf;
     storage = new JNStorage(conf, logDir, startOpt, errorReporter);
     this.journalId = journalId;
 
     refreshCachedData();
-    
+
     this.fjm = storage.getJournalManager();
 
     this.cache = createCache();
 
     this.metrics = JournalMetrics.create(this);
-    
+
     EditLogFile latest = scanStorageForLatestEdits();
     if (latest != null) {
       updateHighestWrittenTxId(latest.getLastTxId());
@@ -184,7 +171,7 @@ public class Journal implements Closeable {
    */
   private synchronized void refreshCachedData() {
     IOUtils.closeStream(committedTxnId);
-    
+
     File currentDir = storage.getSingularStorageDir().getCurrentDir();
     this.lastPromisedEpoch = new PersistentLongFile(
         new File(currentDir, LAST_PROMISED_FILENAME), 0);
@@ -194,7 +181,7 @@ public class Journal implements Closeable {
         new File(currentDir, COMMITTED_TXID_FILENAME),
         HdfsServerConstants.INVALID_TXID);
   }
-  
+
   /**
    * Scan the local storage directory, and return the segment containing
    * the highest transaction.
@@ -205,10 +192,10 @@ public class Journal implements Closeable {
     if (!fjm.getStorageDirectory().getCurrentDir().exists()) {
       return null;
     }
-    
+
     LOG.info("Scanning storage " + fjm);
     List<EditLogFile> files = fjm.getLogFiles(0);
-    
+
     while (!files.isEmpty()) {
       EditLogFile latestLog = files.remove(files.size() - 1);
       latestLog.scanLog(Long.MAX_VALUE, false);
@@ -223,7 +210,7 @@ public class Journal implements Closeable {
         return latestLog;
       }
     }
-    
+
     LOG.info("No files in " + fjm);
     return null;
   }
@@ -251,11 +238,11 @@ public class Journal implements Closeable {
     IOUtils.closeStream(curSegment);
     storage.close();
   }
-  
+
   JNStorage getStorage() {
     return storage;
   }
-  
+
   String getJournalId() {
     return journalId;
   }
@@ -287,10 +274,10 @@ public class Journal implements Closeable {
     if (committed == 0) {
       return 0;
     }
-    
+
     return Math.max(committed - highestWrittenTxId, 0L);
   }
-  
+
   synchronized long getHighestWrittenTxId() {
     return highestWrittenTxId;
   }
@@ -331,10 +318,10 @@ public class Journal implements Closeable {
       throw new IOException("Proposed epoch " + epoch + " <= last promise " +
           getLastPromisedEpoch() + " ; journal id: " + journalId);
     }
-    
+
     updateLastPromisedEpoch(epoch);
     abortCurSegment();
-    
+
     NewEpochResponseProto.Builder builder =
         NewEpochResponseProto.newBuilder();
 
@@ -343,7 +330,7 @@ public class Journal implements Closeable {
     if (latestFile != null) {
       builder.setLastSegmentTxId(latestFile.getFirstTxId());
     }
-    
+
     return builder.build();
   }
 
@@ -352,7 +339,7 @@ public class Journal implements Closeable {
         " to " + newEpoch + " for client " + Server.getRemoteIp() +
         " ; journal id: " + journalId);
     lastPromisedEpoch.set(newEpoch);
-    
+
     // Since we have a new writer, reset the IPC serial - it will start
     // counting again from 0 for this writer.
     currentEpochIpcSerial = -1;
@@ -362,7 +349,7 @@ public class Journal implements Closeable {
     if (curSegment == null) {
       return;
     }
-    
+
     curSegment.abort();
     curSegment = null;
     curSegmentTxId = HdfsServerConstants.INVALID_TXID;
@@ -374,8 +361,8 @@ public class Journal implements Closeable {
    * {@see QJournalProtocol#journal(RequestInfo, long, long, int, byte[])}
    */
   synchronized void journal(RequestInfo reqInfo,
-      long segmentTxId, long firstTxnId,
-      int numTxns, byte[] records) throws IOException {
+                            long segmentTxId, long firstTxnId,
+                            int numTxns, byte[] records) throws IOException {
     checkFormatted();
     checkWriteRequest(reqInfo);
 
@@ -402,11 +389,11 @@ public class Journal implements Closeable {
       abortCurSegment();
       throw e;
     }
-      
+
     checkSync(nextTxId == firstTxnId,
         "Can't write txid " + firstTxnId + " expecting nextTxId=" + nextTxId
             + " ; journal id: " + journalId);
-    
+
     long lastTxnId = firstTxnId + numTxns - 1;
     if (LOG.isTraceEnabled()) {
       LOG.trace("Writing txid " + firstTxnId + "-" + lastTxnId +
@@ -421,7 +408,7 @@ public class Journal implements Closeable {
     // "catching up" with the rest. Hence we do not need to fsync.
     boolean isLagging = lastTxnId <= committedTxnId.get();
     boolean shouldFsync = !isLagging;
-    
+
     curSegment.writeRaw(records, 0, records.length);
     curSegment.setReadyToFlush();
     StopWatch sw = new StopWatch();
@@ -437,7 +424,7 @@ public class Journal implements Closeable {
 
     if (milliSeconds > WARN_SYNC_MILLIS_THRESHOLD) {
       LOG.warn("Sync of transaction range " + firstTxnId + "-" + lastTxnId +
-               " took " + milliSeconds + "ms" + " ; journal id: " + journalId);
+          " took " + milliSeconds + "ms" + " ; journal id: " + journalId);
     }
 
     if (isLagging) {
@@ -445,11 +432,11 @@ public class Journal implements Closeable {
       // nodes. So, we are in "catch up" mode. This gets its own metric.
       metrics.batchesWrittenWhileLagging.incr(1);
     }
-    
+
     metrics.batchesWritten.incr(1);
     metrics.bytesWritten.incr(records.length);
     metrics.txnsWritten.incr(numTxns);
-    
+
     updateHighestWrittenTxId(lastTxnId);
     nextTxId = lastTxnId + 1;
     lastJournalTimestamp = Time.now();
@@ -458,7 +445,7 @@ public class Journal implements Closeable {
   public void heartbeat(RequestInfo reqInfo) throws IOException {
     checkRequest(reqInfo);
   }
-  
+
   /**
    * Ensure that the given request is coming from the correct writer and in-order.
    * @param reqInfo the request info
@@ -475,11 +462,11 @@ public class Journal implements Closeable {
       // the promise.
       updateLastPromisedEpoch(reqInfo.getEpoch());
     }
-    
+
     // Ensure that the IPCs are arriving in-order as expected.
     checkSync(reqInfo.getIpcSerialNumber() > currentEpochIpcSerial,
         "IPC serial %s from client %s was not higher than prior highest " +
-        "IPC serial %s ; journal id: %s", reqInfo.getIpcSerialNumber(),
+            "IPC serial %s ; journal id: %s", reqInfo.getIpcSerialNumber(),
         Server.getRemoteIp(), currentEpochIpcSerial, journalId);
     currentEpochIpcSerial = reqInfo.getIpcSerialNumber();
 
@@ -487,23 +474,23 @@ public class Journal implements Closeable {
       Preconditions.checkArgument(
           reqInfo.getCommittedTxId() >= committedTxnId.get(),
           "Client trying to move committed txid backward from " +
-          committedTxnId.get() + " to " + reqInfo.getCommittedTxId() +
+              committedTxnId.get() + " to " + reqInfo.getCommittedTxId() +
               " ; journal id: " + journalId);
-      
+
       committedTxnId.set(reqInfo.getCommittedTxId());
     }
   }
-  
+
   private synchronized void checkWriteRequest(RequestInfo reqInfo) throws IOException {
     checkRequest(reqInfo);
-    
+
     if (reqInfo.getEpoch() != lastWriterEpoch.get()) {
       throw new IOException("IPC's epoch " + reqInfo.getEpoch() +
           " is not the current writer epoch  " +
           lastWriterEpoch.get() + " ; journal id: " + journalId);
     }
   }
-  
+
   public synchronized boolean isFormatted() {
     return storage.isFormatted();
   }
@@ -522,7 +509,7 @@ public class Journal implements Closeable {
    * 'formatArgs' parameters.
    */
   private void checkSync(boolean expression, String msg,
-      Object... formatArgs) throws JournalOutOfSyncException {
+                         Object... formatArgs) throws JournalOutOfSyncException {
     if (!expression) {
       throw new JournalOutOfSyncException(String.format(msg, formatArgs));
     }
@@ -532,30 +519,30 @@ public class Journal implements Closeable {
    * @throws AssertionError if the given expression is not true.
    * The message of the exception is formatted using the 'msg' and
    * 'formatArgs' parameters.
-   * 
+   *
    * This should be used in preference to Java's built-in assert in
    * non-performance-critical paths, where a failure of this invariant
    * might cause the protocol to lose data. 
    */
   private void alwaysAssert(boolean expression, String msg,
-      Object... formatArgs) {
+                            Object... formatArgs) {
     if (!expression) {
       throw new AssertionError(String.format(msg, formatArgs));
     }
   }
-  
+
   /**
    * Start a new segment at the given txid. The previous segment
    * must have already been finalized.
    */
   public synchronized void startLogSegment(RequestInfo reqInfo, long txid,
-      int layoutVersion) throws IOException {
+                                           int layoutVersion) throws IOException {
     assert fjm != null;
     checkFormatted();
     checkRequest(reqInfo);
-    
+
     if (curSegment != null) {
-      LOG.warn("Client is requesting a new log segment " + txid + 
+      LOG.warn("Client is requesting a new log segment " + txid +
           " though we are already writing " + curSegment + ". " +
           "Aborting the current segment in order to begin the new one." +
           " ; journal id: " + journalId);
@@ -574,7 +561,7 @@ public class Journal implements Closeable {
         throw new IllegalStateException("Already have a finalized segment " +
             existing + " beginning at " + txid + " ; journal id: " + journalId);
       }
-      
+
       // If it's in-progress, it should only contain one transaction,
       // because the "startLogSegment" transaction is written alone at the
       // start of each segment. 
@@ -585,7 +572,7 @@ public class Journal implements Closeable {
             " ; journal id: " + journalId);
       }
     }
-    
+
     long curLastWriterEpoch = lastWriterEpoch.get();
     if (curLastWriterEpoch != reqInfo.getEpoch()) {
       LOG.info("Updating lastWriterEpoch from " + curLastWriterEpoch +
@@ -599,18 +586,18 @@ public class Journal implements Closeable {
     // Otherwise, no writer would have started writing. So, we can
     // remove the record of the older segment here.
     purgePaxosDecision(txid);
-    
+
     curSegment = fjm.startLogSegment(txid, layoutVersion);
     curSegmentTxId = txid;
     curSegmentLayoutVersion = layoutVersion;
     nextTxId = txid;
   }
-  
+
   /**
    * Finalize the log segment at the given transaction ID.
    */
   public synchronized void finalizeLogSegment(RequestInfo reqInfo, long startTxId,
-      long endTxId) throws IOException {
+                                              long endTxId) throws IOException {
     checkFormatted();
     checkRequest(reqInfo);
 
@@ -624,16 +611,16 @@ public class Journal implements Closeable {
         curSegmentTxId = HdfsServerConstants.INVALID_TXID;
         curSegmentLayoutVersion = 0;
       }
-      
+
       checkSync(nextTxId == endTxId + 1,
           "Trying to finalize in-progress log segment %s to end at " +
-          "txid %s but only written up to txid %s ; journal id: %s",
+              "txid %s but only written up to txid %s ; journal id: %s",
           startTxId, endTxId, nextTxId - 1, journalId);
       // No need to validate the edit log if the client is finalizing
       // the log segment that it was just writing to.
       needsValidation = false;
     }
-    
+
     FileJournalManager.EditLogFile elf = fjm.getLogFile(startTxId);
     if (elf == null) {
       throw new JournalOutOfSyncException("No log file to finalize at " +
@@ -645,11 +632,11 @@ public class Journal implements Closeable {
         LOG.info("Validating log segment " + elf.getFile() + " about to be " +
             "finalized ; journal id: " + journalId);
         elf.scanLog(Long.MAX_VALUE, false);
-  
+
         checkSync(elf.getLastTxId() == endTxId,
             "Trying to finalize in-progress log segment %s to end at " +
-            "txid %s but log %s on disk only contains up to txid %s " +
-            "; journal id: %s",
+                "txid %s but log %s on disk only contains up to txid %s " +
+                "; journal id: %s",
             startTxId, endTxId, elf.getFile(), elf.getLastTxId(), journalId);
       }
       fjm.finalizeLogSegment(startTxId, endTxId);
@@ -666,18 +653,18 @@ public class Journal implements Closeable {
     // accepted decision. The existence of the finalized log segment is enough.
     purgePaxosDecision(elf.getFirstTxId());
   }
-  
+
   /**
    * @see JournalManager#purgeLogsOlderThan(long)
    */
   public synchronized void purgeLogsOlderThan(RequestInfo reqInfo,
-      long minTxIdToKeep) throws IOException {
+                                              long minTxIdToKeep) throws IOException {
     checkFormatted();
     checkRequest(reqInfo);
-    
+
     storage.purgeDataOlderThan(minTxIdToKeep);
   }
-  
+
   /**
    * Remove the previously-recorded 'accepted recovery' information
    * for a given log segment, once it is no longer necessary. 
@@ -698,16 +685,16 @@ public class Journal implements Closeable {
    * @see QJournalProtocol#getEditLogManifest(String, String, long, boolean)
    */
   public RemoteEditLogManifest getEditLogManifest(long sinceTxId,
-      boolean inProgressOk) throws IOException {
+                                                  boolean inProgressOk) throws IOException {
     // No need to checkRequest() here - anyone may ask for the list
     // of segments.
     checkFormatted();
-    
+
     List<RemoteEditLog> logs = fjm.getRemoteEditLogs(sinceTxId, inProgressOk);
-    
+
     if (inProgressOk) {
       RemoteEditLog log = null;
-      for (Iterator<RemoteEditLog> iter = logs.iterator(); iter.hasNext();) {
+      for (Iterator<RemoteEditLog> iter = logs.iterator(); iter.hasNext(); ) {
         log = iter.next();
         if (log.isInProgress()) {
           iter.remove();
@@ -727,7 +714,7 @@ public class Journal implements Closeable {
    * @see QJournalProtocol#getJournaledEdits(String, String, long, int)
    */
   public GetJournaledEditsResponseProto getJournaledEdits(long sinceTxId,
-      int maxTxns) throws IOException {
+                                                          int maxTxns) throws IOException {
     if (cache == null) {
       throw new IOException("The journal edits cache is not enabled, which " +
           "is a requirement to fetch journaled edits via RPC. Please enable " +
@@ -798,9 +785,9 @@ public class Journal implements Closeable {
       RequestInfo reqInfo, long segmentTxId) throws IOException {
     checkFormatted();
     checkRequest(reqInfo);
-    
+
     abortCurSegment();
-    
+
     PrepareRecoveryResponseProto.Builder builder =
         PrepareRecoveryResponseProto.newBuilder();
 
@@ -813,37 +800,37 @@ public class Journal implements Closeable {
     if (previouslyAccepted != null && !hasFinalizedSegment) {
       SegmentStateProto acceptedState = previouslyAccepted.getSegmentState();
       assert acceptedState.getEndTxId() == segInfo.getEndTxId() :
-            "prev accepted: " + TextFormat.shortDebugString(previouslyAccepted)+ "\n" +
-            "on disk:       " + TextFormat.shortDebugString(segInfo);
-            
+          "prev accepted: " + TextFormat.shortDebugString(previouslyAccepted) + "\n" +
+              "on disk:       " + TextFormat.shortDebugString(segInfo);
+
       builder.setAcceptedInEpoch(previouslyAccepted.getAcceptedInEpoch())
-        .setSegmentState(previouslyAccepted.getSegmentState());
+          .setSegmentState(previouslyAccepted.getSegmentState());
     } else {
       if (segInfo != null) {
         builder.setSegmentState(segInfo);
       }
     }
-    
+
     builder.setLastWriterEpoch(lastWriterEpoch.get());
     if (committedTxnId.get() != HdfsServerConstants.INVALID_TXID) {
       builder.setLastCommittedTxId(committedTxnId.get());
     }
-    
+
     PrepareRecoveryResponseProto resp = builder.build();
     LOG.info("Prepared recovery for segment " + segmentTxId + ": " +
         TextFormat.shortDebugString(resp) + " ; journal id: " + journalId);
     return resp;
   }
-  
+
   /**
    * @see QJournalProtocol#acceptRecovery(RequestInfo, QJournalProtocolProtos.SegmentStateProto, URL)
    */
   public synchronized void acceptRecovery(RequestInfo reqInfo,
-      SegmentStateProto segment, URL fromUrl)
+                                          SegmentStateProto segment, URL fromUrl)
       throws IOException {
     checkFormatted();
     checkRequest(reqInfo);
-    
+
     abortCurSegment();
 
     long segmentTxId = segment.getStartTxId();
@@ -851,16 +838,16 @@ public class Journal implements Closeable {
     // Basic sanity checks that the segment is well-formed and contains
     // at least one transaction.
     Preconditions.checkArgument(segment.getEndTxId() > 0 &&
-        segment.getEndTxId() >= segmentTxId,
+            segment.getEndTxId() >= segmentTxId,
         "bad recovery state for segment %s: %s ; journal id: %s",
         segmentTxId, TextFormat.shortDebugString(segment), journalId);
-    
+
     PersistedRecoveryPaxosData oldData = getPersistedPaxosData(segmentTxId);
     PersistedRecoveryPaxosData newData = PersistedRecoveryPaxosData.newBuilder()
         .setAcceptedInEpoch(reqInfo.getEpoch())
         .setSegmentState(segment)
         .build();
-    
+
     // If we previously acted on acceptRecovery() from a higher-numbered writer,
     // this call is out of sync. We should never actually trigger this, since the
     // checkRequest() call above should filter non-increasing epoch numbers.
@@ -870,16 +857,16 @@ public class Journal implements Closeable {
               "%s\nJournalId: %s\n",
           oldData, newData, journalId);
     }
-    
+
     File syncedFile = null;
-    
+
     SegmentStateProto currentSegment = getSegmentInfo(segmentTxId);
     if (currentSegment == null ||
         currentSegment.getEndTxId() != segment.getEndTxId()) {
       if (currentSegment == null) {
         LOG.info("Synchronizing log " + TextFormat.shortDebugString(segment) +
             ": no current segment in place ; journal id: " + journalId);
-        
+
         // Update the highest txid for lag metrics
         updateHighestWrittenTxId(Math.max(segment.getEndTxId(),
             highestWrittenTxId));
@@ -887,7 +874,7 @@ public class Journal implements Closeable {
         LOG.info("Synchronizing log " + TextFormat.shortDebugString(segment) +
             ": old segment " + TextFormat.shortDebugString(currentSegment) +
             " is not the right length ; journal id: " + journalId);
-        
+
         // Paranoid sanity check: if the new log is shorter than the log we
         // currently have, we should not end up discarding any transactions
         // which are already Committed.
@@ -895,20 +882,20 @@ public class Journal implements Closeable {
             !txnRange(segment).contains(committedTxnId.get())) {
           throw new AssertionError(
               "Cannot replace segment " +
-              TextFormat.shortDebugString(currentSegment) +
-              " with new segment " +
-              TextFormat.shortDebugString(segment) + 
-              ": would discard already-committed txn " +
-              committedTxnId.get() +
-              " ; journal id: " + journalId);
+                  TextFormat.shortDebugString(currentSegment) +
+                  " with new segment " +
+                  TextFormat.shortDebugString(segment) +
+                  ": would discard already-committed txn " +
+                  committedTxnId.get() +
+                  " ; journal id: " + journalId);
         }
-        
+
         // Another paranoid check: we should not be asked to synchronize a log
         // on top of a finalized segment.
         alwaysAssert(currentSegment.getIsInProgress(),
             "Should never be asked to synchronize a different log on top of " +
-            "an already-finalized segment ; journal id: " + journalId);
-        
+                "an already-finalized segment ; journal id: " + journalId);
+
         // If we're shortening the log, update our highest txid
         // used for lag metrics.
         if (txnRange(currentSegment).contains(highestWrittenTxId)) {
@@ -916,13 +903,13 @@ public class Journal implements Closeable {
         }
       }
       syncedFile = syncLog(reqInfo, segment, fromUrl);
-      
+
     } else {
       LOG.info("Skipping download of log " +
           TextFormat.shortDebugString(segment) +
           ": already have up-to-date logs ; journal id: " + journalId);
     }
-    
+
     // This is one of the few places in the protocol where we have a single
     // RPC that results in two distinct actions:
     //
@@ -969,7 +956,7 @@ public class Journal implements Closeable {
    * @return the temporary location of the downloaded file
    */
   private File syncLog(RequestInfo reqInfo,
-      final SegmentStateProto segment, final URL url) throws IOException {
+                       final SegmentStateProto segment, final URL url) throws IOException {
     final File tmpFile = storage.getSyncLogTemporaryFile(
         segment.getStartTxId(), reqInfo.getEpoch());
     final List<File> localPaths = ImmutableList.of(tmpFile);
@@ -1002,7 +989,7 @@ public class Journal implements Closeable {
         });
     return tmpFile;
   }
-  
+
 
   /**
    * In the case the node crashes in between downloading a log segment
@@ -1010,7 +997,7 @@ public class Journal implements Closeable {
    * will be left in its temporary location on disk. Given the paxos data,
    * we can check if this was indeed the case, and &quot;roll forward&quot;
    * the atomic operation.
-   * 
+   *
    * See the inline comments in
    * {@link #acceptRecovery(RequestInfo, SegmentStateProto, URL)} for more
    * details.
@@ -1026,9 +1013,9 @@ public class Journal implements Closeable {
 
     long segmentId = paxosData.getSegmentState().getStartTxId();
     long epoch = paxosData.getAcceptedInEpoch();
-    
+
     File tmp = storage.getSyncLogTemporaryFile(segmentId, epoch);
-    
+
     if (tmp.exists()) {
       File dst = storage.getInProgressEditLog(segmentId);
       LOG.info("Rolling forward previously half-completed synchronization: " +
@@ -1047,12 +1034,12 @@ public class Journal implements Closeable {
       // Default instance has no fields filled in (they're optional)
       return null;
     }
-    
+
     InputStream in = Files.newInputStream(f.toPath());
     try {
       PersistedRecoveryPaxosData ret = PersistedRecoveryPaxosData.parseDelimitedFrom(in);
       Preconditions.checkState(ret != null &&
-          ret.getSegmentState().getStartTxId() == segmentTxId,
+              ret.getSegmentState().getStartTxId() == segmentTxId,
           "Bad persisted data for segment %s: %s ; journal id: %s",
           segmentTxId, ret, journalId);
       return ret;
@@ -1065,7 +1052,7 @@ public class Journal implements Closeable {
    * Persist data for recovering the given segment from disk.
    */
   private void persistPaxosData(long segmentTxId,
-      PersistedRecoveryPaxosData newData) throws IOException {
+                                PersistedRecoveryPaxosData newData) throws IOException {
     File f = storage.getPaxosFile(segmentTxId);
     boolean success = false;
     AtomicFileOutputStream fos = new AtomicFileOutputStream(f);
@@ -1074,13 +1061,13 @@ public class Journal implements Closeable {
       fos.write('\n');
       // Write human-readable data after the protobuf. This is only
       // to assist in debugging -- it's not parsed at all.
-      try(OutputStreamWriter writer =
-          new OutputStreamWriter(fos, Charsets.UTF_8)) {
+      try (OutputStreamWriter writer =
+               new OutputStreamWriter(fos, Charsets.UTF_8)) {
         writer.write(String.valueOf(newData));
         writer.write('\n');
         writer.flush();
       }
-      
+
       fos.flush();
       success = true;
     } finally {
@@ -1111,11 +1098,11 @@ public class Journal implements Closeable {
         + "; new CTime = " + storage.getCTime());
     storage.getJournalManager().doUpgrade(storage);
     storage.getOrCreatePaxosDir();
-    
+
     // Copy over the contents of the epoch data files to the new dir.
     File currentDir = storage.getSingularStorageDir().getCurrentDir();
     File previousDir = storage.getSingularStorageDir().getPreviousDir();
-    
+
     PersistentLongFile prevLastPromisedEpoch = new PersistentLongFile(
         new File(previousDir, LAST_PROMISED_FILENAME), 0);
     PersistentLongFile prevLastWriterEpoch = new PersistentLongFile(
@@ -1142,16 +1129,16 @@ public class Journal implements Closeable {
   }
 
   public synchronized void doFinalize() throws IOException {
-    LOG.info("Finalizing upgrade for journal " 
-          + storage.getRoot() + "."
-          + (storage.getLayoutVersion()==0 ? "" :
-            "\n   cur LV = " + storage.getLayoutVersion()
+    LOG.info("Finalizing upgrade for journal "
+        + storage.getRoot() + "."
+        + (storage.getLayoutVersion() == 0 ? "" :
+        "\n   cur LV = " + storage.getLayoutVersion()
             + "; cur CTime = " + storage.getCTime()));
     storage.getJournalManager().doFinalize();
   }
 
   public Boolean canRollBack(StorageInfo storage, StorageInfo prevStorage,
-      int targetLayoutVersion) throws IOException {
+                             int targetLayoutVersion) throws IOException {
     return this.storage.getJournalManager().canRollBack(storage, prevStorage,
         targetLayoutVersion);
   }
@@ -1172,7 +1159,7 @@ public class Journal implements Closeable {
   }
 
   synchronized boolean moveTmpSegmentToCurrent(File tmpFile, File finalFile,
-      long endTxId) throws IOException {
+                                               long endTxId) throws IOException {
     final boolean success;
     if (endTxId <= committedTxnId.get()) {
       if (!finalFile.getParentFile().exists()) {

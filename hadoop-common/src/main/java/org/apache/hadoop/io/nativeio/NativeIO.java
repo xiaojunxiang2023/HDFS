@@ -1,33 +1,27 @@
 package org.apache.hadoop.io.nativeio;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.HardLink;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SecureIOUtils.AlreadyExistsException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.CleanerUtil;
 import org.apache.hadoop.util.NativeCodeLoader;
-import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.PerformanceAdvisory;
-
+import org.apache.hadoop.util.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JNI wrappers for various native IO-related calls not available in Java.
@@ -87,6 +81,7 @@ public class NativeIO {
       SUPPORTED(0);
 
       private byte stateCode;
+
       SupportState(int stateCode) {
         this.stateCode = (byte) stateCode;
       }
@@ -98,22 +93,22 @@ public class NativeIO {
       public String getMessage() {
         String msg;
         switch (stateCode) {
-        // -1 represents UNSUPPORTED.
-        case -1:
-          msg = "The native code was built without PMDK support.";
-          break;
-        // 1 represents PMDK_LIB_NOT_FOUND.
-        case 1:
-          msg = "The native code was built with PMDK support, but PMDK libs " +
-              "were NOT found in execution environment or failed to be loaded.";
-          break;
-        // 0 represents SUPPORTED.
-        case 0:
-          msg = "The native code was built with PMDK support, and PMDK libs " +
-              "were loaded successfully.";
-          break;
-        default:
-          msg = "The state code: " + stateCode + " is unrecognized!";
+          // -1 represents UNSUPPORTED.
+          case -1:
+            msg = "The native code was built without PMDK support.";
+            break;
+          // 1 represents PMDK_LIB_NOT_FOUND.
+          case 1:
+            msg = "The native code was built with PMDK support, but PMDK libs " +
+                "were NOT found in execution environment or failed to be loaded.";
+            break;
+          // 0 represents SUPPORTED.
+          case 0:
+            msg = "The native code was built with PMDK support, and PMDK libs " +
+                "were loaded successfully.";
+            break;
+          default:
+            msg = "The state code: " + stateCode + " is unrecognized!";
         }
         return msg;
       }
@@ -132,7 +127,7 @@ public class NativeIO {
     private static boolean syncFileRangePossible = true;
 
     static final String WORKAROUND_NON_THREADSAFE_CALLS_KEY =
-      "hadoop.workaround.non.threadsafe.getpwuid";
+        "hadoop.workaround.non.threadsafe.getpwuid";
     static final boolean WORKAROUND_NON_THREADSAFE_CALLS_DEFAULT = true;
 
     private static long cacheTimeout = -1;
@@ -222,7 +217,7 @@ public class NativeIO {
 
       // Copy data from disk file(src) to pmem file(dest), without flush
       public static void memCopy(byte[] src, long dest, boolean isPmem,
-          long length) {
+                                 long length) {
         NativeIO.POSIX.pmemCopy(src, dest, isPmem, length);
       }
 
@@ -241,13 +236,19 @@ public class NativeIO {
     }
 
     private static native String getPmdkLibPath();
+
     private static native boolean isPmemCheck(long address, long length);
+
     private static native PmemMappedRegion pmemMapFile(String path,
-        long length, boolean isFileExist);
+                                                       long length, boolean isFileExist);
+
     private static native boolean pmemUnMap(long address, long length);
+
     private static native void pmemCopy(byte[] src, long dest, boolean isPmem,
-        long length);
+                                        long length);
+
     private static native void pmemDrain();
+
     private static native void pmemSync(long address, long length);
 
     /**
@@ -256,7 +257,7 @@ public class NativeIO {
     @VisibleForTesting
     public static class CacheManipulator {
       public void mlock(String identifier, ByteBuffer buffer,
-          long len) throws IOException {
+                        long len) throws IOException {
         POSIX.mlock(buffer, len);
       }
 
@@ -269,7 +270,7 @@ public class NativeIO {
       }
 
       public void posixFadviseIfPossible(String identifier,
-          FileDescriptor fd, long offset, long len, int flags)
+                                         FileDescriptor fd, long offset, long len, int flags)
           throws NativeIOException {
         NativeIO.POSIX.posixFadviseIfPossible(identifier, fd, offset,
             len, flags);
@@ -288,7 +289,7 @@ public class NativeIO {
     @VisibleForTesting
     public static class NoMlockCacheManipulator extends CacheManipulator {
       public void mlock(String identifier, ByteBuffer buffer,
-          long len) throws IOException {
+                        long len) throws IOException {
         LOG.info("mlocking " + identifier);
       }
 
@@ -310,18 +311,18 @@ public class NativeIO {
         try {
           Configuration conf = new Configuration();
           workaroundNonThreadSafePasswdCalls = conf.getBoolean(
-            WORKAROUND_NON_THREADSAFE_CALLS_KEY,
-            WORKAROUND_NON_THREADSAFE_CALLS_DEFAULT);
+              WORKAROUND_NON_THREADSAFE_CALLS_KEY,
+              WORKAROUND_NON_THREADSAFE_CALLS_DEFAULT);
 
           initNative();
           nativeLoaded = true;
 
           cacheTimeout = conf.getLong(
-            CommonConfigurationKeys.HADOOP_SECURITY_UID_NAME_CACHE_TIMEOUT_KEY,
-            CommonConfigurationKeys.HADOOP_SECURITY_UID_NAME_CACHE_TIMEOUT_DEFAULT) *
-            1000;
+              CommonConfigurationKeys.HADOOP_SECURITY_UID_NAME_CACHE_TIMEOUT_KEY,
+              CommonConfigurationKeys.HADOOP_SECURITY_UID_NAME_CACHE_TIMEOUT_DEFAULT) *
+              1000;
           LOG.debug("Initialized cache for IDs to User/Group mapping with a " +
-            " cache timeout of " + cacheTimeout/1000 + " seconds.");
+              " cache timeout of " + cacheTimeout / 1000 + " seconds.");
 
         } catch (Throwable t) {
           // This can happen if the user has an older version of libhadoop.so
@@ -347,8 +348,10 @@ public class NativeIO {
 
     /** Wrapper around open(2) */
     public static native FileDescriptor open(String path, int flags, int mode) throws IOException;
+
     /** Wrapper around fstat(2) */
     private static native Stat fstat(FileDescriptor fd) throws IOException;
+
     /** Wrapper around stat(2). */
     private static native Stat stat(String path) throws IOException;
 
@@ -376,11 +379,11 @@ public class NativeIO {
 
     /** Wrapper around posix_fadvise(2) */
     static native void posix_fadvise(
-      FileDescriptor fd, long offset, long len, int flags) throws NativeIOException;
+        FileDescriptor fd, long offset, long len, int flags) throws NativeIOException;
 
     /** Wrapper around sync_file_range(2) */
     static native void sync_file_range(
-      FileDescriptor fd, long offset, long nbytes, int flags) throws NativeIOException;
+        FileDescriptor fd, long offset, long nbytes, int flags) throws NativeIOException;
 
     /**
      * Call posix_fadvise on the given file descriptor. See the manpage
@@ -390,7 +393,7 @@ public class NativeIO {
      * @throws NativeIOException if there is an error with the syscall
      */
     static void posixFadviseIfPossible(String identifier,
-        FileDescriptor fd, long offset, long len, int flags)
+                                       FileDescriptor fd, long offset, long len, int flags)
         throws NativeIOException {
       if (nativeLoaded && fadvisePossible) {
         try {
@@ -469,6 +472,7 @@ public class NativeIO {
 
     /** Linux only methods used for getOwner() implementation */
     private static native long getUIDforFDOwnerforOwner(FileDescriptor fd) throws IOException;
+
     private static native String getUserName(long uid) throws IOException;
 
     /**
@@ -481,12 +485,12 @@ public class NativeIO {
 
       // Mode constants - Set by JNI
       public static int S_IFMT = -1;    /* type of file */
-      public static int S_IFIFO  = -1;  /* named pipe (fifo) */
-      public static int S_IFCHR  = -1;  /* character special */
-      public static int S_IFDIR  = -1;  /* directory */
-      public static int S_IFBLK  = -1;  /* block special */
-      public static int S_IFREG  = -1;  /* regular */
-      public static int S_IFLNK  = -1;  /* symbolic link */
+      public static int S_IFIFO = -1;  /* named pipe (fifo) */
+      public static int S_IFCHR = -1;  /* character special */
+      public static int S_IFDIR = -1;  /* directory */
+      public static int S_IFBLK = -1;  /* block special */
+      public static int S_IFREG = -1;  /* regular */
+      public static int S_IFLNK = -1;  /* symbolic link */
       public static int S_IFSOCK = -1;  /* socket */
       public static int S_ISUID = -1;  /* set user id on execution */
       public static int S_ISGID = -1;  /* set group id on execution */
@@ -518,15 +522,17 @@ public class NativeIO {
       @Override
       public String toString() {
         return "Stat(owner='" + owner + "', group='" + group + "'" +
-          ", mode=" + mode + ")";
+            ", mode=" + mode + ")";
       }
 
       public String getOwner() {
         return owner;
       }
+
       public String getGroup() {
         return group;
       }
+
       public int getMode() {
         return mode;
       }
@@ -566,7 +572,7 @@ public class NativeIO {
      * Return the file stat for a file path.
      *
      * @param path  file path
-     * @return  the file stat
+     * @return the file stat
      * @throws IOException  thrown if there is an IO error while obtaining the
      * file stat
      */
@@ -595,7 +601,7 @@ public class NativeIO {
 
     private static String getName(IdCache domain, int id) throws IOException {
       Map<Integer, CachedName> idNameCache = (domain == IdCache.USER)
-        ? USER_ID_NAME_CACHE : GROUP_ID_NAME_CACHE;
+          ? USER_ID_NAME_CACHE : GROUP_ID_NAME_CACHE;
       String name;
       CachedName cachedName = idNameCache.get(id);
       long now = System.currentTimeMillis();
@@ -606,7 +612,7 @@ public class NativeIO {
         if (LOG.isDebugEnabled()) {
           String type = (domain == IdCache.USER) ? "UserName" : "GroupName";
           LOG.debug("Got " + type + " " + name + " for ID " + id +
-            " from the native implementation");
+              " from the native implementation");
         }
         cachedName = new CachedName(name, now);
         idNameCache.put(id, cachedName);
@@ -615,6 +621,7 @@ public class NativeIO {
     }
 
     static native String getUserName(int uid) throws IOException;
+
     static native String getGroupName(int uid) throws IOException;
 
     private static class CachedName {
@@ -628,19 +635,19 @@ public class NativeIO {
     }
 
     private static final Map<Integer, CachedName> USER_ID_NAME_CACHE =
-      new ConcurrentHashMap<Integer, CachedName>();
+        new ConcurrentHashMap<Integer, CachedName>();
 
     private static final Map<Integer, CachedName> GROUP_ID_NAME_CACHE =
-      new ConcurrentHashMap<Integer, CachedName>();
+        new ConcurrentHashMap<Integer, CachedName>();
 
-    private enum IdCache { USER, GROUP }
+    private enum IdCache {USER, GROUP}
 
     public final static int MMAP_PROT_READ = 0x1;
     public final static int MMAP_PROT_WRITE = 0x2;
     public final static int MMAP_PROT_EXEC = 0x4;
 
     public static native long mmap(FileDescriptor fd, int prot,
-        boolean shared, long length) throws IOException;
+                                   boolean shared, long length) throws IOException;
 
     public static native void munmap(long addr, long length)
         throws IOException;
@@ -692,7 +699,7 @@ public class NativeIO {
 
     /** Wrapper around CreateFile() on Windows */
     public static native FileDescriptor createFile(String path,
-        long desiredAccess, long shareMode, long creationDisposition)
+                                                   long desiredAccess, long shareMode, long creationDisposition)
         throws IOException;
 
     /**
@@ -714,7 +721,7 @@ public class NativeIO {
      * @throws IOException if there is an I/O error
      */
     public static FileOutputStream createFileOutputStreamWithMode(File path,
-        boolean append, int mode) throws IOException {
+                                                                  boolean append, int mode) throws IOException {
       long desiredAccess = GENERIC_WRITE;
       long shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE;
       long creationDisposition = append ? OPEN_ALWAYS : CREATE_ALWAYS;
@@ -724,23 +731,24 @@ public class NativeIO {
 
     /** Wrapper around CreateFile() with security descriptor on Windows */
     private static native FileDescriptor createFileWithMode0(String path,
-        long desiredAccess, long shareMode, long creationDisposition, int mode)
+                                                             long desiredAccess, long shareMode, long creationDisposition, int mode)
         throws NativeIOException;
 
     /** Wrapper around SetFilePointer() on Windows */
     public static native long setFilePointer(FileDescriptor fd,
-        long distanceToMove, long moveMethod) throws IOException;
+                                             long distanceToMove, long moveMethod) throws IOException;
 
     /** Windows only methods used for getOwner() implementation */
     private static native String getOwner(FileDescriptor fd) throws IOException;
 
     /** Supported list of Windows access right flags */
     public enum AccessRight {
-      ACCESS_READ (0x0001),      // FILE_READ_DATA
-      ACCESS_WRITE (0x0002),     // FILE_WRITE_DATA
-      ACCESS_EXECUTE (0x0020);   // FILE_EXECUTE
+      ACCESS_READ(0x0001),      // FILE_READ_DATA
+      ACCESS_WRITE(0x0002),     // FILE_WRITE_DATA
+      ACCESS_EXECUTE(0x0020);   // FILE_EXECUTE
 
       private final int accessRight;
+
       AccessRight(int access) {
         accessRight = access;
       }
@@ -748,7 +756,9 @@ public class NativeIO {
       public int accessRight() {
         return accessRight;
       }
-    };
+    }
+
+    ;
 
     /** Windows only method used to check if the current process has requested
      *  access rights on the given path. */
@@ -849,7 +859,7 @@ public class NativeIO {
     try {
       Field f = Unsafe.class.getDeclaredField("theUnsafe");
       f.setAccessible(true);
-      Unsafe unsafe = (Unsafe)f.get(null);
+      Unsafe unsafe = (Unsafe) f.get(null);
       return unsafe.pageSize();
     } catch (Throwable e) {
       LOG.warn("Unable to get operating system page size.  Guessing 4096.", e);
@@ -860,11 +870,13 @@ public class NativeIO {
   private static class CachedUid {
     final long timestamp;
     final String username;
+
     public CachedUid(String username, long timestamp) {
       this.timestamp = timestamp;
       this.username = username;
     }
   }
+
   private static final Map<Long, CachedUid> uidCache =
       new ConcurrentHashMap<Long, CachedUid>();
   private static long cacheTimeout;
@@ -989,9 +1001,9 @@ public class NativeIO {
     if (!initialized) {
       cacheTimeout =
           new Configuration().getLong("hadoop.security.uid.cache.secs",
-              4*60*60) * 1000;
+              4 * 60 * 60) * 1000;
       LOG.info("Initialized cache for UID to User mapping with a cache" +
-          " timeout of " + cacheTimeout/1000 + " seconds.");
+          " timeout of " + cacheTimeout / 1000 + " seconds.");
       initialized = true;
     }
   }
@@ -1009,7 +1021,7 @@ public class NativeIO {
     if (!nativeLoaded) {
       if (!src.renameTo(dst)) {
         throw new IOException("renameTo(src=" + src + ", dst=" +
-          dst + ") failed.");
+            dst + ") failed.");
       }
     } else {
       renameTo0(src.getAbsolutePath(), dst.getAbsolutePath());

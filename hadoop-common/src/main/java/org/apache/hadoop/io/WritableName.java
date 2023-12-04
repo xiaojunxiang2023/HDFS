@@ -1,17 +1,18 @@
 package org.apache.hadoop.io;
 
-import java.util.HashMap;
-import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 /** Utility to permit renaming of Writable implementation classes without
  * invalidiating files that contain their class name.
  */
 public class WritableName {
   private static HashMap<String, Class<?>> NAME_TO_CLASS =
-    new HashMap<String, Class<?>>();
+      new HashMap<String, Class<?>>();
   private static HashMap<Class<?>, String> CLASS_TO_NAME =
-    new HashMap<Class<?>, String>();
+      new HashMap<Class<?>, String>();
 
   static {                                        // define important types
     WritableName.setName(NullWritable.class, "null");
@@ -20,7 +21,8 @@ public class WritableName {
     WritableName.setName(MD5Hash.class, "MD5Hash");
   }
 
-  private WritableName() {}                      // no public ctor
+  private WritableName() {
+  }                      // no public ctor
 
   /** Set the name that a class should be known as to something other than the
    * class name. */
@@ -44,7 +46,7 @@ public class WritableName {
 
   /** Return the class for a name.  Default is {@link Class#forName(String)}.*/
   public static synchronized Class<?> getClass(String name, Configuration conf
-                                            ) throws IOException {
+  ) throws IOException {
     Class<?> writableClass = NAME_TO_CLASS.get(name);
     if (writableClass != null)
       return writableClass.asSubclass(Writable.class);

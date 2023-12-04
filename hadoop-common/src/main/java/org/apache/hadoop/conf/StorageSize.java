@@ -41,8 +41,8 @@ public class StorageSize {
     this.value = value;
   }
 
-  private static void checkState(boolean state, String errorString){
-    if(!state) {
+  private static void checkState(boolean state, String errorString) {
+    if (!state) {
       throw new IllegalStateException(errorString);
     }
   }

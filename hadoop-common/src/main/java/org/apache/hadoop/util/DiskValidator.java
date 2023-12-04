@@ -1,4 +1,5 @@
 package org.apache.hadoop.util;
+
 import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 
 import java.io.File;

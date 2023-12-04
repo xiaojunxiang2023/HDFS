@@ -14,7 +14,7 @@
  *    nor the names of its contributors may be used to endorse or 
  *    promote products derived from this software without specific prior 
  *    written permission.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -34,11 +34,7 @@ package org.apache.hadoop.util.bloom;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Implements a <i>retouched Bloom filter</i>, as defined in the CoNEXT 2006 paper.
@@ -46,19 +42,19 @@ import java.util.Random;
  * It allows the removal of selected false positives at the cost of introducing
  * random false negatives, and with the benefit of eliminating some random false
  * positives at the same time.
- * 
+ *
  * <p>
  * Originally created by
  * <a href="http://www.one-lab.org">European Commission One-Lab Project 034819</a>.
- * 
+ *
  * @see Filter The general behavior of a filter
  * @see BloomFilter A Bloom filter
  * @see RemoveScheme The different selective clearing algorithms
- * 
+ *
  * @see <a href="http://www-rp.lip6.fr/site_npa/site_rp/_publications/740-rbf_cameraready.pdf">Retouched Bloom Filters: Allowing Networked Applications to Trade Off Selected False Positives Against False Negatives</a>
  */
 public final class RetouchedBloomFilter extends BloomFilter
-implements RemoveScheme {
+    implements RemoveScheme {
   /**
    * KeyList vector (or ElementList Vector, as defined in the paper) of false positives.
    */
@@ -73,12 +69,13 @@ implements RemoveScheme {
    * Ratio vector.
    */
   double[] ratio;
-  
+
   private Random rand;
 
   /** Default constructor - use with readFields */
-  public RetouchedBloomFilter() {}
-  
+  public RetouchedBloomFilter() {
+  }
+
   /**
    * Constructor
    * @param vectorSize The vector size of <i>this</i> filter.
@@ -135,7 +132,7 @@ implements RemoveScheme {
     if (coll == null) {
       throw new NullPointerException("Collection<Key> can not be null");
     }
-    
+
     for (Key k : coll) {
       addFalsePositive(k);
     }
@@ -186,26 +183,26 @@ implements RemoveScheme {
     int index = 0;
     int[] h = hash.hash(k);
 
-    switch(scheme) {
+    switch (scheme) {
 
-    case RANDOM:
-      index = randomRemove();
-      break;
-    
-    case MINIMUM_FN:
-      index = minimumFnRemove(h);
-      break;
-    
-    case MAXIMUM_FP:
-      index = maximumFpRemove(h);
-      break;
-    
-    case RATIO:
-      index = ratioRemove(h);
-      break;
-    
-    default:
-      throw new AssertionError("Undefined selective clearing scheme");
+      case RANDOM:
+        index = randomRemove();
+        break;
+
+      case MINIMUM_FN:
+        index = minimumFnRemove(h);
+        break;
+
+      case MAXIMUM_FP:
+        index = maximumFpRemove(h);
+        break;
+
+      case RATIO:
+        index = ratioRemove(h);
+        break;
+
+      default:
+        throw new AssertionError("Undefined selective clearing scheme");
 
     }
 
@@ -363,7 +360,7 @@ implements RemoveScheme {
     }
     return weight;
   }
-  
+
   /**
    * Creates and initialises the various vectors.
    */
@@ -379,7 +376,7 @@ implements RemoveScheme {
       ratio[i] = 0.0;
     }
   }
-  
+
   // Writable
 
   @Override

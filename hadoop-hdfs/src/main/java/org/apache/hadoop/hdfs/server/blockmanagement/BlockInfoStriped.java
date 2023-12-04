@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
+import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -121,7 +121,7 @@ public class BlockInfoStriped extends BlockInfo {
   }
 
   private void addStorage(DatanodeStorageInfo storage, int index,
-      int blockIndex) {
+                          int blockIndex) {
     setStorageInfo(index, storage);
     setNext(index, null);
     setPrevious(index, null);
@@ -130,7 +130,7 @@ public class BlockInfoStriped extends BlockInfo {
 
   private int findStorageInfoFromEnd(DatanodeStorageInfo storage) {
     final int len = getCapacity();
-    for(int idx = len - 1; idx >= 0; idx--) {
+    for (int idx = len - 1; idx >= 0; idx--) {
       DatanodeStorageInfo cur = getStorageInfo(idx);
       if (storage.equals(cur)) {
         return idx;
@@ -199,7 +199,7 @@ public class BlockInfoStriped extends BlockInfo {
     return StripedBlockUtil.spaceConsumedByStripedBlock(getNumBytes(),
         ecPolicy.getNumDataUnits(), ecPolicy.getNumParityUnits(),
         ecPolicy.getCellSize());
-    }
+  }
 
   @Override
   public final boolean isStriped() {
@@ -216,7 +216,7 @@ public class BlockInfoStriped extends BlockInfo {
     assert this.triplets != null : "BlockInfo is not initialized";
     assert triplets.length % 3 == 0 : "Malformed BlockInfo";
     int num = 0;
-    for (int idx = getCapacity()-1; idx >= 0; idx--) {
+    for (int idx = getCapacity() - 1; idx >= 0; idx--) {
       if (getStorageInfo(idx) != null) {
         num++;
       }
@@ -227,7 +227,7 @@ public class BlockInfoStriped extends BlockInfo {
   @Override
   final boolean hasNoStorage() {
     final int len = getCapacity();
-    for(int idx = 0; idx < len; idx++) {
+    for (int idx = 0; idx < len; idx++) {
       if (getStorageInfo(idx) != null) {
         return false;
       }

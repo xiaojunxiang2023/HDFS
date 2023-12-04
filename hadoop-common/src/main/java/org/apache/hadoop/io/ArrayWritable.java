@@ -5,7 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
-/** 
+/**
  * A Writable for arrays containing instances of a class. The elements of this
  * writable must all be instances of the same class. If this writable will be
  * the input for a Reducer, you will need to create a subclass that sets the
@@ -14,9 +14,9 @@ import java.util.Arrays;
  * For example:
  * <code>
  * public class IntArrayWritable extends ArrayWritable {
- *   public IntArrayWritable() { 
+ *   public IntArrayWritable() {
  *     super(IntWritable.class); 
- *   }	
+ *   }
  * }
  * </code>
  */
@@ -25,9 +25,9 @@ public class ArrayWritable implements Writable {
   private Writable[] values;
 
   public ArrayWritable(Class<? extends Writable> valueClass) {
-    if (valueClass == null) { 
-      throw new IllegalArgumentException("null valueClass"); 
-    }    
+    if (valueClass == null) {
+      throw new IllegalArgumentException("null valueClass");
+    }
     this.valueClass = valueClass;
   }
 

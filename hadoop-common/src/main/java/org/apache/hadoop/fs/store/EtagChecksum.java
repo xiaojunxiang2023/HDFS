@@ -1,11 +1,11 @@
 package org.apache.hadoop.fs.store;
 
+import org.apache.hadoop.fs.FileChecksum;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
-import org.apache.hadoop.fs.FileChecksum;
 
 /**
  * An etag as a checksum.
@@ -66,7 +66,7 @@ public class EtagChecksum extends FileChecksum {
 
   @Override
   public String toString() {
-    return "etag: \"" + eTag  + '"';
+    return "etag: \"" + eTag + '"';
   }
 
 }

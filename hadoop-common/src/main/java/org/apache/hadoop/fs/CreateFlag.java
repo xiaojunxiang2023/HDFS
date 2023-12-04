@@ -1,10 +1,10 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.EnumSet;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 /****************************************************************
  * CreateFlag specifies the file create semantic. Users can combine flags like: <br>
@@ -12,7 +12,7 @@ import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
  * EnumSet.of(CreateFlag.CREATE, CreateFlag.APPEND)
  * </code>
  * <p>
- * 
+ *
  * Use the CreateFlag as follows:
  * <ol>
  * <li> CREATE - to create a file if it does not exist, 
@@ -33,7 +33,7 @@ import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
  * <li> APPEND_NEWBLOCK - Append data to a new block instead of end of the last
  * partial block.</li>
  * </ol>
- * 
+ *
  * Following combinations are not valid and will result in
  * {@link HadoopIllegalArgumentException}:
  * <ol>
@@ -118,7 +118,7 @@ public enum CreateFlag {
   short getMode() {
     return mode;
   }
-  
+
   /**
    * Validate the CreateFlag and throw exception if it is invalid
    * @param flag set of CreateFlag
@@ -131,14 +131,14 @@ public enum CreateFlag {
     }
     final boolean append = flag.contains(APPEND);
     final boolean overwrite = flag.contains(OVERWRITE);
-    
+
     // Both append and overwrite is an error
     if (append && overwrite) {
       throw new HadoopIllegalArgumentException(
           flag + "Both append and overwrite options cannot be enabled.");
     }
   }
-  
+
   /**
    * Validate the CreateFlag for create operation
    * @param path Object representing the path; usually String or {@link Path}
@@ -148,7 +148,7 @@ public enum CreateFlag {
    * @throws HadoopIllegalArgumentException if the CreateFlag is invalid
    */
   public static void validate(Object path, boolean pathExists,
-      EnumSet<CreateFlag> flag) throws IOException {
+                              EnumSet<CreateFlag> flag) throws IOException {
     validate(flag);
     final boolean append = flag.contains(APPEND);
     final boolean overwrite = flag.contains(OVERWRITE);

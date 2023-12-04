@@ -1,48 +1,17 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.IOException;
-
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo.DatanodeInfoBuilder;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsServerProtos.VersionRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsServerProtos.VersionResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.EndCheckpointRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.EndCheckpointResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.ErrorReportRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.ErrorReportResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlockKeysRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlockKeysResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlocksRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetBlocksResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetEditLogManifestRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetEditLogManifestResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetMostRecentCheckpointTxIdRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetMostRecentCheckpointTxIdResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetNextSPSPathRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetNextSPSPathResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetTransactionIdRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.GetTransactionIdResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsRollingUpgradeRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsRollingUpgradeResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsUpgradeFinalizedRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.IsUpgradeFinalizedResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.RegisterRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.RegisterResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.RollEditLogRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.RollEditLogResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.StartCheckpointRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.StartCheckpointResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.NamenodeProtocolProtos.*;
 import org.apache.hadoop.hdfs.security.token.block.ExportedBlockKeys;
 import org.apache.hadoop.hdfs.server.namenode.CheckpointSignature;
-import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeCommand;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeRegistration;
-import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
-import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
-
+import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
 
 /**
  * Implementation for protobuf service that forwards requests
@@ -53,11 +22,11 @@ public class NamenodeProtocolServerSideTranslatorPB implements
     NamenodeProtocolPB {
   private final NamenodeProtocol impl;
 
-  private final static ErrorReportResponseProto VOID_ERROR_REPORT_RESPONSE = 
-  ErrorReportResponseProto.newBuilder().build();
+  private final static ErrorReportResponseProto VOID_ERROR_REPORT_RESPONSE =
+      ErrorReportResponseProto.newBuilder().build();
 
   private final static EndCheckpointResponseProto VOID_END_CHECKPOINT_RESPONSE =
-  EndCheckpointResponseProto.newBuilder().build();
+      EndCheckpointResponseProto.newBuilder().build();
 
   public NamenodeProtocolServerSideTranslatorPB(NamenodeProtocol impl) {
     this.impl = impl;
@@ -65,7 +34,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public GetBlocksResponseProto getBlocks(RpcController unused,
-      GetBlocksRequestProto request) throws ServiceException {
+                                          GetBlocksRequestProto request) throws ServiceException {
     DatanodeInfo dnInfo = new DatanodeInfoBuilder()
         .setNodeID(PBHelperClient.convert(request.getDatanode()))
         .build();
@@ -82,14 +51,14 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public GetBlockKeysResponseProto getBlockKeys(RpcController unused,
-      GetBlockKeysRequestProto request) throws ServiceException {
+                                                GetBlockKeysRequestProto request) throws ServiceException {
     ExportedBlockKeys keys;
     try {
       keys = impl.getBlockKeys();
     } catch (IOException e) {
       throw new ServiceException(e);
     }
-    GetBlockKeysResponseProto.Builder builder = 
+    GetBlockKeysResponseProto.Builder builder =
         GetBlockKeysResponseProto.newBuilder();
     if (keys != null) {
       builder.setKeys(PBHelper.convert(keys));
@@ -99,7 +68,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public GetTransactionIdResponseProto getTransactionId(RpcController unused,
-      GetTransactionIdRequestProto request) throws ServiceException {
+                                                        GetTransactionIdRequestProto request) throws ServiceException {
     long txid;
     try {
       txid = impl.getTransactionID();
@@ -108,7 +77,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
     }
     return GetTransactionIdResponseProto.newBuilder().setTxId(txid).build();
   }
-  
+
   @Override
   public GetMostRecentCheckpointTxIdResponseProto getMostRecentCheckpointTxId(
       RpcController unused, GetMostRecentCheckpointTxIdRequestProto request)
@@ -125,7 +94,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public RollEditLogResponseProto rollEditLog(RpcController unused,
-      RollEditLogRequestProto request) throws ServiceException {
+                                              RollEditLogRequestProto request) throws ServiceException {
     CheckpointSignature signature;
     try {
       signature = impl.rollEditLog();
@@ -138,7 +107,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public ErrorReportResponseProto errorReport(RpcController unused,
-      ErrorReportRequestProto request) throws ServiceException {
+                                              ErrorReportRequestProto request) throws ServiceException {
     try {
       impl.errorReport(PBHelper.convert(request.getRegistration()),
           request.getErrorCode(), request.getMsg());
@@ -165,7 +134,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public StartCheckpointResponseProto startCheckpoint(RpcController unused,
-      StartCheckpointRequestProto request) throws ServiceException {
+                                                      StartCheckpointRequestProto request) throws ServiceException {
     NamenodeCommand cmd;
     try {
       cmd = impl.startCheckpoint(PBHelper.convert(request.getRegistration()));
@@ -178,7 +147,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public EndCheckpointResponseProto endCheckpoint(RpcController unused,
-      EndCheckpointRequestProto request) throws ServiceException {
+                                                  EndCheckpointRequestProto request) throws ServiceException {
     try {
       impl.endCheckpoint(PBHelper.convert(request.getRegistration()),
           PBHelper.convert(request.getSignature()));
@@ -204,7 +173,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
 
   @Override
   public VersionResponseProto versionRequest(RpcController controller,
-      VersionRequestProto request) throws ServiceException {
+                                             VersionRequestProto request) throws ServiceException {
     NamespaceInfo info;
     try {
       info = impl.versionRequest();
@@ -246,7 +215,7 @@ public class NamenodeProtocolServerSideTranslatorPB implements
   @Override
   public GetNextSPSPathResponseProto getNextSPSPath(
       RpcController controller, GetNextSPSPathRequestProto request)
-          throws ServiceException {
+      throws ServiceException {
     try {
       Long nextSPSPath = impl.getNextSPSPath();
       if (nextSPSPath == null) {

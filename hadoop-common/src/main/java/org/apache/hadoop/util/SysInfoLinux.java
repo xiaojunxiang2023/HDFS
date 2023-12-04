@@ -1,8 +1,13 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Shell.ShellCommandExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -11,11 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.util.Shell.ShellCommandExecutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Plugin to calculate resource information on Linux systems.
@@ -44,7 +44,6 @@ public class SysInfoLinux extends SysInfo {
   private static final String HUGEPAGESIZE_STRING = "Hugepagesize";
 
 
-
   /**
    * Patterns for parsing /proc/cpuinfo.
    */
@@ -64,7 +63,7 @@ public class SysInfoLinux extends SysInfo {
   private static final String PROCFS_STAT = "/proc/stat";
   private static final Pattern CPU_TIME_FORMAT =
       Pattern.compile("^cpu[ \t]*([0-9]*)" +
-                      "[ \t]*([0-9]*)[ \t]*([0-9]*)[ \t].*");
+          "[ \t]*([0-9]*)[ \t]*([0-9]*)[ \t].*");
   private CpuTimeTracker cpuTimeTracker;
 
   /**
@@ -72,11 +71,11 @@ public class SysInfoLinux extends SysInfo {
    */
   private static final String PROCFS_NETFILE = "/proc/net/dev";
   private static final Pattern PROCFS_NETFILE_FORMAT =
-      Pattern .compile("^[ \t]*([a-zA-Z]+[0-9]*):" +
-               "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
-               "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
-               "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
-               "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+).*");
+      Pattern.compile("^[ \t]*([a-zA-Z]+[0-9]*):" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+).*");
 
   /**
    * Pattern for parsing /proc/diskstats.
@@ -84,10 +83,10 @@ public class SysInfoLinux extends SysInfo {
   private static final String PROCFS_DISKSFILE = "/proc/diskstats";
   private static final Pattern PROCFS_DISKSFILE_FORMAT =
       Pattern.compile("^[ \t]*([0-9]+)[ \t]*([0-9 ]+)" +
-              "(?!([a-zA-Z]+[0-9]+))([a-zA-Z]+)" +
-              "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
-              "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
-              "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)");
+          "(?!([a-zA-Z]+[0-9]+))([a-zA-Z]+)" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)" +
+          "[ \t]*([0-9]+)[ \t]*([0-9]+)[ \t]*([0-9]+)");
   /**
    * Pattern for parsing /sys/block/partition_name/queue/hw_sector_size.
    */
@@ -133,13 +132,13 @@ public class SysInfoLinux extends SysInfo {
       Math.max(Math.round(1000D / getConf("CLK_TCK")), -1);
 
   private static long getConf(String attr) {
-    if(Shell.LINUX) {
+    if (Shell.LINUX) {
       try {
         ShellCommandExecutor shellExecutorClk = new ShellCommandExecutor(
-            new String[] {"getconf", attr });
+            new String[]{"getconf", attr});
         shellExecutorClk.execute();
         return Long.parseLong(shellExecutorClk.getOutput().replace("\n", ""));
-      } catch (IOException|NumberFormatException e) {
+      } catch (IOException | NumberFormatException e) {
         return -1;
       }
     }
@@ -156,7 +155,7 @@ public class SysInfoLinux extends SysInfo {
 
   public SysInfoLinux() {
     this(PROCFS_MEMFILE, PROCFS_CPUINFO, PROCFS_STAT,
-         PROCFS_NETFILE, PROCFS_DISKSFILE, JIFFY_LENGTH_IN_MILLIS);
+        PROCFS_NETFILE, PROCFS_DISKSFILE, JIFFY_LENGTH_IN_MILLIS);
   }
 
   /**
@@ -171,11 +170,11 @@ public class SysInfoLinux extends SysInfo {
    */
   @VisibleForTesting
   public SysInfoLinux(String procfsMemFile,
-                                       String procfsCpuFile,
-                                       String procfsStatFile,
-                                       String procfsNetFile,
-                                       String procfsDisksFile,
-                                       long jiffyLengthInMillis) {
+                      String procfsCpuFile,
+                      String procfsStatFile,
+                      String procfsNetFile,
+                      String procfsDisksFile,
+                      long jiffyLengthInMillis) {
     this.procfsMemFile = procfsMemFile;
     this.procfsCpuFile = procfsCpuFile;
     this.procfsStatFile = procfsStatFile;
@@ -208,6 +207,7 @@ public class SysInfoLinux extends SysInfo {
     }
     return parsedVal;
   }
+
   /**
    * Read /proc/meminfo, parse and compute memory information.
    * @param readAgain if false, read only on the first time
@@ -316,7 +316,7 @@ public class SysInfoLinux extends SysInfo {
         }
         mat = FREQUENCY_FORMAT.matcher(str);
         if (mat.find()) {
-          cpuFrequency = (long)(Double.parseDouble(mat.group(1)) * 1000); // kHz
+          cpuFrequency = (long) (Double.parseDouble(mat.group(1)) * 1000); // kHz
         }
         mat = PHYSICAL_ID_FORMAT.matcher(str);
         if (mat.find()) {
@@ -529,13 +529,13 @@ public class SysInfoLinux extends SysInfo {
     assert perDiskSectorSize != null && diskName != null;
 
     String procfsDiskSectorFile =
-            "/sys/block/" + diskName + "/queue/hw_sector_size";
+        "/sys/block/" + diskName + "/queue/hw_sector_size";
 
     BufferedReader in;
     try {
       in = new BufferedReader(new InputStreamReader(
           Files.newInputStream(Paths.get(procfsDiskSectorFile)),
-              Charset.forName("UTF-8")));
+          Charset.forName("UTF-8")));
     } catch (IOException f) {
       return defSector;
     }
@@ -554,7 +554,7 @@ public class SysInfoLinux extends SysInfo {
         str = in.readLine();
       }
       return defSector;
-    } catch (IOException|NumberFormatException e) {
+    } catch (IOException | NumberFormatException e) {
       LOG.warn("Error reading the stream " + procfsDiskSectorFile, e);
       return defSector;
     } finally {
@@ -572,8 +572,8 @@ public class SysInfoLinux extends SysInfo {
   public long getPhysicalMemorySize() {
     readProcMemInfoFile();
     return (ramSize
-            - hardwareCorruptSize
-            - (hugePagesTotal * hugePageSize)) * 1024;
+        - hardwareCorruptSize
+        - (hugePagesTotal * hugePageSize)) * 1024;
   }
 
   /** {@inheritDoc} */
@@ -692,15 +692,15 @@ public class SysInfoLinux extends SysInfo {
     System.out.println("Number of Processors : " + plugin.getNumProcessors());
     System.out.println("CPU frequency (kHz) : " + plugin.getCpuFrequency());
     System.out.println("Cumulative CPU time (ms) : " +
-            plugin.getCumulativeCpuTime());
+        plugin.getCumulativeCpuTime());
     System.out.println("Total network read (bytes) : "
-            + plugin.getNetworkBytesRead());
+        + plugin.getNetworkBytesRead());
     System.out.println("Total network written (bytes) : "
-            + plugin.getNetworkBytesWritten());
+        + plugin.getNetworkBytesWritten());
     System.out.println("Total storage read (bytes) : "
-            + plugin.getStorageBytesRead());
+        + plugin.getStorageBytesRead());
     System.out.println("Total storage written (bytes) : "
-            + plugin.getStorageBytesWritten());
+        + plugin.getStorageBytesWritten());
     try {
       // Sleep so we can compute the CPU usage
       Thread.sleep(500L);

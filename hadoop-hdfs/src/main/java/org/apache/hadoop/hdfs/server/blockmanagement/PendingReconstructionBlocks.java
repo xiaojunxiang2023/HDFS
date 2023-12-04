@@ -1,22 +1,17 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_RECONSTRUCTION_PENDING_TIMEOUT_SEC_DEFAULT;
-import static org.apache.hadoop.util.Time.monotonicNow;
+import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.hdfs.server.namenode.NameNode;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Daemon;
+import org.slf4j.Logger;
 
 import java.io.PrintWriter;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
-import org.apache.hadoop.util.Daemon;
-import org.slf4j.Logger;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_RECONSTRUCTION_PENDING_TIMEOUT_SEC_DEFAULT;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /***************************************************
  * PendingReconstructionBlocks does the bookkeeping of all
@@ -47,7 +42,7 @@ class PendingReconstructionBlocks {
   private final static long DEFAULT_RECHECK_INTERVAL = 5 * 60 * 1000;
 
   PendingReconstructionBlocks(long timeoutPeriod) {
-    if ( timeoutPeriod > 0 ) {
+    if (timeoutPeriod > 0) {
       this.timeout = timeoutPeriod;
     }
     pendingReconstructions = new HashMap<>();
@@ -279,13 +274,14 @@ class PendingReconstructionBlocks {
   public Daemon getTimerThread() {
     return timerThread;
   }
+
   /*
    * Shuts down the pending reconstruction monitor thread.
    * Waits for the thread to exit.
    */
   void stop() {
     fsRunning = false;
-    if(timerThread == null) return;
+    if (timerThread == null) return;
     timerThread.interrupt();
     try {
       timerThread.join(3000);
@@ -299,7 +295,7 @@ class PendingReconstructionBlocks {
   void metaSave(PrintWriter out) {
     synchronized (pendingReconstructions) {
       out.println("Metasave: Blocks being reconstructed: " +
-                  pendingReconstructions.size());
+          pendingReconstructions.size());
       for (Map.Entry<BlockInfo, PendingBlockInfo> entry :
           pendingReconstructions.entrySet()) {
         PendingBlockInfo pendingBlock = entry.getValue();

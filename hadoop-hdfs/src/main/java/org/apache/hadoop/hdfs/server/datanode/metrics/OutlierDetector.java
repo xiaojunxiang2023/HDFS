@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 package org.apache.hadoop.hdfs.server.datanode.metrics;
+
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
@@ -44,125 +45,125 @@ import java.util.*;
  *     multiple of the median.
  */
 public class OutlierDetector {
-    public static final Logger LOG =
-            LoggerFactory.getLogger(OutlierDetector.class);
-    /**
-     * If most of the samples are clustered together, the MAD can be
-     * low. The median multiplier introduces another safeguard to avoid
-     * overaggressive outlier detection.
-     */
-    @VisibleForTesting
-    static final int MEDIAN_MULTIPLIER = 3;
-    /**
-     * The multiplier is from Leys, C. et al.
-     */
-    private static final double MAD_MULTIPLIER = (double) 1.4826;
-    /**
-     * Deviation multiplier. A sample is considered to be an outlier if it
-     * exceeds the median by (multiplier * median abs. deviation). 3 is a
-     * conservative choice.
-     */
-    private static final int DEVIATION_MULTIPLIER = 3;
-    /**
-     * Minimum number of resources to run outlier detection.
-     */
-    private final long minNumResources;
-    /**
-     * Threshold in milliseconds below which a node/ disk is definitely not slow.
-     */
-    private final long lowThresholdMs;
+  public static final Logger LOG =
+      LoggerFactory.getLogger(OutlierDetector.class);
+  /**
+   * If most of the samples are clustered together, the MAD can be
+   * low. The median multiplier introduces another safeguard to avoid
+   * overaggressive outlier detection.
+   */
+  @VisibleForTesting
+  static final int MEDIAN_MULTIPLIER = 3;
+  /**
+   * The multiplier is from Leys, C. et al.
+   */
+  private static final double MAD_MULTIPLIER = (double) 1.4826;
+  /**
+   * Deviation multiplier. A sample is considered to be an outlier if it
+   * exceeds the median by (multiplier * median abs. deviation). 3 is a
+   * conservative choice.
+   */
+  private static final int DEVIATION_MULTIPLIER = 3;
+  /**
+   * Minimum number of resources to run outlier detection.
+   */
+  private final long minNumResources;
+  /**
+   * Threshold in milliseconds below which a node/ disk is definitely not slow.
+   */
+  private final long lowThresholdMs;
 
-    public OutlierDetector(long minNumResources, long lowThresholdMs) {
-        this.minNumResources = minNumResources;
-        this.lowThresholdMs = lowThresholdMs;
+  public OutlierDetector(long minNumResources, long lowThresholdMs) {
+    this.minNumResources = minNumResources;
+    this.lowThresholdMs = lowThresholdMs;
+  }
+
+  /**
+   * Compute the Median Absolute Deviation of a sorted list.
+   */
+  public static Double computeMad(List<Double> sortedValues) {
+    if (sortedValues.size() == 0) {
+      throw new IllegalArgumentException(
+          "Cannot compute the Median Absolute Deviation " +
+              "of an empty list.");
     }
 
-    /**
-     * Compute the Median Absolute Deviation of a sorted list.
-     */
-    public static Double computeMad(List<Double> sortedValues) {
-        if (sortedValues.size() == 0) {
-            throw new IllegalArgumentException(
-                    "Cannot compute the Median Absolute Deviation " +
-                            "of an empty list.");
-        }
+    // First get the median of the values.
+    Double median = computeMedian(sortedValues);
+    List<Double> deviations = new ArrayList<>(sortedValues);
 
-        // First get the median of the values.
-        Double median = computeMedian(sortedValues);
-        List<Double> deviations = new ArrayList<>(sortedValues);
-
-        // Then update the list to store deviation from the median.
-        for (int i = 0; i < sortedValues.size(); ++i) {
-            deviations.set(i, Math.abs(sortedValues.get(i) - median));
-        }
-
-        // Finally get the median absolute deviation.
-        Collections.sort(deviations);
-        return computeMedian(deviations) * MAD_MULTIPLIER;
+    // Then update the list to store deviation from the median.
+    for (int i = 0; i < sortedValues.size(); ++i) {
+      deviations.set(i, Math.abs(sortedValues.get(i) - median));
     }
 
-    /**
-     * Compute the median of a sorted list.
-     */
-    public static Double computeMedian(List<Double> sortedValues) {
-        if (sortedValues.size() == 0) {
-            throw new IllegalArgumentException(
-                    "Cannot compute the median of an empty list.");
-        }
+    // Finally get the median absolute deviation.
+    Collections.sort(deviations);
+    return computeMedian(deviations) * MAD_MULTIPLIER;
+  }
 
-        Double median = sortedValues.get(sortedValues.size() / 2);
-        if (sortedValues.size() % 2 == 0) {
-            median += sortedValues.get((sortedValues.size() / 2) - 1);
-            median /= 2;
-        }
-        return median;
+  /**
+   * Compute the median of a sorted list.
+   */
+  public static Double computeMedian(List<Double> sortedValues) {
+    if (sortedValues.size() == 0) {
+      throw new IllegalArgumentException(
+          "Cannot compute the median of an empty list.");
     }
 
-    /**
-     * Return a set of nodes/ disks whose latency is much higher than
-     * their counterparts. The input is a map of (resource {@literal ->} aggregate
-     * latency)
-     * entries.
-     *
-     * The aggregate may be an arithmetic mean or a percentile e.g.
-     * 90th percentile. Percentiles are a better choice than median
-     * since latency is usually not a normal distribution.
-     *
-     * This method allocates temporary memory O(n) and
-     * has run time O(n.log(n)), where n = stats.size().
-     *
-     * @return
-     */
-    public Map<String, Double> getOutliers(Map<String, Double> stats) {
-        if (stats.size() < minNumResources) {
-            LOG.debug("Skipping statistical outlier detection as we don't have " +
-                            "latency data for enough resources. Have {}, need at least {}",
-                    stats.size(), minNumResources);
-            return ImmutableMap.of();
-        }
-        // Compute the median absolute deviation of the aggregates.
-        final List<Double> sorted = new ArrayList<>(stats.values());
-        Collections.sort(sorted);
-        final Double median = computeMedian(sorted);
-        final Double mad = computeMad(sorted);
-        Double upperLimitLatency = Math.max(
-                lowThresholdMs, median * MEDIAN_MULTIPLIER);
-        upperLimitLatency = Math.max(
-                upperLimitLatency, median + (DEVIATION_MULTIPLIER * mad));
-
-        final Map<String, Double> slowResources = new HashMap<>();
-
-        LOG.trace("getOutliers: List={}, MedianLatency={}, " +
-                        "MedianAbsoluteDeviation={}, upperLimitLatency={}",
-                sorted, median, mad, upperLimitLatency);
-
-        // Find resources whose latency exceeds the threshold.
-        for (Map.Entry<String, Double> entry : stats.entrySet()) {
-            if (entry.getValue() > upperLimitLatency) {
-                slowResources.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return slowResources;
+    Double median = sortedValues.get(sortedValues.size() / 2);
+    if (sortedValues.size() % 2 == 0) {
+      median += sortedValues.get((sortedValues.size() / 2) - 1);
+      median /= 2;
     }
+    return median;
+  }
+
+  /**
+   * Return a set of nodes/ disks whose latency is much higher than
+   * their counterparts. The input is a map of (resource {@literal ->} aggregate
+   * latency)
+   * entries.
+   *
+   * The aggregate may be an arithmetic mean or a percentile e.g.
+   * 90th percentile. Percentiles are a better choice than median
+   * since latency is usually not a normal distribution.
+   *
+   * This method allocates temporary memory O(n) and
+   * has run time O(n.log(n)), where n = stats.size().
+   *
+   * @return
+   */
+  public Map<String, Double> getOutliers(Map<String, Double> stats) {
+    if (stats.size() < minNumResources) {
+      LOG.debug("Skipping statistical outlier detection as we don't have " +
+              "latency data for enough resources. Have {}, need at least {}",
+          stats.size(), minNumResources);
+      return ImmutableMap.of();
+    }
+    // Compute the median absolute deviation of the aggregates.
+    final List<Double> sorted = new ArrayList<>(stats.values());
+    Collections.sort(sorted);
+    final Double median = computeMedian(sorted);
+    final Double mad = computeMad(sorted);
+    Double upperLimitLatency = Math.max(
+        lowThresholdMs, median * MEDIAN_MULTIPLIER);
+    upperLimitLatency = Math.max(
+        upperLimitLatency, median + (DEVIATION_MULTIPLIER * mad));
+
+    final Map<String, Double> slowResources = new HashMap<>();
+
+    LOG.trace("getOutliers: List={}, MedianLatency={}, " +
+            "MedianAbsoluteDeviation={}, upperLimitLatency={}",
+        sorted, median, mad, upperLimitLatency);
+
+    // Find resources whose latency exceeds the threshold.
+    for (Map.Entry<String, Double> entry : stats.entrySet()) {
+      if (entry.getValue() > upperLimitLatency) {
+        slowResources.put(entry.getKey(), entry.getValue());
+      }
+    }
+
+    return slowResources;
+  }
 }

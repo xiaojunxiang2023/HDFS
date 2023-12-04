@@ -1,10 +1,10 @@
 package org.apache.hadoop.util;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This is a wrap class of a ReentrantLock. Extending AutoCloseable
@@ -114,7 +114,7 @@ public class AutoCloseableLock implements AutoCloseable {
   @VisibleForTesting
   boolean isLocked() {
     if (lock instanceof ReentrantLock) {
-      return ((ReentrantLock)lock).isLocked();
+      return ((ReentrantLock) lock).isLocked();
     }
     throw new UnsupportedOperationException();
   }

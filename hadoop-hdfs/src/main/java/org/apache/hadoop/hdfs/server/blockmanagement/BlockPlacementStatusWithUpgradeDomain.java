@@ -23,7 +23,7 @@ public class BlockPlacementStatusWithUpgradeDomain implements
   public BlockPlacementStatusWithUpgradeDomain(
       BlockPlacementStatus parentBlockPlacementStatus,
       Set<String> upgradeDomains, int numberOfReplicas,
-      int upgradeDomainFactor){
+      int upgradeDomainFactor) {
     this.parentBlockPlacementStatus = parentBlockPlacementStatus;
     this.upgradeDomains = upgradeDomains;
     this.numberOfReplicas = numberOfReplicas;
@@ -59,7 +59,7 @@ public class BlockPlacementStatusWithUpgradeDomain implements
       }
       errorDescription.append("The block has " + numberOfReplicas +
           " replicas. But it only has " + upgradeDomains.size() +
-              " upgrade domains " + upgradeDomains +".");
+          " upgrade domains " + upgradeDomains + ".");
     }
     return errorDescription.toString();
   }

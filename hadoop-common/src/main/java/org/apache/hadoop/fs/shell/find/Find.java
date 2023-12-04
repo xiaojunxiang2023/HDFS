@@ -1,26 +1,21 @@
 package org.apache.hadoop.fs.shell.find;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.CommandFactory;
 import org.apache.hadoop.fs.shell.CommandFormat;
 import org.apache.hadoop.fs.shell.FsCommand;
 import org.apache.hadoop.fs.shell.PathData;
+
+import java.io.IOException;
+import java.util.*;
+
 /**
  * Implements a Hadoop find command.
  */
 public class Find extends FsCommand {
   /**
    * Register the names for the count command
-   * 
+   *
    * @param factory the command factory that will instantiate this class
    */
   public static void registerCommands(CommandFactory factory) {
@@ -31,11 +26,11 @@ public class Find extends FsCommand {
   public static final String USAGE = "<path> ... <expression> ...";
   public static final String DESCRIPTION;
   private static String[] HELP =
-  { "Finds all files that match the specified expression and",
-      "applies selected actions to them. If no <path> is specified",
-      "then defaults to the current working directory. If no",
-      "expression is specified then defaults to -print."
-  };
+      {"Finds all files that match the specified expression and",
+          "applies selected actions to them. If no <path> is specified",
+          "then defaults to the current working directory. If no",
+          "expression is specified then defaults to -print."
+      };
 
   private static final String OPTION_FOLLOW_LINK = "L";
   private static final String OPTION_FOLLOW_ARG_LINK = "H";
@@ -190,7 +185,7 @@ public class Find extends FsCommand {
 
   /**
    * Set the root expression for this find.
-   * 
+   *
    * @param expression
    */
   void setRootExpression(Expression expression) {
@@ -199,7 +194,7 @@ public class Find extends FsCommand {
 
   /**
    * Return the root expression for this find.
-   * 
+   *
    * @return the root expression
    */
   Expression getRootExpression() {
@@ -238,7 +233,7 @@ public class Find extends FsCommand {
   /**
    * Parse a list of arguments to to extract the {@link Expression} elements.
    * The input Deque will be modified to remove the used elements.
-   * 
+   *
    * @param args arguments to be parsed
    * @return list of {@link Expression} elements applicable to this command
    * @throws IOException if list can not be parsed
@@ -308,7 +303,7 @@ public class Find extends FsCommand {
   /** Returns true if the target is an ancestor of the source. */
   private boolean isAncestor(PathData source, PathData target) {
     for (Path parent = source.path; (parent != null) && !parent.isRoot();
-        parent = parent.getParent()) {
+         parent = parent.getParent()) {
       if (parent.equals(target.path)) {
         return true;
       }

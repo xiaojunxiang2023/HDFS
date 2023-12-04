@@ -1,8 +1,10 @@
 package org.apache.hadoop.hdfs.qjournal.protocolPB;
+
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocolProtos.InterQJournalProtocolService;
 import org.apache.hadoop.ipc.ProtocolInfo;
 import org.apache.hadoop.security.KerberosInfo;
+
 /**
  * Protocol used to communicate between journal nodes for journal sync.
  * Note: This extends the protocolbuffer service based interface to

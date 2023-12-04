@@ -5,12 +5,7 @@ import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
 import org.apache.hadoop.net.Node;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class ErasureCodingWork extends BlockReconstructionWork {
   private final byte[] liveBlockIndicies;
@@ -18,12 +13,12 @@ class ErasureCodingWork extends BlockReconstructionWork {
   private final String blockPoolId;
 
   public ErasureCodingWork(String blockPoolId, BlockInfo block,
-      BlockCollection bc,
-      DatanodeDescriptor[] srcNodes,
-      List<DatanodeDescriptor> containingNodes,
-      List<DatanodeStorageInfo> liveReplicaStorages,
-      int additionalReplRequired, int priority,
-      byte[] liveBlockIndicies, byte[] liveBusyBlockIndicies) {
+                           BlockCollection bc,
+                           DatanodeDescriptor[] srcNodes,
+                           List<DatanodeDescriptor> containingNodes,
+                           List<DatanodeStorageInfo> liveReplicaStorages,
+                           int additionalReplRequired, int priority,
+                           byte[] liveBlockIndicies, byte[] liveBusyBlockIndicies) {
     super(block, bc, srcNodes, containingNodes,
         liveReplicaStorages, additionalReplRequired, priority);
     this.blockPoolId = blockPoolId;
@@ -39,8 +34,8 @@ class ErasureCodingWork extends BlockReconstructionWork {
 
   @Override
   void chooseTargets(BlockPlacementPolicy blockplacement,
-      BlockStoragePolicySuite storagePolicySuite,
-      Set<Node> excludedNodes) {
+                     BlockStoragePolicySuite storagePolicySuite,
+                     Set<Node> excludedNodes) {
     // TODO: new placement policy for EC considering multiple writers
     DatanodeStorageInfo[] chosenTargets = blockplacement.chooseTarget(
         getSrcPath(), getAdditionalReplRequired(), getSrcNodes()[0],
@@ -63,7 +58,7 @@ class ErasureCodingWork extends BlockReconstructionWork {
     for (byte index : liveBlockIndicies) {
       bitSet.set(index);
     }
-    for (byte busyIndex: liveBusyBlockIndicies) {
+    for (byte busyIndex : liveBusyBlockIndicies) {
       bitSet.set(busyIndex);
     }
     for (int i = 0; i < block.getRealDataBlockNum(); i++) {
@@ -135,7 +130,7 @@ class ErasureCodingWork extends BlockReconstructionWork {
   }
 
   private void createReplicationWork(int sourceIndex,
-      DatanodeStorageInfo target) {
+                                     DatanodeStorageInfo target) {
     BlockInfoStriped stripedBlk = (BlockInfoStriped) getBlock();
     final byte blockIndex = liveBlockIndicies[sourceIndex];
     final DatanodeDescriptor source = getSrcNodes()[sourceIndex];
@@ -145,14 +140,14 @@ class ErasureCodingWork extends BlockReconstructionWork {
     final Block targetBlk = new Block(stripedBlk.getBlockId() + blockIndex,
         internBlkLen, stripedBlk.getGenerationStamp());
     source.addBlockToBeReplicated(targetBlk,
-        new DatanodeStorageInfo[] {target});
+        new DatanodeStorageInfo[]{target});
     LOG.debug("Add replication task from source {} to "
         + "target {} for EC block {}", source, target, targetBlk);
   }
 
   private List<Integer> findLeavingServiceSources() {
     // Mark the block in normal node.
-    BlockInfoStriped block = (BlockInfoStriped)getBlock();
+    BlockInfoStriped block = (BlockInfoStriped) getBlock();
     BitSet bitSet = new BitSet(block.getRealTotalBlockNum());
     for (int i = 0; i < getSrcNodes().length; i++) {
       if (getSrcNodes()[i].isInService()) {
@@ -166,7 +161,7 @@ class ErasureCodingWork extends BlockReconstructionWork {
     for (int i = 0; i < getSrcNodes().length; i++) {
       if ((getSrcNodes()[i].isDecommissionInProgress() ||
           (getSrcNodes()[i].isEnteringMaintenance() &&
-          getSrcNodes()[i].isAlive())) &&
+              getSrcNodes()[i].isAlive())) &&
           !bitSet.get(liveBlockIndicies[i])) {
         srcIndices.add(i);
       }

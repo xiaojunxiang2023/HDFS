@@ -1,32 +1,29 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.fs.permission.FsCreateModes;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.FileAlreadyExistsException;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.ParentNotDirectoryException;
 import org.apache.hadoop.fs.UnresolvedLinkException;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.permission.PermissionStatus;
+import org.apache.hadoop.fs.permission.*;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.protocol.AclException;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.util.List;
+
 import static org.apache.hadoop.util.Time.now;
 
 class FSDirMkdirOp {
 
   static FileStatus mkdirs(FSNamesystem fsn, FSPermissionChecker pc, String src,
-      PermissionStatus permissions, boolean createParent) throws IOException {
+                           PermissionStatus permissions, boolean createParent) throws IOException {
     FSDirectory fsd = fsn.getFSDirectory();
-    if(NameNode.stateChangeLog.isDebugEnabled()) {
+    if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("DIR* NameSystem.mkdirs: " + src);
     }
     fsd.writeLock();
@@ -106,7 +103,7 @@ class FSDirMkdirOp {
    * failed.
    */
   private static INodesInPath createParentDirectories(FSDirectory fsd,
-      INodesInPath iip, PermissionStatus perm, boolean inheritPerms)
+                                                      INodesInPath iip, PermissionStatus perm, boolean inheritPerms)
       throws IOException {
     assert fsd.hasWriteLock();
     // this is the desired parent iip if the subsequent delta is 1.
@@ -132,7 +129,7 @@ class FSDirMkdirOp {
   }
 
   static void mkdirForEditLog(FSDirectory fsd, long inodeId, String src,
-      PermissionStatus permissions, List<AclEntry> aclEntries, long timestamp)
+                              PermissionStatus permissions, List<AclEntry> aclEntries, long timestamp)
       throws QuotaExceededException, UnresolvedLinkException, AclException,
       FileAlreadyExistsException, ParentNotDirectoryException,
       AccessControlException {
@@ -146,7 +143,7 @@ class FSDirMkdirOp {
   }
 
   private static INodesInPath createSingleDirectory(FSDirectory fsd,
-      INodesInPath existing, byte[] localName, PermissionStatus perm)
+                                                    INodesInPath existing, byte[] localName, PermissionStatus perm)
       throws IOException {
     assert fsd.hasWriteLock();
     existing = unprotectedMkdir(fsd, fsd.allocateNewInodeId(), existing,
@@ -169,7 +166,7 @@ class FSDirMkdirOp {
   }
 
   private static PermissionStatus addImplicitUwx(PermissionStatus parentPerm,
-      PermissionStatus perm) {
+                                                 PermissionStatus perm) {
     FsPermission p = parentPerm.getPermission();
     FsPermission ancestorPerm;
     if (p.getUnmasked() == null) {
@@ -180,9 +177,9 @@ class FSDirMkdirOp {
     } else {
       ancestorPerm = FsCreateModes.create(
           new FsPermission(
-            p.getUserAction().or(FsAction.WRITE_EXECUTE),
-            p.getGroupAction(),
-            p.getOtherAction()), p.getUnmasked());
+              p.getUserAction().or(FsAction.WRITE_EXECUTE),
+              p.getGroupAction(),
+              p.getOtherAction()), p.getUnmasked());
     }
     return new PermissionStatus(perm.getUserName(), perm.getGroupName(),
         ancestorPerm);
@@ -192,8 +189,8 @@ class FSDirMkdirOp {
    * create a directory at path specified by parent
    */
   private static INodesInPath unprotectedMkdir(FSDirectory fsd, long inodeId,
-      INodesInPath parent, byte[] name, PermissionStatus permission,
-      List<AclEntry> aclEntries, long timestamp)
+                                               INodesInPath parent, byte[] name, PermissionStatus permission,
+                                               List<AclEntry> aclEntries, long timestamp)
       throws QuotaExceededException, AclException, FileAlreadyExistsException {
     assert fsd.hasWriteLock();
     assert parent.getLastINode() != null;

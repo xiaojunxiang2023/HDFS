@@ -1,12 +1,12 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Stores global storage statistics objects.
@@ -33,7 +33,7 @@ public enum GlobalStorageStatistics {
    * Get the StorageStatistics object with the given name.
    *
    * @param name        The storage statistics object name.
-   * @return            The StorageStatistics object with the given name, or
+   * @return The StorageStatistics object with the given name, or
    *                      null if there is none.
    */
   public synchronized StorageStatistics get(String name) {
@@ -46,13 +46,13 @@ public enum GlobalStorageStatistics {
    * @param name        The storage statistics object name.
    * @param provider    An object which can create a new StorageStatistics
    *                      object if needed.
-   * @return            The StorageStatistics object with the given name.
+   * @return The StorageStatistics object with the given name.
    * @throws RuntimeException  If the StorageStatisticsProvider provides a null
    *                           object or a new StorageStatistics object with the
    *                           wrong name.
    */
   public synchronized StorageStatistics put(String name,
-      StorageStatisticsProvider provider) {
+                                            StorageStatisticsProvider provider) {
     Preconditions.checkNotNull(name,
         "Storage statistics can not have a null name!");
     StorageStatistics stats = map.get(name);

@@ -1,17 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode.top;
 
-import java.net.InetAddress;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.server.namenode.AuditLogger;
+import org.apache.hadoop.hdfs.server.namenode.top.metrics.TopMetrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.hdfs.server.namenode.top.metrics.TopMetrics;
+import java.net.InetAddress;
 
 import static org.apache.hadoop.hdfs.server.namenode.top.metrics.TopMetrics.TOPMETRICS_METRICS_SOURCE_NAME;
 
@@ -29,9 +28,9 @@ public class TopAuditLogger implements AuditLogger {
     TopConf topConf = new TopConf(conf);
     this.topMetrics = new TopMetrics(conf, topConf.nntopReportingPeriodsMs);
     if (DefaultMetricsSystem.instance().getSource(
-            TOPMETRICS_METRICS_SOURCE_NAME) == null) {
+        TOPMETRICS_METRICS_SOURCE_NAME) == null) {
       DefaultMetricsSystem.instance().register(TOPMETRICS_METRICS_SOURCE_NAME,
-              "Top N operations by user", topMetrics);
+          "Top N operations by user", topMetrics);
     }
   }
 
@@ -47,7 +46,7 @@ public class TopAuditLogger implements AuditLogger {
 
   @Override
   public void logAuditEvent(boolean succeeded, String userName,
-      InetAddress addr, String cmd, String src, String dst, FileStatus status) {
+                            InetAddress addr, String cmd, String src, String dst, FileStatus status) {
     try {
       topMetrics.report(succeeded, userName, addr, cmd, src, dst, status);
     } catch (Throwable t) {

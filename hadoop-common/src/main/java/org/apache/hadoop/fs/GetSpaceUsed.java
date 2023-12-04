@@ -123,7 +123,7 @@ public interface GetSpaceUsed {
           return CommonConfigurationKeys.FS_GETSPACEUSED_JITTER_DEFAULT;
         }
         return configuration.getLong(CommonConfigurationKeys.FS_GETSPACEUSED_JITTER_KEY,
-                CommonConfigurationKeys.FS_GETSPACEUSED_JITTER_DEFAULT);
+            CommonConfigurationKeys.FS_GETSPACEUSED_JITTER_DEFAULT);
       }
       return jitter;
     }

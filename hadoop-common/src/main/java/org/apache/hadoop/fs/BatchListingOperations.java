@@ -32,7 +32,7 @@ public interface BatchListingOperations {
    * @throws IOException failure
    */
   RemoteIterator<PartialListing<LocatedFileStatus>>
-      batchedListLocatedStatusIterator(
-          List<Path> paths) throws IOException;
+  batchedListLocatedStatusIterator(
+      List<Path> paths) throws IOException;
 
 }

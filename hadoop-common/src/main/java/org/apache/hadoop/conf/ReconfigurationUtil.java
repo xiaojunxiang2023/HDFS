@@ -1,8 +1,8 @@
 package org.apache.hadoop.conf;
 
-import java.util.Map;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ReconfigurationUtil {
 
@@ -18,30 +18,30 @@ public class ReconfigurationUtil {
     }
   }
 
-  public static Collection<PropertyChange> 
-    getChangedProperties(Configuration newConf, Configuration oldConf) {
+  public static Collection<PropertyChange>
+  getChangedProperties(Configuration newConf, Configuration oldConf) {
     Map<String, PropertyChange> changes = new HashMap<String, PropertyChange>();
 
     // iterate over old configuration
-    for (Map.Entry<String, String> oldEntry: oldConf) {
+    for (Map.Entry<String, String> oldEntry : oldConf) {
       String prop = oldEntry.getKey();
       String oldVal = oldEntry.getValue();
       String newVal = newConf.getRaw(prop);
-      
+
       if (newVal == null || !newVal.equals(oldVal)) {
         changes.put(prop, new PropertyChange(prop, newVal, oldVal));
       }
     }
-    
+
     // now iterate over new configuration
     // (to look for properties not present in old conf)
-    for (Map.Entry<String, String> newEntry: newConf) {
+    for (Map.Entry<String, String> newEntry : newConf) {
       String prop = newEntry.getKey();
       String newVal = newEntry.getValue();
       if (oldConf.get(prop) == null) {
         changes.put(prop, new PropertyChange(prop, newVal, null));
       }
-    } 
+    }
 
     return changes.values();
   }

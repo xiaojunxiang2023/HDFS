@@ -1,12 +1,13 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.io.IOException;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
 import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
 import org.apache.hadoop.ipc.ObserverRetryOnActiveException;
 import org.apache.hadoop.ipc.StandbyException;
+
+import java.io.IOException;
 
 /**
  * Namenode standby state. In this state the namenode acts as warm standby and
@@ -16,7 +17,7 @@ import org.apache.hadoop.ipc.StandbyException;
  * <li>Block location information by receiving block reports and blocks
  * received from the datanodes.</li>
  * </ul>
- * 
+ *
  * It does not handle read/write/checkpoint operations.
  */
 public class StandbyState extends HAState {

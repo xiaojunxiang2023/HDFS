@@ -28,17 +28,17 @@ public class StorageReceivedDeletedBlocks {
 
   /**
    * @deprecated Use {@link #StorageReceivedDeletedBlocks(
-   * DatanodeStorage, ReceivedDeletedBlockInfo[])} instead
+   *DatanodeStorage, ReceivedDeletedBlockInfo[])} instead
    */
   @Deprecated
   public StorageReceivedDeletedBlocks(final String storageID,
-      final ReceivedDeletedBlockInfo[] blocks) {
+                                      final ReceivedDeletedBlockInfo[] blocks) {
     this.storage = new DatanodeStorage(storageID);
     this.blocks = blocks;
   }
 
   public StorageReceivedDeletedBlocks(final DatanodeStorage storage,
-      final ReceivedDeletedBlockInfo[] blocks) {
+                                      final ReceivedDeletedBlockInfo[] blocks) {
     this.storage = storage;
     this.blocks = blocks;
   }

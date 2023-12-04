@@ -1,6 +1,7 @@
 package org.apache.hadoop.fs;
 
 import com.google.re2j.PatternSyntaxException;
+
 import java.io.IOException;
 
 /**
@@ -8,11 +9,11 @@ import java.io.IOException;
  */
 public class GlobFilter implements PathFilter {
   private final static PathFilter DEFAULT_FILTER = new PathFilter() {
-      @Override
-      public boolean accept(Path file) {
-        return true;
-      }
-    };
+    @Override
+    public boolean accept(Path file) {
+      return true;
+    }
+  };
 
   private PathFilter userFilter = DEFAULT_FILTER;
   private GlobPattern pattern;
@@ -42,10 +43,9 @@ public class GlobFilter implements PathFilter {
     try {
       userFilter = filter;
       pattern = new GlobPattern(filePattern);
-    }
-    catch (PatternSyntaxException e) {
+    } catch (PatternSyntaxException e) {
       // Existing code expects IOException startWith("Illegal file pattern")
-      throw new IOException("Illegal file pattern: "+ e.getMessage(), e);
+      throw new IOException("Illegal file pattern: " + e.getMessage(), e);
     }
   }
 

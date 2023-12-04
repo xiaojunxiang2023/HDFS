@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs.ftp;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.hadoop.fs.FSInputStream;
 import org.apache.hadoop.fs.FileSystem;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 public class FTPInputStream extends FSInputStream {
 
   InputStream wrappedStream;
@@ -15,7 +16,7 @@ public class FTPInputStream extends FSInputStream {
   long pos;
 
   public FTPInputStream(InputStream stream, FTPClient client,
-      FileSystem.Statistics stats) {
+                        FileSystem.Statistics stats) {
     if (stream == null) {
       throw new IllegalArgumentException("Null InputStream");
     }

@@ -12,22 +12,22 @@ import java.io.IOException;
  */
 public abstract class EnterSafeModeResponse {
 
-    public static EnterSafeModeResponse newInstance() throws IOException {
-        return StateStoreSerializer.newRecord(EnterSafeModeResponse.class);
-    }
+  public static EnterSafeModeResponse newInstance() throws IOException {
+    return StateStoreSerializer.newRecord(EnterSafeModeResponse.class);
+  }
 
-    public static EnterSafeModeResponse newInstance(boolean status)
-            throws IOException {
-        EnterSafeModeResponse response = newInstance();
-        response.setStatus(status);
-        return response;
-    }
+  public static EnterSafeModeResponse newInstance(boolean status)
+      throws IOException {
+    EnterSafeModeResponse response = newInstance();
+    response.setStatus(status);
+    return response;
+  }
 
-    @Public
-    @Unstable
-    public abstract boolean getStatus();
+  @Public
+  @Unstable
+  public abstract boolean getStatus();
 
-    @Public
-    @Unstable
-    public abstract void setStatus(boolean result);
+  @Public
+  @Unstable
+  public abstract void setStatus(boolean result);
 }

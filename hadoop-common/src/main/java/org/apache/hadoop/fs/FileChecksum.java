@@ -1,8 +1,9 @@
 package org.apache.hadoop.fs;
 
-import java.util.Arrays;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.io.Writable;
+
+import java.util.Arrays;
 
 /** An abstract class representing file checksums for files. */
 public abstract class FileChecksum implements Writable {
@@ -29,9 +30,9 @@ public abstract class FileChecksum implements Writable {
       return false;
     }
 
-    final FileChecksum that = (FileChecksum)other;
+    final FileChecksum that = (FileChecksum) other;
     return this.getAlgorithmName().equals(that.getAlgorithmName())
-      && Arrays.equals(this.getBytes(), that.getBytes());
+        && Arrays.equals(this.getBytes(), that.getBytes());
   }
 
   @Override

@@ -1,9 +1,10 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
 import org.apache.hadoop.fs.BatchedRemoteIterator;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
+
+import java.io.IOException;
 
 /**
  * CachePoolIterator is a remote iterator that iterates cache pools.

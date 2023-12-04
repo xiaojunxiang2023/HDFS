@@ -31,7 +31,7 @@ public class CombinedIPList implements IPList {
   private final IPList[] networkLists;
 
   public CombinedIPList(String fixedBlackListFile,
-      String variableBlackListFile, long cacheExpiryInSeconds) {
+                        String variableBlackListFile, long cacheExpiryInSeconds) {
 
     IPList fixedNetworkList = new FileBasedIPList(fixedBlackListFile);
     if (variableBlackListFile != null) {

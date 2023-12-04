@@ -13,17 +13,16 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.planner;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.planner;
 
+import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerDataNode;
+import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolume;
+import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolumeSet;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.hdfs.server.diskbalancer.datamodel
-    .DiskBalancerDataNode;
-import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolume;
-import org.apache.hadoop.hdfs.server.diskbalancer.datamodel
-    .DiskBalancerVolumeSet;
-import org.apache.hadoop.util.Time;
 
 import java.util.Iterator;
 import java.util.List;
@@ -218,9 +217,9 @@ public class GreedyPlanner implements Planner {
       String message =
           String.format(
               "Skipping volume. Volume : %s " +
-              "Type : %s Target " +
-              "Number of bytes : %f lowVolume dfsUsed : %d. Skipping this " +
-              "volume from all future balancing calls.", volume.getPath(),
+                  "Type : %s Target " +
+                  "Number of bytes : %f lowVolume dfsUsed : %d. Skipping this " +
+                  "volume from all future balancing calls.", volume.getPath(),
               volume.getStorageType(),
               currentSet.getIdealUsed() * volume.getCapacity(),
               volume.getUsed());
@@ -254,7 +253,7 @@ public class GreedyPlanner implements Planner {
       String format =
           String.format(
               "First Volume : %s, DataDensity : %f, " +
-              "Last Volume : %s, DataDensity : %f",
+                  "Last Volume : %s, DataDensity : %f",
               queue.first().getPath(), queue.first().getVolumeDataDensity(),
               queue.last().getPath(), queue.last().getVolumeDataDensity());
       LOG.debug(format);

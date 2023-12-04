@@ -17,7 +17,7 @@ public class ByteBufferOutputStream extends OutputStream {
 
   @Override
   public void write(int b) throws IOException {
-    buf.put((byte)b);
+    buf.put((byte) b);
   }
 
   @Override

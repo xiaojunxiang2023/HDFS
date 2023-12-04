@@ -39,10 +39,12 @@ public enum FsAction {
   public FsAction and(FsAction that) {
     return vals[ordinal() & that.ordinal()];
   }
+
   /** OR operation. */
   public FsAction or(FsAction that) {
     return vals[ordinal() | that.ordinal()];
   }
+
   /** NOT operation. */
   public FsAction not() {
     return vals[7 - ordinal()];
@@ -50,7 +52,7 @@ public enum FsAction {
 
   /**
    * Get the FsAction enum for String representation of permissions
-   * 
+   *
    * @param permission
    *          3-character string representation of permission. ex: rwx
    * @return Returns FsAction enum if the corresponding FsAction exists for permission.

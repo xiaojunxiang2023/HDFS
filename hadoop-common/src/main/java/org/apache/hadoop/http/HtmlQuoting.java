@@ -28,16 +28,16 @@ public class HtmlQuoting {
    * @return does the string contain any of the active html characters?
    */
   public static boolean needsQuoting(byte[] data, int off, int len) {
-    for(int i=off; i< off+len; ++i) {
-      switch(data[i]) {
-      case '&':
-      case '<':
-      case '>':
-      case '\'':
-      case '"':
-        return true;
-      default:
-        break;
+    for (int i = off; i < off + len; ++i) {
+      switch (data[i]) {
+        case '&':
+        case '<':
+        case '>':
+        case '\'':
+        case '"':
+          return true;
+        default:
+          break;
       }
     }
     return false;
@@ -53,7 +53,7 @@ public class HtmlQuoting {
       return false;
     }
     byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-    return needsQuoting(bytes, 0 , bytes.length);
+    return needsQuoting(bytes, 0, bytes.length);
   }
 
   /**
@@ -66,28 +66,29 @@ public class HtmlQuoting {
    */
   public static void quoteHtmlChars(OutputStream output, byte[] buffer,
                                     int off, int len) throws IOException {
-    for(int i=off; i < off+len; i++) {
+    for (int i = off; i < off + len; i++) {
       switch (buffer[i]) {
-      case '&':
-        output.write(AMP_BYTES);
-        break;
-      case '<':
-        output.write(LT_BYTES);
-        break;
-      case '>':
-        output.write(GT_BYTES);
-        break;
-      case '\'':
-        output.write(APOS_BYTES);
-        break;
-      case '"':
-        output.write(QUOT_BYTES);
-        break;
-      default: output.write(buffer, i, 1);
+        case '&':
+          output.write(AMP_BYTES);
+          break;
+        case '<':
+          output.write(LT_BYTES);
+          break;
+        case '>':
+          output.write(GT_BYTES);
+          break;
+        case '\'':
+          output.write(APOS_BYTES);
+          break;
+        case '"':
+          output.write(QUOT_BYTES);
+          break;
+        default:
+          output.write(buffer, i, 1);
       }
     }
   }
-  
+
   /**
    * Quote the given item to make it html-safe.
    * @param item the string to quote
@@ -119,25 +120,26 @@ public class HtmlQuoting {
    * @throws IOException if the underlying output fails
    */
   public static OutputStream quoteOutputStream(final OutputStream out
-                                               ) throws IOException {
+  ) throws IOException {
     return new OutputStream() {
       private final byte[] data = new byte[1];
+
       @Override
       public void write(byte[] data, int off, int len) throws IOException {
         quoteHtmlChars(out, data, off, len);
       }
-      
+
       @Override
       public void write(int b) throws IOException {
         data[0] = (byte) b;
         quoteHtmlChars(out, data, 0, 1);
       }
-      
+
       @Override
       public void flush() throws IOException {
         out.flush();
       }
-      
+
       @Override
       public void close() throws IOException {
         out.close();
@@ -169,7 +171,7 @@ public class HtmlQuoting {
         next += 5;
       } else if (item.startsWith("&apos;", next)) {
         buffer.append('\'');
-        next += 6;        
+        next += 6;
       } else if (item.startsWith("&gt;", next)) {
         buffer.append('>');
         next += 4;
@@ -180,12 +182,12 @@ public class HtmlQuoting {
         buffer.append('"');
         next += 6;
       } else {
-        int end = item.indexOf(';', next)+1;
+        int end = item.indexOf(';', next) + 1;
         if (end == 0) {
           end = len;
         }
-        throw new IllegalArgumentException("Bad HTML quoting for " + 
-                                           item.substring(next,end));
+        throw new IllegalArgumentException("Bad HTML quoting for " +
+            item.substring(next, end));
       }
       posn = next;
       next = item.indexOf('&', posn);
@@ -193,12 +195,12 @@ public class HtmlQuoting {
     buffer.append(item, posn, len);
     return buffer.toString();
   }
-  
+
   public static void main(String[] args) throws Exception {
-    for(String arg:args) {
+    for (String arg : args) {
       System.out.println("Original: " + arg);
       String quoted = quoteHtmlChars(arg);
-      System.out.println("Quoted: "+ quoted);
+      System.out.println("Quoted: " + quoted);
       String unquoted = unquoteHtmlChars(quoted);
       System.out.println("Unquoted: " + unquoted);
       System.out.println();

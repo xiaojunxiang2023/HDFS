@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,27 +16,6 @@
  */
 package org.apache.hadoop.security;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTHENTICATION;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_DNS_INTERFACE_KEY;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_DNS_NAMESERVER_KEY;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nullable;
-import javax.security.auth.kerberos.KerberosPrincipal;
-import javax.security.auth.kerberos.KerberosTicket;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.Text;
@@ -45,6 +24,8 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenInfo;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.ZKUtil;
@@ -53,9 +34,20 @@ import org.slf4j.LoggerFactory;
 import org.xbill.DNS.Name;
 import org.xbill.DNS.ResolverConfig;
 
+import javax.annotation.Nullable;
+import javax.security.auth.kerberos.KerberosPrincipal;
+import javax.security.auth.kerberos.KerberosTicket;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 
 /**
  * Security Utils.
@@ -63,7 +55,7 @@ import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 public final class SecurityUtil {
   public static final Logger LOG = LoggerFactory.getLogger(SecurityUtil.class);
   public static final String HOSTNAME_PATTERN = "_HOST";
-  public static final String FAILED_TO_GET_UGI_MSG_HEADER = 
+  public static final String FAILED_TO_GET_UGI_MSG_HEADER =
       "Failed to obtain user group information:";
 
   private SecurityUtil() {
@@ -82,6 +74,7 @@ public final class SecurityUtil {
   static {
     setConfigurationInternal(new Configuration());
   }
+
   public static void setConfiguration(Configuration conf) {
     LOG.info("Updating Configuration");
     setConfigurationInternal(conf);
@@ -121,23 +114,23 @@ public final class SecurityUtil {
         ? new QualifiedHostResolver()
         : new StandardHostResolver();
   }
-  
+
   /**
    * TGS must have the server principal of the form "krbtgt/FOO@FOO".
    * @param principal
    * @return true or false
    */
-  static boolean 
+  static boolean
   isTGSPrincipal(KerberosPrincipal principal) {
     if (principal == null)
       return false;
-    if (principal.getName().equals("krbtgt/" + principal.getRealm() + 
+    if (principal.getName().equals("krbtgt/" + principal.getRealm() +
         "@" + principal.getRealm())) {
       return true;
     }
     return false;
   }
-  
+
   /**
    * Check whether the server principal is the TGS's principal
    * @param ticket the original TGT (the ticket that is obtained when a 
@@ -153,7 +146,7 @@ public final class SecurityUtil {
    * names. It replaces hostname pattern with hostname, which should be
    * fully-qualified domain name. If hostname is null or "0.0.0.0", it uses
    * dynamically looked-up fqdn of the current host instead.
-   * 
+   *
    * @param principalConfig
    *          the Kerberos principal name conf value to convert
    * @param hostname
@@ -162,7 +155,7 @@ public final class SecurityUtil {
    * @throws IOException if the client address cannot be determined
    */
   public static String getServerPrincipal(String principalConfig,
-      String hostname) throws IOException {
+                                          String hostname) throws IOException {
     String[] components = getComponents(principalConfig);
     if (components == null || components.length != 3
         || !components[1].equals(HOSTNAME_PATTERN)) {
@@ -171,14 +164,14 @@ public final class SecurityUtil {
       return replacePattern(components, hostname);
     }
   }
-  
+
   /**
    * Convert Kerberos principal name pattern to valid Kerberos principal names.
    * This method is similar to {@link #getServerPrincipal(String, String)},
    * except 1) the reverse DNS lookup from addr to hostname is done only when
    * necessary, 2) param addr can't be null (no default behavior of using local
    * hostname when addr is null).
-   * 
+   *
    * @param principalConfig
    *          Kerberos principal name pattern to convert
    * @param addr
@@ -187,7 +180,7 @@ public final class SecurityUtil {
    * @throws IOException if the client address cannot be determined
    */
   public static String getServerPrincipal(String principalConfig,
-      InetAddress addr) throws IOException {
+                                          InetAddress addr) throws IOException {
     String[] components = getComponents(principalConfig);
     if (components == null || components.length != 3
         || !components[1].equals(HOSTNAME_PATTERN)) {
@@ -200,13 +193,13 @@ public final class SecurityUtil {
       return replacePattern(components, addr.getCanonicalHostName());
     }
   }
-  
+
   private static String[] getComponents(String principalConfig) {
     if (principalConfig == null)
       return null;
     return principalConfig.split("[/@]");
   }
-  
+
   private static String replacePattern(String[] components, String hostname)
       throws IOException {
     String fqdn = hostname;
@@ -250,7 +243,7 @@ public final class SecurityUtil {
    * Login as a principal specified in config. Substitute $host in
    * user's Kerberos principal name with a dynamically looked-up fully-qualified
    * domain name of the current host.
-   * 
+   *
    * @param conf
    *          conf to use
    * @param keytabFileKey
@@ -260,7 +253,7 @@ public final class SecurityUtil {
    * @throws IOException if login fails
    */
   public static void login(final Configuration conf,
-      final String keytabFileKey, final String userNameKey) throws IOException {
+                           final String keytabFileKey, final String userNameKey) throws IOException {
     login(conf, keytabFileKey, userNameKey, getLocalHostName(conf));
   }
 
@@ -268,7 +261,7 @@ public final class SecurityUtil {
    * Login as a principal specified in config. Substitute $host in user's Kerberos principal 
    * name with hostname. If non-secure mode - return. If no keytab available -
    * bail out with an exception
-   * 
+   *
    * @param conf
    *          conf to use
    * @param keytabFileKey
@@ -280,12 +273,12 @@ public final class SecurityUtil {
    * @throws IOException if the config doesn't specify a keytab
    */
   public static void login(final Configuration conf,
-      final String keytabFileKey, final String userNameKey, String hostname)
+                           final String keytabFileKey, final String userNameKey, String hostname)
       throws IOException {
-    
-    if(! UserGroupInformation.isSecurityEnabled()) 
+
+    if (!UserGroupInformation.isSecurityEnabled())
       return;
-    
+
     String keytabFilename = conf.get(keytabFileKey);
     if (keytabFilename == null || keytabFilename.length() == 0) {
       throw new IOException("Running in secure mode, but config doesn't have a keytab");
@@ -312,8 +305,8 @@ public final class SecurityUtil {
     }
     InetSocketAddress addr = NetUtils.createSocketAddr(authority, defPort);
     return buildTokenService(addr).toString();
-   }
-  
+  }
+
   /**
    * Get the host name from the principal name of format {@literal <}service
    * {@literal >}/host@realm.
@@ -324,8 +317,8 @@ public final class SecurityUtil {
     return new HadoopKerberosName(principalName).getHostName();
   }
 
-  private static ServiceLoader<SecurityInfo> securityInfoProviders = 
-    ServiceLoader.load(SecurityInfo.class);
+  private static ServiceLoader<SecurityInfo> securityInfoProviders =
+      ServiceLoader.load(SecurityInfo.class);
   private static SecurityInfo[] testProviders = new SecurityInfo[0];
 
   /**
@@ -335,17 +328,17 @@ public final class SecurityUtil {
    * @param conf configuration object
    * @return the KerberosInfo or null if it has no KerberosInfo defined
    */
-  public static KerberosInfo 
+  public static KerberosInfo
   getKerberosInfo(Class<?> protocol, Configuration conf) {
-    for(SecurityInfo provider: testProviders) {
+    for (SecurityInfo provider : testProviders) {
       KerberosInfo result = provider.getKerberosInfo(protocol, conf);
       if (result != null) {
         return result;
       }
     }
-    
+
     synchronized (securityInfoProviders) {
-      for(SecurityInfo provider: securityInfoProviders) {
+      for (SecurityInfo provider : securityInfoProviders) {
         KerberosInfo result = provider.getKerberosInfo(protocol, conf);
         if (result != null) {
           return result;
@@ -363,7 +356,7 @@ public final class SecurityUtil {
    * @return client principal or null if it has no client principal defined.
    */
   public static String getClientPrincipal(Class<?> protocol,
-      Configuration conf) {
+                                          Configuration conf) {
     String user = null;
     KerberosInfo krbInfo = SecurityUtil.getKerberosInfo(protocol, conf);
     if (krbInfo != null) {
@@ -381,22 +374,22 @@ public final class SecurityUtil {
    * @return the TokenInfo or null if it has no KerberosInfo defined
    */
   public static TokenInfo getTokenInfo(Class<?> protocol, Configuration conf) {
-    for(SecurityInfo provider: testProviders) {
+    for (SecurityInfo provider : testProviders) {
       TokenInfo result = provider.getTokenInfo(protocol, conf);
       if (result != null) {
         return result;
-      }      
+      }
     }
-    
+
     synchronized (securityInfoProviders) {
-      for(SecurityInfo provider: securityInfoProviders) {
+      for (SecurityInfo provider : securityInfoProviders) {
         TokenInfo result = provider.getTokenInfo(protocol, conf);
         if (result != null) {
           return result;
         }
-      } 
+      }
     }
-    
+
     return null;
   }
 
@@ -419,13 +412,13 @@ public final class SecurityUtil {
     if (token != null) {
       token.setService(service);
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Acquired token "+token);  // Token#toString() prints service
+        LOG.debug("Acquired token " + token);  // Token#toString() prints service
       }
     } else {
-      LOG.warn("Failed to get token for service "+service);
+      LOG.warn("Failed to get token for service " + service);
     }
   }
-  
+
   /**
    * Construct the service key for a token
    * @param addr InetSocketAddress of remote connection with a token
@@ -456,16 +449,16 @@ public final class SecurityUtil {
   public static Text buildTokenService(URI uri) {
     return buildTokenService(NetUtils.createSocketAddr(uri.getAuthority()));
   }
-  
+
   /**
    * Perform the given action as the daemon's login user. If the login
    * user cannot be determined, this will log a FATAL error and exit
    * the whole JVM.
    */
-  public static <T> T doAsLoginUserOrFatal(PrivilegedAction<T> action) { 
+  public static <T> T doAsLoginUserOrFatal(PrivilegedAction<T> action) {
     if (UserGroupInformation.isSecurityEnabled()) {
       UserGroupInformation ugi = null;
-      try { 
+      try {
         ugi = UserGroupInformation.getLoginUser();
       } catch (IOException e) {
         LOG.error("Exception while getting login user", e);
@@ -477,7 +470,7 @@ public final class SecurityUtil {
       return action.run();
     }
   }
-  
+
   /**
    * Perform the given action as the daemon's login user. If an
    * InterruptedException is thrown, it is converted to an IOException.
@@ -505,7 +498,7 @@ public final class SecurityUtil {
   }
 
   private static <T> T doAsUser(UserGroupInformation ugi,
-      PrivilegedExceptionAction<T> action) throws IOException {
+                                PrivilegedExceptionAction<T> action) throws IOException {
     try {
       return ugi.doAs(action);
     } catch (InterruptedException ie) {
@@ -516,13 +509,12 @@ public final class SecurityUtil {
   /**
    * Resolves a host subject to the security requirements determined by
    * hadoop.security.token.service.use_ip. Optionally logs slow resolutions.
-   * 
+   *
    * @param hostname host or ip to resolve
    * @return a resolved host
    * @throws UnknownHostException if the host doesn't exist
    */
-  public static
-  InetAddress getByName(String hostname) throws UnknownHostException {
+  public static InetAddress getByName(String hostname) throws UnknownHostException {
     if (logSlowLookups || LOG.isTraceEnabled()) {
       StopWatch lookupTimer = new StopWatch().start();
       InetAddress result = hostResolver.getByName(hostname);
@@ -540,11 +532,11 @@ public final class SecurityUtil {
       return hostResolver.getByName(hostname);
     }
   }
-  
+
   interface HostResolver {
-    InetAddress getByName(String host) throws UnknownHostException;    
+    InetAddress getByName(String host) throws UnknownHostException;
   }
-  
+
   /**
    * Uses standard java host resolution
    */
@@ -554,7 +546,7 @@ public final class SecurityUtil {
       return InetAddress.getByName(host);
     }
   }
-  
+
   /**
    * This an alternate resolver with important properties that the standard
    * java resolver lacks:
@@ -573,12 +565,13 @@ public final class SecurityUtil {
    *    lookup to IP is not performed since the reverse/forward mappings may
    *    not always return the same IP.  If the client initiated a connection
    *    with an IP, then that IP is all that should ever be contacted.
-   *    
+   *
    * NOTE: this resolver is only used if:
    *       hadoop.security.token.service.use_ip=false 
    */
   protected static class QualifiedHostResolver implements HostResolver {
     private List<String> searchDomains = new ArrayList<>();
+
     {
       ResolverConfig resolverConfig = ResolverConfig.getCurrentConfig();
       Name[] names = resolverConfig.searchPath();
@@ -596,7 +589,7 @@ public final class SecurityUtil {
      * {@link InetAddress#getCanonicalHostName()} will fully qualify the
      * hostname, but it always return the A record whereas the given hostname
      * may be a CNAME.
-     * 
+     *
      * @param host a hostname or ip address
      * @return InetAddress with the fully qualified hostname or ip
      * @throws UnknownHostException if host does not exist
@@ -663,7 +656,7 @@ public final class SecurityUtil {
     InetAddress getByNameWithSearch(String host) {
       InetAddress addr = null;
       if (host.endsWith(".")) { // already qualified?
-        addr = getByExactName(host); 
+        addr = getByExactName(host);
       } else {
         for (String domain : searchDomains) {
           String dot = !domain.startsWith(".") ? "." : "";
@@ -679,7 +672,7 @@ public final class SecurityUtil {
       return InetAddress.getByName(host);
     }
 
-    void setSearchDomains(String ... domains) {
+    void setSearchDomains(String... domains) {
       searchDomains = Arrays.asList(domains);
     }
   }
@@ -710,10 +703,10 @@ public final class SecurityUtil {
    * unix/linux system. For other operating systems, use this method with care.
    * For example, Windows doesn't have the concept of privileged ports.
    * However, it may be used at Windows client to check port of linux server.
-   * 
+   *
    * @param port the port number
    * @return true for privileged ports, false otherwise
-   * 
+   *
    */
   public static boolean isPrivilegedPort(final int port) {
     return port < 1024;
@@ -726,7 +719,7 @@ public final class SecurityUtil {
    * @throws ZKUtil.BadAuthFormatException if the auth format is invalid
    */
   public static List<ZKUtil.ZKAuthInfo> getZKAuthInfos(Configuration conf,
-      String configKey) throws IOException {
+                                                       String configKey) throws IOException {
     char[] zkAuthChars = conf.getPassword(configKey);
     String zkAuthConf =
         zkAuthChars != null ? String.valueOf(zkAuthChars) : null;

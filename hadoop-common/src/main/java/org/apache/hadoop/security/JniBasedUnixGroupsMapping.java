@@ -1,28 +1,28 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * A JNI-based implementation of {@link GroupMappingServiceProvider} 
+ * A JNI-based implementation of {@link GroupMappingServiceProvider}
  * that invokes libC calls to get the group
  * memberships of a given user.
  */
 // MapReduce也可见
 public class JniBasedUnixGroupsMapping implements GroupMappingServiceProvider {
-  
+
   private static final Logger LOG =
       LoggerFactory.getLogger(JniBasedUnixGroupsMapping.class);
 
   static {
     if (!NativeCodeLoader.isNativeCodeLoaded()) {
       throw new RuntimeException("Bailing out since native library couldn't " +
-        "be loaded");
+          "be loaded");
     }
     anchorNative();
     LOG.debug("Using JniBasedUnixGroupsMapping for Group resolution");
@@ -31,7 +31,7 @@ public class JniBasedUnixGroupsMapping implements GroupMappingServiceProvider {
   /**
    * Set up our JNI resources.
    *
-   * @throws                 RuntimeException if setup fails.
+   * @throws RuntimeException if setup fails.
    */
   native static void anchorNative();
 
@@ -40,7 +40,7 @@ public class JniBasedUnixGroupsMapping implements GroupMappingServiceProvider {
    *
    * @param username           The user name
    *
-   * @return                   The set of groups associated with a user.
+   * @return The set of groups associated with a user.
    */
   native static String[] getGroupsForUser(String username);
 

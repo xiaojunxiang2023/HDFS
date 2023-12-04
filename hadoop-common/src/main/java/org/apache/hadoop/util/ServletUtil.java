@@ -1,18 +1,20 @@
 package org.apache.hadoop.util;
 
-import java.io.*;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 public class ServletUtil {
   /**
    * Initial HTML header
    */
   public static PrintWriter initHTML(ServletResponse response, String title
-      ) throws IOException {
+  ) throws IOException {
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.println("<html>\n"
@@ -33,9 +35,9 @@ public class ServletUtil {
       return null;
     }
     s = s.trim();
-    return s.length() == 0? null: s;
+    return s.length() == 0 ? null : s;
   }
-  
+
   /**
    * @return a long value as passed in the given parameter, throwing
    * an exception if it is not present or if it is not a valid number.
@@ -46,14 +48,14 @@ public class ServletUtil {
     if (paramStr == null) {
       throw new IOException("Invalid request has no " + param + " parameter");
     }
-    
+
     return Long.parseLong(paramStr);
   }
 
   public static final String HTML_TAIL = "<hr />\n"
-    + "<a href='http://hadoop.apache.org'>Hadoop</a>, "
-    + Calendar.getInstance().get(Calendar.YEAR) + ".\n"
-    + "</body></html>";
+      + "<a href='http://hadoop.apache.org'>Hadoop</a>, "
+      + Calendar.getInstance().get(Calendar.YEAR) + ".\n"
+      + "</body></html>";
 
   /**
    * HTML footer to be added in the jsps.
@@ -70,7 +72,7 @@ public class ServletUtil {
    * @return path component, null if the default charset is not supported
    */
   public static String getRawPath(final HttpServletRequest request, String servletName) {
-    Preconditions.checkArgument(request.getRequestURI().startsWith(servletName+"/"));
+    Preconditions.checkArgument(request.getRequestURI().startsWith(servletName + "/"));
     return request.getRequestURI().substring(servletName.length());
   }
 }

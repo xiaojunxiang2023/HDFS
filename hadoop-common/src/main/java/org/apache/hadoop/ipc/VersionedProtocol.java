@@ -8,7 +8,7 @@ import java.io.IOException;
  * a static final long versionID field.
  */
 public interface VersionedProtocol {
-  
+
   /**
    * Return protocol version corresponding to protocol interface.
    * @param protocol The classname of the protocol interface
@@ -26,10 +26,10 @@ public interface VersionedProtocol {
    * @param clientMethodsHash the hashcode of client protocol methods
    * @return the server protocol signature containing its version and
    *         a list of its supported methods
-   * @see ProtocolSignature#getProtocolSignature(VersionedProtocol, String, 
+   * @see ProtocolSignature#getProtocolSignature(VersionedProtocol, String,
    *                long, int) for a default implementation
    */
-  public ProtocolSignature getProtocolSignature(String protocol, 
-                                 long clientVersion,
-                                 int clientMethodsHash) throws IOException;
+  public ProtocolSignature getProtocolSignature(String protocol,
+                                                long clientVersion,
+                                                int clientMethodsHash) throws IOException;
 }

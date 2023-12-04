@@ -2,13 +2,13 @@ package org.apache.hadoop.metrics2;
 
 /**
  * The metrics system interface.
- * 
+ *
  * The following components are used for metrics.
  * <ul>
  * <li>{@link MetricsSource} generate and update metrics information.</li>
  * <li>{@link MetricsSink} consume the metrics information</li>
  * </ul>
- * 
+ *
  * {@link MetricsSource} and {@link MetricsSink} register with the metrics
  * system. Implementations of {@link MetricsSystem} polls the
  * {@link MetricsSource}s periodically and pass the {@link MetricsRecord}s to
@@ -39,7 +39,7 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
    * Register a metrics source (deriving name and description from the object)
    * @param <T>   the actual type of the source object
    * @param source  object to register
-   * @return  the source object
+   * @return the source object
    * @exception MetricsException
    */
   public <T> T register(T source) {
@@ -72,7 +72,7 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
 
   /**
    * Requests an immediate publish of all metrics from sources to sinks.
-   * 
+   *
    * This is a "soft" request: the expectation is that a best effort will be
    * done to synchronously snapshot the metrics from all the sources and put
    * them in all the sinks (including flushing the sinks) before returning to
@@ -117,9 +117,20 @@ public abstract class MetricsSystem implements MetricsSystemMXBean {
    * Convenient abstract class for implementing callback interface
    */
   public static abstract class AbstractCallback implements Callback {
-    @Override public void preStart() {}
-    @Override public void postStart() {}
-    @Override public void preStop() {}
-    @Override public void postStop() {}
+    @Override
+    public void preStart() {
+    }
+
+    @Override
+    public void postStart() {
+    }
+
+    @Override
+    public void preStop() {
+    }
+
+    @Override
+    public void postStop() {
+    }
   }
 }

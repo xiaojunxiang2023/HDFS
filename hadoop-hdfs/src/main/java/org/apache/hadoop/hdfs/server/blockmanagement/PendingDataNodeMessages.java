@@ -1,35 +1,34 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
+import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 
 /**
  * In the Standby Node, we can receive messages about blocks
  * before they are actually available in the namespace, or while
  * they have an outdated state in the namespace. In those cases,
  * we queue those block-related messages in this structure.
- * */  
+ * */
 class PendingDataNodeMessages {
-  
+
   final Map<Block, Queue<ReportedBlockInfo>> queueByBlockId =
-    Maps.newHashMap();
+      Maps.newHashMap();
   private int count = 0;
-  
-    
+
+
   static class ReportedBlockInfo {
     private final Block block;
     private final DatanodeStorageInfo storageInfo;
     private final ReplicaState reportedState;
 
     ReportedBlockInfo(DatanodeStorageInfo storageInfo, Block block,
-        ReplicaState reportedState) {
+                      ReplicaState reportedState) {
       this.storageInfo = storageInfo;
       this.block = block;
       this.reportedState = reportedState;
@@ -42,7 +41,7 @@ class PendingDataNodeMessages {
     ReplicaState getReportedState() {
       return reportedState;
     }
-    
+
     DatanodeStorageInfo getStorageInfo() {
       return storageInfo;
     }
@@ -54,7 +53,7 @@ class PendingDataNodeMessages {
           + ", reportedState=" + reportedState + "]";
     }
   }
-  
+
   /**
    * Remove all pending DN messages which reference the given DN.
    * @param dn the datanode whose messages we should remove.
@@ -75,9 +74,9 @@ class PendingDataNodeMessages {
       queueByBlockId.put(entry.getKey(), newQueue);
     }
   }
-  
+
   void enqueueReportedBlock(DatanodeStorageInfo storageInfo, Block block,
-      ReplicaState reportedState) {
+                            ReplicaState reportedState) {
     if (BlockIdManager.isStripedBlockID(block.getBlockId())) {
       Block blkId = new Block(BlockIdManager.convertToStripedID(block
           .getBlockId()));
@@ -90,7 +89,7 @@ class PendingDataNodeMessages {
     }
     count++;
   }
-  
+
   /**
    * @return any messages that were previously queued for the given block,
    * or null if no messages were queued.
@@ -112,16 +111,16 @@ class PendingDataNodeMessages {
     }
     return queue;
   }
-  
+
   int count() {
-    return count ;
+    return count;
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<Block, Queue<ReportedBlockInfo>> entry :
-      queueByBlockId.entrySet()) {
+        queueByBlockId.entrySet()) {
       sb.append("Block " + entry.getKey() + ":\n");
       for (ReportedBlockInfo rbi : entry.getValue()) {
         sb.append("  ").append(rbi).append("\n");

@@ -1,18 +1,20 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+
 import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.XATTR_ERASURECODING_POLICY;
+
 public class ContentSummaryComputationContext {
   private FSDirectory dir = null;
   private FSNamesystem fsn = null;
@@ -30,6 +32,7 @@ public class ContentSummaryComputationContext {
       .getLogger(ContentSummaryComputationContext.class);
 
   private FSPermissionChecker pc;
+
   /**
    * Constructor
    *
@@ -40,21 +43,21 @@ public class ContentSummaryComputationContext {
    *        no limit (i.e. no yielding)
    */
   public ContentSummaryComputationContext(FSDirectory dir,
-      FSNamesystem fsn, long limitPerRun, long sleepMicroSec) {
+                                          FSNamesystem fsn, long limitPerRun, long sleepMicroSec) {
     this(dir, fsn, limitPerRun, sleepMicroSec, null);
   }
 
   public ContentSummaryComputationContext(FSDirectory dir,
-      FSNamesystem fsn, long limitPerRun, long sleepMicroSec,
-      FSPermissionChecker pc) {
+                                          FSNamesystem fsn, long limitPerRun, long sleepMicroSec,
+                                          FSPermissionChecker pc) {
     this.dir = dir;
     this.fsn = fsn;
     this.limitPerRun = limitPerRun;
     this.nextCountLimit = limitPerRun;
     this.counts = new ContentCounts.Builder().build();
     this.snapshotCounts = new ContentCounts.Builder().build();
-    this.sleepMilliSec = sleepMicroSec/1000;
-    this.sleepNanoSec = (int)((sleepMicroSec%1000)*1000);
+    this.sleepMilliSec = sleepMicroSec / 1000;
+    this.sleepNanoSec = (int) ((sleepMicroSec % 1000) * 1000);
     this.pc = pc;
   }
 
@@ -136,7 +139,7 @@ public class ContentSummaryComputationContext {
     Preconditions.checkState((bsps != null || fsn != null),
         "BlockStoragePolicySuite must be either initialized or available via" +
             " FSNameSystem");
-    return (bsps != null) ? bsps:
+    return (bsps != null) ? bsps :
         fsn.getBlockManager().getStoragePolicySuite();
   }
 
@@ -170,7 +173,7 @@ public class ContentSummaryComputationContext {
               .getName();
         }
       } else if (inode.getParent() != null) {
-          return getErasureCodingPolicyName(inode.getParent());
+        return getErasureCodingPolicyName(inode.getParent());
       }
     } catch (IOException ioe) {
       LOG.warn("Encountered error getting ec policy for "

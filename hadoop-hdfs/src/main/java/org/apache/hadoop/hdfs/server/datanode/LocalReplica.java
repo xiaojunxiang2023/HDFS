@@ -1,17 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -21,11 +9,15 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.LengthInputStream;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIO;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DataChecksum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.*;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is used for all replicas which are on local storage media
@@ -69,7 +61,7 @@ abstract public class LocalReplica extends ReplicaInfo {
    * @param dir directory path where block and meta files are located
    */
   LocalReplica(long blockId, long len, long genStamp,
-      FsVolumeSpi vol, File dir) {
+               FsVolumeSpi vol, File dir) {
     super(vol, blockId, len, genStamp);
     setDirInternal(dir);
   }
@@ -139,7 +131,7 @@ abstract public class LocalReplica extends ReplicaInfo {
     public String baseDirPath;
     public boolean hasSubidrs;
 
-    public ReplicaDirInfo (String baseDirPath, boolean hasSubidrs) {
+    public ReplicaDirInfo(String baseDirPath, boolean hasSubidrs) {
       this.baseDirPath = baseDirPath;
       this.hasSubidrs = hasSubidrs;
     }
@@ -191,7 +183,7 @@ abstract public class LocalReplica extends ReplicaInfo {
     } catch (IOException e) {
       if (!fileIoProvider.delete(getVolume(), tmpFile)) {
         DataNode.LOG.info("detachFile failed to delete temporary file " +
-                          tmpFile);
+            tmpFile);
       }
       throw e;
     }
@@ -366,8 +358,8 @@ abstract public class LocalReplica extends ReplicaInfo {
     } catch (IOException e) {
       setGenerationStamp(oldGS); // restore old GS
       throw new IOException("Block " + this + " reopen failed. " +
-                            " Unable to move meta file  " + oldmeta +
-                            " to " + newmeta, e);
+          " Unable to move meta file  " + oldmeta +
+          " to " + newmeta, e);
     }
   }
 
@@ -472,10 +464,10 @@ abstract public class LocalReplica extends ReplicaInfo {
     DataChecksum dcs = BlockMetadataHeader.readHeader(fis).getChecksum();
     int checksumsize = dcs.getChecksumSize();
     int bpc = dcs.getBytesPerChecksum();
-    long n = (newlen - 1)/bpc + 1;
-    long newmetalen = BlockMetadataHeader.getHeaderSize() + n*checksumsize;
-    long lastchunkoffset = (n - 1)*bpc;
-    int lastchunksize = (int)(newlen - lastchunkoffset);
+    long n = (newlen - 1) / bpc + 1;
+    long newmetalen = BlockMetadataHeader.getHeaderSize() + n * checksumsize;
+    long lastchunkoffset = (n - 1) * bpc;
+    int lastchunksize = (int) (newlen - lastchunkoffset);
     byte[] b = new byte[Math.max(lastchunksize, checksumsize)];
 
     try (RandomAccessFile blockRAF = fileIoProvider.getRandomAccessFile(

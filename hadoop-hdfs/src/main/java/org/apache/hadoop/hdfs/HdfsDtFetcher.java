@@ -1,11 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import java.io.IOException;
-import java.net.URI;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -14,6 +8,11 @@ import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.DtFetcher;
 import org.apache.hadoop.security.token.Token;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URI;
 
 
 /**
@@ -49,7 +48,7 @@ public class HdfsDtFetcher implements DtFetcher {
    *  @return a Token, or null if fetch fails.
    */
   public Token<?> addDelegationTokens(Configuration conf, Credentials creds,
-                                  String renewer, String url) throws Exception {
+                                      String renewer, String url) throws Exception {
     if (!url.startsWith(getServiceName().toString())) {
       url = getServiceName().toString() + "://" + url;
     }

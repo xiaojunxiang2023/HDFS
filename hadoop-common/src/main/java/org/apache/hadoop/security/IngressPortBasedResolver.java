@@ -1,13 +1,14 @@
 package org.apache.hadoop.security;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.hadoop.conf.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An implementation of SaslPropertiesResolver. Used on server side,
@@ -70,7 +71,7 @@ public class IngressPortBasedResolver extends SaslPropertiesResolver {
   @Override
   @VisibleForTesting
   public Map<String, String> getServerProperties(InetAddress clientAddress,
-      int ingressPort) {
+                                                 int ingressPort) {
     LOG.debug("Resolving SASL properties for " + clientAddress + " "
         + ingressPort);
     if (!portPropMapping.containsKey(ingressPort)) {

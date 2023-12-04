@@ -40,6 +40,6 @@ public interface DomainNameResolver {
    * the input domainName
    * @throws UnknownHostException
    */
-   String[] getAllResolvedHostnameByDomainName(
-       String domainName, boolean useFQDN) throws UnknownHostException;
+  String[] getAllResolvedHostnameByDomainName(
+      String domainName, boolean useFQDN) throws UnknownHostException;
 }

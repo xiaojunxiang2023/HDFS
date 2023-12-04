@@ -1,17 +1,17 @@
 package org.apache.hadoop.io.compress.zlib;
 
-import java.io.IOException;
-import java.util.zip.Deflater;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.compress.Compressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.zip.Deflater;
+
 /**
  * A wrapper around java.util.zip.Deflater to make it conform 
  * to org.apache.hadoop.io.compress.Compressor interface.
- * 
+ *
  */
 public class BuiltInZlibDeflater extends Deflater implements Compressor {
 
@@ -31,8 +31,8 @@ public class BuiltInZlibDeflater extends Deflater implements Compressor {
   }
 
   @Override
-  public synchronized int compress(byte[] b, int off, int len) 
-    throws IOException {
+  public synchronized int compress(byte[] b, int off, int len)
+      throws IOException {
     return super.deflate(b, off, len);
   }
 
@@ -52,14 +52,14 @@ public class BuiltInZlibDeflater extends Deflater implements Compressor {
     }
     setLevel(ZlibFactory.getCompressionLevel(conf).compressionLevel());
     final ZlibCompressor.CompressionStrategy strategy =
-      ZlibFactory.getCompressionStrategy(conf);
+        ZlibFactory.getCompressionStrategy(conf);
     try {
       setStrategy(strategy.compressionStrategy());
     } catch (IllegalArgumentException ill) {
       LOG.warn(strategy + " not supported by BuiltInZlibDeflater.");
       setStrategy(DEFAULT_STRATEGY);
     }
-    if(LOG.isDebugEnabled()) {
+    if (LOG.isDebugEnabled()) {
       LOG.debug("Reinit compressor with new compression configuration");
     }
   }

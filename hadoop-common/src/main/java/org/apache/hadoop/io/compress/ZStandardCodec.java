@@ -18,7 +18,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeys.IO_COMPRESSION_CODEC_
  * This class creates zstd compressors/decompressors.
  */
 public class ZStandardCodec implements
-    Configurable, CompressionCodec, DirectDecompressionCodec  {
+    Configurable, CompressionCodec, DirectDecompressionCodec {
   private Configuration conf;
 
   /**
@@ -118,7 +118,7 @@ public class ZStandardCodec implements
    */
   @Override
   public CompressionOutputStream createOutputStream(OutputStream out,
-      Compressor compressor)
+                                                    Compressor compressor)
       throws IOException {
     checkNativeCodeLoaded();
     return new CompressorStream(out, compressor,

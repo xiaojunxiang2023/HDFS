@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.hadoop.hdfs.server.namenode.INode;
 import org.apache.hadoop.hdfs.server.namenode.INodeAttributes;
 import org.apache.hadoop.hdfs.server.namenode.INodeDirectory;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A list of snapshot diffs for storing snapshot data.
@@ -15,12 +15,12 @@ import org.apache.hadoop.hdfs.server.namenode.INodeDirectory;
  * @param <D> The diff type, which must extend {@link AbstractINodeDiff}.
  */
 abstract class AbstractINodeDiffList<N extends INode,
-                                     A extends INodeAttributes,
-                                     D extends AbstractINodeDiff<N, A, D>> 
+    A extends INodeAttributes,
+    D extends AbstractINodeDiff<N, A, D>>
     implements Iterable<D> {
 
   /** Diff list sorted by snapshot IDs, i.e. in chronological order.
-    * Created lazily to avoid wasting memory by empty lists. */
+   * Created lazily to avoid wasting memory by empty lists. */
   private DiffList<D> diffs;
 
   /** @return this list as a unmodifiable {@link List}. */
@@ -32,7 +32,7 @@ abstract class AbstractINodeDiffList<N extends INode,
   public boolean isEmpty() {
     return diffs == null || diffs.isEmpty();
   }
-  
+
   /** Clear the list. */
   public void clear() {
     diffs = null;
@@ -41,21 +41,21 @@ abstract class AbstractINodeDiffList<N extends INode,
   /** @return an {@link AbstractINodeDiff}. */
   abstract D createDiff(int snapshotId, N currentINode);
 
-  /** @return a snapshot copy of the current inode. */  
+  /** @return a snapshot copy of the current inode. */
   abstract A createSnapshotCopy(N currentINode);
 
   /**
    * Delete a snapshot. The synchronization of the diff list will be done 
    * outside. If the diff to remove is not the first one in the diff list, we 
    * need to combine the diff with its previous one.
-   * 
+   *
    * @param reclaimContext blocks and inodes that need to be reclaimed
    * @param snapshot The id of the snapshot to be deleted
    * @param prior The id of the snapshot taken before the to-be-deleted snapshot
    * @param currentINode the inode where the snapshot diff is deleted
    */
   public final void deleteSnapshotDiff(INode.ReclaimContext reclaimContext,
-      final int snapshot, final int prior, final N currentINode) {
+                                       final int snapshot, final int prior, final N currentINode) {
     if (diffs == null) {
       return;
     }
@@ -107,11 +107,11 @@ abstract class AbstractINodeDiffList<N extends INode,
     }
     return diff;
   }
-  
+
   /** Add the diff to the beginning of the list. */
   final void addFirst(D diff) {
     createDiffsIfNeeded();
-    final D first = diffs.isEmpty()? null : diffs.get(0);
+    final D first = diffs.isEmpty() ? null : diffs.get(0);
     diffs.addFirst(diff);
     diff.setPosterior(first);
   }
@@ -141,7 +141,7 @@ abstract class AbstractINodeDiffList<N extends INode,
     final AbstractINodeDiff<N, A, D> last = getLast();
     return last == null ? Snapshot.CURRENT_STATE_ID : last.getSnapshotId();
   }
-  
+
   /**
    * Find the latest snapshot before a given snapshot.
    * @param anchorId The returned snapshot's id must be &lt;= or &lt; this
@@ -179,11 +179,11 @@ abstract class AbstractINodeDiffList<N extends INode,
       }
     }
   }
-  
+
   public final int getPrior(int snapshotId) {
     return getPrior(snapshotId, false);
   }
-  
+
   /**
    * Update the prior snapshot.
    */
@@ -195,7 +195,7 @@ abstract class AbstractINodeDiffList<N extends INode,
     }
     return prior;
   }
-  
+
   public final D getDiffById(final int snapshotId) {
     if (snapshotId == Snapshot.CURRENT_STATE_ID || diffs == null) {
       return null;
@@ -212,7 +212,7 @@ abstract class AbstractINodeDiffList<N extends INode,
       return j < diffs.size() ? diffs.get(j) : null;
     }
   }
-  
+
   /**
    * Search for the snapshot whose id is 1) no less than the given id, 
    * and 2) most close to the given id.
@@ -263,8 +263,8 @@ abstract class AbstractINodeDiffList<N extends INode,
    */
   public A getSnapshotINode(final int snapshotId, final A currentINode) {
     final D diff = getDiffById(snapshotId);
-    final A inode = diff == null? null: diff.getSnapshotINode();
-    return inode == null? currentINode: inode;
+    final A inode = diff == null ? null : diff.getSnapshotINode();
+    return inode == null ? currentINode : inode;
   }
 
   /**
@@ -280,7 +280,7 @@ abstract class AbstractINodeDiffList<N extends INode,
 
   /** Save the snapshot copy to the latest snapshot. */
   public D saveSelf2Snapshot(int latestSnapshotId, N currentINode,
-      A snapshotCopy) {
+                             A snapshotCopy) {
     D diff = null;
     if (latestSnapshotId != Snapshot.CURRENT_STATE_ID) {
       diff = checkAndAddLatestSnapshotDiff(latestSnapshotId, currentINode);

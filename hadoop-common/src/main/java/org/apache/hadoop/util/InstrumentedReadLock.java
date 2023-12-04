@@ -1,9 +1,9 @@
 package org.apache.hadoop.util;
 
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
+
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * This is a wrap class of a <tt>ReadLock</tt>.
@@ -23,23 +23,25 @@ public class InstrumentedReadLock extends InstrumentedLock {
    */
   private final ThreadLocal<Long> readLockHeldTimeStamp =
       new ThreadLocal<Long>() {
-    @Override
-    protected Long initialValue() {
-      return Long.MAX_VALUE;
-    };
-  };
+        @Override
+        protected Long initialValue() {
+          return Long.MAX_VALUE;
+        }
+
+        ;
+      };
 
   public InstrumentedReadLock(String name, Logger logger,
-      ReentrantReadWriteLock readWriteLock,
-      long minLoggingGapMs, long lockWarningThresholdMs) {
+                              ReentrantReadWriteLock readWriteLock,
+                              long minLoggingGapMs, long lockWarningThresholdMs) {
     this(name, logger, readWriteLock, minLoggingGapMs, lockWarningThresholdMs,
         new Timer());
   }
 
   @VisibleForTesting
   InstrumentedReadLock(String name, Logger logger,
-      ReentrantReadWriteLock readWriteLock,
-      long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {
+                       ReentrantReadWriteLock readWriteLock,
+                       long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {
     super(name, logger, readWriteLock.readLock(), minLoggingGapMs,
         lockWarningThresholdMs, clock);
     this.readWriteLock = readWriteLock;

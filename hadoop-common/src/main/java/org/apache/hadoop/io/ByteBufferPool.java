@@ -1,6 +1,7 @@
 package org.apache.hadoop.io;
 
 import java.nio.ByteBuffer;
+
 public interface ByteBufferPool {
   /**
    * Get a new direct ByteBuffer.  The pool can provide this from
@@ -9,7 +10,7 @@ public interface ByteBufferPool {
    *
    * @param direct     Whether the buffer should be direct.
    * @param length     The minimum length the buffer will have.
-   * @return           A new ByteBuffer.  This ByteBuffer must be direct.
+   * @return A new ByteBuffer.  This ByteBuffer must be direct.
    *                   Its capacity can be less than what was requested, but
    *                   must be at least 1 byte.
    */

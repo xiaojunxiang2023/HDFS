@@ -13,7 +13,8 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.planner;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.planner;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,7 @@ public class NodePlan {
   private static final ObjectReader READER = MAPPER.readerFor(NodePlan.class);
   private static final ObjectWriter WRITER = MAPPER.writerFor(
       MAPPER.constructType(NodePlan.class));
+
   /**
    * returns timestamp when this plan was created.
    *

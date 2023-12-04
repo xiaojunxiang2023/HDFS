@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */package org.apache.hadoop.hdfs.server.diskbalancer.command;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.command;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Help Command prints out detailed help about each command.
@@ -63,24 +64,24 @@ public class HelpCommand extends Command {
     helpCommand = helpCommand.toLowerCase();
     Command command = null;
     switch (helpCommand) {
-    case DiskBalancerCLI.PLAN:
-      command = new PlanCommand(getConf());
-      break;
-    case DiskBalancerCLI.EXECUTE:
-      command = new ExecuteCommand(getConf());
-      break;
-    case DiskBalancerCLI.QUERY:
-      command = new QueryCommand(getConf());
-      break;
-    case DiskBalancerCLI.CANCEL:
-      command = new CancelCommand(getConf());
-      break;
-    case DiskBalancerCLI.REPORT:
-      command = new ReportCommand(getConf());
-      break;
-    default:
-      command = this;
-      break;
+      case DiskBalancerCLI.PLAN:
+        command = new PlanCommand(getConf());
+        break;
+      case DiskBalancerCLI.EXECUTE:
+        command = new ExecuteCommand(getConf());
+        break;
+      case DiskBalancerCLI.QUERY:
+        command = new QueryCommand(getConf());
+        break;
+      case DiskBalancerCLI.CANCEL:
+        command = new CancelCommand(getConf());
+        break;
+      case DiskBalancerCLI.REPORT:
+        command = new ReportCommand(getConf());
+        break;
+      default:
+        command = this;
+        break;
     }
     command.printHelp();
 

@@ -1,27 +1,17 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.fs.permission.AclEntryScope.*;
-import static org.apache.hadoop.fs.permission.AclEntryType.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-
+import org.apache.hadoop.fs.permission.*;
+import org.apache.hadoop.hdfs.protocol.AclException;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Ordering;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclEntryScope;
-import org.apache.hadoop.fs.permission.AclEntryType;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.permission.ScopedAclEntries;
-import org.apache.hadoop.hdfs.protocol.AclException;
+
+import java.util.*;
+
+import static org.apache.hadoop.fs.permission.AclEntryScope.ACCESS;
+import static org.apache.hadoop.fs.permission.AclEntryScope.DEFAULT;
+import static org.apache.hadoop.fs.permission.AclEntryType.*;
 
 /**
  * AclTransformation defines the operations that can modify an ACL.  All ACL
@@ -61,10 +51,10 @@ final class AclTransformation {
     ValidatedAclSpec aclSpec = new ValidatedAclSpec(inAclSpec);
     ArrayList<AclEntry> aclBuilder = Lists.newArrayListWithCapacity(MAX_ENTRIES);
     EnumMap<AclEntryScope, AclEntry> providedMask =
-      Maps.newEnumMap(AclEntryScope.class);
+        Maps.newEnumMap(AclEntryScope.class);
     EnumSet<AclEntryScope> maskDirty = EnumSet.noneOf(AclEntryScope.class);
     EnumSet<AclEntryScope> scopeDirty = EnumSet.noneOf(AclEntryScope.class);
-    for (AclEntry existingEntry: existingAcl) {
+    for (AclEntry existingEntry : existingAcl) {
       if (aclSpec.containsKey(existingEntry)) {
         scopeDirty.add(existingEntry.getScope());
         if (existingEntry.getType() == MASK) {
@@ -94,7 +84,7 @@ final class AclTransformation {
   public static List<AclEntry> filterDefaultAclEntries(
       List<AclEntry> existingAcl) throws AclException {
     ArrayList<AclEntry> aclBuilder = Lists.newArrayListWithCapacity(MAX_ENTRIES);
-    for (AclEntry existingEntry: existingAcl) {
+    for (AclEntry existingEntry : existingAcl) {
       if (existingEntry.getScope() == DEFAULT) {
         // Default entries sort after access entries, so we can exit early.
         break;
@@ -115,16 +105,16 @@ final class AclTransformation {
    * @throws AclException if validation fails
    */
   public static List<AclEntry> mergeAclEntries(List<AclEntry> existingAcl,
-      List<AclEntry> inAclSpec) throws AclException {
+                                               List<AclEntry> inAclSpec) throws AclException {
     ValidatedAclSpec aclSpec = new ValidatedAclSpec(inAclSpec);
     ArrayList<AclEntry> aclBuilder = Lists.newArrayListWithCapacity(MAX_ENTRIES);
     List<AclEntry> foundAclSpecEntries =
-      Lists.newArrayListWithCapacity(MAX_ENTRIES);
+        Lists.newArrayListWithCapacity(MAX_ENTRIES);
     EnumMap<AclEntryScope, AclEntry> providedMask =
-      Maps.newEnumMap(AclEntryScope.class);
+        Maps.newEnumMap(AclEntryScope.class);
     EnumSet<AclEntryScope> maskDirty = EnumSet.noneOf(AclEntryScope.class);
     EnumSet<AclEntryScope> scopeDirty = EnumSet.noneOf(AclEntryScope.class);
-    for (AclEntry existingEntry: existingAcl) {
+    for (AclEntry existingEntry : existingAcl) {
       AclEntry aclSpecEntry = aclSpec.findByKey(existingEntry);
       if (aclSpecEntry != null) {
         foundAclSpecEntries.add(aclSpecEntry);
@@ -144,7 +134,7 @@ final class AclTransformation {
       }
     }
     // ACL spec entries that were not replacements are new additions.
-    for (AclEntry newEntry: aclSpec) {
+    for (AclEntry newEntry : aclSpec) {
       if (Collections.binarySearch(foundAclSpecEntries, newEntry,
           ACL_ENTRY_COMPARATOR) < 0) {
         scopeDirty.add(newEntry.getScope());
@@ -177,15 +167,15 @@ final class AclTransformation {
    * @throws AclException if validation fails
    */
   public static List<AclEntry> replaceAclEntries(List<AclEntry> existingAcl,
-      List<AclEntry> inAclSpec) throws AclException {
+                                                 List<AclEntry> inAclSpec) throws AclException {
     ValidatedAclSpec aclSpec = new ValidatedAclSpec(inAclSpec);
     ArrayList<AclEntry> aclBuilder = Lists.newArrayListWithCapacity(MAX_ENTRIES);
     // Replacement is done separately for each scope: access and default.
     EnumMap<AclEntryScope, AclEntry> providedMask =
-      Maps.newEnumMap(AclEntryScope.class);
+        Maps.newEnumMap(AclEntryScope.class);
     EnumSet<AclEntryScope> maskDirty = EnumSet.noneOf(AclEntryScope.class);
     EnumSet<AclEntryScope> scopeDirty = EnumSet.noneOf(AclEntryScope.class);
-    for (AclEntry aclSpecEntry: aclSpec) {
+    for (AclEntry aclSpecEntry : aclSpec) {
       scopeDirty.add(aclSpecEntry.getScope());
       if (aclSpecEntry.getType() == MASK) {
         providedMask.put(aclSpecEntry.getScope(), aclSpecEntry);
@@ -195,7 +185,7 @@ final class AclTransformation {
       }
     }
     // Copy existing entries if the scope was not replaced.
-    for (AclEntry existingEntry: existingAcl) {
+    for (AclEntry existingEntry : existingAcl) {
       if (!scopeDirty.contains(existingEntry.getScope())) {
         if (existingEntry.getType() == MASK) {
           providedMask.put(existingEntry.getScope(), existingEntry);
@@ -226,19 +216,19 @@ final class AclTransformation {
    * All access ACL entries sort ahead of all default ACL entries.
    */
   static final Comparator<AclEntry> ACL_ENTRY_COMPARATOR =
-    new Comparator<AclEntry>() {
-      @Override
-      public int compare(AclEntry entry1, AclEntry entry2) {
-        return ComparisonChain.start()
-          .compare(entry1.getScope(), entry2.getScope(),
-            Ordering.explicit(ACCESS, DEFAULT))
-          .compare(entry1.getType(), entry2.getType(),
-            Ordering.explicit(USER, GROUP, MASK, OTHER))
-          .compare(entry1.getName(), entry2.getName(),
-            Ordering.natural().nullsFirst())
-          .result();
-      }
-    };
+      new Comparator<AclEntry>() {
+        @Override
+        public int compare(AclEntry entry1, AclEntry entry2) {
+          return ComparisonChain.start()
+              .compare(entry1.getScope(), entry2.getScope(),
+                  Ordering.explicit(ACCESS, DEFAULT))
+              .compare(entry1.getType(), entry2.getType(),
+                  Ordering.explicit(USER, GROUP, MASK, OTHER))
+              .compare(entry1.getName(), entry2.getName(),
+                  Ordering.natural().nullsFirst())
+              .result();
+        }
+      };
 
   /**
    * Builds the final list of ACL entries to return by trimming, sorting and
@@ -254,16 +244,16 @@ final class AclTransformation {
     Collections.sort(aclBuilder, ACL_ENTRY_COMPARATOR);
     // Full iteration to check for duplicates and invalid named entries.
     AclEntry prevEntry = null;
-    for (AclEntry entry: aclBuilder) {
+    for (AclEntry entry : aclBuilder) {
       if (prevEntry != null &&
           ACL_ENTRY_COMPARATOR.compare(prevEntry, entry) == 0) {
         throw new AclException(
-          "Invalid ACL: multiple entries with same scope, type and name.");
+            "Invalid ACL: multiple entries with same scope, type and name.");
       }
       if (entry.getName() != null && (entry.getType() == MASK ||
           entry.getType() == OTHER)) {
         throw new AclException(
-          "Invalid ACL: this entry type must not have a name: " + entry + ".");
+            "Invalid ACL: this entry type must not have a name: " + entry + ".");
       }
       prevEntry = entry;
     }
@@ -273,21 +263,21 @@ final class AclTransformation {
 
     // Search for the required base access entries.  If there is a default ACL,
     // then do the same check on the default entries.
-    for (AclEntryType type: EnumSet.of(USER, GROUP, OTHER)) {
+    for (AclEntryType type : EnumSet.of(USER, GROUP, OTHER)) {
       AclEntry accessEntryKey = new AclEntry.Builder().setScope(ACCESS)
-        .setType(type).build();
+          .setType(type).build();
       if (Collections.binarySearch(scopedEntries.getAccessEntries(),
           accessEntryKey, ACL_ENTRY_COMPARATOR) < 0) {
         throw new AclException(
-          "Invalid ACL: the user, group and other entries are required.");
+            "Invalid ACL: the user, group and other entries are required.");
       }
       if (!scopedEntries.getDefaultEntries().isEmpty()) {
         AclEntry defaultEntryKey = new AclEntry.Builder().setScope(DEFAULT)
-          .setType(type).build();
+            .setType(type).build();
         if (Collections.binarySearch(scopedEntries.getDefaultEntries(),
             defaultEntryKey, ACL_ENTRY_COMPARATOR) < 0) {
           throw new AclException(
-            "Invalid default ACL: the user, group and other entries are required.");
+              "Invalid default ACL: the user, group and other entries are required.");
         }
       }
     }
@@ -333,16 +323,16 @@ final class AclTransformation {
    * @throws AclException if validation fails
    */
   private static void calculateMasks(List<AclEntry> aclBuilder,
-      EnumMap<AclEntryScope, AclEntry> providedMask,
-      EnumSet<AclEntryScope> maskDirty, EnumSet<AclEntryScope> scopeDirty)
+                                     EnumMap<AclEntryScope, AclEntry> providedMask,
+                                     EnumSet<AclEntryScope> maskDirty, EnumSet<AclEntryScope> scopeDirty)
       throws AclException {
     EnumSet<AclEntryScope> scopeFound = EnumSet.noneOf(AclEntryScope.class);
     EnumMap<AclEntryScope, FsAction> unionPerms =
-      Maps.newEnumMap(AclEntryScope.class);
+        Maps.newEnumMap(AclEntryScope.class);
     EnumSet<AclEntryScope> maskNeeded = EnumSet.noneOf(AclEntryScope.class);
     // Determine which scopes are present, which scopes need a mask, and the
     // union of group class permissions in each scope.
-    for (AclEntry entry: aclBuilder) {
+    for (AclEntry entry : aclBuilder) {
       scopeFound.add(entry.getScope());
       if (entry.getType() == GROUP || entry.getName() != null) {
         FsAction scopeUnionPerms = unionPerms.get(entry.getScope());
@@ -350,19 +340,19 @@ final class AclTransformation {
           scopeUnionPerms = FsAction.NONE;
         }
         unionPerms.put(entry.getScope(),
-          scopeUnionPerms.or(entry.getPermission()));
+            scopeUnionPerms.or(entry.getPermission()));
       }
       if (entry.getName() != null) {
         maskNeeded.add(entry.getScope());
       }
     }
     // Add mask entry if needed in each scope.
-    for (AclEntryScope scope: scopeFound) {
+    for (AclEntryScope scope : scopeFound) {
       if (!providedMask.containsKey(scope) && maskNeeded.contains(scope) &&
           maskDirty.contains(scope)) {
         // Caller explicitly removed mask entry, but it's required.
         throw new AclException(
-          "Invalid ACL: mask is required and cannot be deleted.");
+            "Invalid ACL: mask is required and cannot be deleted.");
       } else if (providedMask.containsKey(scope) &&
           (!scopeDirty.contains(scope) || maskDirty.contains(scope))) {
         // Caller explicitly provided new mask, or we are preserving the existing
@@ -372,10 +362,10 @@ final class AclTransformation {
         // Otherwise, if there are maskable entries present, or the ACL
         // previously had a mask, then recalculate a mask automatically.
         aclBuilder.add(new AclEntry.Builder()
-          .setScope(scope)
-          .setType(MASK)
-          .setPermission(unionPerms.get(scope))
-          .build());
+            .setScope(scope)
+            .setType(MASK)
+            .setPermission(unionPerms.get(scope))
+            .build());
       }
     }
   }
@@ -393,22 +383,22 @@ final class AclTransformation {
       List<AclEntry> accessEntries = scopedEntries.getAccessEntries();
       List<AclEntry> defaultEntries = scopedEntries.getDefaultEntries();
       List<AclEntry> copiedEntries = Lists.newArrayListWithCapacity(3);
-      for (AclEntryType type: EnumSet.of(USER, GROUP, OTHER)) {
+      for (AclEntryType type : EnumSet.of(USER, GROUP, OTHER)) {
         AclEntry defaultEntryKey = new AclEntry.Builder().setScope(DEFAULT)
-          .setType(type).build();
+            .setType(type).build();
         int defaultEntryIndex = Collections.binarySearch(defaultEntries,
-          defaultEntryKey, ACL_ENTRY_COMPARATOR);
+            defaultEntryKey, ACL_ENTRY_COMPARATOR);
         if (defaultEntryIndex < 0) {
           AclEntry accessEntryKey = new AclEntry.Builder().setScope(ACCESS)
-            .setType(type).build();
+              .setType(type).build();
           int accessEntryIndex = Collections.binarySearch(accessEntries,
-            accessEntryKey, ACL_ENTRY_COMPARATOR);
+              accessEntryKey, ACL_ENTRY_COMPARATOR);
           if (accessEntryIndex >= 0) {
             copiedEntries.add(new AclEntry.Builder()
-              .setScope(DEFAULT)
-              .setType(type)
-              .setPermission(accessEntries.get(accessEntryIndex).getPermission())
-              .build());
+                .setScope(DEFAULT)
+                .setType(type)
+                .setPermission(accessEntries.get(accessEntryIndex).getPermission())
+                .build());
           }
         }
       }

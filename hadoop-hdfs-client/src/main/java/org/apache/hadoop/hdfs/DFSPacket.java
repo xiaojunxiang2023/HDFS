@@ -1,16 +1,17 @@
 package org.apache.hadoop.hdfs;
 
+import org.apache.hadoop.hdfs.protocol.HdfsConstants;
+import org.apache.hadoop.hdfs.protocol.datatransfer.PacketHeader;
+import org.apache.hadoop.hdfs.util.ByteArrayManager;
+import org.apache.hadoop.tracing.Span;
+import org.apache.hadoop.tracing.SpanContext;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.util.Arrays;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.datatransfer.PacketHeader;
-import org.apache.hadoop.hdfs.util.ByteArrayManager;
-import org.apache.hadoop.tracing.Span;
-import org.apache.hadoop.tracing.SpanContext;
 
 /****************************************************************
  * DFSPacket is used by DataStreamer and DFSOutputStream.
@@ -97,7 +98,7 @@ public class DFSPacket {
   public synchronized void writeData(ByteBuffer inBuffer, int len)
       throws ClosedChannelException {
     checkBuffer();
-    len =  len > inBuffer.remaining() ? inBuffer.remaining() : len;
+    len = len > inBuffer.remaining() ? inBuffer.remaining() : len;
     if (dataPos + len > buf.length) {
       throw new BufferOverflowException();
     }
@@ -147,7 +148,7 @@ public class DFSPacket {
       // Move the checksum to cover the gap. This can happen for the last
       // packet or during an hflush/hsync call.
       System.arraycopy(buf, checksumStart, buf,
-          dataStart - checksumLen , checksumLen);
+          dataStart - checksumLen, checksumLen);
       checksumPos = dataStart;
       checksumStart = checksumPos - checksumLen;
     }
@@ -164,7 +165,7 @@ public class DFSPacket {
 
     // corrupt the data for testing.
     if (DFSClientFaultInjector.get().corruptPacket()) {
-      buf[headerStart+header.getSerializedSize() + checksumLen + dataLen-1] ^=
+      buf[headerStart + header.getSerializedSize() + checksumLen + dataLen - 1] ^=
           0xff;
     }
 
@@ -174,7 +175,7 @@ public class DFSPacket {
 
     // undo corruption.
     if (DFSClientFaultInjector.get().uncorruptPacket()) {
-      buf[headerStart+header.getSerializedSize() + checksumLen + dataLen-1] ^=
+      buf[headerStart + header.getSerializedSize() + checksumLen + dataLen - 1] ^=
           0xff;
     }
   }

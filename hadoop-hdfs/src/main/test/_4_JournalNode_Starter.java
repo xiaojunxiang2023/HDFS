@@ -7,8 +7,8 @@ import org.junit.Test;
  * @Description:
  */
 public class _4_JournalNode_Starter {
-    @Test
-    public void startJournalNode() throws Exception {
-        JournalNode.main(new String[]{});
-    }
+  @Test
+  public void startJournalNode() throws Exception {
+    JournalNode.main(new String[]{});
+  }
 }

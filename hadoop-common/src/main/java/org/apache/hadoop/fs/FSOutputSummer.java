@@ -1,6 +1,7 @@
 package org.apache.hadoop.fs;
-import org.apache.hadoop.util.DataChecksum;
+
 import org.apache.hadoop.tracing.TraceScope;
+import org.apache.hadoop.util.DataChecksum;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,31 +21,31 @@ abstract public class FSOutputSummer extends OutputStream implements
   private byte checksum[];
   // The number of valid bytes in the buffer.
   private int count;
-  
+
   // We want this value to be a multiple of 3 because the native code checksums
   // 3 chunks simultaneously. The chosen value of 9 strikes a balance between
   // limiting the number of JNI calls and flushing to the underlying stream
   // relatively frequently.
   private static final int BUFFER_NUM_CHUNKS = 9;
-  
+
   protected FSOutputSummer(DataChecksum sum) {
     this.sum = sum;
     this.buf = new byte[sum.getBytesPerChecksum() * BUFFER_NUM_CHUNKS];
     this.checksum = new byte[getChecksumSize() * BUFFER_NUM_CHUNKS];
     this.count = 0;
   }
-  
+
   /* write the data chunk in <code>b</code> staring at <code>offset</code> with
    * a length of <code>len > 0</code>, and its checksum
    */
   protected abstract void writeChunk(byte[] b, int bOffset, int bLen,
-      byte[] checksum, int checksumOffset, int checksumLen) throws IOException;
-  
+                                     byte[] checksum, int checksumOffset, int checksumLen) throws IOException;
+
   /**
    * Check if the implementing OutputStream is closed and should no longer
    * accept writes. Implementations should do nothing if this stream is not
    * closed, and should throw an {@link IOException} if it is closed.
-   * 
+   *
    * @throws IOException if this stream is already closed.
    */
   protected abstract void checkClosed() throws IOException;
@@ -52,8 +53,8 @@ abstract public class FSOutputSummer extends OutputStream implements
   /** Write one byte */
   @Override
   public synchronized void write(int b) throws IOException {
-    buf[count++] = (byte)b;
-    if(count == buf.length) {
+    buf[count++] = (byte) b;
+    if (count == buf.length) {
       flushBuffer();
     }
   }
@@ -74,28 +75,28 @@ abstract public class FSOutputSummer extends OutputStream implements
    * @param      b     the data.
    * @param      off   the start offset in the data.
    * @param      len   the number of bytes to write.
-   * @exception  IOException  if an I/O error occurs.
+   * @exception IOException  if an I/O error occurs.
    */
   @Override
   public synchronized void write(byte b[], int off, int len)
       throws IOException {
-    
+
     checkClosed();
-    
+
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
 
-    for (int n=0;n<len;n+=write1(b, off+n, len-n)) {
+    for (int n = 0; n < len; n += write1(b, off + n, len - n)) {
     }
   }
-  
+
   /**
    * Write a portion of an array, flushing to the underlying
    * stream at most once if necessary.
    */
   private int write1(byte b[], int off, int len) throws IOException {
-    if(count==0 && len>=buf.length) {
+    if (count == 0 && len >= buf.length) {
       // local buffer is empty and user buffer size >= local buffer size, so
       // simply checksum the user buffer and send it directly to the underlying
       // stream
@@ -103,21 +104,21 @@ abstract public class FSOutputSummer extends OutputStream implements
       writeChecksumChunks(b, off, length);
       return length;
     }
-    
+
     // copy user data to local buffer
-    int bytesToCopy = buf.length-count;
-    bytesToCopy = (len<bytesToCopy) ? len : bytesToCopy;
+    int bytesToCopy = buf.length - count;
+    bytesToCopy = (len < bytesToCopy) ? len : bytesToCopy;
     System.arraycopy(b, off, buf, count, bytesToCopy);
     count += bytesToCopy;
     if (count == buf.length) {
       // local buffer is full
       flushBuffer();
-    } 
+    }
     return bytesToCopy;
   }
 
   /* Forces any buffered output bytes to be checksumed and written out to
-   * the underlying output stream. 
+   * the underlying output stream.
    */
   protected synchronized void flushBuffer() throws IOException {
     flushBuffer(false, true);
@@ -134,7 +135,7 @@ abstract public class FSOutputSummer extends OutputStream implements
    * buffer (can only be non-zero if keep is true).
    */
   protected synchronized int flushBuffer(boolean keep,
-      boolean flushPartial) throws IOException {
+                                         boolean flushPartial) throws IOException {
     int bufLen = count;
     int partialLen = bufLen % sum.getBytesPerChecksum();
     int lenToFlush = flushPartial ? bufLen : bufLen - partialLen;
@@ -185,7 +186,7 @@ abstract public class FSOutputSummer extends OutputStream implements
    * to the underlying output stream.
    */
   private void writeChecksumChunks(byte b[], int off, int len)
-  throws IOException {
+      throws IOException {
     sum.calculateChunkedSums(b, off, len, checksum, 0);
     TraceScope scope = createWriteTraceScope();
     try {
@@ -206,7 +207,7 @@ abstract public class FSOutputSummer extends OutputStream implements
    * Converts a checksum integer value to a byte stream
    */
   static public byte[] convertToByteStream(Checksum sum, int checksumSize) {
-    return int2byte((int)sum.getValue(), new byte[checksumSize]);
+    return int2byte((int) sum.getValue(), new byte[checksumSize]);
   }
 
   static byte[] int2byte(int integer, byte[] bytes) {

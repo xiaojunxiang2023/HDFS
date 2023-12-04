@@ -1,9 +1,10 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.io.ByteBufferPool;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
-import org.apache.hadoop.io.ByteBufferPool;
 
 /**
  * FSDataInputStreams implement this interface to provide enhanced
@@ -36,16 +37,16 @@ public interface HasEnhancedByteBufferAccess {
    *            by calling releaseBuffer on it.  The buffer will continue to be
    *            readable until it is released in this manner.  However, the
    *            input stream's close method may warn about unclosed buffers.
-   * @throws    IOException if there was an error reading.
-   * @throws    UnsupportedOperationException  if factory was null,
+   * @throws IOException if there was an error reading.
+   * @throws UnsupportedOperationException  if factory was null,
    *             and we needed an external byte buffer.
-   * @throws    UnsupportedOperationException  will never be thrown
+   * @throws UnsupportedOperationException  will never be thrown
    *             unless the factory argument is null.
    *
    */
   public ByteBuffer read(ByteBufferPool factory, int maxLength,
-      EnumSet<ReadOption> opts)
-          throws IOException, UnsupportedOperationException;
+                         EnumSet<ReadOption> opts)
+      throws IOException, UnsupportedOperationException;
 
   /**
    * Release a ByteBuffer which was created by the enhanced ByteBuffer read

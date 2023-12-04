@@ -1,10 +1,9 @@
 package org.apache.hadoop.util;
 
-import java.nio.ByteBuffer;
-
 import org.apache.hadoop.fs.ChecksumException;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.nio.ByteBuffer;
 
 /**
  * Wrapper around JNI support code to do checksum computation
@@ -12,6 +11,7 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  */
 class NativeCrc32 {
   private static final boolean isSparc = System.getProperty("os.arch").toLowerCase().startsWith("sparc");
+
   /**
    * Return true if the JNI-based native CRC extensions are available.
    */
@@ -29,7 +29,7 @@ class NativeCrc32 {
    * have their position initially at the start of the data, and their limit
    * set at the end of the data. The position, limit, and mark are not
    * modified.
-   * 
+   *
    * @param bytesPerSum the chunk size (eg 512 bytes)
    * @param checksumType the DataChecksum type constant (NULL is not supported)
    * @param sums the DirectByteBuffer pointing at the beginning of the
@@ -41,7 +41,7 @@ class NativeCrc32 {
    * @throws ChecksumException if there is an invalid checksum
    */
   public static void verifyChunkedSums(int bytesPerSum, int checksumType,
-      ByteBuffer sums, ByteBuffer data, String fileName, long basePos)
+                                       ByteBuffer sums, ByteBuffer data, String fileName, long basePos)
       throws ChecksumException {
     nativeComputeChunkedSums(bytesPerSum, checksumType,
         sums, sums.position(),
@@ -50,8 +50,8 @@ class NativeCrc32 {
   }
 
   public static void verifyChunkedSumsByteArray(int bytesPerSum,
-      int checksumType, byte[] sums, int sumsOffset, byte[] data,
-      int dataOffset, int dataLength, String fileName, long basePos)
+                                                int checksumType, byte[] sums, int sumsOffset, byte[] data,
+                                                int dataOffset, int dataLength, String fileName, long basePos)
       throws ChecksumException {
     nativeComputeChunkedSumsByteArray(bytesPerSum, checksumType,
         sums, sumsOffset,
@@ -60,7 +60,7 @@ class NativeCrc32 {
   }
 
   public static void calculateChunkedSums(int bytesPerSum, int checksumType,
-      ByteBuffer sums, ByteBuffer data) {
+                                          ByteBuffer sums, ByteBuffer data) {
     nativeComputeChunkedSums(bytesPerSum, checksumType,
         sums, sums.position(),
         data, data.position(), data.remaining(),
@@ -68,8 +68,8 @@ class NativeCrc32 {
   }
 
   public static void calculateChunkedSumsByteArray(int bytesPerSum,
-      int checksumType, byte[] sums, int sumsOffset, byte[] data,
-      int dataOffset, int dataLength) {
+                                                   int checksumType, byte[] sums, int sumsOffset, byte[] data,
+                                                   int dataOffset, int dataLength) {
     nativeComputeChunkedSumsByteArray(bytesPerSum, checksumType,
         sums, sumsOffset,
         data, dataOffset, dataLength,
@@ -106,14 +106,14 @@ class NativeCrc32 {
       ByteBuffer sums, int sumsOffset,
       ByteBuffer data, int dataOffset, int dataLength,
       String fileName, long basePos) throws ChecksumException;
-  
-    private static native void nativeComputeChunkedSums(
+
+  private static native void nativeComputeChunkedSums(
       int bytesPerSum, int checksumType,
       ByteBuffer sums, int sumsOffset,
       ByteBuffer data, int dataOffset, int dataLength,
       String fileName, long basePos, boolean verify);
 
-    private static native void nativeComputeChunkedSumsByteArray(
+  private static native void nativeComputeChunkedSumsByteArray(
       int bytesPerSum, int checksumType,
       byte[] sums, int sumsOffset,
       byte[] data, int dataOffset, int dataLength,

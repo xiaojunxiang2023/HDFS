@@ -3,13 +3,13 @@ package org.apache.hadoop.util.hash;
 /**
  * This is a very fast, non-cryptographic hash suitable for general hash-based
  * lookup.  See http://murmurhash.googlepages.com/ for more details.
- * 
+ *
  * <p>The C version of MurmurHash 2.0 found at that site was ported
  * to Java by Andrzej Bialecki (ab at getopt org).</p>
  */
 public class MurmurHash extends Hash {
   private static MurmurHash _instance = new MurmurHash();
-  
+
   public static Hash getInstance() {
     return _instance;
   }

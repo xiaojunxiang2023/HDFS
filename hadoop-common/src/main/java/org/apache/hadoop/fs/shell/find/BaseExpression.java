@@ -1,10 +1,5 @@
 package org.apache.hadoop.fs.shell.find;
 
-import java.io.IOException;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -12,14 +7,19 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.PathData;
 
+import java.io.IOException;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Abstract expression for use in the
  * {@link org.apache.hadoop.fs.shell.find.Find} command. Provides default
  * behavior for a no-argument primary expression.
  */
 public abstract class BaseExpression implements Expression, Configurable {
-  private String[] usage = { "Not yet implemented" };
-  private String[] help = { "Not yet implemented" };
+  private String[] usage = {"Not yet implemented"};
+  private String[] help = {"Not yet implemented"};
 
   /** Sets the usage text for this {@link Expression} */
   protected void setUsage(String[] usage) {

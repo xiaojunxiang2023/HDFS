@@ -1,26 +1,28 @@
 package org.apache.hadoop.net;
 
-import java.util.*;
-import java.io.*;
-
-import org.apache.hadoop.util.Shell.ShellCommandExecutor;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.util.Shell.ShellCommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class ScriptBasedMapping extends CachedDNSToSwitchMapping {
 
   static final int MIN_ALLOWABLE_ARGS = 1;
 
-  static final int DEFAULT_ARG_COUNT = 
-                     CommonConfigurationKeys.NET_TOPOLOGY_SCRIPT_NUMBER_ARGS_DEFAULT;
+  static final int DEFAULT_ARG_COUNT =
+      CommonConfigurationKeys.NET_TOPOLOGY_SCRIPT_NUMBER_ARGS_DEFAULT;
 
-  static final String SCRIPT_FILENAME_KEY = 
-                     CommonConfigurationKeys.NET_TOPOLOGY_SCRIPT_FILE_NAME_KEY ;
+  static final String SCRIPT_FILENAME_KEY =
+      CommonConfigurationKeys.NET_TOPOLOGY_SCRIPT_FILE_NAME_KEY;
 
   static final String SCRIPT_ARG_COUNT_KEY =
-                     CommonConfigurationKeys.NET_TOPOLOGY_SCRIPT_NUMBER_ARGS_KEY ;
+      CommonConfigurationKeys.NET_TOPOLOGY_SCRIPT_NUMBER_ARGS_KEY;
   public static final String NO_SCRIPT = "no script";
 
   public ScriptBasedMapping() {
@@ -37,7 +39,7 @@ public class ScriptBasedMapping extends CachedDNSToSwitchMapping {
   }
 
   private RawScriptBasedMapping getRawMapping() {
-    return (RawScriptBasedMapping)rawMapping;
+    return (RawScriptBasedMapping) rawMapping;
   }
 
   @Override
@@ -68,7 +70,7 @@ public class ScriptBasedMapping extends CachedDNSToSwitchMapping {
         LoggerFactory.getLogger(ScriptBasedMapping.class);
 
     @Override
-    public void setConf (Configuration conf) {
+    public void setConf(Configuration conf) {
       super.setConf(conf);
       if (conf != null) {
         scriptName = conf.get(SCRIPT_FILENAME_KEY);
@@ -79,7 +81,8 @@ public class ScriptBasedMapping extends CachedDNSToSwitchMapping {
       }
     }
 
-    public RawScriptBasedMapping() {}
+    public RawScriptBasedMapping() {
+    }
 
     @Override
     public List<String> resolve(List<String> names) {
@@ -120,8 +123,8 @@ public class ScriptBasedMapping extends CachedDNSToSwitchMapping {
       return m;
     }
 
-    protected String runResolveCommand(List<String> args, 
-        String commandScriptName) {
+    protected String runResolveCommand(List<String> args,
+                                       String commandScriptName) {
       int loopCount = 0;
       if (args.size() == 0) {
         return null;

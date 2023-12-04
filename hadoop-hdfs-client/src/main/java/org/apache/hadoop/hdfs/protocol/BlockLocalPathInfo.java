@@ -25,18 +25,24 @@ public class BlockLocalPathInfo {
    * Get the Block data file.
    * @return Block data file.
    */
-  public String getBlockPath() {return localBlockPath;}
+  public String getBlockPath() {
+    return localBlockPath;
+  }
 
   /**
    * @return the Block
    */
-  public ExtendedBlock getBlock() { return block;}
+  public ExtendedBlock getBlock() {
+    return block;
+  }
 
   /**
    * Get the Block metadata file.
    * @return Block metadata file.
    */
-  public String getMetaPath() {return localMetaPath;}
+  public String getMetaPath() {
+    return localMetaPath;
+  }
 
   /**
    * Get number of bytes in the block.

@@ -3,11 +3,7 @@ package org.apache.hadoop.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -52,7 +48,7 @@ public class FileBasedIPList implements IPList {
   }
 
   @Override
-  public  boolean isIn(String ipAddress) {
+  public boolean isIn(String ipAddress) {
     if (ipAddress == null || addressList == null) {
       return false;
     }
@@ -69,7 +65,7 @@ public class FileBasedIPList implements IPList {
   private static String[] readLines(String fileName) throws IOException {
     try {
       if (fileName != null) {
-        File file = new File (fileName);
+        File file = new File(fileName);
         if (file.exists()) {
           try (
               Reader fileReader = new InputStreamReader(
@@ -87,7 +83,7 @@ public class FileBasedIPList implements IPList {
             return (lines.toArray(new String[lines.size()]));
           }
         } else {
-          LOG.debug("Missing ip list file : "+ fileName);
+          LOG.debug("Missing ip list file : " + fileName);
         }
       }
     } catch (IOException ioe) {

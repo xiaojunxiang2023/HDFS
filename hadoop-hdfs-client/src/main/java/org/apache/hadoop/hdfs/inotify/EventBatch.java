@@ -16,5 +16,7 @@ public class EventBatch {
     return txid;
   }
 
-  public Event[] getEvents() { return events; }
+  public Event[] getEvents() {
+    return events;
+  }
 }

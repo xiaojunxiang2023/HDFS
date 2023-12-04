@@ -8,7 +8,7 @@ import java.util.Collection;
 public interface MetricsRecord {
   /**
    * Get the timestamp of the metrics
-   * @return  the timestamp
+   * @return the timestamp
    */
   long timestamp();
 

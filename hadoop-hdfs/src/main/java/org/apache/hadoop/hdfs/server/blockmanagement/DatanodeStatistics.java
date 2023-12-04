@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.Map;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
+
+import java.util.Map;
 
 /** Datanode statistics */
 public interface DatanodeStatistics {
@@ -28,7 +28,7 @@ public interface DatanodeStatistics {
 
   /** @return the percentage of the block pool used space over the total capacity. */
   public float getPercentBlockPoolUsed();
-  
+
   /** @return the total cache capacity of all DataNodes */
   public long getCacheCapacity();
 
@@ -40,10 +40,10 @@ public interface DatanodeStatistics {
 
   /** @return average xceiver count for non-decommission(ing|ed) nodes */
   public int getInServiceXceiverCount();
-  
+
   /** @return number of non-decommission(ing|ed) nodes */
   public int getNumDatanodesInService();
-  
+
   /**
    * @return the total used space by data nodes for non-DFS purposes
    * such as storing temporary files on the local file system

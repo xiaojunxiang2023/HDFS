@@ -1,12 +1,13 @@
 package org.apache.hadoop.util;
 
-import java.util.jar.*;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 /**
  * A micro-application that prints the main class name out of a jar file.
  */
 public class PrintJarMainClass {
-  
+
   /**
    * @param args
    */
@@ -26,5 +27,5 @@ public class PrintJarMainClass {
     System.out.println("UNKNOWN");
     System.exit(1);
   }
-  
+
 }

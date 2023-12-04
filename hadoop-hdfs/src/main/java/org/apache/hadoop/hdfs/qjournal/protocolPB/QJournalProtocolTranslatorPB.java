@@ -1,44 +1,11 @@
 package org.apache.hadoop.hdfs.qjournal.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URL;
 import org.apache.hadoop.hdfs.protocolPB.JournalProtocolPB;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocol;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.AcceptRecoveryRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.CanRollBackRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.CanRollBackResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DiscardSegmentsRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoFinalizeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoPreUpgradeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoRollbackRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoUpgradeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.FinalizeLogSegmentRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.FormatRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalCTimeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalCTimeResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.HeartbeatRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.IsFormattedRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.IsFormattedResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.JournalIdProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.JournalRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PurgeLogsRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.RequestInfoProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.SegmentStateProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.StartLogSegmentRequestProto;
+import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.qjournal.protocol.RequestInfo;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.JournalProtocol;
@@ -47,9 +14,12 @@ import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.ipc.ProtocolMetaInterface;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.RpcClientUtil;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * This class is the client side translator to translate the requests made on
@@ -61,7 +31,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
   /** RpcController is not used and hence is set to null */
   private final static RpcController NULL_CONTROLLER = null;
   private final QJournalProtocolPB rpcProxy;
-  
+
   public QJournalProtocolTranslatorPB(QJournalProtocolPB rpcProxy) {
     this.rpcProxy = rpcProxy;
   }
@@ -112,7 +82,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
         .setIdentifier(jid)
         .build();
   }
-  
+
   @Override
   public void format(String jid,
                      String nameServiceId,
@@ -123,7 +93,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
           .setJid(convertJournalId(jid))
           .setNsInfo(PBHelper.convert(nsInfo))
           .setForce(force);
-      if(nameServiceId != null) {
+      if (nameServiceId != null) {
         req.setNameServiceId(nameServiceId);
       }
 
@@ -144,7 +114,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
           .setNsInfo(PBHelper.convert(nsInfo))
           .setEpoch(epoch);
 
-      if(nameServiceId != null) {
+      if (nameServiceId != null) {
         req.setNameServiceId(nameServiceId);
       }
 
@@ -156,8 +126,8 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
 
   @Override
   public void journal(RequestInfo reqInfo,
-      long segmentTxId, long firstTxnId, int numTxns,
-      byte[] records) throws IOException {
+                      long segmentTxId, long firstTxnId, int numTxns,
+                      byte[] records) throws IOException {
     JournalRequestProto req = JournalRequestProto.newBuilder()
         .setReqInfo(convert(reqInfo))
         .setSegmentTxnId(segmentTxId)
@@ -171,13 +141,13 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
       throw ProtobufHelper.getRemoteException(e);
     }
   }
-  
+
   @Override
   public void heartbeat(RequestInfo reqInfo) throws IOException {
     try {
       rpcProxy.heartbeat(NULL_CONTROLLER, HeartbeatRequestProto.newBuilder()
-            .setReqInfo(convert(reqInfo))
-            .build());
+          .setReqInfo(convert(reqInfo))
+          .build());
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
@@ -192,7 +162,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
     if (reqInfo.hasCommittedTxId()) {
       builder.setCommittedTxId(reqInfo.getCommittedTxId());
     }
-    if(reqInfo.getNameServiceId() != null) {
+    if (reqInfo.getNameServiceId() != null) {
       builder.setNameServiceId(reqInfo.getNameServiceId());
     }
     return builder.build();
@@ -211,23 +181,23 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
       throw ProtobufHelper.getRemoteException(e);
     }
   }
-  
+
   @Override
   public void finalizeLogSegment(RequestInfo reqInfo, long startTxId,
-      long endTxId) throws IOException {
+                                 long endTxId) throws IOException {
     FinalizeLogSegmentRequestProto req =
         FinalizeLogSegmentRequestProto.newBuilder()
-        .setReqInfo(convert(reqInfo))
-        .setStartTxId(startTxId)
-        .setEndTxId(endTxId)
-        .build();
+            .setReqInfo(convert(reqInfo))
+            .setStartTxId(startTxId)
+            .setEndTxId(endTxId)
+            .build();
     try {
       rpcProxy.finalizeLogSegment(NULL_CONTROLLER, req);
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
   }
-  
+
   @Override
   public void purgeLogsOlderThan(RequestInfo reqInfo, long minTxIdToKeep)
       throws IOException {
@@ -245,19 +215,19 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
   @Override
   public GetEditLogManifestResponseProto getEditLogManifest(
       String jid, String nameServiceId,
-       long sinceTxId, boolean inProgressOk) throws IOException {
+      long sinceTxId, boolean inProgressOk) throws IOException {
     try {
       GetEditLogManifestRequestProto.Builder req;
       req = GetEditLogManifestRequestProto.newBuilder()
           .setJid(convertJournalId(jid))
           .setSinceTxId(sinceTxId)
           .setInProgressOk(inProgressOk);
-      if (nameServiceId !=null) {
+      if (nameServiceId != null) {
         req.setNameServiceId(nameServiceId);
       }
       return rpcProxy.getEditLogManifest(NULL_CONTROLLER,
           req.build()
-          );
+      );
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
@@ -265,7 +235,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
 
   @Override
   public GetJournaledEditsResponseProto getJournaledEdits(String jid,
-      String nameServiceId, long sinceTxId, int maxTxns) throws IOException {
+                                                          String nameServiceId, long sinceTxId, int maxTxns) throws IOException {
     try {
       GetJournaledEditsRequestProto.Builder req =
           GetJournaledEditsRequestProto.newBuilder()
@@ -283,13 +253,13 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
 
   @Override
   public PrepareRecoveryResponseProto prepareRecovery(RequestInfo reqInfo,
-      long segmentTxId) throws IOException {
+                                                      long segmentTxId) throws IOException {
     try {
       return rpcProxy.prepareRecovery(NULL_CONTROLLER,
           PrepareRecoveryRequestProto.newBuilder()
-            .setReqInfo(convert(reqInfo))
-            .setSegmentTxId(segmentTxId)
-            .build());
+              .setReqInfo(convert(reqInfo))
+              .setSegmentTxId(segmentTxId)
+              .build());
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
@@ -297,14 +267,14 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
 
   @Override
   public void acceptRecovery(RequestInfo reqInfo,
-      SegmentStateProto stateToAccept, URL fromUrl) throws IOException {
+                             SegmentStateProto stateToAccept, URL fromUrl) throws IOException {
     try {
       rpcProxy.acceptRecovery(NULL_CONTROLLER,
           AcceptRecoveryRequestProto.newBuilder()
-            .setReqInfo(convert(reqInfo))
-            .setStateToAccept(stateToAccept)
-            .setFromURL(fromUrl.toExternalForm())
-            .build());
+              .setReqInfo(convert(reqInfo))
+              .setStateToAccept(stateToAccept)
+              .setFromURL(fromUrl.toExternalForm())
+              .build());
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
@@ -333,14 +303,14 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
     try {
       rpcProxy.doUpgrade(NULL_CONTROLLER,
           DoUpgradeRequestProto.newBuilder()
-            .setJid(convertJournalId(journalId))
-            .setSInfo(PBHelper.convert(sInfo))
-            .build());
+              .setJid(convertJournalId(journalId))
+              .setSInfo(PBHelper.convert(sInfo))
+              .build());
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
   }
-  
+
   @Override
   public void doFinalize(String jid, String nameServiceId) throws IOException {
     try {
@@ -422,7 +392,7 @@ public class QJournalProtocolTranslatorPB implements ProtocolMetaInterface,
       GetJournalCTimeRequestProto.Builder req = GetJournalCTimeRequestProto
           .newBuilder()
           .setJid(convertJournalId(journalId));
-      if(nameServiceId !=null) {
+      if (nameServiceId != null) {
         req.setNameServiceId(nameServiceId);
       }
       GetJournalCTimeResponseProto response = rpcProxy.getJournalCTime(

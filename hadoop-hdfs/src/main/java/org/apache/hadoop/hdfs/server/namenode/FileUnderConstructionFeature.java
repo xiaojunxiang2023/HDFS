@@ -1,8 +1,9 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.namenode.INode.BlocksMapUpdateInfo;
+
+import java.io.IOException;
 
 /**
  * Feature for under-construction file.
@@ -42,7 +43,7 @@ public class FileUnderConstructionFeature implements INode.Feature {
         + f.getFullPathName() + " is null when updating its length";
     assert !lastBlock.isComplete()
         : "The last block for path " + f.getFullPathName()
-            + " is not under-construction when updating its length";
+        + " is not under-construction when updating its length";
     lastBlock.setNumBytes(lastBlockLength);
   }
 
@@ -52,7 +53,7 @@ public class FileUnderConstructionFeature implements INode.Feature {
    * and its size is 0.
    */
   void cleanZeroSizeBlock(final INodeFile f,
-      final BlocksMapUpdateInfo collectedBlocks) {
+                          final BlocksMapUpdateInfo collectedBlocks) {
     final BlockInfo[] blocks = f.getBlocks();
     if (blocks != null && blocks.length > 0
         && !blocks[blocks.length - 1].isComplete()) {

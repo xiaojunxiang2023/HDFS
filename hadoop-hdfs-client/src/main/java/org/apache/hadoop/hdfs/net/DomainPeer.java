@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.net;
 
+import org.apache.hadoop.net.unix.DomainSocket;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.ReadableByteChannel;
-
-import org.apache.hadoop.net.unix.DomainSocket;
 
 /**
  * Represents a peer that we communicate with by using blocking I/O

@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2005, European Commission project OneLab under contract 034819
  * (http://www.one-lab.org)
- * 
+ *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the following 
@@ -16,7 +16,7 @@
  *    nor the names of its contributors may be used to endorse or 
  *    promote products derived from this software without specific prior 
  *    written permission.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 

@@ -13,13 +13,13 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.datamodel;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.datamodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-
 import org.apache.hadoop.hdfs.web.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -272,8 +272,8 @@ public class DiskBalancerVolume {
    */
   public void setUsed(long dfsUsedSpace) {
     if (dfsUsedSpace > this.getCapacity()) {
-      LOG.warn("Volume usage ("+dfsUsedSpace+") is greater than capacity ("+
-        this.getCapacity()+"). Setting volume usage to the capacity");
+      LOG.warn("Volume usage (" + dfsUsedSpace + ") is greater than capacity (" +
+          this.getCapacity() + "). Setting volume usage to the capacity");
       this.used = this.getCapacity();
     } else {
       this.used = dfsUsedSpace;

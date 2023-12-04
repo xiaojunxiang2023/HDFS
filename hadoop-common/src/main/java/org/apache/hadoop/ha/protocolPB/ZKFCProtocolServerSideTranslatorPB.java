@@ -1,6 +1,5 @@
 package org.apache.hadoop.ha.protocolPB;
 
-import java.io.IOException;
 import org.apache.hadoop.ha.fc.ZKFCProtocol;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.CedeActiveRequestProto;
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.CedeActiveResponseProto;
@@ -8,20 +7,22 @@ import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.GracefulFailoverRequestProt
 import org.apache.hadoop.ha.proto.ZKFCProtocolProtos.GracefulFailoverResponseProto;
 import org.apache.hadoop.ipc.ProtocolSignature;
 import org.apache.hadoop.ipc.RPC;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
+
 public class ZKFCProtocolServerSideTranslatorPB implements
     ZKFCProtocolPB {
   private final ZKFCProtocol server;
-  
+
   public ZKFCProtocolServerSideTranslatorPB(ZKFCProtocol server) {
     this.server = server;
   }
 
   @Override
   public CedeActiveResponseProto cedeActive(RpcController controller,
-      CedeActiveRequestProto request) throws ServiceException {
+                                            CedeActiveRequestProto request) throws ServiceException {
     try {
       server.cedeActive(request.getMillisToCede());
       return CedeActiveResponseProto.getDefaultInstance();
@@ -50,7 +51,7 @@ public class ZKFCProtocolServerSideTranslatorPB implements
 
   @Override
   public ProtocolSignature getProtocolSignature(String protocol,
-      long clientVersion, int clientMethodsHash) throws IOException {
+                                                long clientVersion, int clientMethodsHash) throws IOException {
     if (!protocol.equals(RPC.getProtocolName(ZKFCProtocolPB.class))) {
       throw new IOException("Serverside implements " +
           RPC.getProtocolName(ZKFCProtocolPB.class) +

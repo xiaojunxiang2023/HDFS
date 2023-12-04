@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 /**
  * The setting of replace-datanode-on-failure feature.
@@ -19,8 +19,8 @@ public class ReplaceDatanodeOnFailure {
   private static final Condition CONDITION_DEFAULT = new Condition() {
     @Override
     public boolean satisfy(final short replication,
-        final DatanodeInfo[] existings, final int n, final boolean isAppend,
-        final boolean isHflushed) {
+                           final DatanodeInfo[] existings, final int n, final boolean isAppend,
+                           final boolean isHflushed) {
       return replication >= 3 &&
           (n <= (replication / 2) || isAppend || isHflushed);
     }
@@ -29,7 +29,7 @@ public class ReplaceDatanodeOnFailure {
   private static final Condition CONDITION_FALSE = new Condition() {
     @Override
     public boolean satisfy(short replication, DatanodeInfo[] existings,
-        int nExistings, boolean isAppend, boolean isHflushed) {
+                           int nExistings, boolean isAppend, boolean isHflushed) {
       return false;
     }
   };
@@ -37,7 +37,7 @@ public class ReplaceDatanodeOnFailure {
   private static final Condition CONDITION_TRUE = new Condition() {
     @Override
     public boolean satisfy(short replication, DatanodeInfo[] existings,
-        int nExistings, boolean isAppend, boolean isHflushed) {
+                           int nExistings, boolean isAppend, boolean isHflushed) {
       return true;
     }
   };
@@ -85,8 +85,8 @@ public class ReplaceDatanodeOnFailure {
     if (policy == Policy.DISABLE) {
       throw new UnsupportedOperationException(
           "This feature is disabled.  Please refer to "
-          + HdfsClientConfigKeys.BlockWrite.ReplaceDatanodeOnFailure.ENABLE_KEY
-          + " configuration property.");
+              + HdfsClientConfigKeys.BlockWrite.ReplaceDatanodeOnFailure.ENABLE_KEY
+              + " configuration property.");
     }
   }
 
@@ -140,7 +140,7 @@ public class ReplaceDatanodeOnFailure {
     final String policy = conf.get(
         HdfsClientConfigKeys.BlockWrite.ReplaceDatanodeOnFailure.POLICY_KEY,
         HdfsClientConfigKeys.BlockWrite.ReplaceDatanodeOnFailure.POLICY_DEFAULT);
-    for(int i = 1; i < Policy.values().length; i++) {
+    for (int i = 1; i < Policy.values().length; i++) {
       final Policy p = Policy.values()[i];
       if (p.name().equalsIgnoreCase(policy)) {
         return p;
@@ -153,7 +153,7 @@ public class ReplaceDatanodeOnFailure {
 
   /** Write the setting to configuration. */
   public static void write(final Policy policy,
-      final boolean bestEffort, final Configuration conf) {
+                           final boolean bestEffort, final Configuration conf) {
     conf.setBoolean(
         HdfsClientConfigKeys.BlockWrite.ReplaceDatanodeOnFailure.ENABLE_KEY,
         policy != Policy.DISABLE);

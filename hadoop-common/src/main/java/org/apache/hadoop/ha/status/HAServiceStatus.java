@@ -7,7 +7,7 @@ public class HAServiceStatus {
   private final HAServiceState state;
   private boolean readyToBecomeActive;
   private String notReadyReason;
-  
+
   public HAServiceStatus(HAServiceState state) {
     this.state = state;
   }
@@ -20,7 +20,7 @@ public class HAServiceStatus {
     this.readyToBecomeActive = true;
     this.notReadyReason = null;
   }
-  
+
   public void setNotReadyToBecomeActive(String reason) {
     this.readyToBecomeActive = false;
     this.notReadyReason = reason;

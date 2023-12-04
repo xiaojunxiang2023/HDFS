@@ -8,7 +8,7 @@ public class ServiceFailedException extends IOException {
   public ServiceFailedException(final String message) {
     super(message);
   }
-  
+
   public ServiceFailedException(String message, Throwable cause) {
     super(message, cause);
   }

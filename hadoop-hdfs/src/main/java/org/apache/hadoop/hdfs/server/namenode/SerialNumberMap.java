@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,12 +9,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Map object to serial number.
- * 
+ *
  * <p>It allows to get the serial number of an object, if the object doesn't
  * exist in the map, a new serial number increased by 1 is generated to
  * map to the object. The mapped object can also be got through the serial
  * number.
- * 
+ *
  * <p>The map is thread-safe.
  */
 public class SerialNumberMap<T> {
@@ -83,6 +82,6 @@ public class SerialNumberMap<T> {
   @Override
   public String toString() {
     return "current=" + current + ",\n" +
-           "max=" + max + ",\n  t2i=" + t2i + ",\n  i2t=" + i2t;
+        "max=" + max + ",\n  t2i=" + t2i + ",\n  i2t=" + i2t;
   }
 }

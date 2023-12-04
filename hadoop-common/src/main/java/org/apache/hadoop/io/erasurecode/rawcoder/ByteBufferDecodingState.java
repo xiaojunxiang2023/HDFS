@@ -30,9 +30,9 @@ class ByteBufferDecodingState extends DecodingState {
   }
 
   ByteBufferDecodingState(RawErasureDecoder decoder,
-                         int decodeLength,
-                         int[] erasedIndexes,
-                         ByteBuffer[] inputs,
+                          int decodeLength,
+                          int[] erasedIndexes,
+                          ByteBuffer[] inputs,
                           ByteBuffer[] outputs) {
     this.decoder = decoder;
     this.decodeLength = decodeLength;

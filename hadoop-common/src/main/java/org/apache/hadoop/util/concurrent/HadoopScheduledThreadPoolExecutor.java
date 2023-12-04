@@ -40,18 +40,18 @@ public class HadoopScheduledThreadPoolExecutor extends
   }
 
   public HadoopScheduledThreadPoolExecutor(int corePoolSize,
-      ThreadFactory threadFactory) {
+                                           ThreadFactory threadFactory) {
     super(corePoolSize, threadFactory);
   }
 
   public HadoopScheduledThreadPoolExecutor(int corePoolSize,
-      RejectedExecutionHandler handler) {
+                                           RejectedExecutionHandler handler) {
     super(corePoolSize, handler);
   }
 
   public HadoopScheduledThreadPoolExecutor(int corePoolSize,
-      ThreadFactory threadFactory,
-      RejectedExecutionHandler handler) {
+                                           ThreadFactory threadFactory,
+                                           RejectedExecutionHandler handler) {
     super(corePoolSize, threadFactory, handler);
   }
 

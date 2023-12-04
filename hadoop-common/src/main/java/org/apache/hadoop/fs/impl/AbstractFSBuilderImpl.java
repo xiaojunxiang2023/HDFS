@@ -1,19 +1,14 @@
 package org.apache.hadoop.fs.impl;
 
-import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSBuilder;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathHandle;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import javax.annotation.Nonnull;
+import java.util.*;
 
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
@@ -42,7 +37,7 @@ import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.
  * @param <B> type of builder itself.
  */
 public abstract class
-    AbstractFSBuilderImpl<S, B extends FSBuilder<S, B>>
+AbstractFSBuilderImpl<S, B extends FSBuilder<S, B>>
     implements FSBuilder<S, B> {
 
   public static final String UNKNOWN_MANDATORY_KEY = "Unknown mandatory key";
@@ -97,7 +92,7 @@ public abstract class
    * @return this object, typecast
    */
   public B getThisBuilder() {
-    return (B)this;
+    return (B) this;
   }
 
   /**
@@ -302,7 +297,7 @@ public abstract class
    * @throws IllegalArgumentException if any key is unknown.
    */
   protected void rejectUnknownMandatoryKeys(final Collection<String> knownKeys,
-      String extraErrorText)
+                                            String extraErrorText)
       throws IllegalArgumentException {
     rejectUnknownMandatoryKeys(mandatoryKeys, knownKeys, extraErrorText);
   }

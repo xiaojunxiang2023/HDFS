@@ -1,13 +1,13 @@
 package org.apache.hadoop.ipc;
 
+import org.apache.hadoop.ipc.Server.Call;
+import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto;
+import org.apache.hadoop.security.UserGroupInformation;
+
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.ipc.Server.Call;
-import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto;
-import org.apache.hadoop.security.UserGroupInformation;
 
 public abstract class ExternalCall<T> extends Call {
   private final PrivilegedExceptionAction<T> action;
@@ -36,7 +36,7 @@ public abstract class ExternalCall<T> extends Call {
 
   // wait for response to be triggered to support postponed calls
   private void waitForCompletion() throws InterruptedException {
-    synchronized(done) {
+    synchronized (done) {
       while (!done.get()) {
         try {
           done.wait();
@@ -67,7 +67,7 @@ public abstract class ExternalCall<T> extends Call {
 
   @Override
   final void doResponse(Throwable t, RpcStatusProto status) {
-    synchronized(done) {
+    synchronized (done) {
       error = t;
       done.set(true);
       done.notify();

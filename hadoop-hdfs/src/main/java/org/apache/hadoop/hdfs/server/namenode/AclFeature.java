@@ -1,21 +1,21 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.Arrays;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.hdfs.util.ReferenceCountMap.ReferenceCounter;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+
+import java.util.Arrays;
 
 /**
  * Feature that represents the ACLs of the inode.
  */
 public class AclFeature implements INode.Feature, ReferenceCounter {
   public static final ImmutableList<AclEntry> EMPTY_ENTRY_LIST =
-    ImmutableList.of();
+      ImmutableList.of();
   private int refCount = 0;
 
-  private final int [] entries;
+  private final int[] entries;
 
   public AclFeature(int[] entries) {
     this.entries = entries;

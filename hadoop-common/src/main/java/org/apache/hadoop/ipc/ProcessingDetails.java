@@ -1,4 +1,5 @@
 package org.apache.hadoop.ipc;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class ProcessingDetails {
     QUEUE,            // time in the call queue.
     HANDLER,          // handler overhead not spent in processing/response.
     PROCESSING,       // time handler spent processing the call. always equal to
-                      // lock_free + lock_wait + lock_shared + lock_exclusive
+    // lock_free + lock_wait + lock_shared + lock_exclusive
     LOCKFREE,         // processing with no lock.
     LOCKWAIT,         // processing while waiting for lock.
     LOCKSHARED,       // processing with a read lock.

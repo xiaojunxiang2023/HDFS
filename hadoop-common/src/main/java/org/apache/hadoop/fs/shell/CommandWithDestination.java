@@ -1,41 +1,23 @@
 package org.apache.hadoop.fs.shell;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.fs.CreateFlag;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FilterFileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathExistsException;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.fs.PathIsDirectoryException;
-import org.apache.hadoop.fs.PathIsNotDirectoryException;
-import org.apache.hadoop.fs.PathNotFoundException;
-import org.apache.hadoop.fs.PathOperationException;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclUtil;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
-import static org.apache.hadoop.fs.CreateFlag.CREATE;
-import static org.apache.hadoop.fs.CreateFlag.LAZY_PERSIST;
-import static org.apache.hadoop.fs.CreateFlag.OVERWRITE;
+import static org.apache.hadoop.fs.CreateFlag.*;
 
 /**
  * Provides: argument processing to ensure the destination is valid
@@ -67,15 +49,15 @@ abstract class CommandWithDestination extends FsCommand {
   private static final String RESERVED_RAW = "/.reserved/raw";
 
   /**
-   * 
+   *
    * This method is used to enable the force(-f)  option while copying the files.
-   * 
+   *
    * @param flag true/false
    */
   protected void setOverwrite(boolean flag) {
     overwrite = flag;
   }
-  
+
   protected void setLazyPersist(boolean flag) {
     lazyPersist = flag;
   }
@@ -83,7 +65,7 @@ abstract class CommandWithDestination extends FsCommand {
   protected void setVerifyChecksum(boolean flag) {
     verifyChecksum = flag;
   }
-  
+
   protected void setWriteChecksum(boolean flag) {
     writeChecksum = flag;
   }
@@ -107,7 +89,7 @@ abstract class CommandWithDestination extends FsCommand {
       preserveStatus.clear();
     }
   }
-  
+
   protected enum FileAttribute {
     TIMESTAMPS, OWNERSHIP, PERMISSION, ACL, XATTR;
 
@@ -120,10 +102,10 @@ abstract class CommandWithDestination extends FsCommand {
       throw new NoSuchElementException("No attribute for " + symbol);
     }
   }
-  
-  private EnumSet<FileAttribute> preserveStatus = 
+
+  private EnumSet<FileAttribute> preserveStatus =
       EnumSet.noneOf(FileAttribute.class);
-  
+
   /**
    * Checks if the input attribute should be preserved or not
    *
@@ -133,7 +115,7 @@ abstract class CommandWithDestination extends FsCommand {
   private boolean shouldPreserve(FileAttribute attribute) {
     return preserveStatus.contains(attribute);
   }
-  
+
   /**
    * Add file attributes that need to be preserved. This method may be
    * called multiple times to add attributes.
@@ -155,7 +137,7 @@ abstract class CommandWithDestination extends FsCommand {
    *  @param args is the list of arguments
    */
   protected void getLocalDestination(LinkedList<String> args)
-  throws IOException {
+      throws IOException {
     String pathString = (args.size() < 2) ? Path.CUR_DIR : args.removeLast();
     try {
       dst = new PathData(new URI(pathString), getConf());
@@ -176,7 +158,7 @@ abstract class CommandWithDestination extends FsCommand {
    *  @throws PathIOException if path doesn't exist or matches too many times 
    */
   protected void getRemoteDestination(LinkedList<String> args)
-  throws IOException {
+      throws IOException {
     if (args.size() < 2) {
       dst = new PathData(Path.CUR_DIR, getConf());
     } else {
@@ -197,7 +179,7 @@ abstract class CommandWithDestination extends FsCommand {
 
   @Override
   protected void processArguments(LinkedList<PathData> args)
-  throws IOException {
+      throws IOException {
     // if more than one arg, the destination must be a directory
     // if one arg, the dst must not exist or must be a directory
     if (args.size() > 1) {
@@ -221,7 +203,7 @@ abstract class CommandWithDestination extends FsCommand {
 
   @Override
   protected void processPathArgument(PathData src)
-  throws IOException {
+      throws IOException {
     if (src.stat.isDirectory() && src.fs.equals(dst.fs)) {
       PathData target = getTargetPath(src);
       String srcPath = src.fs.makeQualified(src.path).toString();
@@ -234,11 +216,11 @@ abstract class CommandWithDestination extends FsCommand {
       }
       // When a path is normalized, all trailing slashes are removed
       // except for the root
-      if(!srcPath.endsWith(Path.SEPARATOR)) {
+      if (!srcPath.endsWith(Path.SEPARATOR)) {
         srcPath += Path.SEPARATOR;
       }
 
-      if(dstPath.startsWith(srcPath)) {
+      if (dstPath.startsWith(srcPath)) {
         PathIOException e = new PathIOException(src.toString(),
             "is a subdirectory of itself");
         e.setTargetPath(target.toString());
@@ -252,7 +234,7 @@ abstract class CommandWithDestination extends FsCommand {
   protected void processPath(PathData src) throws IOException {
     processPath(src, getTargetPath(src));
   }
-  
+
   /**
    * Called with a source and target destination pair
    * @param src for the operation
@@ -263,7 +245,7 @@ abstract class CommandWithDestination extends FsCommand {
     if (src.stat.isSymlink()) {
       // TODO: remove when FileContext is supported, this needs to either
       // copy the symlink or deref the symlink
-      throw new PathOperationException(src.toString());        
+      throw new PathOperationException(src.toString());
     } else if (src.stat.isFile()) {
       copyFileToTarget(src, dst);
     } else if (src.stat.isDirectory() && !isRecursive()) {
@@ -290,9 +272,9 @@ abstract class CommandWithDestination extends FsCommand {
           PathIOException e = new PathIOException(dst.toString());
           e.setOperation("mkdir");
           throw e;
-        }    
+        }
         dst.refreshStatus(); // need to update stat to know it exists now
-      }      
+      }
       super.recursePath(src);
       if (dst.stat.isDirectory()) {
         preserveAttributes(src, dst, preserveRawXattrs);
@@ -301,7 +283,7 @@ abstract class CommandWithDestination extends FsCommand {
       dst = savedDst;
     }
   }
-  
+
   protected PathData getTargetPath(PathData src) throws IOException {
     PathData target;
     // on the first loop, the dst may be directory or a file, so only create
@@ -315,13 +297,13 @@ abstract class CommandWithDestination extends FsCommand {
     }
     return target;
   }
-  
+
   /**
    * Copies the source file to the target.
    * @param src item to copy
    * @param target where to copy the item
    * @throws IOException if copy fails
-   */ 
+   */
   protected void copyFileToTarget(PathData src, PathData target)
       throws IOException {
     final boolean preserveRawXattrs =
@@ -336,7 +318,7 @@ abstract class CommandWithDestination extends FsCommand {
       IOUtils.closeStream(in);
     }
   }
-  
+
   /**
    * Check the source and target paths to ensure that they are either both in
    * /.reserved/raw or neither in /.reserved/raw. If neither src nor target are
@@ -366,7 +348,7 @@ abstract class CommandWithDestination extends FsCommand {
           RESERVED_RAW + "' or neither.";
       throw new PathOperationException("'" + src.toString() + s);
     } else if (!srcIsRR && dstIsRR) {
-      final String s = "' copy from non '" + RESERVED_RAW +"' to '" +
+      final String s = "' copy from non '" + RESERVED_RAW + "' to '" +
           RESERVED_RAW + "'. Either both source and target must be in '" +
           RESERVED_RAW + "' or neither.";
       throw new PathOperationException("'" + dst.toString() + s);
@@ -385,9 +367,9 @@ abstract class CommandWithDestination extends FsCommand {
    * @param in     the input stream for the copy
    * @param target where to store the contents of the stream
    * @throws IOException if copy fails
-   */ 
+   */
   protected void copyStreamToTarget(InputStream in, PathData target)
-  throws IOException {
+      throws IOException {
     if (target.exists && (target.stat.isDirectory() || !overwrite)) {
       throw new PathExistsException(target.toString());
     }
@@ -414,7 +396,7 @@ abstract class CommandWithDestination extends FsCommand {
    * @throws IOException if fails to preserve attributes
    */
   protected void preserveAttributes(PathData src, PathData target,
-      boolean preserveRawXAttrs)
+                                    boolean preserveRawXAttrs)
       throws IOException {
     if (shouldPreserve(FileAttribute.TIMESTAMPS)) {
       target.fs.setTimes(
@@ -468,7 +450,7 @@ abstract class CommandWithDestination extends FsCommand {
     }
 
     void writeStreamToFile(InputStream in, PathData target,
-        boolean lazyPersist, boolean direct)
+                           boolean lazyPersist, boolean direct)
         throws IOException {
       FSDataOutputStream out = null;
       try {
@@ -481,7 +463,7 @@ abstract class CommandWithDestination extends FsCommand {
         IOUtils.closeStream(out); // just in case copyBytes didn't
       }
     }
-    
+
     // tag created files as temp files
     FSDataOutputStream create(PathData item, boolean lazyPersist)
         throws IOException {
@@ -500,15 +482,15 @@ abstract class CommandWithDestination extends FsCommand {
         EnumSet<CreateFlag> createFlags =
             EnumSet.of(CREATE, LAZY_PERSIST, OVERWRITE);
         return create(item.path,
-                      FsPermission.getFileDefault().applyUMask(
-                          FsPermission.getUMask(getConf())),
-                      createFlags,
-                      getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
-                          IO_FILE_BUFFER_SIZE_DEFAULT),
-                      (short) 1,
-                      defaultBlockSize,
-                      null,
-                      null);
+            FsPermission.getFileDefault().applyUMask(
+                FsPermission.getUMask(getConf())),
+            createFlags,
+            getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
+                IO_FILE_BUFFER_SIZE_DEFAULT),
+            (short) 1,
+            defaultBlockSize,
+            null,
+            null);
       } else {
         return create(item.path, true);
       }
@@ -532,6 +514,7 @@ abstract class CommandWithDestination extends FsCommand {
       // cancel delete on exit if rename is successful
       cancelDeleteOnExit(src.path);
     }
+
     @Override
     public void close() {
       // purge any remaining temp files, but don't close underlying fs

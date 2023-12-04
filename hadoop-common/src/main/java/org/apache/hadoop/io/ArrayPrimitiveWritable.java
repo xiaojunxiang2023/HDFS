@@ -1,5 +1,7 @@
 package org.apache.hadoop.io;
 
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -7,30 +9,29 @@ import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-
 /**
  * This is a wrapper class.  It wraps a Writable implementation around
  * an array of primitives (e.g., int[], long[], etc.), with optimized 
  * wire format, and without creating new objects per element.
- * 
+ *
  * This is a wrapper class only; it does not make a copy of the 
  * underlying array.
  */
 public class ArrayPrimitiveWritable implements Writable {
-  
+
   //componentType is determined from the component type of the value array 
   //during a "set" operation.  It must be primitive.
-  private Class<?> componentType = null; 
+  private Class<?> componentType = null;
   //declaredComponentType need not be declared, but if you do (by using the
   //ArrayPrimitiveWritable(Class<?>) constructor), it will provide typechecking
   //for all "set" operations.
   private Class<?> declaredComponentType = null;
   private int length;
   private Object value; //must be an array of <componentType>[length]
-  
-  private static final Map<String, Class<?>> PRIMITIVE_NAMES = 
-    new HashMap<String, Class<?>>(16);
+
+  private static final Map<String, Class<?>> PRIMITIVE_NAMES =
+      new HashMap<String, Class<?>>(16);
+
   static {
     PRIMITIVE_NAMES.put(boolean.class.getName(), boolean.class);
     PRIMITIVE_NAMES.put(byte.class.getName(), byte.class);
@@ -41,47 +42,47 @@ public class ArrayPrimitiveWritable implements Writable {
     PRIMITIVE_NAMES.put(float.class.getName(), float.class);
     PRIMITIVE_NAMES.put(double.class.getName(), double.class);
   }
-  
+
   private static Class<?> getPrimitiveClass(String className) {
     return PRIMITIVE_NAMES.get(className);
   }
-  
+
   private static void checkPrimitive(Class<?> componentType) {
-    if (componentType == null) { 
-      throw new HadoopIllegalArgumentException("null component type not allowed"); 
+    if (componentType == null) {
+      throw new HadoopIllegalArgumentException("null component type not allowed");
     }
-    if (! PRIMITIVE_NAMES.containsKey(componentType.getName())) {
+    if (!PRIMITIVE_NAMES.containsKey(componentType.getName())) {
       throw new HadoopIllegalArgumentException("input array component type "
           + componentType.getName() + " is not a candidate primitive type");
     }
   }
-  
+
   private void checkDeclaredComponentType(Class<?> componentType) {
-    if ((declaredComponentType != null) 
+    if ((declaredComponentType != null)
         && (componentType != declaredComponentType)) {
       throw new HadoopIllegalArgumentException("input array component type "
           + componentType.getName() + " does not match declared type "
-          + declaredComponentType.getName());     
+          + declaredComponentType.getName());
     }
   }
-  
+
   private static void checkArray(Object value) {
-    if (value == null) { 
-      throw new HadoopIllegalArgumentException("null value not allowed"); 
+    if (value == null) {
+      throw new HadoopIllegalArgumentException("null value not allowed");
     }
-    if (! value.getClass().isArray()) {
+    if (!value.getClass().isArray()) {
       throw new HadoopIllegalArgumentException("non-array value of class "
-          + value.getClass() + " not allowed");             
+          + value.getClass() + " not allowed");
     }
   }
-  
+
   /**
    * Construct an empty instance, for use during Writable read
    */
   public ArrayPrimitiveWritable() {
     //empty constructor
   }
-  
+
   /**
    * Construct an instance of known type but no value yet
    * for use with type-specific wrapper classes
@@ -90,7 +91,7 @@ public class ArrayPrimitiveWritable implements Writable {
     checkPrimitive(componentType);
     this.declaredComponentType = componentType;
   }
-  
+
   /**
    * Wrap an existing array of primitives
    * @param value - array of primitives
@@ -98,23 +99,29 @@ public class ArrayPrimitiveWritable implements Writable {
   public ArrayPrimitiveWritable(Object value) {
     set(value);
   }
-  
+
   /**
    * Get the original array.  
    * Client must cast it back to type componentType[]
    * (or may use type-specific wrapper classes).
    * @return - original array as Object
    */
-  public Object get() { return value; }
-  
-  public Class<?> getComponentType() { return componentType; }
-  
-  public Class<?> getDeclaredComponentType() { return declaredComponentType; }
-  
+  public Object get() {
+    return value;
+  }
+
+  public Class<?> getComponentType() {
+    return componentType;
+  }
+
+  public Class<?> getDeclaredComponentType() {
+    return declaredComponentType;
+  }
+
   public boolean isDeclaredComponentType(Class<?> componentType) {
     return componentType == declaredComponentType;
   }
-  
+
   public void set(Object value) {
     checkArray(value);
     Class<?> componentType = value.getClass().getComponentType();
@@ -124,7 +131,7 @@ public class ArrayPrimitiveWritable implements Writable {
     this.value = value;
     this.length = Array.getLength(value);
   }
-  
+
   /**
    * Do not use this class.
    * This is an internal class, purely for ObjectWritable to use as
@@ -133,22 +140,22 @@ public class ArrayPrimitiveWritable implements Writable {
    */
   static class Internal extends ArrayPrimitiveWritable {
     Internal() {             //use for reads
-      super(); 
+      super();
     }
-    
+
     Internal(Object value) { //use for writes
       super(value);
     }
   } //end Internal subclass declaration
 
-  /* 
+  /*
    * @see org.apache.hadoop.io.Writable#write(java.io.DataOutput)
    */
   @Override
   @SuppressWarnings("deprecation")
   public void write(DataOutput out) throws IOException {
     // write componentType 
-    UTF8.writeString(out, componentType.getName());      
+    UTF8.writeString(out, componentType.getName());
     // write length
     out.writeInt(length);
 
@@ -175,12 +182,12 @@ public class ArrayPrimitiveWritable implements Writable {
     }
   }
 
-  /* 
+  /*
    * @see org.apache.hadoop.io.Writable#readFields(java.io.DataInput)
    */
   @Override
   public void readFields(DataInput in) throws IOException {
-    
+
     // read and set the component type of the array
     @SuppressWarnings("deprecation")
     String className = UTF8.readString(in);
@@ -191,14 +198,14 @@ public class ArrayPrimitiveWritable implements Writable {
     }
     checkDeclaredComponentType(componentType);
     this.componentType = componentType;
-  
+
     // read and set the length of the array
     int length = in.readInt();
     if (length < 0) {
       throw new IOException("encoded array length is negative " + length);
     }
     this.length = length;
-    
+
     // construct and read in the array
     value = Array.newInstance(componentType, length);
 
@@ -225,50 +232,50 @@ public class ArrayPrimitiveWritable implements Writable {
           + " but no encoding is implemented for this type.");
     }
   }
-  
+
   //For efficient implementation, there's no way around
   //the following massive code duplication.
-  
+
   private void writeBooleanArray(DataOutput out) throws IOException {
     boolean[] v = (boolean[]) value;
     for (int i = 0; i < length; i++)
       out.writeBoolean(v[i]);
   }
-  
+
   private void writeCharArray(DataOutput out) throws IOException {
     char[] v = (char[]) value;
     for (int i = 0; i < length; i++)
       out.writeChar(v[i]);
   }
-  
+
   private void writeByteArray(DataOutput out) throws IOException {
     out.write((byte[]) value, 0, length);
   }
-  
+
   private void writeShortArray(DataOutput out) throws IOException {
     short[] v = (short[]) value;
     for (int i = 0; i < length; i++)
       out.writeShort(v[i]);
   }
-  
+
   private void writeIntArray(DataOutput out) throws IOException {
     int[] v = (int[]) value;
     for (int i = 0; i < length; i++)
       out.writeInt(v[i]);
   }
-  
+
   private void writeLongArray(DataOutput out) throws IOException {
     long[] v = (long[]) value;
     for (int i = 0; i < length; i++)
       out.writeLong(v[i]);
   }
-  
+
   private void writeFloatArray(DataOutput out) throws IOException {
     float[] v = (float[]) value;
     for (int i = 0; i < length; i++)
       out.writeFloat(v[i]);
   }
-  
+
   private void writeDoubleArray(DataOutput out) throws IOException {
     double[] v = (double[]) value;
     for (int i = 0; i < length; i++)
@@ -278,47 +285,47 @@ public class ArrayPrimitiveWritable implements Writable {
   private void readBooleanArray(DataInput in) throws IOException {
     boolean[] v = (boolean[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readBoolean(); 
+      v[i] = in.readBoolean();
   }
-  
+
   private void readCharArray(DataInput in) throws IOException {
     char[] v = (char[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readChar(); 
+      v[i] = in.readChar();
   }
-  
+
   private void readByteArray(DataInput in) throws IOException {
     in.readFully((byte[]) value, 0, length);
   }
-  
+
   private void readShortArray(DataInput in) throws IOException {
     short[] v = (short[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readShort(); 
+      v[i] = in.readShort();
   }
-  
+
   private void readIntArray(DataInput in) throws IOException {
     int[] v = (int[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readInt(); 
+      v[i] = in.readInt();
   }
-  
+
   private void readLongArray(DataInput in) throws IOException {
     long[] v = (long[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readLong(); 
+      v[i] = in.readLong();
   }
-  
+
   private void readFloatArray(DataInput in) throws IOException {
     float[] v = (float[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readFloat(); 
+      v[i] = in.readFloat();
   }
-  
+
   private void readDoubleArray(DataInput in) throws IOException {
     double[] v = (double[]) value;
     for (int i = 0; i < length; i++)
-      v[i] = in.readDouble(); 
+      v[i] = in.readDouble();
   }
 }
 

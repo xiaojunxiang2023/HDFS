@@ -1,7 +1,8 @@
 package org.apache.hadoop.io.retry;
 
-import java.lang.reflect.Method;
 import org.apache.hadoop.ipc.RetriableException;
+
+import java.lang.reflect.Method;
 
 /**
  * A dummy invocation handler extending RetryInvocationHandler. It drops the
@@ -9,11 +10,11 @@ import org.apache.hadoop.ipc.RetriableException;
  */
 public class LossyRetryInvocationHandler<T> extends RetryInvocationHandler<T> {
   private final int numToDrop;
-  private static final ThreadLocal<Integer> RetryCount = 
+  private static final ThreadLocal<Integer> RetryCount =
       new ThreadLocal<Integer>();
 
   public LossyRetryInvocationHandler(int numToDrop,
-      FailoverProxyProvider<T> proxyProvider, RetryPolicy retryPolicy) {
+                                     FailoverProxyProvider<T> proxyProvider, RetryPolicy retryPolicy) {
     super(proxyProvider, retryPolicy);
     this.numToDrop = numToDrop;
   }
@@ -38,7 +39,7 @@ public class LossyRetryInvocationHandler<T> extends RetryInvocationHandler<T> {
     } else {
       if (LOG.isDebugEnabled()) {
         LOG.debug("retryCount == " + retryCount
-          + ". It's time to normally process the response");
+            + ". It's time to normally process the response");
       }
       return result;
     }

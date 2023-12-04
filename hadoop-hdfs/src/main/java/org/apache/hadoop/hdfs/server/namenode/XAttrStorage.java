@@ -1,9 +1,10 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * XAttrStorage is used to read and set xattrs for an inode.
@@ -37,18 +38,18 @@ public class XAttrStorage {
     XAttrFeature f = inodeAttr.getXAttrFeature();
     return f == null ? new ArrayList<XAttr>(0) : f.getXAttrs();
   }
-  
+
   /**
    * Update xattrs of inode.
    * <p>
    * Must be called while holding the FSDirectory write lock.
-   * 
+   *
    * @param inode INode to update
    * @param xAttrs to update xAttrs.
    * @param snapshotId id of the latest snapshot of the inode
    */
-  public static void updateINodeXAttrs(INode inode, 
-      List<XAttr> xAttrs, int snapshotId) throws QuotaExceededException {
+  public static void updateINodeXAttrs(INode inode,
+                                       List<XAttr> xAttrs, int snapshotId) throws QuotaExceededException {
     if (inode.getXAttrFeature() != null) {
       inode.removeXAttrFeature(snapshotId);
     }

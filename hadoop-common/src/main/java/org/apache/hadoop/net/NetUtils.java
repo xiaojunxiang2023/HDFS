@@ -1,56 +1,41 @@
 package org.apache.hadoop.net;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.NoRouteToHostException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
-import java.net.ConnectException;
-import java.nio.channels.SocketChannel;
-import java.nio.channels.UnresolvedAddressException;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.net.SocketFactory;
-
-import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.ipc.VersionedProtocol;
+import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.util.ReflectionUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
+import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.SocketFactory;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.net.*;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.UnresolvedAddressException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 // MapReduce也可见
 public class NetUtils {
   private static final Logger LOG = LoggerFactory.getLogger(NetUtils.class);
-  
-  private static Map<String, String> hostToResolved = 
-                                     new HashMap<String, String>();
+
+  private static Map<String, String> hostToResolved =
+      new HashMap<String, String>();
   /** text to point users elsewhere: {@value} */
   private static final String FOR_MORE_DETAILS_SEE
       = " For more details see:  ";
@@ -67,13 +52,13 @@ public class NetUtils {
    * configured by <tt>hadoop.rpc.socket.factory.class.default</tt>. If
    * this default socket factory is not configured, then fall back on the JVM
    * default socket factory.
-   * 
+   *
    * @param conf the configuration
    * @param clazz the class (usually a {@link VersionedProtocol})
    * @return a socket factory
    */
   public static SocketFactory getSocketFactory(Configuration conf,
-      Class<?> clazz) {
+                                               Class<?> clazz) {
 
     SocketFactory factory = null;
 
@@ -91,7 +76,7 @@ public class NetUtils {
   /**
    * Get the default socket factory as specified by the configuration
    * parameter <tt>hadoop.rpc.socket.factory.default</tt>
-   * 
+   *
    * @param conf the configuration
    * @return the default socket factory as specified in the configuration or
    *         the JVM default socket factory if the configuration does not
@@ -112,7 +97,7 @@ public class NetUtils {
    * Get the socket factory corresponding to the given proxy URI. If the
    * given proxy URI corresponds to an absence of configuration parameter,
    * returns null. If the URI is malformed raises an exception.
-   * 
+   *
    * @param propValue the property which is the class name of the
    *        SocketFactory to instantiate; assumed non null and non empty.
    * @return a socket factory as defined in the property value.
@@ -237,7 +222,7 @@ public class NetUtils {
 
     try {
       uri = hasScheme ? URI.create(target) :
-              URI.create("dummyscheme://" + target);
+          URI.create("dummyscheme://" + target);
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException(
           "Does not contain a valid host:port authority: " + target + helpText
@@ -264,7 +249,7 @@ public class NetUtils {
   public static InetSocketAddress createSocketAddrForHost(String host, int port) {
     String staticHost = getStaticResolution(host);
     String resolveHost = (staticHost != null) ? staticHost : host;
-    
+
     InetSocketAddress addr;
     try {
       InetAddress iaddr = SecurityUtil.getByName(resolveHost);
@@ -279,7 +264,7 @@ public class NetUtils {
     }
     return addr;
   }
-  
+
   /**
    * Resolve the uri's hostname and add the default port if not in the uri
    * @param uri to resolve
@@ -307,7 +292,7 @@ public class NetUtils {
       throw new IllegalArgumentException(e);
     }
     return uri;
-  }  
+  }
 
   // cache the canonicalized hostnames;  the cache currently isn't expired,
   // but the canonicals will only change if the host's resolver configuration
@@ -348,7 +333,7 @@ public class NetUtils {
       hostToResolved.put(host, resolvedName);
     }
   }
-  
+
   /**
    * Retrieves the resolved name for the passed host. The resolved name must
    * have been set earlier using 
@@ -361,7 +346,7 @@ public class NetUtils {
       return hostToResolved.get(host);
     }
   }
-  
+
   /**
    * This is used to get all the resolutions that were added using
    * {@link NetUtils#addStaticResolution(String, String)}. The return
@@ -369,37 +354,37 @@ public class NetUtils {
    * of the form String[0]=hostname, String[1]=resolved-hostname
    * @return the list of resolutions
    */
-  public static List <String[]> getAllStaticResolutions() {
+  public static List<String[]> getAllStaticResolutions() {
     synchronized (hostToResolved) {
-      Set <Entry <String, String>>entries = hostToResolved.entrySet();
+      Set<Entry<String, String>> entries = hostToResolved.entrySet();
       if (entries.size() == 0) {
         return null;
       }
-      List <String[]> l = new ArrayList<String[]>(entries.size());
+      List<String[]> l = new ArrayList<String[]>(entries.size());
       for (Entry<String, String> e : entries) {
-        l.add(new String[] {e.getKey(), e.getValue()});
+        l.add(new String[]{e.getKey(), e.getValue()});
       }
-    return l;
+      return l;
     }
   }
-  
+
   /**
    * Returns InetSocketAddress that a client can use to 
    * connect to the server. Server.getListenerAddress() is not correct when
    * the server binds to "0.0.0.0". This returns "hostname:port" of the server,
    * or "127.0.0.1:port" when the getListenerAddress() returns "0.0.0.0:port".
-   * 
+   *
    * @param server
    * @return socket address that a client can use to connect to the server.
    */
   public static InetSocketAddress getConnectAddress(Server server) {
     return getConnectAddress(server.getListenerAddress());
   }
-  
+
   /**
    * Returns an InetSocketAddress that a client can use to connect to the
    * given listening address.
-   * 
+   *
    * @param addr of a listener
    * @return socket address that a client can use to connect to the server.
    */
@@ -414,15 +399,15 @@ public class NetUtils {
     }
     return addr;
   }
-  
+
   /**
    * Same as <code>getInputStream(socket, socket.getSoTimeout()).</code>
    * <br><br>
-   * 
+   *
    * @see #getInputStream(Socket, long)
    */
-  public static SocketInputWrapper getInputStream(Socket socket) 
-                                           throws IOException {
+  public static SocketInputWrapper getInputStream(Socket socket)
+      throws IOException {
     return getInputStream(socket, socket.getSoTimeout());
   }
 
@@ -432,34 +417,34 @@ public class NetUtils {
    * timeout will be set to the specified value. Otherwise, a
    * {@link SocketInputStream} will be created which reads with the configured
    * timeout.
-   * 
+   *
    * Any socket created using socket factories returned by {@link #NetUtils},
    * must use this interface instead of {@link Socket#getInputStream()}.
-   * 
+   *
    * In general, this should be called only once on each socket: see the note
    * in {@link SocketInputWrapper#setTimeout(long)} for more information.
    *
    * @see Socket#getChannel()
-   * 
+   *
    * @param socket
    * @param timeout timeout in milliseconds. zero for waiting as
    *                long as necessary.
    * @return SocketInputWrapper for reading from the socket.
    * @throws IOException
    */
-  public static SocketInputWrapper getInputStream(Socket socket, long timeout) 
-                                           throws IOException {
-    InputStream stm = (socket.getChannel() == null) ? 
-          socket.getInputStream() : new SocketInputStream(socket);
+  public static SocketInputWrapper getInputStream(Socket socket, long timeout)
+      throws IOException {
+    InputStream stm = (socket.getChannel() == null) ?
+        socket.getInputStream() : new SocketInputStream(socket);
     SocketInputWrapper w = new SocketInputWrapper(socket, stm);
     w.setTimeout(timeout);
     return w;
   }
-  
+
   /**
    * Same as getOutputStream(socket, 0). Timeout of zero implies write will
    * wait until data is available.<br><br>
-   * 
+   *
    * From documentation for {@link #getOutputStream(Socket, long)} : <br>
    * Returns OutputStream for the socket. If the socket has an associated
    * SocketChannel then it returns a 
@@ -467,21 +452,21 @@ public class NetUtils {
    * have a channel, {@link Socket#getOutputStream()} is returned. In the later
    * case, the timeout argument is ignored and the write will wait until 
    * data is available.<br><br>
-   * 
+   *
    * Any socket created using socket factories returned by {@link NetUtils},
    * must use this interface instead of {@link Socket#getOutputStream()}.
-   * 
+   *
    * @see #getOutputStream(Socket, long)
-   * 
+   *
    * @param socket
    * @return OutputStream for writing to the socket.
    * @throws IOException
-   */  
-  public static OutputStream getOutputStream(Socket socket) 
-                                             throws IOException {
+   */
+  public static OutputStream getOutputStream(Socket socket)
+      throws IOException {
     return getOutputStream(socket, 0);
   }
-  
+
   /**
    * Returns OutputStream for the socket. If the socket has an associated
    * SocketChannel then it returns a 
@@ -489,24 +474,24 @@ public class NetUtils {
    * have a channel, {@link Socket#getOutputStream()} is returned. In the later
    * case, the timeout argument is ignored and the write will wait until 
    * data is available.<br><br>
-   * 
+   *
    * Any socket created using socket factories returned by {@link NetUtils},
    * must use this interface instead of {@link Socket#getOutputStream()}.
-   * 
+   *
    * @see Socket#getChannel()
-   * 
+   *
    * @param socket
    * @param timeout timeout in milliseconds. This may not always apply. zero
    *        for waiting as long as necessary.
    * @return OutputStream for writing to the socket.
-   * @throws IOException   
+   * @throws IOException
    */
-  public static OutputStream getOutputStream(Socket socket, long timeout) 
-                                             throws IOException {
-    return (socket.getChannel() == null) ? 
-            socket.getOutputStream() : new SocketOutputStream(socket, timeout);            
+  public static OutputStream getOutputStream(Socket socket, long timeout)
+      throws IOException {
+    return (socket.getChannel() == null) ?
+        socket.getOutputStream() : new SocketOutputStream(socket, timeout);
   }
-  
+
   /**
    * This is a drop-in replacement for 
    * {@link Socket#connect(SocketAddress, int)}.
@@ -517,38 +502,38 @@ public class NetUtils {
    * to avoid Sun's connect implementation from creating thread-local 
    * selectors, since Hadoop does not have control on when these are closed
    * and could end up taking all the available file descriptors.
-   * 
+   *
    * @see java.net.Socket#connect(java.net.SocketAddress, int)
-   * 
+   *
    * @param socket
    * @param address the remote address
    * @param timeout timeout in milliseconds
    */
   public static void connect(Socket socket,
-      SocketAddress address,
-      int timeout) throws IOException {
+                             SocketAddress address,
+                             int timeout) throws IOException {
     connect(socket, address, null, timeout);
   }
 
   /**
    * Like {@link NetUtils#connect(Socket, SocketAddress, int)} but
    * also takes a local address and port to bind the socket to. 
-   * 
+   *
    * @param socket
    * @param endpoint the remote address
    * @param localAddr the local address to bind the socket to
    * @param timeout timeout in milliseconds
    */
-  public static void connect(Socket socket, 
+  public static void connect(Socket socket,
                              SocketAddress endpoint,
                              SocketAddress localAddr,
                              int timeout) throws IOException {
     if (socket == null || endpoint == null || timeout < 0) {
       throw new IllegalArgumentException("Illegal argument for connect()");
     }
-    
+
     SocketChannel ch = socket.getChannel();
-    
+
     if (localAddr != null) {
       Class localClass = localAddr.getClass();
       Class remoteClass = endpoint.getClass();
@@ -567,7 +552,7 @@ public class NetUtils {
       }
     } catch (SocketTimeoutException ste) {
       throw new ConnectTimeoutException(ste.getMessage());
-    }  catch (UnresolvedAddressException uae) {
+    } catch (UnresolvedAddressException uae) {
       throw new UnknownHostException(endpoint.toString());
     }
 
@@ -582,15 +567,15 @@ public class NetUtils {
       LOG.info("Detected a loopback TCP socket, disconnecting it");
       socket.close();
       throw new ConnectException(
-        "Localhost targeted connection resulted in a loopback. " +
-        "No daemon is listening on the target port.");
+          "Localhost targeted connection resulted in a loopback. " +
+              "No daemon is listening on the target port.");
     }
   }
-  
-  /** 
+
+  /**
    * Given a string representation of a host, return its ip address
    * in textual presentation.
-   * 
+   *
    * @param name a string representation of a host:
    *             either a textual representation its IP address or its host name
    * @return its IP address in the string format
@@ -600,13 +585,13 @@ public class NetUtils {
       return InetAddress.getByName(name).getHostAddress();
     } catch (UnknownHostException e) {
       return name;
-    }    
+    }
   }
-  
-  /** 
+
+  /**
    * Given a collection of string representation of hosts, return a list of
    * corresponding IP addresses in the textual representation.
-   * 
+   *
    * @param names a collection of string representations of hosts
    * @return a list of corresponding IP addresses in the string format
    * @see #normalizeHostName(String)
@@ -626,7 +611,7 @@ public class NetUtils {
    * @throws UnknownHostException
    */
   public static void verifyHostnames(String[] names) throws UnknownHostException {
-    for (String name: names) {
+    for (String name : names) {
       if (name == null) {
         throw new UnknownHostException("null hostname found");
       }
@@ -649,12 +634,12 @@ public class NetUtils {
   }
 
   private static final Pattern ipPortPattern = // Pattern for matching ip[:port]
-    Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d+)?");
-  
+      Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d+)?");
+
   /**
    * Attempt to obtain the host name of the given string which contains
    * an IP address and an optional port.
-   * 
+   *
    * @param ipPort string of form ip[:port]
    * @return Host name or null if the name can not be determined
    */
@@ -662,7 +647,7 @@ public class NetUtils {
     if (null == ipPort || !ipPortPattern.matcher(ipPort).matches()) {
       return null;
     }
-    
+
     try {
       int colonIdx = ipPort.indexOf(':');
       String ip = (-1 == colonIdx) ? ipPort
@@ -697,7 +682,7 @@ public class NetUtils {
   public static String getLocalHostname() {
     try {
       return InetAddress.getLocalHost().getHostName();
-    } catch(UnknownHostException uhe) {
+    } catch (UnknownHostException uhe) {
       return "" + uhe;
     }
   }
@@ -708,8 +693,11 @@ public class NetUtils {
    * @return hostname
    */
   public static String getHostname() {
-    try {return "" + InetAddress.getLocalHost();}
-    catch(UnknownHostException uhe) {return "" + uhe;}
+    try {
+      return "" + InetAddress.getLocalHost();
+    } catch (UnknownHostException uhe) {
+      return "" + uhe;
+    }
   }
 
   /**
@@ -718,11 +706,11 @@ public class NetUtils {
   public static String getHostPortString(InetSocketAddress addr) {
     return addr.getHostName() + ":" + addr.getPort();
   }
-  
+
   /**
    * Checks if {@code host} is a local host name and return {@link InetAddress}
    * corresponding to that address.
-   * 
+   *
    * @param host the specified host
    * @return a valid local {@link InetAddress} or null
    * @throws SocketException if an I/O error occurs
@@ -738,10 +726,11 @@ public class NetUtils {
       if (NetworkInterface.getByInetAddress(addr) == null) {
         addr = null; // Not a local address
       }
-    } catch (UnknownHostException ignore) { }
+    } catch (UnknownHostException ignore) {
+    }
     return addr;
   }
-  
+
   /**
    * Given an InetAddress, checks to see if the address is a local address, by
    * comparing the address with all the interfaces on the node.
@@ -883,7 +872,7 @@ public class NetUtils {
   private static String see(final String entry) {
     return FOR_MORE_DETAILS_SEE + HADOOP_WIKI + entry;
   }
-  
+
   @SuppressWarnings("unchecked")
   private static <T extends IOException> T wrapWithMessage(
       T exception, String msg) throws T {
@@ -891,7 +880,7 @@ public class NetUtils {
     try {
       Constructor<? extends Throwable> ctor = clazz.getConstructor(String.class);
       Throwable t = ctor.newInstance(msg);
-      return (T)(t.initCause(exception));
+      return (T) (t.initCause(exception));
     } catch (NoSuchMethodException e) {
       return exception;
     } catch (Throwable e) {
@@ -948,7 +937,7 @@ public class NetUtils {
    * given subnet to the given list.
    */
   private static void addMatchingAddrs(NetworkInterface nif,
-      SubnetInfo subnetInfo, List<InetAddress> addrs) {
+                                       SubnetInfo subnetInfo, List<InetAddress> addrs) {
     Enumeration<InetAddress> ifAddrs = nif.getInetAddresses();
     while (ifAddrs.hasMoreElements()) {
       InetAddress ifAddr = ifAddrs.nextElement();
@@ -968,7 +957,7 @@ public class NetUtils {
    * @throws IllegalArgumentException if subnet is invalid
    */
   public static List<InetAddress> getIPs(String subnet,
-      boolean returnSubinterfaces) {
+                                         boolean returnSubinterfaces) {
     List<InetAddress> addrs = new ArrayList<InetAddress>();
     SubnetInfo subnetInfo = new SubnetUtils(subnet).getInfo();
     Enumeration<NetworkInterface> nifs;

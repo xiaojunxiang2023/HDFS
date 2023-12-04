@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
+
 public interface BlockPlacementStatus {
 
   /**
@@ -7,7 +8,7 @@ public interface BlockPlacementStatus {
    * @return if replicas satisfy placement policy's requirement 
    */
   public boolean isPlacementPolicySatisfied();
-  
+
   /**
    * Get description info for log or printed in case replicas are failed to meet
    * requirement of placement policy

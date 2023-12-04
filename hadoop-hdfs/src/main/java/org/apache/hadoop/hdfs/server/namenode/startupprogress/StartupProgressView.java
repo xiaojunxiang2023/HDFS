@@ -5,21 +5,23 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.namenode.startupprogress;
+ */
+package org.apache.hadoop.hdfs.server.namenode.startupprogress;
+
+import org.apache.hadoop.util.Time;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
-import org.apache.hadoop.util.Time;
 
 /**
  * StartupProgressView is an immutable, consistent, read-only view of namenode
@@ -31,7 +33,7 @@ import org.apache.hadoop.util.Time;
  * read operations.  Calculations that require aggregation, such as overall
  * percent complete, will not be impacted by mutations performed in other threads
  * mid-way through the calculation.
- * 
+ *
  * Methods that return primitive long may return {@link Long#MIN_VALUE} as a
  * sentinel value to indicate that the property is undefined.
  */
@@ -41,13 +43,13 @@ public class StartupProgressView {
 
   /**
    * Returns the sum of the counter values for all steps in the specified phase.
-   * 
+   *
    * @param phase Phase to get
    * @return long sum of counter values for all steps
    */
   public long getCount(Phase phase) {
     long sum = 0;
-    for (Step step: getSteps(phase)) {
+    for (Step step : getSteps(phase)) {
       sum += getCount(phase, step);
     }
     return sum;
@@ -55,7 +57,7 @@ public class StartupProgressView {
 
   /**
    * Returns the counter value for the specified phase and step.
-   * 
+   *
    * @param phase Phase to get
    * @param step Step to get
    * @return long counter value for phase and step
@@ -68,19 +70,19 @@ public class StartupProgressView {
   /**
    * Returns overall elapsed time, calculated as time between start of loading
    * fsimage and end of safemode.
-   * 
+   *
    * @return long elapsed time
    */
   public long getElapsedTime() {
     return getElapsedTime(phases.get(Phase.LOADING_FSIMAGE),
-      phases.get(Phase.SAFEMODE));
+        phases.get(Phase.SAFEMODE));
   }
 
   /**
    * Returns elapsed time for the specified phase, calculated as (end - begin) if
    * phase is complete or (now - begin) if phase is running or 0 if the phase is
    * still pending.
-   * 
+   *
    * @param phase Phase to get
    * @return long elapsed time
    */
@@ -92,7 +94,7 @@ public class StartupProgressView {
    * Returns elapsed time for the specified phase and step, calculated as
    * (end - begin) if step is complete or (now - begin) if step is running or 0
    * if the step is still pending.
-   * 
+   *
    * @param phase Phase to get
    * @param step Step to get
    * @return long elapsed time
@@ -104,7 +106,7 @@ public class StartupProgressView {
   /**
    * Returns the optional file name associated with the specified phase, possibly
    * null.
-   * 
+   *
    * @param phase Phase to get
    * @return String optional file name, possibly null
    */
@@ -117,7 +119,7 @@ public class StartupProgressView {
    * of all phases.  This is an approximation that assumes all phases have equal
    * running time.  In practice, this isn't true, but there isn't sufficient
    * information available to predict proportional weights for each phase.
-   * 
+   *
    * @return float percent complete
    */
   public float getPercentComplete() {
@@ -126,7 +128,7 @@ public class StartupProgressView {
     } else {
       float total = 0.0f;
       int numPhases = 0;
-      for (Phase phase: phases.keySet()) {
+      for (Phase phase : phases.keySet()) {
         ++numPhases;
         total += getPercentComplete(phase);
       }
@@ -137,7 +139,7 @@ public class StartupProgressView {
   /**
    * Returns percent complete for the specified phase, calculated by aggregating
    * the counter values and totals for all steps within the phase.
-   * 
+   *
    * @param phase Phase to get
    * @return float percent complete
    */
@@ -147,7 +149,7 @@ public class StartupProgressView {
     } else {
       long total = getTotal(phase);
       long count = 0;
-      for (Step step: getSteps(phase)) {
+      for (Step step : getSteps(phase)) {
         count += getCount(phase, step);
       }
       return total > 0 ? getBoundedPercent(1.0f * count / total) : 0.0f;
@@ -157,7 +159,7 @@ public class StartupProgressView {
   /**
    * Returns percent complete for the specified phase and step, calculated as
    * counter value divided by total.
-   * 
+   *
    * @param phase Phase to get
    * @param step Step to get
    * @return float percent complete
@@ -174,7 +176,7 @@ public class StartupProgressView {
 
   /**
    * Returns all phases.
-   * 
+   *
    * @return {@code Iterable<Phase>} containing all phases
    */
   public Iterable<Phase> getPhases() {
@@ -183,7 +185,7 @@ public class StartupProgressView {
 
   /**
    * Returns all steps within a phase.
-   * 
+   *
    * @param phase Phase to get
    * @return {@code Iterable<Step>} all steps
    */
@@ -194,7 +196,7 @@ public class StartupProgressView {
   /**
    * Returns the optional size in bytes associated with the specified phase,
    * possibly Long.MIN_VALUE if undefined.
-   * 
+   *
    * @param phase Phase to get
    * @return long optional size in bytes, possibly Long.MIN_VALUE
    */
@@ -204,7 +206,7 @@ public class StartupProgressView {
 
   /**
    * Returns the current run status of the specified phase.
-   * 
+   *
    * @param phase Phase to get
    * @return Status run status of phase
    */
@@ -221,13 +223,13 @@ public class StartupProgressView {
 
   /**
    * Returns the sum of the totals for all steps in the specified phase.
-   * 
+   *
    * @param phase Phase to get
    * @return long sum of totals for all steps
    */
   public long getTotal(Phase phase) {
     long sum = 0;
-    for (StepTracking tracking: phases.get(phase).steps.values()) {
+    for (StepTracking tracking : phases.get(phase).steps.values()) {
       if (tracking.total != Long.MIN_VALUE) {
         sum += tracking.total;
       }
@@ -237,7 +239,7 @@ public class StartupProgressView {
 
   /**
    * Returns the total for the specified phase and step.
-   * 
+   *
    * @param phase Phase to get
    * @param step Step to get
    * @return long total
@@ -245,18 +247,18 @@ public class StartupProgressView {
   public long getTotal(Phase phase, Step step) {
     StepTracking tracking = getStepTracking(phase, step);
     return tracking != null && tracking.total != Long.MIN_VALUE ?
-      tracking.total : 0;
+        tracking.total : 0;
   }
 
   /**
    * Creates a new StartupProgressView by cloning data from the specified
    * StartupProgress.
-   * 
+   *
    * @param prog StartupProgress to clone
    */
   StartupProgressView(StartupProgress prog) {
     phases = new HashMap<Phase, PhaseTracking>();
-    for (Map.Entry<Phase, PhaseTracking> entry: prog.phases.entrySet()) {
+    for (Map.Entry<Phase, PhaseTracking> entry : prog.phases.entrySet()) {
       phases.put(entry.getKey(), entry.getValue().clone());
     }
   }
@@ -265,7 +267,7 @@ public class StartupProgressView {
    * Returns elapsed time, calculated as (end - begin) if both are defined or
    * (now - begin) if end is undefined or 0 if both are undefined.  Begin and end
    * time come from the same AbstractTracking instance.
-   * 
+   *
    * @param tracking AbstractTracking containing begin and end time
    * @return long elapsed time
    */
@@ -277,13 +279,13 @@ public class StartupProgressView {
    * Returns elapsed time, calculated as (end - begin) if both are defined or
    * (now - begin) if end is undefined or 0 if both are undefined.  Begin and end
    * time may come from different AbstractTracking instances.
-   * 
+   *
    * @param beginTracking AbstractTracking containing begin time
    * @param endTracking AbstractTracking containing end time
    * @return long elapsed time
    */
   private long getElapsedTime(AbstractTracking beginTracking,
-      AbstractTracking endTracking) {
+                              AbstractTracking endTracking) {
     final long elapsed;
     if (beginTracking != null && beginTracking.beginTime != Long.MIN_VALUE &&
         endTracking != null && endTracking.endTime != Long.MIN_VALUE) {
@@ -300,7 +302,7 @@ public class StartupProgressView {
   /**
    * Returns the StepTracking internal data structure for the specified phase
    * and step, possibly null if not found.
-   * 
+   *
    * @param phase Phase to get
    * @param step Step to get
    * @return StepTracking for phase and step, possibly null
@@ -308,13 +310,13 @@ public class StartupProgressView {
   private StepTracking getStepTracking(Phase phase, Step step) {
     PhaseTracking phaseTracking = phases.get(phase);
     Map<Step, StepTracking> steps = phaseTracking != null ?
-      phaseTracking.steps : null;
+        phaseTracking.steps : null;
     return steps != null ? steps.get(step) : null;
   }
 
   /**
    * Returns the given value restricted to the range [0.0, 1.0].
-   * 
+   *
    * @param percent float value to restrict
    * @return float value restricted to range [0.0, 1.0]
    */

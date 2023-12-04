@@ -1,21 +1,5 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.SocketException;
-import java.nio.MappedByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
@@ -32,16 +16,26 @@ import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.net.unix.DomainSocketWatcher;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.util.Time;
-import org.apache.hadoop.util.Waitable;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
-
+import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.Waitable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.SocketException;
+import java.nio.MappedByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * The ShortCircuitCache tracks things which the client needs to access
@@ -92,11 +86,11 @@ public class ShortCircuitCache implements Closeable {
         Long evictionTimeNs;
         while (!evictable.isEmpty()) {
           Object eldestKey = evictable.firstKey();
-          evictionTimeNs = (Long)eldestKey;
+          evictionTimeNs = (Long) eldestKey;
           long evictionTimeMs =
               TimeUnit.MILLISECONDS.convert(evictionTimeNs, TimeUnit.NANOSECONDS);
           if (evictionTimeMs + maxNonMmappedEvictableLifespanMs >= curMs) break;
-          ShortCircuitReplica replica = (ShortCircuitReplica)evictable.get(
+          ShortCircuitReplica replica = (ShortCircuitReplica) evictable.get(
               eldestKey);
           if (LOG.isTraceEnabled()) {
             LOG.trace("CacheCleaner: purging " + replica + ": " +
@@ -167,7 +161,7 @@ public class ShortCircuitCache implements Closeable {
         return;
       }
       LOG.trace("{}: about to release {}", ShortCircuitCache.this, slot);
-      final DfsClientShm shm = (DfsClientShm)slot.getShm();
+      final DfsClientShm shm = (DfsClientShm) slot.getShm();
       final DomainSocket shmSock = shm.getPeer().getDomainSocket();
       final String path = shmSock.getPath();
       DataOutputStream out = null;
@@ -349,8 +343,8 @@ public class ShortCircuitCache implements Closeable {
   }
 
   public ShortCircuitCache(int maxTotalSize, long maxNonMmappedEvictableLifespanMs,
-      int maxEvictableMmapedSize, long maxEvictableMmapedLifespanMs,
-      long mmapRetryTimeoutMs, long staleThresholdMs, int shmInterruptCheckMs) {
+                           int maxEvictableMmapedSize, long maxEvictableMmapedLifespanMs,
+                           long mmapRetryTimeoutMs, long staleThresholdMs, int shmInterruptCheckMs) {
     Preconditions.checkArgument(maxTotalSize >= 0);
     this.maxTotalSize = maxTotalSize;
     Preconditions.checkArgument(maxNonMmappedEvictableLifespanMs >= 0);
@@ -494,7 +488,7 @@ public class ShortCircuitCache implements Closeable {
    * You must hold the cache lock while calling this function.
    *
    * @param now   Current time in monotonic milliseconds.
-   * @return      Number of replicas demoted.
+   * @return Number of replicas demoted.
    */
   private int demoteOldEvictableMmaped(long now) {
     int numDemoted = 0;
@@ -503,7 +497,7 @@ public class ShortCircuitCache implements Closeable {
 
     while (!evictableMmapped.isEmpty()) {
       Object eldestKey = evictableMmapped.firstKey();
-      evictionTimeNs = (Long)eldestKey;
+      evictionTimeNs = (Long) eldestKey;
       long evictionTimeMs =
           TimeUnit.MILLISECONDS.convert(evictionTimeNs, TimeUnit.NANOSECONDS);
       if (evictionTimeMs + maxEvictableMmapedLifespanMs >= now) {
@@ -512,7 +506,7 @@ public class ShortCircuitCache implements Closeable {
         }
         needMoreSpace = true;
       }
-      ShortCircuitReplica replica = (ShortCircuitReplica)evictableMmapped.get(
+      ShortCircuitReplica replica = (ShortCircuitReplica) evictableMmapped.get(
           eldestKey);
       if (LOG.isTraceEnabled()) {
         String rationale = needMoreSpace ? "because we need more space" :
@@ -567,7 +561,7 @@ public class ShortCircuitCache implements Closeable {
    * Remove a replica from an evictable map.
    *
    * @param replica   The replica to remove.
-   * @return          The map it was removed from.
+   * @return The map it was removed from.
    */
   private String removeEvictable(ShortCircuitReplica replica) {
     if (replica.hasMmap()) {
@@ -586,10 +580,10 @@ public class ShortCircuitCache implements Closeable {
    * @param map       The map to remove it from.
    */
   private void removeEvictable(ShortCircuitReplica replica,
-      LinkedMap map) {
+                               LinkedMap map) {
     Long evictableTimeNs = replica.getEvictableTimeNs();
     Preconditions.checkNotNull(evictableTimeNs);
-    ShortCircuitReplica removed = (ShortCircuitReplica)map.remove(
+    ShortCircuitReplica removed = (ShortCircuitReplica) map.remove(
         evictableTimeNs);
     Preconditions.checkState(removed == replica,
         "failed to make %s unevictable", replica);
@@ -607,7 +601,7 @@ public class ShortCircuitCache implements Closeable {
    * @param map              The map to insert it into.
    */
   private void insertEvictable(Long evictionTimeNs,
-      ShortCircuitReplica replica, LinkedMap map) {
+                               ShortCircuitReplica replica, LinkedMap map) {
     while (map.containsKey(evictionTimeNs)) {
       evictionTimeNs++;
     }
@@ -660,6 +654,7 @@ public class ShortCircuitCache implements Closeable {
   }
 
   static final int FETCH_OR_CREATE_RETRY_TIMES = 3;
+
   /**
    * Fetch or create a replica.
    *
@@ -669,16 +664,16 @@ public class ShortCircuitCache implements Closeable {
    * @param creator      Replica creator callback.  Will be called without
    *                     the cache lock being held.
    *
-   * @return             Null if no replica could be found or created.
+   * @return Null if no replica could be found or created.
    *                     The replica, otherwise.
    */
   public ShortCircuitReplicaInfo fetchOrCreate(ExtendedBlockId key,
-      ShortCircuitReplicaCreator creator) {
+                                               ShortCircuitReplicaCreator creator) {
     Waitable<ShortCircuitReplicaInfo> newWaitable;
     lock.lock();
     try {
       ShortCircuitReplicaInfo info = null;
-      for (int i = 0; i < FETCH_OR_CREATE_RETRY_TIMES; i++){
+      for (int i = 0; i < FETCH_OR_CREATE_RETRY_TIMES; i++) {
         if (closed) {
           LOG.trace("{}: can't fethchOrCreate {} because the cache is closed.",
               this, key);
@@ -709,14 +704,14 @@ public class ShortCircuitCache implements Closeable {
    *
    * @param key       The key that we're using.
    * @param waitable  The waitable object to wait on.
-   * @return          The existing ReplicaInfo object, or null if there is
+   * @return The existing ReplicaInfo object, or null if there is
    *                  none.
    *
    * @throws RetriableException   If the caller needs to retry.
    */
   @VisibleForTesting // ONLY for testing
   protected ShortCircuitReplicaInfo fetch(ExtendedBlockId key,
-      Waitable<ShortCircuitReplicaInfo> waitable) throws RetriableException {
+                                          Waitable<ShortCircuitReplicaInfo> waitable) throws RetriableException {
     // Another thread is already in the process of loading this
     // ShortCircuitReplica.  So we simply wait for it to complete.
     ShortCircuitReplicaInfo info;
@@ -758,8 +753,8 @@ public class ShortCircuitCache implements Closeable {
   }
 
   private ShortCircuitReplicaInfo create(ExtendedBlockId key,
-      ShortCircuitReplicaCreator creator,
-      Waitable<ShortCircuitReplicaInfo> newWaitable) {
+                                         ShortCircuitReplicaCreator creator,
+                                         Waitable<ShortCircuitReplicaInfo> newWaitable) {
     // Handle loading a new replica.
     ShortCircuitReplicaInfo info = null;
     try {
@@ -811,17 +806,17 @@ public class ShortCircuitCache implements Closeable {
   }
 
   ClientMmap getOrCreateClientMmap(ShortCircuitReplica replica,
-      boolean anchored) {
+                                   boolean anchored) {
     Condition newCond;
     lock.lock();
     try {
       while (replica.mmapData != null) {
         if (replica.mmapData instanceof MappedByteBuffer) {
           ref(replica);
-          MappedByteBuffer mmap = (MappedByteBuffer)replica.mmapData;
+          MappedByteBuffer mmap = (MappedByteBuffer) replica.mmapData;
           return new ClientMmap(replica, mmap, anchored);
         } else if (replica.mmapData instanceof Long) {
-          long lastAttemptTimeMs = (Long)replica.mmapData;
+          long lastAttemptTimeMs = (Long) replica.mmapData;
           long delta = Time.monotonicNow() - lastAttemptTimeMs;
           if (delta < mmapRetryTimeoutMs) {
             LOG.trace("{}: can't create client mmap for {} because we failed to"
@@ -831,7 +826,7 @@ public class ShortCircuitCache implements Closeable {
           LOG.trace("{}: retrying client mmap for {}, {} ms after the previous "
               + "failure.", this, replica, delta);
         } else if (replica.mmapData instanceof Condition) {
-          Condition cond = (Condition)replica.mmapData;
+          Condition cond = (Condition) replica.mmapData;
           cond.awaitUninterruptibly();
         } else {
           Preconditions.checkState(false, "invalid mmapData type %s",
@@ -922,10 +917,10 @@ public class ShortCircuitCache implements Closeable {
   @VisibleForTesting // ONLY for testing
   public interface CacheVisitor {
     void visit(int numOutstandingMmaps,
-        Map<ExtendedBlockId, ShortCircuitReplica> replicas,
-        Map<ExtendedBlockId, InvalidToken> failedLoads,
-        LinkedMap evictable,
-        LinkedMap evictableMmapped);
+               Map<ExtendedBlockId, ShortCircuitReplica> replicas,
+               Map<ExtendedBlockId, InvalidToken> failedLoads,
+               LinkedMap evictable,
+               LinkedMap evictableMmapped);
   }
 
   @VisibleForTesting // ONLY for testing
@@ -975,14 +970,14 @@ public class ShortCircuitCache implements Closeable {
    *                         allocating this slot for.
    * @param clientName     The name of the DFSClient allocating the shared
    *                         memory.
-   * @return               Null if short-circuit shared memory is disabled;
+   * @return Null if short-circuit shared memory is disabled;
    *                         a short-circuit memory slot otherwise.
    * @throws IOException   An exception if there was an error talking to
    *                         the datanode.
    */
   public Slot allocShmSlot(DatanodeInfo datanode,
-      DomainPeer peer, MutableBoolean usedPeer,
-      ExtendedBlockId blockId, String clientName) throws IOException {
+                           DomainPeer peer, MutableBoolean usedPeer,
+                           ExtendedBlockId blockId, String clientName) throws IOException {
     if (shmManager != null) {
       return shmManager.allocSlot(datanode, peer, usedPeer,
           blockId, clientName);

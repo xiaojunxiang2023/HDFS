@@ -1,21 +1,21 @@
 package org.apache.hadoop.io.compress.zlib;
 
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 import org.apache.hadoop.io.compress.Decompressor;
 import org.apache.hadoop.io.compress.DirectDecompressor;
 import org.apache.hadoop.util.NativeCodeLoader;
+
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 /**
  * A {@link Decompressor} based on the popular 
  * zlib compression algorithm.
  * http://www.zlib.net/
- * 
+ *
  */
 public class ZlibDecompressor implements Decompressor {
-  private static final int DEFAULT_DIRECT_BUFFER_SIZE = 64*1024;
+  private static final int DEFAULT_DIRECT_BUFFER_SIZE = 64 * 1024;
 
   private long stream;
   private CompressionHeader header;
@@ -35,36 +35,36 @@ public class ZlibDecompressor implements Decompressor {
     /**
      * No headers/trailers/checksums.
      */
-    NO_HEADER (-15),
-    
+    NO_HEADER(-15),
+
     /**
      * Default headers/trailers/checksums.
      */
-    DEFAULT_HEADER (15),
-    
+    DEFAULT_HEADER(15),
+
     /**
      * Simple gzip headers/trailers.
      */
-    GZIP_FORMAT (31),
-    
+    GZIP_FORMAT(31),
+
     /**
      * Autodetect gzip/zlib headers/trailers.
      */
-    AUTODETECT_GZIP_ZLIB (47);
+    AUTODETECT_GZIP_ZLIB(47);
 
     private final int windowBits;
-    
+
     CompressionHeader(int windowBits) {
       this.windowBits = windowBits;
     }
-    
+
     public int windowBits() {
       return windowBits;
     }
   }
 
   private static boolean nativeZlibLoaded = false;
-  
+
   static {
     if (NativeCodeLoader.isNativeCodeLoaded()) {
       try {
@@ -76,7 +76,7 @@ public class ZlibDecompressor implements Decompressor {
       }
     }
   }
-  
+
   static boolean isNativeZlibLoaded() {
     return nativeZlibLoaded;
   }
@@ -86,14 +86,14 @@ public class ZlibDecompressor implements Decompressor {
    */
   public ZlibDecompressor(CompressionHeader header, int directBufferSize) {
     this.header = header;
-    this.directBufferSize = directBufferSize;    
+    this.directBufferSize = directBufferSize;
     compressedDirectBuf = ByteBuffer.allocateDirect(directBufferSize);
     uncompressedDirectBuf = ByteBuffer.allocateDirect(directBufferSize);
     uncompressedDirectBuf.position(directBufferSize);
-    
+
     stream = init(this.header.windowBits());
   }
-  
+
   public ZlibDecompressor() {
     this(CompressionHeader.DEFAULT_HEADER, DEFAULT_DIRECT_BUFFER_SIZE);
   }
@@ -106,18 +106,18 @@ public class ZlibDecompressor implements Decompressor {
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
-  
+
     this.userBuf = b;
     this.userBufOff = off;
     this.userBufLen = len;
-    
+
     setInputFromSavedData();
-    
+
     // Reinitialize zlib's output direct buffer 
     uncompressedDirectBuf.limit(directBufferSize);
     uncompressedDirectBuf.position(directBufferSize);
   }
-  
+
   void setInputFromSavedData() {
     compressedDirectBufOff = 0;
     compressedDirectBufLen = userBufLen;
@@ -127,9 +127,9 @@ public class ZlibDecompressor implements Decompressor {
 
     // Reinitialize zlib's input direct buffer
     compressedDirectBuf.rewind();
-    ((ByteBuffer)compressedDirectBuf).put(userBuf, userBufOff, 
-                                          compressedDirectBufLen);
-    
+    ((ByteBuffer) compressedDirectBuf).put(userBuf, userBufOff,
+        compressedDirectBufLen);
+
     // Note how much data is being fed to zlib
     userBufOff += compressedDirectBufLen;
     userBufLen -= compressedDirectBufLen;
@@ -153,7 +153,7 @@ public class ZlibDecompressor implements Decompressor {
     if (uncompressedDirectBuf.remaining() > 0) {
       return false;
     }
-    
+
     // Check if zlib has consumed all input
     if (compressedDirectBufLen <= 0) {
       // Check if we have consumed all user-input
@@ -163,7 +163,7 @@ public class ZlibDecompressor implements Decompressor {
         setInputFromSavedData();
       }
     }
-    
+
     return false;
   }
 
@@ -180,25 +180,25 @@ public class ZlibDecompressor implements Decompressor {
   }
 
   @Override
-  public int decompress(byte[] b, int off, int len) 
-    throws IOException {
+  public int decompress(byte[] b, int off, int len)
+      throws IOException {
     if (b == null) {
       throw new NullPointerException();
     }
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    
+
     int n = 0;
-    
+
     // Check if there is uncompressed data
     n = uncompressedDirectBuf.remaining();
     if (n > 0) {
       n = Math.min(n, len);
-      ((ByteBuffer)uncompressedDirectBuf).get(b, off, n);
+      ((ByteBuffer) uncompressedDirectBuf).get(b, off, n);
       return n;
     }
-    
+
     // Re-initialize the zlib's output direct buffer
     uncompressedDirectBuf.rewind();
     uncompressedDirectBuf.limit(directBufferSize);
@@ -209,11 +209,11 @@ public class ZlibDecompressor implements Decompressor {
 
     // Get at most 'len' bytes
     n = Math.min(n, len);
-    ((ByteBuffer)uncompressedDirectBuf).get(b, off, n);
+    ((ByteBuffer) uncompressedDirectBuf).get(b, off, n);
 
     return n;
   }
-  
+
   /**
    * Returns the total number of uncompressed bytes output so far.
    *
@@ -274,26 +274,34 @@ public class ZlibDecompressor implements Decompressor {
   protected void finalize() {
     end();
   }
-  
+
   private void checkStream() {
     if (stream == 0)
       throw new NullPointerException();
   }
-  
+
   private native static void initIDs();
+
   private native static long init(int windowBits);
+
   private native static void setDictionary(long strm, byte[] b, int off,
                                            int len);
+
   private native int inflateBytesDirect();
+
   private native static long getBytesRead(long strm);
+
   private native static long getBytesWritten(long strm);
+
   private native static int getRemaining(long strm);
+
   private native static void reset(long strm);
+
   private native static void end(long strm);
-    
+
   int inflateDirect(ByteBuffer src, ByteBuffer dst) throws IOException {
     assert (this instanceof ZlibDirectDecompressor);
-    
+
     ByteBuffer presliced = dst;
     if (dst.position() > 0) {
       presliced = dst;
@@ -326,8 +334,8 @@ public class ZlibDecompressor implements Decompressor {
     }
     return n;
   }
-  
-  public static class ZlibDirectDecompressor 
+
+  public static class ZlibDirectDecompressor
       extends ZlibDecompressor implements DirectDecompressor {
     public ZlibDirectDecompressor() {
       super(CompressionHeader.DEFAULT_HEADER, 0);
@@ -336,18 +344,18 @@ public class ZlibDecompressor implements Decompressor {
     public ZlibDirectDecompressor(CompressionHeader header, int directBufferSize) {
       super(header, directBufferSize);
     }
-    
+
     @Override
     public boolean finished() {
       return (endOfInput && super.finished());
     }
-    
+
     @Override
     public void reset() {
       super.reset();
       endOfInput = true;
     }
-    
+
     private boolean endOfInput;
 
     @Override
@@ -355,7 +363,7 @@ public class ZlibDecompressor implements Decompressor {
         throws IOException {
       assert dst.isDirect() : "dst.isDirect()";
       assert src.isDirect() : "src.isDirect()";
-      assert dst.remaining() > 0 : "dst.remaining() > 0";      
+      assert dst.remaining() > 0 : "dst.remaining() > 0";
       this.inflateDirect(src, dst);
       endOfInput = !src.hasRemaining();
     }

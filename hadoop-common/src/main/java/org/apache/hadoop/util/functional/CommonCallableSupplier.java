@@ -1,20 +1,15 @@
 package org.apache.hadoop.util.functional;
 
+import org.apache.hadoop.util.DurationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executor;
+import java.util.concurrent.*;
 import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.util.DurationInfo;
 
 import static org.apache.hadoop.fs.impl.FutureIOSupport.raiseInnerCause;
 
@@ -63,7 +58,7 @@ public final class CommonCallableSupplier<T> implements Supplier {
    */
   @SuppressWarnings("unchecked")
   public static <T> CompletableFuture<T> submit(final Executor executor,
-      final Callable<T> call) {
+                                                final Callable<T> call) {
     return CompletableFuture
         .supplyAsync(new CommonCallableSupplier<T>(call), executor);
   }

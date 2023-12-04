@@ -3,7 +3,9 @@ package org.apache.hadoop.auth.util.provider;
 import org.apache.hadoop.filter.AuthenticationFilter;
 
 import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,7 +17,8 @@ public class FileSignerSecretProvider extends SignerSecretProvider {
   private byte[] secret;
   private byte[][] secrets;
 
-  public FileSignerSecretProvider() {}
+  public FileSignerSecretProvider() {
+  }
 
   @Override
   public void init(Properties config, ServletContext servletContext,
@@ -26,7 +29,7 @@ public class FileSignerSecretProvider extends SignerSecretProvider {
 
     if (signatureSecretFile != null) {
       try (Reader reader = new InputStreamReader(Files.newInputStream(
-              Paths.get(signatureSecretFile)), StandardCharsets.UTF_8)) {
+          Paths.get(signatureSecretFile)), StandardCharsets.UTF_8)) {
         StringBuilder sb = new StringBuilder();
         int c = reader.read();
         while (c > -1) {
@@ -37,7 +40,7 @@ public class FileSignerSecretProvider extends SignerSecretProvider {
         secret = sb.toString().getBytes(StandardCharsets.UTF_8);
         if (secret.length == 0) {
           throw new RuntimeException("No secret in signature secret file: "
-             + signatureSecretFile);
+              + signatureSecretFile);
         }
       } catch (IOException ex) {
         throw new RuntimeException("Could not read signature secret file: " +

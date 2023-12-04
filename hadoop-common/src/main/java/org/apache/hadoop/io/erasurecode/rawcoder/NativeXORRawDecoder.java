@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
+
 import org.apache.hadoop.io.erasurecode.ErasureCodeNative;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 

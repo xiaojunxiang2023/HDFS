@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
@@ -8,8 +7,10 @@ import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.ipc.CallerContext;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.Arrays;
+
 public abstract class INodeAttributeProvider {
 
   public static class AuthorizationContext {
@@ -304,7 +305,7 @@ public abstract class INodeAttributeProvider {
       } else if (obj == null || getClass() != obj.getClass()) {
         return false;
       }
-      AuthorizationContext other = (AuthorizationContext)obj;
+      AuthorizationContext other = (AuthorizationContext) obj;
       return getFsOwner().equals(other.getFsOwner()) &&
           getSupergroup().equals(other.getSupergroup()) &&
           getCallerUgi().equals(other.getCallerUgi()) &&
@@ -362,12 +363,12 @@ public abstract class INodeAttributeProvider {
      * @throws AccessControlException
      */
     public abstract void checkPermission(String fsOwner, String supergroup,
-        UserGroupInformation callerUgi, INodeAttributes[] inodeAttrs,
-        INode[] inodes, byte[][] pathByNameArr, int snapshotId, String path,
-        int ancestorIndex, boolean doCheckOwner, FsAction ancestorAccess,
-        FsAction parentAccess, FsAction access, FsAction subAccess,
-        boolean ignoreEmptyDir)
-            throws AccessControlException;
+                                         UserGroupInformation callerUgi, INodeAttributes[] inodeAttrs,
+                                         INode[] inodes, byte[][] pathByNameArr, int snapshotId, String path,
+                                         int ancestorIndex, boolean doCheckOwner, FsAction ancestorAccess,
+                                         FsAction parentAccess, FsAction access, FsAction subAccess,
+                                         boolean ignoreEmptyDir)
+        throws AccessControlException;
 
     /**
      * Checks permission on a file system object. Has to throw an Exception
@@ -384,6 +385,7 @@ public abstract class INodeAttributeProvider {
           + "API.");
     }
   }
+
   /**
    * Initialize the provider. This method is called at NameNode startup
    * time.
@@ -429,10 +431,10 @@ public abstract class INodeAttributeProvider {
   }
 
   public abstract INodeAttributes getAttributes(String[] pathElements,
-      INodeAttributes inode);
+                                                INodeAttributes inode);
 
   public INodeAttributes getAttributes(byte[][] components,
-      INodeAttributes inode) {
+                                       INodeAttributes inode) {
     String[] elements = new String[components.length];
     for (int i = 0; i < elements.length; i++) {
       elements[i] = DFSUtil.bytes2String(components[i]);

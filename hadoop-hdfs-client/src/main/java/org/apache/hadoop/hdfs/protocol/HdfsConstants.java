@@ -1,10 +1,12 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public final class HdfsConstants {
   // Long that indicates "leave current quota unchanged"
   public static final long QUOTA_DONT_SET = Long.MAX_VALUE;
@@ -38,7 +40,7 @@ public final class HdfsConstants {
    */
   public static final String DOT_SNAPSHOT_DIR = ".snapshot";
   public static final String SEPARATOR_DOT_SNAPSHOT_DIR
-          = Path.SEPARATOR + DOT_SNAPSHOT_DIR;
+      = Path.SEPARATOR + DOT_SNAPSHOT_DIR;
   public static final String SEPARATOR_DOT_SNAPSHOT_DIR_SEPARATOR
       = Path.SEPARATOR + DOT_SNAPSHOT_DIR + Path.SEPARATOR;
   public final static String DOT_RESERVED_STRING = ".reserved";
@@ -139,9 +141,10 @@ public final class HdfsConstants {
 
     private static final Map<String, RollingUpgradeAction> MAP
         = new HashMap<>();
+
     static {
       MAP.put("", QUERY);
-      for(RollingUpgradeAction a : values()) {
+      for (RollingUpgradeAction a : values()) {
         MAP.put(a.name(), a);
       }
     }

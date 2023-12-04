@@ -1,9 +1,10 @@
 package org.apache.hadoop.util;
 
-import java.lang.reflect.Array;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Array;
+import java.util.List;
 
 /**
  * Contains utility methods for dealing with Java Generics. 
@@ -19,7 +20,7 @@ public class GenericsUtil {
    */
   public static <T> Class<T> getClass(T t) {
     @SuppressWarnings("unchecked")
-    Class<T> clazz = (Class<T>)t.getClass();
+    Class<T> clazz = (Class<T>) t.getClass();
     return clazz;
   }
 
@@ -29,13 +30,12 @@ public class GenericsUtil {
    * @param c the Class object of the items in the list
    * @param list the list to convert
    */
-  public static <T> T[] toArray(Class<T> c, List<T> list)
-  {
+  public static <T> T[] toArray(Class<T> c, List<T> list) {
     @SuppressWarnings("unchecked")
-    T[] ta= (T[])Array.newInstance(c, list.size());
+    T[] ta = (T[]) Array.newInstance(c, list.size());
 
-    for (int i= 0; i<list.size(); i++)
-      ta[i]= list.get(i);
+    for (int i = 0; i < list.size(); i++)
+      ta[i] = list.get(i);
     return ta;
   }
 

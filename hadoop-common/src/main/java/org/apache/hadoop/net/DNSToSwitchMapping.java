@@ -37,7 +37,7 @@ public interface DNSToSwitchMapping {
    * will get a chance to see the new data.
    */
   public void reloadCachedMappings();
-  
+
   /**
    * Reload cached mappings on specific nodes.
    *

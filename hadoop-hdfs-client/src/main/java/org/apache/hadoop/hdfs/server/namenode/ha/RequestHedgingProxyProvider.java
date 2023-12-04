@@ -14,7 +14,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.namenode.ha;
+ */
+package org.apache.hadoop.hdfs.server.namenode.ha;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.retry.MultiException;
+import org.apache.hadoop.ipc.RemoteException;
+import org.apache.hadoop.ipc.StandbyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -24,21 +32,7 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ipc.RemoteException;
-import org.apache.hadoop.ipc.StandbyException;
-
-import org.apache.hadoop.io.retry.MultiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.*;
 
 /**
  * A FailoverProxyProvider implementation that technically does not "failover"
@@ -49,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * outstanding requests to other proxies are immediately cancelled.
  */
 public class RequestHedgingProxyProvider<T> extends
-        ConfiguredFailoverProxyProvider<T> {
+    ConfiguredFailoverProxyProvider<T> {
 
   public static final Logger LOG =
       LoggerFactory.getLogger(RequestHedgingProxyProvider.class);
@@ -61,7 +55,7 @@ public class RequestHedgingProxyProvider<T> extends
     private volatile ProxyInfo<T> currentUsedProxy = null;
 
     public RequestHedgingInvocationHandler(
-            Map<String, ProxyInfo<T>> targetProxies) {
+        Map<String, ProxyInfo<T>> targetProxies) {
       this.targetProxies = new HashMap<>(targetProxies);
     }
 
@@ -79,7 +73,7 @@ public class RequestHedgingProxyProvider<T> extends
     @Override
     public Object
     invoke(Object proxy, final Method method, final Object[] args)
-            throws Throwable {
+        throws Throwable {
       // Need double check locking to guarantee thread-safe since
       // currentUsedProxy is lazily initialized.
       if (currentUsedProxy == null) {
@@ -195,7 +189,7 @@ public class RequestHedgingProxyProvider<T> extends
   private volatile String toIgnore = null;
 
   public RequestHedgingProxyProvider(Configuration conf, URI uri,
-      Class<T> xface, HAProxyFactory<T> proxyFactory) {
+                                     Class<T> xface, HAProxyFactory<T> proxyFactory) {
     super(conf, uri, xface, proxyFactory);
   }
 
@@ -215,9 +209,9 @@ public class RequestHedgingProxyProvider<T> extends
     }
     combinedInfo.append(']');
     T wrappedProxy = (T) Proxy.newProxyInstance(
-            RequestHedgingInvocationHandler.class.getClassLoader(),
-            new Class<?>[]{xface},
-            new RequestHedgingInvocationHandler(targetProxyInfos));
+        RequestHedgingInvocationHandler.class.getClassLoader(),
+        new Class<?>[]{xface},
+        new RequestHedgingInvocationHandler(targetProxyInfos));
     currentUsedHandler =
         new ProxyInfo<T>(wrappedProxy, combinedInfo.toString());
     return currentUsedHandler;
@@ -273,7 +267,7 @@ public class RequestHedgingProxyProvider<T> extends
       Throwable cause = ex.getCause();
       if (cause instanceof InvocationTargetException) {
         return
-            unwrapInvocationTargetException((InvocationTargetException)cause);
+            unwrapInvocationTargetException((InvocationTargetException) cause);
       }
     }
     return ex;

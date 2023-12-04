@@ -6,7 +6,7 @@ package org.apache.hadoop.net;
  * In this network topology, leaves represent data nodes (computers) and inner
  * nodes represent switches/routers that manage traffic in/out of data centers,
  * racks or physical host (with virtual switch).
- * 
+ *
  * @see NetworkTopology
  */
 // MapReduce也可见
@@ -61,7 +61,7 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
   /**
    * Given a string representation of a node group for a specific network
    * location
-   * 
+   *
    * @param loc
    *            a path-like string representation of a network location
    * @return a node group string
@@ -80,7 +80,7 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
           return null;
         } else {
           // may be a leaf node
-          if(!(node.getNetworkLocation() == null ||
+          if (!(node.getNetworkLocation() == null ||
               node.getNetworkLocation().isEmpty())) {
             return getNodeGroup(node.getNetworkLocation());
           } else {
@@ -97,12 +97,12 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
   }
 
   @Override
-  public boolean isOnSameRack( Node node1,  Node node2) {
+  public boolean isOnSameRack(Node node1, Node node2) {
     if (node1 == null || node2 == null ||
         node1.getParent() == null || node2.getParent() == null) {
       return false;
     }
-      
+
     netlock.readLock().lock();
     try {
       return isSameParents(node1.getParent(), node2.getParent());
@@ -114,7 +114,7 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
   /**
    * Check if two nodes are on the same node group (hypervisor) The
    * assumption here is: each nodes are leaf nodes.
-   * 
+   *
    * @param node1
    *            one node (can be null)
    * @param node2
@@ -154,10 +154,10 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
    */
   @Override
   public void add(Node node) {
-    if (node==null) return;
-    if( node instanceof InnerNode ) {
+    if (node == null) return;
+    if (node instanceof InnerNode) {
       throw new IllegalArgumentException(
-        "Not allow to add an inner node: "+NodeBase.getPath(node));
+          "Not allow to add an inner node: " + NodeBase.getPath(node));
     }
     netlock.writeLock().lock();
     try {
@@ -166,7 +166,7 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
       // if node only with default rack info, here we need to add default 
       // nodegroup info
       if (NetworkTopology.DEFAULT_RACK.equals(node.getNetworkLocation())) {
-        node.setNetworkLocation(node.getNetworkLocation() + 
+        node.setNetworkLocation(node.getNetworkLocation() +
             NetworkTopologyWithNodeGroup.DEFAULT_NODEGROUP);
       }
       Node nodeGroup = getNode(node.getNetworkLocation());
@@ -179,10 +179,10 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
       // note: rack's null parent case is: node's topology only has one layer, 
       //       so rack is recognized as "/" and no parent. 
       // This will be recognized as a node with fault topology.
-      if (rack != null && 
+      if (rack != null &&
           (!(rack instanceof InnerNode) || rack.getParent() == null)) {
-        throw new IllegalArgumentException("Unexpected data node " 
-            + node.toString() 
+        throw new IllegalArgumentException("Unexpected data node "
+            + node.toString()
             + " at an illegal network location");
       }
       if (clusterMap.add(node)) {
@@ -192,7 +192,7 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
           incrementRacks();
         }
       }
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("NetworkTopology became:\n" + this.toString());
       }
     } finally {
@@ -206,12 +206,12 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
    */
   @Override
   public void remove(Node node) {
-    if (node==null) return;
-    if( node instanceof InnerNode ) {
+    if (node == null) return;
+    if (node instanceof InnerNode) {
       throw new IllegalArgumentException(
-          "Not allow to remove an inner node: "+NodeBase.getPath(node));
+          "Not allow to remove an inner node: " + NodeBase.getPath(node));
     }
-    LOG.info("Removing a node: "+NodeBase.getPath(node));
+    LOG.info("Removing a node: " + NodeBase.getPath(node));
     netlock.writeLock().lock();
     try {
       if (clusterMap.remove(node)) {
@@ -219,12 +219,12 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
         if (nodeGroup == null) {
           nodeGroup = factory.newInnerNode(node.getNetworkLocation());
         }
-        InnerNode rack = (InnerNode)getNode(nodeGroup.getNetworkLocation());
+        InnerNode rack = (InnerNode) getNode(nodeGroup.getNetworkLocation());
         if (rack == null) {
           numOfRacks--;
         }
       }
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("NetworkTopology became:\n" + this.toString());
       }
     } finally {
@@ -309,7 +309,7 @@ public class NetworkTopologyWithNodeGroup extends NetworkTopology {
 
     /**
      * Judge if this node represents a node group
-     * 
+     *
      * @return true if it has no child or its children are not InnerNodes
      */
     boolean isNodeGroup() {

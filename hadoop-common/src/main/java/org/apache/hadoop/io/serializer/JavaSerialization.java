@@ -1,11 +1,6 @@
 package org.apache.hadoop.io.serializer;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * <p>
@@ -16,19 +11,20 @@ import java.io.Serializable;
 public class JavaSerialization implements Serialization<Serializable> {
 
   static class JavaSerializationDeserializer<T extends Serializable>
-    implements Deserializer<T> {
+      implements Deserializer<T> {
 
     private ObjectInputStream ois;
 
     @Override
     public void open(InputStream in) throws IOException {
       ois = new ObjectInputStream(in) {
-        @Override protected void readStreamHeader() {
+        @Override
+        protected void readStreamHeader() {
           // no header
         }
       };
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public T deserialize(T object) throws IOException {
@@ -48,14 +44,15 @@ public class JavaSerialization implements Serialization<Serializable> {
   }
 
   static class JavaSerializationSerializer
-    implements Serializer<Serializable> {
+      implements Serializer<Serializable> {
 
     private ObjectOutputStream oos;
 
     @Override
     public void open(OutputStream out) throws IOException {
       oos = new ObjectOutputStream(out) {
-        @Override protected void writeStreamHeader() {
+        @Override
+        protected void writeStreamHeader() {
           // no header
         }
       };

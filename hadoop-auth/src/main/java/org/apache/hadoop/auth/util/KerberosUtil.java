@@ -1,23 +1,5 @@
 package org.apache.hadoop.auth.util;
 
-import static org.apache.hadoop.auth.util.micro.PlatformName.IBM_JAVA;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.charset.IllegalCharsetNameException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.ietf.jgss.GSSException;
@@ -27,14 +9,25 @@ import javax.security.auth.Subject;
 import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.kerberos.KeyTab;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.charset.IllegalCharsetNameException;
+import java.util.*;
+import java.util.regex.Pattern;
+
+import static org.apache.hadoop.auth.util.micro.PlatformName.IBM_JAVA;
 
 public class KerberosUtil {
 
   /* Return the Kerberos login module name */
   public static String getKrb5LoginModuleName() {
     return (IBM_JAVA)
-      ? "com.ibm.security.auth.module.Krb5LoginModule"
-      : "com.sun.security.auth.module.Krb5LoginModule";
+        ? "com.ibm.security.auth.module.Krb5LoginModule"
+        : "com.sun.security.auth.module.Krb5LoginModule";
   }
 
   public static final Oid GSS_SPNEGO_MECH_OID =
@@ -110,7 +103,7 @@ public class KerberosUtil {
       int tKrbNtSrvHst = classRef.getField("KRB_NT_SRV_HST").getInt(null);
       principalName = classRef.getConstructor(String.class, int.class).
           newInstance(shortprinc, tKrbNtSrvHst);
-      realmString = (String)classRef.getMethod("getRealmString", new Class[0]).
+      realmString = (String) classRef.getMethod("getRealmString", new Class[0]).
           invoke(principalName, new Object[0]);
     } catch (RuntimeException rte) {
       //silently catch everything
@@ -128,7 +121,7 @@ public class KerberosUtil {
   public static String getLocalHostName() throws UnknownHostException {
     return InetAddress.getLocalHost().getCanonicalHostName();
   }
-  
+
   /**
    * Create Kerberos principal for a given service and hostname,
    * inferring realm from the fqdn of the hostname. It converts
@@ -149,7 +142,7 @@ public class KerberosUtil {
    *           If no IP address for the local host could be found.
    */
   public static final String getServicePrincipal(String service,
-      String hostname)
+                                                 String hostname)
       throws UnknownHostException {
     String fqdn = hostname;
     String shortprinc = null;
@@ -172,11 +165,11 @@ public class KerberosUtil {
 
   /**
    * Get all the unique principals present in the keytabfile.
-   * 
-   * @param keytabFileName 
+   *
+   * @param keytabFileName
    *          Name of the keytab file to be read.
    * @return list of unique principals in the keytab.
-   * @throws IOException 
+   * @throws IOException
    *          If keytab entries cannot be read from the file.
    */
   static final String[] getPrincipalNames(String keytabFileName) throws IOException {
@@ -191,14 +184,14 @@ public class KerberosUtil {
 
   /**
    * Get all the unique principals from keytabfile which matches a pattern.
-   * 
+   *
    * @param keytab Name of the keytab file to be read.
    * @param pattern pattern to be matched.
    * @return list of unique principals which matches the pattern.
    * @throws IOException if cannot get the principal name
    */
   public static final String[] getPrincipalNames(String keytab,
-      Pattern pattern) throws IOException {
+                                                 Pattern pattern) throws IOException {
     String[] principals = getPrincipalNames(keytab);
     if (principals.length != 0) {
       List<String> matchingPrincipals = new ArrayList<String>();
@@ -331,10 +324,10 @@ public class KerberosUtil {
     // standard ASN.1 encoding.
     private static int readLength(ByteBuffer bb) {
       int length = bb.get();
-      if ((length & (byte)0x80) != 0) {
+      if ((length & (byte) 0x80) != 0) {
         int varlength = length & 0x7f;
         length = 0;
-        for (int i=0; i < varlength; i++) {
+        for (int i = 0; i < varlength; i++) {
           length = (length << 8) | (bb.get() & 0xff);
         }
       }
@@ -353,7 +346,7 @@ public class KerberosUtil {
 
     DER get(int... tags) {
       DER der = this;
-      for (int i=0; i < tags.length; i++) {
+      for (int i = 0; i < tags.length; i++) {
         int expectedTag = tags[i];
         // lookup for exact match, else scan if it's sequenced.
         if (der.getTag() != expectedTag) {
@@ -361,7 +354,7 @@ public class KerberosUtil {
         }
         if (der == null) {
           StringBuilder sb = new StringBuilder("Tag not found:");
-          for (int ii=0; ii <= i; ii++) {
+          for (int ii = 0; ii <= i; ii++) {
             sb.append(" 0x").append(Integer.toHexString(tags[ii]));
           }
           throw new IllegalStateException(sb.toString());
@@ -387,7 +380,7 @@ public class KerberosUtil {
     @Override
     public boolean equals(Object o) {
       return (o instanceof DER) &&
-          tag == ((DER)o).tag && bb.equals(((DER)o).bb);
+          tag == ((DER) o).tag && bb.equals(((DER) o).bb);
     }
 
     @Override
@@ -406,7 +399,7 @@ public class KerberosUtil {
 
     @Override
     public String toString() {
-      return "[tag=0x"+Integer.toHexString(tag)+" bb="+bb+"]";
+      return "[tag=0x" + Integer.toHexString(tag) + " bb=" + bb + "]";
     }
   }
 }

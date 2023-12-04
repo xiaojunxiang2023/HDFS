@@ -1,16 +1,11 @@
 package org.apache.hadoop.security;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslClientFactory;
 import javax.security.sasl.SaslException;
+import java.util.*;
 
 /**
  * Class for dealing with caching SASL client factories.
@@ -41,14 +36,14 @@ public class FastSaslClientFactory implements SaslClientFactory {
 
   @Override
   public SaslClient createSaslClient(String[] mechanisms,
-      String authorizationId, String protocol, String serverName,
-      Map<String, ?> props, CallbackHandler cbh) throws SaslException {
+                                     String authorizationId, String protocol, String serverName,
+                                     Map<String, ?> props, CallbackHandler cbh) throws SaslException {
     for (String mechanism : mechanisms) {
       List<SaslClientFactory> factories = factoryCache.get(mechanism);
       if (factories != null) {
         for (SaslClientFactory factory : factories) {
           SaslClient saslClient =
-              factory.createSaslClient(new String[] {mechanism},
+              factory.createSaslClient(new String[]{mechanism},
                   authorizationId, protocol, serverName, props, cbh);
           if (saslClient != null) {
             return saslClient;

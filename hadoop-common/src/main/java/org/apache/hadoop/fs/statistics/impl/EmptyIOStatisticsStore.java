@@ -1,12 +1,12 @@
 package org.apache.hadoop.fs.statistics.impl;
 
+import org.apache.hadoop.fs.statistics.IOStatistics;
+import org.apache.hadoop.fs.statistics.MeanStatistic;
+
 import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.hadoop.fs.statistics.IOStatistics;
-import org.apache.hadoop.fs.statistics.MeanStatistic;
 
 import static java.util.Collections.emptyMap;
 
@@ -20,6 +20,7 @@ final class EmptyIOStatisticsStore implements IOStatisticsStore {
    */
   private static final EmptyIOStatisticsStore INSTANCE =
       new EmptyIOStatisticsStore();
+
   /**
    * Get the single instance of this class.
    * @return a shared, empty instance.
@@ -153,7 +154,7 @@ final class EmptyIOStatisticsStore implements IOStatisticsStore {
 
   @Override
   public void addTimedOperation(final String prefix,
-      final long durationMillis) {
+                                final long durationMillis) {
 
   }
 

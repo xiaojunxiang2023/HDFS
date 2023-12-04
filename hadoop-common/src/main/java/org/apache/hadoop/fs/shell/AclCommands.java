@@ -1,21 +1,13 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.permission.*;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclEntryScope;
-import org.apache.hadoop.fs.permission.AclEntryType;
-import org.apache.hadoop.fs.permission.AclStatus;
-import org.apache.hadoop.fs.permission.AclUtil;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.permission.ScopedAclEntries;
 
 /**
  * Acl related operations
@@ -62,7 +54,7 @@ class AclCommands extends FsCommand {
       FsPermission perm = item.stat.getPermission();
       if (perm.getStickyBit()) {
         out.println("# flags: --" +
-          (perm.getOtherAction().implies(FsAction.EXECUTE) ? "t" : "T"));
+            (perm.getOtherAction().implies(FsAction.EXECUTE) ? "t" : "T"));
       }
 
       final AclStatus aclStatus;
@@ -72,10 +64,10 @@ class AclCommands extends FsCommand {
         entries = aclStatus.getEntries();
       } else {
         aclStatus = null;
-        entries = Collections.<AclEntry> emptyList();
+        entries = Collections.<AclEntry>emptyList();
       }
       ScopedAclEntries scopedEntries = new ScopedAclEntries(
-        AclUtil.getAclFromPermAndEntries(perm, entries));
+          AclUtil.getAclFromPermAndEntries(perm, entries));
       printAclEntriesForSingleScope(aclStatus, perm,
           scopedEntries.getAccessEntries());
       printAclEntriesForSingleScope(aclStatus, perm,
@@ -90,16 +82,16 @@ class AclCommands extends FsCommand {
      * @param entries List<AclEntry> containing ACL entries of file
      */
     private void printAclEntriesForSingleScope(AclStatus aclStatus,
-        FsPermission fsPerm, List<AclEntry> entries) {
+                                               FsPermission fsPerm, List<AclEntry> entries) {
       if (entries.isEmpty()) {
         return;
       }
       if (AclUtil.isMinimalAcl(entries)) {
-        for (AclEntry entry: entries) {
+        for (AclEntry entry : entries) {
           out.println(entry.toStringStable());
         }
       } else {
-        for (AclEntry entry: entries) {
+        for (AclEntry entry : entries) {
           printExtendedAclEntry(aclStatus, fsPerm, entry);
         }
       }
@@ -115,14 +107,14 @@ class AclCommands extends FsCommand {
      * @param entry AclEntry extended ACL entry to print
      */
     private void printExtendedAclEntry(AclStatus aclStatus,
-        FsPermission fsPerm, AclEntry entry) {
+                                       FsPermission fsPerm, AclEntry entry) {
       if (entry.getName() != null || entry.getType() == AclEntryType.GROUP) {
         FsAction entryPerm = entry.getPermission();
         FsAction effectivePerm = aclStatus
             .getEffectivePermission(entry, fsPerm);
         if (entryPerm != effectivePerm) {
           out.println(String.format("%s\t#effective:%s", entry,
-            effectivePerm.SYMBOL));
+              effectivePerm.SYMBOL));
         } else {
           out.println(entry.toStringStable());
         }
@@ -140,11 +132,11 @@ class AclCommands extends FsCommand {
     public static String USAGE = "[-R] [{-b|-k} {-m|-x <acl_spec>} <path>]"
         + "|[--set <acl_spec> <path>]";
     public static String DESCRIPTION = "Sets Access Control Lists (ACLs)"
-        + " of files and directories.\n" 
+        + " of files and directories.\n"
         + "Options:\n"
         + "  -b :Remove all but the base ACL entries. The entries for user,"
         + " group and others are retained for compatibility with permission "
-        + "bits.\n" 
+        + "bits.\n"
         + "  -k :Remove the default ACL.\n"
         + "  -R :Apply operations to all files and directories recursively.\n"
         + "  -m :Modify ACL. New entries are added to the ACL, and existing"
@@ -219,7 +211,7 @@ class AclCommands extends FsCommand {
       // access ACL entries.
       if (isRecursive() && (oneModifyOption || setOption)) {
         accessAclEntries = Lists.newArrayList();
-        for (AclEntry entry: aclEntries) {
+        for (AclEntry entry : aclEntries) {
           if (entry.getScope() == AclEntryScope.ACCESS) {
             accessAclEntries.add(entry);
           }

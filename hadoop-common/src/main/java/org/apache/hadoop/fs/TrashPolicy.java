@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.ReflectionUtils;
 
 import java.io.IOException;
 
-/** 
+/**
  * This interface is used for implementing different Trash policies.
  * Provides factory method to create instances of the configured Trash policy.
  */
@@ -41,18 +42,18 @@ public abstract class TrashPolicy extends Configured {
    */
   public abstract boolean isEnabled();
 
-  /** 
+  /**
    * Move a file or directory to the current trash directory.
    * @return false if the item is already in the trash or trash is disabled
-   */ 
+   */
   public abstract boolean moveToTrash(Path path) throws IOException;
 
-  /** 
+  /**
    * Create a trash checkpoint. 
    */
   public abstract void createCheckpoint() throws IOException;
 
-  /** 
+  /**
    * Delete old trash checkpoint(s).
    */
   public abstract void deleteCheckpoint() throws IOException;
@@ -86,7 +87,7 @@ public abstract class TrashPolicy extends Configured {
     throw new UnsupportedOperationException();
   }
 
-  /** 
+  /**
    * Return a {@link Runnable} that periodically empties the trash of all
    * users, intended to be run by the superuser.
    */

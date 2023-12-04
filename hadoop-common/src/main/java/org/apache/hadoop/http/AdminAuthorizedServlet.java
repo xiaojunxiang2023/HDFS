@@ -1,12 +1,11 @@
 package org.apache.hadoop.http;
 
-import java.io.IOException;
+import org.eclipse.jetty.servlet.DefaultServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.servlet.DefaultServlet;
+import java.io.IOException;
 
 /**
  * General servlet which is admin-authorized.
@@ -18,7 +17,7 @@ public class AdminAuthorizedServlet extends DefaultServlet {
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
- throws ServletException, IOException {
+      throws ServletException, IOException {
     // Do the authorization
     if (HttpServer2.hasAdministratorAccess(getServletContext(), request,
         response)) {

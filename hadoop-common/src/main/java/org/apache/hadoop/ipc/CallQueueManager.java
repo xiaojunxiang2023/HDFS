@@ -1,5 +1,13 @@
 package org.apache.hadoop.ipc;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,15 +17,6 @@ import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstracts queue operations for different blocking queues.
@@ -34,13 +33,13 @@ public class CallQueueManager<E extends Schedulable>
   @SuppressWarnings("unchecked")
   static <E> Class<? extends BlockingQueue<E>> convertQueueClass(
       Class<?> queueClass, Class<E> elementClass) {
-    return (Class<? extends BlockingQueue<E>>)queueClass;
+    return (Class<? extends BlockingQueue<E>>) queueClass;
   }
 
   @SuppressWarnings("unchecked")
   static Class<? extends RpcScheduler> convertSchedulerClass(
       Class<?> schedulerClass) {
-    return (Class<? extends RpcScheduler>)schedulerClass;
+    return (Class<? extends RpcScheduler>) schedulerClass;
   }
 
   private volatile boolean clientBackOffEnabled;
@@ -55,8 +54,8 @@ public class CallQueueManager<E extends Schedulable>
 
   public CallQueueManager(Class<? extends BlockingQueue<E>> backingClass,
                           Class<? extends RpcScheduler> schedulerClass,
-      boolean clientBackOffEnabled, int maxQueueSize, String namespace,
-      Configuration conf) {
+                          boolean clientBackOffEnabled, int maxQueueSize, String namespace,
+                          Configuration conf) {
     int priorityLevels = parseNumLevels(namespace, conf);
     this.scheduler = createScheduler(schedulerClass, priorityLevels,
         namespace, conf);
@@ -65,18 +64,19 @@ public class CallQueueManager<E extends Schedulable>
     this.clientBackOffEnabled = clientBackOffEnabled;
     this.serverFailOverEnabled = conf.getBoolean(
         namespace + "." +
-        CommonConfigurationKeys.IPC_CALLQUEUE_SERVER_FAILOVER_ENABLE,
+            CommonConfigurationKeys.IPC_CALLQUEUE_SERVER_FAILOVER_ENABLE,
         CommonConfigurationKeys.IPC_CALLQUEUE_SERVER_FAILOVER_ENABLE_DEFAULT);
     this.putRef = new AtomicReference<BlockingQueue<E>>(bq);
     this.takeRef = new AtomicReference<BlockingQueue<E>>(bq);
     LOG.info("Using callQueue: {}, queueCapacity: {}, " +
-        "scheduler: {}, ipcBackoff: {}.",
+            "scheduler: {}, ipcBackoff: {}.",
         backingClass, maxQueueSize, schedulerClass, clientBackOffEnabled);
   }
 
-  @VisibleForTesting // only!
+  @VisibleForTesting
+    // only!
   CallQueueManager(BlockingQueue<E> queue, RpcScheduler scheduler,
-      boolean clientBackOffEnabled, boolean serverFailOverEnabled) {
+                   boolean clientBackOffEnabled, boolean serverFailOverEnabled) {
     this.putRef = new AtomicReference<BlockingQueue<E>>(queue);
     this.takeRef = new AtomicReference<BlockingQueue<E>>(queue);
     this.scheduler = scheduler;
@@ -170,7 +170,7 @@ public class CallQueueManager<E extends Schedulable>
 
     // Nothing worked
     throw new RuntimeException(theClass.getName() +
-      " could not be constructed.");
+        " could not be constructed.");
   }
 
   boolean isClientBackoffEnabled() {
@@ -193,14 +193,14 @@ public class CallQueueManager<E extends Schedulable>
 
   int getPriorityLevel(UserGroupInformation user) {
     if (scheduler instanceof DecayRpcScheduler) {
-      return ((DecayRpcScheduler)scheduler).getPriorityLevel(user);
+      return ((DecayRpcScheduler) scheduler).getPriorityLevel(user);
     }
     return 0;
   }
 
   void setPriorityLevel(UserGroupInformation user, int priority) {
     if (scheduler instanceof DecayRpcScheduler) {
-      ((DecayRpcScheduler)scheduler).setPriorityLevel(user, priority);
+      ((DecayRpcScheduler) scheduler).setPriorityLevel(user, priority);
     }
   }
 
@@ -326,14 +326,14 @@ public class CallQueueManager<E extends Schedulable>
         FairCallQueue.IPC_CALLQUEUE_PRIORITY_LEVELS_KEY, 0);
     if (retval == 0) { // No FCQ priority level configured
       retval = conf.getInt(ns + "." +
-          CommonConfigurationKeys.IPC_SCHEDULER_PRIORITY_LEVELS_KEY,
+              CommonConfigurationKeys.IPC_SCHEDULER_PRIORITY_LEVELS_KEY,
           CommonConfigurationKeys.IPC_SCHEDULER_PRIORITY_LEVELS_DEFAULT_KEY);
     } else {
       LOG.warn(ns + "." + FairCallQueue.IPC_CALLQUEUE_PRIORITY_LEVELS_KEY +
           " is deprecated. Please use " + ns + "." +
           CommonConfigurationKeys.IPC_SCHEDULER_PRIORITY_LEVELS_KEY + ".");
     }
-    if(retval < 1) {
+    if (retval < 1) {
       throw new IllegalArgumentException("numLevels must be at least 1");
     }
     return retval;
@@ -361,7 +361,8 @@ public class CallQueueManager<E extends Schedulable>
     putRef.set(newQ);
 
     // Wait for handlers to drain the oldQ
-    while (!queueIsReallyEmpty(oldQ)) {}
+    while (!queueIsReallyEmpty(oldQ)) {
+    }
 
     // Swap takeRef to handle new calls
     takeRef.set(newQ);
@@ -369,7 +370,7 @@ public class CallQueueManager<E extends Schedulable>
     this.scheduler = newScheduler;
 
     LOG.info("Old Queue: " + stringRepr(oldQ) + ", " +
-      "Replacement: " + stringRepr(newQ));
+        "Replacement: " + stringRepr(newQ));
   }
 
   /**
@@ -429,18 +430,20 @@ public class CallQueueManager<E extends Schedulable>
         new CallQueueOverflowException(
             new StandbyException(TOO_BUSY + " - disconnect and failover"),
             RpcStatusProto.FATAL);
+
     CallQueueOverflowException(final IOException ioe,
-        final RpcStatusProto status) {
-      super("Queue full", new RpcServerException(ioe.getMessage(), ioe){
+                               final RpcStatusProto status) {
+      super("Queue full", new RpcServerException(ioe.getMessage(), ioe) {
         @Override
         public RpcStatusProto getRpcStatusProto() {
           return status;
         }
       });
     }
+
     @Override
     public IOException getCause() {
-      return (IOException)super.getCause();
+      return (IOException) super.getCause();
     }
   }
 }

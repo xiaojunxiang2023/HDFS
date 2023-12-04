@@ -1,5 +1,13 @@
 package org.apache.hadoop.fs.statistics.impl;
 
+import org.apache.hadoop.fs.StorageStatistics;
+import org.apache.hadoop.fs.statistics.*;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.functional.CallableRaisingIOE;
+import org.apache.hadoop.util.functional.ConsumerRaisingIOE;
+import org.apache.hadoop.util.functional.FunctionRaisingIOE;
+import org.apache.hadoop.util.functional.InvocationRaisingIOE;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,19 +19,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.hadoop.fs.StorageStatistics;
-import org.apache.hadoop.fs.statistics.DurationTracker;
-import org.apache.hadoop.fs.statistics.DurationTrackerFactory;
-import org.apache.hadoop.fs.statistics.IOStatistics;
-import org.apache.hadoop.fs.statistics.IOStatisticsSource;
-import org.apache.hadoop.fs.statistics.MeanStatistic;
-import org.apache.hadoop.util.functional.CallableRaisingIOE;
-import org.apache.hadoop.util.functional.ConsumerRaisingIOE;
-import org.apache.hadoop.util.functional.FunctionRaisingIOE;
-import org.apache.hadoop.util.functional.InvocationRaisingIOE;
 
 import static org.apache.hadoop.fs.statistics.IOStatistics.MIN_UNSET_VALUE;
 import static org.apache.hadoop.fs.statistics.impl.StubDurationTracker.STUB_DURATION_TRACKER;
@@ -190,9 +185,9 @@ public final class IOStatisticsBinding {
    * @return a concurrent hash map referencing the same values.
    */
   public static <E extends Serializable>
-      ConcurrentHashMap<String, E> snapshotMap(
-          Map<String, E> source,
-          Function<E, E> copyFn) {
+  ConcurrentHashMap<String, E> snapshotMap(
+      Map<String, E> source,
+      Function<E, E> copyFn) {
     ConcurrentHashMap<String, E> dest = new ConcurrentHashMap<>();
     copyMap(dest, source, copyFn);
     return dest;

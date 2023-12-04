@@ -14,54 +14,54 @@ import java.util.concurrent.CountDownLatch;
 // 更新 Router的挂载表缓存
 // 并不是一个定期性服务, 刷新完缓存就销毁线程
 public class MountTableRefresherThread extends Thread {
-    private static final Logger LOG = LoggerFactory.getLogger(MountTableRefresherThread.class);
-    private boolean success;
-    
-    // 目标待更新的 Router
-    private final String adminAddress;
-    private CountDownLatch countDownLatch;
-    private final MountTableManager manager;
+  private static final Logger LOG = LoggerFactory.getLogger(MountTableRefresherThread.class);
+  private boolean success;
 
-    public MountTableRefresherThread(MountTableManager manager, String adminAddress) {
-        this.manager = manager;
-        this.adminAddress = adminAddress;
-        setName("MountTableRefresh_" + adminAddress);
-        setDaemon(true);
-    }
+  // 目标待更新的 Router
+  private final String adminAddress;
+  private CountDownLatch countDownLatch;
+  private final MountTableManager manager;
 
-    @Override
-    public void run() {
-        try {
-            SecurityUtil.doAsLoginUser(() -> {
-                if (UserGroupInformation.isSecurityEnabled()) {
-                    UserGroupInformation.getLoginUser().checkTGTAndReloginFromKeytab();
-                }
-                RefreshMountTableEntriesResponse refreshMountTableEntries = manager.refreshMountTableEntries(RefreshMountTableEntriesRequest.newInstance());
-                success = refreshMountTableEntries.getResult();
-                return true;
-            });
-        } catch (IOException e) {
-            LOG.error("Failed to refresh mount table entries cache at router {}", adminAddress, e);
-        } finally {
-            countDownLatch.countDown();
+  public MountTableRefresherThread(MountTableManager manager, String adminAddress) {
+    this.manager = manager;
+    this.adminAddress = adminAddress;
+    setName("MountTableRefresh_" + adminAddress);
+    setDaemon(true);
+  }
+
+  @Override
+  public void run() {
+    try {
+      SecurityUtil.doAsLoginUser(() -> {
+        if (UserGroupInformation.isSecurityEnabled()) {
+          UserGroupInformation.getLoginUser().checkTGTAndReloginFromKeytab();
         }
+        RefreshMountTableEntriesResponse refreshMountTableEntries = manager.refreshMountTableEntries(RefreshMountTableEntriesRequest.newInstance());
+        success = refreshMountTableEntries.getResult();
+        return true;
+      });
+    } catch (IOException e) {
+      LOG.error("Failed to refresh mount table entries cache at router {}", adminAddress, e);
+    } finally {
+      countDownLatch.countDown();
     }
+  }
 
-    public boolean isSuccess() {
-        return success;
-    }
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public void setCountDownLatch(CountDownLatch countDownLatch) {
-        this.countDownLatch = countDownLatch;
-    }
+  public void setCountDownLatch(CountDownLatch countDownLatch) {
+    this.countDownLatch = countDownLatch;
+  }
 
-    @Override
-    public String toString() {
-        return "MountTableRefreshThread [success=" + success + ", adminAddress="
-                + adminAddress + "]";
-    }
+  @Override
+  public String toString() {
+    return "MountTableRefreshThread [success=" + success + ", adminAddress="
+        + adminAddress + "]";
+  }
 
-    public String getAdminAddress() {
-        return adminAddress;
-    }
+  public String getAdminAddress() {
+    return adminAddress;
+  }
 }

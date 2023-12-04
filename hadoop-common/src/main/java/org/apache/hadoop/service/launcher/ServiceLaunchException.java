@@ -1,16 +1,17 @@
 package org.apache.hadoop.service.launcher;
 
 
-import java.util.Locale;
 import org.apache.hadoop.util.ExitCodeProvider;
 import org.apache.hadoop.util.ExitUtil;
+
+import java.util.Locale;
 
 /**
  * A service launch exception that includes an exit code.
  * <p>
  * When caught by the ServiceLauncher, it will convert that
  * into a process exit code.
- * 
+ *
  * The {@link #ServiceLaunchException(int, String, Object...)} constructor
  * generates formatted exceptions.
  */
@@ -66,7 +67,7 @@ public class ServiceLaunchException extends ExitUtil.ExitException
    * @param args list of arguments
    */
   public ServiceLaunchException(int exitCode, Throwable cause,
-      String format, Object... args) {
+                                String format, Object... args) {
     super(exitCode, String.format(Locale.ENGLISH, format, args), cause);
   }
 }

@@ -1,12 +1,13 @@
 package org.apache.hadoop.io.compress;
 
-import java.io.IOException;
-import java.io.InputStream;
 import org.apache.hadoop.fs.PositionedReadable;
 import org.apache.hadoop.fs.Seekable;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A compression input stream.
@@ -28,13 +29,13 @@ public abstract class CompressionInputStream extends InputStream
   /**
    * Create a compression input stream that reads
    * the decompressed bytes from the given stream.
-   * 
+   *
    * @param in The input stream to be compressed.
    * @throws IOException
    */
   protected CompressionInputStream(InputStream in) throws IOException {
     if (!(in instanceof Seekable) || !(in instanceof PositionedReadable)) {
-        this.maxAvailableData = in.available();
+      this.maxAvailableData = in.available();
     }
     this.in = in;
   }
@@ -72,7 +73,7 @@ public abstract class CompressionInputStream extends InputStream
    * as the underlying stream may have been repositioned.
    */
   public abstract void resetState() throws IOException;
-  
+
   /**
    * This method returns the current position in the stream.
    *
@@ -80,14 +81,13 @@ public abstract class CompressionInputStream extends InputStream
    */
   @Override
   public long getPos() throws IOException {
-    if (!(in instanceof Seekable) || !(in instanceof PositionedReadable)){
+    if (!(in instanceof Seekable) || !(in instanceof PositionedReadable)) {
       //This way of getting the current position will not work for file
       //size which can be fit in an int and hence can not be returned by
       //available method.
       return (this.maxAvailableData - this.in.available());
-    }
-    else{
-      return ((Seekable)this.in).getPos();
+    } else {
+      return ((Seekable) this.in).getPos();
     }
 
   }

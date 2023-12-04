@@ -11,17 +11,17 @@ import java.io.IOException;
  */
 public abstract class RefreshMountTableEntriesResponse {
 
-    public static RefreshMountTableEntriesResponse newInstance()
-            throws IOException {
-        return StateStoreSerializer
-                .newRecord(RefreshMountTableEntriesResponse.class);
-    }
+  public static RefreshMountTableEntriesResponse newInstance()
+      throws IOException {
+    return StateStoreSerializer
+        .newRecord(RefreshMountTableEntriesResponse.class);
+  }
 
-    @Public
-    @Unstable
-    public abstract boolean getResult();
+  @Public
+  @Unstable
+  public abstract boolean getResult();
 
-    @Public
-    @Unstable
-    public abstract void setResult(boolean result);
+  @Public
+  @Unstable
+  public abstract void setResult(boolean result);
 }

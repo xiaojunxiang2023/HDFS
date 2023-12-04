@@ -1,9 +1,23 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_SHARED_FILE_DESCRIPTOR_PATHS;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_SHARED_FILE_DESCRIPTOR_PATHS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_SHORT_CIRCUIT_SHARED_MEMORY_WATCHER_INTERRUPT_CHECK_MS;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_SHORT_CIRCUIT_SHARED_MEMORY_WATCHER_INTERRUPT_CHECK_MS_DEFAULT;
+import org.apache.commons.io.IOUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.InvalidRequestException;
+import org.apache.hadoop.hdfs.ExtendedBlockId;
+import org.apache.hadoop.hdfs.shortcircuit.DfsClientShmManager;
+import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm;
+import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.ShmId;
+import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
+import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
+import org.apache.hadoop.io.nativeio.SharedFileDescriptorFactory;
+import org.apache.hadoop.net.unix.DomainSocket;
+import org.apache.hadoop.net.unix.DomainSocketWatcher;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -13,25 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.InvalidRequestException;
-import org.apache.hadoop.hdfs.ExtendedBlockId;
-import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm;
-import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.ShmId;
-import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
-import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
-import org.apache.hadoop.io.nativeio.SharedFileDescriptorFactory;
-import org.apache.hadoop.net.unix.DomainSocket;
-import org.apache.hadoop.net.unix.DomainSocketWatcher;
-import org.apache.hadoop.hdfs.shortcircuit.DfsClientShmManager;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
 
 /**
  * Manages client short-circuit memory segments on the DataNode.
@@ -55,12 +51,12 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
  * using these replicas can skip checksumming.  It also means that we can do
  * zero-copy reads on these replicas (the ZCR interface has no way of
  * verifying checksums.)
- * 
+ *
  * When a DN needs to munlock a block, it needs to first wait for the block to
  * be unanchored by clients doing a no-checksum read or a zero-copy read. The 
  * DN also marks the block's slots as "unanchorable" to prevent additional 
  * clients from initiating these operations in the future.
- * 
+ *
  * The counterpart of this class on the client is {@link DfsClientShmManager}.
  */
 public class ShortCircuitRegistry {
@@ -75,7 +71,7 @@ public class ShortCircuitRegistry {
     private final ShortCircuitRegistry registry;
 
     RegisteredShm(String clientName, ShmId shmId, FileInputStream stream,
-        ShortCircuitRegistry registry) throws IOException {
+                  ShortCircuitRegistry registry) throws IOException {
       super(shmId, stream);
       this.clientName = clientName;
       this.registry = registry;
@@ -124,7 +120,7 @@ public class ShortCircuitRegistry {
    * The factory which creates shared file descriptors.
    */
   private final SharedFileDescriptorFactory shmFactory;
-  
+
   /**
    * A watcher which sends out callbacks when the UNIX domain socket
    * associated with a shared memory segment closes.
@@ -133,10 +129,10 @@ public class ShortCircuitRegistry {
 
   private final HashMap<ShmId, RegisteredShm> segments =
       new HashMap<ShmId, RegisteredShm>(0);
-  
+
   private final HashMultimap<ExtendedBlockId, Slot> slots =
       HashMultimap.create(0, 1);
-  
+
   public ShortCircuitRegistry(Configuration conf) throws IOException {
     boolean enabled = false;
     SharedFileDescriptorFactory shmFactory = null;
@@ -148,7 +144,7 @@ public class ShortCircuitRegistry {
       if (interruptCheck <= 0) {
         throw new IOException(
             DFS_SHORT_CIRCUIT_SHARED_MEMORY_WATCHER_INTERRUPT_CHECK_MS +
-            " was set to " + interruptCheck);
+                " was set to " + interruptCheck);
       }
       String[] shmPaths =
           conf.getTrimmedStrings(DFS_DATANODE_SHARED_FILE_DESCRIPTOR_PATHS);
@@ -166,7 +162,7 @@ public class ShortCircuitRegistry {
       enabled = true;
       if (LOG.isDebugEnabled()) {
         LOG.debug("created new ShortCircuitRegistry with interruptCheck=" +
-                  interruptCheck + ", shmPath=" + shmFactory.getPath());
+            interruptCheck + ", shmPath=" + shmFactory.getPath());
       }
     } catch (IOException e) {
       if (LOG.isDebugEnabled()) {
@@ -196,7 +192,7 @@ public class ShortCircuitRegistry {
    * Mark any slots associated with this blockId as unanchorable.
    *
    * @param blockId        The block ID.
-   * @return               True if we should allow the munlock request.
+   * @return True if we should allow the munlock request.
    */
   public synchronized boolean processBlockMunlockRequest(
       ExtendedBlockId blockId) {
@@ -242,7 +238,7 @@ public class ShortCircuitRegistry {
     final HashSet<String> clientNames = new HashSet<String>();
     final Set<Slot> affectedSlots = slots.get(blockId);
     for (Slot slot : affectedSlots) {
-      clientNames.add(((RegisteredShm)slot.getShm()).getClientName());
+      clientNames.add(((RegisteredShm) slot.getShm()).getClientName());
     }
     return Joiner.on(",").join(clientNames);
   }
@@ -279,12 +275,12 @@ public class ShortCircuitRegistry {
    *                        other side writes anything to the socket, the
    *                        segment will be closed.  This can happen at any
    *                        time, including right after this function returns.
-   * @return              A NewShmInfo object.  The caller must close the
+   * @return A NewShmInfo object.  The caller must close the
    *                        NewShmInfo object once they are done with it.
    * @throws IOException  If the new memory segment could not be created.
    */
   public NewShmInfo createNewMemorySegment(String clientName,
-      DomainSocket sock) throws IOException {
+                                           DomainSocket sock) throws IOException {
     NewShmInfo info = null;
     RegisteredShm shm = null;
     ShmId shmId = null;
@@ -319,9 +315,9 @@ public class ShortCircuitRegistry {
     }
     return info;
   }
-  
+
   public synchronized void registerSlot(ExtendedBlockId blockId, SlotId slotId,
-      boolean isCached) throws InvalidRequestException {
+                                        boolean isCached) throws InvalidRequestException {
     if (!enabled) {
       if (LOG.isTraceEnabled()) {
         LOG.trace(this + " can't register a slot because the " +
@@ -345,10 +341,10 @@ public class ShortCircuitRegistry {
     Preconditions.checkState(added);
     if (LOG.isTraceEnabled()) {
       LOG.trace(this + ": registered " + blockId + " with slot " +
-        slotId + " (isCached=" + isCached + ")");
+          slotId + " (isCached=" + isCached + ")");
     }
   }
-  
+
   public synchronized void unregisterSlot(SlotId slotId)
       throws InvalidRequestException {
     if (!enabled) {
@@ -369,7 +365,7 @@ public class ShortCircuitRegistry {
     shm.unregisterSlot(slotId.getSlotIdx());
     slots.remove(slot.getBlockId(), slot);
   }
-  
+
   public void shutdown() {
     synchronized (this) {
       if (!enabled) return;
@@ -380,7 +376,7 @@ public class ShortCircuitRegistry {
 
   public static interface Visitor {
     boolean accept(HashMap<ShmId, RegisteredShm> segments,
-                HashMultimap<ExtendedBlockId, Slot> slots);
+                   HashMultimap<ExtendedBlockId, Slot> slots);
   }
 
   @VisibleForTesting

@@ -1,25 +1,19 @@
 package org.apache.hadoop.security.http;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Set;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.hadoop.conf.Configuration;
-
 import org.eclipse.jetty.server.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This filter provides protection against cross site request forgery (CSRF)
@@ -39,10 +33,10 @@ public class RestCsrfPreventionFilter implements Filter {
   public static final String CUSTOM_HEADER_PARAM = "custom-header";
   public static final String CUSTOM_METHODS_TO_IGNORE_PARAM =
       "methods-to-ignore";
-  static final String  BROWSER_USER_AGENTS_DEFAULT = "^Mozilla.*,^Opera.*";
+  static final String BROWSER_USER_AGENTS_DEFAULT = "^Mozilla.*,^Opera.*";
   public static final String HEADER_DEFAULT = "X-XSRF-HEADER";
-  static final String  METHODS_TO_IGNORE_DEFAULT = "GET,OPTIONS,HEAD,TRACE";
-  private String  headerName = HEADER_DEFAULT;
+  static final String METHODS_TO_IGNORE_DEFAULT = "GET,OPTIONS,HEAD,TRACE";
+  private String headerName = HEADER_DEFAULT;
   private Set<String> methodsToIgnore = null;
   private Set<Pattern> browserUserAgents;
 
@@ -66,12 +60,12 @@ public class RestCsrfPreventionFilter implements Filter {
     }
     parseBrowserUserAgents(agents);
     LOG.info("Adding cross-site request forgery (CSRF) protection, "
-        + "headerName = {}, methodsToIgnore = {}, browserUserAgents = {}",
+            + "headerName = {}, methodsToIgnore = {}, browserUserAgents = {}",
         headerName, methodsToIgnore, browserUserAgents);
   }
 
   void parseBrowserUserAgents(String userAgents) {
-    String[] agentsArray =  userAgents.split(",");
+    String[] agentsArray = userAgents.split(",");
     browserUserAgents = new HashSet<Pattern>();
     for (String patternString : agentsArray) {
       browserUserAgents.add(Pattern.compile(patternString));
@@ -182,9 +176,9 @@ public class RestCsrfPreventionFilter implements Filter {
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response,
-      final FilterChain chain) throws IOException, ServletException {
-    final HttpServletRequest httpRequest = (HttpServletRequest)request;
-    final HttpServletResponse httpResponse = (HttpServletResponse)response;
+                       final FilterChain chain) throws IOException, ServletException {
+    final HttpServletRequest httpRequest = (HttpServletRequest) request;
+    final HttpServletResponse httpResponse = (HttpServletResponse) response;
     handleHttpInteraction(new ServletFilterHttpInteraction(httpRequest,
         httpResponse, chain));
   }
@@ -205,7 +199,7 @@ public class RestCsrfPreventionFilter implements Filter {
    *     initialization
    */
   public static Map<String, String> getFilterParams(Configuration conf,
-      String confPrefix) {
+                                                    String confPrefix) {
     return conf.getPropsWithPrefix(confPrefix);
   }
 
@@ -227,7 +221,7 @@ public class RestCsrfPreventionFilter implements Filter {
      * @param chain filter chain to forward to if HTTP interaction is allowed
      */
     public ServletFilterHttpInteraction(HttpServletRequest httpRequest,
-        HttpServletResponse httpResponse, FilterChain chain) {
+                                        HttpServletResponse httpResponse, FilterChain chain) {
       this.httpRequest = httpRequest;
       this.httpResponse = httpResponse;
       this.chain = chain;
@@ -251,7 +245,7 @@ public class RestCsrfPreventionFilter implements Filter {
     @Override
     public void sendError(int code, String message) throws IOException {
       if (httpResponse instanceof Response) {
-        ((Response)httpResponse).setStatusWithReason(code, message);
+        ((Response) httpResponse).setStatusWithReason(code, message);
       }
 
       httpResponse.sendError(code, message);

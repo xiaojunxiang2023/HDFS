@@ -1,7 +1,8 @@
 package org.apache.hadoop.fs.permission;
 
-import java.util.regex.Pattern;
 import org.apache.hadoop.fs.FileStatus;
+
+import java.util.regex.Pattern;
 
 /**
  * Parse a permission mode passed in from a chmod command and apply that
@@ -9,10 +10,10 @@ import org.apache.hadoop.fs.FileStatus;
  */
 public class ChmodParser extends PermissionParser {
   private static Pattern chmodOctalPattern =
-    Pattern.compile("^\\s*[+]?([01]?)([0-7]{3})\\s*$");
+      Pattern.compile("^\\s*[+]?([01]?)([0-7]{3})\\s*$");
   private static Pattern chmodNormalPattern =
-    Pattern.compile("\\G\\s*([ugoa]*)([+=-]+)([rwxXt]+)([,\\s]*)\\s*");
-  
+      Pattern.compile("\\G\\s*([ugoa]*)([+=-]+)([rwxXt]+)([,\\s]*)\\s*");
+
   public ChmodParser(String modeStr) throws IllegalArgumentException {
     super(modeStr, chmodNormalPattern, chmodOctalPattern);
   }
@@ -27,7 +28,7 @@ public class ChmodParser extends PermissionParser {
     FsPermission perms = file.getPermission();
     int existing = perms.toShort();
     boolean exeOk = file.isDirectory() || (existing & 0111) != 0;
-    
-    return (short)combineModes(existing, exeOk);
+
+    return (short) combineModes(existing, exeOk);
   }
 }

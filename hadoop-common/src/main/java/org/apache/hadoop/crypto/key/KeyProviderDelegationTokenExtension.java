@@ -1,9 +1,9 @@
 package org.apache.hadoop.crypto.key;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.security.Credentials;
-import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.DelegationTokenIssuer;
+import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 
@@ -13,10 +13,10 @@ import java.io.IOException;
  */
 public class KeyProviderDelegationTokenExtension extends
     KeyProviderExtension
-    <KeyProviderDelegationTokenExtension.DelegationTokenExtension>
+        <KeyProviderDelegationTokenExtension.DelegationTokenExtension>
     implements DelegationTokenIssuer {
-  
-  private static DelegationTokenExtension DEFAULT_EXTENSION = 
+
+  private static DelegationTokenExtension DEFAULT_EXTENSION =
       new DefaultDelegationTokenExtension();
 
   /**
@@ -44,17 +44,17 @@ public class KeyProviderDelegationTokenExtension extends
     @VisibleForTesting
     Token<?> selectDelegationToken(Credentials creds);
   }
-  
+
   /**
    * Default implementation of {@link DelegationTokenExtension} that
    * implements the method as a no-op.
    */
-  private static class DefaultDelegationTokenExtension implements 
-    DelegationTokenExtension {    
-    
+  private static class DefaultDelegationTokenExtension implements
+      DelegationTokenExtension {
+
     @Override
     public Token<?>[] addDelegationTokens(String renewer,
-        Credentials credentials) {
+                                          Credentials credentials) {
       return null;
     }
 
@@ -86,7 +86,7 @@ public class KeyProviderDelegationTokenExtension extends
   }
 
   private KeyProviderDelegationTokenExtension(KeyProvider keyProvider,
-      DelegationTokenExtension extensions) {
+                                              DelegationTokenExtension extensions) {
     super(keyProvider, extensions);
   }
 
@@ -108,14 +108,14 @@ public class KeyProviderDelegationTokenExtension extends
    * {@link DelegationTokenExtension} interface the <code>KeyProvider</code> 
    * itself will provide the extension functionality, otherwise a default 
    * extension implementation will be used.
-   * 
+   *
    * @param keyProvider <code>KeyProvider</code> to use to create the 
    * <code>KeyProviderDelegationTokenExtension</code> extension.
    * @return a <code>KeyProviderDelegationTokenExtension</code> instance 
    * using the given <code>KeyProvider</code>.
-   */  
+   */
   public static KeyProviderDelegationTokenExtension
-      createKeyProviderDelegationTokenExtension(KeyProvider keyProvider) {
+  createKeyProviderDelegationTokenExtension(KeyProvider keyProvider) {
 
     DelegationTokenExtension delTokExtension =
         (keyProvider instanceof DelegationTokenExtension) ?

@@ -1,5 +1,9 @@
 package org.apache.hadoop.fs.permission;
-import org.apache.hadoop.io.*;
+
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableFactories;
+import org.apache.hadoop.io.WritableFactory;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -12,8 +16,11 @@ import java.io.IOException;
 public class PermissionStatus implements Writable {
   static final WritableFactory FACTORY = new WritableFactory() {
     @Override
-    public Writable newInstance() { return new PermissionStatus(); }
+    public Writable newInstance() {
+      return new PermissionStatus();
+    }
   };
+
   static {                                      // register a ctor
     WritableFactories.setFactory(PermissionStatus.class, FACTORY);
   }
@@ -33,7 +40,8 @@ public class PermissionStatus implements Writable {
   private String groupname;
   private FsPermission permission;
 
-  private PermissionStatus() {}
+  private PermissionStatus() {
+  }
 
   /** Constructor */
   public PermissionStatus(String user, String group, FsPermission permission) {
@@ -43,13 +51,19 @@ public class PermissionStatus implements Writable {
   }
 
   /** Return user name */
-  public String getUserName() {return username;}
+  public String getUserName() {
+    return username;
+  }
 
   /** Return group name */
-  public String getGroupName() {return groupname;}
+  public String getGroupName() {
+    return groupname;
+  }
 
   /** Return permission */
-  public FsPermission getPermission() {return permission;}
+  public FsPermission getPermission() {
+    return permission;
+  }
 
   @Override
   public void readFields(DataInput in) throws IOException {
@@ -76,7 +90,7 @@ public class PermissionStatus implements Writable {
    * Serialize a {@link PermissionStatus} from its base components.
    */
   public static void write(DataOutput out,
-                           String username, 
+                           String username,
                            String groupname,
                            FsPermission permission) throws IOException {
     Text.writeString(out, username, Text.DEFAULT_MAX_LEN);

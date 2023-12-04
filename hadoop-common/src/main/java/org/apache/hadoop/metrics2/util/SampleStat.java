@@ -25,7 +25,7 @@ public class SampleStat {
 
   // We want to reuse the object, sometimes.
   void reset(long numSamples, double a0, double a1, double s0, double s1,
-      double total, MinMax minmax) {
+             double total, MinMax minmax) {
     this.numSamples = numSamples;
     this.a0 = a0;
     this.a1 = a1;
@@ -46,7 +46,7 @@ public class SampleStat {
   /**
    * Add a sample the running stat.
    * @param x the sample number
-   * @return  self
+   * @return self
    */
   public SampleStat add(double x) {
     minmax.add(x);
@@ -58,7 +58,7 @@ public class SampleStat {
    * Note, min/max is not evaluated using this method.
    * @param nSamples  number of samples
    * @param x the partial sum
-   * @return  self
+   * @return self
    */
   public SampleStat add(long nSamples, double x) {
     numSamples += nSamples;
@@ -67,8 +67,7 @@ public class SampleStat {
     if (numSamples == 1) {
       a0 = a1 = x;
       s0 = 0.0;
-    }
-    else {
+    } else {
       // The Welford method for numerical stability
       a1 = a0 + (x - a0) / numSamples;
       s1 = s0 + (x - a0) * (x - a1);
@@ -79,7 +78,7 @@ public class SampleStat {
   }
 
   /**
-   * @return  the total number of samples
+   * @return the total number of samples
    */
   public long numSamples() {
     return numSamples;
@@ -93,35 +92,35 @@ public class SampleStat {
   }
 
   /**
-   * @return  the arithmetic mean of the samples
+   * @return the arithmetic mean of the samples
    */
   public double mean() {
     return numSamples > 0 ? (total / numSamples) : 0.0;
   }
 
   /**
-   * @return  the variance of the samples
+   * @return the variance of the samples
    */
   public double variance() {
     return numSamples > 1 ? s1 / (numSamples - 1) : 0.0;
   }
 
   /**
-   * @return  the standard deviation of the samples
+   * @return the standard deviation of the samples
    */
   public double stddev() {
     return Math.sqrt(variance());
   }
 
   /**
-   * @return  the minimum value of the samples
+   * @return the minimum value of the samples
    */
   public double min() {
     return minmax.min();
   }
 
   /**
-   * @return  the maximum value of the samples
+   * @return the maximum value of the samples
    */
   public double max() {
     return minmax.max();
@@ -162,8 +161,13 @@ public class SampleStat {
       if (value < min) min = value;
     }
 
-    public double min() { return min; }
-    public double max() { return max; }
+    public double min() {
+      return min;
+    }
+
+    public double max() {
+      return max;
+    }
 
     public void reset() {
       min = DEFAULT_MIN_VALUE;

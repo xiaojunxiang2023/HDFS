@@ -1,16 +1,16 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer;
 
+import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.PacketHeaderProto;
+import org.apache.hadoop.hdfs.util.ByteBufferOutputStream;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Shorts;
+import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.PacketHeaderProto;
-import org.apache.hadoop.hdfs.util.ByteBufferOutputStream;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Shorts;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
-import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
 
 /**
  * Header data for each packet that goes through the read/write pipelines.
@@ -98,8 +98,8 @@ public class PacketHeader {
   @Override
   public String toString() {
     return "PacketHeader with packetLen=" + packetLen +
-      " header data: " +
-      proto.toString();
+        " header data: " +
+        proto.toString();
   }
 
   public void setFieldsFromData(
@@ -138,7 +138,7 @@ public class PacketHeader {
    */
   public void putInBuffer(final ByteBuffer buf) {
     assert proto.getSerializedSize() <= MAX_PROTO_SIZE
-      : "Expected " + (MAX_PROTO_SIZE) + " got: " + proto.getSerializedSize();
+        : "Expected " + (MAX_PROTO_SIZE) + " got: " + proto.getSerializedSize();
     try {
       buf.putInt(packetLen);
       buf.putShort((short) proto.getSerializedSize());
@@ -150,7 +150,7 @@ public class PacketHeader {
 
   public void write(DataOutputStream out) throws IOException {
     assert proto.getSerializedSize() <= MAX_PROTO_SIZE
-    : "Expected " + (MAX_PROTO_SIZE) + " got: " + proto.getSerializedSize();
+        : "Expected " + (MAX_PROTO_SIZE) + " got: " + proto.getSerializedSize();
     out.writeInt(packetLen);
     out.writeShort(proto.getSerializedSize());
     proto.writeTo(out);
@@ -179,12 +179,12 @@ public class PacketHeader {
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof PacketHeader)) return false;
-    PacketHeader other = (PacketHeader)o;
+    PacketHeader other = (PacketHeader) o;
     return this.proto.equals(other.proto);
   }
 
   @Override
   public int hashCode() {
-    return (int)proto.getSeqno();
+    return (int) proto.getSeqno();
   }
 }

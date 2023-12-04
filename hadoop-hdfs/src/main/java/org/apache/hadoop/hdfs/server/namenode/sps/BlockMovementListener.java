@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
+
 import org.apache.hadoop.hdfs.protocol.Block;
 
 /**

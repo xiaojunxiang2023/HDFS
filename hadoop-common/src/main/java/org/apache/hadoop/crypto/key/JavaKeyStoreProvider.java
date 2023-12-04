@@ -1,41 +1,22 @@
 package org.apache.hadoop.crypto.key;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.security.ProviderUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import javax.crypto.spec.SecretKeySpec;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URI;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -139,7 +120,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
         if (fs.exists(newPath)) {
           throw new IOException(
               String.format("Keystore not loaded due to some inconsistency "
-              + "('%s' and '%s' should not exist together)!!", path, newPath));
+                  + "('%s' and '%s' should not exist together)!!", path, newPath));
         }
         perm = tryLoadFromPath(path, oldPath);
       } else {
@@ -151,7 +132,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
     } catch (KeyStoreException e) {
       throw new IOException("Can't create keystore: " + e, e);
     } catch (GeneralSecurityException e) {
-      throw new IOException("Can't load keystore " + path + " : " + e , e);
+      throw new IOException("Can't load keystore " + path + " : " + e, e);
     }
   }
 
@@ -262,7 +243,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
     if ((ioe.getCause() == null)
         && (ioe.getMessage() != null)
         && ((ioe.getMessage().contains("Keystore was tampered")) || (ioe
-            .getMessage().contains("password was incorrect")))) {
+        .getMessage().contains("password was incorrect")))) {
       return true;
     }
     return false;
@@ -316,10 +297,10 @@ public class JavaKeyStoreProvider extends KeyProvider {
         key = (SecretKeySpec) keyStore.getKey(versionName, password);
       } catch (KeyStoreException e) {
         throw new IOException("Can't get key " + versionName + " from " +
-                              path, e);
+            path, e);
       } catch (NoSuchAlgorithmException e) {
         throw new IOException("Can't get algorithm for key " + key + " from " +
-                              path, e);
+            path, e);
       } catch (UnrecoverableKeyException e) {
         throw new IOException("Can't recover key " + key + " from " + path, e);
       }
@@ -338,11 +319,11 @@ public class JavaKeyStoreProvider extends KeyProvider {
       try {
         Enumeration<String> e = keyStore.aliases();
         while (e.hasMoreElements()) {
-           alias = e.nextElement();
-           // only include the metadata key names in the list of names
-           if (!alias.contains("@")) {
-               list.add(alias);
-           }
+          alias = e.nextElement();
+          // only include the metadata key names in the list of names
+          if (!alias.contains("@")) {
+            list.add(alias);
+          }
         }
       } catch (KeyStoreException e) {
         throw new IOException("Can't get key " + alias + " from " + path, e);
@@ -412,7 +393,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
 
   @Override
   public KeyVersion createKey(String name, byte[] material,
-                               Options options) throws IOException {
+                              Options options) throws IOException {
     Preconditions.checkArgument(name.equals(StringUtils.toLowerCase(name)),
         "Uppercase key names are unsupported: %s", name);
     writeLock.lock();
@@ -447,7 +428,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
       if (meta == null) {
         throw new IOException("Key " + name + " does not exist in " + this);
       }
-      for(int v=0; v < meta.getVersions(); ++v) {
+      for (int v = 0; v < meta.getVersions(); ++v) {
         String versionName = buildVersionName(name, v);
         try {
           if (keyStore.containsAlias(versionName)) {
@@ -487,7 +468,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
 
   @Override
   public KeyVersion rollNewVersion(String name,
-                                    byte[] material) throws IOException {
+                                   byte[] material) throws IOException {
     writeLock.lock();
     try {
       Metadata meta = getMetadata(name);
@@ -528,12 +509,12 @@ public class JavaKeyStoreProvider extends KeyProvider {
       } catch (FileNotFoundException ignored) {
       }
       // put all of the updates into the keystore
-      for(Map.Entry<String, Metadata> entry: cache.entrySet()) {
+      for (Map.Entry<String, Metadata> entry : cache.entrySet()) {
         try {
           keyStore.setKeyEntry(entry.getKey(), new KeyMetadata(entry.getValue()),
               password, null);
         } catch (KeyStoreException e) {
-          throw new IOException("Can't set metadata key " + entry.getKey(),e );
+          throw new IOException("Can't set metadata key " + entry.getKey(), e);
         }
       }
 
@@ -586,7 +567,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
 
   protected void writeToNew(Path newPath) throws IOException {
     try (FSDataOutputStream out =
-        FileSystem.create(fs, newPath, permissions);) {
+             FileSystem.create(fs, newPath, permissions);) {
       keyStore.store(out, password);
     } catch (KeyStoreException e) {
       throw new IOException("Can't store keystore " + this, e);
@@ -678,7 +659,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
     }
 
     private void readObject(ObjectInputStream in
-                            ) throws IOException, ClassNotFoundException {
+    ) throws IOException, ClassNotFoundException {
       byte[] buf = new byte[in.readInt()];
       in.readFully(buf);
       metadata = new Metadata(buf);

@@ -1,35 +1,30 @@
 package org.apache.hadoop.hdfs.security.token.block;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
+import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
+import org.apache.hadoop.io.WritableUtils;
+import org.apache.hadoop.ipc.Server;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.token.SecretManager;
+import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultiset;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Multiset;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.hadoop.ipc.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
-import org.apache.hadoop.io.WritableUtils;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.security.token.SecretManager;
-import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.util.Time;
-import org.apache.hadoop.util.Timer;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultiset;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Multiset;
+import java.util.*;
 
 /**
  * BlockTokenSecretManager can be instantiated in 2 modes, master mode
@@ -75,6 +70,7 @@ public class BlockTokenSecretManager extends
    * unit testing.
    */
   private Timer timer;
+
   /**
    * Constructor for workers.
    *
@@ -83,22 +79,22 @@ public class BlockTokenSecretManager extends
    * @param useProto should we use new protobuf style tokens
    */
   public BlockTokenSecretManager(long keyUpdateInterval,
-      long tokenLifetime, String blockPoolId, String encryptionAlgorithm,
-      boolean useProto) {
+                                 long tokenLifetime, String blockPoolId, String encryptionAlgorithm,
+                                 boolean useProto) {
     this(false, keyUpdateInterval, tokenLifetime, blockPoolId,
         encryptionAlgorithm, 0, 1, useProto, false);
   }
 
   public BlockTokenSecretManager(long keyUpdateInterval,
-      long tokenLifetime, int nnIndex, int numNNs, String blockPoolId,
-      String encryptionAlgorithm, boolean useProto) {
+                                 long tokenLifetime, int nnIndex, int numNNs, String blockPoolId,
+                                 String encryptionAlgorithm, boolean useProto) {
     this(keyUpdateInterval, tokenLifetime, nnIndex, numNNs,
         blockPoolId, encryptionAlgorithm, useProto, false);
   }
 
   public BlockTokenSecretManager(long keyUpdateInterval,
-      long tokenLifetime, int nnIndex, int numNNs,  String blockPoolId,
-      String encryptionAlgorithm, boolean useProto, boolean shouldWrapQOP) {
+                                 long tokenLifetime, int nnIndex, int numNNs, String blockPoolId,
+                                 String encryptionAlgorithm, boolean useProto, boolean shouldWrapQOP) {
     this(true, keyUpdateInterval, tokenLifetime, blockPoolId,
         encryptionAlgorithm, nnIndex, numNNs, useProto, shouldWrapQOP);
     Preconditions.checkArgument(nnIndex >= 0);
@@ -118,8 +114,8 @@ public class BlockTokenSecretManager extends
    * @param shouldWrapQOP should wrap QOP in the block access token
    */
   private BlockTokenSecretManager(boolean isMaster, long keyUpdateInterval,
-      long tokenLifetime, String blockPoolId, String encryptionAlgorithm,
-      int nnIndex, int numNNs, boolean useProto, boolean shouldWrapQOP) {
+                                  long tokenLifetime, String blockPoolId, String encryptionAlgorithm,
+                                  int nnIndex, int numNNs, boolean useProto, boolean shouldWrapQOP) {
     this.intRange = Integer.MAX_VALUE / numNNs;
     this.nnRangeStart = intRange * nnIndex;
     this.isMaster = isMaster;
@@ -142,8 +138,8 @@ public class BlockTokenSecretManager extends
     // we mod the serial number by the range and then add that times the index
     this.serialNo = (nextNo % intRange) + (nnRangeStart);
     assert serialNo >= nnRangeStart && serialNo < (nnRangeStart + intRange) :
-      "serialNo " + serialNo + " is not in the designated range: [" +
-      nnRangeStart + ", " + (nnRangeStart + intRange) + ")";
+        "serialNo " + serialNo + " is not in the designated range: [" +
+            nnRangeStart + ", " + (nnRangeStart + intRange) + ")";
   }
 
   public void setBlockPoolId(String blockPoolId) {
@@ -190,7 +186,7 @@ public class BlockTokenSecretManager extends
   private synchronized void removeExpiredKeys() {
     long now = timer.now();
     for (Iterator<Map.Entry<Integer, BlockKey>> it = allKeys.entrySet()
-        .iterator(); it.hasNext();) {
+        .iterator(); it.hasNext(); ) {
       Map.Entry<Integer, BlockKey> e = it.next();
       if (e.getValue().getExpiryDate() < now) {
         it.remove();
@@ -256,8 +252,8 @@ public class BlockTokenSecretManager extends
 
   /** Generate an block token for current user */
   public Token<BlockTokenIdentifier> generateToken(ExtendedBlock block,
-      EnumSet<BlockTokenIdentifier.AccessMode> modes,
-      StorageType[] storageTypes, String[] storageIds) throws IOException {
+                                                   EnumSet<BlockTokenIdentifier.AccessMode> modes,
+                                                   StorageType[] storageTypes, String[] storageIds) throws IOException {
     UserGroupInformation ugi = UserGroupInformation.getCurrentUser();
     String userID = (ugi == null ? null : ugi.getShortUserName());
     return generateToken(userID, block, modes, storageTypes, storageIds);
@@ -265,8 +261,8 @@ public class BlockTokenSecretManager extends
 
   /** Generate a block token for a specified user */
   public Token<BlockTokenIdentifier> generateToken(String userId,
-      ExtendedBlock block, EnumSet<BlockTokenIdentifier.AccessMode> modes,
-      StorageType[] storageTypes, String[] storageIds) {
+                                                   ExtendedBlock block, EnumSet<BlockTokenIdentifier.AccessMode> modes,
+                                                   StorageType[] storageTypes, String[] storageIds) {
     BlockTokenIdentifier id = new BlockTokenIdentifier(userId, block
         .getBlockPoolId(), block.getBlockId(), modes, storageTypes,
         storageIds, useProto);
@@ -288,8 +284,8 @@ public class BlockTokenSecretManager extends
    * places the StorageTypes is not relevant.
    */
   public void checkAccess(BlockTokenIdentifier id, String userId,
-      ExtendedBlock block, BlockTokenIdentifier.AccessMode mode,
-      StorageType[] storageTypes, String[] storageIds) throws InvalidToken {
+                          ExtendedBlock block, BlockTokenIdentifier.AccessMode mode,
+                          StorageType[] storageTypes, String[] storageIds) throws InvalidToken {
     checkAccess(id, userId, block, mode);
     if (ArrayUtils.isNotEmpty(storageTypes)) {
       checkAccess(id.getStorageTypes(), storageTypes, "StorageTypes");
@@ -308,8 +304,8 @@ public class BlockTokenSecretManager extends
    * places the StorageTypes is not relevant.
    */
   public void checkAccess(BlockTokenIdentifier id, String userId,
-      ExtendedBlock block, BlockTokenIdentifier.AccessMode mode,
-      StorageType[] storageTypes) throws InvalidToken {
+                          ExtendedBlock block, BlockTokenIdentifier.AccessMode mode,
+                          StorageType[] storageTypes) throws InvalidToken {
     checkAccess(id, userId, block, mode);
     if (ArrayUtils.isNotEmpty(storageTypes)) {
       checkAccess(id.getStorageTypes(), storageTypes, "StorageTypes");
@@ -317,7 +313,7 @@ public class BlockTokenSecretManager extends
   }
 
   public void checkAccess(BlockTokenIdentifier id, String userId,
-      ExtendedBlock block, BlockTokenIdentifier.AccessMode mode)
+                          ExtendedBlock block, BlockTokenIdentifier.AccessMode mode)
       throws InvalidToken {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Checking access for user=" + userId + ", block=" + block
@@ -376,8 +372,8 @@ public class BlockTokenSecretManager extends
 
   /** Check if access should be allowed. userID is not checked if null */
   public void checkAccess(Token<BlockTokenIdentifier> token, String userId,
-      ExtendedBlock block, BlockTokenIdentifier.AccessMode mode,
-      StorageType[] storageTypes, String[] storageIds) throws InvalidToken {
+                          ExtendedBlock block, BlockTokenIdentifier.AccessMode mode,
+                          StorageType[] storageTypes, String[] storageIds) throws InvalidToken {
     BlockTokenIdentifier id = new BlockTokenIdentifier();
     try {
       id.readFields(new DataInputStream(new ByteArrayInputStream(token
@@ -396,7 +392,7 @@ public class BlockTokenSecretManager extends
 
   /** Check if access should be allowed. userID is not checked if null */
   public void checkAccess(Token<BlockTokenIdentifier> token, String userId,
-      ExtendedBlock block, BlockTokenIdentifier.AccessMode mode)
+                          ExtendedBlock block, BlockTokenIdentifier.AccessMode mode)
       throws InvalidToken {
     BlockTokenIdentifier id = new BlockTokenIdentifier();
     try {

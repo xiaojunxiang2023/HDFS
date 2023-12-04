@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,10 +17,10 @@
 
 package org.apache.hadoop.io.file.tfile;
 
+import org.apache.hadoop.fs.FSDataInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.hadoop.fs.FSDataInputStream;
 
 /**
  * BoundedRangeFIleInputStream abstracts a contiguous region of a Hadoop
@@ -38,19 +38,19 @@ public class BoundedRangeFileInputStream extends InputStream {
 
   /**
    * Constructor
-   * 
+   *
    * @param in
    *          The FSDataInputStream we connect to.
    * @param offset
    *          Beginning offset of the region.
    * @param length
    *          Length of the region.
-   * 
+   *
    *          The actual length of the region may be smaller if (off_begin +
    *          length) goes beyond the end of FS input stream.
    */
   public BoundedRangeFileInputStream(FSDataInputStream in, long offset,
-      long length) {
+                                     long length) {
     if (offset < 0 || length < 0) {
       throw new IndexOutOfBoundsException("Invalid offset/length: " + offset
           + "/" + length);

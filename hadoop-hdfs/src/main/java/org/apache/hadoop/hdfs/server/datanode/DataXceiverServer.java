@@ -1,5 +1,16 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.net.Peer;
+import org.apache.hadoop.hdfs.net.PeerServer;
+import org.apache.hadoop.hdfs.util.DataTransferThrottler;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Daemon;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.AsynchronousCloseException;
@@ -9,19 +20,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.net.Peer;
-import org.apache.hadoop.hdfs.net.PeerServer;
-import org.apache.hadoop.hdfs.util.DataTransferThrottler;
-import org.apache.hadoop.util.Daemon;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.slf4j.Logger;
 
 /**
  * Server used for receiving/sending a block of data. This is created to listen
@@ -52,7 +50,7 @@ class DataXceiverServer implements Runnable {
    * running out of memory.
    */
   int maxXceiverCount =
-    DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_DEFAULT;
+      DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_DEFAULT;
 
   /**
    * A manager to make sure that cluster balancing does not take too much
@@ -65,11 +63,11 @@ class DataXceiverServer implements Runnable {
     private final Semaphore semaphore;
     private int maxThreads;
 
-   /**
-    * Constructor.
-    *
-    * @param bandwidth Total amount of bandwidth can be used for balancing
-    */
+    /**
+     * Constructor.
+     *
+     * @param bandwidth Total amount of bandwidth can be used for balancing
+     */
     private BlockBalanceThrottler(long bandwidth, int maxThreads) {
       super(bandwidth);
       this.semaphore = new Semaphore(maxThreads, true);
@@ -95,7 +93,7 @@ class DataXceiverServer implements Runnable {
      * @return true if new maximum was successfully applied; false otherwise
      */
     private boolean setMaxConcurrentMovers(final int newMaxThreads,
-        final int duration) {
+                                           final int duration) {
       Preconditions.checkArgument(newMaxThreads > 0);
       final int delta = newMaxThreads - this.maxThreads;
       LOG.debug("Change concurrent thread count to {} from {}", newMaxThreads,
@@ -132,12 +130,12 @@ class DataXceiverServer implements Runnable {
       return this.maxThreads;
     }
 
-   /**
-    * Check if the block move can start
-    *
-    * Return true if the thread quota is not exceeded and
-    * the counter is incremented; False otherwise.
-    */
+    /**
+     * Check if the block move can start
+     *
+     * Return true if the thread quota is not exceeded and
+     * the counter is incremented; False otherwise.
+     */
     boolean acquire() {
       return this.semaphore.tryAcquire();
     }
@@ -164,16 +162,16 @@ class DataXceiverServer implements Runnable {
   final long estimateBlockSize;
 
   DataXceiverServer(PeerServer peerServer, Configuration conf,
-      DataNode datanode) {
+                    DataNode datanode) {
     this.peerServer = peerServer;
     this.datanode = datanode;
 
     this.maxXceiverCount =
-      conf.getInt(DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_KEY,
-                  DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_DEFAULT);
+        conf.getInt(DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_KEY,
+            DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_DEFAULT);
     Preconditions.checkArgument(this.maxXceiverCount >= 1,
         DFSConfigKeys.DFS_DATANODE_MAX_RECEIVER_THREADS_KEY +
-        " should not be less than 1.");
+            " should not be less than 1.");
 
     this.estimateBlockSize = conf.getLongBytes(DFSConfigKeys.DFS_BLOCK_SIZE_KEY,
         DFSConfigKeys.DFS_BLOCK_SIZE_DEFAULT);
@@ -281,8 +279,8 @@ class DataXceiverServer implements Runnable {
 
   void kill() {
     assert (datanode.shouldRun == false || datanode.shutdownForUpgrade) :
-      "shoudRun should be set to false or restarting should be true"
-      + " before killing";
+        "shoudRun should be set to false or restarting should be true"
+            + " before killing";
     lock.lock();
     try {
       if (!closed) {

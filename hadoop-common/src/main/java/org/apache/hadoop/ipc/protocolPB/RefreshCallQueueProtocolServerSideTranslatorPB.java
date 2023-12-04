@@ -1,13 +1,12 @@
 package org.apache.hadoop.ipc.protocolPB;
 
-import java.io.IOException;
-
 import org.apache.hadoop.ipc.RefreshCallQueueProtocol;
 import org.apache.hadoop.ipc.proto.RefreshCallQueueProtocolProtos.RefreshCallQueueRequestProto;
 import org.apache.hadoop.ipc.proto.RefreshCallQueueProtocolProtos.RefreshCallQueueResponseProto;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
 
 public class RefreshCallQueueProtocolServerSideTranslatorPB implements
     RefreshCallQueueProtocolPB {
@@ -15,7 +14,7 @@ public class RefreshCallQueueProtocolServerSideTranslatorPB implements
   private final RefreshCallQueueProtocol impl;
 
   private final static RefreshCallQueueResponseProto
-  VOID_REFRESH_CALL_QUEUE_RESPONSE = RefreshCallQueueResponseProto
+      VOID_REFRESH_CALL_QUEUE_RESPONSE = RefreshCallQueueResponseProto
       .newBuilder().build();
 
   public RefreshCallQueueProtocolServerSideTranslatorPB(

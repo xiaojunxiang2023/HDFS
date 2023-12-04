@@ -21,35 +21,35 @@ import java.util.Map;
 // 底层调用了 RouterFsck, 底层又请求 NameNode
 @InterfaceAudience.Private
 public class RouterFsckServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public static final String SERVLET_NAME = "fsck";
-    public static final String PATH_SPEC = "/fsck";
+  public static final String SERVLET_NAME = "fsck";
+  public static final String PATH_SPEC = "/fsck";
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        final Map<String, String[]> pmap = request.getParameterMap();
-        final PrintWriter out = response.getWriter();
-        final InetAddress remoteAddress =
-                InetAddress.getByName(request.getRemoteAddr());
-        final ServletContext context = getServletContext();
-        final Configuration conf = RouterHttpServer.getConfFromContext(context);
-        final UserGroupInformation ugi = getUGI(request, conf);
-        try {
-            ugi.doAs((PrivilegedExceptionAction<Object>) () -> {
-                Router router = RouterHttpServer.getRouterFromContext(context);
-                // 调用 RouterFsck
-                new RouterFsck(router, pmap, out, remoteAddress).fsck();
-                return null;
-            });
-        } catch (InterruptedException e) {
-            response.sendError(HttpURLConnection.HTTP_BAD_REQUEST, e.getMessage());
-        }
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    final Map<String, String[]> pmap = request.getParameterMap();
+    final PrintWriter out = response.getWriter();
+    final InetAddress remoteAddress =
+        InetAddress.getByName(request.getRemoteAddr());
+    final ServletContext context = getServletContext();
+    final Configuration conf = RouterHttpServer.getConfFromContext(context);
+    final UserGroupInformation ugi = getUGI(request, conf);
+    try {
+      ugi.doAs((PrivilegedExceptionAction<Object>) () -> {
+        Router router = RouterHttpServer.getRouterFromContext(context);
+        // 调用 RouterFsck
+        new RouterFsck(router, pmap, out, remoteAddress).fsck();
+        return null;
+      });
+    } catch (InterruptedException e) {
+      response.sendError(HttpURLConnection.HTTP_BAD_REQUEST, e.getMessage());
     }
+  }
 
-    protected UserGroupInformation getUGI(HttpServletRequest request,
-                                          Configuration conf) throws IOException {
-        return JspHelper.getUGI(getServletContext(), request, conf);
-    }
+  protected UserGroupInformation getUGI(HttpServletRequest request,
+                                        Configuration conf) throws IOException {
+    return JspHelper.getUGI(getServletContext(), request, conf);
+  }
 }

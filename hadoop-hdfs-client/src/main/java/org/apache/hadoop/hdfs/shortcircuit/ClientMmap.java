@@ -1,10 +1,10 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import java.io.Closeable;
-import java.nio.MappedByteBuffer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.nio.MappedByteBuffer;
 
 /**
  * A reference to a memory-mapped region used by an HDFS client.
@@ -29,7 +29,7 @@ public class ClientMmap implements Closeable {
   private final boolean anchored;
 
   ClientMmap(ShortCircuitReplica replica, MappedByteBuffer map,
-      boolean anchored) {
+             boolean anchored) {
     this.replica = replica;
     this.map = map;
     this.anchored = anchored;

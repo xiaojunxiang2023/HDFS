@@ -2,41 +2,22 @@ package org.apache.hadoop.hdfs.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.fs.ContentSummary;
-import org.apache.hadoop.fs.FileChecksum;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FsServerDefaults;
-import org.apache.hadoop.fs.MD5MD5CRC32CastagnoliFileChecksum;
-import org.apache.hadoop.fs.MD5MD5CRC32FileChecksum;
-import org.apache.hadoop.fs.MD5MD5CRC32GzipFileChecksum;
-import org.apache.hadoop.fs.QuotaUsage;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.fs.XAttrCodec;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclStatus;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSUtilClient;
-import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport;
-import org.apache.hadoop.hdfs.protocol.SnapshottableDirectoryStatus;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo.DatanodeInfoBuilder;
-import org.apache.hadoop.hdfs.protocol.DirectoryListing;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
 import org.apache.hadoop.io.erasurecode.ECSchema;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.ChunkedArrayList;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StringUtils;
@@ -44,13 +25,7 @@ import org.apache.hadoop.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utility methods used in WebHDFS/HttpFS JSON conversion.
@@ -62,10 +37,10 @@ public class JsonUtilClient {
 
   /** Convert a Json map to a RemoteException. */
   static RemoteException toRemoteException(final Map<?, ?> json) {
-    final Map<?, ?> m = (Map<?, ?>)json.get(
+    final Map<?, ?> m = (Map<?, ?>) json.get(
         RemoteException.class.getSimpleName());
-    final String message = (String)m.get("message");
-    final String javaClassName = (String)m.get("javaClassName");
+    final String message = (String) m.get("message");
+    final String javaClassName = (String) m.get("javaClassName");
     if (UNSUPPPORTED_EXCEPTION_STR.equals(javaClassName)) {
       throw new UnsupportedOperationException(message);
     }
@@ -81,7 +56,7 @@ public class JsonUtilClient {
 
     final Token<DelegationTokenIdentifier> token
         = new Token<>();
-    token.decodeFromUrlString((String)m.get("urlString"));
+    token.decodeFromUrlString((String) m.get("urlString"));
     return token;
   }
 
@@ -89,7 +64,7 @@ public class JsonUtilClient {
   @SuppressWarnings("unchecked")
   static Token<BlockTokenIdentifier> toBlockToken(
       final Map<?, ?> m) throws IOException {
-    return (Token<BlockTokenIdentifier>)toToken(m);
+    return (Token<BlockTokenIdentifier>) toToken(m);
   }
 
   /** Convert a string to a FsPermission object. */
@@ -99,28 +74,28 @@ public class JsonUtilClient {
 
   /** Convert a Json map to a HdfsFileStatus object. */
   public static HdfsFileStatus toFileStatus(final Map<?, ?> json,
-      boolean includesType) {
+                                            boolean includesType) {
     if (json == null) {
       return null;
     }
 
     final Map<?, ?> m = includesType ?
-        (Map<?, ?>)json.get(FileStatus.class.getSimpleName()) : json;
+        (Map<?, ?>) json.get(FileStatus.class.getSimpleName()) : json;
     final String localName = (String) m.get("pathSuffix");
     final WebHdfsConstants.PathType type =
         WebHdfsConstants.PathType.valueOf((String) m.get("type"));
-    final byte[] symlink = type != WebHdfsConstants.PathType.SYMLINK? null
+    final byte[] symlink = type != WebHdfsConstants.PathType.SYMLINK ? null
         : DFSUtilClient.string2Bytes((String) m.get("symlink"));
 
     final long len = ((Number) m.get("length")).longValue();
     final String owner = (String) m.get("owner");
     final String group = (String) m.get("group");
-    final FsPermission permission = toFsPermission((String)m.get("permission"));
+    final FsPermission permission = toFsPermission((String) m.get("permission"));
 
     Boolean aclBit = (Boolean) m.get("aclBit");
     Boolean encBit = (Boolean) m.get("encBit");
-    Boolean erasureBit  = (Boolean) m.get("ecBit");
-    Boolean snapshotEnabledBit  = (Boolean) m.get("snapshotEnabled");
+    Boolean erasureBit = (Boolean) m.get("ecBit");
+    Boolean snapshotEnabledBit = (Boolean) m.get("snapshotEnabled");
     EnumSet<HdfsFileStatus.Flags> f =
         EnumSet.noneOf(HdfsFileStatus.Flags.class);
     if (aclBit != null && aclBit) {
@@ -162,29 +137,29 @@ public class JsonUtilClient {
         (byte) ((Number) m.get("storagePolicy")).longValue() :
         HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED;
     return new HdfsFileStatus.Builder()
-      .length(len)
-      .isdir(type == WebHdfsConstants.PathType.DIRECTORY)
-      .replication(replication)
-      .blocksize(blockSize)
-      .mtime(mTime)
-      .atime(aTime)
-      .perm(permission)
-      .flags(f)
-      .owner(owner)
-      .group(group)
-      .symlink(symlink)
-      .path(DFSUtilClient.string2Bytes(localName))
-      .fileId(fileId)
-      .children(childrenNum)
-      .storagePolicy(storagePolicy)
-      .ecPolicy(ecPolicy)
-      .build();
+        .length(len)
+        .isdir(type == WebHdfsConstants.PathType.DIRECTORY)
+        .replication(replication)
+        .blocksize(blockSize)
+        .mtime(mTime)
+        .atime(aTime)
+        .perm(permission)
+        .flags(f)
+        .owner(owner)
+        .group(group)
+        .symlink(symlink)
+        .path(DFSUtilClient.string2Bytes(localName))
+        .fileId(fileId)
+        .children(childrenNum)
+        .storagePolicy(storagePolicy)
+        .ecPolicy(ecPolicy)
+        .build();
   }
 
   static HdfsFileStatus[] toHdfsFileStatusArray(final Map<?, ?> json) {
     Preconditions.checkNotNull(json);
     final Map<?, ?> rootmap =
-        (Map<?, ?>)json.get(FileStatus.class.getSimpleName() + "es");
+        (Map<?, ?>) json.get(FileStatus.class.getSimpleName() + "es");
     final List<?> array = JsonUtilClient.getList(rootmap,
         FileStatus.class.getSimpleName());
 
@@ -219,7 +194,7 @@ public class JsonUtilClient {
       return null;
     }
 
-    final String blockPoolId = (String)m.get("blockPoolId");
+    final String blockPoolId = (String) m.get("blockPoolId");
     final long blockId = ((Number) m.get("blockId")).longValue();
     final long numBytes = ((Number) m.get("numBytes")).longValue();
     final long generationStamp =
@@ -290,7 +265,7 @@ public class JsonUtilClient {
         int colonIdx = name.indexOf(':');
         if (colonIdx > 0) {
           ipAddr = name.substring(0, colonIdx);
-          xferPort = Integer.parseInt(name.substring(colonIdx +1));
+          xferPort = Integer.parseInt(name.substring(colonIdx + 1));
         } else {
           throw new IOException(
               "Invalid value in server response: name=[" + name + "]");
@@ -373,11 +348,11 @@ public class JsonUtilClient {
       return null;
     }
 
-    final ExtendedBlock b = toExtendedBlock((Map<?, ?>)m.get("block"));
+    final ExtendedBlock b = toExtendedBlock((Map<?, ?>) m.get("block"));
     final DatanodeInfo[] locations = toDatanodeInfoArray(
         getList(m, "locations"));
     final long startOffset = ((Number) m.get("startOffset")).longValue();
-    final boolean isCorrupt = (Boolean)m.get("isCorrupt");
+    final boolean isCorrupt = (Boolean) m.get("isCorrupt");
     final DatanodeInfo[] cachedLocations = toDatanodeInfoArray(
         getList(m, "cachedLocations"));
 
@@ -385,7 +360,7 @@ public class JsonUtilClient {
         getList(m, "storageTypes"));
     final LocatedBlock locatedblock = new LocatedBlock(b, locations,
         null, storageTypes, startOffset, isCorrupt, cachedLocations);
-    locatedblock.setBlockToken(toBlockToken((Map<?, ?>)m.get("blockToken")));
+    locatedblock.setBlockToken(toBlockToken((Map<?, ?>) m.get("blockToken")));
     return locatedblock;
   }
 
@@ -501,8 +476,8 @@ public class JsonUtilClient {
       return null;
     }
 
-    final Map<?, ?> m = (Map<?, ?>)json.get(FileChecksum.class.getSimpleName());
-    final String algorithm = (String)m.get("algorithm");
+    final Map<?, ?> m = (Map<?, ?>) json.get(FileChecksum.class.getSimpleName());
+    final String algorithm = (String) m.get("algorithm");
     final int length = ((Number) m.get("length")).intValue();
     final byte[] bytes = StringUtils.hexStringToByte((String) m.get("bytes"));
 
@@ -513,15 +488,15 @@ public class JsonUtilClient {
     final MD5MD5CRC32FileChecksum checksum;
 
     // Recreate what DFSClient would have returned.
-    switch(crcType) {
-    case CRC32:
-      checksum = new MD5MD5CRC32GzipFileChecksum();
-      break;
-    case CRC32C:
-      checksum = new MD5MD5CRC32CastagnoliFileChecksum();
-      break;
-    default:
-      throw new IOException("Unknown algorithm: " + algorithm);
+    switch (crcType) {
+      case CRC32:
+        checksum = new MD5MD5CRC32GzipFileChecksum();
+        break;
+      case CRC32C:
+        checksum = new MD5MD5CRC32CastagnoliFileChecksum();
+        break;
+      default:
+        throw new IOException("Unknown algorithm: " + algorithm);
     }
     checksum.readFields(in);
 
@@ -659,7 +634,7 @@ public class JsonUtilClient {
   @SuppressWarnings("unchecked")
   static Token<DelegationTokenIdentifier> toDelegationToken(
       final Map<?, ?> json) throws IOException {
-    final Map<?, ?> m = (Map<?, ?>)json.get(Token.class.getSimpleName());
+    final Map<?, ?> m = (Map<?, ?>) json.get(Token.class.getSimpleName());
     return (Token<DelegationTokenIdentifier>) toToken(m);
   }
 
@@ -670,15 +645,15 @@ public class JsonUtilClient {
       return null;
     }
 
-    final Map<?, ?> m = (Map<?, ?>)json.get(
+    final Map<?, ?> m = (Map<?, ?>) json.get(
         LocatedBlocks.class.getSimpleName());
     final long fileLength = ((Number) m.get("fileLength")).longValue();
-    final boolean isUnderConstruction = (Boolean)m.get("isUnderConstruction");
+    final boolean isUnderConstruction = (Boolean) m.get("isUnderConstruction");
     final List<LocatedBlock> locatedBlocks = toLocatedBlockList(
         getList(m, "locatedBlocks"));
     final LocatedBlock lastLocatedBlock = toLocatedBlock(
         (Map<?, ?>) m.get("lastLocatedBlock"));
-    final boolean isLastBlockComplete = (Boolean)m.get("isLastBlockComplete");
+    final boolean isLastBlockComplete = (Boolean) m.get("isLastBlockComplete");
     return new LocatedBlocks(fileLength, isUnderConstruction, locatedBlocks,
         lastLocatedBlock, isLastBlockComplete, null, null);
   }
@@ -755,7 +730,7 @@ public class JsonUtilClient {
     }
     Map<?, ?> m =
         (Map<?, ?>) json.get(FsServerDefaults.class.getSimpleName());
-    long blockSize =  getLong(m, "blockSize", -1);
+    long blockSize = getLong(m, "blockSize", -1);
     int bytesPerChecksum = getInt(m, "bytesPerChecksum", -1);
     int writePacketSize = getInt(m, "writePacketSize", -1);
     short replication = (short) getInt(m, "replication", -1);

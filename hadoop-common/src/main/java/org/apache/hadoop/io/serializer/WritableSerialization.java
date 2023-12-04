@@ -1,14 +1,11 @@
 package org.apache.hadoop.io.serializer;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.ReflectionUtils;
+
+import java.io.*;
 
 /**
  * A {@link Serialization} for {@link Writable}s that delegates to
@@ -16,18 +13,18 @@ import org.apache.hadoop.util.ReflectionUtils;
  * {@link Writable#readFields(java.io.DataInput)}.
  */
 public class WritableSerialization extends Configured
-	implements Serialization<Writable> {
+    implements Serialization<Writable> {
   static class WritableDeserializer extends Configured
-  	implements Deserializer<Writable> {
+      implements Deserializer<Writable> {
 
     private Class<?> writableClass;
     private DataInputStream dataIn;
-    
+
     public WritableDeserializer(Configuration conf, Class<?> c) {
       setConf(conf);
       this.writableClass = c;
     }
-    
+
     @Override
     public void open(InputStream in) {
       if (in instanceof DataInputStream) {
@@ -36,13 +33,13 @@ public class WritableSerialization extends Configured
         dataIn = new DataInputStream(in);
       }
     }
-    
+
     @Override
     public Writable deserialize(Writable w) throws IOException {
       Writable writable;
       if (w == null) {
-        writable 
-          = (Writable) ReflectionUtils.newInstance(writableClass, getConf());
+        writable
+            = (Writable) ReflectionUtils.newInstance(writableClass, getConf());
       } else {
         writable = w;
       }
@@ -54,14 +51,14 @@ public class WritableSerialization extends Configured
     public void close() throws IOException {
       dataIn.close();
     }
-    
+
   }
-  
+
   static class WritableSerializer extends Configured implements
-  	Serializer<Writable> {
-    
+      Serializer<Writable> {
+
     private DataOutputStream dataOut;
-    
+
     @Override
     public void open(OutputStream out) {
       if (out instanceof DataOutputStream) {
@@ -82,14 +79,17 @@ public class WritableSerialization extends Configured
     }
 
   }
+
   @Override
   public boolean accept(Class<?> c) {
     return Writable.class.isAssignableFrom(c);
   }
+
   @Override
   public Serializer<Writable> getSerializer(Class<Writable> c) {
     return new WritableSerializer();
   }
+
   @Override
   public Deserializer<Writable> getDeserializer(Class<Writable> c) {
     return new WritableDeserializer(getConf(), c);

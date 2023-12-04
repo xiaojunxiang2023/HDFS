@@ -1,12 +1,12 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.classification.VisibleForTesting;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.classification.VisibleForTesting;
 
 /**
  * Abstract command to enable sub copy commands run with multi-thread.

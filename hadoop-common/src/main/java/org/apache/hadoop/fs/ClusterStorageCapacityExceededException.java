@@ -20,7 +20,7 @@ public class ClusterStorageCapacityExceededException extends IOException {
   }
 
   public ClusterStorageCapacityExceededException(String message,
-      Throwable cause) {
+                                                 Throwable cause) {
     super(message, cause);
   }
 

@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
+
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.util.PerformanceAdvisory;
 import org.slf4j.Logger;
@@ -56,8 +57,8 @@ abstract class AbstractNativeRawEncoder extends RawErasureEncoder {
   }
 
   protected abstract void performEncodeImpl(
-          ByteBuffer[] inputs, int[] inputOffsets,
-          int dataLen, ByteBuffer[] outputs, int[] outputOffsets)
+      ByteBuffer[] inputs, int[] inputOffsets,
+      int dataLen, ByteBuffer[] outputs, int[] outputOffsets)
       throws IOException;
 
   @Override

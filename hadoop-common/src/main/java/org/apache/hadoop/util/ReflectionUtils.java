@@ -1,24 +1,5 @@
 package org.apache.hadoop.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
@@ -30,24 +11,38 @@ import org.apache.hadoop.io.serializer.SerializationFactory;
 import org.apache.hadoop.io.serializer.Serializer;
 import org.slf4j.Logger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * General reflection utils
  */
 public class ReflectionUtils {
-    
+
   private static final Class<?>[] EMPTY_ARRAY = new Class[]{};
   volatile private static SerializationFactory serialFactory = null;
 
-  /** 
+  /**
    * Cache of constructors for each class. Pins the classes so they
    * can't be garbage collected until ReflectionUtils can be collected.
    */
-  private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = 
-    new ConcurrentHashMap<Class<?>, Constructor<?>>();
+  private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE =
+      new ConcurrentHashMap<Class<?>, Constructor<?>>();
 
   /**
    * Check and set 'configuration' if necessary.
-   * 
+   *
    * @param theObject object for which to set configuration
    * @param conf Configuration
    */
@@ -59,7 +54,7 @@ public class ReflectionUtils {
       setJobConf(theObject, conf);
     }
   }
-  
+
   /**
    * This code is to support backward compatibility and break the compile  
    * time dependency of core on mapred.
@@ -72,21 +67,21 @@ public class ReflectionUtils {
     //conf is of type JobConf then
     //invoke configure on theObject
     try {
-      Class<?> jobConfClass = 
-        conf.getClassByNameOrNull("org.apache.hadoop.mapred.JobConf");
+      Class<?> jobConfClass =
+          conf.getClassByNameOrNull("org.apache.hadoop.mapred.JobConf");
       if (jobConfClass == null) {
         return;
       }
-      
-      Class<?> jobConfigurableClass = 
-        conf.getClassByNameOrNull("org.apache.hadoop.mapred.JobConfigurable");
+
+      Class<?> jobConfigurableClass =
+          conf.getClassByNameOrNull("org.apache.hadoop.mapred.JobConfigurable");
       if (jobConfigurableClass == null) {
         return;
       }
       if (jobConfClass.isAssignableFrom(conf.getClass()) &&
-            jobConfigurableClass.isAssignableFrom(theObject.getClass())) {
-        Method configureMethod = 
-          jobConfigurableClass.getMethod("configure", jobConfClass);
+          jobConfigurableClass.isAssignableFrom(theObject.getClass())) {
+        Method configureMethod =
+            jobConfigurableClass.getMethod("configure", jobConfClass);
         configureMethod.invoke(theObject, conf);
       }
     } catch (Exception e) {
@@ -95,7 +90,7 @@ public class ReflectionUtils {
   }
 
   /** Create an object for the given class and initialize it from conf
-   * 
+   *
    * @param theClass class of which an object is created
    * @param conf Configuration
    * @return a new object
@@ -118,42 +113,42 @@ public class ReflectionUtils {
     return result;
   }
 
-  static private ThreadMXBean threadBean = 
-    ManagementFactory.getThreadMXBean();
-    
+  static private ThreadMXBean threadBean =
+      ManagementFactory.getThreadMXBean();
+
   public static void setContentionTracing(boolean val) {
     threadBean.setThreadContentionMonitoringEnabled(val);
   }
-    
+
   private static String getTaskName(long id, String name) {
     if (name == null) {
       return Long.toString(id);
     }
     return id + " (" + name + ")";
   }
-    
+
   /**
    * Print all of the thread's information and stack traces.
-   * 
+   *
    * @param stream the stream to
    * @param title a string title for the stack trace
    */
   public synchronized static void printThreadInfo(PrintStream stream,
-                                     String title) {
+                                                  String title) {
     final int STACK_DEPTH = 20;
     boolean contention = threadBean.isThreadContentionMonitoringEnabled();
     long[] threadIds = threadBean.getAllThreadIds();
     stream.println("Process Thread Dump: " + title);
     stream.println(threadIds.length + " active threads");
-    for (long tid: threadIds) {
+    for (long tid : threadIds) {
       ThreadInfo info = threadBean.getThreadInfo(tid, STACK_DEPTH);
       if (info == null) {
         stream.println("  Inactive");
         continue;
       }
-      stream.println("Thread " + 
-                     getTaskName(info.getThreadId(),
-                                 info.getThreadName()) + ":");
+      stream.println("Thread " +
+          getTaskName(info.getThreadId(),
+              info.getThreadName()) + ":");
       Thread.State state = info.getThreadState();
       stream.println("  State: " + state);
       stream.println("  Blocked count: " + info.getBlockedCount());
@@ -164,22 +159,22 @@ public class ReflectionUtils {
       }
       if (state == Thread.State.WAITING) {
         stream.println("  Waiting on " + info.getLockName());
-      } else  if (state == Thread.State.BLOCKED) {
+      } else if (state == Thread.State.BLOCKED) {
         stream.println("  Blocked on " + info.getLockName());
-        stream.println("  Blocked by " + 
-                       getTaskName(info.getLockOwnerId(),
-                                   info.getLockOwnerName()));
+        stream.println("  Blocked by " +
+            getTaskName(info.getLockOwnerId(),
+                info.getLockOwnerName()));
       }
       stream.println("  Stack:");
-      for (StackTraceElement frame: info.getStackTrace()) {
+      for (StackTraceElement frame : info.getStackTrace()) {
         stream.println("    " + frame.toString());
       }
     }
     stream.flush();
   }
-    
+
   private static long previousLogTime = 0;
-    
+
   /**
    * Log the current thread stacks at INFO level.
    * @param log the logger that logs the stack trace
@@ -240,29 +235,31 @@ public class ReflectionUtils {
 
   /**
    * Return the correctly-typed {@link Class} of the given object.
-   *  
+   *
    * @param o object whose correctly-typed <code>Class</code> is to be obtained
    * @return the correctly typed <code>Class</code> of the given object.
    */
   @SuppressWarnings("unchecked")
   public static <T> Class<T> getClass(T o) {
-    return (Class<T>)o.getClass();
+    return (Class<T>) o.getClass();
   }
-  
+
   // methods to support testing
   static void clearCache() {
     CONSTRUCTOR_CACHE.clear();
   }
-    
+
   static int getCacheSize() {
     return CONSTRUCTOR_CACHE.size();
   }
+
   /**
    * A pair of input/output buffers that we use to clone writables.
    */
   private static class CopyInCopyOutBuffer {
     DataOutputBuffer outBuffer = new DataOutputBuffer();
     DataInputBuffer inBuffer = new DataInputBuffer();
+
     /**
      * Move the data from the output buffer to the input buffer.
      */
@@ -270,17 +267,17 @@ public class ReflectionUtils {
       inBuffer.reset(outBuffer.getData(), outBuffer.getLength());
     }
   }
-  
+
   /**
    * Allocate a buffer for each thread that tries to clone objects.
    */
   private static final ThreadLocal<CopyInCopyOutBuffer> CLONE_BUFFERS
       = new ThreadLocal<CopyInCopyOutBuffer>() {
-      @Override
-      protected synchronized CopyInCopyOutBuffer initialValue() {
-        return new CopyInCopyOutBuffer();
-      }
-    };
+    @Override
+    protected synchronized CopyInCopyOutBuffer initialValue() {
+      return new CopyInCopyOutBuffer();
+    }
+  };
 
   private static SerializationFactory getFactory(Configuration conf) {
     if (serialFactory == null) {
@@ -288,7 +285,7 @@ public class ReflectionUtils {
     }
     return serialFactory;
   }
-  
+
   /**
    * Make a copy of the writable object using serialization to a buffer
    * @param src the object to copy from
@@ -297,8 +294,8 @@ public class ReflectionUtils {
    * @throws IOException
    */
   @SuppressWarnings("unchecked")
-  public static <T> T copy(Configuration conf, 
-                                T src, T dst) throws IOException {
+  public static <T> T copy(Configuration conf,
+                           T src, T dst) throws IOException {
     CopyInCopyOutBuffer buffer = CLONE_BUFFERS.get();
     buffer.outBuffer.reset();
     SerializationFactory factory = getFactory(conf);
@@ -314,7 +311,7 @@ public class ReflectionUtils {
   }
 
   @Deprecated
-  public static void cloneWritableInto(Writable dst, 
+  public static void cloneWritableInto(Writable dst,
                                        Writable src) throws IOException {
     CopyInCopyOutBuffer buffer = CLONE_BUFFERS.get();
     buffer.outBuffer.reset();
@@ -322,7 +319,7 @@ public class ReflectionUtils {
     buffer.moveData();
     dst.readFields(buffer.inBuffer);
   }
-  
+
   /**
    * Gets all the declared fields of a class including fields declared in
    * superclasses.
@@ -341,10 +338,10 @@ public class ReflectionUtils {
       }
       clazz = clazz.getSuperclass();
     }
-    
+
     return fields;
   }
-  
+
   /**
    * Gets all the declared methods of a class including methods declared in
    * superclasses.
@@ -357,7 +354,7 @@ public class ReflectionUtils {
       }
       clazz = clazz.getSuperclass();
     }
-    
+
     return methods;
   }
 }

@@ -17,14 +17,14 @@
  */
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
 
 /**
  * This is a debugging class that can be used by callers to track
@@ -74,14 +74,14 @@ public class InstrumentedLock implements Lock {
   }
 
   public InstrumentedLock(String name, Logger logger, Lock lock,
-      long minLoggingGapMs, long lockWarningThresholdMs) {
+                          long minLoggingGapMs, long lockWarningThresholdMs) {
     this(name, logger, lock,
         minLoggingGapMs, lockWarningThresholdMs, new Timer());
   }
 
   @VisibleForTesting
   InstrumentedLock(String name, Logger logger, Lock lock,
-      long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {
+                   long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {
     this.name = name;
     this.lock = lock;
     this.clock = clock;
@@ -89,7 +89,7 @@ public class InstrumentedLock implements Lock {
     minLoggingGap = minLoggingGapMs;
     lockWarningThreshold = lockWarningThresholdMs;
     lastHoldLogTimestamp = new AtomicLong(
-      clock.monotonicNow() - Math.max(minLoggingGap, lockWarningThreshold));
+        clock.monotonicNow() - Math.max(minLoggingGap, lockWarningThreshold));
     lastWaitLogTimestamp = new AtomicLong(lastHoldLogTimestamp.get());
   }
 
@@ -146,10 +146,10 @@ public class InstrumentedLock implements Lock {
   @VisibleForTesting
   void logWarning(long lockHeldTime, SuppressedSnapshot stats) {
     logger.warn(String.format("Lock held time above threshold(%d ms): " +
-        "lock identifier: %s " +
-        "lockHeldTimeMs=%d ms. Suppressed %d lock warnings. " +
-        "Longest suppressed LockHeldTimeMs=%d. " +
-        "The stack trace is: %s" ,
+            "lock identifier: %s " +
+            "lockHeldTimeMs=%d ms. Suppressed %d lock warnings. " +
+            "Longest suppressed LockHeldTimeMs=%d. " +
+            "The stack trace is: %s",
         lockWarningThreshold, name, lockHeldTime, stats.getSuppressedCount(),
         stats.getMaxSuppressedWait(),
         StringUtils.getStackTrace(Thread.currentThread())));
@@ -158,10 +158,10 @@ public class InstrumentedLock implements Lock {
   @VisibleForTesting
   void logWaitWarning(long lockWaitTime, SuppressedSnapshot stats) {
     logger.warn(String.format("Waited above threshold(%d ms) to acquire lock: " +
-        "lock identifier: %s " +
-        "waitTimeMs=%d ms. Suppressed %d lock wait warnings. " +
-        "Longest suppressed WaitTimeMs=%d. " +
-        "The stack trace is: %s", lockWarningThreshold, name, lockWaitTime,
+            "lock identifier: %s " +
+            "waitTimeMs=%d ms. Suppressed %d lock wait warnings. " +
+            "Longest suppressed WaitTimeMs=%d. " +
+            "The stack trace is: %s", lockWarningThreshold, name, lockWaitTime,
         stats.getSuppressedCount(), stats.getMaxSuppressedWait(),
         StringUtils.getStackTrace(Thread.currentThread())));
   }
@@ -182,7 +182,7 @@ public class InstrumentedLock implements Lock {
    * @param releaseTime - timestamp just before releasing the lock.
    */
   protected void check(long acquireTime, long releaseTime,
-       boolean checkLockHeld) {
+                       boolean checkLockHeld) {
     if (!logger.isWarnEnabled()) {
       return;
     }

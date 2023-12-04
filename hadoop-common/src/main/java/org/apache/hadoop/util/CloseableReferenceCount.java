@@ -1,10 +1,10 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.ClosedChannelException;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A closeable object that maintains a reference count.
@@ -26,7 +26,8 @@ public class CloseableReferenceCount {
    */
   private final AtomicInteger status = new AtomicInteger(0);
 
-  public CloseableReferenceCount() { }
+  public CloseableReferenceCount() {
+  }
 
   /**
    * Increment the reference count.
@@ -44,7 +45,7 @@ public class CloseableReferenceCount {
   /**
    * Decrement the reference count.
    *
-   * @return          True if the object is closed and has no outstanding
+   * @return True if the object is closed and has no outstanding
    *                  references.
    */
   public boolean unreference() {
@@ -70,7 +71,7 @@ public class CloseableReferenceCount {
   /**
    * Return true if the status is currently open.
    *
-   * @return                 True if the status is currently open.
+   * @return True if the status is currently open.
    */
   public boolean isOpen() {
     return ((status.get() & STATUS_CLOSED_MASK) == 0);
@@ -81,7 +82,7 @@ public class CloseableReferenceCount {
    *
    * Once the status is closed, it cannot be reopened.
    *
-   * @return                         The current reference count.
+   * @return The current reference count.
    * @throws ClosedChannelException  If someone else closes the object
    *                                 before we do.
    */
@@ -100,7 +101,7 @@ public class CloseableReferenceCount {
   /**
    * Get the current reference count.
    *
-   * @return                 The current reference count.
+   * @return The current reference count.
    */
   public int getReferenceCount() {
     return status.get() & (~STATUS_CLOSED_MASK);

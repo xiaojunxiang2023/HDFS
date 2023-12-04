@@ -1,17 +1,13 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * An implementation of {@link GroupMappingServiceProvider} which
@@ -22,25 +18,24 @@ import org.slf4j.LoggerFactory;
 // MapReduce也可见
 public class CompositeGroupsMapping
     implements GroupMappingServiceProvider, Configurable {
-  
+
   public static final String MAPPING_PROVIDERS_CONFIG_KEY = GROUP_MAPPING_CONFIG_PREFIX + ".providers";
   public static final String MAPPING_PROVIDERS_COMBINED_CONFIG_KEY = MAPPING_PROVIDERS_CONFIG_KEY + ".combined";
   public static final String MAPPING_PROVIDER_CONFIG_PREFIX = GROUP_MAPPING_CONFIG_PREFIX + ".provider";
-  
+
   private static final Logger LOG =
       LoggerFactory.getLogger(CompositeGroupsMapping.class);
 
-  private List<GroupMappingServiceProvider> providersList = 
-		  new ArrayList<GroupMappingServiceProvider>();
-  
+  private List<GroupMappingServiceProvider> providersList =
+      new ArrayList<GroupMappingServiceProvider>();
+
   private Configuration conf;
   private boolean combined;
 
 
-
   /**
    * Returns list of groups for a user.
-   * 
+   *
    * @param user get groups for this user
    * @return list of groups for a given user
    */
@@ -56,8 +51,8 @@ public class CompositeGroupsMapping
         LOG.warn("Unable to get groups for user {} via {} because: {}",
             user, provider.getClass().getSimpleName(), e.toString());
         LOG.debug("Stacktrace: ", e);
-      }        
-      if (groups != null && ! groups.isEmpty()) {
+      }
+      if (groups != null && !groups.isEmpty()) {
         groupSet.addAll(groups);
         if (!combined) break;
       }
@@ -67,7 +62,7 @@ public class CompositeGroupsMapping
     results.addAll(groupSet);
     return results;
   }
-  
+
   /**
    * Caches groups, no need to do that for this provider
    */
@@ -76,7 +71,7 @@ public class CompositeGroupsMapping
     // does nothing in this provider of user to groups mapping
   }
 
-  /** 
+  /**
    * Adds groups to cache, no need to do that for this provider
    *
    * @param groups unused
@@ -94,12 +89,12 @@ public class CompositeGroupsMapping
   @Override
   public synchronized void setConf(Configuration conf) {
     this.conf = conf;
-    
+
     this.combined = conf.getBoolean(MAPPING_PROVIDERS_COMBINED_CONFIG_KEY, true);
-    
+
     loadMappingProviders();
   }
-  
+
   private void loadMappingProviders() {
     String[] providerNames = conf.getStrings(MAPPING_PROVIDERS_CONFIG_KEY, new String[]{});
 
@@ -114,17 +109,17 @@ public class CompositeGroupsMapping
       }
     }
   }
-    
+
   private void addMappingProvider(String providerName, Class<?> providerClass) {
     Configuration newConf = prepareConf(providerName);
-    GroupMappingServiceProvider provider = 
+    GroupMappingServiceProvider provider =
         (GroupMappingServiceProvider) ReflectionUtils.newInstance(providerClass, newConf);
     providersList.add(provider);
 
   }
 
   /*
-   * For any provider specific configuration properties, such as "hadoop.security.group.mapping.ldap.url" 
+   * For any provider specific configuration properties, such as "hadoop.security.group.mapping.ldap.url"
    * and the like, allow them to be configured as "hadoop.security.group.mapping.provider.PROVIDER-X.ldap.url",
    * so that a provider such as LdapGroupsMapping can be used to composite a complex one with other providers.
    */
@@ -144,5 +139,5 @@ public class CompositeGroupsMapping
       }
     }
     return newConf;
-  }  
+  }
 }

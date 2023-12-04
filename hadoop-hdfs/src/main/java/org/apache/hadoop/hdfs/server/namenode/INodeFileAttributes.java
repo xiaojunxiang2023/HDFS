@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
+
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.server.namenode.INodeFile.HeaderFormat;
@@ -35,10 +36,10 @@ public interface INodeFileAttributes extends INodeAttributes {
     private final long header;
 
     public SnapshotCopy(byte[] name, PermissionStatus permissions,
-        AclFeature aclFeature, long modificationTime, long accessTime,
-        Short replication, Byte ecPolicyID, long preferredBlockSize,
-        byte storagePolicyID, XAttrFeature xAttrsFeature, BlockType blockType) {
-      super(name, permissions, aclFeature, modificationTime, accessTime, 
+                        AclFeature aclFeature, long modificationTime, long accessTime,
+                        Short replication, Byte ecPolicyID, long preferredBlockSize,
+                        byte storagePolicyID, XAttrFeature xAttrsFeature, BlockType blockType) {
+      super(name, permissions, aclFeature, modificationTime, accessTime,
           xAttrsFeature);
       final long layoutRedundancy = HeaderFormat.getBlockLayoutRedundancy(
           blockType, replication, ecPolicyID);
@@ -97,7 +98,7 @@ public interface INodeFileAttributes extends INodeAttributes {
     @Override
     public boolean metadataEquals(INodeFileAttributes other) {
       return other != null
-          && getHeaderLong()== other.getHeaderLong()
+          && getHeaderLong() == other.getHeaderLong()
           && getPermissionLong() == other.getPermissionLong()
           && getAclFeature() == other.getAclFeature()
           && getXAttrFeature() == other.getXAttrFeature();

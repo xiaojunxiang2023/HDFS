@@ -1,14 +1,13 @@
 package org.apache.hadoop.hdfs.web.resources;
 
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys
-    .DFS_WEBHDFS_ACL_PERMISSION_PATTERN_DEFAULT;
+import org.apache.hadoop.fs.permission.AclEntry;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.fs.permission.AclEntry;
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_ACL_PERMISSION_PATTERN_DEFAULT;
 
 /** AclPermission parameter. */
 public class AclPermissionParam extends StringParam {
@@ -30,7 +29,7 @@ public class AclPermissionParam extends StringParam {
   }
 
   public AclPermissionParam(List<AclEntry> acl) {
-    super(DOMAIN,parseAclSpec(acl).equals(DEFAULT) ? null : parseAclSpec(acl));
+    super(DOMAIN, parseAclSpec(acl).equals(DEFAULT) ? null : parseAclSpec(acl));
   }
 
   @VisibleForTesting

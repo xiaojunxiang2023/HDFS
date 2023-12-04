@@ -1,5 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Shell;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,10 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.util.Shell;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 public class Stat extends Shell {
 
@@ -30,9 +30,9 @@ public class Stat extends Shell {
     // Qualify the original and strip out URI fragment via toUri().getPath()
     Path stripped = new Path(
         original.makeQualified(fs.getUri(), fs.getWorkingDirectory())
-        .toUri().getPath());
+            .toUri().getPath());
     // Re-qualify the bare stripped path and store it
-    this.qualified = 
+    this.qualified =
         stripped.makeQualified(fs.getUri(), fs.getWorkingDirectory());
     // Strip back down to a plain path
     this.path = new Path(qualified.toUri().getPath());
@@ -72,12 +72,12 @@ public class Stat extends Shell {
       derefFlag = "-L";
     }
     if (Shell.LINUX) {
-      return new String[] {
-          "stat", derefFlag + "c", "%s,%F,%Y,%X,%a,%U,%G,%N", path.toString() };
+      return new String[]{
+          "stat", derefFlag + "c", "%s,%F,%Y,%X,%a,%U,%G,%N", path.toString()};
     } else if (Shell.FREEBSD || Shell.MAC) {
-      return new String[] {
+      return new String[]{
           "stat", derefFlag + "f", "%z,%HT,%m,%a,%Op,%Su,%Sg,`link' -> `%Y'",
-          path.toString() };
+          path.toString()};
     } else {
       throw new UnsupportedOperationException(
           "stat is not supported on this platform");
@@ -110,13 +110,13 @@ public class Stat extends Shell {
       boolean isDir = tokens.nextToken().equalsIgnoreCase("directory") ? true
           : false;
       // Convert from seconds to milliseconds
-      long modTime = Long.parseLong(tokens.nextToken())*1000;
-      long accessTime = Long.parseLong(tokens.nextToken())*1000;
+      long modTime = Long.parseLong(tokens.nextToken()) * 1000;
+      long accessTime = Long.parseLong(tokens.nextToken()) * 1000;
       String octalPerms = tokens.nextToken();
       // FreeBSD has extra digits beyond 4, truncate them
       if (octalPerms.length() > 4) {
         int len = octalPerms.length();
-        octalPerms = octalPerms.substring(len-4, len);
+        octalPerms = octalPerms.substring(len - 4, len);
       }
       FsPermission perms = new FsPermission(Short.parseShort(octalPerms, 8));
       String owner = tokens.nextToken();
@@ -126,10 +126,10 @@ public class Stat extends Shell {
       // `link' -> `target' OR 'link' -> 'target'
       // '' -> ''
       Path symlink = null;
-      String parts[] = symStr.split(" -> ");      
+      String parts[] = symStr.split(" -> ");
       try {
         String target = parts[1];
-        target = target.substring(1, target.length()-1);
+        target = target.substring(1, target.length() - 1);
         if (!target.isEmpty()) {
           symlink = new Path(target);
         }

@@ -10,7 +10,7 @@ public class OpenFileEntry {
   private final String clientMachine;
 
   public OpenFileEntry(long id, String filePath,
-      String clientName, String clientMachine) {
+                       String clientName, String clientMachine) {
     this.id = id;
     this.filePath = filePath;
     this.clientName = clientName;

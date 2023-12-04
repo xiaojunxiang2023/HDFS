@@ -1,18 +1,14 @@
 package org.apache.hadoop.fs.impl;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSBuilder;
 import org.apache.hadoop.util.functional.CallableRaisingIOE;
 import org.apache.hadoop.util.functional.FutureIO;
+
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * Support for future IO and the FS Builder subclasses.
@@ -37,7 +33,7 @@ public final class FutureIOSupport {
    * @throws IOException if something went wrong
    * @throws RuntimeException any nested RTE thrown
    */
-  public static <T> T  awaitFuture(final Future<T> future)
+  public static <T> T awaitFuture(final Future<T> future)
       throws InterruptedIOException, IOException, RuntimeException {
     return FutureIO.awaitFuture(future);
   }
@@ -55,8 +51,8 @@ public final class FutureIOSupport {
    * @throws TimeoutException the future timed out.
    */
   public static <T> T awaitFuture(final Future<T> future,
-      final long timeout,
-      final TimeUnit unit)
+                                  final long timeout,
+                                  final TimeUnit unit)
       throws InterruptedIOException, IOException, RuntimeException,
       TimeoutException {
     return FutureIO.awaitFuture(future, timeout, unit);
@@ -114,7 +110,7 @@ public final class FutureIOSupport {
    * @return the builder passed in.
    */
   public static <T, U extends FSBuilder<T, U>>
-        FSBuilder<T, U> propagateOptions(
+  FSBuilder<T, U> propagateOptions(
       final FSBuilder<T, U> builder,
       final Configuration conf,
       final String optionalPrefix,

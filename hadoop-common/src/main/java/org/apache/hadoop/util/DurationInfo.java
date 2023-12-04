@@ -1,11 +1,10 @@
 package org.apache.hadoop.util;
 
-import java.util.function.Supplier;
-
-import org.slf4j.Logger;
-
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.classification.InterfaceStability.Unstable;
+import org.slf4j.Logger;
+
+import java.util.function.Supplier;
 
 /**
  * A duration with logging of final state at info or debug
@@ -49,9 +48,9 @@ public class DurationInfo extends OperationDuration
    * @param args list of arguments
    */
   public DurationInfo(Logger log,
-      boolean logAtInfo,
-      String format,
-      Object... args) {
+                      boolean logAtInfo,
+                      String format,
+                      Object... args) {
     this.text = () -> String.format(format, args);
     this.log = log;
     this.logAtInfo = logAtInfo;

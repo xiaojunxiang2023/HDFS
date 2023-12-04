@@ -1,9 +1,9 @@
 package org.apache.hadoop.security.alias;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.ProviderUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -327,7 +323,7 @@ public abstract class AbstractJavaKeyStoreProvider extends CredentialProvider {
   @Override
   public String noPasswordWarning() {
     return ProviderUtils.noPasswordWarning(CREDENTIAL_PASSWORD_ENV_VAR,
-            CREDENTIAL_PASSWORD_FILE_KEY);
+        CREDENTIAL_PASSWORD_FILE_KEY);
   }
 
   @Override

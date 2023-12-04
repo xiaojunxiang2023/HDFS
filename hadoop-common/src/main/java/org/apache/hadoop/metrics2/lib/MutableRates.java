@@ -1,13 +1,14 @@
 package org.apache.hadoop.metrics2.lib;
 
+import org.apache.hadoop.metrics2.MetricsRecordBuilder;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Helper class to manage a group of mutable rate metrics
@@ -39,9 +40,10 @@ public class MutableRates extends MutableMetric {
     for (Method method : protocol.getDeclaredMethods()) {
       String name = method.getName();
       LOG.debug(name);
-      try { registry.newRate(name, name, false, true); }
-      catch (Exception e) {
-        LOG.error("Error creating rate metrics for "+ method.getName(), e);
+      try {
+        registry.newRate(name, name, false, true);
+      } catch (Exception e) {
+        LOG.error("Error creating rate metrics for " + method.getName(), e);
       }
     }
   }

@@ -1,12 +1,12 @@
 package org.apache.hadoop.fs.statistics.impl;
 
+import org.apache.hadoop.fs.StorageStatistics;
+import org.apache.hadoop.fs.statistics.IOStatistics;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.apache.hadoop.fs.StorageStatistics;
-import org.apache.hadoop.fs.statistics.IOStatistics;
 
 /**
  * Returns all the counters of an IOStatistics instance as StorageStatistics.

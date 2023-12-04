@@ -19,15 +19,15 @@ package org.apache.hadoop.util;
 
 
 /** A PriorityQueue maintains a partial ordering of its elements such that the
-  least element can always be found in constant time.  Put()'s and pop()'s
-  require log(size) time. */
+ least element can always be found in constant time.  Put()'s and pop()'s
+ require log(size) time. */
 public abstract class PriorityQueue<T> {
   private T[] heap;
   private int size;
   private int maxSize;
 
   /** Determines the ordering of objects in this priority queue.  Subclasses
-      must define this one method. */
+   must define this one method. */
   protected abstract boolean lessThan(Object a, Object b);
 
   /** Subclass constructors must call this. */
@@ -56,17 +56,15 @@ public abstract class PriorityQueue<T> {
    * @param element
    * @return true if element is added, false otherwise.
    */
-  public boolean insert(T element){
-    if (size < maxSize){
+  public boolean insert(T element) {
+    if (size < maxSize) {
       put(element);
       return true;
-    }
-    else if (size > 0 && !lessThan(element, top())){
+    } else if (size > 0 && !lessThan(element, top())) {
       heap[1] = element;
       adjustTop();
       return true;
-    }
-    else
+    } else
       return false;
   }
 
@@ -79,14 +77,14 @@ public abstract class PriorityQueue<T> {
   }
 
   /** Removes and returns the least element of the PriorityQueue in log(size)
-      time. */
+   time. */
   public final T pop() {
     if (size > 0) {
-      T result = heap[1];			  // save first value
-      heap[1] = heap[size];			  // move last to first
-      heap[size] = null;			  // permit GC of objects
+      T result = heap[1];        // save first value
+      heap[1] = heap[size];        // move last to first
+      heap[size] = null;        // permit GC of objects
       size--;
-      downHeap();				  // adjust heap
+      downHeap();          // adjust heap
       return result;
     } else
       return null;
@@ -118,33 +116,33 @@ public abstract class PriorityQueue<T> {
 
   private final void upHeap() {
     int i = size;
-    T node = heap[i];			  // save bottom node
+    T node = heap[i];        // save bottom node
     int j = i >>> 1;
     while (j > 0 && lessThan(node, heap[j])) {
-      heap[i] = heap[j];			  // shift parents down
+      heap[i] = heap[j];        // shift parents down
       i = j;
       j = j >>> 1;
     }
-    heap[i] = node;				  // install saved node
+    heap[i] = node;          // install saved node
   }
 
   private final void downHeap() {
     int i = 1;
-    T node = heap[i];			  // save top node
-    int j = i << 1;				  // find smaller child
+    T node = heap[i];        // save top node
+    int j = i << 1;          // find smaller child
     int k = j + 1;
     if (k <= size && lessThan(heap[k], heap[j])) {
       j = k;
     }
     while (j <= size && lessThan(heap[j], node)) {
-      heap[i] = heap[j];			  // shift up child
+      heap[i] = heap[j];        // shift up child
       i = j;
       j = i << 1;
       k = j + 1;
       if (k <= size && lessThan(heap[k], heap[j])) {
-	j = k;
+        j = k;
       }
     }
-    heap[i] = node;				  // install saved node
+    heap[i] = node;          // install saved node
   }
 }

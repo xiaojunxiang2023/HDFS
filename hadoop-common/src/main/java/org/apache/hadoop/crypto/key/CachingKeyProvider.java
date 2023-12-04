@@ -1,13 +1,13 @@
 package org.apache.hadoop.crypto.key;
 
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
+import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
-import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
 
 /**
  * A <code>KeyProviderExtension</code> implementation providing a short lived
@@ -24,7 +24,7 @@ public class CachingKeyProvider extends
     private LoadingCache<String, Metadata> keyMetadataCache;
 
     CacheExtension(KeyProvider prov, long keyTimeoutMillis,
-        long currKeyTimeoutMillis) {
+                   long currKeyTimeoutMillis) {
       this.provider = prov;
       keyVersionCache =
           CacheBuilder.newBuilder().expireAfterAccess(keyTimeoutMillis,
@@ -54,25 +54,26 @@ public class CachingKeyProvider extends
               });
       currentKeyCache =
           CacheBuilder.newBuilder().expireAfterWrite(currKeyTimeoutMillis,
-          TimeUnit.MILLISECONDS)
-          .build(new CacheLoader<String, KeyVersion>() {
-            @Override
-            public KeyVersion load(String key) throws Exception {
-              KeyVersion kv = provider.getCurrentKey(key);
-              if (kv == null) {
-                throw new KeyNotFoundException();
-              }
-              return kv;
-            }
-          });
+              TimeUnit.MILLISECONDS)
+              .build(new CacheLoader<String, KeyVersion>() {
+                @Override
+                public KeyVersion load(String key) throws Exception {
+                  KeyVersion kv = provider.getCurrentKey(key);
+                  if (kv == null) {
+                    throw new KeyNotFoundException();
+                  }
+                  return kv;
+                }
+              });
     }
   }
 
   @SuppressWarnings("serial")
-  private static class KeyNotFoundException extends Exception { }
+  private static class KeyNotFoundException extends Exception {
+  }
 
   public CachingKeyProvider(KeyProvider keyProvider, long keyTimeoutMillis,
-      long currKeyTimeoutMillis) {
+                            long currKeyTimeoutMillis) {
     super(keyProvider, new CacheExtension(keyProvider, keyTimeoutMillis,
         currKeyTimeoutMillis));
   }

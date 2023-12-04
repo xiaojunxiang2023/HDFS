@@ -1,4 +1,5 @@
 package org.apache.hadoop.fs.shell;
+
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.io.IOUtils;
@@ -15,6 +16,7 @@ class Head extends FsCommand {
   public static void registerCommands(CommandFactory factory) {
     factory.addClass(Head.class, "-head");
   }
+
   public static final String NAME = "head";
   public static final String USAGE = "<file>";
   public static final String DESCRIPTION =

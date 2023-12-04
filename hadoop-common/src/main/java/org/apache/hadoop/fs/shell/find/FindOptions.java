@@ -1,11 +1,11 @@
 package org.apache.hadoop.fs.shell.find;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.shell.CommandFactory;
+
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Date;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.shell.CommandFactory;
 
 /**
  * Options to be used by the {@link Find} command and its {@link Expression}s.

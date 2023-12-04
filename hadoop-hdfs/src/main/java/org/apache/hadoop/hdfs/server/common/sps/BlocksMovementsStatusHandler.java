@@ -6,11 +6,11 @@ package org.apache.hadoop.hdfs.server.common.sps;
  */
 public interface BlocksMovementsStatusHandler {
 
-    /**
-     * Collect all the storage movement attempt finished blocks.
-     *
-     * @param moveAttemptFinishedBlk
-     *          storage movement attempt finished block
-     */
-    void handle(BlockMovementAttemptFinished moveAttemptFinishedBlk);
+  /**
+   * Collect all the storage movement attempt finished blocks.
+   *
+   * @param moveAttemptFinishedBlk
+   *          storage movement attempt finished block
+   */
+  void handle(BlockMovementAttemptFinished moveAttemptFinishedBlk);
 }

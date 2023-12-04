@@ -1,8 +1,12 @@
 package org.apache.hadoop.security.ssl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.X509ExtendedKeyManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -56,13 +60,13 @@ public class ReloadingX509KeystoreManager extends X509ExtendedKeyManager {
 
   @Override
   public String chooseEngineClientAlias(String[] strings, Principal[] principals,
-      SSLEngine sslEngine) {
+                                        SSLEngine sslEngine) {
     return keyManagerRef.get().chooseEngineClientAlias(strings, principals, sslEngine);
   }
 
   @Override
   public String chooseEngineServerAlias(String s, Principal[] principals,
-      SSLEngine sslEngine) {
+                                        SSLEngine sslEngine) {
     return keyManagerRef.get().chooseEngineServerAlias(s, principals, sslEngine);
   }
 
@@ -73,7 +77,7 @@ public class ReloadingX509KeystoreManager extends X509ExtendedKeyManager {
 
   @Override
   public String chooseClientAlias(String[] strings, Principal[] principals,
-      Socket socket) {
+                                  Socket socket) {
     return keyManagerRef.get().chooseClientAlias(strings, principals, socket);
   }
 
@@ -84,7 +88,7 @@ public class ReloadingX509KeystoreManager extends X509ExtendedKeyManager {
 
   @Override
   public String chooseServerAlias(String s, Principal[] principals,
-      Socket socket) {
+                                  Socket socket) {
     return keyManagerRef.get().chooseServerAlias(s, principals, socket);
   }
 
@@ -124,9 +128,9 @@ public class ReloadingX509KeystoreManager extends X509ExtendedKeyManager {
         SSLFactory.SSLCERTIFICATE);
     keyMgrFactory.init(keystore,
         (keyPassword != null) ? keyPassword.toCharArray() : null);
-    for (KeyManager candidate: keyMgrFactory.getKeyManagers()) {
+    for (KeyManager candidate : keyMgrFactory.getKeyManagers()) {
       if (candidate instanceof X509ExtendedKeyManager) {
-        keyManager = (X509ExtendedKeyManager)candidate;
+        keyManager = (X509ExtendedKeyManager) candidate;
         break;
       }
     }

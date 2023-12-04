@@ -2,13 +2,12 @@ package org.apache.hadoop.io.compress;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.hadoop.io.compress.CompressionOutputStream;
-import org.apache.hadoop.io.compress.Compressor;
+
 public class CompressorStream extends CompressionOutputStream {
   protected Compressor compressor;
   protected byte[] buffer;
   protected boolean closed = false;
-  
+
   public CompressorStream(OutputStream out, Compressor compressor, int bufferSize) {
     super(out);
 
@@ -25,10 +24,10 @@ public class CompressorStream extends CompressionOutputStream {
   public CompressorStream(OutputStream out, Compressor compressor) {
     this(out, compressor, 512);
   }
-  
+
   /**
    * Allow derived classes to directly set the underlying stream.
-   * 
+   *
    * @param out Underlying output stream.
    */
   protected CompressorStream(OutputStream out) {
@@ -74,23 +73,23 @@ public class CompressorStream extends CompressionOutputStream {
   public void resetState() throws IOException {
     compressor.reset();
   }
-  
+
   @Override
   public void close() throws IOException {
     if (!closed) {
       try {
         super.close();
-      }
-      finally {
+      } finally {
         closed = true;
       }
     }
   }
 
   private byte[] oneByte = new byte[1];
+
   @Override
   public void write(int b) throws IOException {
-    oneByte[0] = (byte)(b & 0xff);
+    oneByte[0] = (byte) (b & 0xff);
     write(oneByte, 0, oneByte.length);
   }
 

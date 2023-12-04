@@ -1,18 +1,20 @@
 package org.apache.hadoop.util;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 public class ThreadUtil {
-  
+
   private static final Logger LOG = LoggerFactory.getLogger(ThreadUtil.class);
 
   /**
    * Cause the current thread to sleep as close as possible to the provided
    * number of milliseconds. This method will log and ignore any
    * {@link InterruptedException} encountered.
-   * 
+   *
    * @param millis the number of milliseconds for the current thread to sleep
    */
   public static void sleepAtLeastIgnoreInterrupts(long millis) {
@@ -89,8 +91,8 @@ public class ThreadUtil {
    * @return inputstream with the resource.
    */
   public static InputStream getResourceAsStream(ClassLoader cl,
-        String resourceName)
-        throws IOException {
+                                                String resourceName)
+      throws IOException {
     if (cl == null) {
       throw new IOException("Can not read resource file '" + resourceName +
           "' because given class loader is null");

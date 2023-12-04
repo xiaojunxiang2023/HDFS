@@ -12,11 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utils for KMS.
@@ -38,7 +34,7 @@ public final class KMSUtil {
    *                             the Configuration
    */
   public static KeyProvider createKeyProvider(final Configuration conf,
-      final String configKeyName) throws IOException {
+                                              final String configKeyName) throws IOException {
     LOG.debug("Creating key provider with config key {}", configKeyName);
     URI uri = getKeyProviderUri(conf, configKeyName);
     return (uri != null) ? createKeyProviderFromUri(conf, uri) : null;
@@ -60,7 +56,7 @@ public final class KMSUtil {
   }
 
   public static KeyProvider createKeyProviderFromUri(final Configuration conf,
-      final URI providerUri) throws IOException {
+                                                     final URI providerUri) throws IOException {
     KeyProvider keyProvider = KeyProviderFactory.get(providerUri, conf);
     if (keyProvider == null) {
       throw new IOException("Could not instantiate KeyProvider for uri: " +
@@ -123,7 +119,7 @@ public final class KMSUtil {
 
   @SuppressWarnings("rawtypes")
   public static List<EncryptedKeyVersion>
-      parseJSONEncKeyVersions(String keyName, List valueList) {
+  parseJSONEncKeyVersions(String keyName, List valueList) {
     checkNotNull(valueList, "valueList");
     List<EncryptedKeyVersion> ekvs = new ArrayList<>(valueList.size());
     if (!valueList.isEmpty()) {
@@ -137,7 +133,7 @@ public final class KMSUtil {
 
   @SuppressWarnings("unchecked")
   public static EncryptedKeyVersion parseJSONEncKeyVersion(String keyName,
-      Map valueMap) {
+                                                           Map valueMap) {
     checkNotNull(valueMap, "valueMap");
     String versionName = checkNotNull(
         (String) valueMap.get(KMSRESTConstants.VERSION_NAME_FIELD),

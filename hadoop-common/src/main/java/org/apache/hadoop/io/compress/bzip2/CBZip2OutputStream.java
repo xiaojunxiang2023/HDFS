@@ -24,10 +24,10 @@
 
 package org.apache.hadoop.io.compress.bzip2;
 
-import java.io.OutputStream;
-import java.io.IOException;
-
 import org.apache.hadoop.io.IOUtils;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * An output stream that compresses into the BZip2 format (without the file
@@ -139,96 +139,96 @@ import org.apache.hadoop.io.IOUtils;
 public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
   /**
-  * The minimum supported blocksize <tt> == 1</tt>.
-  */
+   * The minimum supported blocksize <tt> == 1</tt>.
+   */
   public static final int MIN_BLOCKSIZE = 1;
 
   /**
-  * The maximum supported blocksize <tt> == 9</tt>.
-  */
+   * The maximum supported blocksize <tt> == 9</tt>.
+   */
   public static final int MAX_BLOCKSIZE = 9;
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int SETMASK = (1 << 21);
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int CLEARMASK = (~SETMASK);
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int GREATER_ICOST = 15;
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int LESSER_ICOST = 0;
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int SMALL_THRESH = 20;
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int DEPTH_THRESH = 10;
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   */
   protected static final int WORK_FACTOR = 30;
 
   /**
-  * This constant is accessible by subclasses for historical purposes. If you
-  * don't know what it means then you don't need it.
-  * <p>
-  * If you are ever unlucky/improbable enough to get a stack overflow whilst
-  * sorting, increase the following constant and try again. In practice I
-  * have never seen the stack go above 27 elems, so the following limit seems
-  * very generous.
-  * </p>
-  */
+   * This constant is accessible by subclasses for historical purposes. If you
+   * don't know what it means then you don't need it.
+   * <p>
+   * If you are ever unlucky/improbable enough to get a stack overflow whilst
+   * sorting, increase the following constant and try again. In practice I
+   * have never seen the stack go above 27 elems, so the following limit seems
+   * very generous.
+   * </p>
+   */
   protected static final int QSORT_STACK_SIZE = 1000;
 
   /**
-  * Knuth's increments seem to work better than Incerpi-Sedgewick here.
-  * Possibly because the number of elems to sort is usually small, typically
-  * &lt;= 20.
-  */
-  private static final int[] INCS = { 1, 4, 13, 40, 121, 364, 1093, 3280,
-      9841, 29524, 88573, 265720, 797161, 2391484 };
+   * Knuth's increments seem to work better than Incerpi-Sedgewick here.
+   * Possibly because the number of elems to sort is usually small, typically
+   * &lt;= 20.
+   */
+  private static final int[] INCS = {1, 4, 13, 40, 121, 364, 1093, 3280,
+      9841, 29524, 88573, 265720, 797161, 2391484};
 
   /**
-  * This method is accessible by subclasses for historical purposes. If you
-  * don't know what it does then you don't need it.
-  */
+   * This method is accessible by subclasses for historical purposes. If you
+   * don't know what it does then you don't need it.
+   */
   protected static void hbMakeCodeLengths(char[] len, int[] freq,
-      int alphaSize, int maxLen) {
+                                          int alphaSize, int maxLen) {
     /*
-    * Nodes and heap entries run from 1. Entry 0 for both the heap and
-    * nodes is a sentinel.
-    */
+     * Nodes and heap entries run from 1. Entry 0 for both the heap and
+     * nodes is a sentinel.
+     */
     final int[] heap = new int[MAX_ALPHA_SIZE * 2];
     final int[] weight = new int[MAX_ALPHA_SIZE * 2];
     final int[] parent = new int[MAX_ALPHA_SIZE * 2];
 
-    for (int i = alphaSize; --i >= 0;) {
+    for (int i = alphaSize; --i >= 0; ) {
       weight[i + 1] = (freq[i] == 0 ? 1 : freq[i]) << 8;
     }
 
-    for (boolean tooLong = true; tooLong;) {
+    for (boolean tooLong = true; tooLong; ) {
       tooLong = false;
 
       int nNodes = alphaSize;
@@ -343,7 +343,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         int j = 0;
         int k = i;
 
-        for (int parent_k; (parent_k = parent[k]) >= 0;) {
+        for (int parent_k; (parent_k = parent[k]) >= 0; ) {
           k = parent_k;
           j++;
         }
@@ -365,20 +365,20 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   private static void hbMakeCodeLengths(final byte[] len, final int[] freq,
-      final Data dat, final int alphaSize, final int maxLen) {
+                                        final Data dat, final int alphaSize, final int maxLen) {
     /*
-    * Nodes and heap entries run from 1. Entry 0 for both the heap and
-    * nodes is a sentinel.
-    */
+     * Nodes and heap entries run from 1. Entry 0 for both the heap and
+     * nodes is a sentinel.
+     */
     final int[] heap = dat.heap;
     final int[] weight = dat.weight;
     final int[] parent = dat.parent;
 
-    for (int i = alphaSize; --i >= 0;) {
+    for (int i = alphaSize; --i >= 0; ) {
       weight[i + 1] = (freq[i] == 0 ? 1 : freq[i]) << 8;
     }
 
-    for (boolean tooLong = true; tooLong;) {
+    for (boolean tooLong = true; tooLong; ) {
       tooLong = false;
 
       int nNodes = alphaSize;
@@ -468,7 +468,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         final int weight_n2 = weight[n2];
         weight[nNodes] = ((weight_n1 & 0xffffff00) + (weight_n2 & 0xffffff00))
             | (1 + (((weight_n1 & 0x000000ff) > (weight_n2 & 0x000000ff)) ? (weight_n1 & 0x000000ff)
-                : (weight_n2 & 0x000000ff)));
+            : (weight_n2 & 0x000000ff)));
 
         parent[nNodes] = -1;
         nHeap++;
@@ -490,7 +490,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         int j = 0;
         int k = i;
 
-        for (int parent_k; (parent_k = parent[k]) >= 0;) {
+        for (int parent_k; (parent_k = parent[k]) >= 0; ) {
           k = parent_k;
           j++;
         }
@@ -512,19 +512,19 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   /**
-  * Index of the last char in the block, so the block size == last + 1.
-  */
+   * Index of the last char in the block, so the block size == last + 1.
+   */
   private int last;
 
   /**
-  * Index in fmap[] of original string after sorting.
-  */
+   * Index in fmap[] of original string after sorting.
+   */
   private int origPtr;
 
   /**
-  * Always: in the range 0 .. 9. The current block size is 100000 * this
-  * number.
-  */
+   * Always: in the range 0 .. 9. The current block size is 100000 * this
+   * number.
+   */
   private final int blockSize100k;
 
   private boolean blockRandomised;
@@ -538,9 +538,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   private int nMTF;
 
   /*
-  * Used when sorting. If too many long comparisons happen, we stop sorting,
-  * randomise the block slightly, and try again.
-  */
+   * Used when sorting. If too many long comparisons happen, we stop sorting,
+   * randomise the block slightly, and try again.
+   */
   private int workDone;
   private int workLimit;
   private boolean firstAttempt;
@@ -553,75 +553,75 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   private int allowableBlockSize;
 
   /**
-  * All memory intensive stuff.
-  */
+   * All memory intensive stuff.
+   */
   private CBZip2OutputStream.Data data;
 
   private OutputStream out;
 
   /**
-  * Chooses a blocksize based on the given length of the data to compress.
-  *
-  * @return The blocksize, between {@link #MIN_BLOCKSIZE} and
-  *         {@link #MAX_BLOCKSIZE} both inclusive. For a negative
-  *         <tt>inputLength</tt> this method returns <tt>MAX_BLOCKSIZE</tt>
-  *         always.
-  *
-  * @param inputLength
-  *            The length of the data which will be compressed by
-  *            <tt>CBZip2OutputStream</tt>.
-  */
+   * Chooses a blocksize based on the given length of the data to compress.
+   *
+   * @return The blocksize, between {@link #MIN_BLOCKSIZE} and
+   *         {@link #MAX_BLOCKSIZE} both inclusive. For a negative
+   *         <tt>inputLength</tt> this method returns <tt>MAX_BLOCKSIZE</tt>
+   *         always.
+   *
+   * @param inputLength
+   *            The length of the data which will be compressed by
+   *            <tt>CBZip2OutputStream</tt>.
+   */
   public static int chooseBlockSize(long inputLength) {
     return (inputLength > 0) ? (int) Math
         .min((inputLength / 132000) + 1, 9) : MAX_BLOCKSIZE;
   }
 
   /**
-  * Constructs a new <tt>CBZip2OutputStream</tt> with a blocksize of 900k.
-  *
-  * <p>
-  * <b>Attention: </b>The caller is resonsible to write the two BZip2 magic
-  * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
-  * constructor.
-  * </p>
-  *
-  * @param out *
-  *            the destination stream.
-  *
-  * @throws IOException
-  *             if an I/O error occurs in the specified stream.
-  * @throws NullPointerException
-  *             if <code>out == null</code>.
-  */
+   * Constructs a new <tt>CBZip2OutputStream</tt> with a blocksize of 900k.
+   *
+   * <p>
+   * <b>Attention: </b>The caller is resonsible to write the two BZip2 magic
+   * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
+   * constructor.
+   * </p>
+   *
+   * @param out *
+   *            the destination stream.
+   *
+   * @throws IOException
+   *             if an I/O error occurs in the specified stream.
+   * @throws NullPointerException
+   *             if <code>out == null</code>.
+   */
   public CBZip2OutputStream(final OutputStream out) throws IOException {
     this(out, MAX_BLOCKSIZE);
   }
 
   /**
-  * Constructs a new <tt>CBZip2OutputStream</tt> with specified blocksize.
-  *
-  * <p>
-  * <b>Attention: </b>The caller is resonsible to write the two BZip2 magic
-  * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
-  * constructor.
-  * </p>
-  *
-  *
-  * @param out
-  *            the destination stream.
-  * @param blockSize
-  *            the blockSize as 100k units.
-  *
-  * @throws IOException
-  *             if an I/O error occurs in the specified stream.
-  * @throws IllegalArgumentException
-  *             if {@code (blockSize < 1) || (blockSize > 9)}
-  * @throws NullPointerException
-  *             if {@code out == null}.
-  *
-  * @see #MIN_BLOCKSIZE
-  * @see #MAX_BLOCKSIZE
-  */
+   * Constructs a new <tt>CBZip2OutputStream</tt> with specified blocksize.
+   *
+   * <p>
+   * <b>Attention: </b>The caller is resonsible to write the two BZip2 magic
+   * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
+   * constructor.
+   * </p>
+   *
+   *
+   * @param out
+   *            the destination stream.
+   * @param blockSize
+   *            the blockSize as 100k units.
+   *
+   * @throws IOException
+   *             if an I/O error occurs in the specified stream.
+   * @throws IllegalArgumentException
+   *             if {@code (blockSize < 1) || (blockSize > 9)}
+   * @throws NullPointerException
+   *             if {@code out == null}.
+   *
+   * @see #MIN_BLOCKSIZE
+   * @see #MAX_BLOCKSIZE
+   */
   public CBZip2OutputStream(final OutputStream out, final int blockSize)
       throws IOException {
     super();
@@ -662,37 +662,37 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       this.crc.updateCRC(currentCharShadow, runLengthShadow);
 
       switch (runLengthShadow) {
-      case 1:
-        dataShadow.block[lastShadow + 2] = ch;
-        this.last = lastShadow + 1;
+        case 1:
+          dataShadow.block[lastShadow + 2] = ch;
+          this.last = lastShadow + 1;
+          break;
+
+        case 2:
+          dataShadow.block[lastShadow + 2] = ch;
+          dataShadow.block[lastShadow + 3] = ch;
+          this.last = lastShadow + 2;
+          break;
+
+        case 3: {
+          final byte[] block = dataShadow.block;
+          block[lastShadow + 2] = ch;
+          block[lastShadow + 3] = ch;
+          block[lastShadow + 4] = ch;
+          this.last = lastShadow + 3;
+        }
         break;
 
-      case 2:
-        dataShadow.block[lastShadow + 2] = ch;
-        dataShadow.block[lastShadow + 3] = ch;
-        this.last = lastShadow + 2;
-        break;
-
-      case 3: {
-        final byte[] block = dataShadow.block;
-        block[lastShadow + 2] = ch;
-        block[lastShadow + 3] = ch;
-        block[lastShadow + 4] = ch;
-        this.last = lastShadow + 3;
-      }
-        break;
-
-      default: {
-        runLengthShadow -= 4;
-        dataShadow.inUse[runLengthShadow] = true;
-        final byte[] block = dataShadow.block;
-        block[lastShadow + 2] = ch;
-        block[lastShadow + 3] = ch;
-        block[lastShadow + 4] = ch;
-        block[lastShadow + 5] = ch;
-        block[lastShadow + 6] = (byte) runLengthShadow;
-        this.last = lastShadow + 5;
-      }
+        default: {
+          runLengthShadow -= 4;
+          dataShadow.inUse[runLengthShadow] = true;
+          final byte[] block = dataShadow.block;
+          block[lastShadow + 2] = ch;
+          block[lastShadow + 3] = ch;
+          block[lastShadow + 4] = ch;
+          block[lastShadow + 5] = ch;
+          block[lastShadow + 6] = (byte) runLengthShadow;
+          this.last = lastShadow + 5;
+        }
         break;
 
       }
@@ -704,15 +704,15 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   /**
-  * Overriden to close the stream.
-  */
+   * Overriden to close the stream.
+   */
   @Override
   protected void finalize() throws Throwable {
     finish();
     super.finalize();
   }
 
-  
+
   public void finish() throws IOException {
     if (out != null) {
       try {
@@ -742,7 +742,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       }
     }
   }
-  
+
   @Override
   public void flush() throws IOException {
     OutputStream outShadow = this.out;
@@ -759,9 +759,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     this.data = new Data(this.blockSize100k);
 
     /*
-    * Write `magic' bytes h indicating file-format == huffmanised, followed
-    * by a digit indicating blockSize100k.
-    */
+     * Write `magic' bytes h indicating file-format == huffmanised, followed
+     * by a digit indicating blockSize100k.
+     */
     bsPutUByte('h');
     bsPutUByte('0' + this.blockSize100k);
 
@@ -776,7 +776,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     // ch = 0;
 
     boolean[] inUse = this.data.inUse;
-    for (int i = 256; --i >= 0;) {
+    for (int i = 256; --i >= 0; ) {
       inUse[i] = false;
     }
 
@@ -798,16 +798,16 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     blockSort();
 
     /*
-    * A 6-byte block header, the value chosen arbitrarily as 0x314159265359
-    * :-). A 32 bit value does not really give a strong enough guarantee
-    * that the value will not appear by chance in the compressed
-    * datastream. Worst-case probability of this event, for a 900k block,
-    * is about 2.0e-3 for 32 bits, 1.0e-5 for 40 bits and 4.0e-8 for 48
-    * bits. For a compressed file of size 100Gb -- about 100000 blocks --
-    * only a 48-bit marker will do. NB: normal compression/ decompression
-    * donot rely on these statistical properties. They are only important
-    * when trying to recover blocks from damaged files.
-    */
+     * A 6-byte block header, the value chosen arbitrarily as 0x314159265359
+     * :-). A 32 bit value does not really give a strong enough guarantee
+     * that the value will not appear by chance in the compressed
+     * datastream. Worst-case probability of this event, for a 900k block,
+     * is about 2.0e-3 for 32 bits, 1.0e-5 for 40 bits and 4.0e-8 for 48
+     * bits. For a compressed file of size 100Gb -- about 100000 blocks --
+     * only a 48-bit marker will do. NB: normal compression/ decompression
+     * donot rely on these statistical properties. They are only important
+     * when trying to recover blocks from damaged files.
+     */
     bsPutUByte(0x31);
     bsPutUByte(0x41);
     bsPutUByte(0x59);
@@ -831,11 +831,11 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
   private void endCompression() throws IOException {
     /*
-    * Now another magic 48-bit number, 0x177245385090, to indicate the end
-    * of the last block. (sqrt(pi), if you want to know. I did want to use
-    * e, but it contains too much repetition -- 27 18 28 18 28 46 -- for me
-    * to feel statistically comfortable. Call me paranoid.)
-    */
+     * Now another magic 48-bit number, 0x177245385090, to indicate the end
+     * of the last block. (sqrt(pi), if you want to know. I did want to use
+     * e, but it contains too much repetition -- 27 18 28 18 28 46 -- for me
+     * to feel statistically comfortable. Call me paranoid.)
+     */
     bsPutUByte(0x17);
     bsPutUByte(0x72);
     bsPutUByte(0x45);
@@ -848,8 +848,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   /**
-  * Returns the blocksize parameter specified at construction time.
-  */
+   * Returns the blocksize parameter specified at construction time.
+   */
   public final int getBlockSize() {
     return this.blockSize100k;
   }
@@ -871,7 +871,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       throw new IOException("stream closed");
     }
 
-    for (int hi = offs + len; offs < hi;) {
+    for (int hi = offs + len; offs < hi; ) {
       write0(buf[offs++]);
     }
   }
@@ -898,7 +898,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   private static void hbAssignCodes(final int[] code, final byte[] length,
-      final int minLen, final int maxLen, final int alphaSize) {
+                                    final int minLen, final int maxLen, final int alphaSize) {
     int vec = 0;
     for (int n = minLen; n <= maxLen; n++) {
       for (int i = 0; i < alphaSize; i++) {
@@ -950,9 +950,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     final byte[][] len = this.data.sendMTFValues_len;
     final int alphaSize = this.nInUse + 2;
 
-    for (int t = N_GROUPS; --t >= 0;) {
+    for (int t = N_GROUPS; --t >= 0; ) {
       byte[] len_t = len[t];
-      for (int v = alphaSize; --v >= 0;) {
+      for (int v = alphaSize; --v >= 0; ) {
         len_t[v] = GREATER_ICOST;
       }
     }
@@ -966,8 +966,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     sendMTFValues0(nGroups, alphaSize);
 
     /*
-    * Iterate up to N_ITERS times to improve the tables.
-    */
+     * Iterate up to N_ITERS times to improve the tables.
+     */
     final int nSelectors = sendMTFValues1(nGroups, alphaSize);
 
     /* Compute MTF values for the selectors. */
@@ -1001,7 +1001,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       int ge = gs - 1;
       int aFreq = 0;
 
-      for (final int a = alphaSize - 1; (aFreq < tFreq) && (ge < a);) {
+      for (final int a = alphaSize - 1; (aFreq < tFreq) && (ge < a); ) {
         aFreq += mtfFreq[++ge];
       }
 
@@ -1011,7 +1011,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       }
 
       final byte[] len_np = len[nPart - 1];
-      for (int v = alphaSize; --v >= 0;) {
+      for (int v = alphaSize; --v >= 0; ) {
         if ((v >= gs) && (v <= ge)) {
           len_np[v] = LESSER_ICOST;
         } else {
@@ -1043,23 +1043,23 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     int nSelectors = 0;
 
     for (int iter = 0; iter < N_ITERS; iter++) {
-      for (int t = nGroups; --t >= 0;) {
+      for (int t = nGroups; --t >= 0; ) {
         fave[t] = 0;
         int[] rfreqt = rfreq[t];
-        for (int i = alphaSize; --i >= 0;) {
+        for (int i = alphaSize; --i >= 0; ) {
           rfreqt[i] = 0;
         }
       }
 
       nSelectors = 0;
 
-      for (int gs = 0; gs < this.nMTF;) {
+      for (int gs = 0; gs < this.nMTF; ) {
         /* Set group start & end marks. */
 
         /*
-        * Calculate the cost of this group as coded by each of the
-        * coding tables.
-        */
+         * Calculate the cost of this group as coded by each of the
+         * coding tables.
+         */
 
         final int ge = Math.min(gs + G_SIZE - 1, nMTFShadow - 1);
 
@@ -1091,24 +1091,24 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
           cost[5] = cost5;
 
         } else {
-          for (int t = nGroups; --t >= 0;) {
+          for (int t = nGroups; --t >= 0; ) {
             cost[t] = 0;
           }
 
           for (int i = gs; i <= ge; i++) {
             final int icv = sfmap[i];
-            for (int t = nGroups; --t >= 0;) {
+            for (int t = nGroups; --t >= 0; ) {
               cost[t] += len[t][icv] & 0xff;
             }
           }
         }
 
         /*
-        * Find the coding table which is best for this group, and
-        * record its identity in the selector table.
-        */
+         * Find the coding table which is best for this group, and
+         * record its identity in the selector table.
+         */
         int bt = -1;
-        for (int t = nGroups, bc = 999999999; --t >= 0;) {
+        for (int t = nGroups, bc = 999999999; --t >= 0; ) {
           final int cost_t = cost[t];
           if (cost_t < bc) {
             bc = cost_t;
@@ -1121,8 +1121,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         nSelectors++;
 
         /*
-        * Increment the symbol frequencies for the selected table.
-        */
+         * Increment the symbol frequencies for the selected table.
+         */
         final int[] rfreq_bt = rfreq[bt];
         for (int i = gs; i <= ge; i++) {
           rfreq_bt[sfmap[i]]++;
@@ -1132,8 +1132,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       }
 
       /*
-      * Recompute the tables based on the accumulated frequencies.
-      */
+       * Recompute the tables based on the accumulated frequencies.
+       */
       for (int t = 0; t < nGroups; t++) {
         hbMakeCodeLengths(len[t], rfreq[t], this.data, alphaSize, 20);
       }
@@ -1148,7 +1148,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     final Data dataShadow = this.data;
     byte[] pos = dataShadow.sendMTFValues2_pos;
 
-    for (int i = nGroups; --i >= 0;) {
+    for (int i = nGroups; --i >= 0; ) {
       pos[i] = (byte) i;
     }
 
@@ -1177,7 +1177,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       int minLen = 32;
       int maxLen = 0;
       final byte[] len_t = len[t];
-      for (int i = alphaSize; --i >= 0;) {
+      for (int i = alphaSize; --i >= 0; ) {
         final int l = len_t[i] & 0xff;
         if (l > maxLen) {
           maxLen = l;
@@ -1198,10 +1198,10 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     final boolean[] inUse = this.data.inUse;
     final boolean[] inUse16 = this.data.sentMTFValues4_inUse16;
 
-    for (int i = 16; --i >= 0;) {
+    for (int i = 16; --i >= 0; ) {
       inUse16[i] = false;
       final int i16 = i * 16;
-      for (int j = 16; --j >= 0;) {
+      for (int j = 16; --j >= 0; ) {
         if (inUse[i16 + j]) {
           inUse16[i] = true;
         }
@@ -1353,7 +1353,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     int bsLiveShadow = this.bsLive;
     int bsBuffShadow = this.bsBuff;
 
-    for (int gs = 0; gs < nMTFShadow;) {
+    for (int gs = 0; gs < nMTFShadow; ) {
       final int ge = Math.min(gs + G_SIZE - 1, nMTFShadow - 1);
       final int selector_selCtr = selector[selCtr] & 0xff;
       final int[] code_selCtr = code[selector_selCtr];
@@ -1393,17 +1393,17 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   /**
-  * This is the most hammered method of this class.
-  *
-  * <p>
-  * This is the version using unrolled loops. Normally I never use such ones
-  * in Java code. The unrolling has shown a noticable performance improvement
-  * on JRE 1.4.2 (Linux i586 / HotSpot Client). Of course it depends on the
-  * JIT compiler of the vm.
-  * </p>
-  */
+   * This is the most hammered method of this class.
+   *
+   * <p>
+   * This is the version using unrolled loops. Normally I never use such ones
+   * in Java code. The unrolling has shown a noticable performance improvement
+   * on JRE 1.4.2 (Linux i586 / HotSpot Client). Of course it depends on the
+   * JIT compiler of the vm.
+   * </p>
+   */
   private boolean mainSimpleSort(final Data dataShadow, final int lo,
-      final int hi, final int d) {
+                                 final int hi, final int d) {
     final int bigN = hi - lo + 1;
     if (bigN < 2) {
       return this.firstAttempt && (this.workDone > this.workLimit);
@@ -1426,11 +1426,12 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     // Following block contains unrolled code which could be shortened by
     // coding it in additional loops.
 
-    HP: while (--hp >= 0) {
+    HP:
+    while (--hp >= 0) {
       final int h = INCS[hp];
       final int mj = lo + h - 1;
 
-      for (int i = lo + h; i <= hi;) {
+      for (int i = lo + h; i <= hi; ) {
         // copy
         for (int k = 3; (i <= hi) && (--k >= 0); i++) {
           final int v = fmap[i];
@@ -1450,7 +1451,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
           boolean onceRunned = false;
           int a = 0;
 
-          HAMMER: while (true) {
+          HAMMER:
+          while (true) {
             if (onceRunned) {
               fmap[j] = a;
               if ((j -= h) <= mj) {
@@ -1473,7 +1475,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                     if (block[i1 + 5] == block[i2 + 5]) {
                       if (block[(i1 += 6)] == block[(i2 += 6)]) {
                         int x = lastShadow;
-                        X: while (x > 0) {
+                        X:
+                        while (x > 0) {
                           x -= 4;
 
                           if (block[i1 + 1] == block[i2 + 1]) {
@@ -1627,10 +1630,10 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
   }
 
   /**
-  * Method "mainQSort3", file "blocksort.c", BZip2 1.0.2
-  */
+   * Method "mainQSort3", file "blocksort.c", BZip2 1.0.2
+   */
   private void mainQSort3(final Data dataShadow, final int loSt,
-      final int hiSt, final int dSt) {
+                          final int hiSt, final int dSt) {
     final int[] stack_ll = dataShadow.stack_ll;
     final int[] stack_hh = dataShadow.stack_hh;
     final int[] stack_dd = dataShadow.stack_dd;
@@ -1641,7 +1644,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     stack_hh[0] = hiSt;
     stack_dd[0] = dSt;
 
-    for (int sp = 1; --sp >= 0;) {
+    for (int sp = 1; --sp >= 0; ) {
       final int lo = stack_ll[sp];
       final int hi = stack_hh[sp];
       final int d = stack_dd[sp];
@@ -1747,19 +1750,19 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     final boolean firstAttemptShadow = this.firstAttempt;
 
     // Set up the 2-byte frequency table
-    for (int i = 65537; --i >= 0;) {
+    for (int i = 65537; --i >= 0; ) {
       ftab[i] = 0;
     }
 
     /*
-    * In the various block-sized structures, live data runs from 0 to
-    * last+NUM_OVERSHOOT_BYTES inclusive. First, set up the overshoot area
-    * for block.
-    */
+     * In the various block-sized structures, live data runs from 0 to
+     * last+NUM_OVERSHOOT_BYTES inclusive. First, set up the overshoot area
+     * for block.
+     */
     for (int i = 0; i < NUM_OVERSHOOT_BYTES; i++) {
       block[lastShadow + i + 2] = block[(i % (lastShadow + 1)) + 1];
     }
-    for (int i = lastShadow + NUM_OVERSHOOT_BYTES +1; --i >= 0;) {
+    for (int i = lastShadow + NUM_OVERSHOOT_BYTES + 1; --i >= 0; ) {
       quadrant[i] = 0;
     }
     block[0] = block[lastShadow + 1];
@@ -1786,15 +1789,15 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     fmap[--ftab[((block[lastShadow + 1] & 0xff) << 8) + (block[1] & 0xff)]] = lastShadow;
 
     /*
-    * Now ftab contains the first loc of every small bucket. Calculate the
-    * running order, from smallest to largest big bucket.
-    */
-    for (int i = 256; --i >= 0;) {
+     * Now ftab contains the first loc of every small bucket. Calculate the
+     * running order, from smallest to largest big bucket.
+     */
+    for (int i = 256; --i >= 0; ) {
       bigDone[i] = false;
       runningOrder[i] = i;
     }
 
-    for (int h = 364; h != 1;) {
+    for (int h = 364; h != 1; ) {
       h /= 3;
       for (int i = h; i <= 255; i++) {
         final int vv = runningOrder[i];
@@ -1814,21 +1817,21 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     }
 
     /*
-    * The main sorting loop.
-    */
+     * The main sorting loop.
+     */
     for (int i = 0; i <= 255; i++) {
       /*
-      * Process big buckets, starting with the least full.
-      */
+       * Process big buckets, starting with the least full.
+       */
       final int ss = runningOrder[i];
 
       // Step 1:
       /*
-      * Complete the big bucket [ss] by quicksorting any unsorted small
-      * buckets [ss, j]. Hopefully previous pointer-scanning phases have
-      * already completed many of the small buckets [ss, j], so we don't
-      * have to sort them at all.
-      */
+       * Complete the big bucket [ss] by quicksorting any unsorted small
+       * buckets [ss, j]. Hopefully previous pointer-scanning phases have
+       * already completed many of the small buckets [ss, j], so we don't
+       * have to sort them at all.
+       */
       for (int j = 0; j <= 255; j++) {
         final int sb = (ss << 8) + j;
         final int ftab_sb = ftab[sb];
@@ -1863,17 +1866,17 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
         }
       }
 
-      for (int j = 256; --j >= 0;)
+      for (int j = 256; --j >= 0; )
         ftab[(j << 8) + ss] |= SETMASK;
 
       // Step 3:
       /*
-      * The ss big bucket is now done. Record this fact, and update the
-      * quadrant descriptors. Remember to update quadrants in the
-      * overshoot area too, if necessary. The "if (i < 255)" test merely
-      * skips this updating for the last bucket processed, since updating
-      * for the last bucket is pointless.
-      */
+       * The ss big bucket is now done. Record this fact, and update the
+       * quadrant descriptors. Remember to update quadrants in the
+       * overshoot area too, if necessary. The "if (i < 255)" test merely
+       * skips this updating for the last bucket processed, since updating
+       * for the last bucket is pointless.
+       */
       bigDone[ss] = true;
 
       if (i < 255) {
@@ -1903,7 +1906,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     final byte[] block = this.data.block;
     final int lastShadow = this.last;
 
-    for (int i = 256; --i >= 0;)
+    for (int i = 256; --i >= 0; )
       inUse[i] = false;
 
     int rNToGo = 0;
@@ -1953,7 +1956,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       mtfFreq[i] = 0;
     }
 
-    for (int i = nInUseShadow; --i >= 0;) {
+    for (int i = nInUseShadow; --i >= 0; ) {
       yy[i] = (byte) i;
     }
 
@@ -2074,9 +2077,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
     // ============
 
     /**
-    * Array instance identical to sfmap, both are used only temporarily and
-    * indepently, so we do not need to allocate additional memory.
-    */
+     * Array instance identical to sfmap, both are used only temporarily and
+     * indepently, so we do not need to allocate additional memory.
+     */
     final char[] quadrant;
 
     Data(int blockSize100k) {

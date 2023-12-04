@@ -1,13 +1,14 @@
 package org.apache.hadoop.auth.util.provider;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.servlet.ServletContext;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An abstract SignerSecretProvider that can be use used as the base for a
@@ -22,11 +23,11 @@ import org.slf4j.LoggerFactory;
 
 // 对 SignerSecretProvider进行扩展，可以滚动
 
-public abstract class RolloverSignerSecretProvider  extends SignerSecretProvider {
+public abstract class RolloverSignerSecretProvider extends SignerSecretProvider {
 
   @VisibleForTesting
   static Logger LOG = LoggerFactory.getLogger(
-    RolloverSignerSecretProvider.class);
+      RolloverSignerSecretProvider.class);
   /**
    * Stores the currently valid secrets.  The current secret is the 0th element
    * in the array.
@@ -52,7 +53,7 @@ public abstract class RolloverSignerSecretProvider  extends SignerSecretProvider
    */
   @Override
   public void init(Properties config, ServletContext servletContext,
-          long tokenValidity) throws Exception {
+                   long tokenValidity) throws Exception {
     initSecrets(generateNewSecret(), null);
     startScheduler(tokenValidity, tokenValidity);
   }

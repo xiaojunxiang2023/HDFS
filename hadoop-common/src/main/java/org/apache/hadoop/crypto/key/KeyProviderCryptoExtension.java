@@ -1,5 +1,10 @@
 package org.apache.hadoop.crypto.key;
 
+import org.apache.hadoop.crypto.CryptoCodec;
+import org.apache.hadoop.crypto.Decryptor;
+import org.apache.hadoop.crypto.Encryptor;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
@@ -7,19 +12,10 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.crypto.CryptoCodec;
-import org.apache.hadoop.crypto.Decryptor;
-import org.apache.hadoop.crypto.Encryptor;
-
 /**
  * A KeyProvider with Cryptographic Extensions specifically for generating
  * and decrypting encrypted encryption keys.
- * 
+ *
  */
 public class KeyProviderCryptoExtension extends
     KeyProviderExtension<KeyProviderCryptoExtension.CryptoExtension> {
@@ -58,8 +54,8 @@ public class KeyProviderCryptoExtension extends
      * @param encryptedKeyVersion      The encrypted encryption key version.
      */
     protected EncryptedKeyVersion(String keyName,
-        String encryptionKeyVersionName, byte[] encryptedKeyIv,
-        KeyVersion encryptedKeyVersion) {
+                                  String encryptionKeyVersionName, byte[] encryptedKeyIv,
+                                  KeyVersion encryptedKeyVersion) {
       this.encryptionKeyName = keyName == null ? null : keyName.intern();
       this.encryptionKeyVersionName = encryptionKeyVersionName == null ?
           null : encryptionKeyVersionName.intern();
@@ -85,8 +81,8 @@ public class KeyProviderCryptoExtension extends
      * @return EncryptedKeyVersion suitable for decryption.
      */
     public static EncryptedKeyVersion createForDecryption(String keyName,
-        String encryptionKeyVersionName, byte[] encryptedKeyIv,
-        byte[] encryptedKeyMaterial) {
+                                                          String encryptionKeyVersionName, byte[] encryptedKeyIv,
+                                                          byte[] encryptedKeyMaterial) {
       KeyVersion encryptedKeyVersion = new KeyVersion(null, EEK,
           encryptedKeyMaterial);
       return new EncryptedKeyVersion(keyName, encryptionKeyVersionName,
@@ -176,7 +172,7 @@ public class KeyProviderCryptoExtension extends
      * of the key and is encrypted using the same cipher.
      * <p>
      * NOTE: The generated key is not stored by the <code>KeyProvider</code>
-     * 
+     *
      * @param encryptionKeyName
      *          The latest KeyVersion of this key's material will be encrypted.
      * @return EncryptedKeyVersion with the generated key material, the version
@@ -194,7 +190,7 @@ public class KeyProviderCryptoExtension extends
     /**
      * Decrypts an encrypted byte[] key material using the given key version
      * name and initialization vector.
-     * 
+     *
      * @param encryptedKeyVersion
      *          contains keyVersionName and IV to decrypt the encrypted key
      *          material
@@ -222,7 +218,7 @@ public class KeyProviderCryptoExtension extends
      * NOTE: The generated key is not stored by the <code>KeyProvider</code>
      *
      * @param  ekv The EncryptedKeyVersion containing keyVersionName and IV.
-     * @return     The re-encrypted EncryptedKeyVersion.
+     * @return The re-encrypted EncryptedKeyVersion.
      * @throws IOException If the key material could not be re-encrypted.
      * @throws GeneralSecurityException If the key material could not be
      *                            re-encrypted because of a cryptographic issue.
@@ -253,13 +249,13 @@ public class KeyProviderCryptoExtension extends
   private static class DefaultCryptoExtension implements CryptoExtension {
 
     private final KeyProvider keyProvider;
-    private static final ThreadLocal<SecureRandom> RANDOM = 
+    private static final ThreadLocal<SecureRandom> RANDOM =
         new ThreadLocal<SecureRandom>() {
-      @Override
-      protected SecureRandom initialValue() {
-        return new SecureRandom();
-      }
-    };
+          @Override
+          protected SecureRandom initialValue() {
+            return new SecureRandom();
+          }
+        };
 
     private DefaultCryptoExtension(KeyProvider keyProvider) {
       this.keyProvider = keyProvider;
@@ -288,7 +284,7 @@ public class KeyProviderCryptoExtension extends
     }
 
     private EncryptedKeyVersion generateEncryptedKey(final Encryptor encryptor,
-        final KeyVersion encryptionKey, final byte[] key, final byte[] iv)
+                                                     final KeyVersion encryptionKey, final byte[] key, final byte[] iv)
         throws IOException, GeneralSecurityException {
       // Encryption key IV is derived from new key's IV
       final byte[] encryptionIV = EncryptedKeyVersion.deriveIV(iv);
@@ -391,8 +387,8 @@ public class KeyProviderCryptoExtension extends
     }
 
     private KeyVersion decryptEncryptedKey(final Decryptor decryptor,
-        final KeyVersion encryptionKey,
-        final EncryptedKeyVersion encryptedKeyVersion)
+                                           final KeyVersion encryptionKey,
+                                           final EncryptedKeyVersion encryptedKeyVersion)
         throws IOException, GeneralSecurityException {
       // Encryption key IV is determined from encrypted key's IV
       final byte[] encryptionIV =
@@ -458,7 +454,7 @@ public class KeyProviderCryptoExtension extends
    * @param extension
    */
   protected KeyProviderCryptoExtension(KeyProvider keyProvider,
-      CryptoExtension extension) {
+                                       CryptoExtension extension) {
     super(keyProvider, extension);
   }
 
@@ -490,7 +486,7 @@ public class KeyProviderCryptoExtension extends
    */
   public EncryptedKeyVersion generateEncryptedKey(String encryptionKeyName)
       throws IOException,
-                                           GeneralSecurityException {
+      GeneralSecurityException {
     return getExtension().generateEncryptedKey(encryptionKeyName);
   }
 
@@ -506,7 +502,7 @@ public class KeyProviderCryptoExtension extends
    * @throws GeneralSecurityException thrown if the key material could not be 
    * decrypted because of a cryptographic issue.
    */
-  public KeyVersion decryptEncryptedKey(EncryptedKeyVersion encryptedKey) 
+  public KeyVersion decryptEncryptedKey(EncryptedKeyVersion encryptedKey)
       throws IOException, GeneralSecurityException {
     return getExtension().decryptEncryptedKey(encryptedKey);
   }
@@ -523,7 +519,7 @@ public class KeyProviderCryptoExtension extends
    * NOTE: The generated key is not stored by the <code>KeyProvider</code>
    *
    * @param  ekv The EncryptedKeyVersion containing keyVersionName and IV.
-   * @return     The re-encrypted EncryptedKeyVersion.
+   * @return The re-encrypted EncryptedKeyVersion.
    * @throws IOException If the key material could not be re-encrypted
    * @throws GeneralSecurityException If the key material could not be
    *                            re-encrypted because of a cryptographic issue.
@@ -589,12 +585,12 @@ public class KeyProviderCryptoExtension extends
     if (keyProvider instanceof CryptoExtension) {
       cryptoExtension = (CryptoExtension) keyProvider;
     } else if (keyProvider instanceof KeyProviderExtension &&
-            ((KeyProviderExtension)keyProvider).getKeyProvider() instanceof
-                    KeyProviderCryptoExtension.CryptoExtension) {
+        ((KeyProviderExtension) keyProvider).getKeyProvider() instanceof
+            KeyProviderCryptoExtension.CryptoExtension) {
       KeyProviderExtension keyProviderExtension =
-              (KeyProviderExtension)keyProvider;
+          (KeyProviderExtension) keyProvider;
       cryptoExtension =
-              (CryptoExtension)keyProviderExtension.getKeyProvider();
+          (CryptoExtension) keyProviderExtension.getKeyProvider();
     } else {
       cryptoExtension = new DefaultCryptoExtension(keyProvider);
     }

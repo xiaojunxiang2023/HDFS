@@ -1,9 +1,6 @@
 package org.apache.hadoop.io.erasurecode.coder;
-import org.apache.hadoop.io.erasurecode.CodecUtil;
-import org.apache.hadoop.io.erasurecode.ECBlock;
-import org.apache.hadoop.io.erasurecode.ECBlockGroup;
-import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
-import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
+
+import org.apache.hadoop.io.erasurecode.*;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
 
@@ -28,7 +25,7 @@ public class HHXORErasureDecoder extends ErasureDecoder {
 
   @Override
   protected ErasureCodingStep prepareDecodingStep(
-          final ECBlockGroup blockGroup) {
+      final ECBlockGroup blockGroup) {
 
     RawErasureDecoder rawDecoder;
     RawErasureEncoder rawEncoder;
@@ -40,14 +37,14 @@ public class HHXORErasureDecoder extends ErasureDecoder {
     rawEncoder = checkCreateXorRawEncoder();
 
     return new HHXORErasureDecodingStep(inputBlocks,
-            getErasedIndexes(inputBlocks), outputBlocks, rawDecoder,
-            rawEncoder);
+        getErasedIndexes(inputBlocks), outputBlocks, rawDecoder,
+        rawEncoder);
   }
 
   private RawErasureDecoder checkCreateRSRawDecoder() {
     if (rsRawDecoder == null) {
       rsRawDecoder = CodecUtil.createRawDecoder(getConf(),
-              ErasureCodeConstants.RS_CODEC_NAME, getOptions());
+          ErasureCodeConstants.RS_CODEC_NAME, getOptions());
     }
     return rsRawDecoder;
   }

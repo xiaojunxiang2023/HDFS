@@ -1,9 +1,10 @@
 package org.apache.hadoop.hdfs.server.namenode.top.window;
 
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A class for exposing a rolling window view on the event that occur over time.

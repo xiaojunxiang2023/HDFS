@@ -1,19 +1,17 @@
 package org.apache.hadoop.security.alias;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.tools.CommandShell;
+import org.apache.hadoop.util.ToolRunner;
+
 import java.io.Console;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.tools.CommandShell;
-import org.apache.hadoop.util.ToolRunner;
 
 /**
  * This program is the CLI utility for the CredentialProvider facilities in
@@ -24,16 +22,16 @@ public class CredentialShell extends CommandShell {
       "[generic options]\n";
   final static private String COMMANDS =
       "   [-help]\n" +
-      "   [" + CreateCommand.USAGE + "]\n" +
-      "   [" + DeleteCommand.USAGE + "]\n" +
-      "   [" + ListCommand.USAGE + "]\n" +
-      "   [" + CheckCommand.USAGE + "]\n";
+          "   [" + CreateCommand.USAGE + "]\n" +
+          "   [" + DeleteCommand.USAGE + "]\n" +
+          "   [" + ListCommand.USAGE + "]\n" +
+          "   [" + CheckCommand.USAGE + "]\n";
   @VisibleForTesting
   public static final String NO_VALID_PROVIDERS =
       "There are no valid (non-transient) providers configured.\n" +
-      "No action has been taken. Use the -provider option to specify\n" +
-      "a provider. If you want to use a transient provider then you\n" +
-      "MUST use the -provider argument.";
+          "No action has been taken. Use the -provider option to specify\n" +
+          "a provider. If you want to use a transient provider then you\n" +
+          "MUST use the -provider argument.";
 
   private boolean interactive = true;
 
@@ -171,10 +169,10 @@ public class CredentialShell extends CommandShell {
         "list [-provider provider-path] [-strict]";
     public static final String DESC =
         "The list subcommand displays the aliases contained within \n" +
-        "a particular provider - as configured in core-site.xml or\n" +
-        "indicated through the -provider argument. If -strict is supplied,\n" +
-        "fail immediately if the provider requires a password and none is\n" +
-        "provided.";
+            "a particular provider - as configured in core-site.xml or\n" +
+            "indicated through the -provider argument. If -strict is supplied,\n" +
+            "fail immediately if the provider requires a password and none is\n" +
+            "provided.";
 
     public boolean validate() {
       provider = getCredentialProvider();
@@ -209,11 +207,11 @@ public class CredentialShell extends CommandShell {
         "delete <alias> [-f] [-provider provider-path] [-strict]";
     public static final String DESC =
         "The delete subcommand deletes the credential\n" +
-        "specified as the <alias> argument from within the provider\n" +
-        "indicated through the -provider argument. The command asks for\n" +
-        "confirmation unless the -f option is specified. If -strict is\n" +
-        "supplied, fail immediately if the provider requires a password\n" +
-        "and none is given.";
+            "specified as the <alias> argument from within the provider\n" +
+            "indicated through the -provider argument. The command asks for\n" +
+            "confirmation unless the -f option is specified. If -strict is\n" +
+            "supplied, fail immediately if the provider requires a password\n" +
+            "and none is given.";
 
     private String alias = null;
     private boolean cont = true;
@@ -287,11 +285,11 @@ public class CredentialShell extends CommandShell {
         "[-provider provider-path] [-strict]";
     public static final String DESC =
         "The check subcommand check a password for the name\n" +
-        "specified as the <alias> argument within the provider indicated\n" +
-        "through the -provider argument. If -strict is supplied, fail\n" +
-        "immediately if the provider requires a password and none is given.\n" +
-        "If -value is provided, use that for the value of the credential\n" +
-        "instead of prompting the user.";
+            "specified as the <alias> argument within the provider indicated\n" +
+            "through the -provider argument. If -strict is supplied, fail\n" +
+            "immediately if the provider requires a password and none is given.\n" +
+            "If -value is provided, use that for the value of the credential\n" +
+            "instead of prompting the user.";
 
     private String alias = null;
 
@@ -352,7 +350,7 @@ public class CredentialShell extends CommandShell {
         String beMatch =
             Arrays.equals(storePassword, password) ? "success" : "failed";
 
-        getOut().println("Password match " + beMatch + " for " +  alias + ".");
+        getOut().println("Password match " + beMatch + " for " + alias + ".");
       } catch (IOException e) {
         getOut().println("Cannot check aliases for CredentialProvider: " +
             provider.toString()
@@ -372,11 +370,11 @@ public class CredentialShell extends CommandShell {
         "[-provider provider-path] [-strict]";
     public static final String DESC =
         "The create subcommand creates a new credential for the name\n" +
-        "specified as the <alias> argument within the provider indicated\n" +
-        "through the -provider argument. If -strict is supplied, fail\n" +
-        "immediately if the provider requires a password and none is given.\n" +
-        "If -value is provided, use that for the value of the credential\n" +
-        "instead of prompting the user.";
+            "specified as the <alias> argument within the provider indicated\n" +
+            "through the -provider argument. If -strict is supplied, fail\n" +
+            "immediately if the provider requires a password and none is given.\n" +
+            "If -value is provided, use that for the value of the credential\n" +
+            "instead of prompting the user.";
 
     private String alias = null;
 

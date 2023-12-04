@@ -21,7 +21,7 @@ public class ServiceStateException extends RuntimeException implements
   /**
    * Exit code.
    */
-  private int exitCode ;
+  private int exitCode;
 
   /**
    * Instantiate
@@ -41,7 +41,7 @@ public class ServiceStateException extends RuntimeException implements
    */
   public ServiceStateException(String message, Throwable cause) {
     super(message, cause);
-    if(cause instanceof ExitCodeProvider) {
+    if (cause instanceof ExitCodeProvider) {
       this.exitCode = ((ExitCodeProvider) cause).getExitCode();
     } else {
       this.exitCode = LauncherExitCodes.EXIT_SERVICE_LIFECYCLE_EXCEPTION;
@@ -58,10 +58,10 @@ public class ServiceStateException extends RuntimeException implements
    * @param cause inner cause
    */
   public ServiceStateException(int exitCode,
-      String message,
-      Throwable cause) {
+                               String message,
+                               Throwable cause) {
     this(message, cause);
-    this.exitCode =  exitCode;
+    this.exitCode = exitCode;
   }
 
   public ServiceStateException(Throwable cause) {

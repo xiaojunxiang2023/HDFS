@@ -102,14 +102,14 @@ public enum SerialNumberManager {
   public static StringTable newStringTable(int size, int bits) {
     if (bits > maskBits) {
       throw new IllegalArgumentException(
-        "String table bits " + bits + " > " + maskBits);
+          "String table bits " + bits + " > " + maskBits);
     }
     return new StringTable(size, bits);
   }
 
   public static class StringTable implements Iterable<Entry<Integer, String>> {
     private final int tableMaskBits;
-    private final Map<Integer,String> map;
+    private final Map<Integer, String> map;
 
     private StringTable(int size, int loadingMaskBits) {
       this.tableMaskBits = loadingMaskBits;

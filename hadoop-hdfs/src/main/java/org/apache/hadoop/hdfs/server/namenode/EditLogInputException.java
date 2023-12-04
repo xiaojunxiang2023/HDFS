@@ -9,15 +9,15 @@ import java.io.IOException;
 public class EditLogInputException extends IOException {
 
   private static final long serialVersionUID = 1L;
-  
+
   private final long numEditsLoaded;
-  
+
   public EditLogInputException(String message, Throwable cause,
-      long numEditsLoaded) {
+                               long numEditsLoaded) {
     super(message, cause);
     this.numEditsLoaded = numEditsLoaded;
   }
-  
+
   public long getNumEditsLoaded() {
     return numEditsLoaded;
   }

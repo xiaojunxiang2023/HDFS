@@ -1,38 +1,14 @@
 package org.apache.hadoop.hdfs;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.util.EnumSet;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
-import org.apache.hadoop.fs.CanSetDropBehind;
-import org.apache.hadoop.fs.CreateFlag;
-import org.apache.hadoop.fs.FSOutputSummer;
-import org.apache.hadoop.fs.FileAlreadyExistsException;
-import org.apache.hadoop.fs.FileEncryptionInfo;
-import org.apache.hadoop.fs.ParentNotDirectoryException;
-import org.apache.hadoop.fs.StreamCapabilities;
-import org.apache.hadoop.fs.Syncable;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.impl.StoreImplementationUtils;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.client.HdfsDataOutputStream;
 import org.apache.hadoop.hdfs.client.HdfsDataOutputStream.SyncFlag;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf;
-import org.apache.hadoop.hdfs.protocol.DSQuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.NSQuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.QuotaByStorageTypeExceededException;
-import org.apache.hadoop.hdfs.protocol.SnapshotAccessControlException;
-import org.apache.hadoop.hdfs.protocol.UnresolvedPathException;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.datatransfer.PacketHeader;
 import org.apache.hadoop.hdfs.protocol.datatransfer.PacketReceiver;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
@@ -46,16 +22,24 @@ import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.DataChecksum.Type;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.tracing.TraceScope;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
+import java.util.EnumSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 /****************************************************************
@@ -110,7 +94,7 @@ public class DFSOutputStream extends FSOutputSummer
 
   /** Use {@link ByteArrayManager} to create buffer for non-heartbeat packets.*/
   protected DFSPacket createPacket(int packetSize, int chunksPerPkt,
-      long offsetInBlock, long seqno, boolean lastPacketInBlock)
+                                   long offsetInBlock, long seqno, boolean lastPacketInBlock)
       throws InterruptedIOException {
     final byte[] buf;
     final int bufferSize = PacketHeader.PKT_MAX_HEADER_LEN + packetSize;
@@ -157,7 +141,7 @@ public class DFSOutputStream extends FSOutputSummer
    *         The type is NULL if checksum is not computed.
    */
   private static DataChecksum getChecksum4Compute(DataChecksum checksum,
-      HdfsFileStatus stat) {
+                                                  HdfsFileStatus stat) {
     if (DataStreamer.isLazyPersist(stat) && stat.getReplication() == 1) {
       // do not compute checksum for writing to single replica to memory
       return DataChecksum.newDataChecksum(Type.NULL,
@@ -167,8 +151,8 @@ public class DFSOutputStream extends FSOutputSummer
   }
 
   private DFSOutputStream(DFSClient dfsClient, String src,
-      EnumSet<CreateFlag> flag,
-      Progressable progress, HdfsFileStatus stat, DataChecksum checksum) {
+                          EnumSet<CreateFlag> flag,
+                          Progressable progress, HdfsFileStatus stat, DataChecksum checksum) {
     super(getChecksum4Compute(checksum, stat));
     this.dfsClient = dfsClient;
     this.src = src;
@@ -190,7 +174,7 @@ public class DFSOutputStream extends FSOutputSummer
     }
     if (progress != null) {
       DFSClient.LOG.debug("Set non-null progress callback on DFSOutputStream "
-          +"{}", src);
+          + "{}", src);
     }
 
     initWritePacketSize();
@@ -226,8 +210,8 @@ public class DFSOutputStream extends FSOutputSummer
 
   /** Construct a new output stream for creating a file. */
   protected DFSOutputStream(DFSClient dfsClient, String src,
-      HdfsFileStatus stat, EnumSet<CreateFlag> flag, Progressable progress,
-      DataChecksum checksum, String[] favoredNodes, boolean createStreamer) {
+                            HdfsFileStatus stat, EnumSet<CreateFlag> flag, Progressable progress,
+                            DataChecksum checksum, String[] favoredNodes, boolean createStreamer) {
     this(dfsClient, src, flag, progress, stat, checksum);
     this.shouldSyncBlock = flag.contains(CreateFlag.SYNC_BLOCK);
 
@@ -242,10 +226,10 @@ public class DFSOutputStream extends FSOutputSummer
   }
 
   static DFSOutputStream newStreamForCreate(DFSClient dfsClient, String src,
-      FsPermission masked, EnumSet<CreateFlag> flag, boolean createParent,
-      short replication, long blockSize, Progressable progress,
-      DataChecksum checksum, String[] favoredNodes, String ecPolicyName,
-      String storagePolicy)
+                                            FsPermission masked, EnumSet<CreateFlag> flag, boolean createParent,
+                                            short replication, long blockSize, Progressable progress,
+                                            DataChecksum checksum, String[] favoredNodes, String ecPolicyName,
+                                            String storagePolicy)
       throws IOException {
     try (TraceScope ignored =
              dfsClient.newPathTraceScope("newStreamForCreate", src)) {
@@ -292,7 +276,7 @@ public class DFSOutputStream extends FSOutputSummer
       }
       Preconditions.checkNotNull(stat, "HdfsFileStatus should not be null!");
       final DFSOutputStream out;
-      if(stat.getErasureCodingPolicy() != null) {
+      if (stat.getErasureCodingPolicy() != null) {
         out = new DFSStripedOutputStream(dfsClient, src, stat,
             flag, progress, checksum, favoredNodes);
       } else {
@@ -306,8 +290,8 @@ public class DFSOutputStream extends FSOutputSummer
 
   /** Construct a new output stream for append. */
   private DFSOutputStream(DFSClient dfsClient, String src,
-      EnumSet<CreateFlag> flags, Progressable progress, LocatedBlock lastBlock,
-      HdfsFileStatus stat, DataChecksum checksum, String[] favoredNodes)
+                          EnumSet<CreateFlag> flags, Progressable progress, LocatedBlock lastBlock,
+                          HdfsFileStatus stat, DataChecksum checksum, String[] favoredNodes)
       throws IOException {
     this(dfsClient, src, flags, progress, stat, checksum);
     initialFileSize = stat.getLen(); // length of file when opened
@@ -335,14 +319,14 @@ public class DFSOutputStream extends FSOutputSummer
     }
   }
 
-  private void adjustPacketChunkSize(HdfsFileStatus stat) throws IOException{
+  private void adjustPacketChunkSize(HdfsFileStatus stat) throws IOException {
 
     long usedInLastBlock = stat.getLen() % blockSize;
-    int freeInLastBlock = (int)(blockSize - usedInLastBlock);
+    int freeInLastBlock = (int) (blockSize - usedInLastBlock);
 
     // calculate the amount of free space in the pre-existing
     // last crc chunk
-    int usedInCksum = (int)(stat.getLen() % bytesPerChecksum);
+    int usedInCksum = (int) (stat.getLen() % bytesPerChecksum);
     int freeInCksum = bytesPerChecksum - usedInCksum;
 
     // if there is space in the last block, then we have to
@@ -372,8 +356,8 @@ public class DFSOutputStream extends FSOutputSummer
   }
 
   static DFSOutputStream newStreamForAppend(DFSClient dfsClient, String src,
-      EnumSet<CreateFlag> flags, Progressable progress, LocatedBlock lastBlock,
-      HdfsFileStatus stat, DataChecksum checksum, String[] favoredNodes)
+                                            EnumSet<CreateFlag> flags, Progressable progress, LocatedBlock lastBlock,
+                                            HdfsFileStatus stat, DataChecksum checksum, String[] favoredNodes)
       throws IOException {
     try (TraceScope ignored =
              dfsClient.newPathTraceScope("newStreamForAppend", src)) {
@@ -393,8 +377,8 @@ public class DFSOutputStream extends FSOutputSummer
   protected void computePacketChunkSize(int psize, int csize) {
     final int bodySize = psize - PacketHeader.PKT_MAX_HEADER_LEN;
     final int chunkSize = csize + getChecksumSize();
-    chunksPerPacket = Math.max(bodySize/chunkSize, 1);
-    packetSize = chunkSize*chunksPerPacket;
+    chunksPerPacket = Math.max(bodySize / chunkSize, 1);
+    packetSize = chunkSize * chunksPerPacket;
     DFSClient.LOG.debug("computePacketChunkSize: src={}, chunkSize={}, "
             + "chunksPerPacket={}, packetSize={}",
         src, chunkSize, chunksPerPacket, packetSize);
@@ -407,7 +391,7 @@ public class DFSOutputStream extends FSOutputSummer
   // @see FSOutputSummer#writeChunk()
   @Override
   protected synchronized void writeChunk(byte[] b, int offset, int len,
-      byte[] checksum, int ckoff, int cklen) throws IOException {
+                                         byte[] checksum, int ckoff, int cklen) throws IOException {
     writeChunkPrepare(len, ckoff, cklen);
 
     currentPacket.writeChecksum(checksum, ckoff, cklen);
@@ -423,11 +407,11 @@ public class DFSOutputStream extends FSOutputSummer
   }
 
   /* write the data chunk in <code>buffer</code> staring at
-  * <code>buffer.position</code> with
-  * a length of <code>len > 0</code>, and its checksum
-  */
+   * <code>buffer.position</code> with
+   * a length of <code>len > 0</code>, and its checksum
+   */
   protected synchronized void writeChunk(ByteBuffer buffer, int len,
-      byte[] checksum, int ckoff, int cklen) throws IOException {
+                                         byte[] checksum, int ckoff, int cklen) throws IOException {
     writeChunkPrepare(len, ckoff, cklen);
 
     currentPacket.writeChecksum(checksum, ckoff, cklen);
@@ -437,24 +421,24 @@ public class DFSOutputStream extends FSOutputSummer
 
     // If packet is full, enqueue it for transmission
     if (currentPacket.getNumChunks() == currentPacket.getMaxChunks() ||
-            getStreamer().getBytesCurBlock() == blockSize) {
+        getStreamer().getBytesCurBlock() == blockSize) {
       enqueueCurrentPacketFull();
     }
   }
 
   private synchronized void writeChunkPrepare(int buflen,
-      int ckoff, int cklen) throws IOException {
+                                              int ckoff, int cklen) throws IOException {
     dfsClient.checkOpen();
     checkClosed();
 
     if (buflen > bytesPerChecksum) {
       throw new IOException("writeChunk() buffer size is " + buflen +
-                            " is larger than supported  bytesPerChecksum " +
-                            bytesPerChecksum);
+          " is larger than supported  bytesPerChecksum " +
+          bytesPerChecksum);
     }
     if (cklen != 0 && cklen != getChecksumSize()) {
       throw new IOException("writeChunk() checksum size is supposed to be " +
-                            getChecksumSize() + " but found to be " + cklen);
+          getChecksumSize() + " but found to be " + cklen);
     }
 
     if (currentPacket == null) {
@@ -701,7 +685,7 @@ public class DFSOutputStream extends FSOutputSummer
         }
       }
 
-      synchronized(this) {
+      synchronized (this) {
         if (!getStreamer().streamerClosed()) {
           getStreamer().setHflush();
         }
@@ -935,7 +919,7 @@ public class DFSOutputStream extends FSOutputSummer
         final int hdfsTimeout = conf.getHdfsTimeout();
         if (!dfsClient.clientRunning
             || (hdfsTimeout > 0
-                && localstart + hdfsTimeout < Time.monotonicNow())) {
+            && localstart + hdfsTimeout < Time.monotonicNow())) {
           String msg = "Unable to close file because dfsclient " +
               " was unable to contact the HDFS servers. clientRunning " +
               dfsClient.clientRunning + " hdfsTimeout " + hdfsTimeout;
@@ -1056,8 +1040,8 @@ public class DFSOutputStream extends FSOutputSummer
   }
 
   static LocatedBlock addBlock(DatanodeInfo[] excludedNodes,
-      DFSClient dfsClient, String src, ExtendedBlock prevBlock, long fileId,
-      String[] favoredNodes, EnumSet<AddBlockFlag> allocFlags)
+                               DFSClient dfsClient, String src, ExtendedBlock prevBlock, long fileId,
+                               String[] favoredNodes, EnumSet<AddBlockFlag> allocFlags)
       throws IOException {
     final DfsClientConf conf = dfsClient.getConf();
     int retries = conf.getNumBlockWriteLocateFollowingRetry();

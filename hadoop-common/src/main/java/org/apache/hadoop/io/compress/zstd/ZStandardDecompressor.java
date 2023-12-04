@@ -244,11 +244,16 @@ public class ZStandardDecompressor implements Decompressor {
   }
 
   private native static void initIDs();
+
   private native static long create();
+
   private native static void init(long stream);
+
   private native int inflateBytesDirect(ByteBuffer src, int srcOffset,
-      int srcLen, ByteBuffer dst, int dstOffset, int dstLen);
+                                        int srcLen, ByteBuffer dst, int dstOffset, int dstLen);
+
   private native static void free(long strm);
+
   private native static int getStreamSize();
 
   int inflateDirect(ByteBuffer src, ByteBuffer dst) throws IOException {

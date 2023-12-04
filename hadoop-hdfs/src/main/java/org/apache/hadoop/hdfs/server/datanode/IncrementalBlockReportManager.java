@@ -1,25 +1,21 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
+import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
+import org.apache.hadoop.hdfs.server.protocol.*;
+import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
-import org.apache.hadoop.hdfs.server.protocol.DatanodeProtocol;
-import org.apache.hadoop.hdfs.server.protocol.DatanodeRegistration;
-import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
-import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo;
-import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
-import org.apache.hadoop.hdfs.server.protocol.StorageReceivedDeletedBlocks;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * Manage Incremental Block Reports (IBRs).
@@ -33,6 +29,7 @@ class IncrementalBlockReportManager {
     final Map<Block, ReceivedDeletedBlockInfo> blocks = Maps.newHashMap();
 
     private DataNodeMetrics dnMetrics;
+
     PerStorageIBR(final DataNodeMetrics dnMetrics) {
       this.dnMetrics = dnMetrics;
     }
@@ -67,17 +64,17 @@ class IncrementalBlockReportManager {
     private void increaseBlocksCounter(
         final ReceivedDeletedBlockInfo receivedDeletedBlockInfo) {
       switch (receivedDeletedBlockInfo.getStatus()) {
-      case RECEIVING_BLOCK:
-        dnMetrics.incrBlocksReceivingInPendingIBR();
-        break;
-      case RECEIVED_BLOCK:
-        dnMetrics.incrBlocksReceivedInPendingIBR();
-        break;
-      case DELETED_BLOCK:
-        dnMetrics.incrBlocksDeletedInPendingIBR();
-        break;
-      default:
-        break;
+        case RECEIVING_BLOCK:
+          dnMetrics.incrBlocksReceivingInPendingIBR();
+          break;
+        case RECEIVED_BLOCK:
+          dnMetrics.incrBlocksReceivedInPendingIBR();
+          break;
+        case DELETED_BLOCK:
+          dnMetrics.incrBlocksDeletedInPendingIBR();
+          break;
+        default:
+          break;
       }
       dnMetrics.incrBlocksInPendingIBR();
     }
@@ -135,7 +132,7 @@ class IncrementalBlockReportManager {
   synchronized void waitTillNextIBR(long waitTime) {
     if (waitTime > 0 && !sendImmediately()) {
       try {
-        wait(ibrInterval > 0 && ibrInterval < waitTime? ibrInterval: waitTime);
+        wait(ibrInterval > 0 && ibrInterval < waitTime ? ibrInterval : waitTime);
       } catch (InterruptedException ie) {
         LOG.warn(getClass().getSimpleName() + " interrupted");
       }
@@ -149,7 +146,7 @@ class IncrementalBlockReportManager {
         : pendingIBRs.entrySet()) {
       final PerStorageIBR perStorage = entry.getValue();
 
-        // Send newly-received and deleted blockids to namenode
+      // Send newly-received and deleted blockids to namenode
       final ReceivedDeletedBlockInfo[] rdbi = perStorage.removeAll();
       if (rdbi != null) {
         reports.add(new StorageReceivedDeletedBlocks(entry.getKey(), rdbi));
@@ -174,7 +171,7 @@ class IncrementalBlockReportManager {
 
   /** Send IBRs to namenode. */
   void sendIBRs(DatanodeProtocol namenode, DatanodeRegistration registration,
-      String bpid, String nnRpcLatencySuffix) throws IOException {
+                String bpid, String nnRpcLatencySuffix) throws IOException {
     // Generate a list of the pending reports for each storage under the lock
     final StorageReceivedDeletedBlocks[] reports = generateIBRs();
     if (reports.length == 0) {
@@ -203,7 +200,7 @@ class IncrementalBlockReportManager {
         // didn't put something newer in the meantime.
         putMissing(reports);
         LOG.warn("Failed to call blockReceivedAndDeleted: {}, nnId: {}"
-            + ", duration(ms): {}", Arrays.toString(reports),
+                + ", duration(ms): {}", Arrays.toString(reports),
             nnRpcLatencySuffix, monotonicNow() - startTime);
       }
     }
@@ -228,7 +225,7 @@ class IncrementalBlockReportManager {
    */
   @VisibleForTesting
   synchronized void addRDBI(ReceivedDeletedBlockInfo rdbi,
-      DatanodeStorage storage) {
+                            DatanodeStorage storage) {
     // Make sure another entry for the same block is first removed.
     // There may only be one such entry.
     for (PerStorageIBR perStorage : pendingIBRs.values()) {
@@ -240,7 +237,7 @@ class IncrementalBlockReportManager {
   }
 
   synchronized void notifyNamenodeBlock(ReceivedDeletedBlockInfo rdbi,
-      DatanodeStorage storage, boolean isOnTransientStorage) {
+                                        DatanodeStorage storage, boolean isOnTransientStorage) {
     addRDBI(rdbi, storage);
 
     final BlockStatus status = rdbi.getStatus();

@@ -1,11 +1,12 @@
 package org.apache.hadoop.security.token.delegation.web;
+
+import org.apache.hadoop.auth.client.AuthenticatedURL;
+import org.apache.hadoop.auth.client.ConnectionConfigurator;
+import org.apache.hadoop.auth.client.ticator.Authenticator;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.auth.client.AuthenticatedURL;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.auth.client.ticator.Authenticator;
-import org.apache.hadoop.auth.client.ConnectionConfigurator;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.apache.hadoop.util.HttpExceptionUtils;
@@ -27,9 +28,9 @@ import java.util.Map;
  * Delegation Token support.
  */
 public abstract class DelegationTokenAuthenticator implements Authenticator {
-  private static Logger LOG = 
+  private static Logger LOG =
       LoggerFactory.getLogger(DelegationTokenAuthenticator.class);
-  
+
   private static final String CONTENT_TYPE = "Content-Type";
   private static final String APPLICATION_JSON_MIME = "application/json";
 
@@ -62,7 +63,7 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
     private boolean requiresKerberosCredentials;
 
     private DelegationTokenOperation(String httpMethod,
-        boolean requiresKerberosCredentials) {
+                                     boolean requiresKerberosCredentials) {
       this.httpMethod = httpMethod;
       this.requiresKerberosCredentials = requiresKerberosCredentials;
     }
@@ -142,9 +143,9 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
    * @throws AuthenticationException if an authentication exception occurred.
    */
   public Token<AbstractDelegationTokenIdentifier> getDelegationToken(URL url,
-      AuthenticatedURL.Token token, String renewer)
+                                                                     AuthenticatedURL.Token token, String renewer)
       throws IOException, AuthenticationException {
-   return getDelegationToken(url, token, renewer, null);
+    return getDelegationToken(url, token, renewer, null);
   }
 
   /**
@@ -161,7 +162,7 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
    * @throws AuthenticationException if an authentication exception occurred.
    */
   public Token<AbstractDelegationTokenIdentifier> getDelegationToken(URL url,
-      AuthenticatedURL.Token token, String renewer, String doAsUser)
+                                                                     AuthenticatedURL.Token token, String renewer, String doAsUser)
       throws IOException, AuthenticationException {
     Map json = doDelegationTokenOperation(url, token,
         DelegationTokenOperation.GETDELEGATIONTOKEN, renewer, null, true,
@@ -188,8 +189,8 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
    * @throws AuthenticationException if an authentication exception occurred.
    */
   public long renewDelegationToken(URL url,
-      AuthenticatedURL.Token token,
-      Token<AbstractDelegationTokenIdentifier> dToken)
+                                   AuthenticatedURL.Token token,
+                                   Token<AbstractDelegationTokenIdentifier> dToken)
       throws IOException, AuthenticationException {
     return renewDelegationToken(url, token, dToken, null);
   }
@@ -206,8 +207,8 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
    * @throws AuthenticationException if an authentication exception occurred.
    */
   public long renewDelegationToken(URL url,
-      AuthenticatedURL.Token token,
-      Token<AbstractDelegationTokenIdentifier> dToken, String doAsUser)
+                                   AuthenticatedURL.Token token,
+                                   Token<AbstractDelegationTokenIdentifier> dToken, String doAsUser)
       throws IOException, AuthenticationException {
     Map json = doDelegationTokenOperation(url, token,
         DelegationTokenOperation.RENEWDELEGATIONTOKEN, null, dToken, true,
@@ -225,8 +226,8 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
    * @throws IOException if an IO error occurred.
    */
   public void cancelDelegationToken(URL url,
-      AuthenticatedURL.Token token,
-      Token<AbstractDelegationTokenIdentifier> dToken)
+                                    AuthenticatedURL.Token token,
+                                    Token<AbstractDelegationTokenIdentifier> dToken)
       throws IOException {
     cancelDelegationToken(url, token, dToken, null);
   }
@@ -242,8 +243,8 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
    * @throws IOException if an IO error occurred.
    */
   public void cancelDelegationToken(URL url,
-      AuthenticatedURL.Token token,
-      Token<AbstractDelegationTokenIdentifier> dToken, String doAsUser)
+                                    AuthenticatedURL.Token token,
+                                    Token<AbstractDelegationTokenIdentifier> dToken, String doAsUser)
       throws IOException {
     try {
       doDelegationTokenOperation(url, token,
@@ -255,8 +256,8 @@ public abstract class DelegationTokenAuthenticator implements Authenticator {
   }
 
   private Map doDelegationTokenOperation(URL url,
-      AuthenticatedURL.Token token, DelegationTokenOperation operation,
-      String renewer, Token<?> dToken, boolean hasResponse, String doAsUser)
+                                         AuthenticatedURL.Token token, DelegationTokenOperation operation,
+                                         String renewer, Token<?> dToken, boolean hasResponse, String doAsUser)
       throws IOException, AuthenticationException {
     Map ret = null;
     Map<String, String> params = new HashMap<String, String>();

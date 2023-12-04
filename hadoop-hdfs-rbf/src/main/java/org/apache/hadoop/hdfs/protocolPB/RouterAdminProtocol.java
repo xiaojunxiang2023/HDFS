@@ -12,6 +12,6 @@ import org.apache.hadoop.ipc.GenericRefreshProtocol;
 @InterfaceAudience.Private
 @InterfaceStability.Stable
 public interface RouterAdminProtocol extends MountTableManager,
-        RouterStateManager, NameserviceManager, GenericRefreshProtocol,
-        RouterGenericManager {
+    RouterStateManager, NameserviceManager, GenericRefreshProtocol,
+    RouterGenericManager {
 }

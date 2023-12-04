@@ -1,26 +1,26 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Caches frequently used names to facilitate reuse.
  * (example: byte[] representation of the file name in {@link INode}).
- * 
+ *
  * This class is used by initially adding all the file names. Cache
  * tracks the number of times a name is used in a transient map. It promotes 
  * a name used more than {@code useThreshold} to the cache.
- * 
+ *
  * One all the names are added, {@link #initialized()} should be called to
  * finish initialization. The transient map where use count is tracked is
  * discarded and cache is ready for use.
- * 
+ *
  * <p>
  * This class must be synchronized externally.
- * 
+ *
  * @param <K> name to be added to the cache
  */
 class NameCache<K> {
@@ -35,11 +35,11 @@ class NameCache<K> {
       count = 1;
       this.value = value;
     }
-    
+
     void increment() {
       count++;
     }
-    
+
     int get() {
       return count;
     }
@@ -70,11 +70,11 @@ class NameCache<K> {
   NameCache(int useThreshold) {
     this.useThreshold = useThreshold;
   }
-  
+
   /**
    * Add a given name to the cache or track use count.
    * exist. If the name already exists, then the internal value is returned.
-   * 
+   *
    * @param name name to be looked up
    * @return internal value for the name if found; otherwise null
    */
@@ -100,7 +100,7 @@ class NameCache<K> {
     }
     return null;
   }
-  
+
   /**
    * Lookup count when a lookup for a name returned cached object
    * @return number of successful lookups
@@ -128,7 +128,7 @@ class NameCache<K> {
     transientMap.clear();
     transientMap = null;
   }
-  
+
   /** Promote a frequently used name to the cache */
   private void promote(final K name) {
     transientMap.remove(name);

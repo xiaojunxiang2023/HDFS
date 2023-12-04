@@ -10,7 +10,7 @@ public class DatanodeStorageReport {
   final StorageReport[] storageReports;
 
   public DatanodeStorageReport(DatanodeInfo datanodeInfo,
-      StorageReport[] storageReports) {
+                               StorageReport[] storageReports) {
     this.datanodeInfo = datanodeInfo;
     this.storageReports = storageReports;
   }

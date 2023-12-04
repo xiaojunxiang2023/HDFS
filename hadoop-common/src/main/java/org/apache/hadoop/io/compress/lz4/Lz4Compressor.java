@@ -1,16 +1,15 @@
 package org.apache.hadoop.io.compress.lz4;
 
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
-import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.lz4.LZ4Compressor;
-
+import net.jpountz.lz4.LZ4Factory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.compress.Compressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 /**
  * A {@link Compressor} based on the lz4 compression algorithm.
@@ -53,8 +52,8 @@ public class Lz4Compressor implements Compressor {
       }
     } catch (AssertionError t) {
       throw new RuntimeException("lz4-java library is not available: " +
-              "Lz4Compressor has not been loaded. You need to add " +
-              "lz4-java.jar to your CLASSPATH. " + t, t);
+          "Lz4Compressor has not been loaded. You need to add " +
+          "lz4-java.jar to your CLASSPATH. " + t, t);
     }
 
     uncompressedDirectBuf = ByteBuffer.allocateDirect(directBufferSize);
@@ -291,7 +290,7 @@ public class Lz4Compressor implements Compressor {
       uncompressedDirectBuf.limit(uncompressedDirectBufLen).position(0);
       compressedDirectBuf.clear();
       lz4Compressor.compress((ByteBuffer) uncompressedDirectBuf,
-              (ByteBuffer) compressedDirectBuf);
+          (ByteBuffer) compressedDirectBuf);
       uncompressedDirectBufLen = 0;
       uncompressedDirectBuf.limit(directBufferSize).position(0);
       int size = compressedDirectBuf.position();

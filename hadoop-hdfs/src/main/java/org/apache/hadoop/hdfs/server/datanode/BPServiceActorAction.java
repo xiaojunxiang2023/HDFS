@@ -10,5 +10,5 @@ import org.apache.hadoop.hdfs.server.protocol.DatanodeRegistration;
  */
 public interface BPServiceActorAction {
   public void reportTo(DatanodeProtocolClientSideTranslatorPB bpNamenode,
-    DatanodeRegistration bpRegistration) throws BPServiceActorActionException;
+                       DatanodeRegistration bpRegistration) throws BPServiceActorActionException;
 }

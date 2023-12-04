@@ -1,43 +1,5 @@
 package org.apache.hadoop.fs;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.jar.Attributes;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -51,6 +13,30 @@ import org.apache.hadoop.util.Shell.ShellCommandExecutor;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.jar.Attributes;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * A collection of file-processing util methods
@@ -198,9 +184,9 @@ public class FileUtil {
    * Pure-Java implementation of "chmod +rwx f".
    */
   private static void grantPermissions(final File f) {
-      FileUtil.setExecutable(f, true);
-      FileUtil.setReadable(f, true);
-      FileUtil.setWritable(f, true);
+    FileUtil.setExecutable(f, true);
+    FileUtil.setReadable(f, true);
+    FileUtil.setWritable(f, true);
   }
 
   private static boolean deleteImpl(final File f, final boolean doLog) {
@@ -258,7 +244,7 @@ public class FileUtil {
           // Try deleting the directory as this might be a symlink
           boolean b = false;
           b = deleteImpl(contents[i], false);
-          if (b){
+          if (b) {
             //this was indeed a symlink or an empty directory
             continue;
           }
@@ -284,7 +270,7 @@ public class FileUtil {
    */
   @Deprecated
   public static void fullyDelete(FileSystem fs, Path dir)
-  throws IOException {
+      throws IOException {
     fs.delete(dir, true);
   }
 
@@ -296,7 +282,7 @@ public class FileUtil {
                                         Path src,
                                         FileSystem dstFS,
                                         Path dst)
-                                        throws IOException {
+      throws IOException {
     if (srcFS == dstFS) {
       String srcq = srcFS.makeQualified(src).toString() + Path.SEPARATOR;
       String dstq = dstFS.makeQualified(dst).toString() + Path.SEPARATOR;
@@ -305,7 +291,7 @@ public class FileUtil {
           throw new IOException("Cannot copy " + src + " to itself.");
         } else {
           throw new IOException("Cannot copy " + src + " to its subdirectory " +
-                                dst);
+              dst);
         }
       }
     }
@@ -323,7 +309,7 @@ public class FileUtil {
                              FileSystem dstFS, Path dst,
                              boolean deleteSource,
                              boolean overwrite, Configuration conf)
-                             throws IOException {
+      throws IOException {
     boolean gotException = false;
     boolean returnVal = true;
     StringBuilder exceptions = new StringBuilder();
@@ -336,7 +322,7 @@ public class FileUtil {
       FileStatus sdst = dstFS.getFileStatus(dst);
       if (!sdst.isDirectory())
         throw new IOException("copying multiple files, but last argument `" +
-                              dst + "' is not a directory");
+            dst + "' is not a directory");
     } catch (FileNotFoundException e) {
       throw new IOException(
           "`" + dst + "': specified destination directory " +
@@ -385,11 +371,11 @@ public class FileUtil {
       FileStatus contents[] = srcFS.listStatus(src);
       for (int i = 0; i < contents.length; i++) {
         copy(srcFS, contents[i], dstFS,
-             new Path(dst, contents[i].getPath().getName()),
-             deleteSource, overwrite, conf);
+            new Path(dst, contents[i].getPath().getName()),
+            deleteSource, overwrite, conf);
       }
     } else {
-      InputStream in=null;
+      InputStream in = null;
       OutputStream out = null;
       try {
         in = srcFS.open(src);
@@ -423,27 +409,27 @@ public class FileUtil {
       File contents[] = listFiles(src);
       for (int i = 0; i < contents.length; i++) {
         copy(contents[i], dstFS, new Path(dst, contents[i].getName()),
-             deleteSource, conf);
+            deleteSource, conf);
       }
     } else if (src.isFile()) {
       InputStream in = null;
-      OutputStream out =null;
+      OutputStream out = null;
       try {
         in = Files.newInputStream(src.toPath());
         out = dstFS.create(dst);
         IOUtils.copyBytes(in, out, conf);
       } catch (IOException e) {
-        IOUtils.closeStream( out );
-        IOUtils.closeStream( in );
+        IOUtils.closeStream(out);
+        IOUtils.closeStream(in);
         throw e;
       }
     } else if (!src.canRead()) {
       throw new IOException(src.toString() +
-                            ": Permission denied");
+          ": Permission denied");
 
     } else {
       throw new IOException(src.toString() +
-                            ": No such file or directory");
+          ": No such file or directory");
     }
     if (deleteSource) {
       return FileUtil.fullyDelete(src);
@@ -472,8 +458,8 @@ public class FileUtil {
       FileStatus contents[] = srcFS.listStatus(src);
       for (int i = 0; i < contents.length; i++) {
         copy(srcFS, contents[i],
-             new File(dst, contents[i].getPath().getName()),
-             deleteSource, conf);
+            new File(dst, contents[i].getPath().getName()),
+            deleteSource, conf);
       }
     } else {
       InputStream in = srcFS.open(src);
@@ -487,7 +473,7 @@ public class FileUtil {
   }
 
   private static Path checkDest(String srcName, FileSystem dstFS, Path dst,
-      boolean overwrite) throws IOException {
+                                boolean overwrite) throws IOException {
     FileStatus sdst;
     try {
       sdst = dstFS.getFileStatus(dst);
@@ -556,7 +542,7 @@ public class FileUtil {
    * @throws IOException on windows, there can be problems with the subprocess
    */
   public static String makeShellPath(File file, boolean makeCanonicalPath)
-  throws IOException {
+      throws IOException {
     if (makeCanonicalPath) {
       return makeShellPath(file.getCanonicalPath());
     } else {
@@ -603,9 +589,9 @@ public class FileUtil {
     try (ZipInputStream zip = new ZipInputStream(inputStream)) {
       int numOfFailedLastModifiedSet = 0;
       String targetDirPath = toDir.getCanonicalPath() + File.separator;
-      for(ZipEntry entry = zip.getNextEntry();
-          entry != null;
-          entry = zip.getNextEntry()) {
+      for (ZipEntry entry = zip.getNextEntry();
+           entry != null;
+           entry = zip.getNextEntry()) {
         if (!entry.isDirectory()) {
           File file = new File(toDir, entry.getName());
           if (!file.getCanonicalPath().startsWith(targetDirPath)) {
@@ -660,7 +646,7 @@ public class FileUtil {
             if (!file.getParentFile().mkdirs()) {
               if (!file.getParentFile().isDirectory()) {
                 throw new IOException("Mkdirs failed to create " +
-                                      file.getParentFile().toString());
+                    file.getParentFile().toString());
               }
             }
             OutputStream out = Files.newOutputStream(file.toPath());
@@ -715,7 +701,7 @@ public class FileUtil {
                          new InputStreamReader(process.getInputStream(),
                              Charset.forName("UTF-8")))) {
               String line;
-              while((line = reader.readLine()) != null) {
+              while ((line = reader.readLine()) != null) {
                 LOG.debug(line);
               }
             }
@@ -738,7 +724,7 @@ public class FileUtil {
                          new InputStreamReader(process.getErrorStream(),
                              Charset.forName("UTF-8")))) {
               String line;
-              while((line = reader.readLine()) != null) {
+              while ((line = reader.readLine()) != null) {
                 LOG.debug(line);
               }
             }
@@ -804,7 +790,7 @@ public class FileUtil {
       }
     }
 
-    if(Shell.WINDOWS) {
+    if (Shell.WINDOWS) {
       // Tar is not native to Windows. Use simple Java based implementation for
       // tests and simple tar archives
       unTarUsingJava(inputStream, untarDir, gzipped);
@@ -833,12 +819,11 @@ public class FileUtil {
     }
 
     boolean gzipped = inFile.toString().endsWith("gz");
-    if(Shell.WINDOWS) {
+    if (Shell.WINDOWS) {
       // Tar is not native to Windows. Use simple Java based implementation for
       // tests and simple tar archives
       unTarUsingJava(inFile, untarDir, gzipped);
-    }
-    else {
+    } else {
       // spawn tar utility to untar archive for full fledged unix behavior such
       // as resolving symlinks in tar archives
       unTarUsingTar(inFile, untarDir, gzipped);
@@ -864,7 +849,7 @@ public class FileUtil {
   }
 
   private static void unTarUsingTar(File inFile, File untarDir,
-      boolean gzipped) throws IOException {
+                                    boolean gzipped) throws IOException {
     StringBuffer untarCommand = new StringBuffer();
     // not using canonical path here; this postpones relative path
     // resolution until bash is executed.
@@ -885,7 +870,7 @@ public class FileUtil {
       untarCommand.append(source);
     }
     LOG.debug("executing [{}]", untarCommand);
-    String[] shellCmd = { "bash", "-c", untarCommand.toString() };
+    String[] shellCmd = {"bash", "-c", untarCommand.toString()};
     ShellCommandExecutor shexec = new ShellCommandExecutor(shellCmd);
     shexec.execute();
     int exitcode = shexec.getExitCode();
@@ -897,7 +882,7 @@ public class FileUtil {
   }
 
   static void unTarUsingJava(File inFile, File untarDir,
-      boolean gzipped) throws IOException {
+                             boolean gzipped) throws IOException {
     InputStream inputStream = null;
     TarArchiveInputStream tis = null;
     try {
@@ -912,7 +897,7 @@ public class FileUtil {
 
       tis = new TarArchiveInputStream(inputStream);
 
-      for (TarArchiveEntry entry = tis.getNextTarEntry(); entry != null;) {
+      for (TarArchiveEntry entry = tis.getNextTarEntry(); entry != null; ) {
         unpackEntries(tis, entry, untarDir);
         entry = tis.getNextTarEntry();
       }
@@ -931,7 +916,7 @@ public class FileUtil {
       inputStream = new BufferedInputStream(inputStream);
       tis = new TarArchiveInputStream(inputStream);
 
-      for (TarArchiveEntry entry = tis.getNextTarEntry(); entry != null;) {
+      for (TarArchiveEntry entry = tis.getNextTarEntry(); entry != null; ) {
         unpackEntries(tis, entry, untarDir);
         entry = tis.getNextTarEntry();
       }
@@ -941,7 +926,7 @@ public class FileUtil {
   }
 
   private static void unpackEntries(TarArchiveInputStream tis,
-      TarArchiveEntry entry, File outputDir) throws IOException {
+                                    TarArchiveEntry entry, File outputDir) throws IOException {
     String targetDirPath = outputDir.getCanonicalPath() + File.separator;
     File outputFile = new File(outputDir, entry.getName());
     if (!outputFile.getCanonicalPath().startsWith(targetDirPath)) {
@@ -1035,7 +1020,7 @@ public class FileUtil {
    * @param linkname the symlink
    * @return 0 on success
    */
-  public static int symLink(String target, String linkname) throws IOException{
+  public static int symLink(String target, String linkname) throws IOException {
 
     if (target == null || linkname == null) {
       LOG.warn("Can not create a symLink with a target = " + target
@@ -1099,7 +1084,7 @@ public class FileUtil {
    * @throws InterruptedException
    */
   public static int chmod(String filename, String perm
-                          ) throws IOException, InterruptedException {
+  ) throws IOException, InterruptedException {
     return chmod(filename, perm, false);
   }
 
@@ -1113,18 +1098,18 @@ public class FileUtil {
    * @throws IOException
    */
   public static int chmod(String filename, String perm, boolean recursive)
-                            throws IOException {
-    String [] cmd = Shell.getSetPermissionCommand(perm, recursive);
+      throws IOException {
+    String[] cmd = Shell.getSetPermissionCommand(perm, recursive);
     String[] args = new String[cmd.length + 1];
     System.arraycopy(cmd, 0, args, 0, cmd.length);
     args[cmd.length] = new File(filename).getPath();
     ShellCommandExecutor shExec = new ShellCommandExecutor(args);
     try {
       shExec.execute();
-    }catch(IOException e) {
-      if(LOG.isDebugEnabled()) {
+    } catch (IOException e) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Error while changing permission : " + filename
-                  +" Exception: " + StringUtils.stringifyException(e));
+            + " Exception: " + StringUtils.stringifyException(e));
       }
     }
     return shExec.getExitCode();
@@ -1139,13 +1124,13 @@ public class FileUtil {
    * @throws IOException
    */
   public static void setOwner(File file, String username,
-      String groupname) throws IOException {
+                              String groupname) throws IOException {
     if (username == null && groupname == null) {
       throw new IOException("username == null && groupname == null");
     }
     String arg = (username == null ? "" : username)
         + (groupname == null ? "" : ":" + groupname);
-    String [] cmd = Shell.getSetOwnerCommand(arg);
+    String[] cmd = Shell.getSetOwnerCommand(arg);
     execCommand(file, cmd);
   }
 
@@ -1280,7 +1265,7 @@ public class FileUtil {
    * @throws IOException
    */
   public static void setPermission(File f, FsPermission permission
-                                   ) throws IOException {
+  ) throws IOException {
     FsAction user = permission.getUserAction();
     FsAction group = permission.getGroupAction();
     FsAction other = permission.getOtherAction();
@@ -1321,23 +1306,23 @@ public class FileUtil {
 
   private static void checkReturnValue(boolean rv, File p,
                                        FsPermission permission
-                                       ) throws IOException {
+  ) throws IOException {
 //    if (!rv) {
 //      throw new IOException("Failed to set permissions of path: " + p +
 //                            " to " +
 //                            String.format("%04o", permission.toShort()));
 //    }
-      LOG.info("checkReturnValue pass because Windows.");
+    LOG.info("checkReturnValue pass because Windows.");
   }
 
   private static void execSetPermission(File f,
                                         FsPermission permission
-                                       )  throws IOException {
+  ) throws IOException {
     if (NativeIO.isAvailable()) {
       NativeIO.POSIX.chmod(f.getCanonicalPath(), permission.toShort());
     } else {
       execCommand(f, Shell.getSetPermissionCommand(
-                  String.format("%04o", permission.toShort()), false));
+          String.format("%04o", permission.toShort()), false));
     }
   }
 
@@ -1362,9 +1347,9 @@ public class FileUtil {
   public static final File createLocalTempFile(final File basefile,
                                                final String prefix,
                                                final boolean isDeleteOnExit)
-    throws IOException {
+      throws IOException {
     File tmp = File.createTempFile(prefix + basefile.getName(),
-                                   "", basefile.getParentFile());
+        "", basefile.getParentFile());
     if (isDeleteOnExit) {
       tmp.deleteOnExit();
     }
@@ -1394,7 +1379,7 @@ public class FileUtil {
       }
       if (!src.renameTo(target)) {
         throw new IOException("Unable to rename " + src +
-                              " to " + target);
+            " to " + target);
       }
     }
   }
@@ -1411,9 +1396,9 @@ public class FileUtil {
    */
   public static File[] listFiles(File dir) throws IOException {
     File[] files = dir.listFiles();
-    if(files == null) {
+    if (files == null) {
       throw new IOException("Invalid directory or I/O error occurred for dir: "
-                + dir.toString());
+          + dir.toString());
     }
     return files;
   }
@@ -1435,15 +1420,15 @@ public class FileUtil {
           FSExceptionMessages.PERMISSION_DENIED);
     }
     String[] fileNames = dir.list();
-    if(fileNames == null) {
+    if (fileNames == null) {
       throw new IOException("Invalid directory or I/O error occurred for dir: "
-                + dir.toString());
+          + dir.toString());
     }
     return fileNames;
   }
 
   public static String[] createJarWithClassPath(String inputClassPath, Path pwd,
-      Map<String, String> callerEnv) throws IOException {
+                                                Map<String, String> callerEnv) throws IOException {
     return createJarWithClassPath(inputClassPath, pwd, pwd, callerEnv);
   }
 
@@ -1479,16 +1464,16 @@ public class FileUtil {
    * @throws IOException if there is an I/O error while writing the jar file
    */
   public static String[] createJarWithClassPath(String inputClassPath, Path pwd,
-      Path targetDir,
-      Map<String, String> callerEnv) throws IOException {
+                                                Path targetDir,
+                                                Map<String, String> callerEnv) throws IOException {
     // Replace environment variables, case-insensitive on Windows
     @SuppressWarnings("unchecked")
     Map<String, String> env = Shell.WINDOWS ? new CaseInsensitiveMap(callerEnv) :
-      callerEnv;
+        callerEnv;
     String[] classPathEntries = inputClassPath.split(File.pathSeparator);
     for (int i = 0; i < classPathEntries.length; ++i) {
       classPathEntries[i] = StringUtils.replaceTokens(classPathEntries[i],
-        StringUtils.ENV_VAR_PATTERN, env);
+          StringUtils.ENV_VAR_PATTERN, env);
     }
     File workingDir = new File(pwd.toString());
     if (!workingDir.mkdirs()) {
@@ -1502,8 +1487,8 @@ public class FileUtil {
     StringBuilder unexpandedWildcardClasspath = new StringBuilder();
     // Append all entries
     List<String> classPathEntryList = new ArrayList<String>(
-      classPathEntries.length);
-    for (String classPathEntry: classPathEntries) {
+        classPathEntries.length);
+    for (String classPathEntry : classPathEntries) {
       if (classPathEntry.length() == 0) {
         continue;
       }
@@ -1511,7 +1496,7 @@ public class FileUtil {
         // Append all jars that match the wildcard
         List<Path> jars = getJarsInDirectory(classPathEntry);
         if (!jars.isEmpty()) {
-          for (Path jar: jars) {
+          for (Path jar : jars) {
             classPathEntryList.add(jar.toUri().toURL().toExternalForm());
           }
         } else {
@@ -1521,14 +1506,13 @@ public class FileUtil {
       } else {
         // Append just this entry
         File fileCpEntry = null;
-        if(!new Path(classPathEntry).isAbsolute()) {
+        if (!new Path(classPathEntry).isAbsolute()) {
           fileCpEntry = new File(targetDir.toString(), classPathEntry);
-        }
-        else {
+        } else {
           fileCpEntry = new File(classPathEntry);
         }
         String classPathEntryUrl = fileCpEntry.toURI().toURL()
-          .toExternalForm();
+            .toExternalForm();
 
         // File.toURI only appends trailing '/' if it can determine that it is a
         // directory that already exists.  (See JavaDocs.)  If this entry had a
@@ -1561,7 +1545,7 @@ public class FileUtil {
       jos.close();
     }
     String[] jarCp = {classPathJar.getCanonicalPath(),
-                        unexpandedWildcardClasspath.toString()};
+        unexpandedWildcardClasspath.toString()};
     return jarCp;
   }
 
@@ -1599,21 +1583,22 @@ public class FileUtil {
           FileContext.getFileContext(globPath.toUri());
       FileStatus[] files = context.util().globStatus(globPath);
       if (files != null) {
-        for (FileStatus file: files) {
+        for (FileStatus file : files) {
           paths.add(file.getPath());
         }
       }
-    } catch (IOException ignore) {} // return the empty list
+    } catch (IOException ignore) {
+    } // return the empty list
     return paths;
   }
 
   public static boolean compareFs(FileSystem srcFs, FileSystem destFs) {
-    if (srcFs==null || destFs==null) {
+    if (srcFs == null || destFs == null) {
       return false;
     }
     URI srcUri = srcFs.getUri();
     URI dstUri = destFs.getUri();
-    if (srcUri.getScheme()==null) {
+    if (srcUri.getScheme() == null) {
       return false;
     }
     if (!srcUri.getScheme().equals(dstUri.getScheme())) {
@@ -1621,9 +1606,9 @@ public class FileUtil {
     }
     String srcHost = srcUri.getHost();
     String dstHost = dstUri.getHost();
-    if ((srcHost!=null) && (dstHost!=null)) {
+    if ((srcHost != null) && (dstHost != null)) {
       if (srcHost.equals(dstHost)) {
-        return srcUri.getPort()==dstUri.getPort();
+        return srcUri.getPort() == dstUri.getPort();
       }
       try {
         srcHost = InetAddress.getByName(srcHost).getCanonicalHostName();
@@ -1637,13 +1622,13 @@ public class FileUtil {
       if (!srcHost.equals(dstHost)) {
         return false;
       }
-    } else if (srcHost==null && dstHost!=null) {
+    } else if (srcHost == null && dstHost != null) {
       return false;
-    } else if (srcHost!=null) {
+    } else if (srcHost != null) {
       return false;
     }
     // check for ports
-    return srcUri.getPort()==dstUri.getPort();
+    return srcUri.getPort() == dstUri.getPort();
   }
 
   /**
@@ -1661,7 +1646,7 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileSystem write(final FileSystem fs, final Path path,
-      final byte[] bytes) throws IOException {
+                                 final byte[] bytes) throws IOException {
 
     Objects.requireNonNull(path);
     Objects.requireNonNull(bytes);
@@ -1688,13 +1673,13 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileContext write(final FileContext fileContext,
-      final Path path, final byte[] bytes) throws IOException {
+                                  final Path path, final byte[] bytes) throws IOException {
 
     Objects.requireNonNull(path);
     Objects.requireNonNull(bytes);
 
     try (FSDataOutputStream out =
-        fileContext.create(path).overwrite(true).build()) {
+             fileContext.create(path).overwrite(true).build()) {
       out.write(bytes);
     }
 
@@ -1720,7 +1705,7 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileSystem write(final FileSystem fs, final Path path,
-      final Iterable<? extends CharSequence> lines, final Charset cs)
+                                 final Iterable<? extends CharSequence> lines, final Charset cs)
       throws IOException {
 
     Objects.requireNonNull(path);
@@ -1729,8 +1714,8 @@ public class FileUtil {
 
     CharsetEncoder encoder = cs.newEncoder();
     try (FSDataOutputStream out = fs.createFile(path).overwrite(true).build();
-        BufferedWriter writer =
-            new BufferedWriter(new OutputStreamWriter(out, encoder))) {
+         BufferedWriter writer =
+             new BufferedWriter(new OutputStreamWriter(out, encoder))) {
       for (CharSequence line : lines) {
         writer.append(line);
         writer.newLine();
@@ -1758,8 +1743,8 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileContext write(final FileContext fileContext,
-      final Path path, final Iterable<? extends CharSequence> lines,
-      final Charset cs) throws IOException {
+                                  final Path path, final Iterable<? extends CharSequence> lines,
+                                  final Charset cs) throws IOException {
 
     Objects.requireNonNull(path);
     Objects.requireNonNull(lines);
@@ -1767,8 +1752,8 @@ public class FileUtil {
 
     CharsetEncoder encoder = cs.newEncoder();
     try (FSDataOutputStream out = fileContext.create(path).overwrite(true).build();
-        BufferedWriter writer =
-            new BufferedWriter(new OutputStreamWriter(out, encoder))) {
+         BufferedWriter writer =
+             new BufferedWriter(new OutputStreamWriter(out, encoder))) {
       for (CharSequence line : lines) {
         writer.append(line);
         writer.newLine();
@@ -1793,7 +1778,7 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileSystem write(final FileSystem fs, final Path path,
-      final CharSequence charseq, final Charset cs) throws IOException {
+                                 final CharSequence charseq, final Charset cs) throws IOException {
 
     Objects.requireNonNull(path);
     Objects.requireNonNull(charseq);
@@ -1801,8 +1786,8 @@ public class FileUtil {
 
     CharsetEncoder encoder = cs.newEncoder();
     try (FSDataOutputStream out = fs.createFile(path).overwrite(true).build();
-        BufferedWriter writer =
-            new BufferedWriter(new OutputStreamWriter(out, encoder))) {
+         BufferedWriter writer =
+             new BufferedWriter(new OutputStreamWriter(out, encoder))) {
       writer.append(charseq);
     }
     return fs;
@@ -1824,7 +1809,7 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileContext write(final FileContext fs, final Path path,
-      final CharSequence charseq, final Charset cs) throws IOException {
+                                  final CharSequence charseq, final Charset cs) throws IOException {
 
     Objects.requireNonNull(path);
     Objects.requireNonNull(charseq);
@@ -1832,8 +1817,8 @@ public class FileUtil {
 
     CharsetEncoder encoder = cs.newEncoder();
     try (FSDataOutputStream out = fs.create(path).overwrite(true).build();
-        BufferedWriter writer =
-            new BufferedWriter(new OutputStreamWriter(out, encoder))) {
+         BufferedWriter writer =
+             new BufferedWriter(new OutputStreamWriter(out, encoder))) {
       writer.append(charseq);
     }
     return fs;
@@ -1854,7 +1839,7 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileSystem write(final FileSystem fs, final Path path,
-      final CharSequence charseq) throws IOException {
+                                 final CharSequence charseq) throws IOException {
     return write(fs, path, charseq, StandardCharsets.UTF_8);
   }
 
@@ -1873,7 +1858,7 @@ public class FileUtil {
    * @throws IOException if an I/O error occurs creating or writing to the file
    */
   public static FileContext write(final FileContext fileContext,
-      final Path path, final CharSequence charseq) throws IOException {
+                                  final Path path, final CharSequence charseq) throws IOException {
     return write(fileContext, path, charseq, StandardCharsets.UTF_8);
   }
 

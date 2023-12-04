@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.qjournal.client;
 
-import java.io.IOException;
-
 import org.apache.hadoop.hdfs.server.namenode.EditLogOutputStream;
 import org.apache.hadoop.hdfs.server.namenode.EditsDoubleBuffer;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
 import org.apache.hadoop.io.DataOutputBuffer;
+
+import java.io.IOException;
 
 /**
  * EditLogOutputStream implementation that writes to a quorum of
@@ -18,8 +18,8 @@ class QuorumOutputStream extends EditLogOutputStream {
   private final int writeTimeoutMs;
 
   public QuorumOutputStream(AsyncLoggerSet loggers,
-      long txId, int outputBufferCapacity,
-      int writeTimeoutMs, int logVersion) throws IOException {
+                            long txId, int outputBufferCapacity,
+                            int writeTimeoutMs, int logVersion) throws IOException {
     super();
     this.buf = new EditsDoubleBuffer(outputBufferCapacity);
     this.loggers = loggers;
@@ -94,7 +94,7 @@ class QuorumOutputStream extends EditLogOutputStream {
           segmentTxId, firstTxToFlush,
           numReadyTxns, data);
       loggers.waitForWriteQuorum(qcall, writeTimeoutMs, "sendEdits");
-      
+
       // Since we successfully wrote this batch, let the loggers know. Any future
       // RPCs will thus let the loggers know of the most recent transaction, even
       // if a logger has fallen behind.
@@ -109,7 +109,7 @@ class QuorumOutputStream extends EditLogOutputStream {
     loggers.appendReport(sb);
     return sb.toString();
   }
-  
+
   @Override
   public String toString() {
     return "QuorumOutputStream starting at txid " + segmentTxId;

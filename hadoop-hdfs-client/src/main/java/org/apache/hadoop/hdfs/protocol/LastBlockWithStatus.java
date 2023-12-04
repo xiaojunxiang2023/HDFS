@@ -10,7 +10,7 @@ public class LastBlockWithStatus {
   private final HdfsFileStatus fileStatus;
 
   public LastBlockWithStatus(LocatedBlock lastBlock,
-      HdfsFileStatus fileStatus) {
+                             HdfsFileStatus fileStatus) {
     this.lastBlock = lastBlock;
     this.fileStatus = fileStatus;
   }

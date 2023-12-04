@@ -5,7 +5,8 @@ package org.apache.hadoop.metrics2.util;
  */
 public class Contracts {
 
-  private Contracts() {}
+  private Contracts() {
+  }
 
   /**
    * Check an argument for false conditions
@@ -17,7 +18,7 @@ public class Contracts {
    */
   public static <T> T checkArg(T arg, boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalArgumentException(String.valueOf(msg) +": "+ arg);
+      throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
     }
     return arg;
   }
@@ -31,7 +32,7 @@ public class Contracts {
    */
   public static int checkArg(int arg, boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalArgumentException(String.valueOf(msg) +": "+ arg);
+      throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
     }
     return arg;
   }
@@ -45,7 +46,7 @@ public class Contracts {
    */
   public static long checkArg(long arg, boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalArgumentException(String.valueOf(msg) +": "+ arg);
+      throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
     }
     return arg;
   }
@@ -59,7 +60,7 @@ public class Contracts {
    */
   public static float checkArg(float arg, boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalArgumentException(String.valueOf(msg) +": "+ arg);
+      throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
     }
     return arg;
   }
@@ -73,7 +74,7 @@ public class Contracts {
    */
   public static double checkArg(double arg, boolean expression, Object msg) {
     if (!expression) {
-      throw new IllegalArgumentException(String.valueOf(msg) +": "+ arg);
+      throw new IllegalArgumentException(String.valueOf(msg) + ": " + arg);
     }
     return arg;
   }

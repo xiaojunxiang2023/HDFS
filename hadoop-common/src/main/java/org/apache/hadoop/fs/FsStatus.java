@@ -1,13 +1,14 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.io.Writable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import org.apache.hadoop.io.Writable;
 
 /** This class is used to represent the capacity, free and used space on a
-  * {@link FileSystem}.
-  */
+ * {@link FileSystem}.
+ */
 public class FsStatus implements Writable {
   private long capacity;
   private long used;

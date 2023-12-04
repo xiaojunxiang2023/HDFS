@@ -1,18 +1,7 @@
 package org.apache.hadoop.util;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Map.Entry;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -22,15 +11,13 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.MissingArgumentException;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * This class validates configuration XML files in ${HADOOP_CONF_DIR} or
@@ -40,17 +27,17 @@ public final class ConfTest {
 
   private static final String USAGE =
       "Usage: hadoop conftest [-conffile <path>|-h|--help]\n"
-      + "  Options:\n"
-      + "  \n"
-      + "  -conffile <path>\n"
-      + "    If not specified, the files in ${HADOOP_CONF_DIR}\n"
-      + "    whose name end with .xml will be verified.\n"
-      + "    If specified, that path will be verified.\n"
-      + "    You can specify either a file or directory, and\n"
-      + "    if a directory specified, the files in that directory\n"
-      + "    whose name end with .xml will be verified.\n"
-      + "    You can specify this option multiple times.\n"
-      + "  -h, --help       Print this help";
+          + "  Options:\n"
+          + "  \n"
+          + "  -conffile <path>\n"
+          + "    If not specified, the files in ${HADOOP_CONF_DIR}\n"
+          + "    whose name end with .xml will be verified.\n"
+          + "    If specified, that path will be verified.\n"
+          + "    You can specify either a file or directory, and\n"
+          + "    if a directory specified, the files in that directory\n"
+          + "    whose name end with .xml will be verified.\n"
+          + "    You can specify this option multiple times.\n"
+          + "  -h, --help       Print this help";
 
   private static final String HADOOP_CONF_DIR = "HADOOP_CONF_DIR";
 

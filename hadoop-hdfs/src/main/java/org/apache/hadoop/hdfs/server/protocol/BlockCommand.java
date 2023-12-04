@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.util.List;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.BlockTargetPair;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeStorageInfo;
+
+import java.util.List;
 
 /****************************************************
  * A BlockCommand is an instruction to a datanode 
@@ -13,10 +14,10 @@ import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeStorageInfo;
  * the DataNode to either invalidate a set of indicated
  * blocks, or to copy a set of indicated blocks to 
  * another DataNode.
- * 
+ *
  ****************************************************/
 public class BlockCommand extends DatanodeCommand {
-  
+
   /**
    * This constant is used to indicate that the block deletion does not need
    * explicit ACK from the datanode. When a block is put into the list of blocks
@@ -25,7 +26,7 @@ public class BlockCommand extends DatanodeCommand {
    * with such size. Positive number is used for compatibility reasons.
    */
   public static final long NO_ACK = Long.MAX_VALUE;
-  
+
   final String poolId;
   final Block[] blocks;
   final DatanodeInfo[][] targets;
@@ -37,15 +38,15 @@ public class BlockCommand extends DatanodeCommand {
    * @param blocktargetlist    blocks to be transferred 
    */
   public BlockCommand(int action, String poolId,
-      List<BlockTargetPair> blocktargetlist) {
+                      List<BlockTargetPair> blocktargetlist) {
     super(action);
     this.poolId = poolId;
-    blocks = new Block[blocktargetlist.size()]; 
+    blocks = new Block[blocktargetlist.size()];
     targets = new DatanodeInfo[blocks.length][];
     targetStorageTypes = new StorageType[blocks.length][];
     targetStorageIDs = new String[blocks.length][];
 
-    for(int i = 0; i < blocks.length; i++) {
+    for (int i = 0; i < blocks.length; i++) {
       BlockTargetPair p = blocktargetlist.get(i);
       blocks[i] = p.block;
       targets[i] = DatanodeStorageInfo.toDatanodeInfos(p.targets);
@@ -72,8 +73,8 @@ public class BlockCommand extends DatanodeCommand {
    * @param blocks blocks related to the action
    */
   public BlockCommand(int action, String poolId, Block[] blocks,
-      DatanodeInfo[][] targets, StorageType[][] targetStorageTypes,
-      String[][] targetStorageIDs) {
+                      DatanodeInfo[][] targets, StorageType[][] targetStorageTypes,
+                      String[][] targetStorageIDs) {
     super(action);
     this.poolId = poolId;
     this.blocks = blocks;
@@ -81,11 +82,11 @@ public class BlockCommand extends DatanodeCommand {
     this.targetStorageTypes = targetStorageTypes;
     this.targetStorageIDs = targetStorageIDs;
   }
-  
+
   public String getBlockPoolId() {
     return poolId;
   }
-  
+
   public Block[] getBlocks() {
     return blocks;
   }

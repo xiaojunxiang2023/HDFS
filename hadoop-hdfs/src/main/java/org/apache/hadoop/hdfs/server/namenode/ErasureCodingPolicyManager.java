@@ -1,28 +1,19 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicyInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicyState;
-import org.apache.hadoop.hdfs.protocol.SystemErasureCodingPolicies;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.io.erasurecode.CodecUtil;
 import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -96,7 +87,8 @@ public final class ErasureCodingPolicyManager {
     return instance;
   }
 
-  private ErasureCodingPolicyManager() {}
+  private ErasureCodingPolicyManager() {
+  }
 
   public void init(Configuration conf) throws IOException {
     this.policiesByName = new TreeMap<>();
@@ -329,11 +321,11 @@ public final class ErasureCodingPolicyManager {
   }
 
   private byte getCurrentMaxPolicyID() {
-    return policiesByID.keySet().stream().max(Byte::compareTo).orElse((byte)0);
+    return policiesByID.keySet().stream().max(Byte::compareTo).orElse((byte) 0);
   }
 
   private byte getNextAvailablePolicyID() {
-    byte nextPolicyID = (byte)(getCurrentMaxPolicyID() + 1);
+    byte nextPolicyID = (byte) (getCurrentMaxPolicyID() + 1);
     return nextPolicyID > ErasureCodeConstants.USER_DEFINED_POLICY_START_ID ?
         nextPolicyID : ErasureCodeConstants.USER_DEFINED_POLICY_START_ID;
   }
@@ -464,7 +456,7 @@ public final class ErasureCodingPolicyManager {
    */
   public synchronized void loadPolicies(
       List<ErasureCodingPolicyInfo> ecPolicies, Configuration conf)
-      throws IOException{
+      throws IOException {
     Preconditions.checkNotNull(ecPolicies);
     for (ErasureCodingPolicyInfo p : ecPolicies) {
       loadPolicy(p);
@@ -506,7 +498,7 @@ public final class ErasureCodingPolicyManager {
 
   public String getEnabledPoliciesMetric() {
     return StringUtils.join(", ",
-            enabledPoliciesByName.keySet());
+        enabledPoliciesByName.keySet());
   }
 
   private ErasureCodingPolicyInfo createPolicyInfo(ErasureCodingPolicy p,

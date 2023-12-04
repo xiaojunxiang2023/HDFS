@@ -1,20 +1,10 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.hadoop.fs.CreateFlag;
 import org.apache.hadoop.fs.FileAlreadyExistsException;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.LastBlockWithStatus;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
@@ -22,8 +12,11 @@ import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.FSNamesystem.RecoverLeaseOp;
 import org.apache.hadoop.hdfs.server.namenode.NameNodeLayoutVersion.Feature;
 import org.apache.hadoop.ipc.RetriableException;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Helper class to perform append operation.
@@ -34,7 +27,8 @@ final class FSDirAppendOp {
    * Private constructor for preventing FSDirAppendOp object creation.
    * Static-only class.
    */
-  private FSDirAppendOp() {}
+  private FSDirAppendOp() {
+  }
 
   /**
    * Append to an existing file.
@@ -62,9 +56,9 @@ final class FSDirAppendOp {
    * @return the last block with status
    */
   static LastBlockWithStatus appendFile(final FSNamesystem fsn,
-      final String srcArg, final FSPermissionChecker pc, final String holder,
-      final String clientMachine, final boolean newBlock,
-      final boolean logRetryCache) throws IOException {
+                                        final String srcArg, final FSPermissionChecker pc, final String holder,
+                                        final String clientMachine, final boolean newBlock,
+                                        final boolean logRetryCache) throws IOException {
     assert fsn.hasWriteLock();
 
     final LocatedBlock lb;
@@ -117,7 +111,7 @@ final class FSDirAppendOp {
                   + lastBlock + " of src=" + path
                   + " is COMMITTED but not yet COMPLETE."));
         } else if (lastBlock.isComplete()
-          && !blockManager.isSufficientlyReplicated(lastBlock)) {
+            && !blockManager.isSufficientlyReplicated(lastBlock)) {
           throw new IOException("append: lastBlock=" + lastBlock + " of src="
               + path + " is not sufficiently replicated yet.");
         }
@@ -159,9 +153,9 @@ final class FSDirAppendOp {
    * @throws IOException
    */
   static LocatedBlock prepareFileForAppend(final FSNamesystem fsn,
-      final INodesInPath iip, final String leaseHolder,
-      final String clientMachine, final boolean newBlock,
-      final boolean writeToEditLog, final boolean logRetryCache)
+                                           final INodesInPath iip, final String leaseHolder,
+                                           final String clientMachine, final boolean newBlock,
+                                           final boolean writeToEditLog, final boolean logRetryCache)
       throws IOException {
     assert fsn.hasWriteLock();
 
@@ -217,7 +211,7 @@ final class FSDirAppendOp {
    *         update quota usage later
    */
   private static QuotaCounts verifyQuotaForUCBlock(FSNamesystem fsn,
-      INodeFile file, INodesInPath iip) throws QuotaExceededException {
+                                                   INodeFile file, INodesInPath iip) throws QuotaExceededException {
     FSDirectory fsd = fsn.getFSDirectory();
     if (!fsn.isImageLoaded() || fsd.shouldSkipQuotaChecks()) {
       // Do not check quota if editlog is still being processed
@@ -238,7 +232,7 @@ final class FSDirAppendOp {
 
   /** Compute quota change for converting a complete block to a UC block. */
   private static QuotaCounts computeQuotaDeltaForUCBlock(FSNamesystem fsn,
-      INodeFile file) {
+                                                         INodeFile file) {
     final QuotaCounts delta = new QuotaCounts.Builder().build();
     final BlockInfo lastBlock = file.getLastBlock();
     if (lastBlock != null) {

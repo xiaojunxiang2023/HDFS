@@ -25,7 +25,7 @@ public interface RpcScheduler {
   @Deprecated
   @SuppressWarnings("unused")
   default void addResponseTime(String name, int priorityLevel, int queueTime,
-      int processingTime) {
+                               int processingTime) {
     throw new UnsupportedOperationException(
         "This method is deprecated: use the other addResponseTime");
   }
@@ -39,7 +39,7 @@ public interface RpcScheduler {
    */
   @SuppressWarnings("deprecation")
   default void addResponseTime(String callName, Schedulable schedulable,
-      ProcessingDetails details) {
+                               ProcessingDetails details) {
     // For the sake of backwards compatibility with old implementations of
     // this interface, a default implementation is supplied which uses the old
     // method. All new implementations MUST override this interface and should

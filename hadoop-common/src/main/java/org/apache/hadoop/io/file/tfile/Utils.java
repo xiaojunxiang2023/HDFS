@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,12 +17,13 @@
 
 package org.apache.hadoop.io.file.tfile;
 
+import org.apache.hadoop.io.Text;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-import org.apache.hadoop.io.Text;
 
 /**
  * Supporting Utility classes used by TFile, and shared by users of TFile.
@@ -39,7 +40,7 @@ public final class Utils {
   /**
    * Encoding an integer into a variable-length encoding format. Synonymous to
    * <code>Utils#writeVLong(out, n)</code>.
-   * 
+   *
    * @param out
    *          output stream
    * @param n
@@ -85,7 +86,7 @@ public final class Utils {
    * byte[5]=(n&gt;&gt;24)&amp;0xff; byte[6]=(n&gt;&gt;16)&amp;0xff; byte[7]=
    * (n&gt;&gt;8)&amp;0xff; byte[8]=n&amp;0xff;
    * </ul>
-   * 
+   *
    * @param out
    *          output stream
    * @param n
@@ -161,12 +162,12 @@ public final class Utils {
   /**
    * Decoding the variable-length integer. Synonymous to
    * <code>(int)Utils#readVLong(in)</code>.
-   * 
+   *
    * @param in
    *          input stream
    * @return the decoded integer
    * @throws IOException
-   * 
+   *
    * @see Utils#readVLong(DataInput)
    */
   public static int readVInt(DataInput in) throws IOException {
@@ -243,7 +244,7 @@ public final class Utils {
 
   /**
    * Write a String as a VInt n, followed by n Bytes as in Text format.
-   * 
+   *
    * @param out
    * @param s
    * @throws IOException
@@ -262,7 +263,7 @@ public final class Utils {
 
   /**
    * Read a String as a VInt n, followed by n Bytes in Text format.
-   * 
+   *
    * @param in
    *          The input stream.
    * @return The string
@@ -279,7 +280,7 @@ public final class Utils {
   /**
    * A generic Version class. We suggest applications built on top of TFile use
    * this class to maintain version information in their meta blocks.
-   * 
+   *
    * A version number consists of a major version and a minor version. The
    * suggested usage of major and minor version number is to increment major
    * version number when the new storage format is not backward compatible, and
@@ -291,7 +292,7 @@ public final class Utils {
 
     /**
      * Construct the Version object by reading from the input stream.
-     * 
+     *
      * @param in
      *          input stream
      * @throws IOException
@@ -303,7 +304,7 @@ public final class Utils {
 
     /**
      * Constructor.
-     * 
+     *
      * @param major
      *          major version.
      * @param minor
@@ -318,7 +319,7 @@ public final class Utils {
      * Write the objec to a DataOutput. The serialized format of the Version is
      * major version followed by minor version, both as big-endian short
      * integers.
-     * 
+     *
      * @param out
      *          The DataOutput object.
      * @throws IOException
@@ -330,7 +331,7 @@ public final class Utils {
 
     /**
      * Get the major version.
-     * 
+     *
      * @return Major version.
      */
     public int getMajor() {
@@ -339,7 +340,7 @@ public final class Utils {
 
     /**
      * Get the minor version.
-     * 
+     *
      * @return The minor version.
      */
     public int getMinor() {
@@ -348,7 +349,7 @@ public final class Utils {
 
     /**
      * Get the size of the serialized Version object.
-     * 
+     *
      * @return serialized size of the version object.
      */
     public static int size() {
@@ -366,7 +367,7 @@ public final class Utils {
 
     /**
      * Test compatibility.
-     * 
+     *
      * @param other
      *          The Version object to test compatibility with.
      * @return true if both versions have the same major version number; false
@@ -403,7 +404,7 @@ public final class Utils {
   /**
    * Lower bound binary search. Find the index to the first element in the list
    * that compares greater than or equal to key.
-   * 
+   *
    * @param <T>
    *          Type of the input key.
    * @param list
@@ -416,7 +417,7 @@ public final class Utils {
    *         otherwise.
    */
   public static <T> int lowerBound(List<? extends T> list, T key,
-      Comparator<? super T> cmp) {
+                                   Comparator<? super T> cmp) {
     int low = 0;
     int high = list.size();
 
@@ -434,7 +435,7 @@ public final class Utils {
   /**
    * Upper bound binary search. Find the index to the first element in the list
    * that compares greater than the input key.
-   * 
+   *
    * @param <T>
    *          Type of the input key.
    * @param list
@@ -447,7 +448,7 @@ public final class Utils {
    *         otherwise.
    */
   public static <T> int upperBound(List<? extends T> list, T key,
-      Comparator<? super T> cmp) {
+                                   Comparator<? super T> cmp) {
     int low = 0;
     int high = list.size();
 
@@ -465,7 +466,7 @@ public final class Utils {
   /**
    * Lower bound binary search. Find the index to the first element in the list
    * that compares greater than or equal to key.
-   * 
+   *
    * @param <T>
    *          Type of the input key.
    * @param list
@@ -476,7 +477,7 @@ public final class Utils {
    *         otherwise.
    */
   public static <T> int lowerBound(List<? extends Comparable<? super T>> list,
-      T key) {
+                                   T key) {
     int low = 0;
     int high = list.size();
 
@@ -494,7 +495,7 @@ public final class Utils {
   /**
    * Upper bound binary search. Find the index to the first element in the list
    * that compares greater than the input key.
-   * 
+   *
    * @param <T>
    *          Type of the input key.
    * @param list
@@ -505,7 +506,7 @@ public final class Utils {
    *         otherwise.
    */
   public static <T> int upperBound(List<? extends Comparable<? super T>> list,
-      T key) {
+                                   T key) {
     int low = 0;
     int high = list.size();
 

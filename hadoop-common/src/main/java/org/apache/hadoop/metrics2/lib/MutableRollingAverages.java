@@ -1,31 +1,24 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.impl.MetricsCollectorImpl;
-
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.Time;
 
 import javax.annotation.Nullable;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.*;
+import java.util.function.Function;
 
-import static org.apache.hadoop.metrics2.lib.Interns.*;
+import static org.apache.hadoop.metrics2.lib.Interns.info;
 
 /**
  * <p>
@@ -72,7 +65,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
      * @param snapshotTimeStamp when is a new SampleStat snapshot.
      */
     SumAndCount(final double sum, final long count,
-        final long snapshotTimeStamp) {
+                final long snapshotTimeStamp) {
       this.sum = sum;
       this.count = count;
       this.snapshotTimeStamp = snapshotTimeStamp;
@@ -127,7 +120,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
     avgInfoNameTemplate = "[%s]" + "RollingAvg" +
         StringUtils.capitalize(metricValueName);
     avgInfoDescTemplate = "Rolling average " +
-        StringUtils.uncapitalize(metricValueName) +" for "+ "%s";
+        StringUtils.uncapitalize(metricValueName) + " for " + "%s";
     numWindows = NUM_WINDOWS_DEFAULT;
     scheduledTask = SCHEDULER.scheduleAtFixedRate(new RatesRoller(this),
         WINDOW_SIZE_MS_DEFAULT, WINDOW_SIZE_MS_DEFAULT, TimeUnit.MILLISECONDS);

@@ -14,21 +14,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.blockmanagement;
+ */
+package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Doubles;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports;
 import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports.DiskOp;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Doubles;
 import org.apache.hadoop.util.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,12 +107,12 @@ public class SlowDiskTracker {
 
   @VisibleForTesting
   public static String getSlowDiskIDForReport(String datanodeID,
-      String slowDisk) {
+                                              String slowDisk) {
     return datanodeID + DATANODE_DISK_SEPARATOR + slowDisk;
   }
 
   public void addSlowDiskReport(String dataNodeID,
-      SlowDiskReports dnSlowDiskReport) {
+                                SlowDiskReports dnSlowDiskReport) {
     Map<String, Map<DiskOp, Double>> slowDisks =
         dnSlowDiskReport.getSlowDisks();
 
@@ -179,7 +180,7 @@ public class SlowDiskTracker {
     }
 
     public DiskLatency(String slowDiskID, Map<DiskOp, Double> latencyMap,
-        long timestamp) {
+                       long timestamp) {
       this.slowDiskID = slowDiskID;
       this.latencyMap = latencyMap;
       this.timestamp = timestamp;

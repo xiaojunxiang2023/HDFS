@@ -1,14 +1,10 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.util.Collection;
-import java.util.ArrayList;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * BlockRecoveryCommand is an instruction to a data-node to recover
@@ -27,7 +23,7 @@ public class BlockRecoveryCommand extends DatanodeCommand {
    * This is a block with locations from which it should be recovered
    * and the new generation stamp, which the block will have after 
    * successful recovery.
-   * 
+   *
    * The new generation stamp of the block, also plays role of the recovery id.
    */
   public static class RecoveringBlock extends LocatedBlock {
@@ -47,7 +43,7 @@ public class BlockRecoveryCommand extends DatanodeCommand {
      * Create RecoveringBlock with copy-on-truncate option.
      */
     public RecoveringBlock(ExtendedBlock b, DatanodeInfo[] locs,
-        Block recoveryBlock) {
+                           Block recoveryBlock) {
       super(b, locs); // startOffset is unknown
       this.newGenerationStamp = recoveryBlock.getGenerationStamp();
       this.recoveryBlock = recoveryBlock;
@@ -81,7 +77,7 @@ public class BlockRecoveryCommand extends DatanodeCommand {
     private final ErasureCodingPolicy ecPolicy;
 
     public RecoveringStripedBlock(RecoveringBlock rBlock, byte[] blockIndices,
-        ErasureCodingPolicy ecPolicy) {
+                                  ErasureCodingPolicy ecPolicy) {
       super(rBlock);
       this.blockIndices = blockIndices == null ? new byte[]{} : blockIndices;
       this.ecPolicy = ecPolicy;
@@ -115,7 +111,7 @@ public class BlockRecoveryCommand extends DatanodeCommand {
   public BlockRecoveryCommand(int capacity) {
     this(new ArrayList<RecoveringBlock>(capacity));
   }
-  
+
   public BlockRecoveryCommand(Collection<RecoveringBlock> blocks) {
     super(DatanodeProtocol.DNA_RECOVERBLOCK);
     recoveringBlocks = blocks;
@@ -134,7 +130,7 @@ public class BlockRecoveryCommand extends DatanodeCommand {
   public void add(RecoveringBlock block) {
     recoveringBlocks.add(block);
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

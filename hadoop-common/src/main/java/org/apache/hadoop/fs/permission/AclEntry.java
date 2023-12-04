@@ -1,13 +1,12 @@
 package org.apache.hadoop.fs.permission;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
+import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.util.StringUtils;
 
 /**
  * Defines a single entry in an ACL.  An ACL entry has a type (user, group,
@@ -66,11 +65,11 @@ public class AclEntry {
     if (getClass() != o.getClass()) {
       return false;
     }
-    AclEntry other = (AclEntry)o;
+    AclEntry other = (AclEntry) o;
     return Objects.equal(type, other.type) &&
-      Objects.equal(name, other.name) &&
-      Objects.equal(permission, other.permission) &&
-      Objects.equal(scope, other.scope);
+        Objects.equal(name, other.name) &&
+        Objects.equal(permission, other.permission) &&
+        Objects.equal(scope, other.scope);
   }
 
   @Override
@@ -199,7 +198,7 @@ public class AclEntry {
    * objects. Example: "user::rwx,user:foo:rw-,group::r--,other::---"
    * The expected format of ACL entries in the string parameter is the same
    * format produced by the {@link #toStringStable()} method.
-   * 
+   *
    * @param aclSpec
    *          String representation of an ACL spec.
    * @param includePermission
@@ -211,7 +210,7 @@ public class AclEntry {
    * @return Returns list of {@link AclEntry} parsed
    */
   public static List<AclEntry> parseAclSpec(String aclSpec,
-      boolean includePermission) {
+                                            boolean includePermission) {
     List<AclEntry> aclEntries = new ArrayList<AclEntry>();
     Collection<String> aclStrings = StringUtils.getStringCollection(aclSpec,
         ",");
@@ -226,7 +225,7 @@ public class AclEntry {
    * Parses a string representation of an ACL into a AclEntry object.<br>
    * The expected format of ACL entries in the string parameter is the same
    * format produced by the {@link #toStringStable()} method.
-   * 
+   *
    * @param aclStr
    *          String representation of an ACL.<br>
    *          Example: "user:foo:rw-"
@@ -239,7 +238,7 @@ public class AclEntry {
    * @return Returns an {@link AclEntry} object
    */
   public static AclEntry parseAclEntry(String aclStr,
-      boolean includePermission) {
+                                       boolean includePermission) {
     AclEntry.Builder builder = new AclEntry.Builder();
     // Here "::" represent one empty string.
     // StringUtils.getStringCollection() will ignore this.
@@ -307,10 +306,10 @@ public class AclEntry {
    */
   public static String aclSpecToString(List<AclEntry> aclSpec) {
     StringBuilder buf = new StringBuilder();
-    for ( AclEntry e : aclSpec ) {
+    for (AclEntry e : aclSpec) {
       buf.append(e.toString())
           .append(",");
     }
-    return buf.substring(0, buf.length()-1);  // remove last ,
+    return buf.substring(0, buf.length() - 1);  // remove last ,
   }
 }

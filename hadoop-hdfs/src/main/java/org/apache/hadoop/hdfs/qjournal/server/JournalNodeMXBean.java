@@ -7,10 +7,10 @@ import java.util.List;
  * This is the JMX management interface for JournalNode information
  */
 public interface JournalNodeMXBean {
-  
+
   /**
    * Get status information (e.g., whether formatted) of JournalNode's journals.
-   * 
+   *
    * @return A string presenting status for each journal
    */
   String getJournalsStatus();
@@ -31,7 +31,7 @@ public interface JournalNodeMXBean {
    * @return list of clusters.
    */
   default List<String> getClusterIds() {
-    return Collections.emptyList() ;
+    return Collections.emptyList();
   }
 
   /**

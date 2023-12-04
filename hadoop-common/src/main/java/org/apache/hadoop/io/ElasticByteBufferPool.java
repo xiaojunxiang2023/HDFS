@@ -1,7 +1,7 @@
 package org.apache.hadoop.io;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -38,7 +38,7 @@ public final class ElasticByteBufferPool implements ByteBufferPool {
         return false;
       }
       try {
-        Key o = (Key)rhs;
+        Key o = (Key) rhs;
         return (compareTo(o) == 0);
       } catch (ClassCastException e) {
         return false;
@@ -71,7 +71,7 @@ public final class ElasticByteBufferPool implements ByteBufferPool {
         tree.ceilingEntry(new Key(length, 0));
     if (entry == null) {
       return direct ? ByteBuffer.allocateDirect(length) :
-                      ByteBuffer.allocate(length);
+          ByteBuffer.allocate(length);
     }
     tree.remove(entry.getKey());
     entry.getValue().clear();

@@ -1,11 +1,11 @@
 package org.apache.hadoop.service.launcher;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.service.AbstractService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Subclass of {@link AbstractService} that provides basic implementations
@@ -30,7 +30,7 @@ public abstract class AbstractLaunchableService extends AbstractService
    * The base implementation logs all arguments at the debug level,
    * then returns the passed in config unchanged.
    */
-  
+
   @Override
   public Configuration bindArgs(Configuration config, List<String> args) throws
       Exception {

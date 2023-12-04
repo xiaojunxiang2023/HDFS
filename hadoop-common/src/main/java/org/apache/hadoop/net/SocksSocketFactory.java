@@ -1,15 +1,11 @@
 package org.apache.hadoop.net;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
-import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
+
+import javax.net.SocketFactory;
+import java.io.IOException;
+import java.net.*;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SOCKS_SERVER_KEY;
 
@@ -32,7 +28,7 @@ public class SocksSocketFactory extends SocketFactory implements
 
   /**
    * Constructor with a supplied Proxy
-   * 
+   *
    * @param proxy the proxy to use to create sockets
    */
   public SocksSocketFactory(Proxy proxy) {
@@ -55,7 +51,7 @@ public class SocksSocketFactory extends SocketFactory implements
 
   @Override
   public Socket createSocket(InetAddress addr, int port,
-      InetAddress localHostAddr, int localPort) throws IOException {
+                             InetAddress localHostAddr, int localPort) throws IOException {
 
     Socket socket = createSocket();
     socket.bind(new InetSocketAddress(localHostAddr, localPort));
@@ -74,7 +70,7 @@ public class SocksSocketFactory extends SocketFactory implements
 
   @Override
   public Socket createSocket(String host, int port,
-      InetAddress localHostAddr, int localPort) throws IOException,
+                             InetAddress localHostAddr, int localPort) throws IOException,
       UnknownHostException {
 
     Socket socket = createSocket();
@@ -122,7 +118,7 @@ public class SocksSocketFactory extends SocketFactory implements
   /**
    * Set the proxy of this socket factory as described in the string
    * parameter
-   * 
+   *
    * @param proxyStr the proxy address using the format "host:port"
    */
   private void setProxy(String proxyStr) {

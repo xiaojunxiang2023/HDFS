@@ -1,12 +1,9 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.*;
+
 import java.io.IOException;
 import java.util.LinkedList;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathExistsException;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.fs.PathIsNotDirectoryException;
-import org.apache.hadoop.fs.PathNotFoundException;
 
 /**
  * Create the given dir
@@ -16,15 +13,15 @@ class Mkdir extends FsCommand {
   public static void registerCommands(CommandFactory factory) {
     factory.addClass(Mkdir.class, "-mkdir");
   }
-  
+
   public static final String NAME = "mkdir";
   public static final String USAGE = "[-p] <path> ...";
   public static final String DESCRIPTION =
-    "Create a directory in specified location.\n" +
-    "-p: Do not fail if the directory already exists";
+      "Create a directory in specified location.\n" +
+          "-p: Do not fail if the directory already exists";
 
   private boolean createParents;
-  
+
   @Override
   protected void processOptions(LinkedList<String> args) {
     CommandFormat cf = new CommandFormat(1, Integer.MAX_VALUE, "p");
@@ -51,7 +48,7 @@ class Mkdir extends FsCommand {
       final Path itemPath = new Path(item.path.toString());
       final Path itemParentPath = itemPath.getParent();
 
-      if(itemParentPath == null) {
+      if (itemParentPath == null) {
         throw new PathNotFoundException(String.format(
             "Item: %s parent's path is null. This can happen if mkdir is " +
                 "called on root, so there's no parent.", itemPath.toString()));

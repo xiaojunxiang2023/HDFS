@@ -82,5 +82,6 @@ public interface AuditSpan extends Closeable {
    * @param key attribute name
    * @param value value
    */
-  default void set(String key, String value) { }
+  default void set(String key, String value) {
+  }
 }

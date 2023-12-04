@@ -1,10 +1,10 @@
 package org.apache.hadoop.fs.statistics.impl;
 
+import org.apache.hadoop.fs.statistics.MeanStatistic;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.apache.hadoop.fs.statistics.MeanStatistic;
 
 /**
  * These statistics are dynamically evaluated by the supplied
@@ -107,7 +107,7 @@ final class DynamicIOStatistics
    * @param eval the evaluator
    */
   void addMeanStatisticFunction(String key,
-      Function<String, MeanStatistic> eval) {
+                                Function<String, MeanStatistic> eval) {
     meanStatistics.addFunction(key, eval);
   }
 

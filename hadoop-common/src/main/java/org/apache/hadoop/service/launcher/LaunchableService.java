@@ -1,8 +1,9 @@
 package org.apache.hadoop.service.launcher;
 
-import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.service.Service;
+
+import java.util.List;
 
 /**
  * An interface which services can implement to have their
@@ -41,7 +42,7 @@ public interface LaunchableService extends Service {
    * @throws Exception any problem
    */
   Configuration bindArgs(Configuration config, List<String> args)
-        throws Exception;
+      throws Exception;
 
   /**
    * Run a service. This method is called after {@link Service#start()}.

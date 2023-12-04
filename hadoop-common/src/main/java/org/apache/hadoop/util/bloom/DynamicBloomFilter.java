@@ -14,7 +14,7 @@
  *    nor the names of its contributors may be used to endorse or 
  *    promote products derived from this software without specific prior 
  *    written permission.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -65,11 +65,11 @@ import java.io.IOException;
  *
  * @see Filter The general behavior of a filter
  * @see BloomFilter A Bloom filter
- * 
+ *
  * @see <a href="http://www.cse.fau.edu/~jie/research/publications/Publication_files/infocom2006.pdf">Theory and Network Applications of Dynamic Bloom Filters</a>
  */
 public class DynamicBloomFilter extends Filter {
-  /** 
+  /**
    * Threshold for the maximum number of key to record in a dynamic Bloom filter row.
    */
   private int nr;
@@ -87,7 +87,8 @@ public class DynamicBloomFilter extends Filter {
   /**
    * Zero-args constructor for the serialization.
    */
-  public DynamicBloomFilter() { }
+  public DynamicBloomFilter() {
+  }
 
   /**
    * Constructor.
@@ -138,7 +139,7 @@ public class DynamicBloomFilter extends Filter {
       throw new IllegalArgumentException("filters cannot be and-ed");
     }
 
-    DynamicBloomFilter dbf = (DynamicBloomFilter)filter;
+    DynamicBloomFilter dbf = (DynamicBloomFilter) filter;
 
     if (dbf.matrix.length != this.matrix.length || dbf.nr != this.nr) {
       throw new IllegalArgumentException("filters cannot be and-ed");
@@ -180,7 +181,7 @@ public class DynamicBloomFilter extends Filter {
       throw new IllegalArgumentException("filters cannot be or-ed");
     }
 
-    DynamicBloomFilter dbf = (DynamicBloomFilter)filter;
+    DynamicBloomFilter dbf = (DynamicBloomFilter) filter;
 
     if (dbf.matrix.length != this.matrix.length || dbf.nr != this.nr) {
       throw new IllegalArgumentException("filters cannot be or-ed");
@@ -198,14 +199,14 @@ public class DynamicBloomFilter extends Filter {
         || filter.nbHash != this.nbHash) {
       throw new IllegalArgumentException("filters cannot be xor-ed");
     }
-    DynamicBloomFilter dbf = (DynamicBloomFilter)filter;
+    DynamicBloomFilter dbf = (DynamicBloomFilter) filter;
 
     if (dbf.matrix.length != this.matrix.length || dbf.nr != this.nr) {
       throw new IllegalArgumentException("filters cannot be xor-ed");
     }
 
-    for(int i = 0; i<matrix.length; i++) {
-        matrix[i].xor(dbf.matrix[i]);
+    for (int i = 0; i < matrix.length; i++) {
+      matrix[i].xor(dbf.matrix[i]);
     }
   }
 
@@ -256,7 +257,7 @@ public class DynamicBloomFilter extends Filter {
       tmp[i] = matrix[i];
     }
 
-    tmp[tmp.length-1] = new BloomFilter(vectorSize, nbHash, hashType);
+    tmp[tmp.length - 1] = new BloomFilter(vectorSize, nbHash, hashType);
 
     matrix = tmp;
   }

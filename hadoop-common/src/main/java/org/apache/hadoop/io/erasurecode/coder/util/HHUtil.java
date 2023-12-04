@@ -1,10 +1,11 @@
 package org.apache.hadoop.io.erasurecode.coder.util;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Some utilities for Hitchhiker coding.
@@ -55,14 +56,14 @@ public final class HHUtil {
     for (int m = 0; m < inputs.length; ++m) {
       if (inputs[m] != null) {
         emptyInput[m] = allocateByteBuffer(inputs[m].isDirect(),
-                inputs[m].remaining());
+            inputs[m].remaining());
       }
     }
 
     ByteBuffer[] tempOutput = new ByteBuffer[numParityUnits];
     for (int m = 0; m < numParityUnits; ++m) {
       tempOutput[m] = allocateByteBuffer(inputs[m].isDirect(),
-              inputs[0].remaining());
+          inputs[0].remaining());
     }
 
     ByteBuffer[] piggyBacks = new ByteBuffer[numParityUnits - 1];
@@ -138,7 +139,7 @@ public final class HHUtil {
     int bufSize = fisrtValidInput.remaining();
 
     ByteBuffer piggybacks = allocateByteBuffer(fisrtValidInput.isDirect(),
-            bufSize);
+        bufSize);
 
     // Use piggyBackParityIndex to figure out which parity location has the
     // associated piggyBack
@@ -170,8 +171,8 @@ public final class HHUtil {
         }
 
         sum = RSUtil.GF.add(sum,
-                (0xFF & inputs[0][numDataUnits + pbIndex].get(
-                        inputs[0][numDataUnits + pbIndex].position() + k)));
+            (0xFF & inputs[0][numDataUnits + pbIndex].get(
+                inputs[0][numDataUnits + pbIndex].position() + k)));
 
         piggybacks.put(k, (byte) sum);
       }
@@ -194,6 +195,6 @@ public final class HHUtil {
     }
 
     throw new HadoopIllegalArgumentException(
-            "Invalid inputs are found, all being null");
+        "Invalid inputs are found, all being null");
   }
 }

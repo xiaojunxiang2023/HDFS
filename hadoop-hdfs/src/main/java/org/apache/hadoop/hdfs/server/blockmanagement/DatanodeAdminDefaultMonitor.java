@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.server.namenode.INode;
@@ -9,16 +8,12 @@ import org.apache.hadoop.hdfs.server.namenode.INodeId;
 import org.apache.hadoop.hdfs.util.CyclicIteration;
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
 import org.apache.hadoop.hdfs.util.LightWeightLinkedSet;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ChunkedArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.AbstractList;
-import java.util.TreeMap;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Checks to see if datanodes have finished DECOMMISSION_INPROGRESS or
@@ -241,7 +236,7 @@ public class DatanodeAdminDefaultMonitor extends DatanodeAdminMonitorBase
             LOG.info("Node {} {} healthy."
                     + " It needs to replicate {} more blocks."
                     + " {} is still in progress.", dn,
-                isHealthy ? "is": "isn't", blocks.size(), dn.getAdminState());
+                isHealthy ? "is" : "isn't", blocks.size(), dn.getAdminState());
           }
         } else {
           LOG.info("Node {} still has {} blocks to replicate "

@@ -1,15 +1,10 @@
 package org.apache.hadoop.util;
 
-import java.io.PrintStream;
-import java.util.AbstractCollection;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.PrintStream;
+import java.util.*;
 
 /**
  * A low memory footprint {@link GSet} implementation,
@@ -82,7 +77,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
       return MIN_ARRAY_LENGTH;
     } else {
       final int a = Integer.highestOneBit(recommended);
-      return a == recommended? a: a << 1;
+      return a == recommended ? a : a << 1;
     }
   }
 
@@ -95,9 +90,8 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
     return key.hashCode() & hash_mask;
   }
 
-  protected E convert(final LinkedElement e){
-    @SuppressWarnings("unchecked")
-    final E r = (E)e;
+  protected E convert(final LinkedElement e) {
+    @SuppressWarnings("unchecked") final E r = (E) e;
     return r;
   }
 
@@ -110,7 +104,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
 
     //find element
     final int index = getIndex(key);
-    for(LinkedElement e = entries[index]; e != null; e = e.getNext()) {
+    for (LinkedElement e = entries[index]; e != null; e = e.getNext()) {
       if (e.equals(key)) {
         return convert(e);
       }
@@ -132,11 +126,11 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
     }
     LinkedElement e = null;
     try {
-      e = (LinkedElement)element;
+      e = (LinkedElement) element;
     } catch (ClassCastException ex) {
       throw new HadoopIllegalArgumentException(
           "!(element instanceof LinkedElement), element.getClass()="
-          + element.getClass());
+              + element.getClass());
     }
 
     // find index
@@ -176,7 +170,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
       //head != null and key is not equal to head
       //search the element
       LinkedElement prev = entries[index];
-      for(LinkedElement curr = prev.getNext(); curr != null; ) {
+      for (LinkedElement curr = prev.getNext(); curr != null; ) {
         if (curr.equals(key)) {
           //found the element, remove it
           modification++;
@@ -226,7 +220,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean contains(Object o) {
-      return LightWeightGSet.this.contains((K)o);
+      return LightWeightGSet.this.contains((K) o);
     }
 
     @Override
@@ -244,21 +238,21 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
   public String toString() {
     final StringBuilder b = new StringBuilder(getClass().getSimpleName());
     b.append("(size=").append(size)
-     .append(String.format(", %08x", hash_mask))
-     .append(", modification=").append(modification)
-     .append(", entries.length=").append(entries.length)
-     .append(")");
+        .append(String.format(", %08x", hash_mask))
+        .append(", modification=").append(modification)
+        .append(", entries.length=").append(entries.length)
+        .append(")");
     return b.toString();
   }
 
   /** Print detailed information of this object. */
   public void printDetails(final PrintStream out) {
     out.print(this + ", entries = [");
-    for(int i = 0; i < entries.length; i++) {
+    for (int i = 0; i < entries.length; i++) {
       if (entries[i] != null) {
         LinkedElement e = entries[i];
         out.print("\n  " + i + ": " + e);
-        for(e = e.getNext(); e != null; e = e.getNext()) {
+        for (e = e.getNext(); e != null; e = e.getNext()) {
           out.print(" -> " + e);
         }
       }
@@ -277,8 +271,8 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
 
     /** Find the next nonempty entry starting at (index + 1). */
     private LinkedElement nextNonemptyEntry() {
-      for(index++; index < entries.length && entries[index] == null; index++);
-      return index < entries.length? entries[index]: null;
+      for (index++; index < entries.length && entries[index] == null; index++) ;
+      return index < entries.length ? entries[index] : null;
     }
 
     private void ensureNext() {
@@ -323,7 +317,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
         throw new IllegalStateException("There is no current element " +
             "to remove");
       }
-      LightWeightGSet.this.remove((K)cur);
+      LightWeightGSet.this.remove((K) cur);
       iterModification++;
       cur = null;
     }
@@ -332,7 +326,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
       this.trackModification = trackModification;
     }
   }
-  
+
   /**
    * Let t = percentage of max memory.
    * Let e = round(log_2 t).
@@ -343,10 +337,10 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
     return computeCapacity(Runtime.getRuntime().maxMemory(), percentage,
         mapName);
   }
-  
+
   @VisibleForTesting
   static int computeCapacity(long maxMemory, double percentage,
-      String mapName) {
+                             String mapName) {
     if (percentage > 100.0 || percentage < 0.0) {
       throw new HadoopIllegalArgumentException("Percentage " + percentage
           + " must be greater than or equal to 0 "
@@ -364,13 +358,13 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
     final String vmBit = System.getProperty("sun.arch.data.model");
 
     //Percentage of max memory
-    final double percentDivisor = 100.0/percentage;
-    final double percentMemory = maxMemory/percentDivisor;
-    
+    final double percentDivisor = 100.0 / percentage;
+    final double percentMemory = maxMemory / percentDivisor;
+
     //compute capacity
-    final int e1 = (int)(Math.log(percentMemory)/Math.log(2.0) + 0.5);
-    final int e2 = e1 - ("32".equals(vmBit)? 2: 3);
-    final int exponent = e2 < 0? 0: e2 > 30? 30: e2;
+    final int e1 = (int) (Math.log(percentMemory) / Math.log(2.0) + 0.5);
+    final int e2 = e1 - ("32".equals(vmBit) ? 2 : 3);
+    final int exponent = e2 < 0 ? 0 : e2 > 30 ? 30 : e2;
     final int c = 1 << exponent;
 
     LOG.info("Computing capacity for map " + mapName);
@@ -379,11 +373,11 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
         + StringUtils.TraditionalBinaryPrefix.long2String(maxMemory, "B", 1)
         + " = "
         + StringUtils.TraditionalBinaryPrefix.long2String((long) percentMemory,
-            "B", 1));
+        "B", 1));
     LOG.info("capacity      = 2^" + exponent + " = " + c + " entries");
     return c;
   }
-  
+
   public void clear() {
     modification++;
     Arrays.fill(entries, null);

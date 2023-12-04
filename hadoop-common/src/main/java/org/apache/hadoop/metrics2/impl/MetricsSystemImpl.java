@@ -1,5 +1,21 @@
 package org.apache.hadoop.metrics2.impl;
 
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.math3.util.ArithmeticUtils;
+import org.apache.hadoop.metrics2.*;
+import org.apache.hadoop.metrics2.annotation.Metric;
+import org.apache.hadoop.metrics2.annotation.Metrics;
+import org.apache.hadoop.metrics2.lib.*;
+import org.apache.hadoop.metrics2.util.MBeans;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.management.ObjectName;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -10,54 +26,24 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.management.ObjectName;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
-
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.math3.util.ArithmeticUtils;
-import org.apache.hadoop.metrics2.MetricsInfo;
-import org.apache.hadoop.metrics2.MetricsCollector;
-import org.apache.hadoop.metrics2.MetricsException;
-import org.apache.hadoop.metrics2.MetricsFilter;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
-import org.apache.hadoop.metrics2.MetricsSink;
-import org.apache.hadoop.metrics2.MetricsSource;
-import org.apache.hadoop.metrics2.MetricsSystem;
-import org.apache.hadoop.metrics2.MetricsTag;
-import org.apache.hadoop.metrics2.annotation.Metric;
-import org.apache.hadoop.metrics2.annotation.Metrics;
-import org.apache.hadoop.metrics2.lib.MutableCounterLong;
 import static org.apache.hadoop.metrics2.impl.MetricsConfig.*;
-import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
-import org.apache.hadoop.metrics2.lib.Interns;
-import org.apache.hadoop.metrics2.lib.MetricsAnnotations;
-import org.apache.hadoop.metrics2.lib.MetricsRegistry;
-import org.apache.hadoop.metrics2.lib.MetricsSourceBuilder;
-import org.apache.hadoop.metrics2.lib.MutableStat;
-import org.apache.hadoop.metrics2.util.MBeans;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.util.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A base class for metrics system singletons
  */
-@Metrics(context="metricssystem")
+@Metrics(context = "metricssystem")
 public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   static final Logger LOG = LoggerFactory.getLogger(MetricsSystemImpl.class);
   static final String MS_NAME = "MetricsSystem";
-  static final String MS_STATS_NAME = MS_NAME +",sub=Stats";
+  static final String MS_STATS_NAME = MS_NAME + ",sub=Stats";
   static final String MS_STATS_DESC = "Metrics system metrics";
-  static final String MS_CONTROL_NAME = MS_NAME +",sub=Control";
+  static final String MS_CONTROL_NAME = MS_NAME + ",sub=Control";
   static final String MS_INIT_MODE_KEY = "hadoop.metrics.init.mode";
 
-  enum InitMode { NORMAL, STANDBY }
+  enum InitMode {NORMAL, STANDBY}
 
   private final Map<String, MetricsSourceAdapter> sources;
   private final Map<String, MetricsSource> allSources;
@@ -71,9 +57,12 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   private final MetricsCollectorImpl collector;
   private final MetricsRegistry registry = new MetricsRegistry(MS_NAME);
-  @Metric({"Snapshot", "Snapshot stats"}) MutableStat snapshotStat;
-  @Metric({"Publish", "Publishing stats"}) MutableStat publishStat;
-  @Metric("Dropped updates by all sinks") MutableCounterLong droppedPubAll;
+  @Metric({"Snapshot", "Snapshot stats"})
+  MutableStat snapshotStat;
+  @Metric({"Publish", "Publishing stats"})
+  MutableStat publishStat;
+  @Metric("Dropped updates by all sinks")
+  MutableCounterLong droppedPubAll;
 
   private final List<MetricsTag> injectedTags;
 
@@ -128,28 +117,29 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   @Override
   public synchronized MetricsSystem init(String prefix) {
     if (monitoring && !DefaultMetricsSystem.inMiniClusterMode()) {
-      LOG.warn(this.prefix +" metrics system already initialized!");
+      LOG.warn(this.prefix + " metrics system already initialized!");
       return this;
     }
     this.prefix = checkNotNull(prefix, "prefix");
     ++refCount;
     if (monitoring) {
       // in mini cluster mode
-      LOG.info(this.prefix +" metrics system started (again)");
+      LOG.info(this.prefix + " metrics system started (again)");
       return this;
     }
     switch (initMode()) {
       case NORMAL:
-        try { start(); }
-        catch (MetricsConfigException e) {
+        try {
+          start();
+        } catch (MetricsConfigException e) {
           // Configuration errors (e.g., typos) should not be fatal.
           // We can always start the metrics system later via JMX.
-          LOG.warn("Metrics system not started: "+ e.getMessage());
+          LOG.warn("Metrics system not started: " + e.getMessage());
           LOG.debug("Stacktrace: ", e);
         }
         break;
       case STANDBY:
-        LOG.info(prefix +" metrics system started in standby mode");
+        LOG.info(prefix + " metrics system started in standby mode");
     }
     initSystemMBean();
     return this;
@@ -159,8 +149,8 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   public synchronized void start() {
     checkNotNull(prefix, "prefix");
     if (monitoring) {
-      LOG.warn(prefix +" metrics system already started!",
-               new MetricsException("Illegal start"));
+      LOG.warn(prefix + " metrics system already started!",
+          new MetricsException("Illegal start"));
       return;
     }
     for (Callback cb : callbacks) cb.preStart();
@@ -168,7 +158,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     configure(prefix);
     startTimer();
     monitoring = true;
-    LOG.info(prefix +" metrics system started");
+    LOG.info(prefix + " metrics system started");
     for (Callback cb : callbacks) cb.postStart();
     for (Callback cb : namedCallbacks.values()) cb.postStart();
   }
@@ -176,29 +166,30 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   @Override
   public synchronized void stop() {
     if (!monitoring && !DefaultMetricsSystem.inMiniClusterMode()) {
-      LOG.warn(prefix +" metrics system not yet started!",
-               new MetricsException("Illegal stop"));
+      LOG.warn(prefix + " metrics system not yet started!",
+          new MetricsException("Illegal stop"));
       return;
     }
     if (!monitoring) {
       // in mini cluster mode
-      LOG.info(prefix +" metrics system stopped (again)");
+      LOG.info(prefix + " metrics system stopped (again)");
       return;
     }
     for (Callback cb : callbacks) cb.preStop();
     for (Callback cb : namedCallbacks.values()) cb.preStop();
-    LOG.info("Stopping "+ prefix +" metrics system...");
+    LOG.info("Stopping " + prefix + " metrics system...");
     stopTimer();
     stopSources();
     stopSinks();
     clearConfigs();
     monitoring = false;
-    LOG.info(prefix +" metrics system stopped.");
+    LOG.info(prefix + " metrics system stopped.");
     for (Callback cb : callbacks) cb.postStop();
     for (Callback cb : namedCallbacks.values()) cb.postStop();
   }
 
-  @Override public synchronized <T>
+  @Override
+  public synchronized <T>
   T register(String name, String desc, T source) {
     MetricsSourceBuilder sb = MetricsAnnotations.newSourceBuilder(source);
     final MetricsSource s = sb.build();
@@ -208,22 +199,23 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     final String finalName = // be friendly to non-metrics tests
         DefaultMetricsSystem.sourceName(name2, !monitoring);
     allSources.put(finalName, s);
-    LOG.debug(finalName +", "+ finalDesc);
+    LOG.debug(finalName + ", " + finalDesc);
     if (monitoring) {
       registerSource(finalName, finalDesc, s);
     }
     // We want to re-register the source to pick up new config when the
     // metrics system restarts.
     register(finalName, new AbstractCallback() {
-      @Override public void postStart() {
+      @Override
+      public void postStart() {
         registerSource(finalName, finalDesc, s);
       }
     });
     return source;
   }
 
-  @Override public synchronized
-  void unregisterSource(String name) {
+  @Override
+  public synchronized void unregisterSource(String name) {
     if (sources.containsKey(name)) {
       sources.get(name).stop();
       sources.remove(name);
@@ -237,26 +229,26 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     DefaultMetricsSystem.removeSourceName(name);
   }
 
-  synchronized
-  void registerSource(String name, String desc, MetricsSource source) {
+  synchronized void registerSource(String name, String desc, MetricsSource source) {
     checkNotNull(config, "config");
     MetricsConfig conf = sourceConfigs.get(name);
     MetricsSourceAdapter sa = new MetricsSourceAdapter(prefix, name, desc,
         source, injectedTags, period, conf != null ? conf
-            : config.subset(SOURCE_KEY));
+        : config.subset(SOURCE_KEY));
     sources.put(name, sa);
     sa.start();
-    LOG.debug("Registered source "+ name);
+    LOG.debug("Registered source " + name);
   }
 
-  @Override public synchronized <T extends MetricsSink>
+  @Override
+  public synchronized <T extends MetricsSink>
   T register(final String name, final String description, final T sink) {
-    LOG.debug(name +", "+ description);
+    LOG.debug(name + ", " + description);
     if (allSinks.containsKey(name)) {
-      if(sinks.get(name) == null) {
+      if (sinks.get(name) == null) {
         registerSink(name, description, sink);
       } else {
-        LOG.warn("Sink "+ name +" already exists!");
+        LOG.warn("Sink " + name + " already exists!");
       }
       return sink;
     }
@@ -267,7 +259,8 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     // We want to re-register the sink to pick up new config
     // when the metrics system restarts.
     register(name, new AbstractCallback() {
-      @Override public void postStart() {
+      @Override
+      public void postStart() {
         register(name, description, sink);
       }
     });
@@ -282,7 +275,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
         : newSink(name, desc, sink, config.subset(SINK_KEY));
     sinks.put(name, sa);
     sa.start();
-    LOG.info("Registered sink "+ name);
+    LOG.info("Registered sink " + name);
   }
 
   @Override
@@ -296,7 +289,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   private Object getProxyForCallback(final Callback callback) {
     return Proxy.newProxyInstance(callback.getClass().getClassLoader(),
-        new Class<?>[] { Callback.class }, new InvocationHandler() {
+        new Class<?>[]{Callback.class}, new InvocationHandler() {
           @Override
           public Object invoke(Object proxy, Method method, Object[] args)
               throws Throwable {
@@ -330,8 +323,9 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     PropertiesConfiguration saver = new PropertiesConfiguration();
     StringWriter writer = new StringWriter();
     saver.copy(config);
-    try { saver.write(writer); }
-    catch (Exception e) {
+    try {
+      saver.write(writer);
+    } catch (Exception e) {
       throw new MetricsConfigException("Error stringify config", e);
     }
     return writer.toString();
@@ -339,22 +333,22 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   private synchronized void startTimer() {
     if (timer != null) {
-      LOG.warn(prefix +" metrics system timer already started!");
+      LOG.warn(prefix + " metrics system timer already started!");
       return;
     }
     logicalTime = 0;
     long millis = period;
-    timer = new Timer("Timer for '"+ prefix +"' metrics system", true);
+    timer = new Timer("Timer for '" + prefix + "' metrics system", true);
     timer.scheduleAtFixedRate(new TimerTask() {
-          @Override
-          public void run() {
-            try {
-              onTimerEvent();
-            } catch (Exception e) {
-              LOG.warn("Error invoking metrics timer", e);
-            }
-          }
-        }, millis, millis);
+      @Override
+      public void run() {
+        try {
+          onTimerEvent();
+        } catch (Exception e) {
+          LOG.warn("Error invoking metrics timer", e);
+        }
+      }
+    }, millis, millis);
     LOG.info("Scheduled Metric snapshot period at " + (period / 1000)
         + " second(s).");
   }
@@ -365,7 +359,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
       publishMetrics(sampleMetrics(), false);
     }
   }
-  
+
   /**
    * Requests an immediate publish of all metrics from sources to sinks.
    */
@@ -373,12 +367,12 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   public synchronized void publishMetricsNow() {
     if (sinks.size() > 0) {
       publishMetrics(sampleMetrics(), true);
-    }    
+    }
   }
 
   /**
    * Sample all the sources for a snapshot of metrics/tags
-   * @return  the metrics buffer containing the snapshot
+   * @return the metrics buffer containing the snapshot
    */
   @VisibleForTesting
   public synchronized MetricsBuffer sampleMetrics() {
@@ -403,7 +397,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     bufferBuilder.add(sa.name(), sa.getMetrics(collector, true));
     collector.clear();
     snapshotStat.add(Time.monotonicNow() - startTime);
-    LOG.debug("Snapshotted source "+ sa.name());
+    LOG.debug("Snapshotted source " + sa.name());
   }
 
   /**
@@ -418,7 +412,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
       long startTime = Time.monotonicNow();
       boolean result;
       if (immediate) {
-        result = sa.putMetricsImmediate(buffer); 
+        result = sa.putMetricsImmediate(buffer);
       } else {
         result = sa.putMetrics(buffer, logicalTime);
       }
@@ -430,7 +424,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   private synchronized void stopTimer() {
     if (timer == null) {
-      LOG.warn(prefix +" metrics system timer already stopped!");
+      LOG.warn(prefix + " metrics system timer already stopped!");
       return;
     }
     timer.cancel();
@@ -440,7 +434,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   private synchronized void stopSources() {
     for (Entry<String, MetricsSourceAdapter> entry : sources.entrySet()) {
       MetricsSourceAdapter sa = entry.getValue();
-      LOG.debug("Stopping metrics source "+ entry.getKey() +
+      LOG.debug("Stopping metrics source " + entry.getKey() +
           ": class=" + sa.source().getClass());
       sa.stop();
     }
@@ -451,7 +445,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   private synchronized void stopSinks() {
     for (Entry<String, MetricsSinkAdapter> entry : sinks.entrySet()) {
       MetricsSinkAdapter sa = entry.getValue();
-      LOG.debug("Stopping metrics sink "+ entry.getKey() +
+      LOG.debug("Stopping metrics sink " + entry.getKey() +
           ": class=" + sa.sink().getClass());
       sa.stop();
     }
@@ -489,7 +483,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
         sa.start();
         sinks.put(sinkName, sa);
       } catch (Exception e) {
-        LOG.warn("Error creating sink '"+ sinkName +"'", e);
+        LOG.warn("Error creating sink '" + sinkName + "'", e);
       }
     }
     long periodSec = config.getInt(PERIOD_KEY, PERIOD_DEFAULT);
@@ -568,15 +562,16 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   @Override
   public synchronized boolean shutdown() {
-    LOG.debug("refCount="+ refCount);
+    LOG.debug("refCount=" + refCount);
     if (refCount <= 0) {
       LOG.debug("Redundant shutdown", new Throwable());
       return true; // already shutdown
     }
     if (--refCount > 0) return false;
     if (monitoring) {
-      try { stop(); }
-      catch (Exception e) {
+      try {
+        stop();
+      } catch (Exception e) {
         LOG.warn("Error stopping the metrics system", e);
       }
     }
@@ -588,7 +583,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
       MBeans.unregister(mbeanName);
       mbeanName = null;
     }
-    LOG.info(prefix +" metrics system shutdown complete.");
+    LOG.info(prefix + " metrics system shutdown complete.");
     return true;
   }
 
@@ -608,8 +603,8 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
   }
 
   private InitMode initMode() {
-    LOG.debug("from system property: "+ System.getProperty(MS_INIT_MODE_KEY));
-    LOG.debug("from environment variable: "+ System.getenv(MS_INIT_MODE_KEY));
+    LOG.debug("from system property: " + System.getProperty(MS_INIT_MODE_KEY));
+    LOG.debug("from environment variable: " + System.getenv(MS_INIT_MODE_KEY));
     String m = System.getProperty(MS_INIT_MODE_KEY);
     String m2 = m == null ? System.getenv(MS_INIT_MODE_KEY) : m;
     return InitMode.valueOf(

@@ -14,7 +14,7 @@
  *    nor the names of its contributors may be used to endorse or 
  *    promote products derived from this software without specific prior 
  *    written permission.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -31,21 +31,22 @@
 
 package org.apache.hadoop.util.bloom;
 
+import org.apache.hadoop.io.WritableComparable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import org.apache.hadoop.io.WritableComparable;
 
 /**
  * The general behavior of a key that must be stored in a filter.
- * 
+ *
  * @see Filter The general behavior of a filter
  */
 // MapReduce也可见
 public class Key implements WritableComparable<Key> {
   /** Byte value of key */
   byte[] bytes;
-  
+
   /**
    * The weight associated to <i>this</i> key.
    * <p>
@@ -55,7 +56,8 @@ public class Key implements WritableComparable<Key> {
   double weight;
 
   /** default constructor - use with readFields */
-  public Key() {}
+  public Key() {
+  }
 
   /**
    * Constructor.
@@ -89,7 +91,7 @@ public class Key implements WritableComparable<Key> {
     this.bytes = value;
     this.weight = weight;
   }
-  
+
   /** @return byte[] The value of <i>this</i> key. */
   public byte[] getBytes() {
     return this.bytes;
@@ -118,9 +120,9 @@ public class Key implements WritableComparable<Key> {
     if (!(o instanceof Key)) {
       return false;
     }
-    return this.compareTo((Key)o) == 0;
+    return this.compareTo((Key) o) == 0;
   }
-  
+
   @Override
   public int hashCode() {
     int result = 0;
@@ -139,14 +141,14 @@ public class Key implements WritableComparable<Key> {
     out.write(bytes);
     out.writeDouble(weight);
   }
-  
+
   @Override
   public void readFields(DataInput in) throws IOException {
     this.bytes = new byte[in.readInt()];
     in.readFully(this.bytes);
     weight = in.readDouble();
   }
-  
+
   // Comparable
   @Override
   public int compareTo(Key other) {
@@ -154,9 +156,9 @@ public class Key implements WritableComparable<Key> {
     for (int i = 0; result == 0 && i < bytes.length; i++) {
       result = this.bytes[i] - other.bytes[i];
     }
-    
+
     if (result == 0) {
-      result = (int)(this.weight - other.weight);
+      result = (int) (this.weight - other.weight);
     }
     return result;
   }

@@ -1,14 +1,14 @@
 package org.apache.hadoop.filter.handler;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Properties;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationToken;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
 
 /**
  * The {@link AltKerberosAuthenticationHandler} behaves exactly the same way as
@@ -20,7 +20,7 @@ import org.apache.hadoop.auth.util.micro.AuthenticationException;
  * comes from a browser.
  */
 public abstract class AltKerberosAuthenticationHandler
-                        extends KerberosAuthenticationHandler {
+    extends KerberosAuthenticationHandler {
 
   /**
    * Constant that identifies the authentication mechanism.
@@ -32,9 +32,9 @@ public abstract class AltKerberosAuthenticationHandler
    * are not considered browsers (comma separated)
    */
   public static final String NON_BROWSER_USER_AGENTS =
-          TYPE + ".non-browser.user-agents";
+      TYPE + ".non-browser.user-agents";
   private static final String NON_BROWSER_USER_AGENTS_DEFAULT =
-          "java,curl,wget,perl";
+      "java,curl,wget,perl";
 
   private String[] nonBrowserUserAgents;
 
@@ -55,11 +55,11 @@ public abstract class AltKerberosAuthenticationHandler
     super.init(config);
 
     nonBrowserUserAgents = config.getProperty(
-            NON_BROWSER_USER_AGENTS, NON_BROWSER_USER_AGENTS_DEFAULT)
-            .split("\\W*,\\W*");
+        NON_BROWSER_USER_AGENTS, NON_BROWSER_USER_AGENTS_DEFAULT)
+        .split("\\W*,\\W*");
     for (int i = 0; i < nonBrowserUserAgents.length; i++) {
-        nonBrowserUserAgents[i] =
-            nonBrowserUserAgents[i].toLowerCase(Locale.ENGLISH);
+      nonBrowserUserAgents[i] =
+          nonBrowserUserAgents[i].toLowerCase(Locale.ENGLISH);
     }
   }
 
@@ -80,13 +80,12 @@ public abstract class AltKerberosAuthenticationHandler
    */
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request,
-      HttpServletResponse response)
+                                          HttpServletResponse response)
       throws IOException, AuthenticationException {
     AuthenticationToken token;
     if (isBrowser(request.getHeader("User-Agent"))) {
       token = alternateAuthenticate(request, response);
-    }
-    else {
+    } else {
       token = super.authenticate(request, response);
     }
     return token;
@@ -114,10 +113,10 @@ public abstract class AltKerberosAuthenticationHandler
     userAgent = userAgent.toLowerCase(Locale.ENGLISH);
     boolean isBrowser = true;
     for (String nonBrowserUserAgent : nonBrowserUserAgents) {
-        if (userAgent.contains(nonBrowserUserAgent)) {
-            isBrowser = false;
-            break;
-        }
+      if (userAgent.contains(nonBrowserUserAgent)) {
+        isBrowser = false;
+        break;
+      }
     }
     return isBrowser;
   }

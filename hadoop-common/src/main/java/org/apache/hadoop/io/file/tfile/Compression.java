@@ -16,26 +16,14 @@
  */
 package org.apache.hadoop.io.file.tfile;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.compress.CodecPool;
-import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.io.compress.CompressionInputStream;
-import org.apache.hadoop.io.compress.CompressionOutputStream;
-import org.apache.hadoop.io.compress.Compressor;
-import org.apache.hadoop.io.compress.Decompressor;
-import org.apache.hadoop.io.compress.DefaultCodec;
+import org.apache.hadoop.io.compress.*;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.ArrayList;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeys.IO_COMPRESSION_CODEC_LZO_BUFFERSIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeys.IO_COMPRESSION_CODEC_LZO_BUFFERSIZE_KEY;
@@ -116,7 +104,7 @@ public final class Compression {
         if (!isSupported()) {
           throw new IOException(String.format(
               "LZO codec %s=%s could not be loaded", CONF_LZO_CLASS, clazz),
-                  cnf);
+              cnf);
         }
 
         return codec;
@@ -293,7 +281,7 @@ public final class Compression {
             // it.
             LOG.warn("Compressor obtained from CodecPool already finished()");
           } else {
-            if(LOG.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
               LOG.debug("Got a compressor: " + compressor.hashCode());
             }
           }
@@ -310,7 +298,7 @@ public final class Compression {
 
     public void returnCompressor(Compressor compressor) {
       if (compressor != null) {
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
           LOG.debug("Return a compressor: " + compressor.hashCode());
         }
         CodecPool.returnCompressor(compressor);
@@ -327,7 +315,7 @@ public final class Compression {
             // it.
             LOG.warn("Deompressor obtained from CodecPool already finished()");
           } else {
-            if(LOG.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
               LOG.debug("Got a decompressor: " + decompressor.hashCode());
             }
           }
@@ -345,7 +333,7 @@ public final class Compression {
 
     public void returnDecompressor(Decompressor decompressor) {
       if (decompressor != null) {
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
           LOG.debug("Returned a decompressor: " + decompressor.hashCode());
         }
         CodecPool.returnDecompressor(decompressor);

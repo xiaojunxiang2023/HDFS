@@ -19,51 +19,51 @@ import java.util.List;
 @InterfaceStability.Evolving
 public class RouterStoreImpl extends RouterStore {
 
-    public RouterStoreImpl(StateStoreDriver driver) {
-        super(driver);
+  public RouterStoreImpl(StateStoreDriver driver) {
+    super(driver);
+  }
+
+  @Override
+  public GetRouterRegistrationResponse getRouterRegistration(
+      GetRouterRegistrationRequest request) throws IOException {
+
+    final RouterState partial = RouterState.newInstance();
+    partial.setAddress(request.getRouterId());
+    final Query<RouterState> query = new Query<RouterState>(partial);
+    RouterState record = getDriver().get(getRecordClass(), query);
+    if (record != null) {
+      overrideExpiredRecord(record);
     }
+    GetRouterRegistrationResponse response =
+        GetRouterRegistrationResponse.newInstance();
+    response.setRouter(record);
+    return response;
+  }
 
-    @Override
-    public GetRouterRegistrationResponse getRouterRegistration(
-            GetRouterRegistrationRequest request) throws IOException {
+  @Override
+  public GetRouterRegistrationsResponse getRouterRegistrations(
+      GetRouterRegistrationsRequest request) throws IOException {
 
-        final RouterState partial = RouterState.newInstance();
-        partial.setAddress(request.getRouterId());
-        final Query<RouterState> query = new Query<RouterState>(partial);
-        RouterState record = getDriver().get(getRecordClass(), query);
-        if (record != null) {
-            overrideExpiredRecord(record);
-        }
-        GetRouterRegistrationResponse response =
-                GetRouterRegistrationResponse.newInstance();
-        response.setRouter(record);
-        return response;
-    }
+    // Get all values from the cache
+    QueryResult<RouterState> recordsAndTimeStamp =
+        getCachedRecordsAndTimeStamp();
+    List<RouterState> records = recordsAndTimeStamp.getRecords();
+    long timestamp = recordsAndTimeStamp.getTimestamp();
 
-    @Override
-    public GetRouterRegistrationsResponse getRouterRegistrations(
-            GetRouterRegistrationsRequest request) throws IOException {
+    // Generate response
+    GetRouterRegistrationsResponse response =
+        GetRouterRegistrationsResponse.newInstance();
+    response.setRouters(records);
+    response.setTimestamp(timestamp);
+    return response;
+  }
 
-        // Get all values from the cache
-        QueryResult<RouterState> recordsAndTimeStamp =
-                getCachedRecordsAndTimeStamp();
-        List<RouterState> records = recordsAndTimeStamp.getRecords();
-        long timestamp = recordsAndTimeStamp.getTimestamp();
-
-        // Generate response
-        GetRouterRegistrationsResponse response =
-                GetRouterRegistrationsResponse.newInstance();
-        response.setRouters(records);
-        response.setTimestamp(timestamp);
-        return response;
-    }
-
-    // 对 ZNode进行写数据, 更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
-    @Override
-    public RouterHeartbeatResponse routerHeartbeat(RouterHeartbeatRequest request)
-            throws IOException {
-        RouterState record = request.getRouter();
-        boolean status = getDriver().put(record, true, false);
-        return RouterHeartbeatResponse.newInstance(status);
-    }
+  // 对 ZNode进行写数据, 更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
+  @Override
+  public RouterHeartbeatResponse routerHeartbeat(RouterHeartbeatRequest request)
+      throws IOException {
+    RouterState record = request.getRouter();
+    boolean status = getDriver().put(record, true, false);
+    return RouterHeartbeatResponse.newInstance(status);
+  }
 }

@@ -1,8 +1,7 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.thirdparty.protobuf.ByteString;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.protobuf.ByteString;
 
 import java.net.InetSocketAddress;
 
@@ -74,7 +73,7 @@ public class DatanodeID implements Comparable<DatanodeID> {
    * @param ipcPort ipc server port
    */
   public DatanodeID(String ipAddr, String hostName, String datanodeUuid,
-      int xferPort, int infoPort, int infoSecurePort, int ipcPort) {
+                    int xferPort, int infoPort, int infoSecurePort, int ipcPort) {
     this(ipAddr, getByteString(ipAddr),
         hostName, getByteString(hostName),
         datanodeUuid, getByteString(datanodeUuid),
@@ -82,9 +81,9 @@ public class DatanodeID implements Comparable<DatanodeID> {
   }
 
   private DatanodeID(String ipAddr, ByteString ipAddrBytes,
-      String hostName, ByteString hostNameBytes,
-      String datanodeUuid, ByteString datanodeUuidBytes,
-      int xferPort, int infoPort, int infoSecurePort, int ipcPort) {
+                     String hostName, ByteString hostNameBytes,
+                     String datanodeUuid, ByteString datanodeUuidBytes,
+                     int xferPort, int infoPort, int infoSecurePort, int ipcPort) {
     setIpAndXferPort(ipAddr, ipAddrBytes, xferPort);
     this.hostName = hostName;
     this.hostNameBytes = hostNameBytes;
@@ -108,7 +107,7 @@ public class DatanodeID implements Comparable<DatanodeID> {
   }
 
   private void setIpAndXferPort(String ipAddr, ByteString ipAddrBytes,
-      int xferPort) {
+                                int xferPort) {
     // build xferAddr string to reduce cost of frequent use
     this.ipAddr = ipAddr;
     this.ipAddrBytes = ipAddrBytes;

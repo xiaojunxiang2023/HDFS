@@ -1,10 +1,6 @@
 package org.apache.hadoop.security;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 // MapReduce也可见
 public class NetgroupCache {
   private static ConcurrentHashMap<String, Set<String>> userToNetgroupsMap =
-    new ConcurrentHashMap<String, Set<String>>();
+      new ConcurrentHashMap<String, Set<String>>();
 
   /**
    * Get netgroups for a given user
@@ -25,7 +21,7 @@ public class NetgroupCache {
    * @param groups put groups into this List
    */
   public static void getNetgroups(final String user,
-      List<String> groups) {
+                                  List<String> groups) {
     Set<String> userGroups = userToNetgroupsMap.get(user);
     //ConcurrentHashMap does not allow null values; 
     //So null value check can be used to check if the key exists
@@ -44,7 +40,7 @@ public class NetgroupCache {
   }
 
   private static Set<String> getGroups() {
-    Set<String> allGroups = new HashSet<String> ();
+    Set<String> allGroups = new HashSet<String>();
     for (Set<String> userGroups : userToNetgroupsMap.values()) {
       allGroups.addAll(userGroups);
     }
@@ -82,7 +78,7 @@ public class NetgroupCache {
       if (userGroups == null) {
         //Generate a ConcurrentHashSet (backed by the keyset of the ConcurrentHashMap)
         userGroups =
-            Collections.newSetFromMap(new ConcurrentHashMap<String,Boolean>());
+            Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
         Set<String> currentSet = userToNetgroupsMap.putIfAbsent(user, userGroups);
         if (currentSet != null) {
           userGroups = currentSet;

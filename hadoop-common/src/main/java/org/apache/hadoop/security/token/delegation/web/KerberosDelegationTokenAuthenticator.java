@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.token.delegation.web;
+
 import org.apache.hadoop.auth.client.ticator.Authenticator;
 import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
 

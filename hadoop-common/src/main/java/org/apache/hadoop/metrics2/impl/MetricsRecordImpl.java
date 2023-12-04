@@ -1,13 +1,13 @@
 package org.apache.hadoop.metrics2.impl;
 
+import org.apache.hadoop.metrics2.AbstractMetric;
+import org.apache.hadoop.metrics2.MetricsInfo;
+import org.apache.hadoop.metrics2.MetricsTag;
+
 import java.util.List;
 
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
-
-import org.apache.hadoop.metrics2.MetricsInfo;
-import org.apache.hadoop.metrics2.AbstractMetric;
-import org.apache.hadoop.metrics2.MetricsTag;
-import static org.apache.hadoop.metrics2.util.Contracts.*;
+import static org.apache.hadoop.metrics2.util.Contracts.checkArg;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 class MetricsRecordImpl extends AbstractMetricsRecord {
   protected static final String DEFAULT_CONTEXT = "default";
@@ -33,11 +33,13 @@ class MetricsRecordImpl extends AbstractMetricsRecord {
     this.metrics = checkNotNull(metrics, "metrics");
   }
 
-  @Override public long timestamp() {
+  @Override
+  public long timestamp() {
     return timestamp;
   }
 
-  @Override public String name() {
+  @Override
+  public String name() {
     return info.name();
   }
 
@@ -45,11 +47,13 @@ class MetricsRecordImpl extends AbstractMetricsRecord {
     return info;
   }
 
-  @Override public String description() {
+  @Override
+  public String description() {
     return info.description();
   }
 
-  @Override public String context() {
+  @Override
+  public String context() {
     // usually the first tag
     for (MetricsTag t : tags) {
       if (t.info() == MsInfo.Context) {
@@ -64,7 +68,8 @@ class MetricsRecordImpl extends AbstractMetricsRecord {
     return tags; // already unmodifiable from MetricsRecordBuilderImpl#tags
   }
 
-  @Override public Iterable<AbstractMetric> metrics() {
+  @Override
+  public Iterable<AbstractMetric> metrics() {
     return metrics;
   }
 }

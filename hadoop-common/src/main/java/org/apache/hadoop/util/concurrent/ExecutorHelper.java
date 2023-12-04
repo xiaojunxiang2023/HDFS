@@ -61,9 +61,10 @@ public final class ExecutorHelper {
 
     if (t != null) {
       LOG.warn("Caught exception in thread {}  + : ", Thread
-              .currentThread().getName(), t);
+          .currentThread().getName(), t);
     }
   }
 
-  private ExecutorHelper() {}
+  private ExecutorHelper() {
+  }
 }

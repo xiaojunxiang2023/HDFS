@@ -21,9 +21,9 @@ public interface IndexedSorter {
   void sort(IndexedSortable s, int l, int r);
 
   /**
-   * Same as {@link #sort(IndexedSortable,int,int)}, but indicate progress
+   * Same as {@link #sort(IndexedSortable, int, int)}, but indicate progress
    * periodically.
-   * @see #sort(IndexedSortable,int,int)
+   * @see #sort(IndexedSortable, int, int)
    */
   void sort(IndexedSortable s, int l, int r, Progressable rep);
 

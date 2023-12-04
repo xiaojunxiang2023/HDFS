@@ -3,7 +3,9 @@
 package org.apache.hadoop.ipc.protobuf;
 
 public final class RpcHeaderProtos {
-  private RpcHeaderProtos() {}
+  private RpcHeaderProtos() {
+  }
+
   public static void registerAllExtensions(
       org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite registry) {
   }
@@ -13,6 +15,7 @@ public final class RpcHeaderProtos {
     registerAllExtensions(
         (org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite) registry);
   }
+
   /**
    * <pre>
    **
@@ -89,35 +92,42 @@ public final class RpcHeaderProtos {
 
     public static RpcKindProto forNumber(int value) {
       switch (value) {
-        case 0: return RPC_BUILTIN;
-        case 1: return RPC_WRITABLE;
-        case 2: return RPC_PROTOCOL_BUFFER;
-        default: return null;
+        case 0:
+          return RPC_BUILTIN;
+        case 1:
+          return RPC_WRITABLE;
+        case 2:
+          return RPC_PROTOCOL_BUFFER;
+        default:
+          return null;
       }
     }
 
     public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcKindProto>
-        internalGetValueMap() {
+    internalGetValueMap() {
       return internalValueMap;
     }
+
     private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
         RpcKindProto> internalValueMap =
-          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcKindProto>() {
-            public RpcKindProto findValueByNumber(int number) {
-              return RpcKindProto.forNumber(number);
-            }
-          };
+        new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcKindProto>() {
+          public RpcKindProto findValueByNumber(int number) {
+            return RpcKindProto.forNumber(number);
+          }
+        };
 
     public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-        getValueDescriptor() {
+    getValueDescriptor() {
       return getDescriptor().getValues().get(ordinal());
     }
+
     public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-        getDescriptorForType() {
+    getDescriptorForType() {
       return getDescriptor();
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.getDescriptor().getEnumTypes().get(0);
     }
 
@@ -127,7 +137,7 @@ public final class RpcHeaderProtos {
         org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
         throw new java.lang.IllegalArgumentException(
-          "EnumValueDescriptor is not for this type.");
+            "EnumValueDescriptor is not for this type.");
       }
       return VALUES[desc.getIndex()];
     }
@@ -153,6 +163,7 @@ public final class RpcHeaderProtos {
      * <code>optional int64 traceId = 1;</code>
      */
     boolean hasTraceId();
+
     /**
      * <pre>
      * parentIdHigh
@@ -170,6 +181,7 @@ public final class RpcHeaderProtos {
      * <code>optional int64 parentId = 2;</code>
      */
     boolean hasParentId();
+
     /**
      * <pre>
      * parentIdLow
@@ -187,6 +199,7 @@ public final class RpcHeaderProtos {
      * <code>optional bytes spanContext = 3;</code>
      */
     boolean hasSpanContext();
+
     /**
      * <pre>
      * Trace SpanContext
@@ -196,6 +209,7 @@ public final class RpcHeaderProtos {
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString getSpanContext();
   }
+
   /**
    * <pre>
    **
@@ -208,15 +222,17 @@ public final class RpcHeaderProtos {
    *
    * Protobuf type {@code hadoop.common.RPCTraceInfoProto}
    */
-  public  static final class RPCTraceInfoProto extends
+  public static final class RPCTraceInfoProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.RPCTraceInfoProto)
       RPCTraceInfoProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use RPCTraceInfoProto.newBuilder() to construct.
     private RPCTraceInfoProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private RPCTraceInfoProto() {
       spanContext_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
     }
@@ -226,6 +242,7 @@ public final class RpcHeaderProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private RPCTraceInfoProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -279,14 +296,15 @@ public final class RpcHeaderProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCTraceInfoProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCTraceInfoProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.Builder.class);
@@ -295,6 +313,7 @@ public final class RpcHeaderProtos {
     private int bitField0_;
     public static final int TRACEID_FIELD_NUMBER = 1;
     private long traceId_;
+
     /**
      * <pre>
      * parentIdHigh
@@ -305,6 +324,7 @@ public final class RpcHeaderProtos {
     public boolean hasTraceId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <pre>
      * parentIdHigh
@@ -318,6 +338,7 @@ public final class RpcHeaderProtos {
 
     public static final int PARENTID_FIELD_NUMBER = 2;
     private long parentId_;
+
     /**
      * <pre>
      * parentIdLow
@@ -328,6 +349,7 @@ public final class RpcHeaderProtos {
     public boolean hasParentId() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * parentIdLow
@@ -341,6 +363,7 @@ public final class RpcHeaderProtos {
 
     public static final int SPANCONTEXT_FIELD_NUMBER = 3;
     private org.apache.hadoop.thirdparty.protobuf.ByteString spanContext_;
+
     /**
      * <pre>
      * Trace SpanContext
@@ -351,6 +374,7 @@ public final class RpcHeaderProtos {
     public boolean hasSpanContext() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <pre>
      * Trace SpanContext
@@ -363,6 +387,7 @@ public final class RpcHeaderProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -375,7 +400,7 @@ public final class RpcHeaderProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt64(1, traceId_);
       }
@@ -396,15 +421,15 @@ public final class RpcHeaderProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeInt64Size(1, traceId_);
+            .computeInt64Size(1, traceId_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeInt64Size(2, parentId_);
+            .computeInt64Size(2, parentId_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(3, spanContext_);
+            .computeBytesSize(3, spanContext_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -414,7 +439,7 @@ public final class RpcHeaderProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto)) {
         return super.equals(obj);
@@ -471,38 +496,45 @@ public final class RpcHeaderProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -510,11 +542,13 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -522,12 +556,14 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -537,13 +573,18 @@ public final class RpcHeaderProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -556,6 +597,7 @@ public final class RpcHeaderProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -573,13 +615,13 @@ public final class RpcHeaderProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.RPCTraceInfoProto)
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCTraceInfoProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCTraceInfoProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.Builder.class);
@@ -595,11 +637,13 @@ public final class RpcHeaderProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -614,7 +658,7 @@ public final class RpcHeaderProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCTraceInfoProto_descriptor;
       }
 
@@ -658,38 +702,44 @@ public final class RpcHeaderProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -735,9 +785,11 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private long traceId_ ;
+      private long traceId_;
+
       /**
        * <pre>
        * parentIdHigh
@@ -748,6 +800,7 @@ public final class RpcHeaderProtos {
       public boolean hasTraceId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        * parentIdHigh
@@ -758,6 +811,7 @@ public final class RpcHeaderProtos {
       public long getTraceId() {
         return traceId_;
       }
+
       /**
        * <pre>
        * parentIdHigh
@@ -771,6 +825,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * parentIdHigh
@@ -785,7 +840,8 @@ public final class RpcHeaderProtos {
         return this;
       }
 
-      private long parentId_ ;
+      private long parentId_;
+
       /**
        * <pre>
        * parentIdLow
@@ -796,6 +852,7 @@ public final class RpcHeaderProtos {
       public boolean hasParentId() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * parentIdLow
@@ -806,6 +863,7 @@ public final class RpcHeaderProtos {
       public long getParentId() {
         return parentId_;
       }
+
       /**
        * <pre>
        * parentIdLow
@@ -819,6 +877,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * parentIdLow
@@ -834,6 +893,7 @@ public final class RpcHeaderProtos {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString spanContext_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <pre>
        * Trace SpanContext
@@ -844,6 +904,7 @@ public final class RpcHeaderProtos {
       public boolean hasSpanContext() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * Trace SpanContext
@@ -854,6 +915,7 @@ public final class RpcHeaderProtos {
       public org.apache.hadoop.thirdparty.protobuf.ByteString getSpanContext() {
         return spanContext_;
       }
+
       /**
        * <pre>
        * Trace SpanContext
@@ -863,13 +925,14 @@ public final class RpcHeaderProtos {
        */
       public Builder setSpanContext(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
         spanContext_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Trace SpanContext
@@ -883,6 +946,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -901,6 +965,7 @@ public final class RpcHeaderProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.RPCTraceInfoProto)
     private static final org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto();
     }
@@ -909,7 +974,8 @@ public final class RpcHeaderProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<RPCTraceInfoProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<RPCTraceInfoProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<RPCTraceInfoProto>() {
       @java.lang.Override
       public RPCTraceInfoProto parsePartialFrom(
@@ -944,25 +1010,29 @@ public final class RpcHeaderProtos {
      * <code>required string context = 1;</code>
      */
     boolean hasContext();
+
     /**
      * <code>required string context = 1;</code>
      */
     java.lang.String getContext();
+
     /**
      * <code>required string context = 1;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getContextBytes();
+    getContextBytes();
 
     /**
      * <code>optional bytes signature = 2;</code>
      */
     boolean hasSignature();
+
     /**
      * <code>optional bytes signature = 2;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString getSignature();
   }
+
   /**
    * <pre>
    **
@@ -971,15 +1041,17 @@ public final class RpcHeaderProtos {
    *
    * Protobuf type {@code hadoop.common.RPCCallerContextProto}
    */
-  public  static final class RPCCallerContextProto extends
+  public static final class RPCCallerContextProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.RPCCallerContextProto)
       RPCCallerContextProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use RPCCallerContextProto.newBuilder() to construct.
     private RPCCallerContextProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private RPCCallerContextProto() {
       context_ = "";
       signature_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
@@ -990,6 +1062,7 @@ public final class RpcHeaderProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private RPCCallerContextProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1039,14 +1112,15 @@ public final class RpcHeaderProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCCallerContextProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCCallerContextProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.Builder.class);
@@ -1055,12 +1129,14 @@ public final class RpcHeaderProtos {
     private int bitField0_;
     public static final int CONTEXT_FIELD_NUMBER = 1;
     private volatile java.lang.Object context_;
+
     /**
      * <code>required string context = 1;</code>
      */
     public boolean hasContext() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>required string context = 1;</code>
      */
@@ -1069,7 +1145,7 @@ public final class RpcHeaderProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1078,14 +1154,15 @@ public final class RpcHeaderProtos {
         return s;
       }
     }
+
     /**
      * <code>required string context = 1;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getContextBytes() {
+    getContextBytes() {
       java.lang.Object ref = context_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         context_ = b;
@@ -1097,12 +1174,14 @@ public final class RpcHeaderProtos {
 
     public static final int SIGNATURE_FIELD_NUMBER = 2;
     private org.apache.hadoop.thirdparty.protobuf.ByteString signature_;
+
     /**
      * <code>optional bytes signature = 2;</code>
      */
     public boolean hasSignature() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>optional bytes signature = 2;</code>
      */
@@ -1111,6 +1190,7 @@ public final class RpcHeaderProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1127,7 +1207,7 @@ public final class RpcHeaderProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.writeString(output, 1, context_);
       }
@@ -1148,7 +1228,7 @@ public final class RpcHeaderProtos {
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(2, signature_);
+            .computeBytesSize(2, signature_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1158,7 +1238,7 @@ public final class RpcHeaderProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto)) {
         return super.equals(obj);
@@ -1204,38 +1284,45 @@ public final class RpcHeaderProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1243,11 +1330,13 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1255,12 +1344,14 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1270,13 +1361,18 @@ public final class RpcHeaderProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -1289,6 +1385,7 @@ public final class RpcHeaderProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -1302,13 +1399,13 @@ public final class RpcHeaderProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.RPCCallerContextProto)
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCCallerContextProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCCallerContextProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.Builder.class);
@@ -1324,11 +1421,13 @@ public final class RpcHeaderProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -1341,7 +1440,7 @@ public final class RpcHeaderProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RPCCallerContextProto_descriptor;
       }
 
@@ -1381,38 +1480,44 @@ public final class RpcHeaderProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1420,7 +1525,8 @@ public final class RpcHeaderProtos {
       }
 
       public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto other) {
-        if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.getDefaultInstance())
+          return this;
         if (other.hasContext()) {
           bitField0_ |= 0x00000001;
           context_ = other.context_;
@@ -1460,15 +1566,18 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
       private java.lang.Object context_ = "";
+
       /**
        * <code>required string context = 1;</code>
        */
       public boolean hasContext() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required string context = 1;</code>
        */
@@ -1486,14 +1595,15 @@ public final class RpcHeaderProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>required string context = 1;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getContextBytes() {
+      getContextBytes() {
         java.lang.Object ref = context_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           context_ = b;
@@ -1502,19 +1612,21 @@ public final class RpcHeaderProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>required string context = 1;</code>
        */
       public Builder setContext(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
         context_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>required string context = 1;</code>
        */
@@ -1524,45 +1636,50 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required string context = 1;</code>
        */
       public Builder setContextBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
         context_ = value;
         onChanged();
         return this;
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString signature_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <code>optional bytes signature = 2;</code>
        */
       public boolean hasSignature() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional bytes signature = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString getSignature() {
         return signature_;
       }
+
       /**
        * <code>optional bytes signature = 2;</code>
        */
       public Builder setSignature(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         signature_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional bytes signature = 2;</code>
        */
@@ -1572,6 +1689,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -1590,6 +1708,7 @@ public final class RpcHeaderProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.RPCCallerContextProto)
     private static final org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto();
     }
@@ -1598,7 +1717,8 @@ public final class RpcHeaderProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<RPCCallerContextProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<RPCCallerContextProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<RPCCallerContextProto>() {
       @java.lang.Override
       public RPCCallerContextProto parsePartialFrom(
@@ -1633,6 +1753,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
      */
     boolean hasRpcKind();
+
     /**
      * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
      */
@@ -1642,6 +1763,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
      */
     boolean hasRpcOp();
+
     /**
      * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
      */
@@ -1655,6 +1777,7 @@ public final class RpcHeaderProtos {
      * <code>required sint32 callId = 3;</code>
      */
     boolean hasCallId();
+
     /**
      * <pre>
      * a sequence number that is sent back in response
@@ -1672,6 +1795,7 @@ public final class RpcHeaderProtos {
      * <code>required bytes clientId = 4;</code>
      */
     boolean hasClientId();
+
     /**
      * <pre>
      * Globally unique client ID
@@ -1690,6 +1814,7 @@ public final class RpcHeaderProtos {
      * <code>optional sint32 retryCount = 5 [default = -1];</code>
      */
     boolean hasRetryCount();
+
     /**
      * <pre>
      * clientId + callId uniquely identifies a request
@@ -1708,6 +1833,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RPCTraceInfoProto traceInfo = 6;</code>
      */
     boolean hasTraceInfo();
+
     /**
      * <pre>
      * tracing info
@@ -1716,6 +1842,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RPCTraceInfoProto traceInfo = 6;</code>
      */
     org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto getTraceInfo();
+
     /**
      * <pre>
      * tracing info
@@ -1733,6 +1860,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RPCCallerContextProto callerContext = 7;</code>
      */
     boolean hasCallerContext();
+
     /**
      * <pre>
      * call context
@@ -1741,6 +1869,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RPCCallerContextProto callerContext = 7;</code>
      */
     org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto getCallerContext();
+
     /**
      * <pre>
      * call context
@@ -1758,6 +1887,7 @@ public final class RpcHeaderProtos {
      * <code>optional int64 stateId = 8;</code>
      */
     boolean hasStateId();
+
     /**
      * <pre>
      * The last seen Global State ID
@@ -1767,6 +1897,7 @@ public final class RpcHeaderProtos {
      */
     long getStateId();
   }
+
   /**
    * <pre>
    * the header for the RpcRequest
@@ -1774,15 +1905,17 @@ public final class RpcHeaderProtos {
    *
    * Protobuf type {@code hadoop.common.RpcRequestHeaderProto}
    */
-  public  static final class RpcRequestHeaderProto extends
+  public static final class RpcRequestHeaderProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.RpcRequestHeaderProto)
       RpcRequestHeaderProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use RpcRequestHeaderProto.newBuilder() to construct.
     private RpcRequestHeaderProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private RpcRequestHeaderProto() {
       rpcKind_ = 0;
       rpcOp_ = 0;
@@ -1795,6 +1928,7 @@ public final class RpcHeaderProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private RpcRequestHeaderProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1816,7 +1950,7 @@ public final class RpcHeaderProtos {
               break;
             case 8: {
               int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
+              @SuppressWarnings("deprecation")
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcKindProto value = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcKindProto.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
@@ -1828,7 +1962,7 @@ public final class RpcHeaderProtos {
             }
             case 16: {
               int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
+              @SuppressWarnings("deprecation")
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.OperationProto value = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.OperationProto.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
@@ -1903,14 +2037,15 @@ public final class RpcHeaderProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcRequestHeaderProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcRequestHeaderProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.Builder.class);
@@ -1987,35 +2122,42 @@ public final class RpcHeaderProtos {
 
       public static OperationProto forNumber(int value) {
         switch (value) {
-          case 0: return RPC_FINAL_PACKET;
-          case 1: return RPC_CONTINUATION_PACKET;
-          case 2: return RPC_CLOSE_CONNECTION;
-          default: return null;
+          case 0:
+            return RPC_FINAL_PACKET;
+          case 1:
+            return RPC_CONTINUATION_PACKET;
+          case 2:
+            return RPC_CLOSE_CONNECTION;
+          default:
+            return null;
         }
       }
 
       public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<OperationProto>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
+
       private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
           OperationProto> internalValueMap =
-            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<OperationProto>() {
-              public OperationProto findValueByNumber(int number) {
-                return OperationProto.forNumber(number);
-              }
-            };
+          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<OperationProto>() {
+            public OperationProto findValueByNumber(int number) {
+              return OperationProto.forNumber(number);
+            }
+          };
 
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
+
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.getDescriptor().getEnumTypes().get(0);
       }
 
@@ -2025,7 +2167,7 @@ public final class RpcHeaderProtos {
           org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -2042,12 +2184,14 @@ public final class RpcHeaderProtos {
     private int bitField0_;
     public static final int RPCKIND_FIELD_NUMBER = 1;
     private int rpcKind_;
+
     /**
      * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
      */
     public boolean hasRpcKind() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
      */
@@ -2059,12 +2203,14 @@ public final class RpcHeaderProtos {
 
     public static final int RPCOP_FIELD_NUMBER = 2;
     private int rpcOp_;
+
     /**
      * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
      */
     public boolean hasRpcOp() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
      */
@@ -2076,6 +2222,7 @@ public final class RpcHeaderProtos {
 
     public static final int CALLID_FIELD_NUMBER = 3;
     private int callId_;
+
     /**
      * <pre>
      * a sequence number that is sent back in response
@@ -2086,6 +2233,7 @@ public final class RpcHeaderProtos {
     public boolean hasCallId() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <pre>
      * a sequence number that is sent back in response
@@ -2099,6 +2247,7 @@ public final class RpcHeaderProtos {
 
     public static final int CLIENTID_FIELD_NUMBER = 4;
     private org.apache.hadoop.thirdparty.protobuf.ByteString clientId_;
+
     /**
      * <pre>
      * Globally unique client ID
@@ -2109,6 +2258,7 @@ public final class RpcHeaderProtos {
     public boolean hasClientId() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      * <pre>
      * Globally unique client ID
@@ -2122,6 +2272,7 @@ public final class RpcHeaderProtos {
 
     public static final int RETRYCOUNT_FIELD_NUMBER = 5;
     private int retryCount_;
+
     /**
      * <pre>
      * clientId + callId uniquely identifies a request
@@ -2133,6 +2284,7 @@ public final class RpcHeaderProtos {
     public boolean hasRetryCount() {
       return ((bitField0_ & 0x00000010) != 0);
     }
+
     /**
      * <pre>
      * clientId + callId uniquely identifies a request
@@ -2147,6 +2299,7 @@ public final class RpcHeaderProtos {
 
     public static final int TRACEINFO_FIELD_NUMBER = 6;
     private org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto traceInfo_;
+
     /**
      * <pre>
      * tracing info
@@ -2157,6 +2310,7 @@ public final class RpcHeaderProtos {
     public boolean hasTraceInfo() {
       return ((bitField0_ & 0x00000020) != 0);
     }
+
     /**
      * <pre>
      * tracing info
@@ -2167,6 +2321,7 @@ public final class RpcHeaderProtos {
     public org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto getTraceInfo() {
       return traceInfo_ == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.getDefaultInstance() : traceInfo_;
     }
+
     /**
      * <pre>
      * tracing info
@@ -2180,6 +2335,7 @@ public final class RpcHeaderProtos {
 
     public static final int CALLERCONTEXT_FIELD_NUMBER = 7;
     private org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto callerContext_;
+
     /**
      * <pre>
      * call context
@@ -2190,6 +2346,7 @@ public final class RpcHeaderProtos {
     public boolean hasCallerContext() {
       return ((bitField0_ & 0x00000040) != 0);
     }
+
     /**
      * <pre>
      * call context
@@ -2200,6 +2357,7 @@ public final class RpcHeaderProtos {
     public org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto getCallerContext() {
       return callerContext_ == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.getDefaultInstance() : callerContext_;
     }
+
     /**
      * <pre>
      * call context
@@ -2213,6 +2371,7 @@ public final class RpcHeaderProtos {
 
     public static final int STATEID_FIELD_NUMBER = 8;
     private long stateId_;
+
     /**
      * <pre>
      * The last seen Global State ID
@@ -2223,6 +2382,7 @@ public final class RpcHeaderProtos {
     public boolean hasStateId() {
       return ((bitField0_ & 0x00000080) != 0);
     }
+
     /**
      * <pre>
      * The last seen Global State ID
@@ -2235,6 +2395,7 @@ public final class RpcHeaderProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -2261,7 +2422,7 @@ public final class RpcHeaderProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeEnum(1, rpcKind_);
       }
@@ -2297,35 +2458,35 @@ public final class RpcHeaderProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeEnumSize(1, rpcKind_);
+            .computeEnumSize(1, rpcKind_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeEnumSize(2, rpcOp_);
+            .computeEnumSize(2, rpcOp_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeSInt32Size(3, callId_);
+            .computeSInt32Size(3, callId_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(4, clientId_);
+            .computeBytesSize(4, clientId_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeSInt32Size(5, retryCount_);
+            .computeSInt32Size(5, retryCount_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(6, getTraceInfo());
+            .computeMessageSize(6, getTraceInfo());
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(7, getCallerContext());
+            .computeMessageSize(7, getCallerContext());
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeInt64Size(8, stateId_);
+            .computeInt64Size(8, stateId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2335,7 +2496,7 @@ public final class RpcHeaderProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto)) {
         return super.equals(obj);
@@ -2434,38 +2595,45 @@ public final class RpcHeaderProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2473,11 +2641,13 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2485,12 +2655,14 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2500,13 +2672,18 @@ public final class RpcHeaderProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -2519,6 +2696,7 @@ public final class RpcHeaderProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      * the header for the RpcRequest
@@ -2531,13 +2709,13 @@ public final class RpcHeaderProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.RpcRequestHeaderProto)
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcRequestHeaderProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcRequestHeaderProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.Builder.class);
@@ -2553,13 +2731,15 @@ public final class RpcHeaderProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
           getTraceInfoFieldBuilder();
           getCallerContextFieldBuilder();
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -2592,7 +2772,7 @@ public final class RpcHeaderProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcRequestHeaderProto_descriptor;
       }
 
@@ -2664,38 +2844,44 @@ public final class RpcHeaderProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2703,7 +2889,8 @@ public final class RpcHeaderProtos {
       }
 
       public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto other) {
-        if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.getDefaultInstance())
+          return this;
         if (other.hasRpcKind()) {
           setRpcKind(other.getRpcKind());
         }
@@ -2767,15 +2954,18 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
       private int rpcKind_ = 0;
+
       /**
        * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
        */
       public boolean hasRpcKind() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
        */
@@ -2784,6 +2974,7 @@ public final class RpcHeaderProtos {
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcKindProto result = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcKindProto.valueOf(rpcKind_);
         return result == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcKindProto.RPC_BUILTIN : result;
       }
+
       /**
        * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
        */
@@ -2796,6 +2987,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional .hadoop.common.RpcKindProto rpcKind = 1;</code>
        */
@@ -2807,12 +2999,14 @@ public final class RpcHeaderProtos {
       }
 
       private int rpcOp_ = 0;
+
       /**
        * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
        */
       public boolean hasRpcOp() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
        */
@@ -2821,6 +3015,7 @@ public final class RpcHeaderProtos {
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.OperationProto result = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.OperationProto.valueOf(rpcOp_);
         return result == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto.OperationProto.RPC_FINAL_PACKET : result;
       }
+
       /**
        * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
        */
@@ -2833,6 +3028,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional .hadoop.common.RpcRequestHeaderProto.OperationProto rpcOp = 2;</code>
        */
@@ -2843,7 +3039,8 @@ public final class RpcHeaderProtos {
         return this;
       }
 
-      private int callId_ ;
+      private int callId_;
+
       /**
        * <pre>
        * a sequence number that is sent back in response
@@ -2854,6 +3051,7 @@ public final class RpcHeaderProtos {
       public boolean hasCallId() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * a sequence number that is sent back in response
@@ -2864,6 +3062,7 @@ public final class RpcHeaderProtos {
       public int getCallId() {
         return callId_;
       }
+
       /**
        * <pre>
        * a sequence number that is sent back in response
@@ -2877,6 +3076,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * a sequence number that is sent back in response
@@ -2892,6 +3092,7 @@ public final class RpcHeaderProtos {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString clientId_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <pre>
        * Globally unique client ID
@@ -2902,6 +3103,7 @@ public final class RpcHeaderProtos {
       public boolean hasClientId() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <pre>
        * Globally unique client ID
@@ -2912,6 +3114,7 @@ public final class RpcHeaderProtos {
       public org.apache.hadoop.thirdparty.protobuf.ByteString getClientId() {
         return clientId_;
       }
+
       /**
        * <pre>
        * Globally unique client ID
@@ -2921,13 +3124,14 @@ public final class RpcHeaderProtos {
        */
       public Builder setClientId(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000008;
         clientId_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Globally unique client ID
@@ -2943,6 +3147,7 @@ public final class RpcHeaderProtos {
       }
 
       private int retryCount_ = -1;
+
       /**
        * <pre>
        * clientId + callId uniquely identifies a request
@@ -2954,6 +3159,7 @@ public final class RpcHeaderProtos {
       public boolean hasRetryCount() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <pre>
        * clientId + callId uniquely identifies a request
@@ -2965,6 +3171,7 @@ public final class RpcHeaderProtos {
       public int getRetryCount() {
         return retryCount_;
       }
+
       /**
        * <pre>
        * clientId + callId uniquely identifies a request
@@ -2979,6 +3186,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * clientId + callId uniquely identifies a request
@@ -2997,6 +3205,7 @@ public final class RpcHeaderProtos {
       private org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto traceInfo_;
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
           org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProtoOrBuilder> traceInfoBuilder_;
+
       /**
        * <pre>
        * tracing info
@@ -3007,6 +3216,7 @@ public final class RpcHeaderProtos {
       public boolean hasTraceInfo() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <pre>
        * tracing info
@@ -3021,6 +3231,7 @@ public final class RpcHeaderProtos {
           return traceInfoBuilder_.getMessage();
         }
       }
+
       /**
        * <pre>
        * tracing info
@@ -3041,6 +3252,7 @@ public final class RpcHeaderProtos {
         bitField0_ |= 0x00000020;
         return this;
       }
+
       /**
        * <pre>
        * tracing info
@@ -3059,6 +3271,7 @@ public final class RpcHeaderProtos {
         bitField0_ |= 0x00000020;
         return this;
       }
+
       /**
        * <pre>
        * tracing info
@@ -3072,7 +3285,7 @@ public final class RpcHeaderProtos {
               traceInfo_ != null &&
               traceInfo_ != org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.getDefaultInstance()) {
             traceInfo_ =
-              org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.newBuilder(traceInfo_).mergeFrom(value).buildPartial();
+                org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.newBuilder(traceInfo_).mergeFrom(value).buildPartial();
           } else {
             traceInfo_ = value;
           }
@@ -3083,6 +3296,7 @@ public final class RpcHeaderProtos {
         bitField0_ |= 0x00000020;
         return this;
       }
+
       /**
        * <pre>
        * tracing info
@@ -3100,6 +3314,7 @@ public final class RpcHeaderProtos {
         bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
+
       /**
        * <pre>
        * tracing info
@@ -3112,6 +3327,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return getTraceInfoFieldBuilder().getBuilder();
       }
+
       /**
        * <pre>
        * tracing info
@@ -3127,6 +3343,7 @@ public final class RpcHeaderProtos {
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.getDefaultInstance() : traceInfo_;
         }
       }
+
       /**
        * <pre>
        * tracing info
@@ -3135,14 +3352,14 @@ public final class RpcHeaderProtos {
        * <code>optional .hadoop.common.RPCTraceInfoProto traceInfo = 6;</code>
        */
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-          org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProtoOrBuilder> 
-          getTraceInfoFieldBuilder() {
+          org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProtoOrBuilder>
+      getTraceInfoFieldBuilder() {
         if (traceInfoBuilder_ == null) {
           traceInfoBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProtoOrBuilder>(
-                  getTraceInfo(),
-                  getParentForChildren(),
-                  isClean());
+              getTraceInfo(),
+              getParentForChildren(),
+              isClean());
           traceInfo_ = null;
         }
         return traceInfoBuilder_;
@@ -3151,6 +3368,7 @@ public final class RpcHeaderProtos {
       private org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto callerContext_;
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
           org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProtoOrBuilder> callerContextBuilder_;
+
       /**
        * <pre>
        * call context
@@ -3161,6 +3379,7 @@ public final class RpcHeaderProtos {
       public boolean hasCallerContext() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <pre>
        * call context
@@ -3175,6 +3394,7 @@ public final class RpcHeaderProtos {
           return callerContextBuilder_.getMessage();
         }
       }
+
       /**
        * <pre>
        * call context
@@ -3195,6 +3415,7 @@ public final class RpcHeaderProtos {
         bitField0_ |= 0x00000040;
         return this;
       }
+
       /**
        * <pre>
        * call context
@@ -3213,6 +3434,7 @@ public final class RpcHeaderProtos {
         bitField0_ |= 0x00000040;
         return this;
       }
+
       /**
        * <pre>
        * call context
@@ -3226,7 +3448,7 @@ public final class RpcHeaderProtos {
               callerContext_ != null &&
               callerContext_ != org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.getDefaultInstance()) {
             callerContext_ =
-              org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.newBuilder(callerContext_).mergeFrom(value).buildPartial();
+                org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.newBuilder(callerContext_).mergeFrom(value).buildPartial();
           } else {
             callerContext_ = value;
           }
@@ -3237,6 +3459,7 @@ public final class RpcHeaderProtos {
         bitField0_ |= 0x00000040;
         return this;
       }
+
       /**
        * <pre>
        * call context
@@ -3254,6 +3477,7 @@ public final class RpcHeaderProtos {
         bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
+
       /**
        * <pre>
        * call context
@@ -3266,6 +3490,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return getCallerContextFieldBuilder().getBuilder();
       }
+
       /**
        * <pre>
        * call context
@@ -3281,6 +3506,7 @@ public final class RpcHeaderProtos {
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.getDefaultInstance() : callerContext_;
         }
       }
+
       /**
        * <pre>
        * call context
@@ -3289,20 +3515,21 @@ public final class RpcHeaderProtos {
        * <code>optional .hadoop.common.RPCCallerContextProto callerContext = 7;</code>
        */
       private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-          org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProtoOrBuilder> 
-          getCallerContextFieldBuilder() {
+          org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProtoOrBuilder>
+      getCallerContextFieldBuilder() {
         if (callerContextBuilder_ == null) {
           callerContextBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProtoOrBuilder>(
-                  getCallerContext(),
-                  getParentForChildren(),
-                  isClean());
+              getCallerContext(),
+              getParentForChildren(),
+              isClean());
           callerContext_ = null;
         }
         return callerContextBuilder_;
       }
 
-      private long stateId_ ;
+      private long stateId_;
+
       /**
        * <pre>
        * The last seen Global State ID
@@ -3313,6 +3540,7 @@ public final class RpcHeaderProtos {
       public boolean hasStateId() {
         return ((bitField0_ & 0x00000080) != 0);
       }
+
       /**
        * <pre>
        * The last seen Global State ID
@@ -3323,6 +3551,7 @@ public final class RpcHeaderProtos {
       public long getStateId() {
         return stateId_;
       }
+
       /**
        * <pre>
        * The last seen Global State ID
@@ -3336,6 +3565,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * The last seen Global State ID
@@ -3349,6 +3579,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -3367,6 +3598,7 @@ public final class RpcHeaderProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.RpcRequestHeaderProto)
     private static final org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto();
     }
@@ -3375,7 +3607,8 @@ public final class RpcHeaderProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<RpcRequestHeaderProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<RpcRequestHeaderProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<RpcRequestHeaderProto>() {
       @java.lang.Override
       public RpcRequestHeaderProto parsePartialFrom(
@@ -3414,6 +3647,7 @@ public final class RpcHeaderProtos {
      * <code>required uint32 callId = 1;</code>
      */
     boolean hasCallId();
+
     /**
      * <pre>
      * callId used in Request
@@ -3427,6 +3661,7 @@ public final class RpcHeaderProtos {
      * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
      */
     boolean hasStatus();
+
     /**
      * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
      */
@@ -3440,6 +3675,7 @@ public final class RpcHeaderProtos {
      * <code>optional uint32 serverIpcVersionNum = 3;</code>
      */
     boolean hasServerIpcVersionNum();
+
     /**
      * <pre>
      * Sent if success or fail
@@ -3457,6 +3693,7 @@ public final class RpcHeaderProtos {
      * <code>optional string exceptionClassName = 4;</code>
      */
     boolean hasExceptionClassName();
+
     /**
      * <pre>
      * if request fails
@@ -3465,6 +3702,7 @@ public final class RpcHeaderProtos {
      * <code>optional string exceptionClassName = 4;</code>
      */
     java.lang.String getExceptionClassName();
+
     /**
      * <pre>
      * if request fails
@@ -3473,7 +3711,7 @@ public final class RpcHeaderProtos {
      * <code>optional string exceptionClassName = 4;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getExceptionClassNameBytes();
+    getExceptionClassNameBytes();
 
     /**
      * <pre>
@@ -3483,6 +3721,7 @@ public final class RpcHeaderProtos {
      * <code>optional string errorMsg = 5;</code>
      */
     boolean hasErrorMsg();
+
     /**
      * <pre>
      * if request fails, often contains strack trace
@@ -3491,6 +3730,7 @@ public final class RpcHeaderProtos {
      * <code>optional string errorMsg = 5;</code>
      */
     java.lang.String getErrorMsg();
+
     /**
      * <pre>
      * if request fails, often contains strack trace
@@ -3499,7 +3739,7 @@ public final class RpcHeaderProtos {
      * <code>optional string errorMsg = 5;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getErrorMsgBytes();
+    getErrorMsgBytes();
 
     /**
      * <pre>
@@ -3509,6 +3749,7 @@ public final class RpcHeaderProtos {
      * <code>optional .hadoop.common.RpcResponseHeaderProto.RpcErrorCodeProto errorDetail = 6;</code>
      */
     boolean hasErrorDetail();
+
     /**
      * <pre>
      * in case of error
@@ -3526,6 +3767,7 @@ public final class RpcHeaderProtos {
      * <code>optional bytes clientId = 7;</code>
      */
     boolean hasClientId();
+
     /**
      * <pre>
      * Globally unique client ID
@@ -3539,6 +3781,7 @@ public final class RpcHeaderProtos {
      * <code>optional sint32 retryCount = 8 [default = -1];</code>
      */
     boolean hasRetryCount();
+
     /**
      * <code>optional sint32 retryCount = 8 [default = -1];</code>
      */
@@ -3552,6 +3795,7 @@ public final class RpcHeaderProtos {
      * <code>optional int64 stateId = 9;</code>
      */
     boolean hasStateId();
+
     /**
      * <pre>
      * The last written Global State ID
@@ -3561,6 +3805,7 @@ public final class RpcHeaderProtos {
      */
     long getStateId();
   }
+
   /**
    * <pre>
    **
@@ -3584,15 +3829,17 @@ public final class RpcHeaderProtos {
    *
    * Protobuf type {@code hadoop.common.RpcResponseHeaderProto}
    */
-  public  static final class RpcResponseHeaderProto extends
+  public static final class RpcResponseHeaderProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.RpcResponseHeaderProto)
       RpcResponseHeaderProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use RpcResponseHeaderProto.newBuilder() to construct.
     private RpcResponseHeaderProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private RpcResponseHeaderProto() {
       status_ = 0;
       exceptionClassName_ = "";
@@ -3607,6 +3854,7 @@ public final class RpcHeaderProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private RpcResponseHeaderProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3633,7 +3881,7 @@ public final class RpcHeaderProtos {
             }
             case 16: {
               int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
+              @SuppressWarnings("deprecation")
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto value = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
@@ -3662,7 +3910,7 @@ public final class RpcHeaderProtos {
             }
             case 48: {
               int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
+              @SuppressWarnings("deprecation")
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcErrorCodeProto value = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcErrorCodeProto.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(6, rawValue);
@@ -3706,14 +3954,15 @@ public final class RpcHeaderProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcResponseHeaderProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcResponseHeaderProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.Builder.class);
@@ -3790,35 +4039,42 @@ public final class RpcHeaderProtos {
 
       public static RpcStatusProto forNumber(int value) {
         switch (value) {
-          case 0: return SUCCESS;
-          case 1: return ERROR;
-          case 2: return FATAL;
-          default: return null;
+          case 0:
+            return SUCCESS;
+          case 1:
+            return ERROR;
+          case 2:
+            return FATAL;
+          default:
+            return null;
         }
       }
 
       public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcStatusProto>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
+
       private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
           RpcStatusProto> internalValueMap =
-            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcStatusProto>() {
-              public RpcStatusProto findValueByNumber(int number) {
-                return RpcStatusProto.forNumber(number);
-              }
-            };
+          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcStatusProto>() {
+            public RpcStatusProto findValueByNumber(int number) {
+              return RpcStatusProto.forNumber(number);
+            }
+          };
 
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
+
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.getDescriptor().getEnumTypes().get(0);
       }
 
@@ -3828,7 +4084,7 @@ public final class RpcHeaderProtos {
           org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -4057,44 +4313,60 @@ public final class RpcHeaderProtos {
 
       public static RpcErrorCodeProto forNumber(int value) {
         switch (value) {
-          case 1: return ERROR_APPLICATION;
-          case 2: return ERROR_NO_SUCH_METHOD;
-          case 3: return ERROR_NO_SUCH_PROTOCOL;
-          case 4: return ERROR_RPC_SERVER;
-          case 5: return ERROR_SERIALIZING_RESPONSE;
-          case 6: return ERROR_RPC_VERSION_MISMATCH;
-          case 10: return FATAL_UNKNOWN;
-          case 11: return FATAL_UNSUPPORTED_SERIALIZATION;
-          case 12: return FATAL_INVALID_RPC_HEADER;
-          case 13: return FATAL_DESERIALIZING_REQUEST;
-          case 14: return FATAL_VERSION_MISMATCH;
-          case 15: return FATAL_UNAUTHORIZED;
-          default: return null;
+          case 1:
+            return ERROR_APPLICATION;
+          case 2:
+            return ERROR_NO_SUCH_METHOD;
+          case 3:
+            return ERROR_NO_SUCH_PROTOCOL;
+          case 4:
+            return ERROR_RPC_SERVER;
+          case 5:
+            return ERROR_SERIALIZING_RESPONSE;
+          case 6:
+            return ERROR_RPC_VERSION_MISMATCH;
+          case 10:
+            return FATAL_UNKNOWN;
+          case 11:
+            return FATAL_UNSUPPORTED_SERIALIZATION;
+          case 12:
+            return FATAL_INVALID_RPC_HEADER;
+          case 13:
+            return FATAL_DESERIALIZING_REQUEST;
+          case 14:
+            return FATAL_VERSION_MISMATCH;
+          case 15:
+            return FATAL_UNAUTHORIZED;
+          default:
+            return null;
         }
       }
 
       public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcErrorCodeProto>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
+
       private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
           RpcErrorCodeProto> internalValueMap =
-            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcErrorCodeProto>() {
-              public RpcErrorCodeProto findValueByNumber(int number) {
-                return RpcErrorCodeProto.forNumber(number);
-              }
-            };
+          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<RpcErrorCodeProto>() {
+            public RpcErrorCodeProto findValueByNumber(int number) {
+              return RpcErrorCodeProto.forNumber(number);
+            }
+          };
 
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
+
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.getDescriptor().getEnumTypes().get(1);
       }
 
@@ -4104,7 +4376,7 @@ public final class RpcHeaderProtos {
           org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -4121,6 +4393,7 @@ public final class RpcHeaderProtos {
     private int bitField0_;
     public static final int CALLID_FIELD_NUMBER = 1;
     private int callId_;
+
     /**
      * <pre>
      * callId used in Request
@@ -4131,6 +4404,7 @@ public final class RpcHeaderProtos {
     public boolean hasCallId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <pre>
      * callId used in Request
@@ -4144,12 +4418,14 @@ public final class RpcHeaderProtos {
 
     public static final int STATUS_FIELD_NUMBER = 2;
     private int status_;
+
     /**
      * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
      */
     public boolean hasStatus() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
      */
@@ -4161,6 +4437,7 @@ public final class RpcHeaderProtos {
 
     public static final int SERVERIPCVERSIONNUM_FIELD_NUMBER = 3;
     private int serverIpcVersionNum_;
+
     /**
      * <pre>
      * Sent if success or fail
@@ -4171,6 +4448,7 @@ public final class RpcHeaderProtos {
     public boolean hasServerIpcVersionNum() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <pre>
      * Sent if success or fail
@@ -4184,6 +4462,7 @@ public final class RpcHeaderProtos {
 
     public static final int EXCEPTIONCLASSNAME_FIELD_NUMBER = 4;
     private volatile java.lang.Object exceptionClassName_;
+
     /**
      * <pre>
      * if request fails
@@ -4194,6 +4473,7 @@ public final class RpcHeaderProtos {
     public boolean hasExceptionClassName() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      * <pre>
      * if request fails
@@ -4206,7 +4486,7 @@ public final class RpcHeaderProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -4215,6 +4495,7 @@ public final class RpcHeaderProtos {
         return s;
       }
     }
+
     /**
      * <pre>
      * if request fails
@@ -4223,10 +4504,10 @@ public final class RpcHeaderProtos {
      * <code>optional string exceptionClassName = 4;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getExceptionClassNameBytes() {
+    getExceptionClassNameBytes() {
       java.lang.Object ref = exceptionClassName_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         exceptionClassName_ = b;
@@ -4238,6 +4519,7 @@ public final class RpcHeaderProtos {
 
     public static final int ERRORMSG_FIELD_NUMBER = 5;
     private volatile java.lang.Object errorMsg_;
+
     /**
      * <pre>
      * if request fails, often contains strack trace
@@ -4248,6 +4530,7 @@ public final class RpcHeaderProtos {
     public boolean hasErrorMsg() {
       return ((bitField0_ & 0x00000010) != 0);
     }
+
     /**
      * <pre>
      * if request fails, often contains strack trace
@@ -4260,7 +4543,7 @@ public final class RpcHeaderProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -4269,6 +4552,7 @@ public final class RpcHeaderProtos {
         return s;
       }
     }
+
     /**
      * <pre>
      * if request fails, often contains strack trace
@@ -4277,10 +4561,10 @@ public final class RpcHeaderProtos {
      * <code>optional string errorMsg = 5;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getErrorMsgBytes() {
+    getErrorMsgBytes() {
       java.lang.Object ref = errorMsg_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         errorMsg_ = b;
@@ -4292,6 +4576,7 @@ public final class RpcHeaderProtos {
 
     public static final int ERRORDETAIL_FIELD_NUMBER = 6;
     private int errorDetail_;
+
     /**
      * <pre>
      * in case of error
@@ -4302,6 +4587,7 @@ public final class RpcHeaderProtos {
     public boolean hasErrorDetail() {
       return ((bitField0_ & 0x00000020) != 0);
     }
+
     /**
      * <pre>
      * in case of error
@@ -4317,6 +4603,7 @@ public final class RpcHeaderProtos {
 
     public static final int CLIENTID_FIELD_NUMBER = 7;
     private org.apache.hadoop.thirdparty.protobuf.ByteString clientId_;
+
     /**
      * <pre>
      * Globally unique client ID
@@ -4327,6 +4614,7 @@ public final class RpcHeaderProtos {
     public boolean hasClientId() {
       return ((bitField0_ & 0x00000040) != 0);
     }
+
     /**
      * <pre>
      * Globally unique client ID
@@ -4340,12 +4628,14 @@ public final class RpcHeaderProtos {
 
     public static final int RETRYCOUNT_FIELD_NUMBER = 8;
     private int retryCount_;
+
     /**
      * <code>optional sint32 retryCount = 8 [default = -1];</code>
      */
     public boolean hasRetryCount() {
       return ((bitField0_ & 0x00000080) != 0);
     }
+
     /**
      * <code>optional sint32 retryCount = 8 [default = -1];</code>
      */
@@ -4355,6 +4645,7 @@ public final class RpcHeaderProtos {
 
     public static final int STATEID_FIELD_NUMBER = 9;
     private long stateId_;
+
     /**
      * <pre>
      * The last written Global State ID
@@ -4365,6 +4656,7 @@ public final class RpcHeaderProtos {
     public boolean hasStateId() {
       return ((bitField0_ & 0x00000100) != 0);
     }
+
     /**
      * <pre>
      * The last written Global State ID
@@ -4377,6 +4669,7 @@ public final class RpcHeaderProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4397,7 +4690,7 @@ public final class RpcHeaderProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, callId_);
       }
@@ -4436,15 +4729,15 @@ public final class RpcHeaderProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, callId_);
+            .computeUInt32Size(1, callId_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeEnumSize(2, status_);
+            .computeEnumSize(2, status_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(3, serverIpcVersionNum_);
+            .computeUInt32Size(3, serverIpcVersionNum_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(4, exceptionClassName_);
@@ -4454,19 +4747,19 @@ public final class RpcHeaderProtos {
       }
       if (((bitField0_ & 0x00000020) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeEnumSize(6, errorDetail_);
+            .computeEnumSize(6, errorDetail_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(7, clientId_);
+            .computeBytesSize(7, clientId_);
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeSInt32Size(8, retryCount_);
+            .computeSInt32Size(8, retryCount_);
       }
       if (((bitField0_ & 0x00000100) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeInt64Size(9, stateId_);
+            .computeInt64Size(9, stateId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4476,7 +4769,7 @@ public final class RpcHeaderProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto)) {
         return super.equals(obj);
@@ -4584,38 +4877,45 @@ public final class RpcHeaderProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4623,11 +4923,13 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4635,12 +4937,14 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4650,13 +4954,18 @@ public final class RpcHeaderProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -4669,6 +4978,7 @@ public final class RpcHeaderProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -4697,13 +5007,13 @@ public final class RpcHeaderProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.RpcResponseHeaderProto)
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcResponseHeaderProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcResponseHeaderProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.Builder.class);
@@ -4719,11 +5029,13 @@ public final class RpcHeaderProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -4750,7 +5062,7 @@ public final class RpcHeaderProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcResponseHeaderProto_descriptor;
       }
 
@@ -4818,38 +5130,44 @@ public final class RpcHeaderProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -4857,7 +5175,8 @@ public final class RpcHeaderProtos {
       }
 
       public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto other) {
-        if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.getDefaultInstance())
+          return this;
         if (other.hasCallId()) {
           setCallId(other.getCallId());
         }
@@ -4923,9 +5242,11 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int callId_ ;
+      private int callId_;
+
       /**
        * <pre>
        * callId used in Request
@@ -4936,6 +5257,7 @@ public final class RpcHeaderProtos {
       public boolean hasCallId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        * callId used in Request
@@ -4946,6 +5268,7 @@ public final class RpcHeaderProtos {
       public int getCallId() {
         return callId_;
       }
+
       /**
        * <pre>
        * callId used in Request
@@ -4959,6 +5282,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * callId used in Request
@@ -4974,12 +5298,14 @@ public final class RpcHeaderProtos {
       }
 
       private int status_ = 0;
+
       /**
        * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
        */
       public boolean hasStatus() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
        */
@@ -4988,6 +5314,7 @@ public final class RpcHeaderProtos {
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto result = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto.valueOf(status_);
         return result == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto.SUCCESS : result;
       }
+
       /**
        * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
        */
@@ -5000,6 +5327,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required .hadoop.common.RpcResponseHeaderProto.RpcStatusProto status = 2;</code>
        */
@@ -5010,7 +5338,8 @@ public final class RpcHeaderProtos {
         return this;
       }
 
-      private int serverIpcVersionNum_ ;
+      private int serverIpcVersionNum_;
+
       /**
        * <pre>
        * Sent if success or fail
@@ -5021,6 +5350,7 @@ public final class RpcHeaderProtos {
       public boolean hasServerIpcVersionNum() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * Sent if success or fail
@@ -5031,6 +5361,7 @@ public final class RpcHeaderProtos {
       public int getServerIpcVersionNum() {
         return serverIpcVersionNum_;
       }
+
       /**
        * <pre>
        * Sent if success or fail
@@ -5044,6 +5375,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Sent if success or fail
@@ -5059,6 +5391,7 @@ public final class RpcHeaderProtos {
       }
 
       private java.lang.Object exceptionClassName_ = "";
+
       /**
        * <pre>
        * if request fails
@@ -5069,6 +5402,7 @@ public final class RpcHeaderProtos {
       public boolean hasExceptionClassName() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <pre>
        * if request fails
@@ -5090,6 +5424,7 @@ public final class RpcHeaderProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <pre>
        * if request fails
@@ -5098,10 +5433,10 @@ public final class RpcHeaderProtos {
        * <code>optional string exceptionClassName = 4;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getExceptionClassNameBytes() {
+      getExceptionClassNameBytes() {
         java.lang.Object ref = exceptionClassName_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           exceptionClassName_ = b;
@@ -5110,6 +5445,7 @@ public final class RpcHeaderProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <pre>
        * if request fails
@@ -5120,13 +5456,14 @@ public final class RpcHeaderProtos {
       public Builder setExceptionClassName(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000008;
         exceptionClassName_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * if request fails
@@ -5140,6 +5477,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * if request fails
@@ -5150,15 +5488,16 @@ public final class RpcHeaderProtos {
       public Builder setExceptionClassNameBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000008;
         exceptionClassName_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object errorMsg_ = "";
+
       /**
        * <pre>
        * if request fails, often contains strack trace
@@ -5169,6 +5508,7 @@ public final class RpcHeaderProtos {
       public boolean hasErrorMsg() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <pre>
        * if request fails, often contains strack trace
@@ -5190,6 +5530,7 @@ public final class RpcHeaderProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <pre>
        * if request fails, often contains strack trace
@@ -5198,10 +5539,10 @@ public final class RpcHeaderProtos {
        * <code>optional string errorMsg = 5;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getErrorMsgBytes() {
+      getErrorMsgBytes() {
         java.lang.Object ref = errorMsg_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           errorMsg_ = b;
@@ -5210,6 +5551,7 @@ public final class RpcHeaderProtos {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <pre>
        * if request fails, often contains strack trace
@@ -5220,13 +5562,14 @@ public final class RpcHeaderProtos {
       public Builder setErrorMsg(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000010;
         errorMsg_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * if request fails, often contains strack trace
@@ -5240,6 +5583,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * if request fails, often contains strack trace
@@ -5250,15 +5594,16 @@ public final class RpcHeaderProtos {
       public Builder setErrorMsgBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000010;
         errorMsg_ = value;
         onChanged();
         return this;
       }
 
       private int errorDetail_ = 1;
+
       /**
        * <pre>
        * in case of error
@@ -5269,6 +5614,7 @@ public final class RpcHeaderProtos {
       public boolean hasErrorDetail() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <pre>
        * in case of error
@@ -5281,6 +5627,7 @@ public final class RpcHeaderProtos {
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcErrorCodeProto result = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcErrorCodeProto.valueOf(errorDetail_);
         return result == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcErrorCodeProto.ERROR_APPLICATION : result;
       }
+
       /**
        * <pre>
        * in case of error
@@ -5297,6 +5644,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * in case of error
@@ -5312,6 +5660,7 @@ public final class RpcHeaderProtos {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString clientId_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <pre>
        * Globally unique client ID
@@ -5322,6 +5671,7 @@ public final class RpcHeaderProtos {
       public boolean hasClientId() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <pre>
        * Globally unique client ID
@@ -5332,6 +5682,7 @@ public final class RpcHeaderProtos {
       public org.apache.hadoop.thirdparty.protobuf.ByteString getClientId() {
         return clientId_;
       }
+
       /**
        * <pre>
        * Globally unique client ID
@@ -5341,13 +5692,14 @@ public final class RpcHeaderProtos {
        */
       public Builder setClientId(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000040;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000040;
         clientId_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * Globally unique client ID
@@ -5363,18 +5715,21 @@ public final class RpcHeaderProtos {
       }
 
       private int retryCount_ = -1;
+
       /**
        * <code>optional sint32 retryCount = 8 [default = -1];</code>
        */
       public boolean hasRetryCount() {
         return ((bitField0_ & 0x00000080) != 0);
       }
+
       /**
        * <code>optional sint32 retryCount = 8 [default = -1];</code>
        */
       public int getRetryCount() {
         return retryCount_;
       }
+
       /**
        * <code>optional sint32 retryCount = 8 [default = -1];</code>
        */
@@ -5384,6 +5739,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional sint32 retryCount = 8 [default = -1];</code>
        */
@@ -5394,7 +5750,8 @@ public final class RpcHeaderProtos {
         return this;
       }
 
-      private long stateId_ ;
+      private long stateId_;
+
       /**
        * <pre>
        * The last written Global State ID
@@ -5405,6 +5762,7 @@ public final class RpcHeaderProtos {
       public boolean hasStateId() {
         return ((bitField0_ & 0x00000100) != 0);
       }
+
       /**
        * <pre>
        * The last written Global State ID
@@ -5415,6 +5773,7 @@ public final class RpcHeaderProtos {
       public long getStateId() {
         return stateId_;
       }
+
       /**
        * <pre>
        * The last written Global State ID
@@ -5428,6 +5787,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * The last written Global State ID
@@ -5441,6 +5801,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -5459,6 +5820,7 @@ public final class RpcHeaderProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.RpcResponseHeaderProto)
     private static final org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto();
     }
@@ -5467,7 +5829,8 @@ public final class RpcHeaderProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<RpcResponseHeaderProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<RpcResponseHeaderProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<RpcResponseHeaderProto>() {
       @java.lang.Override
       public RpcResponseHeaderProto parsePartialFrom(
@@ -5502,6 +5865,7 @@ public final class RpcHeaderProtos {
      * <code>optional uint32 version = 1;</code>
      */
     boolean hasVersion();
+
     /**
      * <code>optional uint32 version = 1;</code>
      */
@@ -5511,6 +5875,7 @@ public final class RpcHeaderProtos {
      * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
      */
     boolean hasState();
+
     /**
      * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
      */
@@ -5520,6 +5885,7 @@ public final class RpcHeaderProtos {
      * <code>optional bytes token = 3;</code>
      */
     boolean hasToken();
+
     /**
      * <code>optional bytes token = 3;</code>
      */
@@ -5528,39 +5894,46 @@ public final class RpcHeaderProtos {
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
-    java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth> 
-        getAuthsList();
+    java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth>
+    getAuthsList();
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
     org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth getAuths(int index);
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
     int getAuthsCount();
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
-    java.util.List<? extends org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder> 
-        getAuthsOrBuilderList();
+    java.util.List<? extends org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder>
+    getAuthsOrBuilderList();
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
     org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder getAuthsOrBuilder(
         int index);
   }
+
   /**
    * Protobuf type {@code hadoop.common.RpcSaslProto}
    */
-  public  static final class RpcSaslProto extends
+  public static final class RpcSaslProto extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.common.RpcSaslProto)
       RpcSaslProtoOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use RpcSaslProto.newBuilder() to construct.
     private RpcSaslProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private RpcSaslProto() {
       state_ = 0;
       token_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
@@ -5572,6 +5945,7 @@ public final class RpcHeaderProtos {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private RpcSaslProto(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5598,7 +5972,7 @@ public final class RpcHeaderProtos {
             }
             case 16: {
               int rawValue = input.readEnum();
-                @SuppressWarnings("deprecation")
+              @SuppressWarnings("deprecation")
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslState value = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslState.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
@@ -5644,14 +6018,15 @@ public final class RpcHeaderProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.Builder.class);
@@ -5728,38 +6103,48 @@ public final class RpcHeaderProtos {
 
       public static SaslState forNumber(int value) {
         switch (value) {
-          case 0: return SUCCESS;
-          case 1: return NEGOTIATE;
-          case 2: return INITIATE;
-          case 3: return CHALLENGE;
-          case 4: return RESPONSE;
-          case 5: return WRAP;
-          default: return null;
+          case 0:
+            return SUCCESS;
+          case 1:
+            return NEGOTIATE;
+          case 2:
+            return INITIATE;
+          case 3:
+            return CHALLENGE;
+          case 4:
+            return RESPONSE;
+          case 5:
+            return WRAP;
+          default:
+            return null;
         }
       }
 
       public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<SaslState>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
+
       private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
           SaslState> internalValueMap =
-            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<SaslState>() {
-              public SaslState findValueByNumber(int number) {
-                return SaslState.forNumber(number);
-              }
-            };
+          new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<SaslState>() {
+            public SaslState findValueByNumber(int number) {
+              return SaslState.forNumber(number);
+            }
+          };
 
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
+
       public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.getDescriptor().getEnumTypes().get(0);
       }
 
@@ -5769,7 +6154,7 @@ public final class RpcHeaderProtos {
           org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -5791,79 +6176,91 @@ public final class RpcHeaderProtos {
        * <code>required string method = 1;</code>
        */
       boolean hasMethod();
+
       /**
        * <code>required string method = 1;</code>
        */
       java.lang.String getMethod();
+
       /**
        * <code>required string method = 1;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getMethodBytes();
+      getMethodBytes();
 
       /**
        * <code>required string mechanism = 2;</code>
        */
       boolean hasMechanism();
+
       /**
        * <code>required string mechanism = 2;</code>
        */
       java.lang.String getMechanism();
+
       /**
        * <code>required string mechanism = 2;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getMechanismBytes();
+      getMechanismBytes();
 
       /**
        * <code>optional string protocol = 3;</code>
        */
       boolean hasProtocol();
+
       /**
        * <code>optional string protocol = 3;</code>
        */
       java.lang.String getProtocol();
+
       /**
        * <code>optional string protocol = 3;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getProtocolBytes();
+      getProtocolBytes();
 
       /**
        * <code>optional string serverId = 4;</code>
        */
       boolean hasServerId();
+
       /**
        * <code>optional string serverId = 4;</code>
        */
       java.lang.String getServerId();
+
       /**
        * <code>optional string serverId = 4;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getServerIdBytes();
+      getServerIdBytes();
 
       /**
        * <code>optional bytes challenge = 5;</code>
        */
       boolean hasChallenge();
+
       /**
        * <code>optional bytes challenge = 5;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString getChallenge();
     }
+
     /**
      * Protobuf type {@code hadoop.common.RpcSaslProto.SaslAuth}
      */
-    public  static final class SaslAuth extends
+    public static final class SaslAuth extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.common.RpcSaslProto.SaslAuth)
         SaslAuthOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use SaslAuth.newBuilder() to construct.
       private SaslAuth(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private SaslAuth() {
         method_ = "";
         mechanism_ = "";
@@ -5877,6 +6274,7 @@ public final class RpcHeaderProtos {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private SaslAuth(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5944,14 +6342,15 @@ public final class RpcHeaderProtos {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_SaslAuth_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder.class);
@@ -5960,12 +6359,14 @@ public final class RpcHeaderProtos {
       private int bitField0_;
       public static final int METHOD_FIELD_NUMBER = 1;
       private volatile java.lang.Object method_;
+
       /**
        * <code>required string method = 1;</code>
        */
       public boolean hasMethod() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required string method = 1;</code>
        */
@@ -5974,7 +6375,7 @@ public final class RpcHeaderProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -5983,14 +6384,15 @@ public final class RpcHeaderProtos {
           return s;
         }
       }
+
       /**
        * <code>required string method = 1;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getMethodBytes() {
+      getMethodBytes() {
         java.lang.Object ref = method_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           method_ = b;
@@ -6002,12 +6404,14 @@ public final class RpcHeaderProtos {
 
       public static final int MECHANISM_FIELD_NUMBER = 2;
       private volatile java.lang.Object mechanism_;
+
       /**
        * <code>required string mechanism = 2;</code>
        */
       public boolean hasMechanism() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required string mechanism = 2;</code>
        */
@@ -6016,7 +6420,7 @@ public final class RpcHeaderProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -6025,14 +6429,15 @@ public final class RpcHeaderProtos {
           return s;
         }
       }
+
       /**
        * <code>required string mechanism = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getMechanismBytes() {
+      getMechanismBytes() {
         java.lang.Object ref = mechanism_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           mechanism_ = b;
@@ -6044,12 +6449,14 @@ public final class RpcHeaderProtos {
 
       public static final int PROTOCOL_FIELD_NUMBER = 3;
       private volatile java.lang.Object protocol_;
+
       /**
        * <code>optional string protocol = 3;</code>
        */
       public boolean hasProtocol() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional string protocol = 3;</code>
        */
@@ -6058,7 +6465,7 @@ public final class RpcHeaderProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -6067,14 +6474,15 @@ public final class RpcHeaderProtos {
           return s;
         }
       }
+
       /**
        * <code>optional string protocol = 3;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getProtocolBytes() {
+      getProtocolBytes() {
         java.lang.Object ref = protocol_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           protocol_ = b;
@@ -6086,12 +6494,14 @@ public final class RpcHeaderProtos {
 
       public static final int SERVERID_FIELD_NUMBER = 4;
       private volatile java.lang.Object serverId_;
+
       /**
        * <code>optional string serverId = 4;</code>
        */
       public boolean hasServerId() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional string serverId = 4;</code>
        */
@@ -6100,7 +6510,7 @@ public final class RpcHeaderProtos {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -6109,14 +6519,15 @@ public final class RpcHeaderProtos {
           return s;
         }
       }
+
       /**
        * <code>optional string serverId = 4;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getServerIdBytes() {
+      getServerIdBytes() {
         java.lang.Object ref = serverId_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           serverId_ = b;
@@ -6128,12 +6539,14 @@ public final class RpcHeaderProtos {
 
       public static final int CHALLENGE_FIELD_NUMBER = 5;
       private org.apache.hadoop.thirdparty.protobuf.ByteString challenge_;
+
       /**
        * <code>optional bytes challenge = 5;</code>
        */
       public boolean hasChallenge() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional bytes challenge = 5;</code>
        */
@@ -6142,6 +6555,7 @@ public final class RpcHeaderProtos {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -6162,7 +6576,7 @@ public final class RpcHeaderProtos {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.writeString(output, 1, method_);
         }
@@ -6201,7 +6615,7 @@ public final class RpcHeaderProtos {
         }
         if (((bitField0_ & 0x00000010) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(5, challenge_);
+              .computeBytesSize(5, challenge_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -6211,7 +6625,7 @@ public final class RpcHeaderProtos {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth)) {
           return super.equals(obj);
@@ -6284,38 +6698,45 @@ public final class RpcHeaderProtos {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -6323,11 +6744,13 @@ public final class RpcHeaderProtos {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -6335,12 +6758,14 @@ public final class RpcHeaderProtos {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -6350,13 +6775,18 @@ public final class RpcHeaderProtos {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -6369,6 +6799,7 @@ public final class RpcHeaderProtos {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.common.RpcSaslProto.SaslAuth}
        */
@@ -6377,13 +6808,13 @@ public final class RpcHeaderProtos {
           // @@protoc_insertion_point(builder_implements:hadoop.common.RpcSaslProto.SaslAuth)
           org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_SaslAuth_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder.class);
@@ -6399,11 +6830,13 @@ public final class RpcHeaderProtos {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -6422,7 +6855,7 @@ public final class RpcHeaderProtos {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor;
         }
 
@@ -6474,38 +6907,44 @@ public final class RpcHeaderProtos {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth) {
-            return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth)other);
+            return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -6513,7 +6952,8 @@ public final class RpcHeaderProtos {
         }
 
         public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth other) {
-          if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.getDefaultInstance())
+            return this;
           if (other.hasMethod()) {
             bitField0_ |= 0x00000001;
             method_ = other.method_;
@@ -6571,15 +7011,18 @@ public final class RpcHeaderProtos {
           }
           return this;
         }
+
         private int bitField0_;
 
         private java.lang.Object method_ = "";
+
         /**
          * <code>required string method = 1;</code>
          */
         public boolean hasMethod() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>required string method = 1;</code>
          */
@@ -6597,14 +7040,15 @@ public final class RpcHeaderProtos {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>required string method = 1;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getMethodBytes() {
+        getMethodBytes() {
           java.lang.Object ref = method_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             method_ = b;
@@ -6613,19 +7057,21 @@ public final class RpcHeaderProtos {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>required string method = 1;</code>
          */
         public Builder setMethod(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           method_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>required string method = 1;</code>
          */
@@ -6635,27 +7081,30 @@ public final class RpcHeaderProtos {
           onChanged();
           return this;
         }
+
         /**
          * <code>required string method = 1;</code>
          */
         public Builder setMethodBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           method_ = value;
           onChanged();
           return this;
         }
 
         private java.lang.Object mechanism_ = "";
+
         /**
          * <code>required string mechanism = 2;</code>
          */
         public boolean hasMechanism() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>required string mechanism = 2;</code>
          */
@@ -6673,14 +7122,15 @@ public final class RpcHeaderProtos {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>required string mechanism = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getMechanismBytes() {
+        getMechanismBytes() {
           java.lang.Object ref = mechanism_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             mechanism_ = b;
@@ -6689,19 +7139,21 @@ public final class RpcHeaderProtos {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>required string mechanism = 2;</code>
          */
         public Builder setMechanism(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           mechanism_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>required string mechanism = 2;</code>
          */
@@ -6711,27 +7163,30 @@ public final class RpcHeaderProtos {
           onChanged();
           return this;
         }
+
         /**
          * <code>required string mechanism = 2;</code>
          */
         public Builder setMechanismBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           mechanism_ = value;
           onChanged();
           return this;
         }
 
         private java.lang.Object protocol_ = "";
+
         /**
          * <code>optional string protocol = 3;</code>
          */
         public boolean hasProtocol() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional string protocol = 3;</code>
          */
@@ -6749,14 +7204,15 @@ public final class RpcHeaderProtos {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string protocol = 3;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getProtocolBytes() {
+        getProtocolBytes() {
           java.lang.Object ref = protocol_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             protocol_ = b;
@@ -6765,19 +7221,21 @@ public final class RpcHeaderProtos {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string protocol = 3;</code>
          */
         public Builder setProtocol(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           protocol_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string protocol = 3;</code>
          */
@@ -6787,27 +7245,30 @@ public final class RpcHeaderProtos {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string protocol = 3;</code>
          */
         public Builder setProtocolBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           protocol_ = value;
           onChanged();
           return this;
         }
 
         private java.lang.Object serverId_ = "";
+
         /**
          * <code>optional string serverId = 4;</code>
          */
         public boolean hasServerId() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional string serverId = 4;</code>
          */
@@ -6825,14 +7286,15 @@ public final class RpcHeaderProtos {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string serverId = 4;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getServerIdBytes() {
+        getServerIdBytes() {
           java.lang.Object ref = serverId_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             serverId_ = b;
@@ -6841,19 +7303,21 @@ public final class RpcHeaderProtos {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string serverId = 4;</code>
          */
         public Builder setServerId(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000008;
           serverId_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string serverId = 4;</code>
          */
@@ -6863,45 +7327,50 @@ public final class RpcHeaderProtos {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string serverId = 4;</code>
          */
         public Builder setServerIdBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000008;
           serverId_ = value;
           onChanged();
           return this;
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString challenge_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes challenge = 5;</code>
          */
         public boolean hasChallenge() {
           return ((bitField0_ & 0x00000010) != 0);
         }
+
         /**
          * <code>optional bytes challenge = 5;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getChallenge() {
           return challenge_;
         }
+
         /**
          * <code>optional bytes challenge = 5;</code>
          */
         public Builder setChallenge(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000010;
           challenge_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes challenge = 5;</code>
          */
@@ -6911,6 +7380,7 @@ public final class RpcHeaderProtos {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -6929,6 +7399,7 @@ public final class RpcHeaderProtos {
 
       // @@protoc_insertion_point(class_scope:hadoop.common.RpcSaslProto.SaslAuth)
       private static final org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth();
       }
@@ -6937,7 +7408,8 @@ public final class RpcHeaderProtos {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<SaslAuth>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<SaslAuth>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<SaslAuth>() {
         @java.lang.Override
         public SaslAuth parsePartialFrom(
@@ -6967,12 +7439,14 @@ public final class RpcHeaderProtos {
     private int bitField0_;
     public static final int VERSION_FIELD_NUMBER = 1;
     private int version_;
+
     /**
      * <code>optional uint32 version = 1;</code>
      */
     public boolean hasVersion() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint32 version = 1;</code>
      */
@@ -6982,12 +7456,14 @@ public final class RpcHeaderProtos {
 
     public static final int STATE_FIELD_NUMBER = 2;
     private int state_;
+
     /**
      * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
      */
     public boolean hasState() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
      */
@@ -6999,12 +7475,14 @@ public final class RpcHeaderProtos {
 
     public static final int TOKEN_FIELD_NUMBER = 3;
     private org.apache.hadoop.thirdparty.protobuf.ByteString token_;
+
     /**
      * <code>optional bytes token = 3;</code>
      */
     public boolean hasToken() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <code>optional bytes token = 3;</code>
      */
@@ -7014,31 +7492,36 @@ public final class RpcHeaderProtos {
 
     public static final int AUTHS_FIELD_NUMBER = 4;
     private java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth> auths_;
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
     public java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth> getAuthsList() {
       return auths_;
     }
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
-    public java.util.List<? extends org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder> 
-        getAuthsOrBuilderList() {
+    public java.util.List<? extends org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder>
+    getAuthsOrBuilderList() {
       return auths_;
     }
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
     public int getAuthsCount() {
       return auths_.size();
     }
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
     public org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth getAuths(int index) {
       return auths_.get(index);
     }
+
     /**
      * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
      */
@@ -7048,6 +7531,7 @@ public final class RpcHeaderProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -7070,7 +7554,7 @@ public final class RpcHeaderProtos {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, version_);
       }
@@ -7094,19 +7578,19 @@ public final class RpcHeaderProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, version_);
+            .computeUInt32Size(1, version_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeEnumSize(2, state_);
+            .computeEnumSize(2, state_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeBytesSize(3, token_);
+            .computeBytesSize(3, token_);
       }
       for (int i = 0; i < auths_.size(); i++) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(4, auths_.get(i));
+            .computeMessageSize(4, auths_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7116,7 +7600,7 @@ public final class RpcHeaderProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto)) {
         return super.equals(obj);
@@ -7176,38 +7660,45 @@ public final class RpcHeaderProtos {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7215,11 +7706,13 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7227,12 +7720,14 @@ public final class RpcHeaderProtos {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7242,13 +7737,18 @@ public final class RpcHeaderProtos {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -7261,6 +7761,7 @@ public final class RpcHeaderProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.common.RpcSaslProto}
      */
@@ -7269,13 +7770,13 @@ public final class RpcHeaderProtos {
         // @@protoc_insertion_point(builder_implements:hadoop.common.RpcSaslProto)
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProtoOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.class, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.Builder.class);
@@ -7291,12 +7792,14 @@ public final class RpcHeaderProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
           getAuthsFieldBuilder();
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -7317,7 +7820,7 @@ public final class RpcHeaderProtos {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.internal_static_hadoop_common_RpcSaslProto_descriptor;
       }
 
@@ -7370,38 +7873,44 @@ public final class RpcHeaderProtos {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -7437,9 +7946,9 @@ public final class RpcHeaderProtos {
               authsBuilder_ = null;
               auths_ = other.auths_;
               bitField0_ = (bitField0_ & ~0x00000008);
-              authsBuilder_ = 
-                org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getAuthsFieldBuilder() : null;
+              authsBuilder_ =
+                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                      getAuthsFieldBuilder() : null;
             } else {
               authsBuilder_.addAllMessages(other.auths_);
             }
@@ -7481,21 +7990,25 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int version_ ;
+      private int version_;
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
       public boolean hasVersion() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
       public int getVersion() {
         return version_;
       }
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
@@ -7505,6 +8018,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
@@ -7516,12 +8030,14 @@ public final class RpcHeaderProtos {
       }
 
       private int state_ = 0;
+
       /**
        * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
        */
       public boolean hasState() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
        */
@@ -7530,6 +8046,7 @@ public final class RpcHeaderProtos {
         org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslState result = org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslState.valueOf(state_);
         return result == null ? org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslState.SUCCESS : result;
       }
+
       /**
        * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
        */
@@ -7542,6 +8059,7 @@ public final class RpcHeaderProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required .hadoop.common.RpcSaslProto.SaslState state = 2;</code>
        */
@@ -7553,30 +8071,34 @@ public final class RpcHeaderProtos {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.ByteString token_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
       /**
        * <code>optional bytes token = 3;</code>
        */
       public boolean hasToken() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional bytes token = 3;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString getToken() {
         return token_;
       }
+
       /**
        * <code>optional bytes token = 3;</code>
        */
       public Builder setToken(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
         token_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional bytes token = 3;</code>
        */
@@ -7588,12 +8110,13 @@ public final class RpcHeaderProtos {
       }
 
       private java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth> auths_ =
-        java.util.Collections.emptyList();
+          java.util.Collections.emptyList();
+
       private void ensureAuthsIsMutable() {
         if (!((bitField0_ & 0x00000008) != 0)) {
           auths_ = new java.util.ArrayList<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth>(auths_);
           bitField0_ |= 0x00000008;
-         }
+        }
       }
 
       private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -7609,6 +8132,7 @@ public final class RpcHeaderProtos {
           return authsBuilder_.getMessageList();
         }
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7619,6 +8143,7 @@ public final class RpcHeaderProtos {
           return authsBuilder_.getCount();
         }
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7629,6 +8154,7 @@ public final class RpcHeaderProtos {
           return authsBuilder_.getMessage(index);
         }
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7646,6 +8172,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7660,6 +8187,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7676,6 +8204,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7693,6 +8222,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7707,6 +8237,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7721,6 +8252,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7736,6 +8268,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7749,6 +8282,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7762,6 +8296,7 @@ public final class RpcHeaderProtos {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7769,27 +8304,31 @@ public final class RpcHeaderProtos {
           int index) {
         return getAuthsFieldBuilder().getBuilder(index);
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
       public org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder getAuthsOrBuilder(
           int index) {
         if (authsBuilder_ == null) {
-          return auths_.get(index);  } else {
+          return auths_.get(index);
+        } else {
           return authsBuilder_.getMessageOrBuilder(index);
         }
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder> 
-           getAuthsOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder>
+      getAuthsOrBuilderList() {
         if (authsBuilder_ != null) {
           return authsBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(auths_);
         }
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7797,6 +8336,7 @@ public final class RpcHeaderProtos {
         return getAuthsFieldBuilder().addBuilder(
             org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.getDefaultInstance());
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
@@ -7805,27 +8345,30 @@ public final class RpcHeaderProtos {
         return getAuthsFieldBuilder().addBuilder(
             index, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.getDefaultInstance());
       }
+
       /**
        * <code>repeated .hadoop.common.RpcSaslProto.SaslAuth auths = 4;</code>
        */
-      public java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder> 
-           getAuthsBuilderList() {
+      public java.util.List<org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder>
+      getAuthsBuilderList() {
         return getAuthsFieldBuilder().getBuilderList();
       }
+
       private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-          org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder> 
-          getAuthsFieldBuilder() {
+          org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder>
+      getAuthsFieldBuilder() {
         if (authsBuilder_ == null) {
           authsBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
               org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuth.Builder, org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto.SaslAuthOrBuilder>(
-                  auths_,
-                  ((bitField0_ & 0x00000008) != 0),
-                  getParentForChildren(),
-                  isClean());
+              auths_,
+              ((bitField0_ & 0x00000008) != 0),
+              getParentForChildren(),
+              isClean());
           auths_ = null;
         }
         return authsBuilder_;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -7844,6 +8387,7 @@ public final class RpcHeaderProtos {
 
     // @@protoc_insertion_point(class_scope:hadoop.common.RpcSaslProto)
     private static final org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcSaslProto();
     }
@@ -7852,7 +8396,8 @@ public final class RpcHeaderProtos {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<RpcSaslProto>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<RpcSaslProto>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<RpcSaslProto>() {
       @java.lang.Override
       public RpcSaslProto parsePartialFrom(
@@ -7880,93 +8425,95 @@ public final class RpcHeaderProtos {
   }
 
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RPCTraceInfoProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_RPCTraceInfoProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_RPCTraceInfoProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RPCCallerContextProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_RPCCallerContextProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_RPCCallerContextProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RpcRequestHeaderProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_RpcRequestHeaderProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_RpcRequestHeaderProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RpcResponseHeaderProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_RpcResponseHeaderProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_RpcResponseHeaderProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RpcSaslProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_RpcSaslProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_RpcSaslProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_common_RpcSaslProto_SaslAuth_fieldAccessorTable;
 
   public static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
-  private static  org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
+
+  private static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
       descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n\017RpcHeader.proto\022\rhadoop.common\"K\n\021RPCT" +
-      "raceInfoProto\022\017\n\007traceId\030\001 \001(\003\022\020\n\010parent" +
-      "Id\030\002 \001(\003\022\023\n\013spanContext\030\003 \001(\014\";\n\025RPCCall" +
-      "erContextProto\022\017\n\007context\030\001 \002(\t\022\021\n\tsigna" +
-      "ture\030\002 \001(\014\"\245\003\n\025RpcRequestHeaderProto\022,\n\007" +
-      "rpcKind\030\001 \001(\0162\033.hadoop.common.RpcKindPro" +
-      "to\022B\n\005rpcOp\030\002 \001(\01623.hadoop.common.RpcReq" +
-      "uestHeaderProto.OperationProto\022\016\n\006callId" +
-      "\030\003 \002(\021\022\020\n\010clientId\030\004 \002(\014\022\026\n\nretryCount\030\005" +
-      " \001(\021:\002-1\0223\n\ttraceInfo\030\006 \001(\0132 .hadoop.com" +
-      "mon.RPCTraceInfoProto\022;\n\rcallerContext\030\007" +
-      " \001(\0132$.hadoop.common.RPCCallerContextPro" +
-      "to\022\017\n\007stateId\030\010 \001(\003\"]\n\016OperationProto\022\024\n" +
-      "\020RPC_FINAL_PACKET\020\000\022\033\n\027RPC_CONTINUATION_" +
-      "PACKET\020\001\022\030\n\024RPC_CLOSE_CONNECTION\020\002\"\333\005\n\026R" +
-      "pcResponseHeaderProto\022\016\n\006callId\030\001 \002(\r\022D\n" +
-      "\006status\030\002 \002(\01624.hadoop.common.RpcRespons" +
-      "eHeaderProto.RpcStatusProto\022\033\n\023serverIpc" +
-      "VersionNum\030\003 \001(\r\022\032\n\022exceptionClassName\030\004" +
-      " \001(\t\022\020\n\010errorMsg\030\005 \001(\t\022L\n\013errorDetail\030\006 " +
-      "\001(\01627.hadoop.common.RpcResponseHeaderPro" +
-      "to.RpcErrorCodeProto\022\020\n\010clientId\030\007 \001(\014\022\026" +
-      "\n\nretryCount\030\010 \001(\021:\002-1\022\017\n\007stateId\030\t \001(\003\"" +
-      "3\n\016RpcStatusProto\022\013\n\007SUCCESS\020\000\022\t\n\005ERROR\020" +
-      "\001\022\t\n\005FATAL\020\002\"\341\002\n\021RpcErrorCodeProto\022\025\n\021ER" +
-      "ROR_APPLICATION\020\001\022\030\n\024ERROR_NO_SUCH_METHO" +
-      "D\020\002\022\032\n\026ERROR_NO_SUCH_PROTOCOL\020\003\022\024\n\020ERROR" +
-      "_RPC_SERVER\020\004\022\036\n\032ERROR_SERIALIZING_RESPO" +
-      "NSE\020\005\022\036\n\032ERROR_RPC_VERSION_MISMATCH\020\006\022\021\n" +
-      "\rFATAL_UNKNOWN\020\n\022#\n\037FATAL_UNSUPPORTED_SE" +
-      "RIALIZATION\020\013\022\034\n\030FATAL_INVALID_RPC_HEADE" +
-      "R\020\014\022\037\n\033FATAL_DESERIALIZING_REQUEST\020\r\022\032\n\026" +
-      "FATAL_VERSION_MISMATCH\020\016\022\026\n\022FATAL_UNAUTH" +
-      "ORIZED\020\017\"\335\002\n\014RpcSaslProto\022\017\n\007version\030\001 \001" +
-      "(\r\0224\n\005state\030\002 \002(\0162%.hadoop.common.RpcSas" +
-      "lProto.SaslState\022\r\n\005token\030\003 \001(\014\0223\n\005auths" +
-      "\030\004 \003(\0132$.hadoop.common.RpcSaslProto.Sasl" +
-      "Auth\032d\n\010SaslAuth\022\016\n\006method\030\001 \002(\t\022\021\n\tmech" +
-      "anism\030\002 \002(\t\022\020\n\010protocol\030\003 \001(\t\022\020\n\010serverI" +
-      "d\030\004 \001(\t\022\021\n\tchallenge\030\005 \001(\014\"\\\n\tSaslState\022" +
-      "\013\n\007SUCCESS\020\000\022\r\n\tNEGOTIATE\020\001\022\014\n\010INITIATE\020" +
-      "\002\022\r\n\tCHALLENGE\020\003\022\014\n\010RESPONSE\020\004\022\010\n\004WRAP\020\005" +
-      "*J\n\014RpcKindProto\022\017\n\013RPC_BUILTIN\020\000\022\020\n\014RPC" +
-      "_WRITABLE\020\001\022\027\n\023RPC_PROTOCOL_BUFFER\020\002B4\n\036" +
-      "org.apache.hadoop.ipc.protobufB\017RpcHeade" +
-      "rProtos\240\001\001"
+        "\n\017RpcHeader.proto\022\rhadoop.common\"K\n\021RPCT" +
+            "raceInfoProto\022\017\n\007traceId\030\001 \001(\003\022\020\n\010parent" +
+            "Id\030\002 \001(\003\022\023\n\013spanContext\030\003 \001(\014\";\n\025RPCCall" +
+            "erContextProto\022\017\n\007context\030\001 \002(\t\022\021\n\tsigna" +
+            "ture\030\002 \001(\014\"\245\003\n\025RpcRequestHeaderProto\022,\n\007" +
+            "rpcKind\030\001 \001(\0162\033.hadoop.common.RpcKindPro" +
+            "to\022B\n\005rpcOp\030\002 \001(\01623.hadoop.common.RpcReq" +
+            "uestHeaderProto.OperationProto\022\016\n\006callId" +
+            "\030\003 \002(\021\022\020\n\010clientId\030\004 \002(\014\022\026\n\nretryCount\030\005" +
+            " \001(\021:\002-1\0223\n\ttraceInfo\030\006 \001(\0132 .hadoop.com" +
+            "mon.RPCTraceInfoProto\022;\n\rcallerContext\030\007" +
+            " \001(\0132$.hadoop.common.RPCCallerContextPro" +
+            "to\022\017\n\007stateId\030\010 \001(\003\"]\n\016OperationProto\022\024\n" +
+            "\020RPC_FINAL_PACKET\020\000\022\033\n\027RPC_CONTINUATION_" +
+            "PACKET\020\001\022\030\n\024RPC_CLOSE_CONNECTION\020\002\"\333\005\n\026R" +
+            "pcResponseHeaderProto\022\016\n\006callId\030\001 \002(\r\022D\n" +
+            "\006status\030\002 \002(\01624.hadoop.common.RpcRespons" +
+            "eHeaderProto.RpcStatusProto\022\033\n\023serverIpc" +
+            "VersionNum\030\003 \001(\r\022\032\n\022exceptionClassName\030\004" +
+            " \001(\t\022\020\n\010errorMsg\030\005 \001(\t\022L\n\013errorDetail\030\006 " +
+            "\001(\01627.hadoop.common.RpcResponseHeaderPro" +
+            "to.RpcErrorCodeProto\022\020\n\010clientId\030\007 \001(\014\022\026" +
+            "\n\nretryCount\030\010 \001(\021:\002-1\022\017\n\007stateId\030\t \001(\003\"" +
+            "3\n\016RpcStatusProto\022\013\n\007SUCCESS\020\000\022\t\n\005ERROR\020" +
+            "\001\022\t\n\005FATAL\020\002\"\341\002\n\021RpcErrorCodeProto\022\025\n\021ER" +
+            "ROR_APPLICATION\020\001\022\030\n\024ERROR_NO_SUCH_METHO" +
+            "D\020\002\022\032\n\026ERROR_NO_SUCH_PROTOCOL\020\003\022\024\n\020ERROR" +
+            "_RPC_SERVER\020\004\022\036\n\032ERROR_SERIALIZING_RESPO" +
+            "NSE\020\005\022\036\n\032ERROR_RPC_VERSION_MISMATCH\020\006\022\021\n" +
+            "\rFATAL_UNKNOWN\020\n\022#\n\037FATAL_UNSUPPORTED_SE" +
+            "RIALIZATION\020\013\022\034\n\030FATAL_INVALID_RPC_HEADE" +
+            "R\020\014\022\037\n\033FATAL_DESERIALIZING_REQUEST\020\r\022\032\n\026" +
+            "FATAL_VERSION_MISMATCH\020\016\022\026\n\022FATAL_UNAUTH" +
+            "ORIZED\020\017\"\335\002\n\014RpcSaslProto\022\017\n\007version\030\001 \001" +
+            "(\r\0224\n\005state\030\002 \002(\0162%.hadoop.common.RpcSas" +
+            "lProto.SaslState\022\r\n\005token\030\003 \001(\014\0223\n\005auths" +
+            "\030\004 \003(\0132$.hadoop.common.RpcSaslProto.Sasl" +
+            "Auth\032d\n\010SaslAuth\022\016\n\006method\030\001 \002(\t\022\021\n\tmech" +
+            "anism\030\002 \002(\t\022\020\n\010protocol\030\003 \001(\t\022\020\n\010serverI" +
+            "d\030\004 \001(\t\022\021\n\tchallenge\030\005 \001(\014\"\\\n\tSaslState\022" +
+            "\013\n\007SUCCESS\020\000\022\r\n\tNEGOTIATE\020\001\022\014\n\010INITIATE\020" +
+            "\002\022\r\n\tCHALLENGE\020\003\022\014\n\010RESPONSE\020\004\022\010\n\004WRAP\020\005" +
+            "*J\n\014RpcKindProto\022\017\n\013RPC_BUILTIN\020\000\022\020\n\014RPC" +
+            "_WRITABLE\020\001\022\027\n\023RPC_PROTOCOL_BUFFER\020\002B4\n\036" +
+            "org.apache.hadoop.ipc.protobufB\017RpcHeade" +
+            "rProtos\240\001\001"
     };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
           public org.apache.hadoop.thirdparty.protobuf.ExtensionRegistry assignDescriptors(
               org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor root) {
             descriptor = root;
@@ -7974,45 +8521,45 @@ public final class RpcHeaderProtos {
           }
         };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        .internalBuildGeneratedFileFrom(descriptorData,
+            new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[]{
+            }, assigner);
     internal_static_hadoop_common_RPCTraceInfoProto_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+        getDescriptor().getMessageTypes().get(0);
     internal_static_hadoop_common_RPCTraceInfoProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_RPCTraceInfoProto_descriptor,
-        new java.lang.String[] { "TraceId", "ParentId", "SpanContext", });
+        new java.lang.String[]{"TraceId", "ParentId", "SpanContext",});
     internal_static_hadoop_common_RPCCallerContextProto_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+        getDescriptor().getMessageTypes().get(1);
     internal_static_hadoop_common_RPCCallerContextProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_RPCCallerContextProto_descriptor,
-        new java.lang.String[] { "Context", "Signature", });
+        new java.lang.String[]{"Context", "Signature",});
     internal_static_hadoop_common_RpcRequestHeaderProto_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+        getDescriptor().getMessageTypes().get(2);
     internal_static_hadoop_common_RpcRequestHeaderProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_RpcRequestHeaderProto_descriptor,
-        new java.lang.String[] { "RpcKind", "RpcOp", "CallId", "ClientId", "RetryCount", "TraceInfo", "CallerContext", "StateId", });
+        new java.lang.String[]{"RpcKind", "RpcOp", "CallId", "ClientId", "RetryCount", "TraceInfo", "CallerContext", "StateId",});
     internal_static_hadoop_common_RpcResponseHeaderProto_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+        getDescriptor().getMessageTypes().get(3);
     internal_static_hadoop_common_RpcResponseHeaderProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_RpcResponseHeaderProto_descriptor,
-        new java.lang.String[] { "CallId", "Status", "ServerIpcVersionNum", "ExceptionClassName", "ErrorMsg", "ErrorDetail", "ClientId", "RetryCount", "StateId", });
+        new java.lang.String[]{"CallId", "Status", "ServerIpcVersionNum", "ExceptionClassName", "ErrorMsg", "ErrorDetail", "ClientId", "RetryCount", "StateId",});
     internal_static_hadoop_common_RpcSaslProto_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+        getDescriptor().getMessageTypes().get(4);
     internal_static_hadoop_common_RpcSaslProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_RpcSaslProto_descriptor,
-        new java.lang.String[] { "Version", "State", "Token", "Auths", });
+        new java.lang.String[]{"Version", "State", "Token", "Auths",});
     internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor =
-      internal_static_hadoop_common_RpcSaslProto_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_common_RpcSaslProto_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_common_RpcSaslProto_SaslAuth_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_common_RpcSaslProto_SaslAuth_descriptor,
-        new java.lang.String[] { "Method", "Mechanism", "Protocol", "ServerId", "Challenge", });
+        new java.lang.String[]{"Method", "Mechanism", "Protocol", "ServerId", "Challenge",});
   }
 
   // @@protoc_insertion_point(outer_class_scope)

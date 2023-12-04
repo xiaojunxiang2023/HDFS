@@ -28,7 +28,7 @@ public class LongBitFormat implements Serializable {
   public LongBitFormat(String name, LongBitFormat previous, int length,
                        long min) {
     NAME = name;
-    OFFSET = previous == null? 0: previous.OFFSET + previous.LENGTH;
+    OFFSET = previous == null ? 0 : previous.OFFSET + previous.LENGTH;
     LENGTH = length;
     MIN = min;
     MAX = ((-1L) >>> (64 - LENGTH));

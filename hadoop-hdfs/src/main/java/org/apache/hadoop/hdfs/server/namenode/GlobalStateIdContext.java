@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.ObserverReadProxyProvider;
@@ -13,6 +9,11 @@ import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This is the server side implementation responsible for passing
@@ -103,7 +104,7 @@ class GlobalStateIdContext implements AlignmentContext {
    */
   @Override
   public long receiveRequestState(RpcRequestHeaderProto header,
-      long clientWaitTime) throws IOException {
+                                  long clientWaitTime) throws IOException {
     if (!header.hasStateId() &&
         HAServiceState.OBSERVER.equals(namesystem.getState())) {
       // This could happen if client configured with non-observer proxy provider
@@ -123,16 +124,16 @@ class GlobalStateIdContext implements AlignmentContext {
     if (clientStateId > serverStateId &&
         HAServiceState.ACTIVE.equals(namesystem.getState())) {
       FSNamesystem.LOG.warn("The client stateId: {} is greater than "
-          + "the server stateId: {} This is unexpected. "
-          + "Resetting client stateId to server stateId",
+              + "the server stateId: {} This is unexpected. "
+              + "Resetting client stateId to server stateId",
           clientStateId, serverStateId);
       return serverStateId;
     }
     if (HAServiceState.OBSERVER.equals(namesystem.getState()) &&
         clientStateId - serverStateId >
-        ESTIMATED_TRANSACTIONS_PER_SECOND
-            * TimeUnit.MILLISECONDS.toSeconds(clientWaitTime)
-            * ESTIMATED_SERVER_TIME_MULTIPLIER) {
+            ESTIMATED_TRANSACTIONS_PER_SECOND
+                * TimeUnit.MILLISECONDS.toSeconds(clientWaitTime)
+                * ESTIMATED_SERVER_TIME_MULTIPLIER) {
       throw new RetriableException(
           "Observer Node is too far behind: serverStateId = "
               + serverStateId + " clientStateId = " + clientStateId);

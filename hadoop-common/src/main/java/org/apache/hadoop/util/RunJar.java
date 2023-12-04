@@ -1,5 +1,12 @@
 package org.apache.hadoop.util;
 
+import org.apache.commons.io.input.TeeInputStream;
+import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.IOUtils.NullOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,13 +26,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.input.TeeInputStream;
-import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.IOUtils.NullOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Run a Hadoop job jar. */
 public class RunJar {
@@ -140,8 +140,8 @@ public class RunJar {
    */
   @Deprecated
   public static void unJarAndSave(InputStream inputStream, File toDir,
-                           String name, Pattern unpackRegex)
-      throws IOException{
+                                  String name, Pattern unpackRegex)
+      throws IOException {
     File file = new File(toDir, name);
     ensureDirectory(toDir);
     try (OutputStream jar = Files.newOutputStream(file.toPath());
@@ -204,7 +204,7 @@ public class RunJar {
   private static void ensureDirectory(File dir) throws IOException {
     if (!dir.mkdirs() && !dir.isDirectory()) {
       throw new IOException("Mkdirs failed to create " +
-                            dir.toString());
+          dir.toString());
     }
   }
 
@@ -237,7 +237,7 @@ public class RunJar {
       jarFile = new JarFile(fileName);
     } catch (IOException io) {
       throw new IOException("Error opening job jar: " + fileName)
-        .initCause(io);
+          .initCause(io);
     }
 
     Manifest manifest = jarFile.getManifest();
@@ -265,7 +265,7 @@ public class RunJar {
       // If user has insufficient perms to write to tmpDir, default
       // "Permission denied" message doesn't specify a filename.
       System.err.println("Error creating temp dir in java.io.tmpdir "
-                         + tmpDir + " due to " + ioe.getMessage());
+          + tmpDir + " due to " + ioe.getMessage());
       System.exit(-1);
       return;
     }
@@ -298,7 +298,7 @@ public class RunJar {
     String[] newArgs = newArgsSubList
         .toArray(new String[newArgsSubList.size()]);
     try {
-      main.invoke(null, new Object[] {newArgs});
+      main.invoke(null, new Object[]{newArgs});
     } catch (InvocationTargetException e) {
       throw e.getTargetException();
     }

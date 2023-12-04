@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode;
+
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.server.namenode.INodeWithAdditionalFields.PermissionStatusFormat;
-import org.apache.hadoop.hdfs.server.namenode.XAttrFeature;
 
 /**
  * The attributes of an inode.
@@ -22,19 +22,19 @@ public interface INodeAttributes {
 
   /** @return the group name. */
   public String getGroupName();
-  
+
   /** @return the permission. */
   public FsPermission getFsPermission();
 
   /** @return the permission as a short. */
   public short getFsPermissionShort();
-  
+
   /** @return the permission information as a long. */
   public long getPermissionLong();
 
   /** @return the ACL feature. */
   public AclFeature getAclFeature();
-  
+
   /** @return the XAttrs feature. */
   public XAttrFeature getXAttrFeature();
 
@@ -54,8 +54,8 @@ public interface INodeAttributes {
     private XAttrFeature xAttrFeature;
 
     SnapshotCopy(byte[] name, PermissionStatus permissions,
-        AclFeature aclFeature, long modificationTime, long accessTime, 
-        XAttrFeature xAttrFeature) {
+                 AclFeature aclFeature, long modificationTime, long accessTime,
+                 XAttrFeature xAttrFeature) {
       this.name = name;
       this.permission = PermissionStatusFormat.toLong(permissions);
       if (aclFeature != null) {
@@ -104,7 +104,7 @@ public interface INodeAttributes {
     public final short getFsPermissionShort() {
       return PermissionStatusFormat.getMode(permission);
     }
-    
+
     @Override
     public long getPermissionLong() {
       return permission;
@@ -124,7 +124,7 @@ public interface INodeAttributes {
     public final long getAccessTime() {
       return accessTime;
     }
-    
+
     @Override
     public final XAttrFeature getXAttrFeature() {
       return xAttrFeature;

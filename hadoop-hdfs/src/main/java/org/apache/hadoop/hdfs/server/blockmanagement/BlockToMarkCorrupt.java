@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import static org.apache.hadoop.hdfs.server.blockmanagement.CorruptReplicasMap.Reason;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import static org.apache.hadoop.hdfs.server.blockmanagement.CorruptReplicasMap.Reason;
 
 /**
  * BlockToMarkCorrupt is used to build the "toCorrupt" list, which is a
@@ -20,7 +20,7 @@ class BlockToMarkCorrupt {
   private final CorruptReplicasMap.Reason reasonCode;
 
   BlockToMarkCorrupt(Block corrupted, BlockInfo stored, String reason,
-      CorruptReplicasMap.Reason reasonCode) {
+                     CorruptReplicasMap.Reason reasonCode) {
     Preconditions.checkNotNull(corrupted, "corrupted is null");
     Preconditions.checkNotNull(stored, "stored is null");
 
@@ -31,7 +31,7 @@ class BlockToMarkCorrupt {
   }
 
   BlockToMarkCorrupt(Block corrupted, BlockInfo stored, long gs, String reason,
-      CorruptReplicasMap.Reason reasonCode) {
+                     CorruptReplicasMap.Reason reasonCode) {
     this(corrupted, stored, reason, reasonCode);
     //the corrupted block in datanode has a different generation stamp
     this.corrupted.setGenerationStamp(gs);
@@ -60,6 +60,6 @@ class BlockToMarkCorrupt {
   @Override
   public String toString() {
     return corrupted + "("
-        + (corrupted == stored ? "same as stored": "stored=" + stored) + ")";
+        + (corrupted == stored ? "same as stored" : "stored=" + stored) + ")";
   }
 }

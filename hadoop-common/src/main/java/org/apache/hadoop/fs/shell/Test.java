@@ -1,16 +1,17 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.permission.FsAction;
+import org.apache.hadoop.security.AccessControlException;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.security.AccessControlException;
 
 /**
  * Perform shell-like file tests 
  */
 
-class Test extends FsCommand {  
+class Test extends FsCommand {
   public static void registerCommands(CommandFactory factory) {
     factory.addClass(Test.class, "-test");
   }
@@ -32,13 +33,13 @@ class Test extends FsCommand {
           + "        zero bytes in size, else return 1.";
 
   private char flag;
-  
+
   @Override
   protected void processOptions(LinkedList<String> args) {
     CommandFormat cf = new CommandFormat(1, 1,
         "e", "d", "f", "s", "z", "w", "r");
     cf.parse(args);
-    
+
     String[] opts = cf.getOpts().toArray(new String[0]);
     switch (opts.length) {
       case 0:
@@ -55,29 +56,29 @@ class Test extends FsCommand {
   protected void processPath(PathData item) throws IOException {
     boolean test = false;
     switch (flag) {
-    case 'e':
-      test = true;
-      break;
-    case 'd':
-      test = item.stat.isDirectory();
-      break;
-    case 'f':
-      test = item.stat.isFile();
-      break;
-    case 's':
-      test = (item.stat.getLen() > 0);
-      break;
-    case 'z':
-      test = (item.stat.getLen() == 0);
-      break;
-    case 'w':
-      test = testAccess(item, FsAction.WRITE);
-      break;
-    case 'r':
-      test = testAccess(item, FsAction.READ);
-      break;
-    default:
-      break;
+      case 'e':
+        test = true;
+        break;
+      case 'd':
+        test = item.stat.isDirectory();
+        break;
+      case 'f':
+        test = item.stat.isFile();
+        break;
+      case 's':
+        test = (item.stat.getLen() > 0);
+        break;
+      case 'z':
+        test = (item.stat.getLen() == 0);
+        break;
+      case 'w':
+        test = testAccess(item, FsAction.WRITE);
+        break;
+      case 'r':
+        test = testAccess(item, FsAction.READ);
+        break;
+      default:
+        break;
     }
     if (!test) {
       exitCode = 1;

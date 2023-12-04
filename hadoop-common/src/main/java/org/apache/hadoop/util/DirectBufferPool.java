@@ -1,13 +1,13 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * A simple class for pooling direct ByteBuffers. This is necessary
@@ -26,8 +26,8 @@ public class DirectBufferPool {
 
   // Essentially implement a multimap with weak values.
   final ConcurrentMap<Integer, Queue<WeakReference<ByteBuffer>>> buffersBySize =
-    new ConcurrentHashMap<Integer, Queue<WeakReference<ByteBuffer>>>();
- 
+      new ConcurrentHashMap<Integer, Queue<WeakReference<ByteBuffer>>>();
+
   /**
    * Allocate a direct buffer of the specified size, in bytes.
    * If a pooled buffer is available, returns that. Otherwise
@@ -39,7 +39,7 @@ public class DirectBufferPool {
       // no available buffers for this size
       return ByteBuffer.allocateDirect(size);
     }
-    
+
     WeakReference<ByteBuffer> ref;
     while ((ref = list.poll()) != null) {
       ByteBuffer b = ref.get();
@@ -50,7 +50,7 @@ public class DirectBufferPool {
 
     return ByteBuffer.allocateDirect(size);
   }
-  
+
   /**
    * Return a buffer into the pool. After being returned,
    * the buffer may be recycled, so the user must not
@@ -71,7 +71,7 @@ public class DirectBufferPool {
     }
     list.add(new WeakReference<ByteBuffer>(buf));
   }
-  
+
   /**
    * Return the number of available buffers of a given size.
    * This is used only for tests.
@@ -82,7 +82,7 @@ public class DirectBufferPool {
     if (list == null) {
       return 0;
     }
-    
+
     return list.size();
   }
 }

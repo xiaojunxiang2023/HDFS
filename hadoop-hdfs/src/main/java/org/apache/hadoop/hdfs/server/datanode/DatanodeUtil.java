@@ -1,14 +1,15 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.LengthInputStream;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /** Provide utility methods for Datanode. */
 public class DatanodeUtil {
@@ -22,10 +23,10 @@ public class DatanodeUtil {
    * @param ioe an I/O exception
    * @return cause if the I/O exception is caused by a possible disk error;
    *         null otherwise.
-   */ 
+   */
   static IOException getCauseIfDiskError(IOException ioe) {
-    if (ioe.getMessage()!=null && ioe.getMessage().startsWith(DISK_ERROR)) {
-      return (IOException)ioe.getCause();
+    if (ioe.getMessage() != null && ioe.getMessage().startsWith(DISK_ERROR)) {
+      return (IOException) ioe.getCause();
     } else {
       return null;
     }
@@ -33,7 +34,7 @@ public class DatanodeUtil {
 
   /**
    * Create a new file.
-   * @throws IOException 
+   * @throws IOException
    * if the file already exists or if the file cannot be created.
    */
   public static File createFileWithExistsCheck(
@@ -56,17 +57,17 @@ public class DatanodeUtil {
     }
     return f;
   }
-  
+
   /**
    * @return the meta name given the block name and generation stamp.
    */
   public static String getMetaName(String blockName, long generationStamp) {
-    return blockName + "_" + generationStamp + Block.METADATA_EXTENSION; 
+    return blockName + "_" + generationStamp + Block.METADATA_EXTENSION;
   }
 
   /** @return the unlink file. */
   public static File getUnlinkTmpFile(File f) {
-    return new File(f.getParentFile(), f.getName()+UNLINK_BLOCK_SUFFIX);
+    return new File(f.getParentFile(), f.getName() + UNLINK_BLOCK_SUFFIX);
   }
 
   /**
@@ -120,6 +121,6 @@ public class DatanodeUtil {
     if (lin == null) {
       throw new FileNotFoundException("Meta file for " + b + " not found.");
     }
-    return (FileInputStream)lin.getWrappedStream();
+    return (FileInputStream) lin.getWrappedStream();
   }
 }

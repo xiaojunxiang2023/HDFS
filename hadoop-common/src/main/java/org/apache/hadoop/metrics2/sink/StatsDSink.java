@@ -1,23 +1,18 @@
 package org.apache.hadoop.metrics2.sink;
 
+import org.apache.commons.configuration2.SubsetConfiguration;
+import org.apache.hadoop.metrics2.*;
+import org.apache.hadoop.metrics2.impl.MsInfo;
+import org.apache.hadoop.net.NetUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.hadoop.metrics2.AbstractMetric;
-import org.apache.hadoop.metrics2.MetricType;
-import org.apache.hadoop.metrics2.MetricsException;
-import org.apache.hadoop.metrics2.MetricsRecord;
-import org.apache.hadoop.metrics2.MetricsSink;
-import org.apache.hadoop.metrics2.MetricsTag;
-import org.apache.hadoop.metrics2.impl.MsInfo;
-import org.apache.hadoop.net.NetUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A metrics sink that writes metrics to a StatsD daemon.

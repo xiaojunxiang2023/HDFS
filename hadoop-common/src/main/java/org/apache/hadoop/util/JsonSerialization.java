@@ -1,33 +1,18 @@
 package org.apache.hadoop.util;
 
-import javax.annotation.Nullable;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FutureDataInputStreamBuilder;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathIOException;
+
+import javax.annotation.Nullable;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.Map;
 
 import static org.apache.hadoop.util.functional.FutureIO.awaitFuture;
 
@@ -79,7 +64,7 @@ public class JsonSerialization<T> {
    * @param pretty generate pretty (indented) output?
    */
   public JsonSerialization(Class<T> classType,
-      boolean failOnUnknownProperties, boolean pretty) {
+                           boolean failOnUnknownProperties, boolean pretty) {
     Preconditions.checkArgument(classType != null, "null classType");
     this.classType = classType;
     this.mapper = new ObjectMapper();
@@ -261,7 +246,7 @@ public class JsonSerialization<T> {
    * @throws IOException IO exception
    */
   public void save(FileSystem fs, Path path, T instance,
-      boolean overwrite) throws
+                   boolean overwrite) throws
       IOException {
     writeJsonAsBytes(instance, fs.create(path, overwrite));
   }
@@ -272,7 +257,7 @@ public class JsonSerialization<T> {
    * @throws IOException on any failure
    */
   private void writeJsonAsBytes(T instance,
-      OutputStream dataOutputStream) throws IOException {
+                                OutputStream dataOutputStream) throws IOException {
     try {
       dataOutputStream.write(toBytes(instance));
     } finally {

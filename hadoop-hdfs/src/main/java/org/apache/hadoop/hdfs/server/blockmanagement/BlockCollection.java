@@ -1,10 +1,11 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.io.IOException;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.security.AccessControlException;
 
-/** 
+import java.io.IOException;
+
+/**
  * This interface is used by the block manager to expose a
  * few characteristics of a collection of Block/BlockUnderConstruction.
  */
@@ -14,7 +15,7 @@ public interface BlockCollection {
    */
   BlockInfo getLastBlock();
 
-  /** 
+  /**
    * Get content summary.
    */
   ContentSummary computeContentSummary(BlockStoragePolicySuite bsps)
@@ -22,7 +23,7 @@ public interface BlockCollection {
 
   /**
    * @return the number of blocks or block groups
-   */ 
+   */
   int numBlocks();
 
   /**
@@ -62,7 +63,7 @@ public interface BlockCollection {
    * and set the locations.
    */
   void convertLastBlockToUC(BlockInfo lastBlock,
-      DatanodeStorageInfo[] targets) throws IOException;
+                            DatanodeStorageInfo[] targets) throws IOException;
 
   /**
    * @return whether the block collection is under construction.

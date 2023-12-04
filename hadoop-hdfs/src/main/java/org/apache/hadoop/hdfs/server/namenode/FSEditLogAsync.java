@@ -1,5 +1,15 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics;
+import org.apache.hadoop.ipc.Server;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.ExitUtil;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayDeque;
@@ -10,16 +20,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics;
-import org.apache.hadoop.util.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ipc.Server;
-import org.apache.hadoop.util.ExitUtil;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 class FSEditLogAsync extends FSEditLog implements Runnable {
   static final Logger LOG = LoggerFactory.getLogger(FSEditLog.class);
@@ -47,13 +47,13 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
   }
 
   private boolean isSyncThreadAlive() {
-    synchronized(syncThreadLock) {
+    synchronized (syncThreadLock) {
       return syncThread != null && syncThread.isAlive();
     }
   }
 
   private void startSyncThread() {
-    synchronized(syncThreadLock) {
+    synchronized (syncThreadLock) {
       if (!isSyncThreadAlive()) {
         syncThread = new Thread(this, this.getClass().getSimpleName());
         syncThread.start();
@@ -62,7 +62,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
   }
 
   private void stopSyncThread() {
-    synchronized(syncThreadLock) {
+    synchronized (syncThreadLock) {
       if (syncThread != null) {
         try {
           syncThread.interrupt();
@@ -106,7 +106,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
 
     Edit edit = getEditInstance(op);
     THREAD_EDIT.set(edit);
-    synchronized(this) {
+    synchronized (this) {
       enqueueEdit(edit);
       beginTransaction(op);
     }
@@ -129,7 +129,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
   public void logSyncAll() {
     // doesn't actually log anything, just ensures that the queues are
     // drained when it returns.
-    Edit edit = new SyncEdit(this, null){
+    Edit edit = new SyncEdit(this, null) {
       @Override
       public boolean logEdit() {
         return true;
@@ -143,14 +143,16 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
   // however, release of outstanding permits must be postponed until
   // drained permits are restored to avoid starvation.  logic has some races
   // but is good enough to serve its purpose.
-  private Semaphore overflowMutex = new Semaphore(8){
+  private Semaphore overflowMutex = new Semaphore(8) {
     private AtomicBoolean draining = new AtomicBoolean();
     private AtomicInteger pendingReleases = new AtomicInteger();
+
     @Override
     public int drainPermits() {
       draining.set(true);
       return super.drainPermits();
     }
+
     // while draining, count the releases until release(int)
     private void tryRelease(int permits) {
       pendingReleases.getAndAdd(permits);
@@ -158,10 +160,12 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
         super.release(pendingReleases.getAndSet(0));
       }
     }
+
     @Override
     public void release() {
       tryRelease(1);
     }
+
     @Override
     public void release(int permits) {
       draining.set(false);
@@ -257,7 +261,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
   }
 
   private void terminate(Throwable t) {
-    String message = "Exception while edit logging: "+t.getMessage();
+    String message = "Exception while edit logging: " + t.getMessage();
     LOG.error(message, t);
     ExitUtil.terminate(1, message);
   }
@@ -290,6 +294,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
 
     // wait for background thread to finish syncing.
     abstract void logSyncWait();
+
     // wake up the thread in logSyncWait.
     abstract void logSyncNotify(RuntimeException ex);
   }
@@ -311,11 +316,12 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
 
     @Override
     public void logSyncWait() {
-      synchronized(lock) {
+      synchronized (lock) {
         while (!done) {
           try {
             lock.wait(10);
-          } catch (InterruptedException e) {}
+          } catch (InterruptedException e) {
+          }
         }
         // only needed by tests that rely on ExitUtil.terminate() since
         // normally exceptions terminate the NN.
@@ -328,7 +334,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
 
     @Override
     public void logSyncNotify(RuntimeException ex) {
-      synchronized(lock) {
+      synchronized (lock) {
         done = true;
         syncEx = ex;
         lock.notifyAll();
@@ -337,7 +343,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
 
     @Override
     public String toString() {
-      return "["+getClass().getSimpleName()+" op:"+op+"]";
+      return "[" + getClass().getSimpleName() + " op:" + op + "]";
     }
   }
 
@@ -366,12 +372,13 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
         } else {
           call.abortResponse(syncEx);
         }
-      } catch (Exception e) {} // don't care if not sent.
+      } catch (Exception e) {
+      } // don't care if not sent.
     }
 
     @Override
     public String toString() {
-      return "["+getClass().getSimpleName()+" op:"+op+" call:"+call+"]";
+      return "[" + getClass().getSimpleName() + " op:" + op + " call:" + call + "]";
     }
   }
 }

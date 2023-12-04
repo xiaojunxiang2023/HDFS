@@ -1,17 +1,13 @@
 package org.apache.hadoop.metrics2.sink;
 
+import org.apache.commons.configuration2.SubsetConfiguration;
+import org.apache.hadoop.metrics2.*;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.hadoop.metrics2.AbstractMetric;
-import org.apache.hadoop.metrics2.MetricsException;
-import org.apache.hadoop.metrics2.MetricsRecord;
-import org.apache.hadoop.metrics2.MetricsSink;
-import org.apache.hadoop.metrics2.MetricsTag;
 
 /**
  * A metrics sink that writes to a file
@@ -26,9 +22,9 @@ public class FileSink implements MetricsSink, Closeable {
     try {
       writer = filename == null ? System.out
           : new PrintStream(Files.newOutputStream(Paths.get(filename)),
-                            true, "UTF-8");
+          true, "UTF-8");
     } catch (Exception e) {
-      throw new MetricsException("Error creating "+ filename, e);
+      throw new MetricsException("Error creating " + filename, e);
     }
   }
 

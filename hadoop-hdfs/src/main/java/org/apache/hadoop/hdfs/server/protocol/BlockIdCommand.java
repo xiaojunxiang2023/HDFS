@@ -14,13 +14,13 @@ public class BlockIdCommand extends DatanodeCommand {
   public BlockIdCommand(int action, String poolId, long[] blockIds) {
     super(action);
     this.poolId = poolId;
-    this.blockIds= blockIds;
+    this.blockIds = blockIds;
   }
-  
+
   public String getBlockPoolId() {
     return poolId;
   }
-  
+
   public long[] getBlockIds() {
     return blockIds;
   }

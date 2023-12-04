@@ -1,5 +1,8 @@
 package org.apache.hadoop.crypto.key;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
 /**
  * A factory to create a list of KeyProvider based on the path given in a
@@ -21,7 +22,7 @@ public abstract class KeyProviderFactory {
 
   public abstract KeyProvider createProvider(URI providerName,
                                              Configuration conf
-                                             ) throws IOException;
+  ) throws IOException;
 
   private static final ServiceLoader<KeyProviderFactory> serviceLoader =
       ServiceLoader.load(KeyProviderFactory.class,
@@ -35,11 +36,11 @@ public abstract class KeyProviderFactory {
       iterServices.next();
     }
   }
-  
+
   public static List<KeyProvider> getProviders(Configuration conf
-                                               ) throws IOException {
+  ) throws IOException {
     List<KeyProvider> result = new ArrayList<KeyProvider>();
-    for(String path: conf.getStringCollection(KEY_PROVIDER_PATH)) {
+    for (String path : conf.getStringCollection(KEY_PROVIDER_PATH)) {
       try {
         URI uri = new URI(path);
         KeyProvider kp = get(uri, conf);

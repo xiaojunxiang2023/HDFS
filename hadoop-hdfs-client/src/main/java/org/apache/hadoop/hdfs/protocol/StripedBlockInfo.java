@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.security.token.Token;
 
@@ -14,8 +15,8 @@ public class StripedBlockInfo {
   private final ErasureCodingPolicy ecPolicy;
 
   public StripedBlockInfo(ExtendedBlock block, DatanodeInfo[] datanodes,
-      Token<BlockTokenIdentifier>[] blockTokens, byte[] blockIndices,
-      ErasureCodingPolicy ecPolicy) {
+                          Token<BlockTokenIdentifier>[] blockTokens, byte[] blockIndices,
+                          ErasureCodingPolicy ecPolicy) {
     this.block = block;
     this.datanodes = datanodes;
     this.blockTokens = blockTokens;

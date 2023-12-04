@@ -1,59 +1,36 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.hdfs.client.BlockReportOptions;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocolPB.DatanodeLifelineProtocolClientSideTranslatorPB;
+import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
+import org.apache.hadoop.hdfs.server.common.IncorrectVersionException;
+import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
+import org.apache.hadoop.hdfs.server.protocol.*;
+import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.ipc.RemoteException;
+import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.VersionInfo;
+import org.apache.hadoop.util.VersionUtil;
+import org.slf4j.Logger;
 
 import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
-import org.apache.hadoop.hdfs.client.BlockReportOptions;
-import org.apache.hadoop.hdfs.protocol.BlockListAsLongs;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.RollingUpgradeStatus;
-import org.apache.hadoop.hdfs.protocol.UnregisteredNodeException;
-import org.apache.hadoop.hdfs.protocolPB.DatanodeLifelineProtocolClientSideTranslatorPB;
-import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
-import org.apache.hadoop.hdfs.server.common.IncorrectVersionException;
-import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
-import org.apache.hadoop.hdfs.server.protocol.BlockReportContext;
-import org.apache.hadoop.hdfs.server.protocol.DatanodeCommand;
-import org.apache.hadoop.hdfs.server.protocol.DatanodeRegistration;
-import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
-import org.apache.hadoop.hdfs.server.protocol.DisallowedDatanodeException;
-import org.apache.hadoop.hdfs.server.protocol.HeartbeatResponse;
-import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
-import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports;
-import org.apache.hadoop.hdfs.server.protocol.SlowPeerReports;
-import org.apache.hadoop.hdfs.server.protocol.StorageBlockReport;
-import org.apache.hadoop.hdfs.server.protocol.StorageReport;
-import org.apache.hadoop.hdfs.server.protocol.VolumeFailureSummary;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.ipc.RemoteException;
-import org.apache.hadoop.net.NetUtils;
-import org.apache.hadoop.util.Time;
-import org.apache.hadoop.util.VersionInfo;
-import org.apache.hadoop.util.VersionUtil;
-import org.slf4j.Logger;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * A thread per active or standby namenode to perform:
@@ -65,13 +42,13 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
  * </ul>
  */
 class BPServiceActor implements Runnable {
-  
+
   static final Logger LOG = DataNode.LOG;
   final InetSocketAddress nnAddr;
   HAServiceState state;
 
   final BPOfferService bpos;
-  
+
   volatile long lastCacheReport = 0;
   private final Scheduler scheduler;
 
@@ -97,12 +74,12 @@ class BPServiceActor implements Runnable {
   private final IncrementalBlockReportManager ibrManager;
 
   private DatanodeRegistration bpRegistration;
-  final LinkedList<BPServiceActorAction> bpThreadQueue 
+  final LinkedList<BPServiceActorAction> bpThreadQueue
       = new LinkedList<BPServiceActorAction>();
   private final CommandProcessingThread commandProcessingThread;
 
   BPServiceActor(String serviceId, String nnId, InetSocketAddress nnAddr,
-      InetSocketAddress lifelineNnAddr, BPOfferService bpos) {
+                 InetSocketAddress lifelineNnAddr, BPOfferService bpos) {
     this.bpos = bpos;
     this.dn = bpos.getDataNode();
     this.nnAddr = nnAddr;
@@ -155,7 +132,7 @@ class BPServiceActor implements Runnable {
   public String toString() {
     return bpos.toString() + " service to " + nnAddr;
   }
-  
+
   InetSocketAddress getNNSocketAddress() {
     return nnAddr;
   }
@@ -213,7 +190,7 @@ class BPServiceActor implements Runnable {
    * This calls <code>versionRequest</code> to determine the NN's
    * namespace and version info. It automatically retries until
    * the NN responds or the DN is shutting down.
-   * 
+   *
    * @return the NamespaceInfo
    */
   @VisibleForTesting
@@ -224,16 +201,16 @@ class BPServiceActor implements Runnable {
         nsInfo = bpNamenode.versionRequest();
         LOG.debug(this + " received versionRequest response: " + nsInfo);
         break;
-      } catch(SocketTimeoutException e) {  // namenode is busy
+      } catch (SocketTimeoutException e) {  // namenode is busy
         LOG.warn("Problem connecting to server: " + nnAddr);
-      } catch(IOException e ) {  // namenode is not available
+      } catch (IOException e) {  // namenode is not available
         LOG.warn("Problem connecting to server: " + nnAddr);
       }
-      
+
       // try again in a second
       sleepAndLogInterrupts(5000, "requesting version info from NN");
     }
-    
+
     if (nsInfo != null) {
       checkNNVersion(nsInfo);
     } else {
@@ -301,7 +278,7 @@ class BPServiceActor implements Runnable {
       }
     }
   }
-  
+
   @VisibleForTesting
   void triggerHeartbeatForTests() {
     synchronized (ibrManager) {
@@ -361,7 +338,7 @@ class BPServiceActor implements Runnable {
     StorageBlockReport reports[] =
         new StorageBlockReport[perVolumeBlockLists.size()];
 
-    for(Map.Entry<DatanodeStorage, BlockListAsLongs> kvPair : perVolumeBlockLists.entrySet()) {
+    for (Map.Entry<DatanodeStorage, BlockListAsLongs> kvPair : perVolumeBlockLists.entrySet()) {
       BlockListAsLongs blockList = kvPair.getValue();
       reports[i++] = new StorageBlockReport(kvPair.getKey(), blockList);
       totalBlockCount += blockList.getNumberOfBlocks();
@@ -393,7 +370,7 @@ class BPServiceActor implements Runnable {
       } else {
         // Send one block report per message.
         for (int r = 0; r < reports.length; r++) {
-          StorageBlockReport singleReport[] = { reports[r] };
+          StorageBlockReport singleReport[] = {reports[r]};
           DatanodeCommand cmd = bpNamenode.blockReport(
               bpRegistration, bpos.getBlockPoolId(), singleReport,
               new BlockReportContext(reports.length, r, reportId,
@@ -501,9 +478,9 @@ class BPServiceActor implements Runnable {
         dn.getFSDataset().getStorageReports(bpos.getBlockPoolId());
     if (LOG.isDebugEnabled()) {
       LOG.debug("Sending heartbeat with " + reports.length +
-                " storage reports from service actor: " + this);
+          " storage reports from service actor: " + this);
     }
-    
+
     final long now = monotonicNow();
     scheduler.updateLastHeartbeatTime(now);
     VolumeFailureSummary volumeFailureSummary = dn.getFSDataset()
@@ -581,7 +558,7 @@ class BPServiceActor implements Runnable {
       commandProcessingThread.interrupt();
     }
   }
-  
+
   //This must be called only by blockPoolManager
   void join() {
     try {
@@ -591,12 +568,13 @@ class BPServiceActor implements Runnable {
       if (bpThread != null) {
         bpThread.join();
       }
-    } catch (InterruptedException ie) { }
+    } catch (InterruptedException ie) {
+    }
   }
-  
+
   //Cleanup method to be called by current thread before exiting.
   private synchronized void cleanUp() {
-    
+
     shouldServiceRun = false;
     IOUtils.cleanupWithLogger(null, bpNamenode);
     IOUtils.cleanupWithLogger(null, lifelineSender);
@@ -628,7 +606,7 @@ class BPServiceActor implements Runnable {
         + " Initial delay: " + dnConf.initialBlockReportDelayMs + "msecs"
         + "; heartBeatInterval=" + dnConf.heartBeatInterval
         + (lifelineSender != null ?
-            "; lifelineIntervalMs=" + dnConf.getLifelineIntervalMs() : ""));
+        "; lifelineIntervalMs=" + dnConf.getLifelineIntervalMs() : ""));
 
     //
     // Now loop for a long time....
@@ -652,18 +630,18 @@ class BPServiceActor implements Runnable {
           // -- Bytes remaining
           //
           boolean requestBlockReportLease = (fullBlockReportLeaseId == 0) &&
-                  scheduler.isBlockReportDue(startTime);
+              scheduler.isBlockReportDue(startTime);
           if (!dn.areHeartbeatsDisabledForTests()) {
             resp = sendHeartBeat(requestBlockReportLease);
             assert resp != null;
             if (resp.getFullBlockReportLeaseId() != 0) {
               if (fullBlockReportLeaseId != 0) {
                 LOG.warn(nnAddr + " sent back a full block report lease " +
-                        "ID of 0x" +
-                        Long.toHexString(resp.getFullBlockReportLeaseId()) +
-                        ", but we already have a lease ID of 0x" +
-                        Long.toHexString(fullBlockReportLeaseId) + ". " +
-                        "Overwriting old lease ID.");
+                    "ID of 0x" +
+                    Long.toHexString(resp.getFullBlockReportLeaseId()) +
+                    ", but we already have a lease ID of 0x" +
+                    Long.toHexString(fullBlockReportLeaseId) + ". " +
+                    "Overwriting old lease ID.");
               }
               fullBlockReportLeaseId = resp.getFullBlockReportLeaseId();
             }
@@ -687,7 +665,7 @@ class BPServiceActor implements Runnable {
           }
         }
         if (!dn.areIBRDisabledForTests() &&
-            (ibrManager.sendImmediately()|| sendHeartbeat)) {
+            (ibrManager.sendImmediately() || sendHeartbeat)) {
           ibrManager.sendIBRs(bpNamenode, bpRegistration,
               bpos.getBlockPoolId(), getRpcMetricSuffix());
         }
@@ -717,7 +695,7 @@ class BPServiceActor implements Runnable {
         // There is no work to do;  sleep until hearbeat timer elapses, 
         // or work arrives, and then iterate again.
         ibrManager.waitTillNextIBR(scheduler.getHeartbeatWaitTime());
-      } catch(RemoteException re) {
+      } catch (RemoteException re) {
         String reClass = re.getClassName();
         if (UnregisteredNodeException.class.getName().equals(reClass) ||
             DisallowedDatanodeException.class.getName().equals(reClass) ||
@@ -753,9 +731,9 @@ class BPServiceActor implements Runnable {
    * The bpDatanode needs to register with the namenode on startup in order
    * 1) to report which storage it is serving now and 
    * 2) to receive a registrationID
-   *  
+   *
    * issued by the namenode to recognize registered datanodes.
-   * 
+   *
    * @param nsInfo current NamespaceInfo
    * @see FSNamesystem#registerDatanode(DatanodeRegistration)
    * @throws IOException
@@ -774,15 +752,15 @@ class BPServiceActor implements Runnable {
         newBpRegistration.setNamespaceInfo(nsInfo);
         bpRegistration = newBpRegistration;
         break;
-      } catch(EOFException e) {  // namenode might have just restarted
+      } catch (EOFException e) {  // namenode might have just restarted
         LOG.info("Problem connecting to server: " + nnAddr + " :"
             + e.getLocalizedMessage());
-      } catch(SocketTimeoutException e) {  // namenode is busy
+      } catch (SocketTimeoutException e) {  // namenode is busy
         LOG.info("Problem connecting to server: " + nnAddr);
-      } catch(RemoteException e) {
+      } catch (RemoteException e) {
         LOG.warn("RemoteException in register", e);
         throw e;
-      } catch(IOException e) {
+      } catch (IOException e) {
         LOG.warn("Problem connecting to server: " + nnAddr);
       }
       // Try again in a second
@@ -806,7 +784,7 @@ class BPServiceActor implements Runnable {
 
 
   private void sleepAndLogInterrupts(int millis,
-      String stateString) {
+                                     String stateString) {
     try {
       Thread.sleep(millis);
     } catch (InterruptedException ie) {
@@ -885,9 +863,9 @@ class BPServiceActor implements Runnable {
    */
   void reportRemoteBadBlock(DatanodeInfo dnInfo, ExtendedBlock block)
       throws IOException {
-    LocatedBlock lb = new LocatedBlock(block, 
-                                    new DatanodeInfo[] {dnInfo});
-    bpNamenode.reportBadBlocks(new LocatedBlock[] {lb});
+    LocatedBlock lb = new LocatedBlock(block,
+        new DatanodeInfo[]{dnInfo});
+    bpNamenode.reportBadBlocks(new LocatedBlock[]{lb});
   }
 
   void reRegister() throws IOException {
@@ -912,18 +890,18 @@ class BPServiceActor implements Runnable {
   void triggerBlockReport(BlockReportOptions options) {
     if (options.isIncremental()) {
       LOG.info(bpos.toString() + ": scheduling an incremental block report " +
-         "to namenode: " + nnAddr + ".");
+          "to namenode: " + nnAddr + ".");
       ibrManager.triggerIBR(true);
     } else {
       LOG.info(bpos.toString() + ": scheduling a full block report " +
-         "to namenode: " + nnAddr + ".");
-      synchronized(ibrManager) {
+          "to namenode: " + nnAddr + ".");
+      synchronized (ibrManager) {
         scheduler.forceFullBlockReportNow();
         ibrManager.notifyAll();
       }
     }
   }
-  
+
   public void bpThreadEnqueue(BPServiceActorAction action) {
     synchronized (bpThreadQueue) {
       if (!bpThreadQueue.contains(action)) {
@@ -943,7 +921,7 @@ class BPServiceActor implements Runnable {
       try {
         actionItem.reportTo(bpNamenode, bpRegistration);
       } catch (BPServiceActorActionException baae) {
-        LOG.warn(baae.getMessage() + nnAddr , baae);
+        LOG.warn(baae.getMessage() + nnAddr, baae);
         // Adding it back to the queue if not present
         bpThreadEnqueue(actionItem);
       }
@@ -1067,20 +1045,20 @@ class BPServiceActor implements Runnable {
           dn.getFSDataset().getStorageReports(bpos.getBlockPoolId());
       if (LOG.isDebugEnabled()) {
         LOG.debug("Sending lifeline with " + reports.length + " storage " +
-                  " reports from service actor: " + BPServiceActor.this);
+            " reports from service actor: " + BPServiceActor.this);
       }
       VolumeFailureSummary volumeFailureSummary = dn.getFSDataset()
           .getVolumeFailureSummary();
       int numFailedVolumes = volumeFailureSummary != null ?
           volumeFailureSummary.getFailedStorageLocations().length : 0;
       lifelineNamenode.sendLifeline(bpRegistration,
-                                    reports,
-                                    dn.getFSDataset().getCacheCapacity(),
-                                    dn.getFSDataset().getCacheUsed(),
-                                    dn.getXmitsInProgress(),
-                                    dn.getXceiverCount(),
-                                    numFailedVolumes,
-                                    volumeFailureSummary);
+          reports,
+          dn.getFSDataset().getCacheCapacity(),
+          dn.getFSDataset().getCacheUsed(),
+          dn.getXmitsInProgress(),
+          dn.getXceiverCount(),
+          numFailedVolumes,
+          volumeFailureSummary);
     }
   }
 
@@ -1164,11 +1142,11 @@ class BPServiceActor implements Runnable {
     }
 
     long getLastHearbeatTime() {
-      return (monotonicNow() - lastHeartbeatTime)/1000;
+      return (monotonicNow() - lastHeartbeatTime) / 1000;
     }
 
     long getLastBlockReportTime() {
-      return (monotonicNow() - lastBlockReportTime)/1000;
+      return (monotonicNow() - lastBlockReportTime) / 1000;
     }
 
     long scheduleNextLifeline(long baseTime) {
@@ -1232,7 +1210,7 @@ class BPServiceActor implements Runnable {
       // time before we start the periodic block reports.
       if (resetBlockReportTime) {
         nextBlockReportTime = monotonicNow() +
-            ThreadLocalRandom.current().nextInt((int)(blockReportIntervalMs));
+            ThreadLocalRandom.current().nextInt((int) (blockReportIntervalMs));
         resetBlockReportTime = false;
       } else {
         /* say the last block report was at 8:20:14. The current report

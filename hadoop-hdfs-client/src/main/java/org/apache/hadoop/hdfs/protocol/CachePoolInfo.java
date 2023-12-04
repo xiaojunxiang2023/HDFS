@@ -1,14 +1,13 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.hadoop.fs.InvalidRequestException;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo.Expiration;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
 
 /**
  * CachePoolInfo describes a cache pool.
@@ -119,7 +118,7 @@ public class CachePoolInfo {
 
   /**
    * @return The default replication num for CacheDirective in this pool
-     */
+   */
   public Short getDefaultReplication() {
     return defaultReplication;
   }
@@ -162,12 +161,16 @@ public class CachePoolInfo {
 
   @Override
   public boolean equals(Object o) {
-    if (o == null) { return false; }
-    if (o == this) { return true; }
+    if (o == null) {
+      return false;
+    }
+    if (o == this) {
+      return true;
+    }
     if (o.getClass() != getClass()) {
       return false;
     }
-    CachePoolInfo other = (CachePoolInfo)o;
+    CachePoolInfo other = (CachePoolInfo) o;
     return new EqualsBuilder().
         append(poolName, other.poolName).
         append(ownerName, other.ownerName).
@@ -200,7 +203,7 @@ public class CachePoolInfo {
       throw new InvalidRequestException("Limit is negative.");
     }
     if ((info.getDefaultReplication() != null)
-            && (info.getDefaultReplication() < 0)) {
+        && (info.getDefaultReplication() < 0)) {
       throw new InvalidRequestException("Default Replication is negative");
     }
 

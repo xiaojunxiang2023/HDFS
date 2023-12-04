@@ -45,7 +45,7 @@ public class PermissionParam extends ShortParam {
    * @param str a string representation of the parameter value.
    */
   public PermissionParam(final String str) {
-    this(DOMAIN, DOMAIN.parse(str), (short)0, (short)01777);
+    this(DOMAIN, DOMAIN.parse(str), (short) 0, (short) 01777);
   }
 
   PermissionParam(final Domain domain, final Short value, final Short min,
@@ -68,9 +68,9 @@ public class PermissionParam extends ShortParam {
     return this.getFsPermission(DEFAULT_DIR_PERMISSION);
   }
 
-  private FsPermission getFsPermission(short defaultPermission){
+  private FsPermission getFsPermission(short defaultPermission) {
     final Short v = getValue();
-    return new FsPermission(v != null? v: defaultPermission);
+    return new FsPermission(v != null ? v : defaultPermission);
   }
 
 }

@@ -1,10 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.SignedBytes;
-import java.net.URISyntaxException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BlockLocation;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -14,16 +9,8 @@ import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.net.BasicInetPeer;
 import org.apache.hadoop.hdfs.net.NioInetPeer;
 import org.apache.hadoop.hdfs.net.Peer;
-import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
-import org.apache.hadoop.hdfs.protocol.DatanodeID;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.EncryptionZone;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
-import org.apache.hadoop.hdfs.protocol.ReconfigurationProtocol;
 import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataEncryptionKeyFactory;
 import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.SaslDataTransferClient;
 import org.apache.hadoop.hdfs.protocolPB.ClientDatanodeProtocolTranslatorPB;
@@ -36,49 +23,30 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.NodeBase;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.SignedBytes;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.SocketFactory;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InterruptedIOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.URI;
+import java.io.*;
+import java.net.*;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_DATA_TRANSFER_CLIENT_TCPNODELAY_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_DATA_TRANSFER_CLIENT_TCPNODELAY_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_HA_NAMENODES_KEY_PREFIX;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_AUXILIARY_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_KEY;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMESERVICES;
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.*;
+
 public class DFSUtilClient {
   public static final byte[] EMPTY_BYTES = {};
   private static final Logger LOG = LoggerFactory.getLogger(
@@ -112,8 +80,9 @@ public class DFSUtilClient {
    * on byte separator.
    */
   public static byte[][] bytes2byteArray(byte[] bytes) {
-    return bytes2byteArray(bytes, bytes.length, (byte)Path.SEPARATOR_CHAR);
+    return bytes2byteArray(bytes, bytes.length, (byte) Path.SEPARATOR_CHAR);
   }
+
   /**
    * Splits first len bytes in bytes to array of arrays of bytes
    * on byte separator.
@@ -122,7 +91,7 @@ public class DFSUtilClient {
    * @param separator the delimiting byte
    */
   public static byte[][] bytes2byteArray(byte[] bytes, int len,
-      byte separator) {
+                                         byte separator) {
     Preconditions.checkPositionIndex(len, bytes.length);
     if (len == 0) {
       return new byte[][]{null};
@@ -131,7 +100,7 @@ public class DFSUtilClient {
     // peeking at prior byte.
     int splits = 0;
     for (int i = 1; i < len; i++) {
-      if (bytes[i-1] == separator && bytes[i] != separator) {
+      if (bytes[i - 1] == separator && bytes[i] != separator) {
         splits++;
       }
     }
@@ -157,14 +126,15 @@ public class DFSUtilClient {
     }
     return result;
   }
+
   /** Return used as percentage of capacity */
   public static float getPercentUsed(long used, long capacity) {
-    return capacity <= 0 ? 100 : (used * 100.0f)/capacity;
+    return capacity <= 0 ? 100 : (used * 100.0f) / capacity;
   }
 
   /** Return remaining as percentage of capacity */
   public static float getPercentRemaining(long remaining, long capacity) {
-    return capacity <= 0 ? 0 : (remaining * 100.0f)/capacity;
+    return capacity <= 0 ? 0 : (remaining * 100.0f) / capacity;
   }
 
   /** Convert percentage to a string. */
@@ -201,7 +171,7 @@ public class DFSUtilClient {
       return key;
     }
     assert !suffix.startsWith(".") :
-      "suffix '" + suffix + "' should not already have '.' prepended.";
+        "suffix '" + suffix + "' should not already have '.' prepended.";
     return key + "." + suffix;
   }
 
@@ -215,7 +185,7 @@ public class DFSUtilClient {
   public static Map<String, Map<String, InetSocketAddress>> getHaNnRpcAddresses(
       Configuration conf) {
     return DFSUtilClient.getAddresses(conf, null,
-      HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_KEY);
+        HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_KEY);
   }
 
   /**
@@ -275,21 +245,21 @@ public class DFSUtilClient {
         hosts[hCnt] = locations[hCnt].getHostName();
         xferAddrs[hCnt] = locations[hCnt].getXferAddr();
         NodeBase node = new NodeBase(xferAddrs[hCnt],
-                                     locations[hCnt].getNetworkLocation());
+            locations[hCnt].getNetworkLocation());
         racks[hCnt] = node.toString();
       }
       DatanodeInfo[] cachedLocations = blk.getCachedLocations();
       String[] cachedHosts = new String[cachedLocations.length];
-      for (int i=0; i<cachedLocations.length; i++) {
+      for (int i = 0; i < cachedLocations.length; i++) {
         cachedHosts[i] = cachedLocations[i].getHostName();
       }
       blkLocations[idx] = new BlockLocation(xferAddrs, hosts, cachedHosts,
-                                            racks,
-                                            blk.getStorageIDs(),
-                                            blk.getStorageTypes(),
-                                            blk.getStartOffset(),
-                                            blk.getBlockSize(),
-                                            blk.isCorrupt());
+          racks,
+          blk.getStorageIDs(),
+          blk.getStorageTypes(),
+          blk.getStartOffset(),
+          blk.getBlockSize(),
+          blk.isCorrupt());
       idx++;
     }
     return blkLocations;
@@ -310,7 +280,7 @@ public class DFSUtilClient {
    * Given a list of path components returns a byte array
    */
   public static byte[] byteArray2bytes(byte[][] pathComponents) {
-    if (pathComponents.length == 0 ||  (pathComponents.length == 1
+    if (pathComponents.length == 0 || (pathComponents.length == 1
         && (pathComponents[0] == null || pathComponents[0].length == 0))) {
       return EMPTY_BYTES;
     }
@@ -445,7 +415,7 @@ public class DFSUtilClient {
    * @return
    */
   private static String checkKeysAndProcess(String defaultValue, String suffix,
-      Configuration conf, String... keys) {
+                                            Configuration conf, String... keys) {
     String succeededKey = null;
     String address = null;
     for (String key : keys) {
@@ -458,7 +428,7 @@ public class DFSUtilClient {
     String ret;
     if (address == null) {
       ret = defaultValue;
-    } else if(DFS_NAMENODE_RPC_ADDRESS_KEY.equals(succeededKey))  {
+    } else if (DFS_NAMENODE_RPC_ADDRESS_KEY.equals(succeededKey)) {
       ret = checkRpcAuxiliary(conf, suffix, address);
     } else {
       ret = address;
@@ -477,7 +447,7 @@ public class DFSUtilClient {
    * address if auxiliary port not enabled.
    */
   private static String checkRpcAuxiliary(Configuration conf, String suffix,
-      String address) {
+                                          String address) {
     String key = DFS_NAMENODE_RPC_ADDRESS_AUXILIARY_KEY;
     key = addSuffix(key, suffix);
     int[] ports = conf.getInts(key);
@@ -520,7 +490,7 @@ public class DFSUtilClient {
    * @return value of the key or default if a key was not found in configuration
    */
   public static String getConfValue(String defaultValue, String keySuffix,
-      Configuration conf, String... keys) {
+                                    Configuration conf, String... keys) {
     String value = null;
     for (String key : keys) {
       key = addSuffix(key, keySuffix);
@@ -549,8 +519,8 @@ public class DFSUtilClient {
     String[] components = StringUtils.split(src, '/');
     for (int i = 0; i < components.length; i++) {
       String element = components[i];
-      if (element.equals(".")  ||
-          (element.contains(":"))  ||
+      if (element.equals(".") ||
+          (element.contains(":")) ||
           (element.contains("/"))) {
         return false;
       }
@@ -585,8 +555,8 @@ public class DFSUtilClient {
     // Chop off the milliseconds
     long durationSec = durationMs / 1000;
     final int secondsPerMinute = 60;
-    final int secondsPerHour = 60*60;
-    final int secondsPerDay = 60*60*24;
+    final int secondsPerHour = 60 * 60;
+    final int secondsPerDay = 60 * 60 * 24;
     final long days = durationSec / secondsPerDay;
     durationSec -= days * secondsPerDay;
     final long hours = durationSec / secondsPerHour;
@@ -596,7 +566,7 @@ public class DFSUtilClient {
     final long seconds = durationSec;
     final long milliseconds = durationMs % 1000;
     String format = "%03d:%02d:%02d:%02d.%03d";
-    if (negative)  {
+    if (negative) {
       format = "-" + format;
     }
     return String.format(format, days, hours, minutes, seconds, milliseconds);
@@ -698,10 +668,10 @@ public class DFSUtilClient {
   }
 
   public static Peer peerFromSocketAndKey(
-        SaslDataTransferClient saslClient, Socket s,
-        DataEncryptionKeyFactory keyFactory,
-        Token<BlockTokenIdentifier> blockToken, DatanodeID datanodeId,
-        int socketTimeoutMs) throws IOException {
+      SaslDataTransferClient saslClient, Socket s,
+      DataEncryptionKeyFactory keyFactory,
+      Token<BlockTokenIdentifier> blockToken, DatanodeID datanodeId,
+      int socketTimeoutMs) throws IOException {
     Peer peer = null;
     boolean success = false;
     try {
@@ -766,7 +736,7 @@ public class DFSUtilClient {
         filesystemURI.getScheme())) {
       throw new IllegalArgumentException(String.format(
           "Invalid URI for NameNode address (check %s): " +
-          "%s is not of scheme '%s'.", FileSystem.FS_DEFAULT_NAME_KEY,
+              "%s is not of scheme '%s'.", FileSystem.FS_DEFAULT_NAME_KEY,
           filesystemURI.toString(), HdfsConstants.HDFS_URI_SCHEME));
     }
     return getNNAddress(authority);
@@ -781,7 +751,7 @@ public class DFSUtilClient {
    * @return address of file system
    */
   public static InetSocketAddress getNNAddressCheckLogical(Configuration conf,
-      URI filesystemURI) {
+                                                           URI filesystemURI) {
     InetSocketAddress retAddr;
     if (HAUtilClient.isLogicalUri(conf, filesystemURI)) {
       retAddr = InetSocketAddress.createUnresolved(filesystemURI.getAuthority(),
@@ -796,13 +766,13 @@ public class DFSUtilClient {
     int port = namenode.getPort();
     String portString =
         (port == HdfsClientConfigKeys.DFS_NAMENODE_RPC_PORT_DEFAULT) ?
-        "" : (":" + port);
+            "" : (":" + port);
     return URI.create(HdfsConstants.HDFS_URI_SCHEME + "://"
         + namenode.getHostName() + portString);
   }
 
   public static InterruptedIOException toInterruptedIOException(String message,
-      InterruptedException e) {
+                                                                InterruptedException e) {
     final InterruptedIOException iioe = new InterruptedIOException(message);
     iioe.initCause(e);
     return iioe;
@@ -904,11 +874,11 @@ public class DFSUtilClient {
    * @return ThreadPoolExecutor
    */
   public static ThreadPoolExecutor getThreadPoolExecutor(int corePoolSize,
-      int maxPoolSize, long keepAliveTimeSecs, String threadNamePrefix,
-      boolean runRejectedExec) {
+                                                         int maxPoolSize, long keepAliveTimeSecs, String threadNamePrefix,
+                                                         boolean runRejectedExec) {
     return getThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTimeSecs,
         new SynchronousQueue<>(), threadNamePrefix, runRejectedExec);
-}
+  }
 
   /**
    * Utility to create a {@link ThreadPoolExecutor}.
@@ -924,29 +894,29 @@ public class DFSUtilClient {
    * @return ThreadPoolExecutor
    */
   public static ThreadPoolExecutor getThreadPoolExecutor(int corePoolSize,
-      int maxPoolSize, long keepAliveTimeSecs, BlockingQueue<Runnable> queue,
-      String threadNamePrefix, boolean runRejectedExec) {
+                                                         int maxPoolSize, long keepAliveTimeSecs, BlockingQueue<Runnable> queue,
+                                                         String threadNamePrefix, boolean runRejectedExec) {
     Preconditions.checkArgument(corePoolSize > 0);
     ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize,
         maxPoolSize, keepAliveTimeSecs, TimeUnit.SECONDS,
         queue, new Daemon.DaemonFactory() {
-          private final AtomicInteger threadIndex = new AtomicInteger(0);
+      private final AtomicInteger threadIndex = new AtomicInteger(0);
 
-          @Override
-          public Thread newThread(Runnable r) {
-            Thread t = super.newThread(r);
-            t.setName(threadNamePrefix + threadIndex.getAndIncrement());
-            return t;
-          }
-        });
+      @Override
+      public Thread newThread(Runnable r) {
+        Thread t = super.newThread(r);
+        t.setName(threadNamePrefix + threadIndex.getAndIncrement());
+        return t;
+      }
+    });
     if (runRejectedExec) {
       threadPoolExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor
           .CallerRunsPolicy() {
         @Override
         public void rejectedExecution(Runnable runnable,
-            ThreadPoolExecutor e) {
+                                      ThreadPoolExecutor e) {
           LOG.info(threadNamePrefix + " task is rejected by " +
-                  "ThreadPoolExecutor. Executing it in current thread.");
+              "ThreadPoolExecutor. Executing it in current thread.");
           // will run in the current thread
           super.rejectedExecution(runnable, e);
         }
@@ -958,7 +928,7 @@ public class DFSUtilClient {
   private static final int INODE_PATH_MAX_LENGTH = 3 * Path.SEPARATOR.length()
       + HdfsConstants.DOT_RESERVED_STRING.length()
       + HdfsConstants.DOT_INODES_STRING.length()
-      + (int)Math.ceil(Math.log10(Long.MAX_VALUE)) + 1;
+      + (int) Math.ceil(Math.log10(Long.MAX_VALUE)) + 1;
 
   /**
    * Create the internal unique file path from HDFS file ID (inode ID). Unlike
@@ -970,8 +940,8 @@ public class DFSUtilClient {
   public static Path makePathFromFileId(long fileId) {
     StringBuilder sb = new StringBuilder(INODE_PATH_MAX_LENGTH);
     sb.append(Path.SEPARATOR).append(HdfsConstants.DOT_RESERVED_STRING)
-      .append(Path.SEPARATOR).append(HdfsConstants.DOT_INODES_STRING)
-      .append(Path.SEPARATOR).append(fileId);
+        .append(Path.SEPARATOR).append(HdfsConstants.DOT_INODES_STRING)
+        .append(Path.SEPARATOR).append(fileId);
     return new Path(sb.toString());
   }
 
@@ -985,7 +955,7 @@ public class DFSUtilClient {
    * @return the home directory of current user.
    */
   public static String getHomeDirectory(Configuration conf,
-      UserGroupInformation ugi) {
+                                        UserGroupInformation ugi) {
     String userHomePrefix = HdfsClientConfigKeys
         .DFS_USER_HOME_DIR_PREFIX_DEFAULT;
     if (conf != null) {
@@ -1003,7 +973,7 @@ public class DFSUtilClient {
    * @return unqualified path of trash root.
    */
   public static String getTrashRoot(Configuration conf,
-      UserGroupInformation ugi) {
+                                    UserGroupInformation ugi) {
     return getHomeDirectory(conf, ugi)
         + Path.SEPARATOR + FileSystem.TRASH_PREFIX;
   }
@@ -1015,7 +985,7 @@ public class DFSUtilClient {
    * @return unqualified path of trash root.
    */
   public static String getEZTrashRoot(EncryptionZone ez,
-      UserGroupInformation ugi) {
+                                      UserGroupInformation ugi) {
     String ezpath = ez.getPath();
     return (ezpath.equals("/") ? ezpath : ezpath + Path.SEPARATOR)
         + FileSystem.TRASH_PREFIX + Path.SEPARATOR + ugi.getShortUserName();

@@ -1,17 +1,17 @@
 package org.apache.hadoop.http;
 
-import java.util.HashMap;
-
-import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.log4j.Appender;
 import org.eclipse.jetty.server.AsyncRequestLogWriter;
 import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.RequestLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 /**
  * RequestLog object for use with Http
@@ -39,7 +39,8 @@ public class HttpRequestLog {
     String appenderName = name + "requestlog";
     Log logger = LogFactory.getLog(loggerName);
 
-    boolean isLog4JLogger;;
+    boolean isLog4JLogger;
+    ;
     try {
       isLog4JLogger = logger instanceof Log4JLogger;
     } catch (NoClassDefFoundError err) {
@@ -50,7 +51,7 @@ public class HttpRequestLog {
       isLog4JLogger = false;
     }
     if (isLog4JLogger) {
-      Log4JLogger httpLog4JLog = (Log4JLogger)logger;
+      Log4JLogger httpLog4JLog = (Log4JLogger) logger;
       org.apache.log4j.Logger httpLogger = httpLog4JLog.getLogger();
       Appender appender = null;
 
@@ -68,7 +69,7 @@ public class HttpRequestLog {
 
       if (appender instanceof HttpRequestLogAppender) {
         HttpRequestLogAppender requestLogAppender
-          = (HttpRequestLogAppender)appender;
+            = (HttpRequestLogAppender) appender;
         AsyncRequestLogWriter logWriter = new AsyncRequestLogWriter();
         logWriter.setFilename(requestLogAppender.getFilename());
         logWriter.setRetainDays(requestLogAppender.getRetainDays());

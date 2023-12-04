@@ -1,15 +1,20 @@
 package org.apache.hadoop.io;
 
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.thirdparty.protobuf.Message;
+import org.apache.hadoop.util.ProtoUtil;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import java.io.*;
-import java.util.*;
-import org.apache.hadoop.conf.*;
-import org.apache.hadoop.util.ProtoUtil;
-
-import org.apache.hadoop.thirdparty.protobuf.Message;
+import java.util.HashMap;
+import java.util.Map;
 
 /** A polymorphic Writable that writes an instance with it's class name.
  * Handles arrays, strings and primitive types without a Writable wrapper.
@@ -20,8 +25,9 @@ public class ObjectWritable implements Writable, Configurable {
   private Object instance;
   private Configuration conf;
 
-  public ObjectWritable() {}
-  
+  public ObjectWritable() {
+  }
+
   public ObjectWritable(Object instance) {
     set(instance);
   }
@@ -32,34 +38,39 @@ public class ObjectWritable implements Writable, Configurable {
   }
 
   /** Return the instance, or null if none. */
-  public Object get() { return instance; }
-  
+  public Object get() {
+    return instance;
+  }
+
   /** Return the class this is meant to be. */
-  public Class getDeclaredClass() { return declaredClass; }
-  
+  public Class getDeclaredClass() {
+    return declaredClass;
+  }
+
   /** Reset the instance. */
   public void set(Object instance) {
     this.declaredClass = instance.getClass();
     this.instance = instance;
   }
-  
+
   @Override
   public String toString() {
     return "OW[class=" + declaredClass + ",value=" + instance + "]";
   }
 
-  
+
   @Override
   public void readFields(DataInput in) throws IOException {
     readObject(in, this, this.conf);
   }
-  
+
   @Override
   public void write(DataOutput out) throws IOException {
     writeObject(out, instance, declaredClass, conf);
   }
 
   private static final Map<String, Class<?>> PRIMITIVE_NAMES = new HashMap<String, Class<?>>();
+
   static {
     PRIMITIVE_NAMES.put("boolean", Boolean.TYPE);
     PRIMITIVE_NAMES.put("byte", Byte.TYPE);
@@ -74,11 +85,16 @@ public class ObjectWritable implements Writable, Configurable {
 
   private static class NullInstance extends Configured implements Writable {
     private Class<?> declaredClass;
-    public NullInstance() { super(null); }
+
+    public NullInstance() {
+      super(null);
+    }
+
     public NullInstance(Class declaredClass, Configuration conf) {
       super(conf);
       this.declaredClass = declaredClass;
     }
+
     @Override
     public void readFields(DataInput in) throws IOException {
       String className = UTF8.readString(in);
@@ -91,6 +107,7 @@ public class ObjectWritable implements Writable, Configurable {
         }
       }
     }
+
     @Override
     public void write(DataOutput out) throws IOException {
       UTF8.writeString(out, declaredClass.getName());
@@ -100,30 +117,30 @@ public class ObjectWritable implements Writable, Configurable {
   /** Write a {@link Writable}, {@link String}, primitive type, or an array of
    * the preceding. */
   public static void writeObject(DataOutput out, Object instance,
-                                 Class declaredClass, 
+                                 Class declaredClass,
                                  Configuration conf) throws IOException {
     writeObject(out, instance, declaredClass, conf, false);
   }
-  
-    /** 
-     * Write a {@link Writable}, {@link String}, primitive type, or an array of
-     * the preceding.  
-     * 
-     * @param allowCompactArrays - set true for RPC and internal or intra-cluster
-     * usages.  Set false for inter-cluster, File, and other persisted output 
-     * usages, to preserve the ability to interchange files with other clusters 
-     * that may not be running the same version of software.  Sometime in ~2013 
-     * we can consider removing this parameter and always using the compact format.
-     */
-    public static void writeObject(DataOutput out, Object instance,
-        Class declaredClass, Configuration conf, boolean allowCompactArrays) 
-    throws IOException {
+
+  /**
+   * Write a {@link Writable}, {@link String}, primitive type, or an array of
+   * the preceding.  
+   *
+   * @param allowCompactArrays - set true for RPC and internal or intra-cluster
+   * usages.  Set false for inter-cluster, File, and other persisted output 
+   * usages, to preserve the ability to interchange files with other clusters 
+   * that may not be running the same version of software.  Sometime in ~2013 
+   * we can consider removing this parameter and always using the compact format.
+   */
+  public static void writeObject(DataOutput out, Object instance,
+                                 Class declaredClass, Configuration conf, boolean allowCompactArrays)
+      throws IOException {
 
     if (instance == null) {                       // null
       instance = new NullInstance(declaredClass, conf);
       declaredClass = Writable.class;
     }
-    
+
     // Special case: must come before writing out the declaredClass.
     // If this is an eligible array of primitives,
     // wrap it in an ArrayPrimitiveWritable$Internal wrapper class.
@@ -143,70 +160,70 @@ public class ObjectWritable implements Writable, Configurable {
         writeObject(out, Array.get(instance, i),
             declaredClass.getComponentType(), conf, allowCompactArrays);
       }
-      
+
     } else if (declaredClass == ArrayPrimitiveWritable.Internal.class) {
       ((ArrayPrimitiveWritable.Internal) instance).write(out);
-      
+
     } else if (declaredClass == String.class) {   // String
-      UTF8.writeString(out, (String)instance);
-      
+      UTF8.writeString(out, (String) instance);
+
     } else if (declaredClass.isPrimitive()) {     // primitive type
 
       if (declaredClass == Boolean.TYPE) {        // boolean
-        out.writeBoolean(((Boolean)instance).booleanValue());
+        out.writeBoolean(((Boolean) instance).booleanValue());
       } else if (declaredClass == Character.TYPE) { // char
-        out.writeChar(((Character)instance).charValue());
+        out.writeChar(((Character) instance).charValue());
       } else if (declaredClass == Byte.TYPE) {    // byte
-        out.writeByte(((Byte)instance).byteValue());
+        out.writeByte(((Byte) instance).byteValue());
       } else if (declaredClass == Short.TYPE) {   // short
-        out.writeShort(((Short)instance).shortValue());
+        out.writeShort(((Short) instance).shortValue());
       } else if (declaredClass == Integer.TYPE) { // int
-        out.writeInt(((Integer)instance).intValue());
+        out.writeInt(((Integer) instance).intValue());
       } else if (declaredClass == Long.TYPE) {    // long
-        out.writeLong(((Long)instance).longValue());
+        out.writeLong(((Long) instance).longValue());
       } else if (declaredClass == Float.TYPE) {   // float
-        out.writeFloat(((Float)instance).floatValue());
+        out.writeFloat(((Float) instance).floatValue());
       } else if (declaredClass == Double.TYPE) {  // double
-        out.writeDouble(((Double)instance).doubleValue());
+        out.writeDouble(((Double) instance).doubleValue());
       } else if (declaredClass == Void.TYPE) {    // void
       } else {
-        throw new IllegalArgumentException("Not a primitive: "+declaredClass);
+        throw new IllegalArgumentException("Not a primitive: " + declaredClass);
       }
     } else if (declaredClass.isEnum()) {         // enum
-      UTF8.writeString(out, ((Enum)instance).name());
+      UTF8.writeString(out, ((Enum) instance).name());
     } else if (Writable.class.isAssignableFrom(declaredClass)) { // Writable
       UTF8.writeString(out, instance.getClass().getName());
-      ((Writable)instance).write(out);
+      ((Writable) instance).write(out);
 
     } else if (Message.class.isAssignableFrom(declaredClass)) {
-      ((Message)instance).writeDelimitedTo(
+      ((Message) instance).writeDelimitedTo(
           DataOutputOutputStream.constructOutputStream(out));
     } else {
-      throw new IOException("Can't write: "+instance+" as "+declaredClass);
+      throw new IOException("Can't write: " + instance + " as " + declaredClass);
     }
   }
-  
-  
+
+
   /** Read a {@link Writable}, {@link String}, primitive type, or an array of
    * the preceding. */
   public static Object readObject(DataInput in, Configuration conf)
-    throws IOException {
+      throws IOException {
     return readObject(in, null, conf);
   }
-    
+
   /** Read a {@link Writable}, {@link String}, primitive type, or an array of
    * the preceding. */
   @SuppressWarnings("unchecked")
   public static Object readObject(DataInput in, ObjectWritable objectWritable, Configuration conf)
-    throws IOException {
+      throws IOException {
     String className = UTF8.readString(in);
     Class<?> declaredClass = PRIMITIVE_NAMES.get(className);
     if (declaredClass == null) {
       declaredClass = loadClass(conf, className);
     }
-    
+
     Object instance;
-    
+
     if (declaredClass.isPrimitive()) {            // primitive types
 
       if (declaredClass == Boolean.TYPE) {             // boolean
@@ -228,7 +245,7 @@ public class ObjectWritable implements Writable, Configurable {
       } else if (declaredClass == Void.TYPE) {         // void
         instance = null;
       } else {
-        throw new IllegalArgumentException("Not a primitive: "+declaredClass);
+        throw new IllegalArgumentException("Not a primitive: " + declaredClass);
       }
 
     } else if (declaredClass.isArray()) {              // array
@@ -237,11 +254,11 @@ public class ObjectWritable implements Writable, Configurable {
       for (int i = 0; i < length; i++) {
         Array.set(instance, i, readObject(in, conf));
       }
-      
+
     } else if (declaredClass == ArrayPrimitiveWritable.Internal.class) {
       // Read and unwrap ArrayPrimitiveWritable$Internal array.
       // Always allow the read, even if write is disabled by allowCompactArrays.
-      ArrayPrimitiveWritable.Internal temp = 
+      ArrayPrimitiveWritable.Internal temp =
           new ArrayPrimitiveWritable.Internal();
       temp.readFields(in);
       instance = temp.get();
@@ -257,13 +274,13 @@ public class ObjectWritable implements Writable, Configurable {
       Class instanceClass = null;
       String str = UTF8.readString(in);
       instanceClass = loadClass(conf, str);
-      
+
       Writable writable = WritableFactories.newInstance(instanceClass, conf);
       writable.readFields(in);
       instance = writable;
 
       if (instanceClass == NullInstance.class) {  // null
-        declaredClass = ((NullInstance)instance).declaredClass;
+        declaredClass = ((NullInstance) instance).declaredClass;
         instance = null;
       }
     }
@@ -274,13 +291,13 @@ public class ObjectWritable implements Writable, Configurable {
     }
 
     return instance;
-      
+
   }
 
   /**
    * Try to instantiate a protocol buffer of the given message class
    * from the given input stream.
-   * 
+   *
    * @param protoClass the class of the generated protocol buffer
    * @param dataIn the input stream to read from
    * @return the instantiated Message instance
@@ -296,27 +313,27 @@ public class ObjectWritable implements Writable, Configurable {
         // the data
         Method parseMethod = getStaticProtobufMethod(protoClass,
             "parseDelimitedFrom", InputStream.class);
-        return (Message)parseMethod.invoke(null, (InputStream)dataIn);
+        return (Message) parseMethod.invoke(null, (InputStream) dataIn);
       } else {
         // Have to read it into a buffer first, since protobuf doesn't deal
         // with the DataInput interface directly.
-        
+
         // Read the size delimiter that writeDelimitedTo writes
         int size = ProtoUtil.readRawVarint32(dataIn);
         if (size < 0) {
           throw new IOException("Invalid size: " + size);
         }
-      
+
         byte[] data = new byte[size];
         dataIn.readFully(data);
         Method parseMethod = getStaticProtobufMethod(protoClass,
             "parseFrom", byte[].class);
-        return (Message)parseMethod.invoke(null, data);
+        return (Message) parseMethod.invoke(null, data);
       }
     } catch (InvocationTargetException e) {
-      
+
       if (e.getCause() instanceof IOException) {
-        throw (IOException)e.getCause();
+        throw (IOException) e.getCause();
       } else {
         throw new IOException(e.getCause());
       }
@@ -327,7 +344,7 @@ public class ObjectWritable implements Writable, Configurable {
   }
 
   static Method getStaticProtobufMethod(Class<?> declaredClass, String method,
-      Class<?> ... args) {
+                                        Class<?>... args) {
 
     try {
       return declaredClass.getMethod(method, args);
@@ -366,5 +383,5 @@ public class ObjectWritable implements Writable, Configurable {
   public Configuration getConf() {
     return this.conf;
   }
-  
+
 }

@@ -35,11 +35,12 @@ public final class ErasureCodeNative {
 
     if (LOADING_FAILURE_REASON != null) {
       LOG.warn("ISA-L support is not available in your platform... " +
-              "using builtin-java codec where applicable");
+          "using builtin-java codec where applicable");
     }
   }
 
-  private ErasureCodeNative() {}
+  private ErasureCodeNative() {
+  }
 
   /**
    * Are native libraries loaded?

@@ -20,19 +20,19 @@ public class ClientHAProxyFactory<T> implements HAProxyFactory<T> {
   @Override
   @SuppressWarnings("unchecked")
   public T createProxy(Configuration conf, InetSocketAddress nnAddr,
-      Class<T> xface, UserGroupInformation ugi, boolean withRetries,
-      AtomicBoolean fallbackToSimpleAuth) throws IOException {
+                       Class<T> xface, UserGroupInformation ugi, boolean withRetries,
+                       AtomicBoolean fallbackToSimpleAuth) throws IOException {
     if (alignmentContext != null) {
       return (T) NameNodeProxiesClient.createProxyWithAlignmentContext(
-        nnAddr, conf, ugi, false, fallbackToSimpleAuth, alignmentContext);
+          nnAddr, conf, ugi, false, fallbackToSimpleAuth, alignmentContext);
     }
     return (T) NameNodeProxiesClient.createNonHAProxyWithClientProtocol(
-      nnAddr, conf, ugi, false, fallbackToSimpleAuth);
+        nnAddr, conf, ugi, false, fallbackToSimpleAuth);
   }
 
   @Override
   public T createProxy(Configuration conf, InetSocketAddress nnAddr,
-      Class<T> xface, UserGroupInformation ugi, boolean withRetries)
+                       Class<T> xface, UserGroupInformation ugi, boolean withRetries)
       throws IOException {
     return createProxy(conf, nnAddr, xface, ugi, withRetries, null);
   }

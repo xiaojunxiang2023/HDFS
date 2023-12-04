@@ -8,95 +8,95 @@ import java.math.BigInteger;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public interface FederationMBean {
-    String getNamenodes();
+  String getNamenodes();
 
-    String getNameservices();
+  String getNameservices();
 
-    String getMountTable();
+  String getMountTable();
 
-    String getRouters();
+  String getRouters();
 
-    long getTotalCapacity();
+  long getTotalCapacity();
 
-    long getUsedCapacity();
+  long getUsedCapacity();
 
-    long getRemainingCapacity();
+  long getRemainingCapacity();
 
-    BigInteger getTotalCapacityBigInt();
+  BigInteger getTotalCapacityBigInt();
 
-    BigInteger getUsedCapacityBigInt();
+  BigInteger getUsedCapacityBigInt();
 
-    BigInteger getRemainingCapacityBigInt();
+  BigInteger getRemainingCapacityBigInt();
 
-    long getProvidedSpace();
+  long getProvidedSpace();
 
-    int getNumNameservices();
+  int getNumNameservices();
 
-    int getNumNamenodes();
+  int getNumNamenodes();
 
-    int getNumExpiredNamenodes();
+  int getNumExpiredNamenodes();
 
-    int getNumLiveNodes();
+  int getNumLiveNodes();
 
-    int getNumDeadNodes();
+  int getNumDeadNodes();
 
-    int getNumStaleNodes();
+  int getNumStaleNodes();
 
-    int getNumDecommissioningNodes();
+  int getNumDecommissioningNodes();
 
-    int getNumDecomLiveNodes();
+  int getNumDecomLiveNodes();
 
-    int getNumDecomDeadNodes();
+  int getNumDecomDeadNodes();
 
-    int getNumInMaintenanceLiveDataNodes();
+  int getNumInMaintenanceLiveDataNodes();
 
-    int getNumInMaintenanceDeadDataNodes();
+  int getNumInMaintenanceDeadDataNodes();
 
-    int getNumEnteringMaintenanceDataNodes();
+  int getNumEnteringMaintenanceDataNodes();
 
-    String getNodeUsage();
+  String getNodeUsage();
 
-    long getNumBlocks();
+  long getNumBlocks();
 
-    long getNumOfMissingBlocks();
+  long getNumOfMissingBlocks();
 
-    long getNumOfBlocksPendingReplication();
+  long getNumOfBlocksPendingReplication();
 
-    long getNumOfBlocksUnderReplicated();
+  long getNumOfBlocksUnderReplicated();
 
-    long getNumOfBlocksPendingDeletion();
+  long getNumOfBlocksPendingDeletion();
 
-    long getNumFiles();
+  long getNumFiles();
 
-    @Deprecated
-    String getRouterStarted();
+  @Deprecated
+  String getRouterStarted();
 
-    @Deprecated
-    String getVersion();
+  @Deprecated
+  String getVersion();
 
-    @Deprecated
-    String getCompiledDate();
+  @Deprecated
+  String getCompiledDate();
 
-    @Deprecated
-    String getCompileInfo();
+  @Deprecated
+  String getCompileInfo();
 
-    @Deprecated
-    String getHostAndPort();
+  @Deprecated
+  String getHostAndPort();
 
-    @Deprecated
-    String getRouterId();
+  @Deprecated
+  String getRouterId();
 
-    String getClusterId();
+  String getClusterId();
 
-    @Deprecated
-    String getBlockPoolId();
+  @Deprecated
+  String getBlockPoolId();
 
-    @Deprecated
-    String getRouterStatus();
+  @Deprecated
+  String getRouterStatus();
 
-    @Deprecated
-    long getCurrentTokensCount();
+  @Deprecated
+  long getCurrentTokensCount();
 
-    @Deprecated
-    boolean isSecurityEnabled();
+  @Deprecated
+  boolean isSecurityEnabled();
 }

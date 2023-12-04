@@ -1,19 +1,12 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.net.NetworkTopology;
+
+import java.util.*;
 
 /**
  * The class is responsible for choosing the desired number of targets
@@ -31,8 +24,8 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
   private int upgradeDomainFactor;
 
   @Override
-  public void initialize(Configuration conf,  FSClusterStats stats,
-      NetworkTopology clusterMap, Host2NodesMap host2datanodeMap) {
+  public void initialize(Configuration conf, FSClusterStats stats,
+                         NetworkTopology clusterMap, Host2NodesMap host2datanodeMap) {
     super.initialize(conf, stats, clusterMap, host2datanodeMap);
     upgradeDomainFactor = conf.getInt(
         DFSConfigKeys.DFS_UPGRADE_DOMAIN_FACTOR,
@@ -41,8 +34,8 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
 
   @Override
   protected boolean isGoodDatanode(DatanodeDescriptor node,
-      int maxTargetPerRack, boolean considerLoad,
-      List<DatanodeStorageInfo> results, boolean avoidStaleNodes) {
+                                   int maxTargetPerRack, boolean considerLoad,
+                                   List<DatanodeStorageInfo> results, boolean avoidStaleNodes) {
     boolean isGoodTarget = super.isGoodDatanode(node,
         maxTargetPerRack, considerLoad, results, avoidStaleNodes);
     if (isGoodTarget) {
@@ -79,7 +72,7 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
     if (results == null) {
       return upgradeDomains;
     }
-    for(DatanodeStorageInfo storageInfo : results) {
+    for (DatanodeStorageInfo storageInfo : results) {
       upgradeDomains.add(getUpgradeDomain(storageInfo));
     }
     return upgradeDomains;
@@ -90,7 +83,7 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
     if (nodes == null) {
       return upgradeDomains;
     }
-    for(DatanodeInfo node : nodes) {
+    for (DatanodeInfo node : nodes) {
       upgradeDomains.add(getUpgradeDomainWithDefaultValue(node));
     }
     return upgradeDomains;
@@ -99,7 +92,7 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
   private <T> Map<String, List<T>> getUpgradeDomainMap(
       Collection<T> storagesOrDataNodes) {
     Map<String, List<T>> upgradeDomainMap = new HashMap<>();
-    for(T storage : storagesOrDataNodes) {
+    for (T storage : storagesOrDataNodes) {
       String upgradeDomain = getUpgradeDomainWithDefaultValue(
           getDatanodeInfo(storage));
       List<T> storages = upgradeDomainMap.get(upgradeDomain);
@@ -114,13 +107,13 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
 
   @Override
   public BlockPlacementStatus verifyBlockPlacement(DatanodeInfo[] locs,
-      int numberOfReplicas) {
+                                                   int numberOfReplicas) {
     BlockPlacementStatus defaultStatus = super.verifyBlockPlacement(locs,
         numberOfReplicas);
     BlockPlacementStatusWithUpgradeDomain upgradeDomainStatus =
         new BlockPlacementStatusWithUpgradeDomain(defaultStatus,
             getUpgradeDomainsFromNodes(locs),
-                numberOfReplicas, upgradeDomainFactor);
+            numberOfReplicas, upgradeDomainFactor);
     return upgradeDomainStatus;
   }
 
@@ -247,9 +240,9 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
 
   @Override
   boolean useDelHint(DatanodeStorageInfo delHint,
-      DatanodeStorageInfo added, List<DatanodeStorageInfo> moreThanOne,
-      Collection<DatanodeStorageInfo> exactlyOne,
-      List<StorageType> excessTypes) {
+                     DatanodeStorageInfo added, List<DatanodeStorageInfo> moreThanOne,
+                     Collection<DatanodeStorageInfo> exactlyOne,
+                     List<StorageType> excessTypes) {
     if (!super.useDelHint(delHint, added, moreThanOne, exactlyOne,
         excessTypes)) {
       // If BlockPlacementPolicyDefault doesn't allow useDelHint, there is no
@@ -263,7 +256,7 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
   // Check if moving from source to target will preserve the upgrade domain
   // policy.
   private <T> boolean isMovableBasedOnUpgradeDomain(Collection<T> all,
-      T source, T target) {
+                                                    T source, T target) {
     Map<String, List<T>> udMap = getUpgradeDomainMap(all);
     // shareUDSet includes datanodes that share same upgrade
     // domain with another datanode.
@@ -280,7 +273,7 @@ public class BlockPlacementPolicyWithUpgradeDomain extends
 
   @Override
   public boolean isMovable(Collection<DatanodeInfo> locs,
-      DatanodeInfo source, DatanodeInfo target) {
+                           DatanodeInfo source, DatanodeInfo target) {
     if (super.isMovable(locs, source, target)) {
       return isMovableBasedOnUpgradeDomain(locs, source, target);
     } else {

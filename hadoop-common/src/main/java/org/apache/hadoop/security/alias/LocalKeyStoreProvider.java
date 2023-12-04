@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.alias;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.permission.FsPermission;

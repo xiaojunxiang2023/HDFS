@@ -1,12 +1,13 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.statistics.IOStatistics;
+import org.apache.hadoop.fs.statistics.IOStatisticsSource;
+
 import java.io.BufferedInputStream;
 import java.io.EOFException;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.StringJoiner;
-import org.apache.hadoop.fs.statistics.IOStatistics;
-import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 
 import static org.apache.hadoop.fs.statistics.IOStatisticsSupport.retrieveIOStatistics;
 
@@ -38,7 +39,7 @@ public class BufferedFSInputStream extends BufferedInputStream
     if (in == null) {
       throw new IOException(FSExceptionMessages.STREAM_IS_CLOSED);
     }
-    return ((FSInputStream)in).getPos()-(count-pos);
+    return ((FSInputStream) in).getPos() - (count - pos);
   }
 
   @Override
@@ -47,7 +48,7 @@ public class BufferedFSInputStream extends BufferedInputStream
       return 0;
     }
 
-    seek(getPos()+n);
+    seek(getPos() + n);
     return n;
   }
 
@@ -64,10 +65,10 @@ public class BufferedFSInputStream extends BufferedInputStream
       // This optimization only works if pos != count -- if they are
       // equal, it's possible that the previous reads were just
       // longer than the total buffer size, and hence skipped the buffer.
-      long end = ((FSInputStream)in).getPos();
+      long end = ((FSInputStream) in).getPos();
       long start = end - count;
-      if( pos>=start && pos<end) {
-        this.pos = (int)(pos-start);
+      if (pos >= start && pos < end) {
+        this.pos = (int) (pos - start);
         return;
       }
     }
@@ -76,29 +77,29 @@ public class BufferedFSInputStream extends BufferedInputStream
     this.pos = 0;
     this.count = 0;
 
-    ((FSInputStream)in).seek(pos);
+    ((FSInputStream) in).seek(pos);
   }
 
   @Override
   public boolean seekToNewSource(long targetPos) throws IOException {
     pos = 0;
     count = 0;
-    return ((FSInputStream)in).seekToNewSource(targetPos);
+    return ((FSInputStream) in).seekToNewSource(targetPos);
   }
 
   @Override
   public int read(long position, byte[] buffer, int offset, int length) throws IOException {
-    return ((FSInputStream)in).read(position, buffer, offset, length) ;
+    return ((FSInputStream) in).read(position, buffer, offset, length);
   }
 
   @Override
   public void readFully(long position, byte[] buffer, int offset, int length) throws IOException {
-    ((FSInputStream)in).readFully(position, buffer, offset, length);
+    ((FSInputStream) in).readFully(position, buffer, offset, length);
   }
 
   @Override
   public void readFully(long position, byte[] buffer) throws IOException {
-    ((FSInputStream)in).readFully(position, buffer);
+    ((FSInputStream) in).readFully(position, buffer);
   }
 
   @Override

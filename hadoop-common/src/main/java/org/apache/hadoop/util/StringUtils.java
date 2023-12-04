@@ -1,30 +1,20 @@
 package org.apache.hadoop.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.net.NetUtils;
-import org.apache.log4j.LogManager;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
+import org.apache.log4j.LogManager;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * General string utils
@@ -42,7 +32,7 @@ public class StringUtils {
    * environment variable name without the leading $.
    */
   public static final Pattern SHELL_ENV_VAR_PATTERN =
-    Pattern.compile("\\$([A-Za-z_]{1}[A-Za-z0-9_]*)");
+      Pattern.compile("\\$([A-Za-z_]{1}[A-Za-z0-9_]*)");
 
   /**
    * Windows environment variables: surrounded by %.  The group captures the
@@ -55,7 +45,7 @@ public class StringUtils {
    * according to platform-specific rules.
    */
   public static final Pattern ENV_VAR_PATTERN = Shell.WINDOWS ?
-    WIN_ENV_VAR_PATTERN : SHELL_ENV_VAR_PATTERN;
+      WIN_ENV_VAR_PATTERN : SHELL_ENV_VAR_PATTERN;
 
   /**
    * Make a string representation of the exception.
@@ -69,7 +59,7 @@ public class StringUtils {
     wrt.close();
     return stm.toString();
   }
-  
+
   /**
    * Given a full hostname, return the word upto the first dot.
    * @param fullHostname the full hostname
@@ -85,7 +75,7 @@ public class StringUtils {
     }
     return fullHostname;
   }
-  
+
   /**
    * Given an integer, return a string that is in an approximate, but human 
    * readable format. 
@@ -111,18 +101,20 @@ public class StringUtils {
    * @return a string representation of the percentage
    */
   public static String formatPercent(double fraction, int decimalPlaces) {
-    return format("%." + decimalPlaces + "f%%", fraction*100);
+    return format("%." + decimalPlaces + "f%%", fraction * 100);
   }
-  
+
   /**
    * Given an array of strings, return a comma-separated list of its elements.
    * @param strs Array of strings
    * @return Empty string if strs.length is 0, comma separated list of strings
    * otherwise
    */
-  
+
   public static String arrayToString(String[] strs) {
-    if (strs.length == 0) { return ""; }
+    if (strs.length == 0) {
+      return "";
+    }
     StringBuilder sbuf = new StringBuilder();
     sbuf.append(strs[0]);
     for (int idx = 1; idx < strs.length; idx++) {
@@ -144,8 +136,8 @@ public class StringUtils {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes == null");
     }
-    StringBuilder s = new StringBuilder(); 
-    for(int i = start; i < end; i++) {
+    StringBuilder s = new StringBuilder();
+    for (int i = start; i < end; i++) {
       s.append(format("%02x", bytes[i]));
     }
     return s.toString();
@@ -164,7 +156,7 @@ public class StringUtils {
    * @return byte's hex value as a String
    */
   public static String byteToHexString(byte b) {
-    return byteToHexString(new byte[] {b});
+    return byteToHexString(new byte[]{b});
   }
 
   /**
@@ -181,22 +173,23 @@ public class StringUtils {
     }
     return bts;
   }
+
   /**
-   * 
+   *
    * @param uris
    */
-  public static String uriToString(URI[] uris){
+  public static String uriToString(URI[] uris) {
     if (uris == null) {
       return null;
     }
     StringBuilder ret = new StringBuilder(uris[0].toString());
-    for(int i = 1; i < uris.length;i++){
+    for (int i = 1; i < uris.length; i++) {
       ret.append(",");
       ret.append(uris[i].toString());
     }
     return ret.toString();
   }
-  
+
   /**
    * @param str
    *          The string array to be parsed into an URI array.
@@ -205,76 +198,77 @@ public class StringUtils {
    * @throws IllegalArgumentException
    *           If any string in str violates RFC&nbsp;2396.
    */
-  public static URI[] stringToURI(String[] str){
-    if (str == null) 
+  public static URI[] stringToURI(String[] str) {
+    if (str == null)
       return null;
     URI[] uris = new URI[str.length];
-    for (int i = 0; i < str.length;i++){
-      try{
+    for (int i = 0; i < str.length; i++) {
+      try {
         uris[i] = new URI(str[i]);
-      }catch(URISyntaxException ur){
+      } catch (URISyntaxException ur) {
         throw new IllegalArgumentException(
             "Failed to create uri for " + str[i], ur);
       }
     }
     return uris;
   }
-  
+
   /**
-   * 
+   *
    * @param str
    */
-  public static Path[] stringToPath(String[] str){
+  public static Path[] stringToPath(String[] str) {
     if (str == null) {
       return null;
     }
     Path[] p = new Path[str.length];
-    for (int i = 0; i < str.length;i++){
+    for (int i = 0; i < str.length; i++) {
       p[i] = new Path(str[i]);
     }
     return p;
   }
+
   /**
-   * 
+   *
    * Given a finish and start time in long milliseconds, returns a 
    * String in the format Xhrs, Ymins, Z sec, for the time difference between two times. 
    * If finish time comes before start time then negative valeus of X, Y and Z wil return. 
-   * 
+   *
    * @param finishTime finish time
    * @param startTime start time
    */
-  public static String formatTimeDiff(long finishTime, long startTime){
-    long timeDiff = finishTime - startTime; 
-    return formatTime(timeDiff); 
+  public static String formatTimeDiff(long finishTime, long startTime) {
+    long timeDiff = finishTime - startTime;
+    return formatTime(timeDiff);
   }
-  
+
   /**
-   * 
+   *
    * Given the time in long milliseconds, returns a 
    * String in the format Xhrs, Ymins, Z sec. 
-   * 
+   *
    * @param timeDiff The time difference to format
    */
-  public static String formatTime(long timeDiff){
+  public static String formatTime(long timeDiff) {
     StringBuilder buf = new StringBuilder();
-    long hours = timeDiff / (60*60*1000);
-    long rem = (timeDiff % (60*60*1000));
-    long minutes =  rem / (60*1000);
-    rem = rem % (60*1000);
+    long hours = timeDiff / (60 * 60 * 1000);
+    long rem = (timeDiff % (60 * 60 * 1000));
+    long minutes = rem / (60 * 1000);
+    rem = rem % (60 * 1000);
     long seconds = rem / 1000;
-    
-    if (hours != 0){
+
+    if (hours != 0) {
       buf.append(hours);
       buf.append("hrs, ");
     }
-    if (minutes != 0){
+    if (minutes != 0) {
       buf.append(minutes);
       buf.append("mins, ");
     }
     // return "0sec if no difference
     buf.append(seconds);
     buf.append("sec");
-    return buf.toString(); 
+    return buf.toString();
   }
 
   /**
@@ -323,10 +317,11 @@ public class StringUtils {
    * @return formatted value.
    */
   public static String getFormattedTimeWithDiff(FastDateFormat dateFormat,
-      long finishTime, long startTime) {
+                                                long finishTime, long startTime) {
     String formattedFinishTime = dateFormat.format(finishTime);
     return getFormattedTimeWithDiff(formattedFinishTime, finishTime, startTime);
   }
+
   /**
    * Formats time in ms and appends difference (finishTime - startTime)
    * as returned by formatTimeDiff().
@@ -338,23 +333,23 @@ public class StringUtils {
    * @return formatted value.
    */
   public static String getFormattedTimeWithDiff(String formattedFinishTime,
-      long finishTime, long startTime){
+                                                long finishTime, long startTime) {
     StringBuilder buf = new StringBuilder();
     if (0 != finishTime) {
       buf.append(formattedFinishTime);
-      if (0 != startTime){
-        buf.append(" (" + formatTimeDiff(finishTime , startTime) + ")");
+      if (0 != startTime) {
+        buf.append(" (" + formatTimeDiff(finishTime, startTime) + ")");
       }
     }
     return buf.toString();
   }
-  
+
   /**
    * Returns an arraylist of strings.
    * @param str the comma separated string values
    * @return the arraylist of the comma separated string values
    */
-  public static String[] getStrings(String str){
+  public static String[] getStrings(String str) {
     String delim = ",";
     return getStrings(str, delim);
   }
@@ -365,9 +360,9 @@ public class StringUtils {
    * @param delim delimiter to separate the values
    * @return the arraylist of the separated string values
    */
-  public static String[] getStrings(String str, String delim){
+  public static String[] getStrings(String str, String delim) {
     Collection<String> values = getStringCollection(str, delim);
-    if(values.size() == 0) {
+    if (values.size() == 0) {
       return null;
     }
     return values.toArray(new String[values.size()]);
@@ -378,14 +373,14 @@ public class StringUtils {
    * @param str comma separated string values
    * @return an <code>ArrayList</code> of string values
    */
-  public static Collection<String> getStringCollection(String str){
+  public static Collection<String> getStringCollection(String str) {
     String delim = ",";
     return getStringCollection(str, delim);
   }
 
   /**
    * Returns a collection of strings.
-   * 
+   *
    * @param str
    *          String to parse
    * @param delim
@@ -414,7 +409,7 @@ public class StringUtils {
    * @return Collection of string values.
    */
   public static Collection<String> getTrimmedStringCollection(String str,
-      String delim) {
+                                                              String delim) {
     List<String> values = new ArrayList<String>();
     if (str == null)
       return values;
@@ -437,13 +432,13 @@ public class StringUtils {
    * @return a <code>Collection</code> of <code>String</code> values, empty
    *         Collection if null String input
    */
-  public static Collection<String> getTrimmedStringCollection(String str){
+  public static Collection<String> getTrimmedStringCollection(String str) {
     Set<String> set = new LinkedHashSet<String>(
-      Arrays.asList(getTrimmedStrings(str)));
+        Arrays.asList(getTrimmedStrings(str)));
     set.remove("");
     return set;
   }
-  
+
   /**
    * Splits a comma or newline separated value <code>String</code>, trimming
    * leading and trailing whitespace on each value.
@@ -453,7 +448,7 @@ public class StringUtils {
    * @return an array of <code>String</code> values, empty array if null String
    *         input
    */
-  public static String[] getTrimmedStrings(String str){
+  public static String[] getTrimmedStrings(String str) {
     if (null == str || str.trim().isEmpty()) {
       return emptyStringArray;
     }
@@ -465,7 +460,7 @@ public class StringUtils {
   final public static char COMMA = ',';
   final public static String COMMA_STR = ",";
   final public static char ESCAPE_CHAR = '\\';
-  
+
   /**
    * Split a string using the default separator
    * @param str a string that may have escaped separator
@@ -474,7 +469,7 @@ public class StringUtils {
   public static String[] split(String str) {
     return split(str, ESCAPE_CHAR, COMMA);
   }
-  
+
   /**
    * Split a string using the given separator
    * @param str a string that may have escaped separator
@@ -484,7 +479,7 @@ public class StringUtils {
    */
   public static String[] split(
       String str, char escapeChar, char separator) {
-    if (str==null) {
+    if (str == null) {
       return null;
     }
     ArrayList<String> strList = new ArrayList<String>();
@@ -498,7 +493,7 @@ public class StringUtils {
     strList.add(split.toString());
     // remove trailing empty split(s)
     int last = strList.size(); // last split
-    while (--last>=0 && "".equals(strList.get(last))) {
+    while (--last >= 0 && "".equals(strList.get(last))) {
       strList.remove(last);
     }
     return strList.toArray(new String[strList.size()]);
@@ -527,12 +522,12 @@ public class StringUtils {
     strList.add(str.substring(startIndex));
     // remove trailing empty split(s)
     int last = strList.size(); // last split
-    while (--last>=0 && "".equals(strList.get(last))) {
+    while (--last >= 0 && "".equals(strList.get(last))) {
       strList.remove(last);
     }
     return strList.toArray(new String[strList.size()]);
   }
-  
+
   /**
    * Finds the first occurrence of the separator character ignoring the escaped
    * separators starting from the index. Note the substring between the index
@@ -543,7 +538,7 @@ public class StringUtils {
    * @param start from where to search
    * @param split used to pass back the extracted string
    */
-  public static int findNext(String str, char separator, char escapeChar, 
+  public static int findNext(String str, char separator, char escapeChar,
                              int start, StringBuilder split) {
     int numPreEscapes = 0;
     for (int i = start; i < str.length(); i++) {
@@ -553,13 +548,13 @@ public class StringUtils {
       } else {
         split.append(curChar);
         numPreEscapes = (curChar == escapeChar)
-                        ? (++numPreEscapes) % 2
-                        : 0;
+            ? (++numPreEscapes) % 2
+            : 0;
       }
     }
     return -1;
   }
-  
+
   /**
    * Escape commas in the string using the default escape char
    * @param str a string
@@ -568,11 +563,11 @@ public class StringUtils {
   public static String escapeString(String str) {
     return escapeString(str, ESCAPE_CHAR, COMMA);
   }
-  
+
   /**
    * Escape <code>charToEscape</code> in the string 
    * with the escape char <code>escapeChar</code>
-   * 
+   *
    * @param str string
    * @param escapeChar escape char
    * @param charToEscape the char to be escaped
@@ -580,9 +575,9 @@ public class StringUtils {
    */
   public static String escapeString(
       String str, char escapeChar, char charToEscape) {
-    return escapeString(str, escapeChar, new char[] {charToEscape});
+    return escapeString(str, escapeChar, new char[]{charToEscape});
   }
-  
+
   // check if the character array has the character 
   private static boolean hasChar(char[] chars, char character) {
     for (char target : chars) {
@@ -592,17 +587,17 @@ public class StringUtils {
     }
     return false;
   }
-  
+
   /**
    * @param charsToEscape array of characters to be escaped
    */
-  public static String escapeString(String str, char escapeChar, 
+  public static String escapeString(String str, char escapeChar,
                                     char[] charsToEscape) {
     if (str == null) {
       return null;
     }
     StringBuilder result = new StringBuilder();
-    for (int i=0; i<str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
       char curChar = str.charAt(i);
       if (curChar == escapeChar || hasChar(charsToEscape, curChar)) {
         // special char
@@ -612,7 +607,7 @@ public class StringUtils {
     }
     return result.toString();
   }
-  
+
   /**
    * Unescape commas in the string using the default escape char
    * @param str a string
@@ -621,11 +616,11 @@ public class StringUtils {
   public static String unEscapeString(String str) {
     return unEscapeString(str, ESCAPE_CHAR, COMMA);
   }
-  
+
   /**
    * Unescape <code>charToEscape</code> in the string 
    * with the escape char <code>escapeChar</code>
-   * 
+   *
    * @param str string
    * @param escapeChar escape char
    * @param charToEscape the escaped char
@@ -633,33 +628,33 @@ public class StringUtils {
    */
   public static String unEscapeString(
       String str, char escapeChar, char charToEscape) {
-    return unEscapeString(str, escapeChar, new char[] {charToEscape});
+    return unEscapeString(str, escapeChar, new char[]{charToEscape});
   }
-  
+
   /**
    * @param charsToEscape array of characters to unescape
    */
-  public static String unEscapeString(String str, char escapeChar, 
+  public static String unEscapeString(String str, char escapeChar,
                                       char[] charsToEscape) {
     if (str == null) {
       return null;
     }
     StringBuilder result = new StringBuilder(str.length());
     boolean hasPreEscape = false;
-    for (int i=0; i<str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
       char curChar = str.charAt(i);
       if (hasPreEscape) {
         if (curChar != escapeChar && !hasChar(charsToEscape, curChar)) {
           // no special char
-          throw new IllegalArgumentException("Illegal escaped string " + str + 
-              " unescaped " + escapeChar + " at " + (i-1));
-        } 
+          throw new IllegalArgumentException("Illegal escaped string " + str +
+              " unescaped " + escapeChar + " at " + (i - 1));
+        }
         // otherwise discard the escape char
         result.append(curChar);
         hasPreEscape = false;
       } else {
         if (hasChar(charsToEscape, curChar)) {
-          throw new IllegalArgumentException("Illegal escaped string " + str + 
+          throw new IllegalArgumentException("Illegal escaped string " + str +
               " unescaped " + curChar + " at " + i);
         } else if (curChar == escapeChar) {
           hasPreEscape = true;
@@ -668,13 +663,13 @@ public class StringUtils {
         }
       }
     }
-    if (hasPreEscape ) {
-      throw new IllegalArgumentException("Illegal escaped string " + str + 
-          ", not expecting " + escapeChar + " in the end." );
+    if (hasPreEscape) {
+      throw new IllegalArgumentException("Illegal escaped string " + str +
+          ", not expecting " + escapeChar + " in the end.");
     }
     return result.toString();
   }
-  
+
   /**
    * Return a message for logging.
    * @param prefix prefix keyword for the message
@@ -684,7 +679,7 @@ public class StringUtils {
   public static String toStartupShutdownString(String prefix, String[] msg) {
     StringBuilder b = new StringBuilder(prefix);
     b.append("\n/************************************************************");
-    for(String s : msg)
+    for (String s : msg)
       b.append("\n").append(prefix).append(s);
     b.append("\n************************************************************/");
     return b.toString();
@@ -697,7 +692,7 @@ public class StringUtils {
    * @param LOG the target log object
    */
   public static void startupShutdownMessage(Class<?> clazz, String[] args,
-                                     final org.apache.commons.logging.Log LOG) {
+                                            final org.apache.commons.logging.Log LOG) {
     startupShutdownMessage(clazz, args, LogAdapter.create(LOG));
   }
 
@@ -708,12 +703,12 @@ public class StringUtils {
    * @param LOG the target log object
    */
   public static void startupShutdownMessage(Class<?> clazz, String[] args,
-                                     final org.slf4j.Logger LOG) {
+                                            final org.slf4j.Logger LOG) {
     startupShutdownMessage(clazz, args, LogAdapter.create(LOG));
   }
 
   static void startupShutdownMessage(Class<?> clazz, String[] args,
-                                     final LogAdapter LOG) { 
+                                     final LogAdapter LOG) {
     final String hostname = NetUtils.getHostname();
     final String classname = clazz.getSimpleName();
     LOG.info(createStartupShutdownMessage(classname, hostname, args));
@@ -726,14 +721,14 @@ public class StringUtils {
       }
     }
     ShutdownHookManager.get().addShutdownHook(
-      new Runnable() {
-        @Override
-        public void run() {
-          LOG.info(toStartupShutdownString("SHUTDOWN_MSG: ", new String[]{
-            "Shutting down " + classname + " at " + hostname}));
-          LogManager.shutdown();
-        }
-      }, SHUTDOWN_HOOK_PRIORITY);
+        new Runnable() {
+          @Override
+          public void run() {
+            LOG.info(toStartupShutdownString("SHUTDOWN_MSG: ", new String[]{
+                "Shutting down " + classname + " at " + hostname}));
+            LogManager.shutdown();
+          }
+        }, SHUTDOWN_HOOK_PRIORITY);
 
   }
 
@@ -745,18 +740,18 @@ public class StringUtils {
    * @return a string to log.
    */
   public static String createStartupShutdownMessage(String classname,
-      String hostname, String[] args) {
-    return toStartupShutdownString("STARTUP_MSG: ", new String[] {
+                                                    String hostname, String[] args) {
+    return toStartupShutdownString("STARTUP_MSG: ", new String[]{
         "Starting " + classname,
         "  host = " + hostname,
         "  args = " + (args != null ? Arrays.asList(args) : new ArrayList<>()),
         "  version = " + VersionInfo.getVersion(),
         "  classpath = " + System.getProperty("java.class.path"),
         "  build = " + VersionInfo.getUrl() + " -r "
-                     + VersionInfo.getRevision()  
-                     + "; compiled by '" + VersionInfo.getUser()
-                     + "' on " + VersionInfo.getDate(),
-        "  java = " + System.getProperty("java.version") }
+            + VersionInfo.getRevision()
+            + "; compiled by '" + VersionInfo.getUser()
+            + "' on " + VersionInfo.getDate(),
+        "  java = " + System.getProperty("java.version")}
     );
   }
 
@@ -771,7 +766,7 @@ public class StringUtils {
     GIGA(MEGA.bitShift + 10),
     TERA(GIGA.bitShift + 10),
     PETA(TERA.bitShift + 10),
-    EXA (PETA.bitShift + 10);
+    EXA(PETA.bitShift + 10);
 
     public final long value;
     public final char symbol;
@@ -790,7 +785,7 @@ public class StringUtils {
      */
     public static TraditionalBinaryPrefix valueOf(char symbol) {
       symbol = Character.toUpperCase(symbol);
-      for(TraditionalBinaryPrefix prefix : TraditionalBinaryPrefix.values()) {
+      for (TraditionalBinaryPrefix prefix : TraditionalBinaryPrefix.values()) {
         if (symbol == prefix.symbol) {
           return prefix;
         }
@@ -826,7 +821,7 @@ public class StringUtils {
               + "'. Allowed prefixes are k, m, g, t, p, e(case insensitive)");
         }
         long num = Long.parseLong(s.substring(0, lastpos));
-        if (num > (Long.MAX_VALUE/prefix) || num < (Long.MIN_VALUE/prefix)) {
+        if (num > (Long.MAX_VALUE / prefix) || num < (Long.MIN_VALUE / prefix)) {
           throw new IllegalArgumentException(s + " does not fit in a Long");
         }
         return num * prefix;
@@ -835,7 +830,7 @@ public class StringUtils {
 
     /**
      * Convert a long integer to a string with traditional binary prefix.
-     * 
+     *
      * @param n the value to be converted
      * @param unit The unit, e.g. "B" for bytes.
      * @param decimalPlaces The number of decimal places.
@@ -859,23 +854,23 @@ public class StringUtils {
       if (n < KILO.value) {
         //no prefix
         b.append(n);
-        return (unit.isEmpty()? b: b.append(" ").append(unit)).toString();
+        return (unit.isEmpty() ? b : b.append(" ").append(unit)).toString();
       } else {
         //find traditional binary prefix
         int i = 0;
-        for(; i < values().length && n >= values()[i].value; i++);
+        for (; i < values().length && n >= values()[i].value; i++) ;
         TraditionalBinaryPrefix prefix = values()[i - 1];
 
         if ((n & prefix.bitMask) == 0) {
           //exact division
           b.append(n >> prefix.bitShift);
         } else {
-          final String  format = "%." + decimalPlaces + "f";
-          String s = format(format, n/(double)prefix.value);
+          final String format = "%." + decimalPlaces + "f";
+          String s = format(format, n / (double) prefix.value);
           //check a special rounding up case
           if (s.startsWith("1024")) {
             prefix = values()[i];
-            s = format(format, n/(double)prefix.value);
+            s = format(format, n / (double) prefix.value);
           }
           b.append(s);
         }
@@ -884,41 +879,51 @@ public class StringUtils {
     }
   }
 
-    /**
-     * Escapes HTML Special characters present in the string.
-     * @param string
-     * @return HTML Escaped String representation
-     */
-    public static String escapeHTML(String string) {
-      if(string == null) {
-        return null;
-      }
-      StringBuilder sb = new StringBuilder();
-      boolean lastCharacterWasSpace = false;
-      char[] chars = string.toCharArray();
-      for(char c : chars) {
-        if(c == ' ') {
-          if(lastCharacterWasSpace){
-            lastCharacterWasSpace = false;
-            sb.append("&nbsp;");
-          }else {
-            lastCharacterWasSpace=true;
-            sb.append(" ");
-          }
-        }else {
+  /**
+   * Escapes HTML Special characters present in the string.
+   * @param string
+   * @return HTML Escaped String representation
+   */
+  public static String escapeHTML(String string) {
+    if (string == null) {
+      return null;
+    }
+    StringBuilder sb = new StringBuilder();
+    boolean lastCharacterWasSpace = false;
+    char[] chars = string.toCharArray();
+    for (char c : chars) {
+      if (c == ' ') {
+        if (lastCharacterWasSpace) {
           lastCharacterWasSpace = false;
-          switch(c) {
-          case '<': sb.append("&lt;"); break;
-          case '>': sb.append("&gt;"); break;
-          case '&': sb.append("&amp;"); break;
-          case '"': sb.append("&quot;"); break;
-          default : sb.append(c);break;
-          }
+          sb.append("&nbsp;");
+        } else {
+          lastCharacterWasSpace = true;
+          sb.append(" ");
+        }
+      } else {
+        lastCharacterWasSpace = false;
+        switch (c) {
+          case '<':
+            sb.append("&lt;");
+            break;
+          case '>':
+            sb.append("&gt;");
+            break;
+          case '&':
+            sb.append("&amp;");
+            break;
+          case '"':
+            sb.append("&quot;");
+            break;
+          default:
+            sb.append(c);
+            break;
         }
       }
-      
-      return sb.toString();
     }
+
+    return sb.toString();
+  }
 
   /**
    * @return a byte description of the given long interger value.
@@ -932,7 +937,7 @@ public class StringUtils {
   public static String limitDecimalTo2(double d) {
     return format("%.2f", d);
   }
-  
+
   /**
    * Concatenates strings, using a separator.
    *
@@ -961,7 +966,7 @@ public class StringUtils {
    *
    * @param separator to join with
    * @param strings to join
-   * @return  the joined string
+   * @return the joined string
    */
   public static String join(CharSequence separator, String[] strings) {
     // Ideally we don't have to duplicate the code here if array is iterable.
@@ -990,7 +995,7 @@ public class StringUtils {
    */
   public static String camelize(String s) {
     StringBuilder sb = new StringBuilder();
-    String[] words = split(StringUtils.toLowerCase(s), ESCAPE_CHAR,  '_');
+    String[] words = split(StringUtils.toLowerCase(s), ESCAPE_CHAR, '_');
 
     for (String word : words)
       sb.append(org.apache.commons.lang3.StringUtils.capitalize(word));
@@ -1004,11 +1009,11 @@ public class StringUtils {
    * must use a capturing group.  The value of the first capturing group is used
    * to look up the replacement.  If no replacement is found for the token, then
    * it is replaced with the empty string.
-   * 
+   *
    * For example, assume template is "%foo%_%bar%_%baz%", pattern is "%(.*?)%",
    * and replacements contains 2 entries, mapping "foo" to "zoo" and "baz" to
    * "zaz".  The result returned would be "zoo__zaz".
-   * 
+   *
    * @param template String template to receive replacements
    * @param pattern Pattern to match for identifying tokens, must use a capturing
    *   group
@@ -1017,7 +1022,7 @@ public class StringUtils {
    * @return String template with replacements
    */
   public static String replaceTokens(String template, Pattern pattern,
-      Map<String, String> replacements) {
+                                     Map<String, String> replacements) {
     StringBuffer sb = new StringBuffer();
     Matcher matcher = pattern.matcher(template);
     while (matcher.find()) {
@@ -1030,7 +1035,7 @@ public class StringUtils {
     matcher.appendTail(sb);
     return sb.toString();
   }
-  
+
   /**
    * Get stack trace for a given thread.
    */
@@ -1049,7 +1054,7 @@ public class StringUtils {
    *
    * @param name  Name of the option to remove.  Example: -foo.
    * @param args  List of arguments.
-   * @return      null if the option was not found; the value of the 
+   * @return null if the option was not found; the value of the 
    *              option otherwise.
    * @throws IllegalArgumentException if the option's argument is not present
    */
@@ -1074,13 +1079,13 @@ public class StringUtils {
     }
     return val;
   }
-  
+
   /**
    * From a list of command-line arguments, remove an option.
    *
    * @param name  Name of the option to remove.  Example: -foo.
    * @param args  List of arguments.
-   * @return      true if the option was found and removed; false otherwise.
+   * @return true if the option was found and removed; false otherwise.
    */
   public static boolean popOption(String name, List<String> args) {
     for (Iterator<String> iter = args.iterator(); iter.hasNext(); ) {
@@ -1095,14 +1100,14 @@ public class StringUtils {
     }
     return false;
   }
-  
+
   /**
    * From a list of command-line arguments, return the first non-option
    * argument.  Non-option arguments are those which either come after 
    * a double dash (--) or do not start with a dash.
    *
    * @param args  List of arguments.
-   * @return      The first non-option argument, or null if there were none.
+   * @return The first non-option argument, or null if there were none.
    */
   public static String popFirstNonOption(List<String> args) {
     for (Iterator<String> iter = args.iterator(); iter.hasNext(); ) {
@@ -1127,7 +1132,7 @@ public class StringUtils {
    * Locale.ENGLISH.
    *
    * @param str  string to be converted
-   * @return     the str, converted to lowercase.
+   * @return the str, converted to lowercase.
    */
   public static String toLowerCase(String str) {
     return str.toLowerCase(Locale.ENGLISH);
@@ -1138,7 +1143,7 @@ public class StringUtils {
    * Locale.ENGLISH.
    *
    * @param str  string to be converted
-   * @return     the str, converted to uppercase.
+   * @return the str, converted to uppercase.
    */
   public static String toUpperCase(String str) {
     return str.toUpperCase(Locale.ENGLISH);
@@ -1149,7 +1154,7 @@ public class StringUtils {
    *
    * @param s1  Non-null string to be converted
    * @param s2  string to be converted
-   * @return     the str, converted to uppercase.
+   * @return the str, converted to uppercase.
    */
   public static boolean equalsIgnoreCase(String s1, String s2) {
     Preconditions.checkNotNull(s1);
@@ -1202,15 +1207,15 @@ public class StringUtils {
    * @return a line with newlines inserted, <code>null</code> if null input
    */
   public static String wrap(String str, int wrapLength, String newLineStr,
-      boolean wrapLongWords) {
-    if(str == null) {
+                            boolean wrapLongWords) {
+    if (str == null) {
       return null;
     } else {
-      if(newLineStr == null) {
+      if (newLineStr == null) {
         newLineStr = System.lineSeparator();
       }
 
-      if(wrapLength < 1) {
+      if (wrapLength < 1) {
         wrapLength = 1;
       }
 
@@ -1218,22 +1223,22 @@ public class StringUtils {
       int offset = 0;
       StringBuffer wrappedLine = new StringBuffer(inputLineLength + 32);
 
-      while(inputLineLength - offset > wrapLength) {
-        if(str.charAt(offset) == 32) {
+      while (inputLineLength - offset > wrapLength) {
+        if (str.charAt(offset) == 32) {
           ++offset;
         } else {
           int spaceToWrapAt = str.lastIndexOf(32, wrapLength + offset);
-          if(spaceToWrapAt >= offset) {
+          if (spaceToWrapAt >= offset) {
             wrappedLine.append(str.substring(offset, spaceToWrapAt));
             wrappedLine.append(newLineStr);
             offset = spaceToWrapAt + 1;
-          } else if(wrapLongWords) {
+          } else if (wrapLongWords) {
             wrappedLine.append(str.substring(offset, wrapLength + offset));
             wrappedLine.append(newLineStr);
             offset += wrapLength;
           } else {
             spaceToWrapAt = str.indexOf(32, wrapLength + offset);
-            if(spaceToWrapAt >= 0) {
+            if (spaceToWrapAt >= 0) {
               wrappedLine.append(str.substring(offset, spaceToWrapAt));
               wrappedLine.append(newLineStr);
               offset = spaceToWrapAt + 1;

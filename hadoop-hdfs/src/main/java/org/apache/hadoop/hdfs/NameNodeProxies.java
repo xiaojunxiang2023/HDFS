@@ -1,24 +1,9 @@
 package org.apache.hadoop.hdfs;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.NameNodeProxiesClient.ProxyAndInfo;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.hdfs.protocolPB.AliasMapProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.InMemoryAliasMapProtocolClientSideTranslatorPB;
-import org.apache.hadoop.hdfs.protocolPB.JournalProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.JournalProtocolTranslatorPB;
-import org.apache.hadoop.hdfs.protocolPB.NamenodeProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.NamenodeProtocolTranslatorPB;
+import org.apache.hadoop.hdfs.protocolPB.*;
 import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMapProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.AbstractNNFailoverProxyProvider;
 import org.apache.hadoop.hdfs.server.namenode.ha.NameNodeHAProxyFactory;
@@ -29,11 +14,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.retry.RetryPolicies;
 import org.apache.hadoop.io.retry.RetryPolicy;
 import org.apache.hadoop.io.retry.RetryProxy;
-import org.apache.hadoop.ipc.AlignmentContext;
-import org.apache.hadoop.ipc.ProtobufRpcEngine2;
-import org.apache.hadoop.ipc.ProxyCombiner;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RefreshCallQueueProtocol;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.protocolPB.RefreshCallQueueProtocolClientSideTranslatorPB;
 import org.apache.hadoop.ipc.protocolPB.RefreshCallQueueProtocolPB;
 import org.apache.hadoop.net.NetUtils;
@@ -48,6 +29,16 @@ import org.apache.hadoop.security.protocolPB.RefreshUserMappingsProtocolPB;
 import org.apache.hadoop.tools.GetUserMappingsProtocol;
 import org.apache.hadoop.tools.protocolPB.GetUserMappingsProtocolClientSideTranslatorPB;
 import org.apache.hadoop.tools.protocolPB.GetUserMappingsProtocolPB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Create proxy objects to communicate with a remote NN. All remote access to an
@@ -56,7 +47,7 @@ import org.apache.hadoop.tools.protocolPB.GetUserMappingsProtocolPB;
  * create either an HA- or non-HA-enabled client proxy as appropriate.
  */
 public class NameNodeProxies {
-  
+
   private static final Logger LOG =
       LoggerFactory.getLogger(NameNodeProxies.class);
 
@@ -64,7 +55,7 @@ public class NameNodeProxies {
    * Creates the namenode proxy with the passed protocol. This will handle
    * creation of either HA- or non-HA-enabled proxy objects, depending upon
    * if the provided URI is a configured logical URI.
-   * 
+   *
    * @param conf the configuration containing the required IPC
    *        properties, client failover configurations, etc.
    * @param nameNodeUri the URI pointing either to a specific NameNode
@@ -75,7 +66,7 @@ public class NameNodeProxies {
    * @throws IOException if there is an error creating the proxy
    **/
   public static <T> ProxyAndInfo<T> createProxy(Configuration conf,
-      URI nameNodeUri, Class<T> xface) throws IOException {
+                                                URI nameNodeUri, Class<T> xface) throws IOException {
     return createProxy(conf, nameNodeUri, xface, null);
   }
 
@@ -97,7 +88,7 @@ public class NameNodeProxies {
    **/
   @SuppressWarnings("unchecked")
   public static <T> ProxyAndInfo<T> createProxy(Configuration conf,
-      URI nameNodeUri, Class<T> xface, AtomicBoolean fallbackToSimpleAuth)
+                                                URI nameNodeUri, Class<T> xface, AtomicBoolean fallbackToSimpleAuth)
       throws IOException {
     AbstractNNFailoverProxyProvider<T> failoverProxyProvider =
         NameNodeProxiesClient.createFailoverProxyProvider(conf, nameNodeUri,
@@ -116,7 +107,7 @@ public class NameNodeProxies {
   /**
    * Creates an explicitly non-HA-enabled proxy object. Most of the time you
    * don't want to use this, and should instead use {@link NameNodeProxies#createProxy}.
-   * 
+   *
    * @param conf the configuration object
    * @param nnAddr address of the remote NN to connect to
    * @param xface the IPC interface which should be created
@@ -154,7 +145,7 @@ public class NameNodeProxies {
       AtomicBoolean fallbackToSimpleAuth, AlignmentContext alignmentContext)
       throws IOException {
     Text dtService = SecurityUtil.buildTokenService(nnAddr);
-  
+
     T proxy;
     if (xface == ClientProtocol.class) {
       proxy = (T) NameNodeProxiesClient.createProxyWithAlignmentContext(
@@ -212,28 +203,28 @@ public class NameNodeProxies {
   }
 
   private static RefreshAuthorizationPolicyProtocol
-      createNNProxyWithRefreshAuthorizationPolicyProtocol(InetSocketAddress address,
-      Configuration conf, UserGroupInformation ugi,
-      AlignmentContext alignmentContext) throws IOException {
+  createNNProxyWithRefreshAuthorizationPolicyProtocol(InetSocketAddress address,
+                                                      Configuration conf, UserGroupInformation ugi,
+                                                      AlignmentContext alignmentContext) throws IOException {
     RefreshAuthorizationPolicyProtocolPB proxy = createNameNodeProxy(address,
         conf, ugi, RefreshAuthorizationPolicyProtocolPB.class, 0,
         alignmentContext);
     return new RefreshAuthorizationPolicyProtocolClientSideTranslatorPB(proxy);
   }
-  
+
   private static RefreshUserMappingsProtocol
-      createNNProxyWithRefreshUserMappingsProtocol(InetSocketAddress address,
-      Configuration conf, UserGroupInformation ugi,
-      AlignmentContext alignmentContext) throws IOException {
+  createNNProxyWithRefreshUserMappingsProtocol(InetSocketAddress address,
+                                               Configuration conf, UserGroupInformation ugi,
+                                               AlignmentContext alignmentContext) throws IOException {
     RefreshUserMappingsProtocolPB proxy = createNameNodeProxy(address, conf,
         ugi, RefreshUserMappingsProtocolPB.class, 0, alignmentContext);
     return new RefreshUserMappingsProtocolClientSideTranslatorPB(proxy);
   }
 
   private static RefreshCallQueueProtocol
-      createNNProxyWithRefreshCallQueueProtocol(InetSocketAddress address,
-      Configuration conf, UserGroupInformation ugi,
-      AlignmentContext alignmentContext) throws IOException {
+  createNNProxyWithRefreshCallQueueProtocol(InetSocketAddress address,
+                                            Configuration conf, UserGroupInformation ugi,
+                                            AlignmentContext alignmentContext) throws IOException {
     RefreshCallQueueProtocolPB proxy = createNameNodeProxy(address, conf, ugi,
         RefreshCallQueueProtocolPB.class, 0, alignmentContext);
     return new RefreshCallQueueProtocolClientSideTranslatorPB(proxy);
@@ -246,7 +237,7 @@ public class NameNodeProxies {
         GetUserMappingsProtocolPB.class, 0, alignmentContext);
     return new GetUserMappingsProtocolClientSideTranslatorPB(proxy);
   }
-  
+
   private static NamenodeProtocol createNNProxyWithNamenodeProtocol(
       InetSocketAddress address, Configuration conf, UserGroupInformation ugi,
       boolean withRetries, AlignmentContext alignmentContext)
@@ -255,9 +246,9 @@ public class NameNodeProxies {
         address, conf, ugi, NamenodeProtocolPB.class, 0, alignmentContext);
     if (withRetries) { // create the proxy with retries
       RetryPolicy timeoutPolicy = RetryPolicies.exponentialBackoffRetry(5, 200,
-              TimeUnit.MILLISECONDS);
+          TimeUnit.MILLISECONDS);
       Map<String, RetryPolicy> methodNameToPolicyMap
-           = new HashMap<String, RetryPolicy>();
+          = new HashMap<String, RetryPolicy>();
       methodNameToPolicyMap.put("getBlocks", timeoutPolicy);
       methodNameToPolicyMap.put("getAccessKeys", timeoutPolicy);
       NamenodeProtocol translatorProxy =
@@ -284,8 +275,8 @@ public class NameNodeProxies {
   }
 
   private static <T> T createNameNodeProxy(InetSocketAddress address,
-      Configuration conf, UserGroupInformation ugi, Class<T> xface,
-      int rpcTimeout, AlignmentContext alignmentContext) throws IOException {
+                                           Configuration conf, UserGroupInformation ugi, Class<T> xface,
+                                           int rpcTimeout, AlignmentContext alignmentContext) throws IOException {
     RPC.setProtocolEngine(conf, xface, ProtobufRpcEngine2.class);
     return RPC.getProtocolProxy(xface,
         RPC.getProtocolVersion(xface), address, ugi, conf,

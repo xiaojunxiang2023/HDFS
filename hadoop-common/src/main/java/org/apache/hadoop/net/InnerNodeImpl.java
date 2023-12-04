@@ -8,7 +8,8 @@ import java.util.Map;
 // 一个节点
 public class InnerNodeImpl extends NodeBase implements InnerNode {
   protected static class Factory implements InnerNode.Factory<InnerNodeImpl> {
-    protected Factory() {}
+    protected Factory() {
+    }
 
     @Override
     public InnerNodeImpl newInnerNode(String path) {
@@ -27,7 +28,7 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
   }
 
   protected InnerNodeImpl(String name, String location,
-      InnerNode parent, int level) {
+                          InnerNode parent, int level) {
     super(name, location, parent, level);
   }
 
@@ -57,8 +58,8 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
   // this是不是 n的祖先
   public boolean isAncestor(Node n) {
     return getPath(this).equals(NodeBase.PATH_SEPARATOR_STR) ||
-      (n.getNetworkLocation()+NodeBase.PATH_SEPARATOR_STR).
-      startsWith(getPath(this)+NodeBase.PATH_SEPARATOR_STR);
+        (n.getNetworkLocation() + NodeBase.PATH_SEPARATOR_STR).
+            startsWith(getPath(this) + NodeBase.PATH_SEPARATOR_STR);
   }
 
   // this是不是 n的父亲
@@ -70,13 +71,13 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
   public String getNextAncestorName(Node n) {
     if (!isAncestor(n)) {
       throw new IllegalArgumentException(
-                                         this + "is not an ancestor of " + n);
+          this + "is not an ancestor of " + n);
     }
     String name = n.getNetworkLocation().substring(getPath(this).length());
     if (name.charAt(0) == PATH_SEPARATOR) {
       name = name.substring(1);
     }
-    int index=name.indexOf(PATH_SEPARATOR);
+    int index = name.indexOf(PATH_SEPARATOR);
     if (index != -1) {
       name = name.substring(0, index);
     }
@@ -93,10 +94,10 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
     if (isParent(n)) {
       // this node is the parent of n; add n directly
       n.setParent(this);
-      n.setLevel(this.level+1);
+      n.setLevel(this.level + 1);
       Node prev = childrenMap.put(n.getName(), n);
       if (prev != null) {
-        for(int i=0; i<children.size(); i++) {
+        for (int i = 0; i < children.size(); i++) {
           if (children.get(i).getName().equals(n.getName())) {
             children.set(i, n);
             return false;
@@ -109,7 +110,7 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
     } else {
       // find the next ancestor node
       String parentName = getNextAncestorName(n);
-      InnerNode parentNode = (InnerNode)childrenMap.get(parentName);
+      InnerNode parentNode = (InnerNode) childrenMap.get(parentName);
       if (parentNode == null) {
         // create a new InnerNode
         parentNode = createParentNode(parentName);
@@ -153,7 +154,7 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
     if (isParent(n)) {
       // this node is the parent of n; remove n directly
       if (childrenMap.containsKey(n.getName())) {
-        for (int i=0; i<children.size(); i++) {
+        for (int i = 0; i < children.size(); i++) {
           if (children.get(i).getName().equals(n.getName())) {
             children.remove(i);
             childrenMap.remove(n.getName());
@@ -167,7 +168,7 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
     } else {
       // find the next ancestor node: the parent node
       String parentName = getNextAncestorName(n);
-      InnerNodeImpl parentNode = (InnerNodeImpl)childrenMap.get(parentName);
+      InnerNodeImpl parentNode = (InnerNodeImpl) childrenMap.get(parentName);
       if (parentNode == null) {
         return false;
       }
@@ -176,7 +177,7 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
       // if the parent node has no children, remove the parent node too
       if (isRemoved) {
         if (parentNode.getNumOfChildren() == 0) {
-          for(int i=0; i < children.size(); i++) {
+          for (int i = 0; i < children.size(); i++) {
             if (children.get(i).getName().equals(parentName)) {
               children.remove(i);
               childrenMap.remove(parentName);
@@ -201,7 +202,7 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
     if (childNode == null || path.length == 1) {
       return childNode;
     } else if (childNode instanceof InnerNode) {
-      return ((InnerNode)childNode).getLoc(path[1]);
+      return ((InnerNode) childNode).getLoc(path[1]);
     } else {
       return null;
     }
@@ -209,12 +210,12 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
 
   @Override
   public Node getLeaf(int leafIndex, Node excludedNode) {
-    int count=0;
+    int count = 0;
     // check if the excluded node a leaf
     boolean isLeaf = !(excludedNode instanceof InnerNode);
     // calculate the total number of excluded leaf nodes
     int numOfExcludedLeaves =
-        isLeaf ? 1 : ((InnerNode)excludedNode).getNumOfLeaves();
+        isLeaf ? 1 : ((InnerNode) excludedNode).getNumOfLeaves();
     if (isLeafParent()) { // children are leaves
       if (isLeaf) { // excluded node is a leaf node
         if (excludedNode != null &&
@@ -222,30 +223,30 @@ public class InnerNodeImpl extends NodeBase implements InnerNode {
           int excludedIndex = children.indexOf(excludedNode);
           if (excludedIndex != -1 && leafIndex >= 0) {
             // excluded node is one of the children so adjust the leaf index
-            leafIndex = leafIndex>=excludedIndex ? leafIndex+1 : leafIndex;
+            leafIndex = leafIndex >= excludedIndex ? leafIndex + 1 : leafIndex;
           }
         }
       }
       // range check
-      if (leafIndex<0 || leafIndex>=this.getNumOfChildren()) {
+      if (leafIndex < 0 || leafIndex >= this.getNumOfChildren()) {
         return null;
       }
       return children.get(leafIndex);
     } else {
-      for(int i=0; i<children.size(); i++) {
-        InnerNodeImpl child = (InnerNodeImpl)children.get(i);
+      for (int i = 0; i < children.size(); i++) {
+        InnerNodeImpl child = (InnerNodeImpl) children.get(i);
         if (excludedNode == null || excludedNode != child) {
           // not the excludedNode
           int numOfLeaves = child.getNumOfLeaves();
           if (excludedNode != null && child.isAncestor(excludedNode)) {
             numOfLeaves -= numOfExcludedLeaves;
           }
-          if (count+numOfLeaves > leafIndex) {
+          if (count + numOfLeaves > leafIndex) {
             // the leaf is in the child subtree
-            return child.getLeaf(leafIndex-count, excludedNode);
+            return child.getLeaf(leafIndex - count, excludedNode);
           } else {
             // go to the next child
-            count = count+numOfLeaves;
+            count = count + numOfLeaves;
           }
         } else { // it is the excluededNode
           // skip it and set the excludedNode to be null

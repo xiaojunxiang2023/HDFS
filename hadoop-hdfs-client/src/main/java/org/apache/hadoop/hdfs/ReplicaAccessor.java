@@ -16,7 +16,7 @@ public abstract class ReplicaAccessor {
    * @param off    The offset within buf to start reading into.
    * @param len    The maximum length to read.
    *
-   * @return       The number of bytes read.  If the read extends past the end
+   * @return The number of bytes read.  If the read extends past the end
    *                  of the replica, a short read count will be returned.  We
    *                  will should return -1 if EOF is reached and no bytes
    *                  can be returned.  We will never return a short read
@@ -35,7 +35,7 @@ public abstract class ReplicaAccessor {
    *                 position and the limit.  The ByteBuffer may or may not be
    *                 direct.
    *
-   * @return       The number of bytes read.  If the read extends past the end
+   * @return The number of bytes read.  If the read extends past the end
    *                 of the replica, a short read count will be returned.  We
    *                 should return -1 if EOF is reached and no bytes can be
    *                 returned.  We will never return a short read count unless

@@ -1,17 +1,11 @@
 package org.apache.hadoop.auth.util;
 
-import static org.apache.hadoop.auth.util.HttpConstants.NEGOTIATE;
-import static org.apache.hadoop.auth.util.HttpConstants.BASIC;
-import static org.apache.hadoop.auth.util.HttpConstants.DIGEST;
+import org.apache.hadoop.filter.handler.*;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.util.Locale;
 
-import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
-import org.apache.hadoop.filter.handler.LdapAuthenticationHandler;
-import org.apache.hadoop.filter.handler.MultiSchemeAuthenticationHandler;
-import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
-import org.apache.hadoop.filter.handler.AuthenticationHandler;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import static org.apache.hadoop.auth.util.HttpConstants.*;
 
 /**
  * This is a utility class designed to provide functionality related to

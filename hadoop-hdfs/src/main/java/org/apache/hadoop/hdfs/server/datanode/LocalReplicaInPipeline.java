@@ -1,16 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
@@ -19,6 +8,13 @@ import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StringUtils;
+
+import java.io.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This class defines a replica in a pipeline, which
@@ -57,7 +53,7 @@ public class LocalReplicaInPipeline extends LocalReplica
    *                       the estimated maximum block length.
    */
   public LocalReplicaInPipeline(long blockId, long genStamp,
-        FsVolumeSpi vol, File dir, long bytesToReserve) {
+                                FsVolumeSpi vol, File dir, long bytesToReserve) {
     this(blockId, 0L, genStamp, vol, dir, Thread.currentThread(),
         bytesToReserve);
   }
@@ -70,7 +66,7 @@ public class LocalReplicaInPipeline extends LocalReplica
    * @param writer a thread that is writing to this replica
    */
   LocalReplicaInPipeline(Block block,
-      FsVolumeSpi vol, File dir, Thread writer) {
+                         FsVolumeSpi vol, File dir, Thread writer) {
     this(block.getBlockId(), block.getNumBytes(), block.getGenerationStamp(),
         vol, dir, writer, 0L);
   }
@@ -87,7 +83,7 @@ public class LocalReplicaInPipeline extends LocalReplica
    *                       the estimated maximum block length.
    */
   LocalReplicaInPipeline(long blockId, long len, long genStamp,
-      FsVolumeSpi vol, File dir, Thread writer, long bytesToReserve) {
+                         FsVolumeSpi vol, File dir, Thread writer, long bytesToReserve) {
     super(blockId, len, genStamp, vol, dir);
     this.bytesAcked = len;
     this.bytesOnDisk = len;
@@ -267,14 +263,14 @@ public class LocalReplicaInPipeline extends LocalReplica
 
   @Override // ReplicaInPipeline
   public ReplicaOutputStreams createStreams(boolean isCreate,
-      DataChecksum requestedChecksum) throws IOException {
+                                            DataChecksum requestedChecksum) throws IOException {
     final File blockFile = getBlockFile();
     final File metaFile = getMetaFile();
     if (DataNode.LOG.isDebugEnabled()) {
       DataNode.LOG.debug("writeTo blockfile is " + blockFile +
-                         " of size " + blockFile.length());
+          " of size " + blockFile.length());
       DataNode.LOG.debug("writeTo metafile is " + metaFile +
-                         " of size " + metaFile.length());
+          " of size " + metaFile.length());
     }
     long blockDiskSize = 0L;
     long crcDiskSize = 0L;
@@ -307,10 +303,10 @@ public class LocalReplicaInPipeline extends LocalReplica
 
         blockDiskSize = bytesOnDisk;
         crcDiskSize = BlockMetadataHeader.getHeaderSize() +
-          (blockDiskSize+bytesPerChunk-1)/bytesPerChunk*checksumSize;
+            (blockDiskSize + bytesPerChunk - 1) / bytesPerChunk * checksumSize;
         if (blockDiskSize > 0 &&
             (blockDiskSize > blockFile.length() ||
-               crcDiskSize>metaFile.length())) {
+                crcDiskSize > metaFile.length())) {
           throw new IOException("Corrupted block: " + this);
         }
         checkedMeta = true;
@@ -349,7 +345,7 @@ public class LocalReplicaInPipeline extends LocalReplica
   @Override
   public OutputStream createRestartMetaStream() throws IOException {
     File blockFile = getBlockFile();
-    File restartMeta = new File(blockFile.getParent()  +
+    File restartMeta = new File(blockFile.getParent() +
         File.pathSeparator + "." + blockFile.getName() + ".restart");
     if (!getFileIoProvider().deleteWithExistsCheck(getVolume(), restartMeta)) {
       DataNode.LOG.warn("Failed to delete restart meta file: " +
@@ -384,7 +380,7 @@ public class LocalReplicaInPipeline extends LocalReplica
   }
 
   @Override
-  public ReplicaRecoveryInfo createInfo(){
+  public ReplicaRecoveryInfo createInfo() {
     throw new UnsupportedOperationException("Replica of type " + getState() +
         " does not support createInfo");
   }
@@ -408,8 +404,8 @@ public class LocalReplicaInPipeline extends LocalReplica
       fileIoProvider.rename(getVolume(), oldmeta, newmeta);
     } catch (IOException e) {
       throw new IOException("Block " + oldReplicaInfo + " reopen failed. " +
-                            " Unable to move meta file  " + oldmeta +
-                            " to rbw dir " + newmeta, e);
+          " Unable to move meta file  " + oldmeta +
+          " to rbw dir " + newmeta, e);
     }
 
     try {

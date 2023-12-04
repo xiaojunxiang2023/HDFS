@@ -1,18 +1,5 @@
 package org.apache.hadoop.crypto.key.kms;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.net.ConnectException;
-import java.net.URI;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.net.ssl.SSLHandshakeException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension.CryptoExtension;
@@ -27,13 +14,24 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.KMSUtil;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import javax.net.ssl.SSLHandshakeException;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.ConnectException;
+import java.net.URI;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A simple LoadBalancing KMSClientProvider that round-robins requests
@@ -68,18 +66,18 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
   private RetryPolicy retryPolicy = null;
 
   public LoadBalancingKMSClientProvider(URI providerUri,
-      KMSClientProvider[] providers, Configuration conf) {
+                                        KMSClientProvider[] providers, Configuration conf) {
     this(providerUri, providers, Time.monotonicNow(), conf);
   }
 
   @VisibleForTesting
   LoadBalancingKMSClientProvider(KMSClientProvider[] providers, long seed,
-      Configuration conf) {
+                                 Configuration conf) {
     this(URI.create("kms://testing"), providers, seed, conf);
   }
 
   private LoadBalancingKMSClientProvider(URI uri,
-      KMSClientProvider[] providers, long seed, Configuration conf) {
+                                         KMSClientProvider[] providers, long seed, Configuration conf) {
     super(conf);
     // uri is the token service so it can be instantiated for renew/cancel.
     dtService = KMSClientProvider.getDtService(uri);
@@ -98,15 +96,15 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
     for (KMSClientProvider provider : providers) {
       provider.setClientTokenProvider(this);
     }
-    this.currentIdx = new AtomicInteger((int)(seed % providers.length));
+    this.currentIdx = new AtomicInteger((int) (seed % providers.length));
     int maxNumRetries = conf.getInt(CommonConfigurationKeysPublic.
         KMS_CLIENT_FAILOVER_MAX_RETRIES_KEY, providers.length);
     int sleepBaseMillis = conf.getInt(CommonConfigurationKeysPublic.
-        KMS_CLIENT_FAILOVER_SLEEP_BASE_MILLIS_KEY,
+            KMS_CLIENT_FAILOVER_SLEEP_BASE_MILLIS_KEY,
         CommonConfigurationKeysPublic.
             KMS_CLIENT_FAILOVER_SLEEP_BASE_MILLIS_DEFAULT);
     int sleepMaxMillis = conf.getInt(CommonConfigurationKeysPublic.
-        KMS_CLIENT_FAILOVER_SLEEP_MAX_MILLIS_KEY,
+            KMS_CLIENT_FAILOVER_SLEEP_MAX_MILLIS_KEY,
         CommonConfigurationKeysPublic.
             KMS_CLIENT_FAILOVER_SLEEP_MAX_MILLIS_DEFAULT);
     Preconditions.checkState(maxNumRetries >= 0);
@@ -127,7 +125,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
 
   @Override
   public org.apache.hadoop.security.token.Token<? extends TokenIdentifier>
-      selectDelegationToken(Credentials creds) {
+  selectDelegationToken(Credentials creds) {
     Token<? extends TokenIdentifier> token =
         KMSClientProvider.selectDelegationToken(creds, canonicalService);
     if (token == null) {
@@ -146,12 +144,12 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
   }
 
   private <T> T doOp(ProviderCallable<T> op, int currPos,
-      boolean isIdempotent) throws IOException {
+                     boolean isIdempotent) throws IOException {
     if (providers.length == 0) {
       throw new IOException("No providers configured !");
     }
     int numFailovers = 0;
-    for (int i = 0;; i++, numFailovers++) {
+    for (int i = 0; ; i++, numFailovers++) {
       KMSClientProvider provider = providers[(currPos + i) % providers.length];
       try {
         return op.call(provider);
@@ -178,7 +176,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
           action = retryPolicy.shouldRetry(ioe, 0, numFailovers, isIdempotent);
         } catch (Exception e) {
           if (e instanceof IOException) {
-            throw (IOException)e;
+            throw (IOException) e;
           }
           throw new IOException(e);
         }
@@ -187,12 +185,12 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
         if (action.action == RetryAction.RetryDecision.FAIL
             && numFailovers >= providers.length - 1) {
           LOG.error("Aborting since the Request has failed with all KMS"
-              + " providers(depending on {}={} setting and numProviders={})"
-              + " in the group OR the exception is not recoverable",
+                  + " providers(depending on {}={} setting and numProviders={})"
+                  + " in the group OR the exception is not recoverable",
               CommonConfigurationKeysPublic.KMS_CLIENT_FAILOVER_MAX_RETRIES_KEY,
               getConf().getInt(
                   CommonConfigurationKeysPublic.
-                  KMS_CLIENT_FAILOVER_MAX_RETRIES_KEY, providers.length),
+                      KMS_CLIENT_FAILOVER_MAX_RETRIES_KEY, providers.length),
               providers.length);
           throw ioe;
         }
@@ -206,7 +204,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
         }
       } catch (Exception e) {
         if (e instanceof RuntimeException) {
-          throw (RuntimeException)e;
+          throw (RuntimeException) e;
         } else {
           throw new WrapperException(e);
         }
@@ -280,7 +278,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
         e = ioe;
         LOG.error(
             "Error warming up keys for provider with url"
-            + "[" + provider.getKMSUrl() + "]", ioe);
+                + "[" + provider.getKMSUrl() + "]", ioe);
       }
     }
     if (!success && e != null) {
@@ -306,8 +304,8 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
 
   @Override
   public EncryptedKeyVersion
-      generateEncryptedKey(final String encryptionKeyName)
-          throws IOException, GeneralSecurityException {
+  generateEncryptedKey(final String encryptionKeyName)
+      throws IOException, GeneralSecurityException {
     try {
       return doOp(new ProviderCallable<EncryptedKeyVersion>() {
         @Override
@@ -326,8 +324,8 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
 
   @Override
   public KeyVersion
-      decryptEncryptedKey(final EncryptedKeyVersion encryptedKeyVersion)
-          throws IOException, GeneralSecurityException {
+  decryptEncryptedKey(final EncryptedKeyVersion encryptedKeyVersion)
+      throws IOException, GeneralSecurityException {
     try {
       return doOp(new ProviderCallable<KeyVersion>() {
         @Override
@@ -447,7 +445,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
 
   @Override
   public KeyVersion createKey(final String name, final byte[] material,
-      final Options options) throws IOException {
+                              final Options options) throws IOException {
     return doOp(new ProviderCallable<KeyVersion>() {
       @Override
       public KeyVersion call(KMSClientProvider provider) throws IOException {

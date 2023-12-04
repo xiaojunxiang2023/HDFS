@@ -1,28 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.util.Time.now;
-
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.util.ShutdownHookManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -43,26 +20,35 @@ import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeDirType;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.Phase;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress;
-import org.apache.hadoop.hdfs.server.protocol.CheckpointCommand;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeCommand;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeRegistration;
-import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
+import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.hdfs.util.Canceler;
 import org.apache.hadoop.hdfs.util.MD5FileUtils;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.log.LogThrottlingHelper;
 import org.apache.hadoop.log.LogThrottlingHelper.LogAction;
-import org.apache.hadoop.util.ExitUtil;
-import org.apache.hadoop.util.Time;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.ExitUtil;
+import org.apache.hadoop.util.ShutdownHookManager;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.apache.hadoop.util.Time.now;
 
 /**
  * FSImage handles checkpointing and logging of the namespace edits.
- * 
+ *
  */
 public class FSImage implements Closeable {
   public static final Logger LOG =
@@ -81,7 +67,7 @@ public class FSImage implements Closeable {
   private AtomicBoolean exitAfterSave = new AtomicBoolean(false);
 
   protected NNStorage storage;
-  
+
   /**
    * The last transaction ID that was either loaded from an image
    * or loaded by loading edits files.
@@ -107,7 +93,7 @@ public class FSImage implements Closeable {
    * a. checkpoint when NN is in standby.
    * b. admin saveNameSpace operation.
    * c. download checkpoint file from any remote checkpointer.
-  */
+   */
   private final Set<Long> currentlyCheckpointing =
       Collections.<Long>synchronizedSet(new HashSet<Long>());
 
@@ -123,8 +109,8 @@ public class FSImage implements Closeable {
    */
   public FSImage(Configuration conf) throws IOException {
     this(conf,
-         FSNamesystem.getNamespaceDirs(conf),
-         FSNamesystem.getNamespaceEditsDirs(conf));
+        FSNamesystem.getNamespaceDirs(conf),
+        FSNamesystem.getNamespaceEditsDirs(conf));
   }
 
   /**
@@ -144,8 +130,8 @@ public class FSImage implements Closeable {
     this.conf = conf;
 
     storage = new NNStorage(conf, imageDirs, editsDirs);
-    if(conf.getBoolean(DFSConfigKeys.DFS_NAMENODE_NAME_DIR_RESTORE_KEY,
-                       DFSConfigKeys.DFS_NAMENODE_NAME_DIR_RESTORE_DEFAULT)) {
+    if (conf.getBoolean(DFSConfigKeys.DFS_NAMENODE_NAME_DIR_RESTORE_KEY,
+        DFSConfigKeys.DFS_NAMENODE_NAME_DIR_RESTORE_DEFAULT)) {
       storage.setRestoreFailedStorage(true);
     }
 
@@ -153,29 +139,29 @@ public class FSImage implements Closeable {
     archivalManager = new NNStorageRetentionManager(conf, storage, editLog);
     FSImageFormatProtobuf.initParallelLoad(conf);
   }
- 
+
   void format(FSNamesystem fsn, String clusterId, boolean force)
       throws IOException {
     long fileCount = fsn.getFilesTotal();
     // Expect 1 file, which is the root inode
     Preconditions.checkState(fileCount == 1,
         "FSImage.format should be called with an uninitialized namesystem, has " +
-        fileCount + " files");
+            fileCount + " files");
     NamespaceInfo ns = NNStorage.newNamespaceInfo();
     LOG.info("Allocated new BlockPoolId: " + ns.getBlockPoolID());
     ns.clusterID = clusterId;
-    
+
     storage.format(ns);
     editLog.formatNonFileJournals(ns, force);
     saveFSImageInAllDirs(fsn, 0);
   }
-  
+
   /**
    * Check whether the storage directories and non-file journals exist.
    * If running in interactive mode, will prompt the user for each
    * directory to allow them to format anyway. Otherwise, returns
    * false, unless 'force' is specified.
-   * 
+   *
    * @param force if true, format regardless of whether dirs exist
    * @param interactive prompt the user when a dir exists
    * @return true if formatting should proceed
@@ -186,50 +172,50 @@ public class FSImage implements Closeable {
     for (StorageDirectory sd : storage.dirIterable(null)) {
       confirms.add(sd);
     }
-    
+
     confirms.addAll(editLog.getFormatConfirmables());
     return Storage.confirmFormat(confirms, force, interactive);
   }
-  
+
   /**
    * Analyze storage directories.
    * Recover from previous transitions if required. 
    * Perform fs state transition if necessary depending on the namespace info.
    * Read storage info. 
-   * 
+   *
    * @throws IOException
    * @return true if the image needs to be saved or false otherwise
    */
   boolean recoverTransitionRead(StartupOption startOpt, FSNamesystem target,
-      MetaRecoveryContext recovery)
+                                MetaRecoveryContext recovery)
       throws IOException {
-    assert startOpt != StartupOption.FORMAT : 
-      "NameNode formatting should be performed before reading the image";
-    
+    assert startOpt != StartupOption.FORMAT :
+        "NameNode formatting should be performed before reading the image";
+
     Collection<URI> imageDirs = storage.getImageDirectories();
     Collection<URI> editsDirs = editLog.getEditURIs();
 
     // none of the data dirs exist
-    if((imageDirs.size() == 0 || editsDirs.size() == 0) 
-                             && startOpt != StartupOption.IMPORT)  
+    if ((imageDirs.size() == 0 || editsDirs.size() == 0)
+        && startOpt != StartupOption.IMPORT)
       throw new IOException(
           "All specified directories are not accessible or do not exist.");
-    
+
     // 1. For each data directory calculate its state and 
     // check whether all is consistent before transitioning.
-    Map<StorageDirectory, StorageState> dataDirStates = 
-             new HashMap<StorageDirectory, StorageState>();
+    Map<StorageDirectory, StorageState> dataDirStates =
+        new HashMap<StorageDirectory, StorageState>();
     boolean isFormatted = recoverStorageDirs(startOpt, storage, dataDirStates);
 
     if (LOG.isTraceEnabled()) {
       LOG.trace("Data dir states:\n  " +
-        Joiner.on("\n  ").withKeyValueSeparator(": ")
-        .join(dataDirStates));
+          Joiner.on("\n  ").withKeyValueSeparator(": ")
+              .join(dataDirStates));
     }
-    
-    if (!isFormatted && startOpt != StartupOption.ROLLBACK 
-                     && startOpt != StartupOption.IMPORT) {
-      throw new IOException("NameNode is not formatted.");      
+
+    if (!isFormatted && startOpt != StartupOption.ROLLBACK
+        && startOpt != StartupOption.IMPORT) {
+      throw new IOException("NameNode is not formatted.");
     }
 
 
@@ -237,7 +223,7 @@ public class FSImage implements Closeable {
     if (startOpt == StartupOption.METADATAVERSION) {
       System.out.println("HDFS Image Version: " + layoutVersion);
       System.out.println("Software format version: " +
-        HdfsServerConstants.NAMENODE_LAYOUT_VERSION);
+          HdfsServerConstants.NAMENODE_LAYOUT_VERSION);
       return false;
     }
 
@@ -250,71 +236,71 @@ public class FSImage implements Closeable {
         && layoutVersion < Storage.LAST_PRE_UPGRADE_LAYOUT_VERSION
         && layoutVersion != HdfsServerConstants.NAMENODE_LAYOUT_VERSION) {
       throw new IOException(
-          "\nFile system image contains an old layout version " 
-          + storage.getLayoutVersion() + ".\nAn upgrade to version "
-          + HdfsServerConstants.NAMENODE_LAYOUT_VERSION + " is required.\n"
-          + "Please restart NameNode with the \""
-          + RollingUpgradeStartupOption.STARTED.getOptionString()
-          + "\" option if a rolling upgrade is already started;"
-          + " or restart NameNode with the \""
-          + StartupOption.UPGRADE.getName() + "\" option to start"
-          + " a new upgrade.");
+          "\nFile system image contains an old layout version "
+              + storage.getLayoutVersion() + ".\nAn upgrade to version "
+              + HdfsServerConstants.NAMENODE_LAYOUT_VERSION + " is required.\n"
+              + "Please restart NameNode with the \""
+              + RollingUpgradeStartupOption.STARTED.getOptionString()
+              + "\" option if a rolling upgrade is already started;"
+              + " or restart NameNode with the \""
+              + StartupOption.UPGRADE.getName() + "\" option to start"
+              + " a new upgrade.");
     }
-    
+
     storage.processStartupOptionsForUpgrade(startOpt, layoutVersion);
 
     // 2. Format unformatted dirs.
-    for (Iterator<StorageDirectory> it = storage.dirIterator(); it.hasNext();) {
+    for (Iterator<StorageDirectory> it = storage.dirIterator(); it.hasNext(); ) {
       StorageDirectory sd = it.next();
       StorageState curState = dataDirStates.get(sd);
-      switch(curState) {
-      case NON_EXISTENT:
-        throw new IOException(StorageState.NON_EXISTENT + 
-                              " state cannot be here");
-      case NOT_FORMATTED:
-        // Create a dir structure, but not the VERSION file. The presence of
-        // VERSION is checked in the inspector's needToSave() method and
-        // saveNamespace is triggered if it is absent. This will bring
-        // the storage state uptodate along with a new VERSION file.
-        // If HA is enabled, NNs start up as standby so saveNamespace is not
-        // triggered.
-        LOG.info("Storage directory " + sd.getRoot() + " is not formatted.");
-        LOG.info("Formatting ...");
-        sd.clearDirectory(); // create empty current dir
-        // For non-HA, no further action is needed here, as saveNamespace will
-        // take care of the rest.
-        if (!target.isHaEnabled()) {
-          continue;
-        }
-        // If HA is enabled, save the dirs to create a version file later when
-        // a checkpoint image is saved.
-        if (newDirs == null) {
-          newDirs = new HashSet<StorageDirectory>();
-        }
-        newDirs.add(sd);
-        break;
-      default:
-        break;
+      switch (curState) {
+        case NON_EXISTENT:
+          throw new IOException(StorageState.NON_EXISTENT +
+              " state cannot be here");
+        case NOT_FORMATTED:
+          // Create a dir structure, but not the VERSION file. The presence of
+          // VERSION is checked in the inspector's needToSave() method and
+          // saveNamespace is triggered if it is absent. This will bring
+          // the storage state uptodate along with a new VERSION file.
+          // If HA is enabled, NNs start up as standby so saveNamespace is not
+          // triggered.
+          LOG.info("Storage directory " + sd.getRoot() + " is not formatted.");
+          LOG.info("Formatting ...");
+          sd.clearDirectory(); // create empty current dir
+          // For non-HA, no further action is needed here, as saveNamespace will
+          // take care of the rest.
+          if (!target.isHaEnabled()) {
+            continue;
+          }
+          // If HA is enabled, save the dirs to create a version file later when
+          // a checkpoint image is saved.
+          if (newDirs == null) {
+            newDirs = new HashSet<StorageDirectory>();
+          }
+          newDirs.add(sd);
+          break;
+        default:
+          break;
       }
     }
 
     // 3. Do transitions
-    switch(startOpt) {
-    case UPGRADE:
-    case UPGRADEONLY:
-      doUpgrade(target);
-      return false; // upgrade saved image already
-    case IMPORT:
-      doImportCheckpoint(target);
-      return false; // import checkpoint saved image already
-    case ROLLBACK:
-      throw new AssertionError("Rollback is now a standalone command, " +
-          "NameNode should not be starting with this option.");
-    case REGULAR:
-    default:
-      // just load the image
+    switch (startOpt) {
+      case UPGRADE:
+      case UPGRADEONLY:
+        doUpgrade(target);
+        return false; // upgrade saved image already
+      case IMPORT:
+        doImportCheckpoint(target);
+        return false; // import checkpoint saved image already
+      case ROLLBACK:
+        throw new AssertionError("Rollback is now a standalone command, " +
+            "NameNode should not be starting with this option.");
+      case REGULAR:
+      default:
+        // just load the image
     }
-    
+
     return loadFSImage(target, startOpt, recovery);
   }
 
@@ -346,14 +332,14 @@ public class FSImage implements Closeable {
    * @return true if there is at least one valid formatted storage directory
    */
   public static boolean recoverStorageDirs(StartupOption startOpt,
-      NNStorage storage, Map<StorageDirectory, StorageState> dataDirStates)
+                                           NNStorage storage, Map<StorageDirectory, StorageState> dataDirStates)
       throws IOException {
     boolean isFormatted = false;
     // This loop needs to be over all storage dirs, even shared dirs, to make
     // sure that we properly examine their state, but we make sure we don't
     // mutate the shared dir below in the actual loop.
-    for (Iterator<StorageDirectory> it = 
-                      storage.dirIterator(); it.hasNext();) {
+    for (Iterator<StorageDirectory> it =
+         storage.dirIterator(); it.hasNext(); ) {
       StorageDirectory sd = it.next();
       StorageState curState;
       if (startOpt == StartupOption.METADATAVERSION) {
@@ -365,19 +351,19 @@ public class FSImage implements Closeable {
       try {
         curState = sd.analyzeStorage(startOpt, storage);
         // sd is locked but not opened
-        switch(curState) {
-        case NON_EXISTENT:
-          // name-node fails if any of the configured storage dirs are missing
-          throw new InconsistentFSStateException(sd.getRoot(),
-                      "storage directory does not exist or is not accessible.");
-        case NOT_FORMATTED:
-          break;
-        case NORMAL:
-          break;
-        default:  // recovery is possible
-          sd.doRecover(curState);
+        switch (curState) {
+          case NON_EXISTENT:
+            // name-node fails if any of the configured storage dirs are missing
+            throw new InconsistentFSStateException(sd.getRoot(),
+                "storage directory does not exist or is not accessible.");
+          case NOT_FORMATTED:
+            break;
+          case NORMAL:
+            break;
+          default:  // recovery is possible
+            sd.doRecover(curState);
         }
-        if (curState != StorageState.NOT_FORMATTED 
+        if (curState != StorageState.NOT_FORMATTED
             && startOpt != StartupOption.ROLLBACK) {
           // read and verify consistency with other directories
           storage.readProperties(sd, startOpt);
@@ -385,13 +371,13 @@ public class FSImage implements Closeable {
         }
         if (startOpt == StartupOption.IMPORT && isFormatted)
           // import of a checkpoint is allowed only into empty image directories
-          throw new IOException("Cannot import image from a checkpoint. " 
+          throw new IOException("Cannot import image from a checkpoint. "
               + " NameNode already contains an image in " + sd.getRoot());
       } catch (IOException ioe) {
         sd.unlock();
         throw ioe;
       }
-      dataDirStates.put(sd,curState);
+      dataDirStates.put(sd, curState);
     }
     return isFormatted;
   }
@@ -400,12 +386,12 @@ public class FSImage implements Closeable {
   public static void checkUpgrade(NNStorage storage) throws IOException {
     // Upgrade or rolling upgrade is allowed only if there are 
     // no previous fs states in any of the local directories
-    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext();) {
+    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext(); ) {
       StorageDirectory sd = it.next();
       if (sd.getPreviousDir().exists())
         throw new InconsistentFSStateException(sd.getRoot(),
             "previous fs state should not exist during upgrade. "
-            + "Finalize or rollback first.");
+                + "Finalize or rollback first.");
     }
   }
 
@@ -437,14 +423,14 @@ public class FSImage implements Closeable {
     // Do upgrade for each directory
     this.loadFSImage(target, StartupOption.UPGRADE, null);
     target.checkRollingUpgrade("upgrade namenode");
-    
+
     long oldCTime = storage.getCTime();
     storage.cTime = now();  // generate new cTime for the state
     int oldLV = storage.getLayoutVersion();
     storage.layoutVersion = HdfsServerConstants.NAMENODE_LAYOUT_VERSION;
-    
+
     List<StorageDirectory> errorSDs =
-      Collections.synchronizedList(new ArrayList<StorageDirectory>());
+        Collections.synchronizedList(new ArrayList<StorageDirectory>());
     assert !editLog.isSegmentOpen() : "Edits log must not be open.";
     LOG.info("Starting upgrade of local storage directories."
         + "\n   old LV = " + oldLV
@@ -452,7 +438,7 @@ public class FSImage implements Closeable {
         + ".\n   new LV = " + storage.getLayoutVersion()
         + "; new CTime = " + storage.getCTime());
     // Do upgrade for each directory
-    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext();) {
+    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext(); ) {
       StorageDirectory sd = it.next();
       try {
         NNUpgradeUtil.doPreUpgrade(conf, sd);
@@ -475,7 +461,7 @@ public class FSImage implements Closeable {
     if (target.isHaEnabled()) {
       editLog.doUpgradeOfSharedLog();
     }
-    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext();) {
+    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext(); ) {
       StorageDirectory sd = it.next();
       try {
         NNUpgradeUtil.doUpgrade(sd, storage);
@@ -485,7 +471,7 @@ public class FSImage implements Closeable {
       }
     }
     storage.reportErrorsOnDirectories(errorSDs);
-    
+
     isUpgradeFinalized = false;
     if (!storage.getRemovedStorageDirs().isEmpty()) {
       // during upgrade, it's a fatal error to fail any storage directory
@@ -503,7 +489,7 @@ public class FSImage implements Closeable {
     FSImage prevState = new FSImage(conf);
     try {
       prevState.getStorage().layoutVersion = HdfsServerConstants.NAMENODE_LAYOUT_VERSION;
-      for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext();) {
+      for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext(); ) {
         StorageDirectory sd = it.next();
         if (!NNUpgradeUtil.canRollBack(sd, storage, prevState.getStorage(),
             HdfsServerConstants.NAMENODE_LAYOUT_VERSION)) {
@@ -512,7 +498,7 @@ public class FSImage implements Closeable {
         LOG.info("Can perform rollback for " + sd);
         canRollback = true;
       }
-      
+
       if (fsns.isHaEnabled()) {
         // If HA is enabled, check if the shared log can be rolled back as well.
         editLog.initJournalsForWrite();
@@ -523,25 +509,25 @@ public class FSImage implements Closeable {
           canRollback = true;
         }
       }
-      
+
       if (!canRollback)
         throw new IOException("Cannot rollback. None of the storage "
             + "directories contain previous fs state.");
-  
+
       // Now that we know all directories are going to be consistent
       // Do rollback for each directory containing previous state
-      for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext();) {
+      for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext(); ) {
         StorageDirectory sd = it.next();
         LOG.info("Rolling back storage directory " + sd.getRoot()
-                 + ".\n   new LV = " + prevState.getStorage().getLayoutVersion()
-                 + "; new CTime = " + prevState.getStorage().getCTime());
+            + ".\n   new LV = " + prevState.getStorage().getLayoutVersion()
+            + "; new CTime = " + prevState.getStorage().getCTime());
         NNUpgradeUtil.doRollBack(sd);
       }
       if (fsns.isHaEnabled()) {
         // If HA is enabled, try to roll back the shared log as well.
         editLog.doRollback();
       }
-      
+
       isUpgradeFinalized = true;
     } finally {
       prevState.close();
@@ -555,23 +541,23 @@ public class FSImage implements Closeable {
    */
   void doImportCheckpoint(FSNamesystem target) throws IOException {
     Collection<URI> checkpointDirs =
-      FSImage.getCheckpointDirs(conf, null);
+        FSImage.getCheckpointDirs(conf, null);
     List<URI> checkpointEditsDirs =
-      FSImage.getCheckpointEditsDirs(conf, null);
+        FSImage.getCheckpointEditsDirs(conf, null);
 
     if (checkpointDirs == null || checkpointDirs.isEmpty()) {
       throw new IOException("Cannot import image from a checkpoint. "
-                            + "\"dfs.namenode.checkpoint.dir\" is not set." );
+          + "\"dfs.namenode.checkpoint.dir\" is not set.");
     }
-    
+
     if (checkpointEditsDirs == null || checkpointEditsDirs.isEmpty()) {
       throw new IOException("Cannot import image from a checkpoint. "
-                            + "\"dfs.namenode.checkpoint.dir\" is not set." );
+          + "\"dfs.namenode.checkpoint.dir\" is not set.");
     }
 
     FSImage realImage = target.getFSImage();
-    FSImage ckptImage = new FSImage(conf, 
-                                    checkpointDirs, checkpointEditsDirs);
+    FSImage ckptImage = new FSImage(conf,
+        checkpointDirs, checkpointEditsDirs);
     // load from the checkpoint dirs
     try {
       ckptImage.recoverTransitionRead(StartupOption.REGULAR, target, null);
@@ -580,7 +566,7 @@ public class FSImage implements Closeable {
     }
     // return back the real image
     realImage.getStorage().setStorageInfo(ckptImage.getStorage());
-    realImage.getEditLog().setNextTxId(ckptImage.getEditLog().getLastWrittenTxId()+1);
+    realImage.getEditLog().setNextTxId(ckptImage.getEditLog().getLastWrittenTxId() + 1);
     realImage.initEditLog(StartupOption.IMPORT);
 
     realImage.getStorage().setBlockPoolID(ckptImage.getBlockPoolID());
@@ -589,13 +575,13 @@ public class FSImage implements Closeable {
     saveNamespace(target);
     updateStorageVersion();
   }
-  
+
   void finalizeUpgrade(boolean finalizeEditLog) throws IOException {
     LOG.info("Finalizing upgrade for local dirs. " +
-        (storage.getLayoutVersion() == 0 ? "" : 
-          "\n   cur LV = " + storage.getLayoutVersion()
-          + "; cur CTime = " + storage.getCTime()));
-    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext();) {
+        (storage.getLayoutVersion() == 0 ? "" :
+            "\n   cur LV = " + storage.getLayoutVersion()
+                + "; cur CTime = " + storage.getCTime()));
+    for (Iterator<StorageDirectory> it = storage.dirIterator(false); it.hasNext(); ) {
       StorageDirectory sd = it.next();
       NNUpgradeUtil.doFinalize(sd);
     }
@@ -621,7 +607,7 @@ public class FSImage implements Closeable {
     editLog.openForWrite(layoutVersion);
     storage.writeTransactionIdFileToStorage(editLog.getCurSegmentTxId());
   }
-  
+
   /**
    * Toss the current image and namesystem, reloading from the specified
    * file.
@@ -635,7 +621,7 @@ public class FSImage implements Closeable {
   /**
    * Choose latest image from one of the directories,
    * load it and merge with the edits.
-   * 
+   *
    * Saving and loading fsimage should never trigger symlink resolution. 
    * The paths that are persisted do not have *intermediate* symlinks 
    * because intermediate symlinks are resolved at the time files, 
@@ -648,7 +634,7 @@ public class FSImage implements Closeable {
    * @throws IOException
    */
   private boolean loadFSImage(FSNamesystem target, StartupOption startOpt,
-      MetaRecoveryContext recovery)
+                              MetaRecoveryContext recovery)
       throws IOException {
     final boolean rollingRollback
         = RollingUpgradeStartupOption.ROLLBACK.matches(startOpt);
@@ -698,21 +684,21 @@ public class FSImage implements Closeable {
           toAtLeastTxId, recovery, false);
     } else {
       editStreams = FSImagePreTransactionalStorageInspector
-        .getEditLogStreams(storage);
+          .getEditLogStreams(storage);
     }
     int maxOpSize = conf.getInt(DFSConfigKeys.DFS_NAMENODE_MAX_OP_SIZE_KEY,
         DFSConfigKeys.DFS_NAMENODE_MAX_OP_SIZE_DEFAULT);
     for (EditLogInputStream elis : editStreams) {
       elis.setMaxOpSize(maxOpSize);
     }
- 
+
     for (EditLogInputStream l : editStreams) {
       LOG.debug("Planning to load edit log stream: " + l);
     }
     if (!editStreams.iterator().hasNext()) {
       LOG.info("No edit log streams selected.");
     }
-    
+
     FSImageFile imageFile = null;
     for (int i = 0; i < imageFiles.size(); i++) {
       try {
@@ -735,7 +721,7 @@ public class FSImage implements Closeable {
           "above for more info.");
     }
     prog.endPhase(Phase.LOADING_FSIMAGE);
-    
+
     if (!rollingRollback) {
       prog.beginPhase(Phase.LOADING_EDITS);
       long txnsAdvanced = loadEdits(editStreams, target, Long.MAX_VALUE,
@@ -775,7 +761,7 @@ public class FSImage implements Closeable {
   }
 
   void loadFSImageFile(FSNamesystem target, MetaRecoveryContext recovery,
-      FSImageFile imageFile, StartupOption startupOption) throws IOException {
+                       FSImageFile imageFile, StartupOption startupOption) throws IOException {
     LOG.info("Planning to load image: " + imageFile);
     StorageDirectory sdForProperties = imageFile.sd;
     storage.readProperties(sdForProperties, startupOption);
@@ -795,8 +781,8 @@ public class FSImage implements Closeable {
       if (md5 == null) {
         throw new InconsistentFSStateException(sdForProperties.getRoot(),
             "Message digest property " +
-            NNStorage.DEPRECATED_MESSAGE_DIGEST_PROPERTY +
-            " not set for storage directory " + sdForProperties.getRoot());
+                NNStorage.DEPRECATED_MESSAGE_DIGEST_PROPERTY +
+                " not set for storage directory " + sdForProperties.getRoot());
       }
       loadFSImage(imageFile.getFile(), new MD5Hash(md5), target, recovery,
           false);
@@ -816,8 +802,8 @@ public class FSImage implements Closeable {
       editLog.recoverUnclosedStreams();
     } else if (HAUtil.isHAEnabled(conf, nameserviceId)
         && (startOpt == StartupOption.UPGRADE
-            || startOpt == StartupOption.UPGRADEONLY
-            || RollingUpgradeStartupOption.ROLLBACK.matches(startOpt))) {
+        || startOpt == StartupOption.UPGRADEONLY
+        || RollingUpgradeStartupOption.ROLLBACK.matches(startOpt))) {
       // This NN is HA, but we're doing an upgrade or a rollback of rolling
       // upgrade so init the edit log for write.
       editLog.initJournalsForWrite();
@@ -856,28 +842,28 @@ public class FSImage implements Closeable {
     long checkpointAge = Time.now() - imageFile.lastModified();
 
     return (checkpointAge > checkpointPeriod * 1000) ||
-           (numEditsLoaded > checkpointTxnCount);
+        (numEditsLoaded > checkpointTxnCount);
   }
-  
+
   /**
    * Load the specified list of edit files into the image.
    */
   public long loadEdits(Iterable<EditLogInputStream> editStreams,
-      FSNamesystem target) throws IOException {
+                        FSNamesystem target) throws IOException {
     return loadEdits(editStreams, target, Long.MAX_VALUE, null, null);
   }
 
   public long loadEdits(Iterable<EditLogInputStream> editStreams,
-      FSNamesystem target, long maxTxnsToRead,
-      StartupOption startOpt, MetaRecoveryContext recovery)
+                        FSNamesystem target, long maxTxnsToRead,
+                        StartupOption startOpt, MetaRecoveryContext recovery)
       throws IOException {
     LOG.debug("About to load edits:\n  " + Joiner.on("\n  ").join(editStreams));
-    
+
     long prevLastAppliedTxId = lastAppliedTxId;
     long remainingReadTxns = maxTxnsToRead;
-    try {    
+    try {
       FSEditLogLoader loader = new FSEditLogLoader(target, lastAppliedTxId);
-      
+
       // Load latest edits
       for (EditLogInputStream editIn : editStreams) {
         LogAction logAction = loadEditLogHelper.record();
@@ -892,7 +878,7 @@ public class FSImage implements Closeable {
         }
         try {
           remainingReadTxns -= loader.loadFSEdits(editIn, lastAppliedTxId + 1,
-                  remainingReadTxns, startOpt, recovery);
+              remainingReadTxns, startOpt, recovery);
         } finally {
           // Update lastAppliedTxId even in case of error, since some ops may
           // have been successfully applied before the error.
@@ -918,7 +904,7 @@ public class FSImage implements Closeable {
    * it against the MD5 sum stored in its associated .md5 file.
    */
   private void loadFSImage(File imageFile, FSNamesystem target,
-      MetaRecoveryContext recovery, boolean requireSameLayoutVersion)
+                           MetaRecoveryContext recovery, boolean requireSameLayoutVersion)
       throws IOException {
     MD5Hash expectedMD5 = MD5FileUtils.readStoredMd5ForFile(imageFile);
     if (expectedMD5 == null) {
@@ -928,14 +914,14 @@ public class FSImage implements Closeable {
     loadFSImage(imageFile, expectedMD5, target, recovery,
         requireSameLayoutVersion);
   }
-  
+
   /**
    * Load in the filesystem image from file. It's a big list of
    * filenames and blocks.
    */
   private void loadFSImage(File curFile, MD5Hash expectedMd5,
-      FSNamesystem target, MetaRecoveryContext recovery,
-      boolean requireSameLayoutVersion) throws IOException {
+                           FSNamesystem target, MetaRecoveryContext recovery,
+                           boolean requireSameLayoutVersion) throws IOException {
     // BlockPoolId is required when the FsImageLoader loads the rolling upgrade
     // information. Make sure the ID is properly set.
     target.setBlockPoolId(this.getBlockPoolID());
@@ -963,11 +949,11 @@ public class FSImage implements Closeable {
    * Save the contents of the FS image to the file.
    */
   void saveFSImage(SaveNamespaceContext context, StorageDirectory sd,
-      NameNodeFile dstType) throws IOException {
+                   NameNodeFile dstType) throws IOException {
     long txid = context.getTxId();
     File newFile = NNStorage.getStorageFile(sd, NameNodeFile.IMAGE_NEW, txid);
     File dstFile = NNStorage.getStorageFile(sd, dstType, txid);
-    
+
     FSImageFormatProtobuf.Saver saver = new FSImageFormatProtobuf.Saver(context,
         conf);
     FSImageCompression compression = FSImageCompression.createCompression(conf);
@@ -988,7 +974,7 @@ public class FSImage implements Closeable {
    * but for tools like OIV.
    */
   public void saveLegacyOIVImage(FSNamesystem source, String targetDir,
-      Canceler canceler) throws IOException {
+                                 Canceler canceler) throws IOException {
     FSImageCompression compression =
         FSImageCompression.createCompression(conf);
     long txid = getCorrectLastAppliedOrWrittenTxId();
@@ -1019,7 +1005,7 @@ public class FSImage implements Closeable {
     private final NameNodeFile nnf;
 
     public FSImageSaver(SaveNamespaceContext context, StorageDirectory sd,
-        NameNodeFile nnf) {
+                        NameNodeFile nnf) {
       this.context = context;
       this.sd = sd;
       this.nnf = nnf;
@@ -1057,14 +1043,14 @@ public class FSImage implements Closeable {
         }
       }
     }
-    
+
     @Override
     public String toString() {
       return "FSImageSaver for " + sd.getRoot() +
-             " of type " + sd.getStorageDirType();
+          " of type " + sd.getStorageDirType();
     }
   }
-  
+
   private void waitForThreads(List<Thread> threads) {
     for (Thread thread : threads) {
       while (thread.isAlive()) {
@@ -1072,12 +1058,12 @@ public class FSImage implements Closeable {
           thread.join();
         } catch (InterruptedException iex) {
           LOG.error("Caught interrupted exception while waiting for thread " +
-                    thread.getName() + " to finish. Retrying join");
-        }        
+              thread.getName() + " to finish. Retrying join");
+        }
       }
     }
   }
-  
+
   /**
    * Update version of all storage directories.
    */
@@ -1094,7 +1080,7 @@ public class FSImage implements Closeable {
    * @see #saveNamespace(FSNamesystem, NameNodeFile, Canceler)
    */
   public synchronized boolean saveNamespace(long timeWindow, long txGap,
-      FSNamesystem source) throws IOException {
+                                            FSNamesystem source) throws IOException {
     if (timeWindow > 0 || txGap > 0) {
       final FSImageStorageInspector inspector = storage.readAndInspectDirs(
           EnumSet.of(NameNodeFile.IMAGE, NameNodeFile.IMAGE_ROLLBACK),
@@ -1116,19 +1102,19 @@ public class FSImage implements Closeable {
   public void saveNamespace(FSNamesystem source) throws IOException {
     saveNamespace(0, 0, source);
   }
-  
+
   /**
    * Save the contents of the FS image to a new image file in each of the
    * current storage directories.
    */
   public synchronized void saveNamespace(FSNamesystem source, NameNodeFile nnf,
-      Canceler canceler) throws IOException {
+                                         Canceler canceler) throws IOException {
     assert editLog != null : "editLog must be initialized";
     LOG.info("Save namespace ...");
     storage.attemptRestoreRemovedStorage();
 
     boolean editLogWasOpen = editLog.isSegmentOpen();
-    
+
     if (editLogWasOpen) {
       editLog.endCurrentLogSegment(true);
     }
@@ -1191,7 +1177,7 @@ public class FSImage implements Closeable {
   }
 
   private synchronized void saveFSImageInAllDirs(FSNamesystem source,
-      NameNodeFile nnf, long txid, Canceler canceler) throws IOException {
+                                                 NameNodeFile nnf, long txid, Canceler canceler) throws IOException {
     StartupProgress prog = NameNode.getStartupProgress();
     prog.beginPhase(Phase.SAVING_CHECKPOINT);
     if (storage.getNumStorageDirs(NameNodeDirType.IMAGE) == 0) {
@@ -1202,12 +1188,12 @@ public class FSImage implements Closeable {
     }
     SaveNamespaceContext ctx = new SaveNamespaceContext(
         source, txid, canceler);
-    
+
     try {
       List<Thread> saveThreads = new ArrayList<Thread>();
       // save images into current
       for (Iterator<StorageDirectory> it
-             = storage.dirIterator(NameNodeDirType.IMAGE); it.hasNext();) {
+           = storage.dirIterator(NameNodeDirType.IMAGE); it.hasNext(); ) {
         StorageDirectory sd = it.next();
         FSImageSaver saver = new FSImageSaver(ctx, sd, nnf);
         Thread saveThread = new Thread(saver, saver.toString());
@@ -1217,19 +1203,19 @@ public class FSImage implements Closeable {
       waitForThreads(saveThreads);
       saveThreads.clear();
       storage.reportErrorsOnDirectories(ctx.getErrorSDs());
-  
+
       if (storage.getNumStorageDirs(NameNodeDirType.IMAGE) == 0) {
         throw new IOException(
-          "Failed to save in any storage directories while saving namespace.");
+            "Failed to save in any storage directories while saving namespace.");
       }
       if (canceler.isCancelled()) {
         deleteCancelledCheckpoint(txid);
         ctx.checkCancelled(); // throws
         assert false : "should have thrown above!";
       }
-  
+
       renameCheckpoint(txid, NameNodeFile.IMAGE_NEW, nnf, false);
-  
+
       // Since we now have a new checkpoint, we can clean up some
       // old edit logs and checkpoints.
       // Do not purge anything if we just wrote a corrupted FsImage.
@@ -1262,7 +1248,7 @@ public class FSImage implements Closeable {
    * Rename FSImage with the specific txid
    */
   private void renameCheckpoint(long txid, NameNodeFile fromNnf,
-      NameNodeFile toNnf, boolean renameMD5) throws IOException {
+                                NameNodeFile toNnf, boolean renameMD5) throws IOException {
     ArrayList<StorageDirectory> al = null;
 
     for (StorageDirectory sd : storage.dirIterable(NameNodeDirType.IMAGE)) {
@@ -1276,7 +1262,7 @@ public class FSImage implements Closeable {
         al.add(sd);
       }
     }
-    if(al != null) storage.reportErrorsOnDirectories(al);
+    if (al != null) storage.reportErrorsOnDirectories(al);
   }
 
   /**
@@ -1300,7 +1286,7 @@ public class FSImage implements Closeable {
         al.add(image.sd);
       }
     }
-    if(al != null) {
+    if (al != null) {
       storage.reportErrorsOnDirectories(al);
     }
   }
@@ -1316,24 +1302,24 @@ public class FSImage implements Closeable {
       File ckpt = NNStorage.getStorageFile(sd, NameNodeFile.IMAGE_NEW, txid);
       if (ckpt.exists() && !ckpt.delete()) {
         LOG.warn("Unable to delete cancelled checkpoint in " + sd);
-        al.add(sd);            
+        al.add(sd);
       }
     }
     storage.reportErrorsOnDirectories(al);
   }
 
   private void renameImageFileInDir(StorageDirectory sd, NameNodeFile fromNnf,
-      NameNodeFile toNnf, long txid, boolean renameMD5) throws IOException {
+                                    NameNodeFile toNnf, long txid, boolean renameMD5) throws IOException {
     final File fromFile = NNStorage.getStorageFile(sd, fromNnf, txid);
     final File toFile = NNStorage.getStorageFile(sd, toNnf, txid);
     // renameTo fails on Windows if the destination file already exists.
-    if(LOG.isDebugEnabled()) {
-      LOG.debug("renaming  " + fromFile.getAbsolutePath() 
-                + " to " + toFile.getAbsolutePath());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("renaming  " + fromFile.getAbsolutePath()
+          + " to " + toFile.getAbsolutePath());
     }
     if (!fromFile.renameTo(toFile)) {
       if (!toFile.delete() || !fromFile.renameTo(toFile)) {
-        throw new IOException("renaming  " + fromFile.getAbsolutePath() + " to "  + 
+        throw new IOException("renaming  " + fromFile.getAbsolutePath() + " to " +
             toFile.getAbsolutePath() + " FAILED");
       }
     }
@@ -1361,7 +1347,7 @@ public class FSImage implements Closeable {
    * If the backup image is older than the active one then it should 
    * be discarded and downloaded from the active node.<br>
    * If the images are the same then the backup image will be used as current.
-   * 
+   *
    * @param bnReg the backup node registration.
    * @param nnReg this (active) name-node registration.
    * @return {@link NamenodeCommand} if backup node should shutdown or
@@ -1372,32 +1358,32 @@ public class FSImage implements Closeable {
   NamenodeCommand startCheckpoint(NamenodeRegistration bnReg, // backup node
                                   NamenodeRegistration nnReg,
                                   int layoutVersion) // active name-node
-  throws IOException {
+      throws IOException {
     LOG.info("Start checkpoint at txid " + getEditLog().getLastWrittenTxId());
     String msg = null;
     // Verify that checkpoint is allowed
-    if(bnReg.getNamespaceID() != storage.getNamespaceID())
+    if (bnReg.getNamespaceID() != storage.getNamespaceID())
       msg = "Name node " + bnReg.getAddress()
-            + " has incompatible namespace id: " + bnReg.getNamespaceID()
-            + " expected: " + storage.getNamespaceID();
-    else if(bnReg.isRole(NamenodeRole.NAMENODE))
+          + " has incompatible namespace id: " + bnReg.getNamespaceID()
+          + " expected: " + storage.getNamespaceID();
+    else if (bnReg.isRole(NamenodeRole.NAMENODE))
       msg = "Name node " + bnReg.getAddress()
-            + " role " + bnReg.getRole() + ": checkpoint is not allowed.";
-    else if(bnReg.getLayoutVersion() < storage.getLayoutVersion()
+          + " role " + bnReg.getRole() + ": checkpoint is not allowed.";
+    else if (bnReg.getLayoutVersion() < storage.getLayoutVersion()
         || (bnReg.getLayoutVersion() == storage.getLayoutVersion()
-            && bnReg.getCTime() > storage.getCTime()))
+        && bnReg.getCTime() > storage.getCTime()))
       // remote node has newer image age
       msg = "Name node " + bnReg.getAddress()
-            + " has newer image layout version: LV = " +bnReg.getLayoutVersion()
-            + " cTime = " + bnReg.getCTime()
-            + ". Current version: LV = " + storage.getLayoutVersion()
-            + " cTime = " + storage.getCTime();
-    if(msg != null) {
+          + " has newer image layout version: LV = " + bnReg.getLayoutVersion()
+          + " cTime = " + bnReg.getCTime()
+          + ". Current version: LV = " + storage.getLayoutVersion()
+          + " cTime = " + storage.getCTime();
+    if (msg != null) {
       LOG.error(msg);
       return new NamenodeCommand(NamenodeProtocol.ACT_SHUTDOWN);
     }
     boolean needToReturnImg = true;
-    if(storage.getNumStorageDirs(NameNodeDirType.IMAGE) == 0)
+    if (storage.getNumStorageDirs(NameNodeDirType.IMAGE) == 0)
       // do not return image if there are no image directories
       needToReturnImg = false;
     CheckpointSignature sig = rollEditLog(layoutVersion);
@@ -1408,7 +1394,7 @@ public class FSImage implements Closeable {
    * End checkpoint.
    * <p>
    * Validate the current storage info with the given signature.
-   * 
+   *
    * @param sig to validate the current storage info against
    * @throws IOException if the checkpoint fields are inconsistent
    */
@@ -1424,10 +1410,10 @@ public class FSImage implements Closeable {
    * saves the related .md5 file into place.
    */
   public synchronized void saveDigestAndRenameCheckpointImage(NameNodeFile nnf,
-      long txid, MD5Hash digest) throws IOException {
+                                                              long txid, MD5Hash digest) throws IOException {
     // Write and rename MD5 file
     List<StorageDirectory> badSds = Lists.newArrayList();
-    
+
     for (StorageDirectory sd : storage.dirIterable(NameNodeDirType.IMAGE)) {
       File imageFile = NNStorage.getImageFile(sd, nnf, txid);
       try {
@@ -1437,9 +1423,9 @@ public class FSImage implements Closeable {
       }
     }
     storage.reportErrorsOnDirectories(badSds);
-    
+
     CheckpointFaultInjector.getInstance().afterMD5Rename();
-    
+
     // Rename image from tmp file
     renameCheckpoint(txid, NameNodeFile.IMAGE_NEW, nnf, false);
     // So long as this is the newest image available,
@@ -1471,7 +1457,7 @@ public class FSImage implements Closeable {
    * dfs.namenode.checkpoint.dir configuration property
    */
   static Collection<URI> getCheckpointDirs(Configuration conf,
-      String defaultValue) {
+                                           String defaultValue) {
     Collection<String> dirNames = conf.getTrimmedStringCollection(
         DFSConfigKeys.DFS_NAMENODE_CHECKPOINT_DIR_KEY);
     if (dirNames.size() == 0 && defaultValue != null) {
@@ -1481,7 +1467,7 @@ public class FSImage implements Closeable {
   }
 
   static List<URI> getCheckpointEditsDirs(Configuration conf,
-      String defaultName) {
+                                          String defaultName) {
     Collection<String> dirNames = conf.getTrimmedStringCollection(
         DFSConfigKeys.DFS_NAMENODE_CHECKPOINT_EDITS_DIR_KEY);
     if (dirNames.size() == 0 && defaultName != null) {
@@ -1497,15 +1483,15 @@ public class FSImage implements Closeable {
   public int getLayoutVersion() {
     return storage.getLayoutVersion();
   }
-  
+
   public int getNamespaceID() {
     return storage.getNamespaceID();
   }
-  
+
   public String getClusterID() {
     return storage.getClusterID();
   }
-  
+
   public String getBlockPoolID() {
     return storage.getBlockPoolID();
   }

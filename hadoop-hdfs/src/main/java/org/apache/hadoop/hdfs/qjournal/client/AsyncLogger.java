@@ -1,27 +1,22 @@
 package org.apache.hadoop.hdfs.qjournal.client;
 
-import java.net.InetSocketAddress;
-import java.net.URL;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocol;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.SegmentStateProto;
+import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.qjournal.protocol.RequestInfo;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
-
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListenableFuture;
+
+import java.net.InetSocketAddress;
+import java.net.URL;
 
 /**
  * Interface for a remote log which is only communicated with asynchronously.
  * This is essentially a wrapper around {@link QJournalProtocol} with the key
  * differences being:
- * 
+ *
  * <ul>
  * <li>All methods return {@link ListenableFuture}s instead of synchronous
  * objects.</li>
@@ -30,10 +25,10 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Listenable
  * </ul>
  */
 interface AsyncLogger {
-  
+
   interface Factory {
     AsyncLogger createLogger(Configuration conf, NamespaceInfo nsInfo,
-        String journalId, String nameServiceId, InetSocketAddress addr);
+                             String journalId, String nameServiceId, InetSocketAddress addr);
   }
 
   /**
@@ -49,7 +44,7 @@ interface AsyncLogger {
 
   /**
    * Begin writing a new log segment.
-   * 
+   *
    * @param txid the first txid to be written to the new log
    * @param layoutVersion the LayoutVersion of the log
    */
@@ -57,7 +52,7 @@ interface AsyncLogger {
 
   /**
    * Finalize a log segment.
-   * 
+   *
    * @param startTxId the first txid that was written to the segment
    * @param endTxId the last txid that was written to the segment
    */
@@ -81,7 +76,7 @@ interface AsyncLogger {
    * @return whether or not the remote node has any valid data.
    */
   public ListenableFuture<Boolean> isFormatted();
-  
+
   /**
    * @return the state of the last epoch on the target node.
    */
@@ -97,7 +92,7 @@ interface AsyncLogger {
    */
   public ListenableFuture<GetJournaledEditsResponseProto> getJournaledEdits(
       long fromTxnId, int maxTransactions);
-  
+
   /**
    * Fetch the list of edit logs available on the remote node.
    */
@@ -114,7 +109,7 @@ interface AsyncLogger {
    * Accept a recovery proposal. See the HDFS-3077 design document for details.
    */
   public ListenableFuture<Void> acceptRecovery(SegmentStateProto log,
-      URL fromUrl);
+                                               URL fromUrl);
 
   /**
    * Set the epoch number used for all future calls.
@@ -132,7 +127,7 @@ interface AsyncLogger {
    * Build an HTTP URL to fetch the log segment with the given startTxId.
    */
   public URL buildURLToFetchLogs(long segmentTxId);
-  
+
   /**
    * Tear down any resources, connections, etc. The proxy may not be used
    * after this point, and any in-flight RPCs may throw an exception.
@@ -152,7 +147,7 @@ interface AsyncLogger {
   public ListenableFuture<Void> doFinalize();
 
   public ListenableFuture<Boolean> canRollBack(StorageInfo storage,
-      StorageInfo prevStorage, int targetLayoutVersion);
+                                               StorageInfo prevStorage, int targetLayoutVersion);
 
   public ListenableFuture<Void> doRollback();
 

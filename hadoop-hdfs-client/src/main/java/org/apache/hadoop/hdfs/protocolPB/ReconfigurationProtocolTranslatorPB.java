@@ -1,11 +1,5 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.List;
-
-import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.hdfs.protocol.ReconfigurationProtocol;
@@ -13,18 +7,18 @@ import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetRe
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.ListReconfigurablePropertiesRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.ListReconfigurablePropertiesResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.StartReconfigurationRequestProto;
-import org.apache.hadoop.ipc.ProtobufHelper;
-import org.apache.hadoop.ipc.ProtobufRpcEngine2;
-import org.apache.hadoop.ipc.ProtocolMetaInterface;
-import org.apache.hadoop.ipc.ProtocolTranslator;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RpcClientUtil;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.protobuf.RpcController;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.protobuf.RpcController;
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+import javax.net.SocketFactory;
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.List;
 
 /**
  * This class is the client side translator to translate the requests made on
@@ -52,7 +46,7 @@ public class ReconfigurationProtocolTranslatorPB implements
   private final ReconfigurationProtocolPB rpcProxy;
 
   public ReconfigurationProtocolTranslatorPB(InetSocketAddress addr,
-      UserGroupInformation ticket, Configuration conf, SocketFactory factory)
+                                             UserGroupInformation ticket, Configuration conf, SocketFactory factory)
       throws IOException {
     rpcProxy = createReconfigurationProtocolProxy(addr, ticket, conf, factory,
         0);
@@ -93,9 +87,9 @@ public class ReconfigurationProtocolTranslatorPB implements
     try {
       return ReconfigurationProtocolUtils.getReconfigurationStatus(
           rpcProxy
-          .getReconfigurationStatus(
-              NULL_CONTROLLER,
-              VOID_GET_RECONFIG_STATUS));
+              .getReconfigurationStatus(
+                  NULL_CONTROLLER,
+                  VOID_GET_RECONFIG_STATUS));
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }

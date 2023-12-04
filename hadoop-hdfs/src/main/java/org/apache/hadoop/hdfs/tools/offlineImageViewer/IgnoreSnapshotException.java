@@ -6,6 +6,6 @@ import java.io.IOException;
  * Signals that a snapshot is ignored.
  */
 public class IgnoreSnapshotException extends IOException {
-    public IgnoreSnapshotException() {
-    }
+  public IgnoreSnapshotException() {
+  }
 }

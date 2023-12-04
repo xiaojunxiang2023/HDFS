@@ -44,7 +44,7 @@ public class Tracer {
   }
 
   public TraceScope newScope(String description, SpanContext spanCtx,
-      boolean finishSpanOnClose) {
+                             boolean finishSpanOnClose) {
     return nullTraceScope;
   }
 

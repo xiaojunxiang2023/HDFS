@@ -1,16 +1,15 @@
 package org.apache.hadoop.hdfs.protocol;
 
+import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
+import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
-import org.apache.hadoop.security.token.Token;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 /**
  * Associates a block with the Datanodes that contain its replicas
@@ -31,7 +30,7 @@ public class LocatedBlock {
 
     @Override
     public int compare(DatanodeInfoWithStorage dns1,
-        DatanodeInfoWithStorage dns2) {
+                       DatanodeInfoWithStorage dns2) {
       if (StorageType.PROVIDED.equals(dns1.getStorageType())
           && !StorageType.PROVIDED.equals(dns2.getStorageType())) {
         return 1;
@@ -77,22 +76,22 @@ public class LocatedBlock {
   }
 
   public LocatedBlock(ExtendedBlock b, DatanodeInfo[] locs,
-      String[] storageIDs, StorageType[] storageTypes) {
+                      String[] storageIDs, StorageType[] storageTypes) {
     this(b, convert(locs, storageIDs, storageTypes),
-         storageIDs, storageTypes, -1, false, EMPTY_LOCS);
+        storageIDs, storageTypes, -1, false, EMPTY_LOCS);
   }
 
   public LocatedBlock(ExtendedBlock b, DatanodeInfo[] locs,
-      String[] storageIDs, StorageType[] storageTypes, long startOffset,
-      boolean corrupt, DatanodeInfo[] cachedLocs) {
+                      String[] storageIDs, StorageType[] storageTypes, long startOffset,
+                      boolean corrupt, DatanodeInfo[] cachedLocs) {
     this(b, convert(locs, storageIDs, storageTypes),
         storageIDs, storageTypes, startOffset, corrupt,
         null == cachedLocs || 0 == cachedLocs.length ? EMPTY_LOCS : cachedLocs);
   }
 
   public LocatedBlock(ExtendedBlock b, DatanodeInfoWithStorage[] locs,
-      String[] storageIDs, StorageType[] storageTypes, long startOffset,
-      boolean corrupt, DatanodeInfo[] cachedLocs) {
+                      String[] storageIDs, StorageType[] storageTypes, long startOffset,
+                      boolean corrupt, DatanodeInfo[] cachedLocs) {
     this.b = b;
     this.offset = startOffset;
     this.corrupt = corrupt;
@@ -100,8 +99,8 @@ public class LocatedBlock {
     this.storageIDs = storageIDs;
     this.storageTypes = storageTypes;
     this.cachedLocs = null == cachedLocs || 0 == cachedLocs.length
-      ? EMPTY_LOCS
-      : cachedLocs;
+        ? EMPTY_LOCS
+        : cachedLocs;
   }
 
   private static DatanodeInfoWithStorage[] convert(
@@ -111,9 +110,9 @@ public class LocatedBlock {
     }
 
     DatanodeInfoWithStorage[] ret = new DatanodeInfoWithStorage[infos.length];
-    for(int i = 0; i < infos.length; i++) {
+    for (int i = 0; i < infos.length; i++) {
       ret[i] = new DatanodeInfoWithStorage(infos[i],
-          storageIDs   != null ? storageIDs[i]   : null,
+          storageIDs != null ? storageIDs[i] : null,
           storageTypes != null ? storageTypes[i] : null);
     }
     return ret;
@@ -155,12 +154,12 @@ public class LocatedBlock {
    */
   public void updateCachedStorageInfo() {
     if (storageIDs != null) {
-      for(int i = 0; i < locs.length; i++) {
+      for (int i = 0; i < locs.length; i++) {
         storageIDs[i] = locs[i].getStorageID();
       }
     }
     if (storageTypes != null) {
-      for(int i = 0; i < locs.length; i++) {
+      for (int i = 0; i < locs.length; i++) {
         storageTypes[i] = locs[i].getStorageType();
       }
     }

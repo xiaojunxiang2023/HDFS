@@ -8,10 +8,10 @@ import java.io.IOException;
 
 public class Fs_Test1 {
 
-    public static void main(String[] args) throws IOException {
-        FileSystem fs = FSUtils.loadFS(args);
-        System.out.println(fs.getUri());
-        fs.mkdirs(new Path("hdfs://hh"));
-    }
+  public static void main(String[] args) throws IOException {
+    FileSystem fs = FSUtils.loadFS(args);
+    System.out.println(fs.getUri());
+    fs.mkdirs(new Path("hdfs://hh"));
+  }
 
 }

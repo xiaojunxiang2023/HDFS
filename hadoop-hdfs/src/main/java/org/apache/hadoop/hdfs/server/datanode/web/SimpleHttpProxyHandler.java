@@ -22,114 +22,114 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * inputs.
  */
 class SimpleHttpProxyHandler extends SimpleChannelInboundHandler<HttpRequest> {
-    static final Logger LOG = DatanodeHttpServer.LOG;
-    private final InetSocketAddress host;
-    private String uri;
-    private Channel proxiedChannel;
+  static final Logger LOG = DatanodeHttpServer.LOG;
+  private final InetSocketAddress host;
+  private String uri;
+  private Channel proxiedChannel;
 
-    SimpleHttpProxyHandler(InetSocketAddress host) {
-        this.host = host;
+  SimpleHttpProxyHandler(InetSocketAddress host) {
+    this.host = host;
+  }
+
+  private static void closeOnFlush(Channel ch) {
+    if (ch.isActive()) {
+      ch.writeAndFlush(Unpooled.EMPTY_BUFFER)
+          .addListener(ChannelFutureListener.CLOSE);
     }
+  }
 
-    private static void closeOnFlush(Channel ch) {
-        if (ch.isActive()) {
-            ch.writeAndFlush(Unpooled.EMPTY_BUFFER)
-                    .addListener(ChannelFutureListener.CLOSE);
-        }
-    }
-
-    @Override
-    public void channelRead0
-            (final ChannelHandlerContext ctx, final HttpRequest req) {
-        uri = req.getUri();
-        final Channel client = ctx.channel();
-        Bootstrap proxiedServer = new Bootstrap()
-                .group(client.eventLoop())
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new HttpRequestEncoder(), new Forwarder(uri, client));
-                    }
-                });
-        ChannelFuture f = proxiedServer.connect(host);
-        proxiedChannel = f.channel();
-        f.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    ctx.channel().pipeline().remove(HttpResponseEncoder.class);
-                    HttpRequest newReq = new DefaultFullHttpRequest(HTTP_1_1,
-                            req.getMethod(), req.getUri());
-                    newReq.headers().add(req.headers());
-                    newReq.headers().set(CONNECTION, Values.CLOSE);
-                    future.channel().writeAndFlush(newReq);
-                } else {
-                    DefaultHttpResponse resp = new DefaultHttpResponse(HTTP_1_1,
-                            INTERNAL_SERVER_ERROR);
-                    resp.headers().set(CONNECTION, Values.CLOSE);
-                    LOG.info("Proxy " + uri + " failed. Cause: ", future.cause());
-                    ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
-                    client.close();
-                }
-            }
+  @Override
+  public void channelRead0
+      (final ChannelHandlerContext ctx, final HttpRequest req) {
+    uri = req.getUri();
+    final Channel client = ctx.channel();
+    Bootstrap proxiedServer = new Bootstrap()
+        .group(client.eventLoop())
+        .channel(NioSocketChannel.class)
+        .handler(new ChannelInitializer<SocketChannel>() {
+          @Override
+          protected void initChannel(SocketChannel ch) throws Exception {
+            ChannelPipeline p = ch.pipeline();
+            p.addLast(new HttpRequestEncoder(), new Forwarder(uri, client));
+          }
         });
+    ChannelFuture f = proxiedServer.connect(host);
+    proxiedChannel = f.channel();
+    f.addListener(new ChannelFutureListener() {
+      @Override
+      public void operationComplete(ChannelFuture future) throws Exception {
+        if (future.isSuccess()) {
+          ctx.channel().pipeline().remove(HttpResponseEncoder.class);
+          HttpRequest newReq = new DefaultFullHttpRequest(HTTP_1_1,
+              req.getMethod(), req.getUri());
+          newReq.headers().add(req.headers());
+          newReq.headers().set(CONNECTION, Values.CLOSE);
+          future.channel().writeAndFlush(newReq);
+        } else {
+          DefaultHttpResponse resp = new DefaultHttpResponse(HTTP_1_1,
+              INTERNAL_SERVER_ERROR);
+          resp.headers().set(CONNECTION, Values.CLOSE);
+          LOG.info("Proxy " + uri + " failed. Cause: ", future.cause());
+          ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+          client.close();
+        }
+      }
+    });
+  }
+
+  @Override
+  public void channelInactive(ChannelHandlerContext ctx) {
+    if (proxiedChannel != null) {
+      proxiedChannel.close();
+      proxiedChannel = null;
+    }
+  }
+
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Proxy for " + uri + " failed. cause: ", cause);
+    }
+    if (proxiedChannel != null) {
+      proxiedChannel.close();
+      proxiedChannel = null;
+    }
+    ctx.close();
+  }
+
+  private static class Forwarder extends ChannelInboundHandlerAdapter {
+    private final String uri;
+    private final Channel client;
+
+    private Forwarder(String uri, Channel client) {
+      this.uri = uri;
+      this.client = client;
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        if (proxiedChannel != null) {
-            proxiedChannel.close();
-            proxiedChannel = null;
+      closeOnFlush(client);
+    }
+
+    @Override
+    public void channelRead(final ChannelHandlerContext ctx, Object msg) {
+      client.writeAndFlush(msg).addListener(new ChannelFutureListener() {
+        @Override
+        public void operationComplete(ChannelFuture future) {
+          if (future.isSuccess()) {
+            ctx.channel().read();
+          } else {
+            LOG.debug("Proxy failed. Cause: ", future.cause());
+            future.channel().close();
+          }
         }
+      });
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Proxy for " + uri + " failed. cause: ", cause);
-        }
-        if (proxiedChannel != null) {
-            proxiedChannel.close();
-            proxiedChannel = null;
-        }
-        ctx.close();
+      LOG.debug("Proxy for " + uri + " failed. cause: ", cause);
+      closeOnFlush(ctx.channel());
     }
-
-    private static class Forwarder extends ChannelInboundHandlerAdapter {
-        private final String uri;
-        private final Channel client;
-
-        private Forwarder(String uri, Channel client) {
-            this.uri = uri;
-            this.client = client;
-        }
-
-        @Override
-        public void channelInactive(ChannelHandlerContext ctx) {
-            closeOnFlush(client);
-        }
-
-        @Override
-        public void channelRead(final ChannelHandlerContext ctx, Object msg) {
-            client.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) {
-                    if (future.isSuccess()) {
-                        ctx.channel().read();
-                    } else {
-                        LOG.debug("Proxy failed. Cause: ", future.cause());
-                        future.channel().close();
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            LOG.debug("Proxy for " + uri + " failed. cause: ", cause);
-            closeOnFlush(ctx.channel());
-        }
-    }
+  }
 }

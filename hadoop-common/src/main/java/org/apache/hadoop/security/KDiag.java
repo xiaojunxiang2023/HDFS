@@ -1,18 +1,14 @@
 package org.apache.hadoop.security;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.hadoop.auth.util.KerberosName;
 import org.apache.hadoop.auth.util.KerberosUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.auth.util.KerberosName;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.util.ExitUtil;
-import org.apache.hadoop.util.Shell;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.util.*;
 import org.apache.kerby.kerberos.kerb.keytab.Keytab;
 import org.apache.kerby.kerberos.kerb.keytab.KeytabEntry;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
@@ -21,30 +17,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
-
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 import static org.apache.hadoop.security.UserGroupInformation.*;
 import static org.apache.hadoop.util.StringUtils.popOption;
 import static org.apache.hadoop.util.StringUtils.popOptionWithArgument;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_TOKEN_FILES;
 
 /**
  * Kerberos diagnostics
@@ -69,19 +53,19 @@ public class KDiag extends Configured implements Tool, Closeable {
    */
   public static final String KRB5_CONFIG = "KRB5_CONFIG";
   public static final String JAVA_SECURITY_KRB5_CONF
-    = "java.security.krb5.conf";
+      = "java.security.krb5.conf";
   public static final String JAVA_SECURITY_KRB5_REALM
-    = "java.security.krb5.realm";
+      = "java.security.krb5.realm";
   public static final String JAVA_SECURITY_KRB5_KDC_ADDRESS
-    = "java.security.krb5.kdc";
+      = "java.security.krb5.kdc";
   public static final String SUN_SECURITY_KRB5_DEBUG
-    = "sun.security.krb5.debug";
+      = "sun.security.krb5.debug";
   public static final String SUN_SECURITY_SPNEGO_DEBUG
-    = "sun.security.spnego.debug";
+      = "sun.security.spnego.debug";
   public static final String SUN_SECURITY_JAAS_FILE
-    = "java.security.auth.login.config";
+      = "java.security.auth.login.config";
   public static final String KERBEROS_KINIT_COMMAND
-    = "hadoop.kerberos.kinit.command";
+      = "hadoop.kerberos.kinit.command";
 
   public static final String HADOOP_AUTHENTICATION_IS_DISABLED
       = "Hadoop authentication is disabled";
@@ -151,11 +135,11 @@ public class KDiag extends Configured implements Tool, Closeable {
 
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
   public KDiag(Configuration conf,
-      PrintWriter out,
-      File keytab,
-      String principal,
-      long minKeyLength,
-      boolean securityRequired) {
+               PrintWriter out,
+               File keytab,
+               String principal,
+               long minKeyLength,
+               boolean securityRequired) {
     super(conf);
     this.keytab = keytab;
     this.principal = principal;
@@ -226,21 +210,21 @@ public class KDiag extends Configured implements Tool, Closeable {
 
   private String usage() {
     return "KDiag: Diagnose Kerberos Problems\n"
-      + arg("-D", "key=value", "Define a configuration option")
-      + arg(ARG_JAAS, "",
-      "Require a JAAS file to be defined in " + SUN_SECURITY_JAAS_FILE)
-      + arg(ARG_KEYLEN, "<keylen>",
-      "Require a minimum size for encryption keys supported by the JVM."
-      + " Default value : "+ minKeyLength)
-      + arg(ARG_KEYTAB, "<keytab> " + ARG_PRINCIPAL + " <principal>",
-          "Login from a keytab as a specific principal")
-      + arg(ARG_NOFAIL, "", "Do not fail on the first problem")
-      + arg(ARG_NOLOGIN, "", "Do not attempt to log in")
-      + arg(ARG_OUTPUT, "<file>", "Write output to a file")
-      + arg(ARG_RESOURCE, "<resource>", "Load an XML configuration resource")
-      + arg(ARG_SECURE, "", "Require the hadoop configuration to be secure")
-      + arg(ARG_VERIFYSHORTNAME, ARG_PRINCIPAL + " <principal>",
-      "Verify the short name of the specific principal does not contain '@' or '/'");
+        + arg("-D", "key=value", "Define a configuration option")
+        + arg(ARG_JAAS, "",
+        "Require a JAAS file to be defined in " + SUN_SECURITY_JAAS_FILE)
+        + arg(ARG_KEYLEN, "<keylen>",
+        "Require a minimum size for encryption keys supported by the JVM."
+            + " Default value : " + minKeyLength)
+        + arg(ARG_KEYTAB, "<keytab> " + ARG_PRINCIPAL + " <principal>",
+        "Login from a keytab as a specific principal")
+        + arg(ARG_NOFAIL, "", "Do not fail on the first problem")
+        + arg(ARG_NOLOGIN, "", "Do not attempt to log in")
+        + arg(ARG_OUTPUT, "<file>", "Write output to a file")
+        + arg(ARG_RESOURCE, "<resource>", "Load an XML configuration resource")
+        + arg(ARG_SECURE, "", "Require the hadoop configuration to be secure")
+        + arg(ARG_VERIFYSHORTNAME, ARG_PRINCIPAL + " <principal>",
+        "Verify the short name of the specific principal does not contain '@' or '/'");
   }
 
   private String arg(String name, String params, String meaning) {
@@ -283,15 +267,15 @@ public class KDiag extends Configured implements Tool, Closeable {
 
     title("Core System Properties");
     for (String prop : new String[]{
-      "user.name",
-      "java.version",
-      "java.vendor",
-      JAVA_SECURITY_KRB5_CONF,
-      JAVA_SECURITY_KRB5_REALM,
-      JAVA_SECURITY_KRB5_KDC_ADDRESS,
-      SUN_SECURITY_KRB5_DEBUG,
-      SUN_SECURITY_SPNEGO_DEBUG,
-      SUN_SECURITY_JAAS_FILE
+        "user.name",
+        "java.version",
+        "java.vendor",
+        JAVA_SECURITY_KRB5_CONF,
+        JAVA_SECURITY_KRB5_REALM,
+        JAVA_SECURITY_KRB5_KDC_ADDRESS,
+        SUN_SECURITY_KRB5_DEBUG,
+        SUN_SECURITY_SPNEGO_DEBUG,
+        SUN_SECURITY_JAAS_FILE
     }) {
       printSysprop(prop);
     }
@@ -324,19 +308,19 @@ public class KDiag extends Configured implements Tool, Closeable {
 
     title("Configuration Options");
     for (String prop : new String[]{
-      KERBEROS_KINIT_COMMAND,
-      HADOOP_SECURITY_AUTHENTICATION,
-      HADOOP_SECURITY_AUTHORIZATION,
-      "hadoop.kerberos.min.seconds.before.relogin",    // not in 2.6
-      "hadoop.security.dns.interface",   // not in 2.6
-      "hadoop.security.dns.nameserver",  // not in 2.6
-      HADOOP_RPC_PROTECTION,
-      HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS,
-      HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX,
-      HADOOP_SECURITY_GROUP_MAPPING,
-      "hadoop.security.impersonation.provider.class",    // not in 2.6
-      DFS_DATA_TRANSFER_PROTECTION, // HDFS
-      DFS_DATA_TRANSFER_SASLPROPERTIES_RESOLVER_CLASS // HDFS
+        KERBEROS_KINIT_COMMAND,
+        HADOOP_SECURITY_AUTHENTICATION,
+        HADOOP_SECURITY_AUTHORIZATION,
+        "hadoop.kerberos.min.seconds.before.relogin",    // not in 2.6
+        "hadoop.security.dns.interface",   // not in 2.6
+        "hadoop.security.dns.nameserver",  // not in 2.6
+        HADOOP_RPC_PROTECTION,
+        HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS,
+        HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX,
+        HADOOP_SECURITY_GROUP_MAPPING,
+        "hadoop.security.impersonation.provider.class",    // not in 2.6
+        DFS_DATA_TRANSFER_PROTECTION, // HDFS
+        DFS_DATA_TRANSFER_SASLPROPERTIES_RESOLVER_CLASS // HDFS
     }) {
       printConfOpt(prop);
     }
@@ -394,9 +378,9 @@ public class KDiag extends Configured implements Tool, Closeable {
     } finally {
       // restore original system properties
       System.setProperty(SUN_SECURITY_KRB5_DEBUG,
-        Boolean.toString(krb5Debug));
+          Boolean.toString(krb5Debug));
       System.setProperty(SUN_SECURITY_SPNEGO_DEBUG,
-        Boolean.toString(spnegoDebug));
+          Boolean.toString(spnegoDebug));
     }
   }
 
@@ -444,14 +428,14 @@ public class KDiag extends Configured implements Tool, Closeable {
       String result = kn.getShortName();
       if (nonSimplePattern.matcher(result).find()) {
         warn(CAT_KERBEROS, principal + " short name: " + result +
-                " still contains @ or /");
+            " still contains @ or /");
       }
     } catch (IOException e) {
       throw new KerberosDiagsFailure(CAT_KERBEROS, e,
-              "Failed to get short name for " + principal, e);
+          "Failed to get short name for " + principal, e);
     } catch (IllegalArgumentException e) {
       error(CAT_KERBEROS, "KerberosName(" + principal + ") failed: %s\n%s",
-              e, StringUtils.stringifyException(e));
+          e, StringUtils.stringifyException(e));
     }
   }
 
@@ -477,19 +461,19 @@ public class KDiag extends Configured implements Tool, Closeable {
    * Validate that hadoop.token.files (if specified) exist and are valid.
    */
   private void validateHadoopTokenFiles(Configuration conf)
-          throws KerberosDiagsFailure, SecurityException {
+      throws KerberosDiagsFailure, SecurityException {
     title("Locating Hadoop token files");
 
     String tokenFileLocation = System.getProperty(HADOOP_TOKEN_FILES);
-    if(tokenFileLocation != null) {
+    if (tokenFileLocation != null) {
       println("Found " + HADOOP_TOKEN_FILES + " in system properties : "
           + tokenFileLocation);
     }
 
-    if(conf.get(HADOOP_TOKEN_FILES) != null) {
+    if (conf.get(HADOOP_TOKEN_FILES) != null) {
       println("Found " + HADOOP_TOKEN_FILES + " in hadoop configuration : "
           + conf.get(HADOOP_TOKEN_FILES));
-      if(System.getProperty(HADOOP_TOKEN_FILES) != null) {
+      if (System.getProperty(HADOOP_TOKEN_FILES) != null) {
         println(HADOOP_TOKEN_FILES + " in the system properties overrides the"
             + " one specified in hadoop configuration");
       } else {
@@ -498,7 +482,7 @@ public class KDiag extends Configured implements Tool, Closeable {
     }
 
     if (tokenFileLocation != null) {
-      for (String tokenFileName:
+      for (String tokenFileName :
           StringUtils.getTrimmedStrings(tokenFileLocation)) {
         if (tokenFileName.length() > 0) {
           File tokenFile = new File(tokenFileName);
@@ -522,7 +506,7 @@ public class KDiag extends Configured implements Tool, Closeable {
       String jvmKrbPath = System.getProperty(JAVA_SECURITY_KRB5_CONF);
       if (jvmKrbPath != null && !jvmKrbPath.isEmpty()) {
         println("Setting kerberos path from sysprop %s: \"%s\"",
-          JAVA_SECURITY_KRB5_CONF, jvmKrbPath);
+            JAVA_SECURITY_KRB5_CONF, jvmKrbPath);
         krbPath = jvmKrbPath;
       }
 
@@ -565,10 +549,10 @@ public class KDiag extends Configured implements Tool, Closeable {
       for (KeytabEntry entry : entries) {
         EncryptionKey key = entry.getKey();
         println(" %s: version=%d expires=%s encryption=%s",
-                entry.getPrincipal(),
-                entry.getKvno(),
-                entry.getTimestamp(),
-                key.getKeyType());
+            entry.getPrincipal(),
+            entry.getKvno(),
+            entry.getTimestamp(),
+            key.getKeyType());
       }
     }
     println("keytab entry count: %d", entrySize);
@@ -621,13 +605,13 @@ public class KDiag extends Configured implements Tool, Closeable {
    * @throws IOException
    */
   private void dumpUGI(String title, UserGroupInformation ugi)
-    throws IOException {
+      throws IOException {
     title(title);
     println("UGI instance = %s", ugi);
     println("Has kerberos credentials: %b", ugi.hasKerberosCredentials());
     println("Authentication method: %s", ugi.getAuthenticationMethod());
     println("Real Authentication method: %s",
-      ugi.getRealAuthenticationMethod());
+        ugi.getRealAuthenticationMethod());
     title("Group names");
     for (String name : ugi.getGroupNames()) {
       println(name);
@@ -636,7 +620,7 @@ public class KDiag extends Configured implements Tool, Closeable {
     List<Text> secretKeys = ugi.getCredentials().getAllSecretKeys();
     title("Secret keys");
     if (!secretKeys.isEmpty()) {
-      for (Text secret: secretKeys) {
+      for (Text secret : secretKeys) {
         println("%s", secret);
       }
     } else {
@@ -693,9 +677,9 @@ public class KDiag extends Configured implements Tool, Closeable {
     try {
       Class<? extends SaslPropertiesResolver> resolverClass =
           getConf().getClass(
-          saslPropsResolverKey,
-          SaslPropertiesResolver.class,
-          SaslPropertiesResolver.class);
+              saslPropsResolverKey,
+              SaslPropertiesResolver.class,
+              SaslPropertiesResolver.class);
       println("Resolver is %s", resolverClass);
     } catch (RuntimeException e) {
       throw new KerberosDiagsFailure(CAT_SASL, e,
@@ -753,11 +737,11 @@ public class KDiag extends Configured implements Tool, Closeable {
     return verify(file.exists(), category,
         "%s file does not exist: %s",
         text, file)
-     && verify(file.isFile(), category,
+        && verify(file.isFile(), category,
         "%s path does not refer to a file: %s", text, file)
-     && verify(file.length() != 0, category,
+        && verify(file.length() != 0, category,
         "%s file is empty: %s", text, file)
-      && verify(file.canRead(), category,
+        && verify(file.canRead(), category,
         "%s file is not readable: %s", text, file);
   }
 
@@ -767,7 +751,7 @@ public class KDiag extends Configured implements Tool, Closeable {
    */
   public void dumpTokens(UserGroupInformation ugi) {
     Collection<Token<? extends TokenIdentifier>> tokens
-      = ugi.getCredentials().getAllTokens();
+        = ugi.getCredentials().getAllTokens();
     title("Token Count: %d", tokens.size());
     for (Token<? extends TokenIdentifier> token : tokens) {
       println("Token %s", token.getKind());
@@ -897,7 +881,7 @@ public class KDiag extends Configured implements Tool, Closeable {
    * @throws KerberosDiagsFailure containing the formatted text
    */
   private void fail(String category, String message, Object... args)
-    throws KerberosDiagsFailure {
+      throws KerberosDiagsFailure {
     error(category, message, args);
     throw new KerberosDiagsFailure(category, message, args);
   }
@@ -918,10 +902,10 @@ public class KDiag extends Configured implements Tool, Closeable {
    *         if the condition was met
    */
   private boolean verify(boolean condition,
-      String category,
-      String message,
-      Object... args)
-    throws KerberosDiagsFailure {
+                         String category,
+                         String message,
+                         Object... args)
+      throws KerberosDiagsFailure {
     if (!condition) {
       // condition not met: fail or report
       probeHasFailed = true;
@@ -945,10 +929,10 @@ public class KDiag extends Configured implements Tool, Closeable {
    *
    */
   private boolean verify(File tokenFile, Configuration conf, String category,
-      String message) throws KerberosDiagsFailure {
+                         String message) throws KerberosDiagsFailure {
     try {
       Credentials.readTokenStorageFile(tokenFile, conf);
-    } catch(Exception e) {
+    } catch (Exception e) {
       if (!nofail) {
         fail(category, message);
       } else {
@@ -965,16 +949,17 @@ public class KDiag extends Configured implements Tool, Closeable {
    * @param message format string
    * @param args list of arguments
    */
-  private void error(String category, String message, Object...args) {
+  private void error(String category, String message, Object... args) {
     println("ERROR: %s: %s", category, String.format(message, args));
   }
+
   /**
    * Print a message as an warning
    * @param category error category
    * @param message format string
    * @param args list of arguments
    */
-  private void warn(String category, String message, Object...args) {
+  private void warn(String category, String message, Object... args) {
     println("WARNING: %s: %s", category, String.format(message, args));
   }
 
@@ -989,9 +974,9 @@ public class KDiag extends Configured implements Tool, Closeable {
    *         if the condition was met
    */
   private void failif(boolean condition,
-      String category,
-      String message,
-      Object... args)
+                      String category,
+                      String message,
+                      Object... args)
       throws KerberosDiagsFailure {
     if (condition) {
       fail(category, message, args);
@@ -1007,7 +992,7 @@ public class KDiag extends Configured implements Tool, Closeable {
    * @throws Exception
    */
   public static int exec(Configuration conf, String... argv) throws Exception {
-    try(KDiag kdiag = new KDiag()) {
+    try (KDiag kdiag = new KDiag()) {
       return ToolRunner.run(conf, kdiag, argv);
     }
   }
@@ -1043,13 +1028,13 @@ public class KDiag extends Configured implements Tool, Closeable {
     }
 
     public KerberosDiagsFailure(String category,
-        String message,
-        Object... args) {
+                                String message,
+                                Object... args) {
       this(category, String.format(message, args));
     }
 
     public KerberosDiagsFailure(String category, Throwable throwable,
-        String message, Object... args) {
+                                String message, Object... args) {
       this(category, message, args);
       initCause(throwable);
     }

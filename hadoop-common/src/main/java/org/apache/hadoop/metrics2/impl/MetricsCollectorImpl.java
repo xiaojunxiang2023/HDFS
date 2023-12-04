@@ -1,14 +1,16 @@
 package org.apache.hadoop.metrics2.impl;
 
+import org.apache.hadoop.metrics2.MetricsCollector;
+import org.apache.hadoop.metrics2.MetricsFilter;
+import org.apache.hadoop.metrics2.MetricsInfo;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.metrics2.MetricsInfo;
-import org.apache.hadoop.metrics2.MetricsCollector;
-import org.apache.hadoop.metrics2.MetricsFilter;
-import static org.apache.hadoop.metrics2.lib.Interns.*;
+import static org.apache.hadoop.metrics2.lib.Interns.info;
+
 @VisibleForTesting
 public class MetricsCollectorImpl implements MetricsCollector,
     Iterable<MetricsRecordBuilderImpl> {
@@ -19,7 +21,7 @@ public class MetricsCollectorImpl implements MetricsCollector,
   @Override
   public MetricsRecordBuilderImpl addRecord(MetricsInfo info) {
     boolean acceptable = recordFilter == null ||
-                         recordFilter.accepts(info.name());
+        recordFilter.accepts(info.name());
     MetricsRecordBuilderImpl rb = new MetricsRecordBuilderImpl(this, info,
         recordFilter, metricFilter, acceptable);
     if (acceptable) rbs.add(rb);
@@ -28,7 +30,7 @@ public class MetricsCollectorImpl implements MetricsCollector,
 
   @Override
   public MetricsRecordBuilderImpl addRecord(String name) {
-    return addRecord(info(name, name +" record"));
+    return addRecord(info(name, name + " record"));
   }
 
   public List<MetricsRecordImpl> getRecords() {
@@ -46,7 +48,10 @@ public class MetricsCollectorImpl implements MetricsCollector,
   public Iterator<MetricsRecordBuilderImpl> iterator() {
     return rbs.iterator();
   }
-  public void clear() { rbs.clear(); }
+
+  public void clear() {
+    rbs.clear();
+  }
 
   MetricsCollectorImpl setRecordFilter(MetricsFilter rf) {
     recordFilter = rf;

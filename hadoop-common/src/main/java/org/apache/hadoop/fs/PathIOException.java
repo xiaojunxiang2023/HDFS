@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Exceptions based on standard posix/linux style exceptions for path related
  * errors. Returns an exception with the format "path: standard error string".
- * 
+ *
  * This exception corresponds to Error Input/ouput(EIO)
  */
 public class PathIOException extends IOException {
@@ -87,13 +87,15 @@ public class PathIOException extends IOException {
   }
 
   /** @return Path that generated the exception */
-  public Path getPath()  { return new Path(path); }
+  public Path getPath() {
+    return new Path(path);
+  }
 
   /** @return Path if the operation involved copying or moving, else null */
   public Path getTargetPath() {
     return (targetPath != null) ? new Path(targetPath) : null;
-  }    
-  
+  }
+
   /**
    * Optional operation that will preface the path
    * @param operation a string
@@ -101,7 +103,7 @@ public class PathIOException extends IOException {
   public void setOperation(String operation) {
     this.operation = operation;
   }
-  
+
   /**
    * Optional path if the exception involved two paths, ex. a copy operation
    * @param targetPath the of the operation
@@ -109,7 +111,7 @@ public class PathIOException extends IOException {
   public void setTargetPath(String targetPath) {
     this.targetPath = targetPath;
   }
-  
+
   private String formatPath(String path) {
     return "`" + path + "'";
   }

@@ -1,12 +1,22 @@
 package org.apache.hadoop.log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.regex.Pattern;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.Jdk14Logger;
+import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.hadoop.auth.client.AuthenticatedURL;
+import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.http.HttpServer2;
+import org.apache.hadoop.security.ssl.SSLFactory;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
+import org.apache.hadoop.util.GenericOptionsParser;
+import org.apache.hadoop.util.ServletUtil;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
@@ -14,24 +24,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.impl.Jdk14Logger;
-import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.http.HttpServer2;
-import org.apache.hadoop.auth.client.AuthenticatedURL;
-import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
-import org.apache.hadoop.security.ssl.SSLFactory;
-import org.apache.hadoop.util.GenericOptionsParser;
-import org.apache.hadoop.util.ServletUtil;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.regex.Pattern;
 
 /**
  * Change log level in runtime.
@@ -44,6 +43,7 @@ public class LogLevel {
 
   public static final String PROTOCOL_HTTP = "http";
   public static final String PROTOCOL_HTTPS = "https";
+
   /**
    * A command line implementation
    */
@@ -68,7 +68,7 @@ public class LogLevel {
 
   public static boolean isValidProtocol(String protocol) {
     return ((protocol.equals(PROTOCOL_HTTP) ||
-      protocol.equals(PROTOCOL_HTTPS)));
+        protocol.equals(PROTOCOL_HTTPS)));
   }
 
   @VisibleForTesting
@@ -103,15 +103,15 @@ public class LogLevel {
     private void sendLogLevelRequest()
         throws HadoopIllegalArgumentException, Exception {
       switch (operation) {
-      case GETLEVEL:
-        doGetLevel();
-        break;
-      case SETLEVEL:
-        doSetLevel();
-        break;
-      default:
-        throw new HadoopIllegalArgumentException(
-          "Expect either -getlevel or -setlevel");
+        case GETLEVEL:
+          doGetLevel();
+          break;
+        case SETLEVEL:
+          doSetLevel();
+          break;
+        default:
+          throw new HadoopIllegalArgumentException(
+              "Expect either -getlevel or -setlevel");
       }
     }
 
@@ -154,14 +154,14 @@ public class LogLevel {
             "Redundant -getlevel command");
       }
       // check number of arguments is sufficient
-      if (index+2 >= args.length) {
+      if (index + 2 >= args.length) {
         throw new HadoopIllegalArgumentException(
             "-getlevel needs two parameters");
       }
       operation = Operations.GETLEVEL;
-      hostName = args[index+1];
-      className = args[index+2];
-      return index+3;
+      hostName = args[index + 1];
+      className = args[index + 2];
+      return index + 3;
     }
 
     private int parseSetLevelArgs(String[] args, int index) throws
@@ -172,15 +172,15 @@ public class LogLevel {
             "Redundant -setlevel command");
       }
       // check number of arguments is sufficient
-      if (index+3 >= args.length) {
+      if (index + 3 >= args.length) {
         throw new HadoopIllegalArgumentException(
             "-setlevel needs three parameters");
       }
       operation = Operations.SETLEVEL;
-      hostName = args[index+1];
-      className = args[index+2];
-      level = args[index+3];
-      return index+4;
+      hostName = args[index + 1];
+      className = args[index + 2];
+      level = args[index + 3];
+      return index + 4;
     }
 
     private int parseProtocolArgs(String[] args, int index) throws
@@ -191,17 +191,17 @@ public class LogLevel {
             "Redundant -protocol command");
       }
       // check number of arguments is sufficient
-      if (index+1 >= args.length) {
+      if (index + 1 >= args.length) {
         throw new HadoopIllegalArgumentException(
             "-protocol needs one parameter");
       }
       // check protocol is valid
-      protocol = args[index+1];
+      protocol = args[index + 1];
       if (!isValidProtocol(protocol)) {
         throw new HadoopIllegalArgumentException(
             "Invalid protocol: " + protocol);
       }
-      return index+2;
+      return index + 2;
     }
 
     /**
@@ -275,7 +275,7 @@ public class LogLevel {
       // read from the servlet
       BufferedReader in = new BufferedReader(
           new InputStreamReader(connection.getInputStream(), Charsets.UTF_8));
-      for (String line;;) {
+      for (String line; ; ) {
         line = in.readLine();
         if (line == null) {
           break;
@@ -300,7 +300,7 @@ public class LogLevel {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response
-        ) throws ServletException, IOException {
+    ) throws ServletException, IOException {
 
       // Do the authorization
       if (!HttpServer2.hasAdministratorAccess(getServletContext(), request,
@@ -319,18 +319,16 @@ public class LogLevel {
 
         Log log = LogFactory.getLog(logName);
         out.println(MARKER
-            + "Log Class: <b>" + log.getClass().getName() +"</b><br />");
+            + "Log Class: <b>" + log.getClass().getName() + "</b><br />");
         if (level != null) {
           out.println(MARKER + "Submitted Level: <b>" + level + "</b><br />");
         }
 
         if (log instanceof Log4JLogger) {
-          process(((Log4JLogger)log).getLogger(), level, out);
-        }
-        else if (log instanceof Jdk14Logger) {
-          process(((Jdk14Logger)log).getLogger(), level, out);
-        }
-        else {
+          process(((Log4JLogger) log).getLogger(), level, out);
+        } else if (log instanceof Jdk14Logger) {
+          process(((Jdk14Logger) log).getLogger(), level, out);
+        } else {
           out.println("Sorry, " + log.getClass() + " not supported.<br />");
         }
       }
@@ -349,7 +347,7 @@ public class LogLevel {
         + "</form>";
 
     private static void process(org.apache.log4j.Logger log, String level,
-        PrintWriter out) throws IOException {
+                                PrintWriter out) throws IOException {
       if (level != null) {
         if (!level.equalsIgnoreCase(org.apache.log4j.Level.toLevel(level)
             .toString())) {
@@ -364,7 +362,7 @@ public class LogLevel {
     }
 
     private static void process(java.util.logging.Logger log, String level,
-        PrintWriter out) throws IOException {
+                                PrintWriter out) throws IOException {
       if (level != null) {
         String levelToUpperCase = level.toUpperCase();
         try {
@@ -376,7 +374,7 @@ public class LogLevel {
       }
 
       java.util.logging.Level lev;
-      for(; (lev = log.getLevel()) == null; log = log.getParent());
+      for (; (lev = log.getLevel()) == null; log = log.getParent()) ;
       out.println(MARKER + "Effective Level: <b>" + lev + "</b><br />");
     }
   }

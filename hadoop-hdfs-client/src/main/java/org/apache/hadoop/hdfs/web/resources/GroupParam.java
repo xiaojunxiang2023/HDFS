@@ -14,7 +14,7 @@ public class GroupParam extends StringParam {
    * @param str a string representation of the parameter value.
    */
   public GroupParam(final String str) {
-    super(DOMAIN, str == null || str.equals(DEFAULT)? null: str);
+    super(DOMAIN, str == null || str.equals(DEFAULT) ? null : str);
   }
 
   @Override

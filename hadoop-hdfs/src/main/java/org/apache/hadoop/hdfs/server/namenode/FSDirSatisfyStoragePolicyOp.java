@@ -1,12 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.XATTR_SATISFY_STORAGE_POLICY;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.fs.XAttrSetFlag;
@@ -15,8 +8,14 @@ import org.apache.hadoop.hdfs.XAttrHelper;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.sps.StoragePolicySatisfyManager;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+
+import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.XATTR_SATISFY_STORAGE_POLICY;
 
 /**
  * Helper class to perform storage policy satisfier related operations.
@@ -46,7 +45,7 @@ final class FSDirSatisfyStoragePolicyOp {
    * @throws IOException
    */
   static FileStatus satisfyStoragePolicy(FSDirectory fsd, BlockManager bm,
-      String src, boolean logRetryCache) throws IOException {
+                                         String src, boolean logRetryCache) throws IOException {
 
     assert fsd.getFSNamesystem().hasWriteLock();
     FSPermissionChecker pc = fsd.getPermissionChecker();

@@ -1,6 +1,7 @@
 package org.apache.hadoop.hdfs.protocol;
-import org.apache.hadoop.fs.UnresolvedLinkException;
+
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.UnresolvedLinkException;
 
 /**
  * Thrown when a symbolic link is encountered in a path.
@@ -20,7 +21,7 @@ public final class UnresolvedPathException extends UnresolvedLinkException {
   }
 
   public UnresolvedPathException(String path, String preceding,
-      String remainder, String linkTarget) {
+                                 String remainder, String linkTarget) {
     this.path = path;
     this.preceding = preceding;
     this.remainder = remainder;
@@ -40,8 +41,8 @@ public final class UnresolvedPathException extends UnresolvedLinkException {
       return noRemainder ? target : new Path(target, remainder);
     } else {
       return noRemainder
-        ? new Path(preceding, target)
-        : new Path(new Path(preceding, linkTarget), remainder);
+          ? new Path(preceding, target)
+          : new Path(new Path(preceding, linkTarget), remainder);
     }
   }
 

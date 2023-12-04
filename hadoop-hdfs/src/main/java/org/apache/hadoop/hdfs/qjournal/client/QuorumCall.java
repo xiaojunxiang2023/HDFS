@@ -1,25 +1,24 @@
 package org.apache.hadoop.hdfs.qjournal.client;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.MoreExecutors;
 import org.apache.hadoop.ipc.RemoteException;
-import org.apache.hadoop.util.StopWatch;
-import org.apache.hadoop.util.Timer;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.FutureCallback;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Futures;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListenableFuture;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.MoreExecutors;
 import org.apache.hadoop.thirdparty.protobuf.Message;
 import org.apache.hadoop.thirdparty.protobuf.TextFormat;
+import org.apache.hadoop.util.StopWatch;
+import org.apache.hadoop.util.Timer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -36,7 +35,7 @@ class QuorumCall<KEY, RESULT> {
    * while waiting for a quorum call.
    */
   private static final int WAIT_PROGRESS_INTERVAL_MILLIS = 1000;
-  
+
   /**
    * Start logging messages at INFO level periodically after waiting for
    * this fraction of the configured timeout for any call.
@@ -50,7 +49,7 @@ class QuorumCall<KEY, RESULT> {
   private final StopWatch quorumStopWatch;
   private final Timer timer;
   private final List<ListenableFuture<RESULT>> allCalls;
-  
+
   static <KEY, RESULT> QuorumCall<KEY, RESULT> create(
       Map<KEY, ? extends ListenableFuture<RESULT>> calls, Timer timer) {
     final QuorumCall<KEY, RESULT> qr = new QuorumCall<KEY, RESULT>(timer);
@@ -126,10 +125,10 @@ class QuorumCall<KEY, RESULT> {
     }
   }
 
-  
+
   /**
    * Wait for the quorum to achieve a certain number of responses.
-   * 
+   *
    * Note that, even after this returns, more responses may arrive,
    * causing the return value of other methods in this class to change.
    *
@@ -150,7 +149,7 @@ class QuorumCall<KEY, RESULT> {
       int millis, String operationName)
       throws InterruptedException, TimeoutException {
     long st = timer.monotonicNow();
-    long nextLogTime = st + (long)(millis * WAIT_PROGRESS_INFO_THRESHOLD);
+    long nextLogTime = st + (long) (millis * WAIT_PROGRESS_INFO_THRESHOLD);
     long et = st + millis;
     while (true) {
       restartQuorumStopWatch();
@@ -159,7 +158,7 @@ class QuorumCall<KEY, RESULT> {
       if (minSuccesses > 0 && countSuccesses() >= minSuccesses) return;
       if (maxExceptions >= 0 && countExceptions() > maxExceptions) return;
       long now = timer.monotonicNow();
-      
+
       if (now > nextLogTime) {
         long waited = now - st;
         String msg = String.format(
@@ -217,7 +216,7 @@ class QuorumCall<KEY, RESULT> {
    * If so, it re-throws it, even if there was a quorum of responses.
    * This code only runs if assertions are enabled for this class,
    * otherwise it should JIT itself away.
-   * 
+   *
    * This is done since AssertionError indicates programmer confusion
    * rather than some kind of expected issue, and thus in the context
    * of test cases we'd like to actually fail the test case instead of
@@ -229,9 +228,9 @@ class QuorumCall<KEY, RESULT> {
     if (assertsEnabled) {
       for (Throwable t : exceptions.values()) {
         if (t instanceof AssertionError) {
-          throw (AssertionError)t;
+          throw (AssertionError) t;
         } else if (t instanceof RemoteException &&
-            ((RemoteException)t).getClassName().equals(
+            ((RemoteException) t).getClassName().equals(
                 AssertionError.class.getName())) {
           throw new AssertionError(t);
         }
@@ -243,12 +242,12 @@ class QuorumCall<KEY, RESULT> {
     successes.put(k, res);
     notifyAll();
   }
-  
+
   private synchronized void addException(KEY k, Throwable t) {
     exceptions.put(k, t);
     notifyAll();
   }
-  
+
   /**
    * @return the total number of calls for which a response has been received,
    * regardless of whether it threw an exception or returned a successful
@@ -257,7 +256,7 @@ class QuorumCall<KEY, RESULT> {
   public synchronized int countResponses() {
     return successes.size() + exceptions.size();
   }
-  
+
   /**
    * @return the number of calls for which a non-exception response has been
    * received.
@@ -265,7 +264,7 @@ class QuorumCall<KEY, RESULT> {
   public synchronized int countSuccesses() {
     return successes.size();
   }
-  
+
   /**
    * @return the number of calls for which an exception response has been
    * received.
@@ -298,7 +297,7 @@ class QuorumCall<KEY, RESULT> {
       }
       first = false;
       sb.append(e.getKey()).append(": ")
-        .append(TextFormat.shortDebugString(e.getValue()));
+          .append(TextFormat.shortDebugString(e.getValue()));
     }
     return sb.toString();
   }
@@ -316,7 +315,7 @@ class QuorumCall<KEY, RESULT> {
       }
       first = false;
       sb.append(e.getKey()).append(": ")
-        .append(e.getValue().getLocalizedMessage());
+          .append(e.getValue().getLocalizedMessage());
     }
     return sb.toString();
   }

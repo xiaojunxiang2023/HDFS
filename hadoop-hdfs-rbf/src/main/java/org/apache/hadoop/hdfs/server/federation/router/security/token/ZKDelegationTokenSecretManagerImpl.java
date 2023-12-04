@@ -12,20 +12,20 @@ import java.io.IOException;
 // DelegationToken的管理器, 使用 ZooKeeper作为存储介质
 public class ZKDelegationTokenSecretManagerImpl extends ZKDelegationTokenSecretManager<AbstractDelegationTokenIdentifier> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ZKDelegationTokenSecretManagerImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ZKDelegationTokenSecretManagerImpl.class);
 
-    public ZKDelegationTokenSecretManagerImpl(Configuration conf) {
-        super(conf);
-        try {
-            super.startThreads();
-        } catch (IOException e) {
-            LOG.error("Error starting threads for zkDelegationTokens", e);
-        }
-        LOG.info("Zookeeper delegation token secret manager instantiated");
+  public ZKDelegationTokenSecretManagerImpl(Configuration conf) {
+    super(conf);
+    try {
+      super.startThreads();
+    } catch (IOException e) {
+      LOG.error("Error starting threads for zkDelegationTokens", e);
     }
+    LOG.info("Zookeeper delegation token secret manager instantiated");
+  }
 
-    @Override
-    public DelegationTokenIdentifier createIdentifier() {
-        return new DelegationTokenIdentifier();
-    }
+  @Override
+  public DelegationTokenIdentifier createIdentifier() {
+    return new DelegationTokenIdentifier();
+  }
 }

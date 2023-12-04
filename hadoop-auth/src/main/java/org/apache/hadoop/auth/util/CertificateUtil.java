@@ -1,15 +1,13 @@
 package org.apache.hadoop.auth.util;
 
+import javax.servlet.ServletException;
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
-
-import javax.servlet.ServletException;
 
 public class CertificateUtil {
   private static final String PEM_HEADER = "-----BEGIN CERTIFICATE-----\n";

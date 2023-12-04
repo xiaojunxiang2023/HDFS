@@ -21,7 +21,7 @@ public final class DiskValidatorFactory {
    * @param clazz a class extends {@link DiskValidator}
    */
   public static DiskValidator
-      getInstance(Class<? extends DiskValidator> clazz) {
+  getInstance(Class<? extends DiskValidator> clazz) {
     DiskValidator diskValidator;
     if (INSTANCES.containsKey(clazz)) {
       diskValidator = INSTANCES.get(clazz);

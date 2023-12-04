@@ -1,16 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode.metrics;
 
 /**
- * 
+ *
  * This Interface defines the methods to get the status of a the FSNamesystem of
  * a name node.
  * It is also used for publishing via JMX (hence we follow the JMX naming
  * convention.)
- * 
+ *
  * Note we have not used the MetricsDynamicMBeanBase to implement this
  * because the interface for the NameNodeStateMBean is stable and should
  * be published as an interface.
- * 
+ *
  * <p>
  * Name Node runtime activity statistic  info is reported in
  * @see org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics
@@ -23,8 +23,8 @@ public interface FSNamesystemMBean {
    * @return the state
    */
   public String getFSState();
-  
-  
+
+
   /**
    * Number of allocated blocks in the system
    * @return -  number of allocated blocks
@@ -43,7 +43,7 @@ public interface FSNamesystemMBean {
    * @return -  free capacity in bytes
    */
   public long getCapacityRemaining();
- 
+
   /**
    * Used storage capacity
    * @return -  used capacity in bytes
@@ -61,7 +61,7 @@ public interface FSNamesystemMBean {
    * @return -  num of files and directories
    */
   public long getFilesTotal();
- 
+
   /**
    * Get aggregated count of all blocks pending to be reconstructed.
    * @deprecated Use {@link #getPendingReconstructionBlocks()} instead.
@@ -105,13 +105,13 @@ public interface FSNamesystemMBean {
    * @return number of live data nodes
    */
   public int getNumLiveDataNodes();
-  
+
   /**
    * Number of dead data nodes
    * @return number of dead data nodes
    */
   public int getNumDeadDataNodes();
-  
+
   /**
    * Number of stale data nodes
    * @return number of stale data nodes
@@ -185,7 +185,7 @@ public interface FSNamesystemMBean {
   /**
    * Returns a nested JSON object listing the top users for different RPC 
    * operations over tracked time windows.
-   * 
+   *
    * @return JSON string
    */
   public String getTopUserOpCounts();

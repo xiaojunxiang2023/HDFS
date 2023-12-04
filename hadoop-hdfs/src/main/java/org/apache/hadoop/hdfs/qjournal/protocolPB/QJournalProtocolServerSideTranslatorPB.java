@@ -1,61 +1,21 @@
 package org.apache.hadoop.hdfs.qjournal.protocolPB;
 
-import java.io.IOException;
-import java.net.URL;
 import org.apache.hadoop.hdfs.protocolPB.JournalProtocolPB;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocol;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.AcceptRecoveryRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.AcceptRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.CanRollBackRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.CanRollBackResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DiscardSegmentsRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DiscardSegmentsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoFinalizeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoFinalizeResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoPreUpgradeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoPreUpgradeResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoRollbackRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoRollbackResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoUpgradeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.DoUpgradeResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.FinalizeLogSegmentRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.FinalizeLogSegmentResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.FormatRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.FormatResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalCTimeRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalCTimeResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.HeartbeatRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.HeartbeatResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.IsFormattedRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.IsFormattedResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.JournalIdProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.JournalRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.JournalResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PurgeLogsRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PurgeLogsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.StartLogSegmentRequestProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.StartLogSegmentResponseProto;
+import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.qjournal.protocol.RequestInfo;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NodeType;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.namenode.NameNodeLayoutVersion;
 import org.apache.hadoop.hdfs.server.protocol.JournalProtocol;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Implementation for protobuf service that forwards requests
@@ -67,20 +27,20 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
   private final QJournalProtocol impl;
 
   private final static JournalResponseProto VOID_JOURNAL_RESPONSE =
-  JournalResponseProto.newBuilder().build();
+      JournalResponseProto.newBuilder().build();
 
   private final static StartLogSegmentResponseProto
-  VOID_START_LOG_SEGMENT_RESPONSE =
+      VOID_START_LOG_SEGMENT_RESPONSE =
       StartLogSegmentResponseProto.newBuilder().build();
 
   public QJournalProtocolServerSideTranslatorPB(QJournalProtocol impl) {
     this.impl = impl;
   }
 
-  
+
   @Override
   public IsFormattedResponseProto isFormatted(RpcController controller,
-      IsFormattedRequestProto request) throws ServiceException {
+                                              IsFormattedRequestProto request) throws ServiceException {
     try {
       boolean ret = impl.isFormatted(
           convert(request.getJid()),
@@ -96,7 +56,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public GetJournalStateResponseProto getJournalState(RpcController controller,
-      GetJournalStateRequestProto request) throws ServiceException {
+                                                      GetJournalStateRequestProto request) throws ServiceException {
     try {
       return impl.getJournalState(
           convert(request.getJid()),
@@ -112,7 +72,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public NewEpochResponseProto newEpoch(RpcController controller,
-      NewEpochRequestProto request) throws ServiceException {
+                                        NewEpochRequestProto request) throws ServiceException {
     try {
       return impl.newEpoch(
           request.getJid().getIdentifier(),
@@ -125,7 +85,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
   }
 
   public FormatResponseProto format(RpcController controller,
-      FormatRequestProto request) throws ServiceException {
+                                    FormatRequestProto request) throws ServiceException {
     try {
       impl.format(request.getJid().getIdentifier(),
           request.hasNameServiceId() ? request.getNameServiceId() : null,
@@ -135,11 +95,11 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
       throw new ServiceException(ioe);
     }
   }
-  
+
   /** @see JournalProtocol#journal */
   @Override
   public JournalResponseProto journal(RpcController unused,
-      JournalRequestProto req) throws ServiceException {
+                                      JournalRequestProto req) throws ServiceException {
     try {
       impl.journal(convert(req.getReqInfo()),
           req.getSegmentTxnId(), req.getFirstTxnId(),
@@ -153,7 +113,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
   /** @see QJournalProtocol#heartbeat */
   @Override
   public HeartbeatResponseProto heartbeat(RpcController controller,
-      HeartbeatRequestProto req) throws ServiceException {
+                                          HeartbeatRequestProto req) throws ServiceException {
     try {
       impl.heartbeat(convert(req.getReqInfo()));
     } catch (IOException e) {
@@ -165,7 +125,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
   /** @see JournalProtocol#startLogSegment */
   @Override
   public StartLogSegmentResponseProto startLogSegment(RpcController controller,
-      StartLogSegmentRequestProto req) throws ServiceException {
+                                                      StartLogSegmentRequestProto req) throws ServiceException {
     try {
       int layoutVersion = req.hasLayoutVersion() ? req.getLayoutVersion()
           : NameNodeLayoutVersion.CURRENT_LAYOUT_VERSION;
@@ -176,7 +136,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
     }
     return VOID_START_LOG_SEGMENT_RESPONSE;
   }
-  
+
   @Override
   public FinalizeLogSegmentResponseProto finalizeLogSegment(
       RpcController controller, FinalizeLogSegmentRequestProto req)
@@ -189,10 +149,10 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
     }
     return FinalizeLogSegmentResponseProto.newBuilder().build();
   }
-  
+
   @Override
   public PurgeLogsResponseProto purgeLogs(RpcController controller,
-      PurgeLogsRequestProto req) throws ServiceException {
+                                          PurgeLogsRequestProto req) throws ServiceException {
     try {
       impl.purgeLogsOlderThan(convert(req.getReqInfo()),
           req.getMinTxIdToKeep());
@@ -232,7 +192,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public PrepareRecoveryResponseProto prepareRecovery(RpcController controller,
-      PrepareRecoveryRequestProto request) throws ServiceException {
+                                                      PrepareRecoveryRequestProto request) throws ServiceException {
     try {
       return impl.prepareRecovery(convert(request.getReqInfo()),
           request.getSegmentTxId());
@@ -243,7 +203,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public AcceptRecoveryResponseProto acceptRecovery(RpcController controller,
-      AcceptRecoveryRequestProto request) throws ServiceException {
+                                                    AcceptRecoveryRequestProto request) throws ServiceException {
     try {
       impl.acceptRecovery(convert(request.getReqInfo()),
           request.getStateToAccept(),
@@ -254,7 +214,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
     }
   }
 
-  
+
   private RequestInfo convert(
       QJournalProtocolProtos.RequestInfoProto reqInfo) {
     return new RequestInfo(
@@ -264,13 +224,13 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
         reqInfo.getEpoch(),
         reqInfo.getIpcSerialNumber(),
         reqInfo.hasCommittedTxId() ?
-          reqInfo.getCommittedTxId() : HdfsServerConstants.INVALID_TXID);
+            reqInfo.getCommittedTxId() : HdfsServerConstants.INVALID_TXID);
   }
 
 
   @Override
   public DoPreUpgradeResponseProto doPreUpgrade(RpcController controller,
-      DoPreUpgradeRequestProto request) throws ServiceException {
+                                                DoPreUpgradeRequestProto request) throws ServiceException {
     try {
       impl.doPreUpgrade(convert(request.getJid()));
       return DoPreUpgradeResponseProto.getDefaultInstance();
@@ -281,7 +241,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public DoUpgradeResponseProto doUpgrade(RpcController controller,
-      DoUpgradeRequestProto request) throws ServiceException {
+                                          DoUpgradeRequestProto request) throws ServiceException {
     StorageInfo si = PBHelper.convert(request.getSInfo(), NodeType.JOURNAL_NODE);
     try {
       impl.doUpgrade(convert(request.getJid()), si);
@@ -293,7 +253,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public DoFinalizeResponseProto doFinalize(RpcController controller,
-      DoFinalizeRequestProto request) throws ServiceException {
+                                            DoFinalizeRequestProto request) throws ServiceException {
     try {
       impl.doFinalize(convert(request.getJid()),
           request.hasNameServiceId() ? request.getNameServiceId() : null);
@@ -305,7 +265,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public CanRollBackResponseProto canRollBack(RpcController controller,
-      CanRollBackRequestProto request) throws ServiceException {
+                                              CanRollBackRequestProto request) throws ServiceException {
     try {
       StorageInfo si = PBHelper.convert(request.getStorage(), NodeType.JOURNAL_NODE);
       Boolean result = impl.canRollBack(convert(request.getJid()),
@@ -348,7 +308,7 @@ public class QJournalProtocolServerSideTranslatorPB implements QJournalProtocolP
 
   @Override
   public GetJournalCTimeResponseProto getJournalCTime(RpcController controller,
-      GetJournalCTimeRequestProto request) throws ServiceException {
+                                                      GetJournalCTimeRequestProto request) throws ServiceException {
     try {
       Long resultCTime = impl.getJournalCTime(convert(request.getJid()),
           request.getNameServiceId());

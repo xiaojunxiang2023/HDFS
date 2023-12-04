@@ -1,25 +1,20 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeDirType;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
 
 /**
  * Inspects an FSImage storage directory in the "old" (pre-HDFS-1073) format.
@@ -32,14 +27,14 @@ import org.apache.hadoop.io.IOUtils;
 class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
   private static final Logger LOG =
       LoggerFactory.getLogger(FSImagePreTransactionalStorageInspector.class);
-  
+
   /* Flag if there is at least one storage dir that doesn't contain the newest
    * fstime */
   private boolean hasOutOfDateStorageDirs = false;
   /* Flag set false if there are any "previous" directories found */
   private boolean isUpgradeFinalized = true;
   private boolean needToSaveAfterRecovery = false;
-  
+
   // Track the name and edits dir with the latest times
   private long latestNameCheckpointTime = Long.MIN_VALUE;
   private long latestEditsCheckpointTime = Long.MIN_VALUE;
@@ -51,7 +46,7 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
 
   private final List<String> imageDirs = new ArrayList<String>();
   private final List<String> editsDirs = new ArrayList<String>();
-  
+
   @Override
   void inspectDirectory(StorageDirectory sd) throws IOException {
     // Was the file just formatted?
@@ -59,43 +54,43 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
       hasOutOfDateStorageDirs = true;
       return;
     }
-    
+
     boolean imageExists = false;
     boolean editsExists = false;
-    
+
     // Determine if sd is image, edits or both
     if (sd.getStorageDirType().isOfType(NameNodeDirType.IMAGE)) {
-      imageExists = NNStorage.getStorageFile(sd, NameNodeFile.IMAGE).exists();        
+      imageExists = NNStorage.getStorageFile(sd, NameNodeFile.IMAGE).exists();
       imageDirs.add(sd.getRoot().getCanonicalPath());
     }
-    
+
     if (sd.getStorageDirType().isOfType(NameNodeDirType.EDITS)) {
       editsExists = NNStorage.getStorageFile(sd, NameNodeFile.EDITS).exists();
       editsDirs.add(sd.getRoot().getCanonicalPath());
     }
-    
+
     long checkpointTime = readCheckpointTime(sd);
 
     checkpointTimes.add(checkpointTime);
-    
-    if (sd.getStorageDirType().isOfType(NameNodeDirType.IMAGE) && 
-       (latestNameCheckpointTime < checkpointTime) && imageExists) {
+
+    if (sd.getStorageDirType().isOfType(NameNodeDirType.IMAGE) &&
+        (latestNameCheckpointTime < checkpointTime) && imageExists) {
       latestNameCheckpointTime = checkpointTime;
       latestNameSD = sd;
     }
-    
-    if (sd.getStorageDirType().isOfType(NameNodeDirType.EDITS) && 
-         (latestEditsCheckpointTime < checkpointTime) && editsExists) {
+
+    if (sd.getStorageDirType().isOfType(NameNodeDirType.EDITS) &&
+        (latestEditsCheckpointTime < checkpointTime) && editsExists) {
       latestEditsCheckpointTime = checkpointTime;
       latestEditsSD = sd;
     }
-    
+
     // check that we have a valid, non-default checkpointTime
     if (checkpointTime <= 0L)
       hasOutOfDateStorageDirs = true;
-    
+
     // set finalized flag
-    isUpgradeFinalized = isUpgradeFinalized && !sd.getPreviousDir().exists();    
+    isUpgradeFinalized = isUpgradeFinalized && !sd.getPreviousDir().exists();
   }
 
   /**
@@ -126,7 +121,7 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
   boolean isUpgradeFinalized() {
     return isUpgradeFinalized;
   }
-    
+
   @Override
   List<FSImageFile> getLatestImages() throws IOException {
     // We should have at least one image and one edits dirs
@@ -134,7 +129,7 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
       throw new IOException("Image file is not found in " + imageDirs);
     if (latestEditsSD == null)
       throw new IOException("Edits file is not found in " + editsDirs);
-    
+
     // Make sure we are loading image and edits from same checkpoint
     if (latestNameCheckpointTime > latestEditsCheckpointTime
         && latestNameSD != latestEditsSD
@@ -146,19 +141,19 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
       // See -NOTE- in saveNamespace().
       LOG.error("This is a rare failure scenario!!!");
       LOG.error("Image checkpoint time " + latestNameCheckpointTime +
-                " > edits checkpoint time " + latestEditsCheckpointTime);
+          " > edits checkpoint time " + latestEditsCheckpointTime);
       LOG.error("Name-node will treat the image as the latest state of " +
-                "the namespace. Old edits will be discarded.");
+          "the namespace. Old edits will be discarded.");
     } else if (latestNameCheckpointTime != latestEditsCheckpointTime) {
       throw new IOException("Inconsistent storage detected, " +
-                      "image and edits checkpoint times do not match. " +
-                      "image checkpoint time = " + latestNameCheckpointTime +
-                      "edits checkpoint time = " + latestEditsCheckpointTime);
+          "image and edits checkpoint times do not match. " +
+          "image checkpoint time = " + latestNameCheckpointTime +
+          "edits checkpoint time = " + latestEditsCheckpointTime);
     }
 
     needToSaveAfterRecovery = doRecovery();
-    
-    FSImageFile file = new FSImageFile(latestNameSD, 
+
+    FSImageFile file = new FSImageFile(latestNameSD,
         NNStorage.getStorageFile(latestNameSD, NameNodeFile.IMAGE),
         HdfsServerConstants.INVALID_TXID);
     LinkedList<FSImageFile> ret = new LinkedList<FSImageFile>();
@@ -169,21 +164,21 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
   @Override
   boolean needToSave() {
     return hasOutOfDateStorageDirs ||
-      checkpointTimes.size() != 1 ||
-      latestNameCheckpointTime > latestEditsCheckpointTime ||
-      needToSaveAfterRecovery;
+        checkpointTimes.size() != 1 ||
+        latestNameCheckpointTime > latestEditsCheckpointTime ||
+        needToSaveAfterRecovery;
   }
-  
+
   boolean doRecovery() throws IOException {
     LOG.debug(
-        "Performing recovery in "+ latestNameSD + " and " + latestEditsSD);
-      
+        "Performing recovery in " + latestNameSD + " and " + latestEditsSD);
+
     boolean needToSave = false;
     File curFile =
-      NNStorage.getStorageFile(latestNameSD, NameNodeFile.IMAGE);
+        NNStorage.getStorageFile(latestNameSD, NameNodeFile.IMAGE);
     File ckptFile =
-      NNStorage.getStorageFile(latestNameSD, NameNodeFile.IMAGE_NEW);
-    
+        NNStorage.getStorageFile(latestNameSD, NameNodeFile.IMAGE_NEW);
+
     //
     // If we were in the midst of a checkpoint
     //
@@ -214,14 +209,14 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
             LOG.warn("Unable to delete dir " + curFile + " before rename");
           if (!ckptFile.renameTo(curFile)) {
             throw new IOException("Unable to rename " + ckptFile +
-                                  " to " + curFile);
+                " to " + curFile);
           }
         }
       }
     }
     return needToSave;
   }
-  
+
   /**
    * @return a list with the paths to EDITS and EDITS_NEW (if it exists)
    * in a given storage directory.
@@ -237,7 +232,7 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
     }
     return files;
   }
-  
+
   private List<File> getLatestEditsFiles() {
     if (latestNameCheckpointTime > latestEditsCheckpointTime) {
       // the image is already current, discard edits
@@ -245,10 +240,10 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
           "Name checkpoint time is newer than edits, not loading edits.");
       return Collections.emptyList();
     }
-    
+
     return getEditsInStorageDir(latestEditsSD);
   }
-  
+
   @Override
   long getMaxSeenTxId() {
     return 0L;
@@ -256,8 +251,8 @@ class FSImagePreTransactionalStorageInspector extends FSImageStorageInspector {
 
   static Iterable<EditLogInputStream> getEditLogStreams(NNStorage storage)
       throws IOException {
-    FSImagePreTransactionalStorageInspector inspector 
-      = new FSImagePreTransactionalStorageInspector();
+    FSImagePreTransactionalStorageInspector inspector
+        = new FSImagePreTransactionalStorageInspector();
     storage.inspectStorageDirs(inspector);
 
     List<EditLogInputStream> editStreams = new ArrayList<EditLogInputStream>();

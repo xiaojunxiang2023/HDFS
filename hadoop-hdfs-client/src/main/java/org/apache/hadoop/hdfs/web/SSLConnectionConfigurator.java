@@ -23,7 +23,7 @@ public class SSLConnectionConfigurator implements ConnectionConfigurator {
   private final int readTimeout;
 
   SSLConnectionConfigurator(int connectTimeout, int readTimeout,
-      Configuration conf) throws IOException, GeneralSecurityException {
+                            Configuration conf) throws IOException, GeneralSecurityException {
     factory = new SSLFactory(SSLFactory.Mode.CLIENT, conf);
     factory.init();
     sf = factory.createSSLSocketFactory();

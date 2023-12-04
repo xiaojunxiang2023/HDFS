@@ -1,7 +1,8 @@
 package org.apache.hadoop.hdfs.server.datanode;
+
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 
-/** 
+/**
  * This represents block replicas which are stored in DataNode.
  */
 public interface Replica {
@@ -22,7 +23,7 @@ public interface Replica {
    * @return the number of bytes that have been received
    */
   public long getNumBytes();
-  
+
   /**
    * Get the number of bytes that have written to disk
    * @return the number of bytes that have written to disk

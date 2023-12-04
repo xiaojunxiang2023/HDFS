@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class ErasureCodingPolicyInfo implements Serializable {
   private ErasureCodingPolicyState state;
 
   public ErasureCodingPolicyInfo(final ErasureCodingPolicy thePolicy,
-      final ErasureCodingPolicyState theState) {
+                                 final ErasureCodingPolicyState theState) {
     Preconditions.checkNotNull(thePolicy);
     Preconditions.checkNotNull(theState);
     policy = thePolicy;

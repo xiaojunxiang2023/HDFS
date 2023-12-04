@@ -14,25 +14,18 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.command;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
@@ -47,6 +40,9 @@ import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolumeSe
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.HostsFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,15 +56,7 @@ import java.net.URL;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Common interface for command handling.
@@ -331,7 +319,7 @@ public abstract class Command extends Configured implements Closeable {
       String invalidNodes = StringUtils.join(invalidNodeList.toArray(), ",");
       String warnMsg = String.format(
           "The node(s) '%s' not found. "
-          + "Please make sure that '%s' exists in the cluster.",
+              + "Please make sure that '%s' exists in the cluster.",
           invalidNodes, invalidNodes);
       throw new DiskBalancerException(warnMsg,
           DiskBalancerException.Result.INVALID_NODE);
@@ -432,7 +420,7 @@ public abstract class Command extends Configured implements Closeable {
    */
   protected FSDataOutputStream create(String fileName) throws IOException {
     Preconditions.checkNotNull(fileName);
-    if(fs == null) {
+    if (fs == null) {
       fs = FileSystem.get(getConf());
     }
     return fs.create(new Path(this.diskBalancerLogs, fileName));
@@ -443,10 +431,10 @@ public abstract class Command extends Configured implements Closeable {
    */
   protected FSDataInputStream open(String fileName) throws IOException {
     Preconditions.checkNotNull(fileName);
-    if(fs == null) {
+    if (fs == null) {
       fs = FileSystem.get(getConf());
     }
-    return  fs.open(new Path(fileName));
+    return fs.open(new Path(fileName));
   }
 
   /**
@@ -490,7 +478,7 @@ public abstract class Command extends Configured implements Closeable {
    * Put output line to log and string buffer.
    * */
   protected void recordOutput(final TextStringBuilder result,
-      final String outputLine) {
+                              final String outputLine) {
     LOG.info(outputLine);
     result.appendln(outputLine);
   }

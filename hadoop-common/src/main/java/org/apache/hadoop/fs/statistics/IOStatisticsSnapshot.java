@@ -1,5 +1,9 @@
 package org.apache.hadoop.fs.statistics;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding;
+import org.apache.hadoop.util.JsonSerialization;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,14 +16,10 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding;
-import org.apache.hadoop.util.JsonSerialization;
-
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.hadoop.fs.statistics.IOStatisticsLogging.ioStatisticsToString;
 import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.aggregateMaps;
 import static org.apache.hadoop.fs.statistics.impl.IOStatisticsBinding.snapshotMap;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Snapshot of statistics from a different source.

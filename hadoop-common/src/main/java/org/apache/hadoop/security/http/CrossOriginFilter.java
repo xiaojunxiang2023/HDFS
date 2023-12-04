@@ -1,27 +1,19 @@
 package org.apache.hadoop.security.http;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CrossOriginFilter implements Filter {
 
@@ -74,7 +66,7 @@ public class CrossOriginFilter implements Filter {
 
   @Override
   public void doFilter(ServletRequest req, ServletResponse res,
-      FilterChain chain)
+                       FilterChain chain)
       throws IOException, ServletException {
     doCrossFilter((HttpServletRequest) req, (HttpServletResponse) res);
     chain.doFilter(req, res);
@@ -91,14 +83,14 @@ public class CrossOriginFilter implements Filter {
 
     String originsList = encodeHeader(req.getHeader(ORIGIN));
     if (!isCrossOrigin(originsList)) {
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Header origin is null. Returning");
       }
       return;
     }
 
     if (!areOriginsAllowed(originsList)) {
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Header origins '" + originsList + "' not allowed. Returning");
       }
       return;
@@ -107,7 +99,7 @@ public class CrossOriginFilter implements Filter {
     String accessControlRequestMethod =
         req.getHeader(ACCESS_CONTROL_REQUEST_METHOD);
     if (!isMethodAllowed(accessControlRequestMethod)) {
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Access control method '" + accessControlRequestMethod +
             "' not allowed. Returning");
       }
@@ -117,14 +109,14 @@ public class CrossOriginFilter implements Filter {
     String accessControlRequestHeaders =
         req.getHeader(ACCESS_CONTROL_REQUEST_HEADERS);
     if (!areHeadersAllowed(accessControlRequestHeaders)) {
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Access control headers '" + accessControlRequestHeaders +
             "' not allowed. Returning");
       }
       return;
     }
 
-    if(LOG.isDebugEnabled()) {
+    if (LOG.isDebugEnabled()) {
       LOG.debug("Completed cross origin filter checks. Populating " +
           "HttpServletResponse");
     }
@@ -179,10 +171,10 @@ public class CrossOriginFilter implements Filter {
     LOG.info("Allowed Origins: " + StringUtils.join(allowedOrigins, ','));
     LOG.info("Allow All Origins: " + allowAllOrigins);
     List<String> discouragedAllowedOrigins = allowedOrigins.stream()
-            .filter(s -> s.length() > 1 && s.contains("*") && !(s.startsWith(ALLOWED_ORIGINS_REGEX_PREFIX)))
-            .collect(Collectors.toList());
+        .filter(s -> s.length() > 1 && s.contains("*") && !(s.startsWith(ALLOWED_ORIGINS_REGEX_PREFIX)))
+        .collect(Collectors.toList());
     for (String discouragedAllowedOrigin : discouragedAllowedOrigins) {
-        LOG.warn("Allowed Origin pattern '" + discouragedAllowedOrigin + "' is discouraged, use the 'regex:' prefix and use a Java regular expression instead.");
+      LOG.warn("Allowed Origin pattern '" + discouragedAllowedOrigin + "' is discouraged, use the 'regex:' prefix and use a Java regular expression instead.");
     }
   }
 
@@ -220,18 +212,18 @@ public class CrossOriginFilter implements Filter {
       for (String allowedOrigin : allowedOrigins) {
         Pattern regexPattern = null;
         if (allowedOrigin.startsWith(ALLOWED_ORIGINS_REGEX_PREFIX)) {
-            String regex = allowedOrigin.substring(ALLOWED_ORIGINS_REGEX_PREFIX.length());
-            regexPattern = Pattern.compile(regex);
+          String regex = allowedOrigin.substring(ALLOWED_ORIGINS_REGEX_PREFIX.length());
+          regexPattern = Pattern.compile(regex);
         } else if (allowedOrigin.contains("*")) {
-            String regex = allowedOrigin.replace(".", "\\.").replace("*", ".*");
-            regexPattern = Pattern.compile(regex);
+          String regex = allowedOrigin.replace(".", "\\.").replace("*", ".*");
+          regexPattern = Pattern.compile(regex);
         }
 
         if (regexPattern != null
-                && regexPattern.matcher(origin).matches()) {
-            return true;
+            && regexPattern.matcher(origin).matches()) {
+          return true;
         } else if (allowedOrigin.equals(origin)) {
-            return true;
+          return true;
         }
       }
     }

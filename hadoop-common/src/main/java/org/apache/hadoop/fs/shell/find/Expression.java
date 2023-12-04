@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs.shell.find;
 
+import org.apache.hadoop.fs.shell.PathData;
+
 import java.io.IOException;
 import java.util.Deque;
-
-import org.apache.hadoop.fs.shell.PathData;
 
 /**
  * Interface describing an expression to be used in the

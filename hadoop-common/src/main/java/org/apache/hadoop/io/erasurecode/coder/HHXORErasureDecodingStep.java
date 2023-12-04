@@ -1,12 +1,13 @@
 package org.apache.hadoop.io.erasurecode.coder;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.coder.util.HHUtil;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Hitchhiker-XOR Erasure decoding step, a wrapper of all the necessary
@@ -30,8 +31,8 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
    * @param rawEncoder underlying XOR encoder for hitchhiker decoding
    */
   public HHXORErasureDecodingStep(ECBlock[] inputBlocks, int[] erasedIndexes,
-      ECBlock[] outputBlocks, RawErasureDecoder rawDecoder,
-      RawErasureEncoder rawEncoder) {
+                                  ECBlock[] outputBlocks, RawErasureDecoder rawDecoder,
+                                  RawErasureEncoder rawEncoder) {
     super(inputBlocks, outputBlocks);
     this.pbIndex = rawDecoder.getNumParityUnits() - 1;
     this.erasedIndexes = erasedIndexes;
@@ -94,7 +95,7 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
     if (erasedIndexes.length == 1 && erasedIndexes[0] < numDataUnits) {
       // Only reconstruct one data unit missing
       doDecodeSingle(newIn, newOut, erasedIndexes[0], bufSize,
-              fisrtValidInput.isDirect());
+          fisrtValidInput.isDirect());
     } else {
       doDecodeMultiAndParity(newIn, newOut, erasedIndexes, bufSize);
     }
@@ -147,7 +148,7 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
 
     int piggyBackParityIndex = piggyBackFullIndex[erasedLocationToFix];
     ByteBuffer piggyBack = HHUtil.getPiggyBackForDecode(inputs, tmpOutputs,
-            piggyBackParityIndex, numDataUnits, numParityUnits, pbIndex);
+        piggyBackParityIndex, numDataUnits, numParityUnits, pbIndex);
 
     // Second consider the first subPacket.
     // get the value of the piggyback associated with the erased location
@@ -155,7 +156,7 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
       // decode the erased value in the first subPacket by using the piggyback
       int idxToWrite = 0;
       doDecodeByPiggyBack(inputs[0], tmpOutputs[0][idxToWrite], piggyBack,
-              erasedLocationToFix);
+          erasedLocationToFix);
     } else {
       ByteBuffer buffer;
       byte[][][] newInputs = new byte[getSubPacketSize()][inputs[0].length][];
@@ -188,8 +189,8 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
       // decode the erased value in the first subPacket by using the piggyback
       int idxToWrite = 0;
       doDecodeByPiggyBack(newInputs[0], inputOffsets[0],
-              newOutputs[0][idxToWrite], outOffsets[0][idxToWrite],
-              newPiggyBack, erasedLocationToFix, bufSize);
+          newOutputs[0][idxToWrite], outOffsets[0][idxToWrite],
+          newPiggyBack, erasedLocationToFix, bufSize);
     }
 
     for (int i = 0; i < subPacketSize; ++i) {
@@ -216,7 +217,7 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
       for (int j = startIndex; j < endIndex; j++) {
         if (inputs[j] != null) {
           piggyBack.put(i, (byte)
-                  (piggyBack.get(i) ^ inputs[j].get(inputs[j].position() + i)));
+              (piggyBack.get(i) ^ inputs[j].get(inputs[j].position() + i)));
         }
       }
       outputs.put(outputs.position() + i, piggyBack.get(i));
@@ -290,7 +291,7 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
     }
 
     ByteBuffer[] piggyBack = HHUtil.getPiggyBacksFromInput(tempInput,
-            piggyBackIndex, numParityUnits, 0, xorRawEncoder);
+        piggyBackIndex, numParityUnits, 0, xorRawEncoder);
 
     for (int j = numDataUnits + 1; j < numTotalUnits; ++j) {
       if (parityToFixFlag[j] == 0 && inputs[1][j] != null) {
@@ -299,8 +300,8 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
              m = piggyBack[j - numDataUnits - 1].position();
              k < inputs[1][j].limit(); ++k, ++m) {
           inputs[1][j].put(k, (byte)
-                  (inputs[1][j].get(k) ^
-                          piggyBack[j - numDataUnits - 1].get(m)));
+              (inputs[1][j].get(k) ^
+                  piggyBack[j - numDataUnits - 1].get(m)));
         }
       }
     }
@@ -311,13 +312,13 @@ public class HHXORErasureDecodingStep extends HHErasureCodingStep {
     // parity index = 0, the data have no piggyBack
     for (int j = 0; j < erasedLocationToFix.length; ++j) {
       if (erasedLocationToFix[j] < numTotalUnits
-              && erasedLocationToFix[j] > numDataUnits) {
+          && erasedLocationToFix[j] > numDataUnits) {
         int parityIndex = erasedLocationToFix[j] - numDataUnits - 1;
         for (int k = outputs[1][j].position(),
              m = piggyBack[parityIndex].position();
              k < outputs[1][j].limit(); ++k, ++m) {
           outputs[1][j].put(k, (byte)
-                  (outputs[1][j].get(k) ^ piggyBack[parityIndex].get(m)));
+              (outputs[1][j].get(k) ^ piggyBack[parityIndex].get(m)));
         }
       }
     }

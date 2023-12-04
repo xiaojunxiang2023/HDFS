@@ -1,19 +1,19 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.apache.hadoop.util.PerformanceAdvisory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 public class JniBasedUnixGroupsMappingWithFallback implements
     GroupMappingServiceProvider {
 
   private static final Logger LOG = LoggerFactory
       .getLogger(JniBasedUnixGroupsMappingWithFallback.class);
-  
+
   private GroupMappingServiceProvider impl;
 
   public JniBasedUnixGroupsMappingWithFallback() {
@@ -23,7 +23,7 @@ public class JniBasedUnixGroupsMappingWithFallback implements
       PerformanceAdvisory.LOG.debug("Falling back to shell based");
       this.impl = new ShellBasedUnixGroupsMapping();
     }
-    if (LOG.isDebugEnabled()){
+    if (LOG.isDebugEnabled()) {
       LOG.debug("Group mapping impl=" + impl.getClass().getName());
     }
   }

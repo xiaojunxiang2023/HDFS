@@ -1,11 +1,10 @@
 package org.apache.hadoop.filter;
 
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.auth.util.AuthToken;
-
-import java.security.Principal;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 /**
  * The {@link AuthenticationToken} contains information about an authenticated

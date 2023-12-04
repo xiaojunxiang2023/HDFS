@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,15 +15,6 @@
  * the License.
  */
 package org.apache.hadoop.io.file.tfile;
-
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -37,6 +28,11 @@ import org.apache.hadoop.io.file.tfile.Utils.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
 /**
  * Dumping the information of a TFile.
  */
@@ -49,6 +45,7 @@ class TFileDumper {
 
   private enum Align {
     LEFT, CENTER, RIGHT, ZERO_PADDED;
+
     static String format(String s, int width, Align align) {
       if (s.length() >= width) return s;
       int room = width - s.length();
@@ -84,7 +81,7 @@ class TFileDumper {
 
   /**
    * Dump information about TFile.
-   * 
+   *
    * @param file
    *          Path string of the TFile
    * @param out
@@ -140,7 +137,7 @@ class TFileDumper {
         Collection<MetaIndexEntry> metaBlks =
             reader.readerBCF.metaIndex.index.values();
         boolean calculateCompression = false;
-        for (Iterator<MetaIndexEntry> it = metaBlks.iterator(); it.hasNext();) {
+        for (Iterator<MetaIndexEntry> it = metaBlks.iterator(); it.hasNext(); ) {
           MetaIndexEntry e = it.next();
           metaSize += e.getRegion().getCompressedSize();
           metaSizeUncompressed += e.getRegion().getRawSize();
@@ -168,14 +165,14 @@ class TFileDumper {
       int maxKeyLength = 0;
       Set<Map.Entry<String, String>> entrySet = properties.entrySet();
       for (Iterator<Map.Entry<String, String>> it = entrySet.iterator(); it
-          .hasNext();) {
+          .hasNext(); ) {
         Map.Entry<String, String> e = it.next();
         if (e.getKey().length() > maxKeyLength) {
           maxKeyLength = e.getKey().length();
         }
       }
       for (Iterator<Map.Entry<String, String>> it = entrySet.iterator(); it
-          .hasNext();) {
+          .hasNext(); ) {
         Map.Entry<String, String> e = it.next();
         out.printf("%s : %s%n", Align.format(e.getKey(), maxKeyLength,
             Align.LEFT), e.getValue());
@@ -214,8 +211,8 @@ class TFileDumper {
           TFileIndexEntry indexEntry = reader.tfileIndex.getEntry(i);
           out.printf("%s %s %s %s %s ", Align.format(Align.format(i,
               blkIDWidth2, Align.ZERO_PADDED), blkIDWidth, Align.LEFT), Align
-              .format(region.getOffset(), offsetWidth, Align.LEFT), Align
-              .format(region.getCompressedSize(), blkLenWidth, Align.LEFT),
+                  .format(region.getOffset(), offsetWidth, Align.LEFT), Align
+                  .format(region.getCompressedSize(), blkLenWidth, Align.LEFT),
               Align.format(region.getRawSize(), rawSizeWidth, Align.LEFT),
               Align.format(indexEntry.kvEntries, recordsWidth, Align.LEFT));
           byte[] key = indexEntry.key;
@@ -250,7 +247,7 @@ class TFileDumper {
         Set<Map.Entry<String, MetaIndexEntry>> metaBlkEntrySet =
             reader.readerBCF.metaIndex.index.entrySet();
         for (Iterator<Map.Entry<String, MetaIndexEntry>> it =
-            metaBlkEntrySet.iterator(); it.hasNext();) {
+             metaBlkEntrySet.iterator(); it.hasNext(); ) {
           Map.Entry<String, MetaIndexEntry> e = it.next();
           if (e.getKey().length() > maxNameLen) {
             maxNameLen = e.getKey().length();
@@ -275,7 +272,7 @@ class TFileDumper {
                 compressionWidth, Align.LEFT));
 
         for (Iterator<Map.Entry<String, MetaIndexEntry>> it =
-            metaBlkEntrySet.iterator(); it.hasNext();) {
+             metaBlkEntrySet.iterator(); it.hasNext(); ) {
           Map.Entry<String, MetaIndexEntry> e = it.next();
           String blkName = e.getValue().getMetaName();
           BlockRegion region = e.getValue().getRegion();

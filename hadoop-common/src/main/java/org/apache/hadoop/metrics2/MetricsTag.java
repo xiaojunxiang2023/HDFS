@@ -23,11 +23,13 @@ public class MetricsTag implements MetricsInfo {
     this.value = value;
   }
 
-  @Override public String name() {
+  @Override
+  public String name() {
     return info.name();
   }
 
-  @Override public String description() {
+  @Override
+  public String description() {
     return info.description();
   }
 
@@ -40,26 +42,29 @@ public class MetricsTag implements MetricsInfo {
 
   /**
    * Get the value of the tag
-   * @return  the value
+   * @return the value
    */
   public String value() {
     return value;
   }
 
-  @Override public boolean equals(Object obj) {
+  @Override
+  public boolean equals(Object obj) {
     if (obj instanceof MetricsTag) {
       final MetricsTag other = (MetricsTag) obj;
       return Objects.equal(info, other.info()) &&
-             Objects.equal(value, other.value());
+          Objects.equal(value, other.value());
     }
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Objects.hashCode(info, value);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
         .add("info=" + info)
         .add("value=" + value())

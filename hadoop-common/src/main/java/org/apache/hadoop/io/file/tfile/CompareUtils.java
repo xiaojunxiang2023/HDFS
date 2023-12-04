@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,11 +16,11 @@
  */
 package org.apache.hadoop.io.file.tfile;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
 import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.WritableComparator;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 class CompareUtils {
   /**
@@ -49,7 +49,7 @@ class CompareUtils {
     }
 
     public int compare(byte[] a, int off1, int len1, byte[] b, int off2,
-        int len2) {
+                       int len2) {
       return cmp.compare(a, off1, len1, b, off2, len2);
     }
   }

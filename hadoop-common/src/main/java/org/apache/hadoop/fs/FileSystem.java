@@ -1,36 +1,5 @@
 package org.apache.hadoop.fs;
 
-import javax.annotation.Nonnull;
-import java.io.Closeable;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.lang.ref.WeakReference;
-import java.lang.ref.ReferenceQueue;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeSet;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -42,11 +11,7 @@ import org.apache.hadoop.fs.Options.Rename;
 import org.apache.hadoop.fs.impl.AbstractFSBuilderImpl;
 import org.apache.hadoop.fs.impl.FutureDataInputStreamBuilderImpl;
 import org.apache.hadoop.fs.impl.OpenFileParameters;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclStatus;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsCreateModes;
-import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.fs.permission.*;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.net.NetUtils;
@@ -54,27 +19,34 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.DelegationTokenIssuer;
-import org.apache.hadoop.util.ClassUtil;
-import org.apache.hadoop.util.DataChecksum;
-import org.apache.hadoop.util.DurationInfo;
-import org.apache.hadoop.util.LambdaUtils;
-import org.apache.hadoop.util.Progressable;
-import org.apache.hadoop.util.ReflectionUtils;
-import org.apache.hadoop.util.ShutdownHookManager;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.tracing.Tracer;
-import org.apache.hadoop.tracing.TraceScope;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.tracing.TraceScope;
+import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
+import javax.annotation.Nonnull;
+import java.io.Closeable;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.PrivilegedExceptionAction;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicLong;
+
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapabilityArgs;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
 
 /****************************************************************
  * An abstract base class for a fairly generic filesystem.  It
@@ -153,9 +125,9 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
 public abstract class FileSystem extends Configured
     implements Closeable, DelegationTokenIssuer, PathCapabilities {
   public static final String FS_DEFAULT_NAME_KEY =
-                   CommonConfigurationKeys.FS_DEFAULT_NAME_KEY;
+      CommonConfigurationKeys.FS_DEFAULT_NAME_KEY;
   public static final String DEFAULT_FS =
-                   CommonConfigurationKeys.FS_DEFAULT_NAME_DEFAULT;
+      CommonConfigurationKeys.FS_DEFAULT_NAME_DEFAULT;
 
   /**
    * This log is widely used in the org.apache.hadoop.fs code and tests,
@@ -218,13 +190,13 @@ public abstract class FileSystem extends Configured
    */
   @VisibleForTesting
   static void addFileSystemForTesting(URI uri, Configuration conf,
-      FileSystem fs) throws IOException {
+                                      FileSystem fs) throws IOException {
     CACHE.map.put(new Cache.Key(uri, conf), fs);
   }
 
   @VisibleForTesting
   static void removeFileSystemForTesting(URI uri, Configuration conf,
-      FileSystem fs) throws IOException {
+                                         FileSystem fs) throws IOException {
     CACHE.map.remove(new Cache.Key(uri, conf), fs);
   }
 
@@ -245,9 +217,9 @@ public abstract class FileSystem extends Configured
    * somehow interrupted.
    */
   public static FileSystem get(final URI uri, final Configuration conf,
-        final String user) throws IOException, InterruptedException {
+                               final String user) throws IOException, InterruptedException {
     String ticketCachePath =
-      conf.get(CommonConfigurationKeys.KERBEROS_TICKET_CACHE_PATH);
+        conf.get(CommonConfigurationKeys.KERBEROS_TICKET_CACHE_PATH);
     UserGroupInformation ugi =
         UserGroupInformation.getBestUGI(ticketCachePath, user);
     return ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
@@ -399,7 +371,7 @@ public abstract class FileSystem extends Configured
   }
 
   protected static FileSystem getFSofPath(final Path absOrFqPath,
-      final Configuration conf)
+                                          final Configuration conf)
       throws UnsupportedFileSystemException, IOException {
     absOrFqPath.checkNotSchemeWithRelative();
     absOrFqPath.checkNotRelative();
@@ -427,18 +399,20 @@ public abstract class FileSystem extends Configured
   @Override
   public String getCanonicalServiceName() {
     return (getChildFileSystems() == null)
-      ? SecurityUtil.buildDTServiceName(getUri(), getDefaultPort())
-      : null;
+        ? SecurityUtil.buildDTServiceName(getUri(), getDefaultPort())
+        : null;
   }
 
   /** @deprecated call {@link #getUri()} instead.*/
   @Deprecated
-  public String getName() { return getUri().toString(); }
+  public String getName() {
+    return getUri().toString();
+  }
 
   /** @deprecated call {@link #get(URI, Configuration)} instead. */
   @Deprecated
   public static FileSystem getNamed(String name, Configuration conf)
-    throws IOException {
+      throws IOException {
     return get(URI.create(fixName(name)), conf);
   }
 
@@ -450,12 +424,12 @@ public abstract class FileSystem extends Configured
     // convert old-format name to new-format name
     if (name.equals("local")) {         // "local" is now "file:///".
       LOGGER.warn("\"local\" is a deprecated filesystem name."
-               +" Use \"file:///\" instead.");
+          + " Use \"file:///\" instead.");
       name = "file:///";
-    } else if (name.indexOf('/')==-1) {   // unqualified is "hdfs://"
-      LOGGER.warn("\""+name+"\" is a deprecated filesystem name."
-               +" Use \"hdfs://"+name+"/\" instead.");
-      name = "hdfs://"+name;
+    } else if (name.indexOf('/') == -1) {   // unqualified is "hdfs://"
+      LOGGER.warn("\"" + name + "\" is a deprecated filesystem name."
+          + " Use \"hdfs://" + name + "/\" instead.");
+      name = "hdfs://" + name;
     }
     return name;
   }
@@ -468,8 +442,8 @@ public abstract class FileSystem extends Configured
    * @throws IOException if somehow the local FS cannot be instantiated.
    */
   public static LocalFileSystem getLocal(Configuration conf)
-    throws IOException {
-    return (LocalFileSystem)get(LocalFileSystem.NAME, conf);
+      throws IOException {
+    return (LocalFileSystem) get(LocalFileSystem.NAME, conf);
   }
 
   /**
@@ -528,9 +502,9 @@ public abstract class FileSystem extends Configured
    *         somehow interrupted.
    */
   public static FileSystem newInstance(final URI uri, final Configuration conf,
-      final String user) throws IOException, InterruptedException {
+                                       final String user) throws IOException, InterruptedException {
     String ticketCachePath =
-      conf.get(CommonConfigurationKeys.KERBEROS_TICKET_CACHE_PATH);
+        conf.get(CommonConfigurationKeys.KERBEROS_TICKET_CACHE_PATH);
     UserGroupInformation ugi =
         UserGroupInformation.getBestUGI(ticketCachePath, user);
     return ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
@@ -588,8 +562,8 @@ public abstract class FileSystem extends Configured
    * @throws IOException FS creation or initialization failure.
    */
   public static LocalFileSystem newInstanceLocal(Configuration conf)
-    throws IOException {
-    return (LocalFileSystem)newInstance(LocalFileSystem.NAME, conf);
+      throws IOException {
+    return (LocalFileSystem) newInstance(LocalFileSystem.NAME, conf);
   }
 
   /**
@@ -616,7 +590,7 @@ public abstract class FileSystem extends Configured
   }
 
   private static void debugLogFileSystemClose(String methodName,
-      String additionalInfo) {
+                                              String additionalInfo) {
     if (LOGGER.isDebugEnabled()) {
       Throwable throwable = new Throwable().fillInStackTrace();
       LOGGER.debug("FileSystem.{}() by method: {}); {}", methodName,
@@ -671,6 +645,7 @@ public abstract class FileSystem extends Configured
   public FileSystem[] getChildFileSystems() {
     return null;
   }
+
   @Override
   public DelegationTokenIssuer[] getAdditionalTokenIssuers()
       throws IOException {
@@ -695,7 +670,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public static FSDataOutputStream create(FileSystem fs,
-      Path file, FsPermission permission) throws IOException {
+                                          Path file, FsPermission permission) throws IOException {
     // create the file with default permission
     FSDataOutputStream out = fs.create(file);
     // set its permission to the supplied one
@@ -771,12 +746,12 @@ public abstract class FileSystem extends Configured
         thatAuthority = uri.getAuthority();
         if (thisAuthority == thatAuthority ||       // authorities match
             (thisAuthority != null &&
-             thisAuthority.equalsIgnoreCase(thatAuthority)))
+                thisAuthority.equalsIgnoreCase(thatAuthority)))
           return;
       }
     }
     throw new IllegalArgumentException("Wrong FS: " + path +
-                                       ", expected: " + this.getUri());
+        ", expected: " + this.getUri());
   }
 
   /**
@@ -835,7 +810,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public BlockLocation[] getFileBlockLocations(FileStatus file,
-      long start, long len) throws IOException {
+                                               long start, long len) throws IOException {
     if (file == null) {
       return null;
     }
@@ -850,8 +825,8 @@ public abstract class FileSystem extends Configured
     }
     String[] name = {"localhost:9866"};
     String[] host = {"localhost"};
-    return new BlockLocation[] {
-      new BlockLocation(name, host, 0, file.getLen()) };
+    return new BlockLocation[]{
+        new BlockLocation(name, host, 0, file.getLen())};
   }
 
   /**
@@ -875,7 +850,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public BlockLocation[] getFileBlockLocations(Path p,
-      long start, long len) throws IOException {
+                                               long start, long len) throws IOException {
     if (p == null) {
       throw new NullPointerException();
     }
@@ -925,10 +900,10 @@ public abstract class FileSystem extends Configured
    * @throws FileNotFoundException if the path is not present
    * @throws IOException for any other error
    */
-   public Path resolvePath(final Path p) throws IOException {
-     checkPath(p);
-     return getFileStatus(p).getPath();
-   }
+  public Path resolvePath(final Path p) throws IOException {
+    checkPath(p);
+    return getFileStatus(p).getPath();
+  }
 
   /**
    * Opens an FSDataInputStream at the indicated Path.
@@ -937,7 +912,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public abstract FSDataInputStream open(Path f, int bufferSize)
-    throws IOException;
+      throws IOException;
 
   /**
    * Opens an FSDataInputStream at the indicated Path.
@@ -1034,10 +1009,10 @@ public abstract class FileSystem extends Configured
   public FSDataOutputStream create(Path f, boolean overwrite)
       throws IOException {
     return create(f, overwrite,
-                  getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
-                      IO_FILE_BUFFER_SIZE_DEFAULT),
-                  getDefaultReplication(f),
-                  getDefaultBlockSize(f));
+        getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
+            IO_FILE_BUFFER_SIZE_DEFAULT),
+        getDefaultReplication(f),
+        getDefaultBlockSize(f));
   }
 
   /**
@@ -1051,10 +1026,10 @@ public abstract class FileSystem extends Configured
   public FSDataOutputStream create(Path f, Progressable progress)
       throws IOException {
     return create(f, true,
-                  getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
-                      IO_FILE_BUFFER_SIZE_DEFAULT),
-                  getDefaultReplication(f),
-                  getDefaultBlockSize(f), progress);
+        getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
+            IO_FILE_BUFFER_SIZE_DEFAULT),
+        getDefaultReplication(f),
+        getDefaultBlockSize(f), progress);
   }
 
   /**
@@ -1067,10 +1042,10 @@ public abstract class FileSystem extends Configured
   public FSDataOutputStream create(Path f, short replication)
       throws IOException {
     return create(f, true,
-                  getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
-                      IO_FILE_BUFFER_SIZE_DEFAULT),
-                  replication,
-                  getDefaultBlockSize(f));
+        getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
+            IO_FILE_BUFFER_SIZE_DEFAULT),
+        replication,
+        getDefaultBlockSize(f));
   }
 
   /**
@@ -1083,11 +1058,11 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public FSDataOutputStream create(Path f, short replication,
-      Progressable progress) throws IOException {
+                                   Progressable progress) throws IOException {
     return create(f, true,
-                  getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
-                      IO_FILE_BUFFER_SIZE_DEFAULT),
-                  replication, getDefaultBlockSize(f), progress);
+        getConf().getInt(IO_FILE_BUFFER_SIZE_KEY,
+            IO_FILE_BUFFER_SIZE_DEFAULT),
+        replication, getDefaultBlockSize(f), progress);
   }
 
 
@@ -1102,10 +1077,10 @@ public abstract class FileSystem extends Configured
   public FSDataOutputStream create(Path f,
                                    boolean overwrite,
                                    int bufferSize
-                                   ) throws IOException {
+  ) throws IOException {
     return create(f, overwrite, bufferSize,
-                  getDefaultReplication(f),
-                  getDefaultBlockSize(f));
+        getDefaultReplication(f),
+        getDefaultBlockSize(f));
   }
 
   /**
@@ -1123,10 +1098,10 @@ public abstract class FileSystem extends Configured
                                    boolean overwrite,
                                    int bufferSize,
                                    Progressable progress
-                                   ) throws IOException {
+  ) throws IOException {
     return create(f, overwrite, bufferSize,
-                  getDefaultReplication(f),
-                  getDefaultBlockSize(f), progress);
+        getDefaultReplication(f),
+        getDefaultBlockSize(f), progress);
   }
 
 
@@ -1140,10 +1115,10 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public FSDataOutputStream create(Path f,
-      boolean overwrite,
-      int bufferSize,
-      short replication,
-      long blockSize) throws IOException {
+                                   boolean overwrite,
+                                   int bufferSize,
+                                   short replication,
+                                   long blockSize) throws IOException {
     return create(f, overwrite, bufferSize, replication, blockSize, null);
   }
 
@@ -1158,12 +1133,12 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public FSDataOutputStream create(Path f,
-                                            boolean overwrite,
-                                            int bufferSize,
-                                            short replication,
-                                            long blockSize,
-                                            Progressable progress
-                                            ) throws IOException {
+                                   boolean overwrite,
+                                   int bufferSize,
+                                   short replication,
+                                   long blockSize,
+                                   Progressable progress
+  ) throws IOException {
     return this.create(f, FsCreateModes.applyUMask(
         FsPermission.getFileDefault(), FsPermission.getUMask(getConf())),
         overwrite, bufferSize, replication, blockSize, progress);
@@ -1184,12 +1159,12 @@ public abstract class FileSystem extends Configured
    * @see #setPermission(Path, FsPermission)
    */
   public abstract FSDataOutputStream create(Path f,
-      FsPermission permission,
-      boolean overwrite,
-      int bufferSize,
-      short replication,
-      long blockSize,
-      Progressable progress) throws IOException;
+                                            FsPermission permission,
+                                            boolean overwrite,
+                                            int bufferSize,
+                                            short replication,
+                                            long blockSize,
+                                            Progressable progress) throws IOException;
 
   /**
    * Create an FSDataOutputStream at the indicated Path with write-progress
@@ -1205,12 +1180,12 @@ public abstract class FileSystem extends Configured
    * @see #setPermission(Path, FsPermission)
    */
   public FSDataOutputStream create(Path f,
-      FsPermission permission,
-      EnumSet<CreateFlag> flags,
-      int bufferSize,
-      short replication,
-      long blockSize,
-      Progressable progress) throws IOException {
+                                   FsPermission permission,
+                                   EnumSet<CreateFlag> flags,
+                                   int bufferSize,
+                                   short replication,
+                                   long blockSize,
+                                   Progressable progress) throws IOException {
     return create(f, permission, flags, bufferSize, replication,
         blockSize, progress, null);
   }
@@ -1231,13 +1206,13 @@ public abstract class FileSystem extends Configured
    * @see #setPermission(Path, FsPermission)
    */
   public FSDataOutputStream create(Path f,
-      FsPermission permission,
-      EnumSet<CreateFlag> flags,
-      int bufferSize,
-      short replication,
-      long blockSize,
-      Progressable progress,
-      ChecksumOpt checksumOpt) throws IOException {
+                                   FsPermission permission,
+                                   EnumSet<CreateFlag> flags,
+                                   int bufferSize,
+                                   short replication,
+                                   long blockSize,
+                                   Progressable progress,
+                                   ChecksumOpt checksumOpt) throws IOException {
     // Checksum options are ignored by default. The file systems that
     // implement checksum need to override this method. The full
     // support is currently only available in DFS.
@@ -1254,13 +1229,13 @@ public abstract class FileSystem extends Configured
    */
   @Deprecated
   protected FSDataOutputStream primitiveCreate(Path f,
-      FsPermission absolutePermission,
-      EnumSet<CreateFlag> flag,
-      int bufferSize,
-      short replication,
-      long blockSize,
-      Progressable progress,
-      ChecksumOpt checksumOpt) throws IOException {
+                                               FsPermission absolutePermission,
+                                               EnumSet<CreateFlag> flag,
+                                               int bufferSize,
+                                               short replication,
+                                               long blockSize,
+                                               Progressable progress,
+                                               ChecksumOpt checksumOpt) throws IOException {
 
     boolean pathExists = exists(f);
     CreateFlag.validate(f, pathExists, flag);
@@ -1293,8 +1268,8 @@ public abstract class FileSystem extends Configured
    */
   @Deprecated
   protected boolean primitiveMkdir(Path f, FsPermission absolutePermission)
-    throws IOException {
-   return this.mkdirs(f, absolutePermission);
+      throws IOException {
+    return this.mkdirs(f, absolutePermission);
   }
 
 
@@ -1307,8 +1282,8 @@ public abstract class FileSystem extends Configured
    */
   @Deprecated
   protected void primitiveMkdir(Path f, FsPermission absolutePermission,
-                    boolean createParent)
-    throws IOException {
+                                boolean createParent)
+      throws IOException {
 
     if (!createParent) { // parent must exist.
       // since the this.mkdirs makes parent dirs automatically
@@ -1326,7 +1301,7 @@ public abstract class FileSystem extends Configured
     // calling the regular mkdirs is good enough.
     // FSs that implement permissions should override this.
     if (!this.mkdirs(f, absolutePermission)) {
-      throw new IOException("mkdir of "+ f + " failed");
+      throw new IOException("mkdir of " + f + " failed");
     }
   }
 
@@ -1345,9 +1320,9 @@ public abstract class FileSystem extends Configured
    * @see #setPermission(Path, FsPermission)
    */
   public FSDataOutputStream createNonRecursive(Path f,
-      boolean overwrite,
-      int bufferSize, short replication, long blockSize,
-      Progressable progress) throws IOException {
+                                               boolean overwrite,
+                                               int bufferSize, short replication, long blockSize,
+                                               Progressable progress) throws IOException {
     return this.createNonRecursive(f, FsPermission.getFileDefault(),
         overwrite, bufferSize, replication, blockSize, progress);
   }
@@ -1367,35 +1342,35 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    * @see #setPermission(Path, FsPermission)
    */
-   public FSDataOutputStream createNonRecursive(Path f, FsPermission permission,
-       boolean overwrite, int bufferSize, short replication, long blockSize,
-       Progressable progress) throws IOException {
-     return createNonRecursive(f, permission,
-         overwrite ? EnumSet.of(CreateFlag.CREATE, CreateFlag.OVERWRITE)
-             : EnumSet.of(CreateFlag.CREATE), bufferSize,
-             replication, blockSize, progress);
-   }
+  public FSDataOutputStream createNonRecursive(Path f, FsPermission permission,
+                                               boolean overwrite, int bufferSize, short replication, long blockSize,
+                                               Progressable progress) throws IOException {
+    return createNonRecursive(f, permission,
+        overwrite ? EnumSet.of(CreateFlag.CREATE, CreateFlag.OVERWRITE)
+            : EnumSet.of(CreateFlag.CREATE), bufferSize,
+        replication, blockSize, progress);
+  }
 
-   /**
-    * Opens an FSDataOutputStream at the indicated Path with write-progress
-    * reporting. Same as create(), except fails if parent directory doesn't
-    * already exist.
-    * @param f the file name to open
-    * @param permission file permission
-    * @param flags {@link CreateFlag}s to use for this stream.
-    * @param bufferSize the size of the buffer to be used.
-    * @param replication required block replication for the file.
-    * @param blockSize block size
-    * @param progress the progress reporter
-    * @throws IOException IO failure
-    * @see #setPermission(Path, FsPermission)
-    */
-    public FSDataOutputStream createNonRecursive(Path f, FsPermission permission,
-        EnumSet<CreateFlag> flags, int bufferSize, short replication, long blockSize,
-        Progressable progress) throws IOException {
-      throw new IOException("createNonRecursive unsupported for this filesystem "
-          + this.getClass());
-    }
+  /**
+   * Opens an FSDataOutputStream at the indicated Path with write-progress
+   * reporting. Same as create(), except fails if parent directory doesn't
+   * already exist.
+   * @param f the file name to open
+   * @param permission file permission
+   * @param flags {@link CreateFlag}s to use for this stream.
+   * @param bufferSize the size of the buffer to be used.
+   * @param replication required block replication for the file.
+   * @param blockSize block size
+   * @param progress the progress reporter
+   * @throws IOException IO failure
+   * @see #setPermission(Path, FsPermission)
+   */
+  public FSDataOutputStream createNonRecursive(Path f, FsPermission permission,
+                                               EnumSet<CreateFlag> flags, int bufferSize, short replication, long blockSize,
+                                               Progressable progress) throws IOException {
+    throw new IOException("createNonRecursive unsupported for this filesystem "
+        + this.getClass());
+  }
 
   /**
    * Creates the given Path as a brand-new zero-length file.  If
@@ -1452,7 +1427,7 @@ public abstract class FileSystem extends Configured
    *         (default).
    */
   public abstract FSDataOutputStream append(Path f, int bufferSize,
-      Progressable progress) throws IOException;
+                                            Progressable progress) throws IOException;
 
   /**
    * Concat existing files together.
@@ -1462,12 +1437,12 @@ public abstract class FileSystem extends Configured
    * @throws UnsupportedOperationException if the operation is unsupported
    *         (default).
    */
-  public void concat(final Path trg, final Path [] psrcs) throws IOException {
+  public void concat(final Path trg, final Path[] psrcs) throws IOException {
     throw new UnsupportedOperationException("Not implemented by the " +
         getClass().getSimpleName() + " FileSystem implementation");
   }
 
- /**
+  /**
    * Get the replication factor.
    *
    * @deprecated Use {@link #getFileStatus(Path)} instead
@@ -1494,7 +1469,7 @@ public abstract class FileSystem extends Configured
    *         or is a directory
    */
   public boolean setReplication(Path src, short replication)
-    throws IOException {
+      throws IOException {
     return true;
   }
 
@@ -1541,7 +1516,7 @@ public abstract class FileSystem extends Configured
    */
   @Deprecated
   protected void rename(final Path src, final Path dst,
-      final Rename... options) throws IOException {
+                        final Rename... options) throws IOException {
     // Default implementation
     final FileStatus srcStatus = getFileLinkStatus(src);
     if (srcStatus == null) {
@@ -1639,7 +1614,7 @@ public abstract class FileSystem extends Configured
    * @param recursive if path is a directory and set to
    * true, the directory is deleted else throws an exception. In
    * case of a file the recursive can be set to either true or false.
-   * @return  true if delete is successful else false.
+   * @return true if delete is successful else false.
    * @throws IOException IO failure
    */
   public abstract boolean delete(Path f, boolean recursive) throws IOException;
@@ -1668,7 +1643,7 @@ public abstract class FileSystem extends Configured
    *   further, and may cause the files to not be deleted.</li>
    * </ol>
    * @param f the path to delete.
-   * @return  true if deleteOnExit is successful, otherwise false.
+   * @return true if deleteOnExit is successful, otherwise false.
    * @throws IOException IO failure
    */
   public boolean deleteOnExit(Path f) throws IOException {
@@ -1702,14 +1677,13 @@ public abstract class FileSystem extends Configured
    */
   protected void processDeleteOnExit() {
     synchronized (deleteOnExit) {
-      for (Iterator<Path> iter = deleteOnExit.iterator(); iter.hasNext();) {
+      for (Iterator<Path> iter = deleteOnExit.iterator(); iter.hasNext(); ) {
         Path path = iter.next();
         try {
           if (exists(path)) {
             delete(path, true);
           }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           LOGGER.info("Ignoring failure to deleteOnExit for path {}", path);
         }
         iter.remove();
@@ -1796,11 +1770,11 @@ public abstract class FileSystem extends Configured
     }
     // f is a directory
     long[] summary = {0, 0, 1};
-    for(FileStatus s : listStatus(f)) {
+    for (FileStatus s : listStatus(f)) {
       long length = s.getLen();
       ContentSummary c = s.isDirectory() ? getContentSummary(s.getPath()) :
           new ContentSummary.Builder().length(length).
-          fileCount(1).directoryCount(0).spaceConsumed(length).build();
+              fileCount(1).directoryCount(0).spaceConsumed(length).build();
       summary[0] += c.getLength();
       summary[1] += c.getFileCount();
       summary[2] += c.getDirectoryCount();
@@ -1829,7 +1803,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void setQuota(Path src, final long namespaceQuota,
-      final long storagespaceQuota) throws IOException {
+                       final long storagespaceQuota) throws IOException {
     methodNotSupported();
   }
 
@@ -1842,7 +1816,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void setQuotaByStorageType(Path src, final StorageType type,
-      final long quota) throws IOException {
+                                    final long quota) throws IOException {
     methodNotSupported();
   }
 
@@ -1850,11 +1824,11 @@ public abstract class FileSystem extends Configured
    * The default filter accepts all paths.
    */
   private static final PathFilter DEFAULT_FILTER = new PathFilter() {
-      @Override
-      public boolean accept(Path file) {
-        return true;
-      }
-    };
+    @Override
+    public boolean accept(Path file) {
+      return true;
+    }
+  };
 
   /**
    * List the statuses of the files/directories in the given path if the path is
@@ -1870,7 +1844,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException see specific implementation
    */
   public abstract FileStatus[] listStatus(Path f) throws FileNotFoundException,
-                                                         IOException;
+      IOException;
 
   /**
    * Represents a batch of directory entries when iteratively listing a
@@ -1938,7 +1912,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException see specific implementation
    */
   private void listStatus(ArrayList<FileStatus> results, Path f,
-      PathFilter filter) throws FileNotFoundException, IOException {
+                          PathFilter filter) throws FileNotFoundException, IOException {
     FileStatus listing[] = listStatus(f);
     Preconditions.checkNotNull(listing, "listStatus should not return NULL");
     for (int i = 0; i < listing.length; i++) {
@@ -1957,7 +1931,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public RemoteIterator<Path> listCorruptFileBlocks(Path path)
-    throws IOException {
+      throws IOException {
     throw new UnsupportedOperationException(getClass().getCanonicalName() +
         " does not support listCorruptFileBlocks");
   }
@@ -1979,7 +1953,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException see specific implementation
    */
   public FileStatus[] listStatus(Path f, PathFilter filter)
-                                   throws FileNotFoundException, IOException {
+      throws FileNotFoundException, IOException {
     ArrayList<FileStatus> results = new ArrayList<>();
     listStatus(results, f, filter);
     return results.toArray(new FileStatus[results.size()]);
@@ -2128,7 +2102,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException If an I/O error occurred
    */
   public RemoteIterator<LocatedFileStatus> listLocatedStatus(final Path f)
-  throws FileNotFoundException, IOException {
+      throws FileNotFoundException, IOException {
     return listLocatedStatus(f, DEFAULT_FILTER);
   }
 
@@ -2144,15 +2118,15 @@ public abstract class FileSystem extends Configured
    * @throws IOException if any I/O error occurred
    */
   protected RemoteIterator<LocatedFileStatus> listLocatedStatus(final Path f,
-      final PathFilter filter)
-  throws FileNotFoundException, IOException {
+                                                                final PathFilter filter)
+      throws FileNotFoundException, IOException {
     return new RemoteIterator<LocatedFileStatus>() {
       private final FileStatus[] stats = listStatus(f, filter);
       private int i = 0;
 
       @Override
       public boolean hasNext() {
-        return i<stats.length;
+        return i < stats.length;
       }
 
       @Override
@@ -2207,7 +2181,7 @@ public abstract class FileSystem extends Configured
       if (i == entries.getEntries().length) {
         fetchMore();
       }
-      return (T)entries.getEntries()[i++];
+      return (T) entries.getEntries()[i++];
     }
   }
 
@@ -2226,7 +2200,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException if any I/O error occurred
    */
   public RemoteIterator<FileStatus> listStatusIterator(final Path p)
-  throws FileNotFoundException, IOException {
+      throws FileNotFoundException, IOException {
     return new DirListingIterator<>(p);
   }
 
@@ -2251,11 +2225,11 @@ public abstract class FileSystem extends Configured
    */
   public RemoteIterator<LocatedFileStatus> listFiles(
       final Path f, final boolean recursive)
-  throws FileNotFoundException, IOException {
+      throws FileNotFoundException, IOException {
     return new RemoteIterator<LocatedFileStatus>() {
       private Stack<RemoteIterator<LocatedFileStatus>> itors = new Stack<>();
       private RemoteIterator<LocatedFileStatus> curItor =
-        listLocatedStatus(f);
+          listLocatedStatus(f);
       private LocatedFileStatus curFile;
 
       @Override
@@ -2308,7 +2282,7 @@ public abstract class FileSystem extends Configured
     String username;
     try {
       username = UserGroupInformation.getCurrentUser().getShortUserName();
-    } catch(IOException ex) {
+    } catch (IOException ex) {
       LOGGER.warn("Unable to get user name. Fall back to system property " +
           "user.name", ex);
       username = System.getProperty("user.name");
@@ -2367,7 +2341,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public abstract boolean mkdirs(Path f, FsPermission permission
-      ) throws IOException;
+  ) throws IOException;
 
   /**
    * The src file is on the local disk.  Add it to filesystem at
@@ -2377,7 +2351,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void copyFromLocalFile(Path src, Path dst)
-    throws IOException {
+      throws IOException {
     copyFromLocalFile(false, src, dst);
   }
 
@@ -2389,7 +2363,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void moveFromLocalFile(Path[] srcs, Path dst)
-    throws IOException {
+      throws IOException {
     copyFromLocalFile(true, true, srcs, dst);
   }
 
@@ -2401,7 +2375,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void moveFromLocalFile(Path src, Path dst)
-    throws IOException {
+      throws IOException {
     copyFromLocalFile(true, src, dst);
   }
 
@@ -2414,7 +2388,7 @@ public abstract class FileSystem extends Configured
    * @param dst path
    */
   public void copyFromLocalFile(boolean delSrc, Path src, Path dst)
-    throws IOException {
+      throws IOException {
     copyFromLocalFile(delSrc, true, src, dst);
   }
 
@@ -2430,7 +2404,7 @@ public abstract class FileSystem extends Configured
    */
   public void copyFromLocalFile(boolean delSrc, boolean overwrite,
                                 Path[] srcs, Path dst)
-    throws IOException {
+      throws IOException {
     Configuration conf = getConf();
     FileUtil.copy(getLocal(conf), srcs, this, dst, delSrc, overwrite, conf);
   }
@@ -2447,7 +2421,7 @@ public abstract class FileSystem extends Configured
    */
   public void copyFromLocalFile(boolean delSrc, boolean overwrite,
                                 Path src, Path dst)
-    throws IOException {
+      throws IOException {
     Configuration conf = getConf();
     FileUtil.copy(getLocal(conf), src, this, dst, delSrc, overwrite, conf);
   }
@@ -2482,7 +2456,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void copyToLocalFile(boolean delSrc, Path src, Path dst)
-    throws IOException {
+      throws IOException {
     copyToLocalFile(delSrc, src, dst, false);
   }
 
@@ -2506,7 +2480,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException for any IO error
    */
   public void copyToLocalFile(boolean delSrc, Path src, Path dst,
-      boolean useRawLocalFileSystem) throws IOException {
+                              boolean useRawLocalFileSystem) throws IOException {
     Configuration conf = getConf();
     FileSystem local = null;
     if (useRawLocalFileSystem) {
@@ -2528,7 +2502,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public Path startLocalOutput(Path fsOutputFile, Path tmpLocalFile)
-    throws IOException {
+      throws IOException {
     return tmpLocalFile;
   }
 
@@ -2543,7 +2517,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void completeLocalOutput(Path fsOutputFile, Path tmpLocalFile)
-    throws IOException {
+      throws IOException {
     moveFromLocalFile(tmpLocalFile, fsOutputFile);
   }
 
@@ -2628,7 +2602,9 @@ public abstract class FileSystem extends Configured
    * @deprecated use {@link #getDefaultReplication(Path)} instead
    */
   @Deprecated
-  public short getDefaultReplication() { return 1; }
+  public short getDefaultReplication() {
+    return 1;
+  }
 
   /**
    * Get the default replication for a path.
@@ -2725,8 +2701,8 @@ public abstract class FileSystem extends Configured
       }
     }
     throw new AccessControlException(String.format(
-      "Permission denied: user=%s, path=\"%s\":%s:%s:%s%s", user, stat.getPath(),
-      stat.getOwner(), stat.getGroup(), stat.isDirectory() ? "d" : "-", perm));
+        "Permission denied: user=%s, path=\"%s\":%s:%s:%s%s", user, stat.getPath(),
+        stat.getOwner(), stat.getGroup(), stat.isDirectory() ? "d" : "-", perm));
   }
 
   /**
@@ -2744,7 +2720,7 @@ public abstract class FileSystem extends Configured
    * See {@link FileContext#createSymlink(Path, Path, boolean)}.
    */
   public void createSymlink(final Path target, final Path link,
-      final boolean createParent) throws AccessControlException,
+                            final boolean createParent) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
       ParentNotDirectoryException, UnsupportedFileSystemException,
       IOException {
@@ -2875,7 +2851,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void setPermission(Path p, FsPermission permission
-      ) throws IOException {
+  ) throws IOException {
   }
 
   /**
@@ -2887,7 +2863,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void setOwner(Path p, String username, String groupname
-      ) throws IOException {
+  ) throws IOException {
   }
 
   /**
@@ -2902,7 +2878,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException IO failure
    */
   public void setTimes(Path p, long mtime, long atime
-      ) throws IOException {
+  ) throws IOException {
   }
 
   /**
@@ -2940,7 +2916,7 @@ public abstract class FileSystem extends Configured
    *         (default outcome).
    */
   public void renameSnapshot(Path path, String snapshotOldName,
-      String snapshotNewName) throws IOException {
+                             String snapshotNewName) throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
         + " doesn't support renameSnapshot");
   }
@@ -3089,7 +3065,7 @@ public abstract class FileSystem extends Configured
    *         (default outcome).
    */
   public void setXAttr(Path path, String name, byte[] value,
-      EnumSet<XAttrSetFlag> flag) throws IOException {
+                       EnumSet<XAttrSetFlag> flag) throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
         + " doesn't support setXAttr");
   }
@@ -3166,7 +3142,7 @@ public abstract class FileSystem extends Configured
    */
   public List<String> listXAttrs(Path path) throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
-            + " doesn't support listXAttrs");
+        + " doesn't support listXAttrs");
   }
 
   /**
@@ -3313,12 +3289,12 @@ public abstract class FileSystem extends Configured
   public boolean hasPathCapability(final Path path, final String capability)
       throws IOException {
     switch (validatePathCapabilityArgs(makeQualified(path), capability)) {
-    case CommonPathCapabilities.FS_SYMLINKS:
-      // delegate to the existing supportsSymlinks() call.
-      return supportsSymlinks() && areSymlinksEnabled();
-    default:
-      // the feature is not implemented.
-      return false;
+      case CommonPathCapabilities.FS_SYMLINKS:
+        // delegate to the existing supportsSymlinks() call.
+        return supportsSymlinks() && areSymlinksEnabled();
+      default:
+        // the feature is not implemented.
+        return false;
     }
   }
 
@@ -3387,7 +3363,7 @@ public abstract class FileSystem extends Configured
    * @throws IOException if the filesystem could not be loaded
    */
   public static Class<? extends FileSystem> getFileSystemClass(String scheme,
-      Configuration conf) throws IOException {
+                                                               Configuration conf) throws IOException {
     if (!FILE_SYSTEMS_LOADED) {
       loadFileSystems();
     }
@@ -3426,9 +3402,9 @@ public abstract class FileSystem extends Configured
   private static FileSystem createFileSystem(URI uri, Configuration conf)
       throws IOException {
     Tracer tracer = FsTracer.get(conf);
-    try(TraceScope scope = tracer.newScope("FileSystem#createFileSystem");
-        DurationInfo ignored =
-            new DurationInfo(LOGGER, false, "Creating FS %s", uri)) {
+    try (TraceScope scope = tracer.newScope("FileSystem#createFileSystem");
+         DurationInfo ignored =
+             new DurationInfo(LOGGER, false, "Creating FS %s", uri)) {
       scope.addKVAnnotation("scheme", uri.getScheme());
       Class<? extends FileSystem> clazz =
           getFileSystemClass(uri.getScheme(), conf);
@@ -3484,13 +3460,13 @@ public abstract class FileSystem extends Configured
       creatorPermits = new Semaphore(permits);
     }
 
-    FileSystem get(URI uri, Configuration conf) throws IOException{
+    FileSystem get(URI uri, Configuration conf) throws IOException {
       Key key = new Key(uri, conf);
       return getInternal(uri, conf, key);
     }
 
     /** The objects inserted into the cache using this method are all unique. */
-    FileSystem getUnique(URI uri, Configuration conf) throws IOException{
+    FileSystem getUnique(URI uri, Configuration conf) throws IOException {
       Key key = new Key(uri, conf, unique.getAndIncrement());
       return getInternal(uri, conf, key);
     }
@@ -3509,7 +3485,7 @@ public abstract class FileSystem extends Configured
      * @throws IOException
      */
     private FileSystem getInternal(URI uri, Configuration conf, Key key)
-        throws IOException{
+        throws IOException {
       FileSystem fs;
       synchronized (this) {
         fs = map.get(key);
@@ -3524,7 +3500,7 @@ public abstract class FileSystem extends Configured
         creatorPermits.acquire();
       } catch (InterruptedException e) {
         // acquisition was interrupted; convert to an IOE.
-        throw (IOException)new InterruptedIOException(e.toString())
+        throw (IOException) new InterruptedIOException(e.toString())
             .initCause(e);
       }
       FileSystem fsToClose = null;
@@ -3644,8 +3620,7 @@ public abstract class FileSystem extends Configured
         if (fs != null) {
           try {
             fs.close();
-          }
-          catch(IOException ioe) {
+          } catch (IOException ioe) {
             exceptions.add(ioe);
           }
         }
@@ -3683,8 +3658,7 @@ public abstract class FileSystem extends Configured
       for (FileSystem fs : targetFSList) {
         try {
           fs.close();
-        }
-        catch(IOException ioe) {
+        } catch (IOException ioe) {
           exceptions.add(ioe);
         }
       }
@@ -3705,9 +3679,9 @@ public abstract class FileSystem extends Configured
       }
 
       Key(URI uri, Configuration conf, long unique) throws IOException {
-        scheme = uri.getScheme()==null ?
+        scheme = uri.getScheme() == null ?
             "" : StringUtils.toLowerCase(uri.getScheme());
-        authority = uri.getAuthority()==null ?
+        authority = uri.getAuthority() == null ?
             "" : StringUtils.toLowerCase(uri.getAuthority());
         this.unique = unique;
 
@@ -3716,7 +3690,7 @@ public abstract class FileSystem extends Configured
 
       @Override
       public int hashCode() {
-        return (scheme + authority).hashCode() + ugi.hashCode() + (int)unique;
+        return (scheme + authority).hashCode() + ugi.hashCode() + (int) unique;
       }
 
       static boolean isEqual(Object a, Object b) {
@@ -3729,18 +3703,18 @@ public abstract class FileSystem extends Configured
           return true;
         }
         if (obj instanceof Key) {
-          Key that = (Key)obj;
+          Key that = (Key) obj;
           return isEqual(this.scheme, that.scheme)
-                 && isEqual(this.authority, that.authority)
-                 && isEqual(this.ugi, that.ugi)
-                 && (this.unique == that.unique);
+              && isEqual(this.authority, that.authority)
+              && isEqual(this.ugi, that.ugi)
+              && (this.unique == that.unique);
         }
         return false;
       }
 
       @Override
       public String toString() {
-        return "("+ugi.toString() + ")@" + scheme + "://" + authority;
+        return "(" + ugi.toString() + ")@" + scheme + "://" + authority;
       }
     }
   }
@@ -3869,6 +3843,7 @@ public abstract class FileSystem extends Configured
 
     private interface StatisticsAggregator<T> {
       void accept(StatisticsData data);
+
       T aggregate();
     }
 
@@ -3986,7 +3961,7 @@ public abstract class FileSystem extends Configured
         while (!Thread.interrupted()) {
           try {
             StatisticsDataReference ref =
-                (StatisticsDataReference)STATS_DATA_REF_QUEUE.remove();
+                (StatisticsDataReference) STATS_DATA_REF_QUEUE.remove();
             ref.cleanUp();
           } catch (InterruptedException ie) {
             LOGGER.warn("Cleaner thread interrupted, will stop", ie);
@@ -4009,7 +3984,7 @@ public abstract class FileSystem extends Configured
         threadData.set(data);
         StatisticsDataReference ref =
             new StatisticsDataReference(data, Thread.currentThread());
-        synchronized(this) {
+        synchronized (this) {
           allData.add(ref);
         }
       }
@@ -4074,20 +4049,20 @@ public abstract class FileSystem extends Configured
      */
     public void incrementBytesReadByDistance(int distance, long newBytes) {
       switch (distance) {
-      case 0:
-        getThreadStatistics().bytesReadLocalHost += newBytes;
-        break;
-      case 1:
-      case 2:
-        getThreadStatistics().bytesReadDistanceOfOneOrTwo += newBytes;
-        break;
-      case 3:
-      case 4:
-        getThreadStatistics().bytesReadDistanceOfThreeOrFour += newBytes;
-        break;
-      default:
-        getThreadStatistics().bytesReadDistanceOfFiveOrLarger += newBytes;
-        break;
+        case 0:
+          getThreadStatistics().bytesReadLocalHost += newBytes;
+          break;
+        case 1:
+        case 2:
+          getThreadStatistics().bytesReadDistanceOfOneOrTwo += newBytes;
+          break;
+        case 3:
+        case 4:
+          getThreadStatistics().bytesReadDistanceOfThreeOrFour += newBytes;
+          break;
+        default:
+          getThreadStatistics().bytesReadDistanceOfFiveOrLarger += newBytes;
+          break;
       }
     }
 
@@ -4099,11 +4074,11 @@ public abstract class FileSystem extends Configured
      * Finally, at the end, we will call aggregate to get the final total.
      *
      * @param         visitor to use.
-     * @return        The total.
+     * @return The total.
      */
     private synchronized <T> T visitAll(StatisticsAggregator<T> visitor) {
       visitor.accept(rootData);
-      for (StatisticsDataReference ref: allData) {
+      for (StatisticsDataReference ref : allData) {
         StatisticsData data = ref.getData();
         visitor.accept(data);
       }
@@ -4220,20 +4195,20 @@ public abstract class FileSystem extends Configured
     public long getBytesReadByDistance(int distance) {
       long bytesRead;
       switch (distance) {
-      case 0:
-        bytesRead = getData().getBytesReadLocalHost();
-        break;
-      case 1:
-      case 2:
-        bytesRead = getData().getBytesReadDistanceOfOneOrTwo();
-        break;
-      case 3:
-      case 4:
-        bytesRead = getData().getBytesReadDistanceOfThreeOrFour();
-        break;
-      default:
-        bytesRead = getData().getBytesReadDistanceOfFiveOrLarger();
-        break;
+        case 0:
+          bytesRead = getData().getBytesReadLocalHost();
+          break;
+        case 1:
+        case 2:
+          bytesRead = getData().getBytesReadDistanceOfOneOrTwo();
+          break;
+        case 3:
+        case 4:
+          bytesRead = getData().getBytesReadDistanceOfThreeOrFour();
+          break;
+        default:
+          bytesRead = getData().getBytesReadDistanceOfFiveOrLarger();
+          break;
       }
       return bytesRead;
     }
@@ -4350,7 +4325,7 @@ public abstract class FileSystem extends Configured
   @Deprecated
   public static synchronized Map<String, Statistics> getStatistics() {
     Map<String, Statistics> result = new HashMap<>();
-    for(Statistics stat: statisticsTable.values()) {
+    for (Statistics stat : statisticsTable.values()) {
       result.put(stat.getScheme(), stat);
     }
     return result;
@@ -4373,7 +4348,7 @@ public abstract class FileSystem extends Configured
    */
   @Deprecated
   public static synchronized Statistics getStatistics(final String scheme,
-      Class<? extends FileSystem> cls) {
+                                                      Class<? extends FileSystem> cls) {
     checkArgument(scheme != null,
         "No statistics is allowed for a file system with null scheme!");
     Statistics result = statisticsTable.get(cls);
@@ -4402,12 +4377,11 @@ public abstract class FileSystem extends Configured
   /**
    * Print all statistics for all file systems to {@code System.out}
    */
-  public static synchronized
-  void printStatistics() throws IOException {
-    for (Map.Entry<Class<? extends FileSystem>, Statistics> pair:
-            statisticsTable.entrySet()) {
+  public static synchronized void printStatistics() throws IOException {
+    for (Map.Entry<Class<? extends FileSystem>, Statistics> pair :
+        statisticsTable.entrySet()) {
       System.out.println("  FileSystem " + pair.getKey().getName() +
-                         ": " + pair.getValue());
+          ": " + pair.getValue());
     }
   }
 
@@ -4432,7 +4406,7 @@ public abstract class FileSystem extends Configured
    * subclasses. The default implementation returns an empty storage statistics
    * object.</p>
    *
-   * @return    The StorageStatistics for this FileSystem instance.
+   * @return The StorageStatistics for this FileSystem instance.
    *            Will never be null.
    */
   public StorageStatistics getStorageStatistics() {
@@ -4465,7 +4439,7 @@ public abstract class FileSystem extends Configured
    */
   private static final class FileSystemDataOutputStreamBuilder extends
       FSDataOutputStreamBuilder<FSDataOutputStream,
-        FileSystemDataOutputStreamBuilder> {
+          FileSystemDataOutputStreamBuilder> {
 
     /**
      * Constructor.
@@ -4725,7 +4699,7 @@ public abstract class FileSystem extends Configured
           .withOptions(getOptions())
           .withBufferSize(getBufferSize())
           .withStatus(super.getStatus());  // explicit to avoid IDE warnings
-      if(optionalPath.isPresent()) {
+      if (optionalPath.isPresent()) {
         return getFS().openFileWithOptions(optionalPath.get(),
             parameters);
       } else {

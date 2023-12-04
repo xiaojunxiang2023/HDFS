@@ -1,12 +1,12 @@
 package org.apache.hadoop.io.erasurecode;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Erasure coding schema to housekeeper relevant information.
@@ -90,8 +90,8 @@ public final class ECSchema implements Serializable {
    * @param extraOptions extra options to configure the codec
    */
   public ECSchema(String codecName, int numDataUnits, int numParityUnits,
-      Map<String, String> extraOptions) {
-    assert (codecName != null && ! codecName.isEmpty());
+                  Map<String, String> extraOptions) {
+    assert (codecName != null && !codecName.isEmpty());
     assert (numDataUnits > 0 && numParityUnits > 0);
 
     this.codecName = codecName;

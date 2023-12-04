@@ -1,8 +1,5 @@
 package org.apache.hadoop.io;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -16,10 +13,11 @@ import org.apache.hadoop.util.hash.Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAPFILE_BLOOM_ERROR_RATE_DEFAULT;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAPFILE_BLOOM_ERROR_RATE_KEY;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAPFILE_BLOOM_SIZE_DEFAULT;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAPFILE_BLOOM_SIZE_KEY;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 
 /**
  * This class extends {@link MapFile} and provides very much the same
@@ -32,7 +30,7 @@ public class BloomMapFile {
   private static final Logger LOG = LoggerFactory.getLogger(BloomMapFile.class);
   public static final String BLOOM_FILE_NAME = "bloom";
   public static final int HASH_COUNT = 5;
-  
+
   public static void delete(FileSystem fs, String name) throws IOException {
     Path dir = new Path(name);
     Path data = new Path(dir, MapFile.DATA_FILE_NAME);
@@ -47,14 +45,14 @@ public class BloomMapFile {
 
   private static byte[] byteArrayForBloomKey(DataOutputBuffer buf) {
     int cleanLength = buf.getLength();
-    byte [] ba = buf.getData();
+    byte[] ba = buf.getData();
     if (cleanLength != ba.length) {
       ba = new byte[cleanLength];
       System.arraycopy(buf.getData(), 0, ba, 0, cleanLength);
     }
     return ba;
   }
-  
+
   public static class Writer extends MapFile.Writer {
     private DynamicBloomFilter bloomFilter;
     private int numKeys;
@@ -63,66 +61,66 @@ public class BloomMapFile {
     private DataOutputBuffer buf = new DataOutputBuffer();
     private FileSystem fs;
     private Path dir;
-    
+
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        Class<? extends WritableComparable> keyClass,
-        Class<? extends Writable> valClass, CompressionType compress,
-        CompressionCodec codec, Progressable progress) throws IOException {
-      this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass), 
-           compression(compress, codec), progressable(progress));
+                  Class<? extends WritableComparable> keyClass,
+                  Class<? extends Writable> valClass, CompressionType compress,
+                  CompressionCodec codec, Progressable progress) throws IOException {
+      this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass),
+          compression(compress, codec), progressable(progress));
     }
 
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        Class<? extends WritableComparable> keyClass,
-        Class valClass, CompressionType compress,
-        Progressable progress) throws IOException {
-      this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass), 
-           compression(compress), progressable(progress));
+                  Class<? extends WritableComparable> keyClass,
+                  Class valClass, CompressionType compress,
+                  Progressable progress) throws IOException {
+      this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass),
+          compression(compress), progressable(progress));
     }
 
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        Class<? extends WritableComparable> keyClass,
-        Class valClass, CompressionType compress)
+                  Class<? extends WritableComparable> keyClass,
+                  Class valClass, CompressionType compress)
         throws IOException {
-      this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass), 
-           compression(compress));
+      this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass),
+          compression(compress));
     }
 
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        WritableComparator comparator, Class valClass,
-        CompressionType compress, CompressionCodec codec, Progressable progress)
+                  WritableComparator comparator, Class valClass,
+                  CompressionType compress, CompressionCodec codec, Progressable progress)
         throws IOException {
-      this(conf, new Path(dirName), comparator(comparator), 
-           valueClass(valClass), compression(compress, codec), 
-           progressable(progress));
+      this(conf, new Path(dirName), comparator(comparator),
+          valueClass(valClass), compression(compress, codec),
+          progressable(progress));
     }
 
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        WritableComparator comparator, Class valClass,
-        CompressionType compress, Progressable progress) throws IOException {
-      this(conf, new Path(dirName), comparator(comparator), 
-           valueClass(valClass), compression(compress),
-           progressable(progress));
+                  WritableComparator comparator, Class valClass,
+                  CompressionType compress, Progressable progress) throws IOException {
+      this(conf, new Path(dirName), comparator(comparator),
+          valueClass(valClass), compression(compress),
+          progressable(progress));
     }
 
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        WritableComparator comparator, Class valClass, CompressionType compress)
+                  WritableComparator comparator, Class valClass, CompressionType compress)
         throws IOException {
-      this(conf, new Path(dirName), comparator(comparator), 
-           valueClass(valClass), compression(compress));
+      this(conf, new Path(dirName), comparator(comparator),
+          valueClass(valClass), compression(compress));
     }
 
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-        WritableComparator comparator, Class valClass) throws IOException {
-      this(conf, new Path(dirName), comparator(comparator), 
-           valueClass(valClass));
+                  WritableComparator comparator, Class valClass) throws IOException {
+      this(conf, new Path(dirName), comparator(comparator),
+          valueClass(valClass));
     }
 
     @Deprecated
@@ -132,7 +130,7 @@ public class BloomMapFile {
       this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass));
     }
 
-    public Writer(Configuration conf, Path dir, 
+    public Writer(Configuration conf, Path dir,
                   SequenceFile.Writer.Option... options) throws IOException {
       super(conf, dir, options);
       this.fs = dir.getFileSystem(conf);
@@ -150,8 +148,8 @@ public class BloomMapFile {
       // Our desired error rate is by default 0.005, i.e. 0.5%
       float errorRate = conf.getFloat(
           IO_MAPFILE_BLOOM_ERROR_RATE_KEY, IO_MAPFILE_BLOOM_ERROR_RATE_DEFAULT);
-      vectorSize = (int)Math.ceil((double)(-HASH_COUNT * numKeys) /
-          Math.log(1.0 - Math.pow(errorRate, 1.0/HASH_COUNT)));
+      vectorSize = (int) Math.ceil((double) (-HASH_COUNT * numKeys) /
+          Math.log(1.0 - Math.pow(errorRate, 1.0 / HASH_COUNT)));
       bloomFilter = new DynamicBloomFilter(vectorSize, HASH_COUNT,
           Hash.getHashType(conf), numKeys);
     }
@@ -181,7 +179,7 @@ public class BloomMapFile {
     }
 
   }
-  
+
   public static class Reader extends MapFile.Reader {
     private DynamicBloomFilter bloomFilter;
     private DataOutputBuffer buf = new DataOutputBuffer();
@@ -201,19 +199,19 @@ public class BloomMapFile {
 
     @Deprecated
     public Reader(FileSystem fs, String dirName, WritableComparator comparator,
-        Configuration conf, boolean open) throws IOException {
+                  Configuration conf, boolean open) throws IOException {
       this(new Path(dirName), conf, comparator(comparator));
     }
 
     @Deprecated
     public Reader(FileSystem fs, String dirName, WritableComparator comparator,
-        Configuration conf) throws IOException {
+                  Configuration conf) throws IOException {
       this(new Path(dirName), conf, comparator(comparator));
     }
-    
-    private void initBloomFilter(Path dirName, 
+
+    private void initBloomFilter(Path dirName,
                                  Configuration conf) {
-      
+
       DataInputStream in = null;
       try {
         FileSystem fs = dirName.getFileSystem(conf);
@@ -229,13 +227,13 @@ public class BloomMapFile {
         IOUtils.closeStream(in);
       }
     }
-    
+
     /**
      * Checks if this MapFile has the indicated key. The membership test is
      * performed using a Bloom filter, so the result has always non-zero
      * probability of false positives.
      * @param key key to check
-     * @return  false iff key doesn't exist, true if key probably exists.
+     * @return false iff key doesn't exist, true if key probably exists.
      * @throws IOException
      */
     public boolean probablyHasKey(WritableComparable key) throws IOException {
@@ -247,7 +245,7 @@ public class BloomMapFile {
       bloomKey.set(byteArrayForBloomKey(buf), 1.0);
       return bloomFilter.membershipTest(bloomKey);
     }
-    
+
     /**
      * Fast version of the
      * {@link MapFile.Reader#get(WritableComparable, Writable)} method. First
@@ -263,7 +261,7 @@ public class BloomMapFile {
       }
       return super.get(key, val);
     }
-    
+
     /**
      * Retrieve the Bloom filter used by this instance of the Reader.
      * @return a Bloom filter (see {@link Filter})

@@ -1,18 +1,18 @@
 package org.apache.hadoop.metrics2.sink.ganglia;
 
-import java.io.IOException;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.configuration2.SubsetConfiguration;
 import org.apache.hadoop.metrics2.MetricsSink;
 import org.apache.hadoop.metrics2.util.Servers;
 import org.apache.hadoop.net.DNS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This the base class for Ganglia sink classes using metrics2. Lot of the code
@@ -64,7 +64,7 @@ public abstract class AbstractGangliaSink implements MetricsSink {
    * Used for visiting Metrics
    */
   protected final GangliaMetricVisitor gangliaMetricVisitor =
-    new GangliaMetricVisitor();
+      new GangliaMetricVisitor();
 
   private SubsetConfiguration conf;
   private Map<String, GangliaConf> gangliaConfMap;
@@ -78,14 +78,18 @@ public abstract class AbstractGangliaSink implements MetricsSink {
     positive,   // 1
     negative,   // 2
     both        // 3
-  };
+  }
+
+  ;
 
   /**
    * define enum for various type of conf
    */
   public enum GangliaConfType {
     slope, units, dmax, tmax
-  };
+  }
+
+  ;
 
   /*
    * (non-Javadoc)
@@ -118,7 +122,7 @@ public abstract class AbstractGangliaSink implements MetricsSink {
     metricsServers = Servers.parse(conf.getString(SERVERS_PROPERTY),
         DEFAULT_PORT);
     multicastEnabled = conf.getBoolean(MULTICAST_ENABLED_PROPERTY,
-            DEFAULT_MULTICAST_ENABLED);
+        DEFAULT_MULTICAST_ENABLED);
     multicastTtl = conf.getInt(MULTICAST_TTL_PROPERTY, DEFAULT_MULTICAST_TTL);
 
     // extract the Ganglia conf per metrics
@@ -174,18 +178,18 @@ public abstract class AbstractGangliaSink implements MetricsSink {
         }
 
         switch (gtype) {
-        case units:
-          gconf.setUnits(metricValue);
-          break;
-        case dmax:
-          gconf.setDmax(Integer.parseInt(metricValue));
-          break;
-        case tmax:
-          gconf.setTmax(Integer.parseInt(metricValue));
-          break;
-        case slope:
-          gconf.setSlope(GangliaSlope.valueOf(metricValue));
-          break;
+          case units:
+            gconf.setUnits(metricValue);
+            break;
+          case dmax:
+            gconf.setDmax(Integer.parseInt(metricValue));
+            break;
+          case tmax:
+            gconf.setTmax(Integer.parseInt(metricValue));
+            break;
+          case slope:
+            gconf.setSlope(GangliaSlope.valueOf(metricValue));
+            break;
         }
       }
     }
@@ -252,12 +256,12 @@ public abstract class AbstractGangliaSink implements MetricsSink {
       for (SocketAddress socketAddress : metricsServers) {
         if (socketAddress == null || !(socketAddress instanceof InetSocketAddress))
           throw new IllegalArgumentException("Unsupported Address type");
-        InetSocketAddress inetAddress = (InetSocketAddress)socketAddress;
-        if(inetAddress.isUnresolved()) {
+        InetSocketAddress inetAddress = (InetSocketAddress) socketAddress;
+        if (inetAddress.isUnresolved()) {
           throw new UnknownHostException("Unresolved host: " + inetAddress);
         }
         DatagramPacket packet =
-          new DatagramPacket(buffer, offset, socketAddress);
+            new DatagramPacket(buffer, offset, socketAddress);
         datagramSocket.send(packet);
       }
     } finally {

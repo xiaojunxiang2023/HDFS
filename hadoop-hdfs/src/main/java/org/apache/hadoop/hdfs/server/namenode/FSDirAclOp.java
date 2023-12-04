@@ -1,17 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
 import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclEntryScope;
-import org.apache.hadoop.fs.permission.AclEntryType;
-import org.apache.hadoop.fs.permission.AclStatus;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.fs.permission.*;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.AclException;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -36,7 +30,7 @@ class FSDirAclOp {
           existingAcl, aclSpec);
       AclStorage.updateINodeAcl(inode, newAcl, snapshotId);
       fsd.getEditLog().logSetAcl(src, newAcl);
-    } catch (AclException e){
+    } catch (AclException e) {
       throw new AclException(e.getMessage() + " Path: " + src, e);
     } finally {
       fsd.writeUnlock();
@@ -59,10 +53,10 @@ class FSDirAclOp {
       int snapshotId = iip.getLatestSnapshotId();
       List<AclEntry> existingAcl = AclStorage.readINodeLogicalAcl(inode);
       List<AclEntry> newAcl = AclTransformation.filterAclEntriesByAclSpec(
-        existingAcl, aclSpec);
+          existingAcl, aclSpec);
       AclStorage.updateINodeAcl(inode, newAcl, snapshotId);
       fsd.getEditLog().logSetAcl(src, newAcl);
-    } catch (AclException e){
+    } catch (AclException e) {
       throw new AclException(e.getMessage() + " Path: " + src, e);
     } finally {
       fsd.writeUnlock();
@@ -71,7 +65,7 @@ class FSDirAclOp {
   }
 
   static FileStatus removeDefaultAcl(FSDirectory fsd, FSPermissionChecker pc,
-      final String srcArg) throws IOException {
+                                     final String srcArg) throws IOException {
     String src = srcArg;
     checkAclsConfigFlag(fsd);
     INodesInPath iip;
@@ -84,10 +78,10 @@ class FSDirAclOp {
       int snapshotId = iip.getLatestSnapshotId();
       List<AclEntry> existingAcl = AclStorage.readINodeLogicalAcl(inode);
       List<AclEntry> newAcl = AclTransformation.filterDefaultAclEntries(
-        existingAcl);
+          existingAcl);
       AclStorage.updateINodeAcl(inode, newAcl, snapshotId);
       fsd.getEditLog().logSetAcl(src, newAcl);
-    } catch (AclException e){
+    } catch (AclException e) {
       throw new AclException(e.getMessage() + " Path: " + src, e);
     } finally {
       fsd.writeUnlock();
@@ -96,7 +90,7 @@ class FSDirAclOp {
   }
 
   static FileStatus removeAcl(FSDirectory fsd, FSPermissionChecker pc,
-      final String srcArg) throws IOException {
+                              final String srcArg) throws IOException {
     String src = srcArg;
     checkAclsConfigFlag(fsd);
     INodesInPath iip;
@@ -106,7 +100,7 @@ class FSDirAclOp {
       src = iip.getPath();
       fsd.checkOwner(pc, iip);
       unprotectedRemoveAcl(fsd, iip);
-    } catch (AclException e){
+    } catch (AclException e) {
       throw new AclException(e.getMessage() + " Path: " + src, e);
     } finally {
       fsd.writeUnlock();
@@ -127,7 +121,7 @@ class FSDirAclOp {
       fsd.checkOwner(pc, iip);
       List<AclEntry> newAcl = unprotectedSetAcl(fsd, iip, aclSpec, false);
       fsd.getEditLog().logSetAcl(iip.getPath(), newAcl);
-    } catch (AclException e){
+    } catch (AclException e) {
       throw new AclException(e.getMessage() + " Path: " + src, e);
     } finally {
       fsd.writeUnlock();
@@ -154,7 +148,7 @@ class FSDirAclOp {
           .stickyBit(fsPermission.getStickyBit())
           .setPermission(fsPermission)
           .addEntries(acl).build();
-    } catch (AclException e){
+    } catch (AclException e) {
       throw new AclException(e.getMessage() + " Path: " + src, e);
     } finally {
       fsd.readUnlock();
@@ -162,7 +156,7 @@ class FSDirAclOp {
   }
 
   static List<AclEntry> unprotectedSetAcl(FSDirectory fsd, INodesInPath iip,
-      List<AclEntry> aclSpec, boolean fromEdits) throws IOException {
+                                          List<AclEntry> aclSpec, boolean fromEdits) throws IOException {
     assert fsd.hasWriteLock();
 
     // ACL removal is logged to edits as OP_SET_ACL with an empty list.

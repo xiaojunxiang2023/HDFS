@@ -1,12 +1,13 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
 
+import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-public final class WritableUtils  {
+
+public final class WritableUtils {
 
   public static byte[] readCompressedByteArray(DataInput in) throws IOException {
     int length = in.readInt();
@@ -15,12 +16,12 @@ public final class WritableUtils  {
     in.readFully(buffer);      // could/should use readFully(buffer,0,length)?
     GZIPInputStream gzi = new GZIPInputStream(new ByteArrayInputStream(buffer, 0, buffer.length));
     byte[] outbuf = new byte[length];
-    ByteArrayOutputStream bos =  new ByteArrayOutputStream();
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
     int len;
-    while((len=gzi.read(outbuf, 0, outbuf.length)) != -1){
+    while ((len = gzi.read(outbuf, 0, outbuf.length)) != -1) {
       bos.write(outbuf, 0, len);
     }
-    byte[] decompressed =  bos.toByteArray();
+    byte[] decompressed = bos.toByteArray();
     bos.close();
     gzi.close();
     return decompressed;
@@ -33,10 +34,10 @@ public final class WritableUtils  {
     }
   }
 
-  public static int  writeCompressedByteArray(DataOutput out, 
-                                              byte[] bytes) throws IOException {
+  public static int writeCompressedByteArray(DataOutput out,
+                                             byte[] bytes) throws IOException {
     if (bytes != null) {
-      ByteArrayOutputStream bos =  new ByteArrayOutputStream();
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
       GZIPOutputStream gzout = new GZIPOutputStream(bos);
       try {
         gzout.write(bytes, 0, bytes.length);
@@ -50,7 +51,7 @@ public final class WritableUtils  {
       out.writeInt(len);
       out.write(buffer, 0, len);
       /* debug only! Once we have confidence, can lose this. */
-      return ((bytes.length != 0) ? (100*buffer.length)/bytes.length : 0);
+      return ((bytes.length != 0) ? (100 * buffer.length) / bytes.length : 0);
     } else {
       out.writeInt(-1);
       return -1;
@@ -66,7 +67,7 @@ public final class WritableUtils  {
   }
 
 
-  public static int  writeCompressedString(DataOutput out, String s) throws IOException {
+  public static int writeCompressedString(DataOutput out, String s) throws IOException {
     return writeCompressedByteArray(out, (s != null) ? s.getBytes("UTF-8") : null);
   }
 
@@ -75,7 +76,7 @@ public final class WritableUtils  {
    * Write a String as a Network Int n, followed by n Bytes
    * Alternative to 16 bit read/writeUTF.
    * Encoding standard is... ?
-   * 
+   *
    */
   public static void writeString(DataOutput out, String s) throws IOException {
     if (s != null) {
@@ -94,12 +95,12 @@ public final class WritableUtils  {
    * Encoding standard is... ?
    *
    */
-  public static String readString(DataInput in) throws IOException{
+  public static String readString(DataInput in) throws IOException {
     int length = in.readInt();
     if (length == -1) return null;
     byte[] buffer = new byte[length];
     in.readFully(buffer);      // could/should use readFully(buffer,0,length)?
-    return new String(buffer,"UTF-8");  
+    return new String(buffer, "UTF-8");
   }
 
 
@@ -108,9 +109,9 @@ public final class WritableUtils  {
    * Could be generalised using introspection.
    *
    */
-  public static void writeStringArray(DataOutput out, String[] s) throws IOException{
+  public static void writeStringArray(DataOutput out, String[] s) throws IOException {
     out.writeInt(s.length);
-    for(int i = 0; i < s.length; i++) {
+    for (int i = 0; i < s.length; i++) {
       writeString(out, s[i]);
     }
   }
@@ -121,13 +122,13 @@ public final class WritableUtils  {
    * Could be generalised using introspection.
    *
    */
-  public static void writeCompressedStringArray(DataOutput out, String[] s) throws IOException{
+  public static void writeCompressedStringArray(DataOutput out, String[] s) throws IOException {
     if (s == null) {
       out.writeInt(-1);
       return;
     }
     out.writeInt(s.length);
-    for(int i = 0; i < s.length; i++) {
+    for (int i = 0; i < s.length; i++) {
       writeCompressedString(out, s[i]);
     }
   }
@@ -141,7 +142,7 @@ public final class WritableUtils  {
     int len = in.readInt();
     if (len == -1) return null;
     String[] s = new String[len];
-    for(int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       s[i] = readString(in);
     }
     return s;
@@ -153,11 +154,11 @@ public final class WritableUtils  {
    * Could be generalised using introspection. Handles null arrays and null values.
    *
    */
-  public static  String[] readCompressedStringArray(DataInput in) throws IOException {
+  public static String[] readCompressedStringArray(DataInput in) throws IOException {
     int len = in.readInt();
     if (len == -1) return null;
     String[] s = new String[len];
-    for(int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       s[i] = readCompressedString(in);
     }
     return s;
@@ -166,18 +167,20 @@ public final class WritableUtils  {
 
   /*
    *
-   * Test Utility Method Display Byte Array. 
+   * Test Utility Method Display Byte Array.
    *
    */
-  public static void displayByteArray(byte[] record){
+  public static void displayByteArray(byte[] record) {
     int i;
-    for(i=0;i < record.length -1; i++){
-      if (i % 16 == 0) { System.out.println(); }
-      System.out.print(Integer.toHexString(record[i]  >> 4 & 0x0F));
+    for (i = 0; i < record.length - 1; i++) {
+      if (i % 16 == 0) {
+        System.out.println();
+      }
+      System.out.print(Integer.toHexString(record[i] >> 4 & 0x0F));
       System.out.print(Integer.toHexString(record[i] & 0x0F));
       System.out.print(",");
     }
-    System.out.print(Integer.toHexString(record[i]  >> 4 & 0x0F));
+    System.out.print(Integer.toHexString(record[i] >> 4 & 0x0F));
     System.out.print(Integer.toHexString(record[i] & 0x0F));
     System.out.println();
   }
@@ -190,7 +193,7 @@ public final class WritableUtils  {
   public static <T extends Writable> T clone(T orig, Configuration conf) {
     try {
       @SuppressWarnings("unchecked") // Unchecked cast from Class to Class<T>
-      T newInst = ReflectionUtils.newInstance((Class<T>) orig.getClass(), conf);
+          T newInst = ReflectionUtils.newInstance((Class<T>) orig.getClass(), conf);
       ReflectionUtils.copy(conf, orig, newInst);
       return newInst;
     } catch (IOException e) {
@@ -224,12 +227,12 @@ public final class WritableUtils  {
    *
    * @param stream Binary output stream
    * @param i Integer to be serialized
-   * @throws java.io.IOException 
+   * @throws java.io.IOException
    */
   public static void writeVInt(DataOutput stream, int i) throws IOException {
     writeVLong(stream, i);
   }
-  
+
   /**
    * Serializes a long to a binary stream with zero-compressed encoding.
    * For -112 {@literal <=} i {@literal <=} 127, only one byte is used with the
@@ -241,45 +244,45 @@ public final class WritableUtils  {
    * If the first byte value v is between -121 and -128, the following long
    * is negative, with number of bytes that follow are -(v+120). Bytes are
    * stored in the high-non-zero-byte-first order.
-   * 
+   *
    * @param stream Binary output stream
    * @param i Long to be serialized
-   * @throws java.io.IOException 
+   * @throws java.io.IOException
    */
   public static void writeVLong(DataOutput stream, long i) throws IOException {
     if (i >= -112 && i <= 127) {
-      stream.writeByte((byte)i);
+      stream.writeByte((byte) i);
       return;
     }
-      
+
     int len = -112;
     if (i < 0) {
       i ^= -1L; // take one's complement'
       len = -120;
     }
-      
+
     long tmp = i;
     while (tmp != 0) {
       tmp = tmp >> 8;
       len--;
     }
-      
-    stream.writeByte((byte)len);
-      
+
+    stream.writeByte((byte) len);
+
     len = (len < -120) ? -(len + 120) : -(len + 112);
-      
+
     for (int idx = len; idx != 0; idx--) {
       int shiftbits = (idx - 1) * 8;
       long mask = 0xFFL << shiftbits;
-      stream.writeByte((byte)((i & mask) >> shiftbits));
+      stream.writeByte((byte) ((i & mask) >> shiftbits));
     }
   }
-  
+
 
   /**
    * Reads a zero-compressed encoded long from input stream and returns it.
    * @param stream Binary input stream
-   * @throws java.io.IOException 
+   * @throws java.io.IOException
    * @return deserialized long from stream.
    */
   public static long readVLong(DataInput stream) throws IOException {
@@ -289,7 +292,7 @@ public final class WritableUtils  {
       return firstByte;
     }
     long i = 0;
-    for (int idx = 0; idx < len-1; idx++) {
+    for (int idx = 0; idx < len - 1; idx++) {
       byte b = stream.readByte();
       i = i << 8;
       i = i | (b & 0xFF);
@@ -300,7 +303,7 @@ public final class WritableUtils  {
   /**
    * Reads a zero-compressed encoded integer from input stream and returns it.
    * @param stream Binary input stream
-   * @throws java.io.IOException 
+   * @throws java.io.IOException
    * @return deserialized integer from stream.
    */
   public static int readVInt(DataInput stream) throws IOException {
@@ -308,7 +311,7 @@ public final class WritableUtils  {
     if ((n > Integer.MAX_VALUE) || (n < Integer.MIN_VALUE)) {
       throw new IOException("value too long to fit in integer");
     }
-    return (int)n;
+    return (int) n;
   }
 
   /**
@@ -336,7 +339,7 @@ public final class WritableUtils  {
       throw new IOException("expected integer less or equal to " + upper +
           ", got " + n);
     }
-    return (int)n;
+    return (int) n;
   }
 
   /**
@@ -370,7 +373,7 @@ public final class WritableUtils  {
     if (i >= -112 && i <= 127) {
       return 1;
     }
-      
+
     if (i < 0) {
       i ^= -1L; // take one's complement'
     }
@@ -379,6 +382,7 @@ public final class WritableUtils  {
     // find the number of data bytes + length byte
     return (dataBits + 7) / 8 + 1;
   }
+
   /**
    * Read an Enum value from DataInput, Enums are read and written 
    * using String values. 
@@ -389,19 +393,21 @@ public final class WritableUtils  {
    * @throws IOException
    */
   public static <T extends Enum<T>> T readEnum(DataInput in, Class<T> enumType)
-    throws IOException{
+      throws IOException {
     return T.valueOf(enumType, Text.readString(in));
   }
+
   /**
    * writes String value of enum to DataOutput. 
    * @param out Dataoutput stream
    * @param enumVal enum value
    * @throws IOException
    */
-  public static void writeEnum(DataOutput out,  Enum<?> enumVal) 
-    throws IOException{
-    Text.writeString(out, enumVal.name()); 
+  public static void writeEnum(DataOutput out, Enum<?> enumVal)
+      throws IOException {
+    Text.writeString(out, enumVal.name());
   }
+
   /**
    * Skip <i>len</i> number of bytes in input stream<i>in</i>
    * @param in input stream
@@ -412,13 +418,13 @@ public final class WritableUtils  {
     int total = 0;
     int cur = 0;
 
-    while ((total<len) && ((cur = in.skipBytes(len-total)) > 0)) {
-        total += cur;
+    while ((total < len) && ((cur = in.skipBytes(len - total)) > 0)) {
+      total += cur;
     }
 
-    if (total<len) {
+    if (total < len) {
       throw new IOException("Not able to skip " + len + " bytes, possibly " +
-                            "due to end of input.");
+          "due to end of input.");
     }
   }
 
@@ -426,12 +432,12 @@ public final class WritableUtils  {
   public static byte[] toByteArray(Writable... writables) {
     final DataOutputBuffer out = new DataOutputBuffer();
     try {
-      for(Writable w : writables) {
+      for (Writable w : writables) {
         w.write(out);
       }
       out.close();
     } catch (IOException e) {
-      throw new RuntimeException("Fail to convert writables to a byte array",e);
+      throw new RuntimeException("Fail to convert writables to a byte array", e);
     }
     return out.getData();
   }
@@ -444,19 +450,19 @@ public final class WritableUtils  {
    * @return the bytes as a string
    * @throws IOException if reading from the DataInput fails
    * @throws IllegalArgumentException if the encoded byte size for string 
-             is negative or larger than maxSize. Only the vint is read.
+  is negative or larger than maxSize. Only the vint is read.
    */
   public static String readStringSafely(DataInput in,
                                         int maxLength
-                                        ) throws IOException, 
-                                                 IllegalArgumentException {
+  ) throws IOException,
+      IllegalArgumentException {
     int length = readVInt(in);
     if (length < 0 || length > maxLength) {
-      throw new IllegalArgumentException("Encoded byte size for String was " + length + 
-                                         ", which is outside of 0.." +
-                                         maxLength + " range.");
+      throw new IllegalArgumentException("Encoded byte size for String was " + length +
+          ", which is outside of 0.." +
+          maxLength + " range.");
     }
-    byte [] bytes = new byte[length];
+    byte[] bytes = new byte[length];
     in.readFully(bytes, 0, length);
     return Text.decode(bytes);
   }

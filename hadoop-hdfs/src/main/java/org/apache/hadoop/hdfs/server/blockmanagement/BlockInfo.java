@@ -1,16 +1,16 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.LightWeightGSet;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.apache.hadoop.hdfs.server.namenode.INodeId.INVALID_INODE_ID;
 
@@ -67,7 +67,7 @@ public abstract class BlockInfo extends Block
 
   public BlockInfo(Block blk, short size) {
     super(blk);
-    this.triplets = new Object[3*size];
+    this.triplets = new Object[3 * size];
     this.bcId = INVALID_INODE_ID;
     this.replication = isStriped() ? 0 : size;
   }
@@ -107,34 +107,34 @@ public abstract class BlockInfo extends Block
 
   DatanodeStorageInfo getStorageInfo(int index) {
     assert this.triplets != null : "BlockInfo is not initialized";
-    assert index >= 0 && index*3 < triplets.length : "Index is out of bound";
-    return (DatanodeStorageInfo)triplets[index*3];
+    assert index >= 0 && index * 3 < triplets.length : "Index is out of bound";
+    return (DatanodeStorageInfo) triplets[index * 3];
   }
 
   BlockInfo getPrevious(int index) {
     assert this.triplets != null : "BlockInfo is not initialized";
-    assert index >= 0 && index*3+1 < triplets.length : "Index is out of bound";
-    BlockInfo info = (BlockInfo)triplets[index*3+1];
+    assert index >= 0 && index * 3 + 1 < triplets.length : "Index is out of bound";
+    BlockInfo info = (BlockInfo) triplets[index * 3 + 1];
     assert info == null ||
         info.getClass().getName().startsWith(BlockInfo.class.getName()) :
-        "BlockInfo is expected at " + index*3;
+        "BlockInfo is expected at " + index * 3;
     return info;
   }
 
   BlockInfo getNext(int index) {
     assert this.triplets != null : "BlockInfo is not initialized";
-    assert index >= 0 && index*3+2 < triplets.length : "Index is out of bound";
-    BlockInfo info = (BlockInfo)triplets[index*3+2];
+    assert index >= 0 && index * 3 + 2 < triplets.length : "Index is out of bound";
+    BlockInfo info = (BlockInfo) triplets[index * 3 + 2];
     assert info == null || info.getClass().getName().startsWith(
         BlockInfo.class.getName()) :
-        "BlockInfo is expected at " + index*3;
+        "BlockInfo is expected at " + index * 3;
     return info;
   }
 
   void setStorageInfo(int index, DatanodeStorageInfo storage) {
     assert this.triplets != null : "BlockInfo is not initialized";
-    assert index >= 0 && index*3 < triplets.length : "Index is out of bound";
-    triplets[index*3] = storage;
+    assert index >= 0 && index * 3 < triplets.length : "Index is out of bound";
+    triplets[index * 3] = storage;
   }
 
   /**
@@ -147,9 +147,9 @@ public abstract class BlockInfo extends Block
    */
   BlockInfo setPrevious(int index, BlockInfo to) {
     assert this.triplets != null : "BlockInfo is not initialized";
-    assert index >= 0 && index*3+1 < triplets.length : "Index is out of bound";
-    BlockInfo info = (BlockInfo) triplets[index*3+1];
-    triplets[index*3+1] = to;
+    assert index >= 0 && index * 3 + 1 < triplets.length : "Index is out of bound";
+    BlockInfo info = (BlockInfo) triplets[index * 3 + 1];
+    triplets[index * 3 + 1] = to;
     return info;
   }
 
@@ -163,9 +163,9 @@ public abstract class BlockInfo extends Block
    */
   BlockInfo setNext(int index, BlockInfo to) {
     assert this.triplets != null : "BlockInfo is not initialized";
-    assert index >= 0 && index*3+2 < triplets.length : "Index is out of bound";
-    BlockInfo info = (BlockInfo) triplets[index*3+2];
-    triplets[index*3+2] = to;
+    assert index >= 0 && index * 3 + 2 < triplets.length : "Index is out of bound";
+    BlockInfo info = (BlockInfo) triplets[index * 3 + 2];
+    triplets[index * 3 + 2] = to;
     return info;
   }
 
@@ -216,9 +216,9 @@ public abstract class BlockInfo extends Block
   DatanodeStorageInfo findStorageInfo(DatanodeDescriptor dn) {
     int len = getCapacity();
     DatanodeStorageInfo providedStorageInfo = null;
-    for(int idx = 0; idx < len; idx++) {
+    for (int idx = 0; idx < len; idx++) {
       DatanodeStorageInfo cur = getStorageInfo(idx);
-      if(cur != null) {
+      if (cur != null) {
         if (cur.getStorageType() == StorageType.PROVIDED) {
           // if block resides on provided storage, only match the storage ids
           if (dn.getStorageInfo(cur.getStorageID()) != null) {
@@ -240,7 +240,7 @@ public abstract class BlockInfo extends Block
    */
   int findStorageInfo(DatanodeStorageInfo storageInfo) {
     int len = getCapacity();
-    for(int idx = 0; idx < len; idx++) {
+    for (int idx = 0; idx < len; idx++) {
       DatanodeStorageInfo cur = getStorageInfo(idx);
       if (cur == storageInfo) {
         return idx;
@@ -308,7 +308,7 @@ public abstract class BlockInfo extends Block
    * @return the new head of the list.
    */
   public BlockInfo moveBlockToHead(BlockInfo head, DatanodeStorageInfo storage,
-      int curIndex, int headIndex) {
+                                   int curIndex, int headIndex) {
     if (head == this) {
       return this;
     }
@@ -378,7 +378,7 @@ public abstract class BlockInfo extends Block
    * Add/Update the under construction feature.
    */
   public void convertToBlockUnderConstruction(BlockUCState s,
-      DatanodeStorageInfo[] targets) {
+                                              DatanodeStorageInfo[] targets) {
     if (isComplete()) {
       uc = new BlockUnderConstructionFeature(this, s, targets,
           this.getBlockType());

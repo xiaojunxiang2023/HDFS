@@ -1,22 +1,21 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.Iterator;
-
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.GSet;
 import org.apache.hadoop.util.LightWeightGSet;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.util.Iterator;
 
 /**
  * Storing all the {@link INode}s and maintaining the mapping between INode ID
  * and INode.  
  */
 public class INodeMap {
-  
+
   static INodeMap newInstance(INodeDirectory rootDir) {
     // Compute the map capacity by allocating 1% of total memory
     int capacity = LightWeightGSet.computeCapacity(1, "INodeMap");
@@ -28,7 +27,7 @@ public class INodeMap {
 
   /** Synchronized by external lock. */
   private final GSet<INode, INodeWithAdditionalFields> map;
-  
+
   public Iterator<INodeWithAdditionalFields> getMapIterator() {
     return map.iterator();
   }
@@ -37,7 +36,7 @@ public class INodeMap {
     Preconditions.checkArgument(map != null);
     this.map = map;
   }
-  
+
   /**
    * Add an {@link INode} into the {@link INode} map. Replace the old value if 
    * necessary. 
@@ -45,10 +44,10 @@ public class INodeMap {
    */
   public final void put(INode inode) {
     if (inode instanceof INodeWithAdditionalFields) {
-      map.put((INodeWithAdditionalFields)inode);
+      map.put((INodeWithAdditionalFields) inode);
     }
   }
-  
+
   /**
    * Remove a {@link INode} from the map.
    * @param inode The {@link INode} to be removed.
@@ -56,14 +55,14 @@ public class INodeMap {
   public final void remove(INode inode) {
     map.remove(inode);
   }
-  
+
   /**
    * @return The size of the map.
    */
   public int size() {
     return map.size();
   }
-  
+
   /**
    * Get the {@link INode} with the given id from the map.
    * @param id ID of the {@link INode}.
@@ -73,11 +72,11 @@ public class INodeMap {
   public INode get(long id) {
     INode inode = new INodeWithAdditionalFields(id, null, new PermissionStatus(
         "", "", new FsPermission((short) 0)), 0, 0) {
-      
+
       @Override
       void recordModification(int latestSnapshotId) {
       }
-      
+
       @Override
       public void destroyAndCollectBlocks(ReclaimContext reclaimContext) {
         // Nothing to do
@@ -95,14 +94,14 @@ public class INodeMap {
           int snapshotId, ContentSummaryComputationContext summary) {
         return null;
       }
-      
+
       @Override
       public void cleanSubtree(
           ReclaimContext reclaimContext, int snapshotId, int priorSnapshotId) {
       }
 
       @Override
-      public byte getStoragePolicyID(){
+      public byte getStoragePolicyID() {
         return HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED;
       }
 
@@ -111,10 +110,10 @@ public class INodeMap {
         return HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED;
       }
     };
-      
+
     return map.get(inode);
   }
-  
+
   /**
    * Clear the {@link #map}
    */

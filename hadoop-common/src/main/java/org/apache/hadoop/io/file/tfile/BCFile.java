@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,19 +16,6 @@
  */
 
 package org.apache.hadoop.io.file.tfile;
-
-import java.io.Closeable;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -43,6 +30,12 @@ import org.apache.hadoop.io.file.tfile.Compression.Algorithm;
 import org.apache.hadoop.io.file.tfile.Utils.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Block Compressed file, the underlying physical storage layer for TFile.
@@ -86,7 +79,7 @@ final class BCFile {
     private static interface BlockRegister {
       /**
        * Register a block that is fully closed.
-       * 
+       *
        * @param raw
        *          The size of block in terms of uncompressed bytes.
        * @param offsetStart
@@ -117,7 +110,7 @@ final class BCFile {
        * @throws IOException
        */
       public WBlockState(Algorithm compressionAlgo, FSDataOutputStream fsOut,
-          BytesWritable fsOutputBuffer, Configuration conf) throws IOException {
+                         BytesWritable fsOutputBuffer, Configuration conf) throws IOException {
         this.compressAlgo = compressionAlgo;
         this.fsOut = fsOut;
         this.posStart = fsOut.getPos();
@@ -140,7 +133,7 @@ final class BCFile {
 
       /**
        * Get the output stream for BlockAppender's consumption.
-       * 
+       *
        * @return the output stream suitable for writing block data.
        */
       OutputStream getOutputStream() {
@@ -149,7 +142,7 @@ final class BCFile {
 
       /**
        * Get the current position in file.
-       * 
+       *
        * @return The current byte offset in underlying file.
        * @throws IOException
        */
@@ -163,7 +156,7 @@ final class BCFile {
 
       /**
        * Current size of compressed data.
-       * 
+       *
        * @return
        * @throws IOException
        */
@@ -190,7 +183,7 @@ final class BCFile {
 
     /**
      * Access point to stuff data into a block.
-     * 
+     *
      * TODO: Change DataOutputStream to something else that tracks the size as
      * long instead of int. Currently, we will wrap around if the row block size
      * is greater than 4GB.
@@ -203,7 +196,7 @@ final class BCFile {
 
       /**
        * Constructor
-       * 
+       *
        * @param register
        *          the block register, which is called when the block is closed.
        * @param wbs
@@ -217,7 +210,7 @@ final class BCFile {
 
       /**
        * Get the raw size of the block.
-       * 
+       *
        * @return the number of uncompressed bytes written through the
        *         BlockAppender so far.
        * @throws IOException
@@ -232,7 +225,7 @@ final class BCFile {
 
       /**
        * Get the compressed size of the block in progress.
-       * 
+       *
        * @return the number of compressed bytes written to the underlying FS
        *         file. The size may be smaller than actual need to compress the
        *         all data written due to internal buffering inside the
@@ -273,7 +266,7 @@ final class BCFile {
 
     /**
      * Constructor
-     * 
+     *
      * @param fout
      *          FS output stream.
      * @param compressionName
@@ -283,7 +276,7 @@ final class BCFile {
      * @see Compression#getSupportedAlgorithms
      */
     public Writer(FSDataOutputStream fout, String compressionName,
-        Configuration conf) throws IOException {
+                  Configuration conf) throws IOException {
       if (fout.getPos() != 0) {
         throw new IOException("Output file not at zero offset.");
       }
@@ -367,7 +360,7 @@ final class BCFile {
      * block. There can only be one BlockAppender stream active at any time.
      * Regular Blocks may not be created after the first Meta Blocks. The caller
      * must call BlockAppender.close() to conclude the block creation.
-     * 
+     *
      * @param name
      *          The name of the Meta Block. The name must not conflict with
      *          existing Meta Blocks.
@@ -391,7 +384,7 @@ final class BCFile {
      * active at any time. Regular Blocks may not be created after the first
      * Meta Blocks. The caller must call BlockAppender.close() to conclude the
      * block creation.
-     * 
+     *
      * @param name
      *          The name of the Meta Block. The name must not conflict with
      *          existing Meta Blocks.
@@ -410,7 +403,7 @@ final class BCFile {
      * block. There can only be one BlockAppender stream active at any time.
      * Data Blocks may not be created after the first Meta Blocks. The caller
      * must call BlockAppender.close() to conclude the block creation.
-     * 
+     *
      * @return The BlockAppender stream
      * @throws IOException
      */
@@ -458,7 +451,7 @@ final class BCFile {
     /**
      * Callback to make sure a data block is added to the internal list when
      * it's being closed.
-     * 
+     *
      */
     private class DataBlockRegister implements BlockRegister {
       DataBlockRegister() {
@@ -494,7 +487,7 @@ final class BCFile {
       private final InputStream in;
 
       public RBlockState(Algorithm compressionAlgo, FSDataInputStream fsin,
-          BlockRegion region, Configuration conf) throws IOException {
+                         BlockRegion region, Configuration conf) throws IOException {
         this.compressAlgo = compressionAlgo;
         this.region = region;
         this.decompressor = compressionAlgo.getDecompressor();
@@ -504,7 +497,7 @@ final class BCFile {
               compressAlgo
                   .createDecompressionStream(new BoundedRangeFileInputStream(
                       fsin, this.region.getOffset(), this.region
-                          .getCompressedSize()), decompressor, TFile
+                      .getCompressedSize()), decompressor, TFile
                       .getFSInputBufferSize(conf));
         } catch (IOException e) {
           compressAlgo.returnDecompressor(decompressor);
@@ -514,7 +507,7 @@ final class BCFile {
 
       /**
        * Get the output stream for BlockAppender's consumption.
-       * 
+       *
        * @return the output stream suitable for writing block data.
        */
       public InputStream getInputStream() {
@@ -570,7 +563,7 @@ final class BCFile {
 
       /**
        * Get the name of the compression algorithm used to compress the block.
-       * 
+       *
        * @return name of the compression algorithm.
        */
       public String getCompressionName() {
@@ -579,7 +572,7 @@ final class BCFile {
 
       /**
        * Get the uncompressed size of the block.
-       * 
+       *
        * @return uncompressed size of the block.
        */
       public long getRawSize() {
@@ -588,7 +581,7 @@ final class BCFile {
 
       /**
        * Get the compressed size of the block.
-       * 
+       *
        * @return compressed size of the block.
        */
       public long getCompressedSize() {
@@ -597,7 +590,7 @@ final class BCFile {
 
       /**
        * Get the starting position of the block in the file.
-       * 
+       *
        * @return the starting position of the block in the file.
        */
       public long getStartPos() {
@@ -607,7 +600,7 @@ final class BCFile {
 
     /**
      * Constructor
-     * 
+     *
      * @param fin
      *          FS input stream.
      * @param fileLength
@@ -646,7 +639,7 @@ final class BCFile {
 
     /**
      * Get the name of the default compression algorithm.
-     * 
+     *
      * @return the name of the default compression algorithm.
      */
     public String getDefaultCompressionName() {
@@ -655,7 +648,7 @@ final class BCFile {
 
     /**
      * Get version of BCFile file being read.
-     * 
+     *
      * @return version of BCFile file being read.
      */
     public Version getBCFileVersion() {
@@ -664,7 +657,7 @@ final class BCFile {
 
     /**
      * Get version of BCFile API.
-     * 
+     *
      * @return version of BCFile API.
      */
     public Version getAPIVersion() {
@@ -681,7 +674,7 @@ final class BCFile {
 
     /**
      * Get the number of data blocks.
-     * 
+     *
      * @return the number of data blocks.
      */
     public int getBlockCount() {
@@ -690,7 +683,7 @@ final class BCFile {
 
     /**
      * Stream access to a Meta Block.
-     * 
+     *
      * @param name
      *          meta block name
      * @return BlockReader input stream for reading the meta block.
@@ -711,7 +704,7 @@ final class BCFile {
 
     /**
      * Stream access to a Data Block.
-     * 
+     *
      * @param blockIndex
      *          0-based data block index.
      * @return BlockReader input stream for reading the data block.
@@ -736,7 +729,7 @@ final class BCFile {
     /**
      * Find the smallest Block index whose starting offset is greater than or
      * equal to the specified offset.
-     * 
+     *
      * @param offset
      *          User-specific offset.
      * @return the index to the data Block if such block exists; or -1
@@ -822,7 +815,7 @@ final class BCFile {
     }
 
     public MetaIndexEntry(String metaName, Algorithm compressionAlgorithm,
-        BlockRegion region) {
+                          BlockRegion region) {
       this.metaName = metaName;
       this.compressionAlgorithm = compressionAlgorithm;
       this.region = region;
@@ -915,7 +908,7 @@ final class BCFile {
             (byte) 0xd1, (byte) 0x11, (byte) 0xd3, (byte) 0x68, (byte) 0x91,
             (byte) 0xb5, (byte) 0xd7, (byte) 0xb6, (byte) 0x39, (byte) 0xdf,
             (byte) 0x41, (byte) 0x40, (byte) 0x92, (byte) 0xba, (byte) 0xe1,
-            (byte) 0x50 };
+            (byte) 0x50};
 
     public static void readAndVerify(DataInput in) throws IOException {
       byte[] abMagic = new byte[size()];

@@ -1,17 +1,17 @@
 package org.apache.hadoop.hdfs;
 
-import java.util.Collections;
 import org.apache.hadoop.hdfs.inotify.EventBatch;
 import org.apache.hadoop.hdfs.inotify.EventBatchList;
 import org.apache.hadoop.hdfs.inotify.MissingEventsException;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.util.Time;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -42,13 +42,13 @@ public class DFSInotifyEventInputStream {
   private static final int INITIAL_WAIT_MS = 10;
 
   DFSInotifyEventInputStream(ClientProtocol namenode, Tracer tracer)
-        throws IOException {
+      throws IOException {
     // Only consider new transaction IDs.
     this(namenode, tracer, namenode.getCurrentEditLogTxid());
   }
 
   DFSInotifyEventInputStream(ClientProtocol namenode, Tracer tracer,
-      long lastReadTxid) {
+                             long lastReadTxid) {
     this.namenode = namenode;
     this.it = Collections.emptyIterator();
     this.lastReadTxid = lastReadTxid;

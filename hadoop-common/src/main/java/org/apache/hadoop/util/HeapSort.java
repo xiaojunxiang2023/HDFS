@@ -5,10 +5,11 @@ package org.apache.hadoop.util;
  */
 public final class HeapSort implements IndexedSorter {
 
-  public HeapSort() { }
+  public HeapSort() {
+  }
 
   private static void downHeap(final IndexedSortable s, final int b,
-      int i, final int N) {
+                               int i, final int N) {
     for (int idx = i << 1; idx < N; idx = i << 1) {
       if (idx + 1 < N && s.compare(b + idx, b + idx + 1) < 0) {
         if (s.compare(b + i, b + idx + 1) < 0) {
@@ -33,13 +34,13 @@ public final class HeapSort implements IndexedSorter {
 
   @Override
   public void sort(final IndexedSortable s, final int p, final int r,
-      final Progressable rep) {
+                   final Progressable rep) {
     final int N = r - p;
     // build heap w/ reverse comparator, then write in-place from end
     final int t = Integer.highestOneBit(N);
     for (int i = t; i > 1; i >>>= 1) {
       for (int j = i >>> 1; j < i; ++j) {
-        downHeap(s, p-1, j, N + 1);
+        downHeap(s, p - 1, j, N + 1);
       }
       if (null != rep) {
         rep.progress();

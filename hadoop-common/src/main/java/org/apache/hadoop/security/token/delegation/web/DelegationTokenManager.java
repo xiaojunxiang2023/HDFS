@@ -1,8 +1,5 @@
 package org.apache.hadoop.security.token.delegation.web;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -10,10 +7,13 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
 import org.apache.hadoop.security.token.delegation.ZKDelegationTokenSecretManager;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * Delegation Token Manager used by the
@@ -145,7 +145,7 @@ public class DelegationTokenManager {
   public Token<? extends AbstractDelegationTokenIdentifier> createToken(
       UserGroupInformation ugi, String renewer, String service) {
     LOG.debug("Creating token with ugi:{}, renewer:{}, service:{}.",
-        ugi, renewer, service !=null ? service : "");
+        ugi, renewer, service != null ? service : "");
     renewer = (renewer == null) ? ugi.getShortUserName() : renewer;
     String user = ugi.getUserName();
     Text owner = new Text(user);
@@ -168,7 +168,7 @@ public class DelegationTokenManager {
   @SuppressWarnings("unchecked")
   public long renewToken(
       Token<? extends AbstractDelegationTokenIdentifier> token, String renewer)
-          throws IOException {
+      throws IOException {
     LOG.debug("Renewing token:{} with renewer:{}.", token, renewer);
     return secretManager.renewToken(token, renewer);
   }
@@ -179,14 +179,14 @@ public class DelegationTokenManager {
       String canceler) throws IOException {
     LOG.debug("Cancelling token:{} with canceler:{}.", token, canceler);
     canceler = (canceler != null) ? canceler :
-               verifyToken(token).getShortUserName();
+        verifyToken(token).getShortUserName();
     secretManager.cancelToken(token, canceler);
   }
 
   @SuppressWarnings("unchecked")
   public UserGroupInformation verifyToken(
       Token<? extends AbstractDelegationTokenIdentifier> token)
-          throws IOException {
+      throws IOException {
     AbstractDelegationTokenIdentifier id = secretManager.decodeTokenIdentifier(token);
     secretManager.verifyToken(id, token.getPassword());
     return id.getUser();
@@ -200,7 +200,7 @@ public class DelegationTokenManager {
 
   private static DelegationTokenIdentifier decodeToken(
       Token<DelegationTokenIdentifier> token, Text tokenKind)
-          throws IOException {
+      throws IOException {
     ByteArrayInputStream buf = new ByteArrayInputStream(token.getIdentifier());
     DataInputStream dis = new DataInputStream(buf);
     DelegationTokenIdentifier id = new DelegationTokenIdentifier(tokenKind);

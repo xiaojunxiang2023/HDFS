@@ -10,7 +10,7 @@ interface StreamLimiter {
    * Set a limit.  Calling this function clears any existing limit.
    */
   public void setLimit(long limit);
-  
+
   /**
    * Disable limit.
    */

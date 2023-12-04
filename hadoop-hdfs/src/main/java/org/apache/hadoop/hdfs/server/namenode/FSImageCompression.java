@@ -1,18 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
+
+import java.io.*;
 
 /**
  * Simple container class that handles support for compressed fsimage files.
@@ -52,18 +46,18 @@ public class FSImageCompression {
    * @throws IOException if the specified codec is not available.
    */
   static FSImageCompression createCompression(Configuration conf)
-    throws IOException {
+      throws IOException {
     boolean compressImage = conf.getBoolean(
-      DFSConfigKeys.DFS_IMAGE_COMPRESS_KEY,
-      DFSConfigKeys.DFS_IMAGE_COMPRESS_DEFAULT);
+        DFSConfigKeys.DFS_IMAGE_COMPRESS_KEY,
+        DFSConfigKeys.DFS_IMAGE_COMPRESS_DEFAULT);
 
     if (!compressImage) {
       return createNoopCompression();
     }
 
     String codecClassName = conf.get(
-      DFSConfigKeys.DFS_IMAGE_COMPRESSION_CODEC_KEY,
-      DFSConfigKeys.DFS_IMAGE_COMPRESSION_CODEC_DEFAULT);
+        DFSConfigKeys.DFS_IMAGE_COMPRESSION_CODEC_KEY,
+        DFSConfigKeys.DFS_IMAGE_COMPRESSION_CODEC_DEFAULT);
     return createCompression(conf, codecClassName);
   }
 
@@ -72,8 +66,8 @@ public class FSImageCompression {
    * <code>codecClassName</code>
    */
   static FSImageCompression createCompression(Configuration conf,
-                                                      String codecClassName)
-    throws IOException {
+                                              String codecClassName)
+      throws IOException {
 
     CompressionCodecFactory factory = new CompressionCodecFactory(conf);
     CompressionCodec codec = factory.getCodecByClassName(codecClassName);
@@ -90,8 +84,7 @@ public class FSImageCompression {
    * underlying IO fails.
    */
   static FSImageCompression readCompressionHeader(
-    Configuration conf, DataInput in) throws IOException
-  {
+      Configuration conf, DataInput in) throws IOException {
     boolean isCompressed = in.readBoolean();
 
     if (!isCompressed) {
@@ -101,7 +94,7 @@ public class FSImageCompression {
       return createCompression(conf, codecClassName);
     }
   }
-  
+
   /**
    * Unwrap a compressed input stream by wrapping it with a decompressor based
    * on this codec. If this instance represents no compression, simply adds
@@ -123,7 +116,7 @@ public class FSImageCompression {
    * compression codec, and return the same stream wrapped with that codec.
    * If no codec is specified, simply adds buffering to the stream, so that
    * the returned stream is always buffered.
-   * 
+   *
    * @param os The stream to write header to and wrap. This stream should
    * be unbuffered.
    * @return A stream wrapped with the specified compressor, or buffering
@@ -132,7 +125,7 @@ public class FSImageCompression {
    * instantiated
    */
   DataOutputStream writeHeaderAndWrapStream(OutputStream os)
-  throws IOException {
+      throws IOException {
     DataOutputStream dos = new DataOutputStream(os);
 
     dos.writeBoolean(imageCodec != null);

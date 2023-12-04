@@ -13,7 +13,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.protocol;
+ */
+package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.fs.Path;
 
 import javax.annotation.Nonnull;
@@ -30,14 +32,15 @@ public class ProvidedStorageLocation {
   private final byte[] nonce;
 
   public ProvidedStorageLocation(Path path, long offset, long length,
-      byte[] nonce) {
+                                 byte[] nonce) {
     this.path = path;
     this.offset = offset;
     this.length = length;
     this.nonce = Arrays.copyOf(nonce, nonce.length);
   }
 
-  public @Nonnull Path getPath() {
+  public @Nonnull
+  Path getPath() {
     return path;
   }
 
@@ -49,7 +52,8 @@ public class ProvidedStorageLocation {
     return length;
   }
 
-  public @Nonnull byte[] getNonce() {
+  public @Nonnull
+  byte[] getNonce() {
     // create a copy of the nonce and return it.
     return Arrays.copyOf(nonce, nonce.length);
   }

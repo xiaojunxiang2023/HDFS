@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.token.delegation.web;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 

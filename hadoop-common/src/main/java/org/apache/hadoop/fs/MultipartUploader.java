@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.statistics.IOStatisticsSource;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 
 /**
  * MultipartUploader is an interface for copying files multipart and across

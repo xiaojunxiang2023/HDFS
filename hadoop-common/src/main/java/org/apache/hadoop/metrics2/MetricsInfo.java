@@ -1,4 +1,5 @@
 package org.apache.hadoop.metrics2;
+
 import org.apache.hadoop.metrics2.annotation.Metric;
 
 /**

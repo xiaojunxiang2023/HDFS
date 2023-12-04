@@ -1,28 +1,24 @@
 package org.apache.hadoop.ipc.metrics;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ipc.Server;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.metrics2.MetricsTag;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
-import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
-import org.apache.hadoop.metrics2.lib.MetricsRegistry;
-import org.apache.hadoop.metrics2.lib.MutableCounterLong;
-import org.apache.hadoop.metrics2.lib.MutableQuantiles;
-import org.apache.hadoop.metrics2.lib.MutableRate;
+import org.apache.hadoop.metrics2.lib.*;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class is for maintaining  the various RPC statistics
  * and publishing them through the metrics interfaces.
  */
-@Metrics(about="Aggregate RPC metrics", context="rpc")
+@Metrics(about = "Aggregate RPC metrics", context = "rpc")
 public class RpcMetrics {
 
   static final Logger LOG = LoggerFactory.getLogger(RpcMetrics.class);
@@ -61,7 +57,7 @@ public class RpcMetrics {
       for (int i = 0; i < intervals.length; i++) {
         int interval = intervals[i];
         rpcQueueTimeQuantiles[i] = registry.newQuantiles("rpcQueueTime"
-            + interval + "s", "rpc queue time in " + metricsTimeUnit, "ops",
+                + interval + "s", "rpc queue time in " + metricsTimeUnit, "ops",
             "latency", interval);
         rpcLockWaitTimeQuantiles[i] = registry.newQuantiles(
             "rpcLockWaitTime" + interval + "s",
@@ -80,22 +76,30 @@ public class RpcMetrics {
     LOG.debug("Initialized " + registry);
   }
 
-  public String name() { return name; }
+  public String name() {
+    return name;
+  }
 
   public static RpcMetrics create(Server server, Configuration conf) {
     RpcMetrics m = new RpcMetrics(server, conf);
     return DefaultMetricsSystem.instance().register(m.name, null, m);
   }
 
-  @Metric("Number of received bytes") MutableCounterLong receivedBytes;
-  @Metric("Number of sent bytes") MutableCounterLong sentBytes;
-  @Metric("Queue time") MutableRate rpcQueueTime;
+  @Metric("Number of received bytes")
+  MutableCounterLong receivedBytes;
+  @Metric("Number of sent bytes")
+  MutableCounterLong sentBytes;
+  @Metric("Queue time")
+  MutableRate rpcQueueTime;
   MutableQuantiles[] rpcQueueTimeQuantiles;
-  @Metric("Lock wait time") MutableRate rpcLockWaitTime;
+  @Metric("Lock wait time")
+  MutableRate rpcLockWaitTime;
   MutableQuantiles[] rpcLockWaitTimeQuantiles;
-  @Metric("Processing time") MutableRate rpcProcessingTime;
+  @Metric("Processing time")
+  MutableRate rpcProcessingTime;
   MutableQuantiles[] rpcProcessingTimeQuantiles;
-  @Metric("Deferred Processing time") MutableRate deferredRpcProcessingTime;
+  @Metric("Deferred Processing time")
+  MutableRate deferredRpcProcessingTime;
   MutableQuantiles[] deferredRpcProcessingTimeQuantiles;
   @Metric("Number of authentication failures")
   MutableCounterLong rpcAuthenticationFailures;
@@ -110,7 +114,8 @@ public class RpcMetrics {
   @Metric("Number of Slow RPC calls")
   MutableCounterLong rpcSlowCalls;
 
-  @Metric("Number of open connections") public int numOpenConnections() {
+  @Metric("Number of open connections")
+  public int numOpenConnections() {
     return server.getNumOpenConnections();
   }
 
@@ -119,11 +124,13 @@ public class RpcMetrics {
     return server.getNumOpenConnectionsPerUser();
   }
 
-  @Metric("Length of the call queue") public int callQueueLength() {
+  @Metric("Length of the call queue")
+  public int callQueueLength() {
     return server.getCallQueueLen();
   }
 
-  @Metric("Number of dropped connections") public long numDroppedConnections() {
+  @Metric("Number of dropped connections")
+  public long numDroppedConnections() {
     return server.getNumDroppedConnections();
   }
 
@@ -266,9 +273,10 @@ public class RpcMetrics {
   /**
    * Increments the Slow RPC counter.
    */
-  public  void incrSlowRpc() {
+  public void incrSlowRpc() {
     rpcSlowCalls.incr();
   }
+
   /**
    * Returns a MutableRate Counter.
    * @return Mutable Rate
@@ -290,12 +298,12 @@ public class RpcMetrics {
    * @return double
    */
   public double getProcessingMean() {
-    return  rpcProcessingTime.lastStat().mean();
+    return rpcProcessingTime.lastStat().mean();
   }
 
   /**
    * Return Standard Deviation of the Processing Time.
-   * @return  double
+   * @return double
    */
   public double getProcessingStdDev() {
     return rpcProcessingTime.lastStat().stddev();

@@ -25,16 +25,16 @@ public enum BlockConstructionStage {
   // transfer Finalized for adding datanodes
   TRANSFER_FINALIZED;
 
-  final static private byte RECOVERY_BIT = (byte)1;
+  final static private byte RECOVERY_BIT = (byte) 1;
 
   /**
    * get the recovery stage of this stage
    */
   public BlockConstructionStage getRecoveryStage() {
     if (this == PIPELINE_SETUP_CREATE) {
-      throw new IllegalArgumentException( "Unexpected blockStage " + this);
+      throw new IllegalArgumentException("Unexpected blockStage " + this);
     } else {
-      return values()[ordinal()|RECOVERY_BIT];
+      return values()[ordinal() | RECOVERY_BIT];
     }
   }
 }

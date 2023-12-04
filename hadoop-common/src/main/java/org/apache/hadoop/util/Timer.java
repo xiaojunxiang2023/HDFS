@@ -24,7 +24,9 @@ public class Timer {
    * wait for an interval to expire.
    * @return a monotonic clock that counts in milliseconds.
    */
-  public long monotonicNow() { return Time.monotonicNow(); }
+  public long monotonicNow() {
+    return Time.monotonicNow();
+  }
 
   /**
    * Same as {@link #monotonicNow()} but returns its result in nanoseconds.

@@ -1,18 +1,18 @@
 package org.apache.hadoop.io.compress;
 
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.ReflectionUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
 import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
+import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A global compressor/decompressor pool used to save and reuse 
@@ -20,20 +20,20 @@ import org.slf4j.LoggerFactory;
  */
 public class CodecPool {
   private static final Logger LOG = LoggerFactory.getLogger(CodecPool.class);
-  
+
   /**
    * A global compressor pool used to save the expensive 
    * construction/destruction of (possibly native) decompression codecs.
    */
   private static final Map<Class<Compressor>, Set<Compressor>> compressorPool =
-    new HashMap<Class<Compressor>, Set<Compressor>>();
-  
+      new HashMap<Class<Compressor>, Set<Compressor>>();
+
   /**
    * A global decompressor pool used to save the expensive 
    * construction/destruction of (possibly native) decompression codecs.
    */
   private static final Map<Class<Decompressor>, Set<Decompressor>> decompressorPool =
-    new HashMap<Class<Decompressor>, Set<Decompressor>>();
+      new HashMap<Class<Decompressor>, Set<Decompressor>>();
 
   private static <T> LoadingCache<Class<T>, AtomicInteger> createCache(
       Class<T> klass) {
@@ -52,16 +52,16 @@ public class CodecPool {
   private static final LoadingCache<Class<Compressor>, AtomicInteger> compressorCounts =
       createCache(Compressor.class);
 
-   /**
+  /**
    * Map to tracks the number of leased decompressors
    */
   private static final LoadingCache<Class<Decompressor>, AtomicInteger> decompressorCounts =
       createCache(Decompressor.class);
 
   private static <T> T borrow(Map<Class<T>, Set<T>> pool,
-                             Class<? extends T> codecClass) {
+                              Class<? extends T> codecClass) {
     T codec = null;
-    
+
     // Check if an appropriate codec is available
     Set<T> codecSet;
     synchronized (pool) {
@@ -76,7 +76,7 @@ public class CodecPool {
         }
       }
     }
-    
+
     return codec;
   }
 
@@ -98,7 +98,7 @@ public class CodecPool {
     }
     return false;
   }
-  
+
   @SuppressWarnings("unchecked")
   private static <T> int getLeaseCount(
       LoadingCache<Class<T>, AtomicInteger> usageCounts,
@@ -128,10 +128,10 @@ public class CodecPool {
     Compressor compressor = borrow(compressorPool, codec.getCompressorType());
     if (compressor == null) {
       compressor = codec.createCompressor();
-      LOG.info("Got brand-new compressor ["+codec.getDefaultExtension()+"]");
+      LOG.info("Got brand-new compressor [" + codec.getDefaultExtension() + "]");
     } else {
       compressor.reinit(conf);
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Got recycled compressor");
       }
     }
@@ -141,15 +141,15 @@ public class CodecPool {
     }
     return compressor;
   }
-  
+
   public static Compressor getCompressor(CompressionCodec codec) {
     return getCompressor(codec, null);
   }
-  
+
   /**
    * Get a {@link Decompressor} for the given {@link CompressionCodec} from the
    * pool or a new one.
-   *  
+   *
    * @param codec the <code>CompressionCodec</code> for which to get the 
    *              <code>Decompressor</code>
    * @return <code>Decompressor</code> for the given 
@@ -159,9 +159,9 @@ public class CodecPool {
     Decompressor decompressor = borrow(decompressorPool, codec.getDecompressorType());
     if (decompressor == null) {
       decompressor = codec.createDecompressor();
-      LOG.info("Got brand-new decompressor ["+codec.getDefaultExtension()+"]");
+      LOG.info("Got brand-new decompressor [" + codec.getDefaultExtension() + "]");
     } else {
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Got recycled decompressor");
       }
     }
@@ -171,10 +171,10 @@ public class CodecPool {
     }
     return decompressor;
   }
-  
+
   /**
    * Return the {@link Compressor} to the pool.
-   * 
+   *
    * @param compressor the <code>Compressor</code> to be returned to the pool
    */
   public static void returnCompressor(Compressor compressor) {
@@ -190,10 +190,10 @@ public class CodecPool {
       updateLeaseCount(compressorCounts, compressor, -1);
     }
   }
-  
+
   /**
    * Return the {@link Decompressor} to the pool.
-   * 
+   *
    * @param decompressor the <code>Decompressor</code> to be returned to the 
    *                     pool
    */

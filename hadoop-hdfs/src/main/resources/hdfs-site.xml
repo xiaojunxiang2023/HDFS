@@ -15,7 +15,7 @@
         <name>dfs.replication</name>
         <value>6</value>
     </property>
-    
+
     <property>
         <name>net.topology.script.file.name</name>
         <value>D:\docker\data\xjx\study-code\HDFS\hadoop-hdfs\src\main\resources\topology_script.py</value>

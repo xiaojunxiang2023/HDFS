@@ -1,13 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeys.DFS_CLIENT_IGNORE_NAMENODE_DEFAULT_KMS_URI;
-import static org.apache.hadoop.fs.CommonConfigurationKeys.DFS_CLIENT_IGNORE_NAMENODE_DEFAULT_KMS_URI_DEFAULT;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.security.GeneralSecurityException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CipherSuite;
 import org.apache.hadoop.crypto.CryptoCodec;
@@ -24,6 +16,15 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.KMSUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.security.GeneralSecurityException;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeys.DFS_CLIENT_IGNORE_NAMENODE_DEFAULT_KMS_URI;
+import static org.apache.hadoop.fs.CommonConfigurationKeys.DFS_CLIENT_IGNORE_NAMENODE_DEFAULT_KMS_URI_DEFAULT;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_CRYPTO_CODEC_CLASSES_KEY_PREFIX;
 
 /**
  * Utility class for key provider related methods in hdfs client package.
@@ -79,7 +80,7 @@ public final class HdfsKMSUtil {
    *                     available.
    */
   public static CryptoCodec getCryptoCodec(Configuration conf,
-      FileEncryptionInfo feInfo) throws IOException {
+                                           FileEncryptionInfo feInfo) throws IOException {
     final CipherSuite suite = feInfo.getCipherSuite();
     if (suite.equals(CipherSuite.UNKNOWN)) {
       throw new IOException("NameNode specified unknown CipherSuite with ID "
@@ -108,15 +109,15 @@ public final class HdfsKMSUtil {
    * @throws IOException
    */
   public static URI getKeyProviderUri(UserGroupInformation ugi,
-      URI namenodeUri, String keyProviderUriStr, Configuration conf)
-          throws IOException {
+                                      URI namenodeUri, String keyProviderUriStr, Configuration conf)
+      throws IOException {
     URI keyProviderUri = null;
     // Lookup the secret in credentials object for namenodeuri.
     Credentials credentials = ugi.getCredentials();
     Text credsKey = getKeyProviderMapKey(namenodeUri);
     byte[] keyProviderUriBytes =
         credentials.getSecretKey(credsKey);
-    if(keyProviderUriBytes != null) {
+    if (keyProviderUriBytes != null) {
       keyProviderUri =
           URI.create(DFSUtilClient.bytes2String(keyProviderUriBytes));
     }
@@ -159,12 +160,12 @@ public final class HdfsKMSUtil {
    */
   public static Text getKeyProviderMapKey(URI namenodeUri) {
     return new Text(DFS_KMS_PREFIX + namenodeUri.getScheme()
-        +"://" + namenodeUri.getAuthority());
+        + "://" + namenodeUri.getAuthority());
   }
 
   public static CryptoInputStream createWrappedInputStream(InputStream is,
-      KeyProvider keyProvider, FileEncryptionInfo fileEncryptionInfo,
-      Configuration conf) throws IOException {
+                                                           KeyProvider keyProvider, FileEncryptionInfo fileEncryptionInfo,
+                                                           Configuration conf) throws IOException {
     // File is encrypted, wrap the stream in a crypto stream.
     // Currently only one version, so no special logic based on the version#
     HdfsKMSUtil.getCryptoProtocolVersion(fileEncryptionInfo);
@@ -180,7 +181,7 @@ public final class HdfsKMSUtil {
    * Decrypts a EDEK by consulting the KeyProvider.
    */
   static KeyVersion decryptEncryptedDataEncryptionKey(FileEncryptionInfo
-      feInfo, KeyProvider keyProvider) throws IOException {
+                                                          feInfo, KeyProvider keyProvider) throws IOException {
     if (keyProvider == null) {
       throw new IOException("No KeyProvider is configured, cannot access" +
           " an encrypted file");

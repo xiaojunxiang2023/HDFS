@@ -1,25 +1,27 @@
 package org.apache.hadoop.ipc.metrics;
+
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.MetricsRegistry;
 import org.apache.hadoop.metrics2.lib.MutableRatesWithAggregation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * This class is for maintaining queue (priority) level related
  * statistics when FairCallQueue is used and publishing them
  * through the metrics interface.
  */
-@Metrics(about="Per queue(priority) metrics",
-    context="decayrpcschedulerdetailed")
+@Metrics(about = "Per queue(priority) metrics",
+    context = "decayrpcschedulerdetailed")
 public class DecayRpcSchedulerDetailedMetrics {
 
-  @Metric private MutableRatesWithAggregation rpcQueueRates;
-  @Metric private MutableRatesWithAggregation rpcProcessingRates;
+  @Metric
+  private MutableRatesWithAggregation rpcQueueRates;
+  @Metric
+  private MutableRatesWithAggregation rpcProcessingRates;
 
   private static final Logger LOG =
       LoggerFactory.getLogger(DecayRpcSchedulerDetailedMetrics.class);
@@ -29,7 +31,7 @@ public class DecayRpcSchedulerDetailedMetrics {
   private String[] processingNamesForLevels;
 
   DecayRpcSchedulerDetailedMetrics(String ns) {
-    name = "DecayRpcSchedulerDetailedMetrics."+ ns;
+    name = "DecayRpcSchedulerDetailedMetrics." + ns;
     registry = new MetricsRegistry("decayrpcschedulerdetailed")
         .tag("port", "RPC port", String.valueOf(ns));
     LOG.debug(registry.info().toString());
@@ -49,8 +51,8 @@ public class DecayRpcSchedulerDetailedMetrics {
     queueNamesForLevels = new String[numLevels];
     processingNamesForLevels = new String[numLevels];
     for (int i = 0; i < numLevels; i++) {
-      queueNamesForLevels[i] = getQueueName(i+1);
-      processingNamesForLevels[i] = getProcessingName(i+1);
+      queueNamesForLevels[i] = getQueueName(i + 1);
+      processingNamesForLevels[i] = getProcessingName(i + 1);
     }
     rpcQueueRates.init(queueNamesForLevels);
     rpcProcessingRates.init(processingNamesForLevels);
@@ -87,14 +89,14 @@ public class DecayRpcSchedulerDetailedMetrics {
    * Returns the rate name inside the metric.
    */
   public String getQueueName(int priority) {
-    return "DecayRPCSchedulerPriority."+priority+".RpcQueueTime";
+    return "DecayRPCSchedulerPriority." + priority + ".RpcQueueTime";
   }
 
   /**
    * Returns the rate name inside the metric.
    */
   public String getProcessingName(int priority) {
-    return "DecayRPCSchedulerPriority."+priority+".RpcProcessingTime";
+    return "DecayRPCSchedulerPriority." + priority + ".RpcProcessingTime";
   }
 
   public String getName() {

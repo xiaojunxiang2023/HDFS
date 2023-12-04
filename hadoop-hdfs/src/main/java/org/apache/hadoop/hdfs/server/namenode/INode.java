@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -20,6 +16,10 @@ import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithName;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.hdfs.util.Diff;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.ChunkedArrayList;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
@@ -88,6 +88,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     setUser(user);
     return this;
   }
+
   /**
    * @param snapshotId
    *          if it is not {@link Snapshot#CURRENT_STATE_ID}, get the result
@@ -121,7 +122,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * @return permission.
    */
   abstract FsPermission getFsPermission(int snapshotId);
-  
+
   /** The same as getFsPermission(Snapshot.CURRENT_STATE_ID). */
   @Override
   public final FsPermission getFsPermission() {
@@ -167,36 +168,36 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    *          from the given snapshot; otherwise, get the result from the
    *          current inode.
    * @return XAttrFeature
-   */  
+   */
   abstract XAttrFeature getXAttrFeature(int snapshotId);
-  
+
   @Override
   public final XAttrFeature getXAttrFeature() {
     return getXAttrFeature(Snapshot.CURRENT_STATE_ID);
   }
-  
+
   /**
    * Set <code>XAttrFeature</code> 
    */
   abstract void addXAttrFeature(XAttrFeature xAttrFeature);
-  
+
   final INode addXAttrFeature(XAttrFeature xAttrFeature, int latestSnapshotId) {
     recordModification(latestSnapshotId);
     addXAttrFeature(xAttrFeature);
     return this;
   }
-  
+
   /**
    * Remove <code>XAttrFeature</code> 
    */
   abstract void removeXAttrFeature();
-  
+
   final INode removeXAttrFeature(int lastestSnapshotId) {
     recordModification(lastestSnapshotId);
     removeXAttrFeature();
     return this;
   }
-  
+
   /**
    * @return if the given snapshot id is {@link Snapshot#CURRENT_STATE_ID},
    *         return this; otherwise return the corresponding snapshot inode.
@@ -218,7 +219,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
       return false;
     }
     final INode child = parentDir.getChild(getLocalNameBytes(),
-            Snapshot.CURRENT_STATE_ID);
+        Snapshot.CURRENT_STATE_ID);
     if (this == child) {
       return true;
     }
@@ -253,10 +254,10 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     return child != null && child.isReference() &&
         this == child.asReference().getReferredINode();
   }
-  
+
   /** @return true if the given inode is an ancestor directory of this inode. */
   public final boolean isAncestorDirectory(final INodeDirectory dir) {
-    for(INodeDirectory p = getParent(); p != null; p = p.getParent()) {
+    for (INodeDirectory p = getParent(); p != null; p = p.getParent()) {
       if (p == dir) {
         return true;
       }
@@ -269,7 +270,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * this method tells which snapshot the modification should be
    * associated with: the snapshot that belongs to the SRC tree of the rename
    * operation, or the snapshot belonging to the DST tree.
-   * 
+   *
    * @param latestInDst
    *          id of the latest snapshot in the DST tree above the reference node
    * @return True: the modification should be recorded in the snapshot that
@@ -298,7 +299,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * be recorded in the latest snapshot.
    *
    * @param latestSnapshotId The id of the latest snapshot that has been taken.
-   *                         Note that it is {@link Snapshot#CURRENT_STATE_ID} 
+   *                         Note that it is {@link Snapshot#CURRENT_STATE_ID}
    *                         if no snapshots have been taken.
    */
   abstract void recordModification(final int latestSnapshotId);
@@ -367,12 +368,12 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Clean the subtree under this inode and collect the blocks from the descents
    * for further block deletion/update. The current inode can either resides in
    * the current tree or be stored as a snapshot copy.
-   * 
+   *
    * <pre>
    * In general, we have the following rules. 
    * 1. When deleting a file/directory in the current tree, we have different 
    * actions according to the type of the node to delete. 
-   * 
+   *
    * 1.1 The current inode (this) is an {@link INodeFile}. 
    * 1.1.1 If {@code prior} is null, there is no snapshot taken on ancestors 
    * before. Thus we simply destroy (i.e., to delete completely, no need to save 
@@ -380,17 +381,17 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * cleansing.
    * 1.1.2 Else do nothing since the current INode will be stored as a snapshot
    * copy.
-   * 
+   *
    * 1.2 The current inode is an {@link INodeDirectory}.
    * 1.2.1 If {@code prior} is null, there is no snapshot taken on ancestors 
    * before. Similarly, we destroy the whole subtree and collect blocks.
    * 1.2.2 Else do nothing with the current INode. Recursively clean its 
    * children.
-   * 
+   *
    * 1.3 The current inode is a file with snapshot.
    * Call recordModification(..) to capture the current states.
    * Mark the INode as deleted.
-   * 
+   *
    * 1.4 The current inode is an {@link INodeDirectory} with snapshot feature.
    * Call recordModification(..) to capture the current states. 
    * Destroy files/directories created after the latest snapshot 
@@ -418,7 +419,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    *        snapshot.
    */
   public abstract void cleanSubtree(ReclaimContext reclaimContext,
-      final int snapshotId, int priorSnapshotId);
+                                    final int snapshotId, int priorSnapshotId);
 
   /**
    * Destroy self and clear everything! If the INode is a file, this method
@@ -443,7 +444,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Compute {@link ContentSummary}. 
    */
   public final ContentSummary computeAndConvertContentSummary(int snapshotId,
-      ContentSummaryComputationContext summary) throws AccessControlException {
+                                                              ContentSummaryComputationContext summary) throws AccessControlException {
     computeContentSummary(snapshotId, summary);
     final ContentCounts counts = summary.getCounts();
     final ContentCounts snapshotCounts = summary.getSnapshotCounts();
@@ -521,19 +522,19 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
 
   /**
    * Count subtree {@link Quota#NAMESPACE} and {@link Quota#STORAGESPACE} usages.
-   * 
+   *
    * With the existence of {@link INodeReference}, the same inode and its
    * subtree may be referred by multiple {@link WithName} nodes and a
    * {@link DstReference} node. To avoid circles while quota usage computation,
    * we have the following rules:
-   * 
+   *
    * <pre>
    * 1. For a {@link DstReference} node, since the node must be in the current
    * tree (or has been deleted as the end point of a series of rename 
    * operations), we compute the quota usage of the referred node (and its 
    * subtree) in the regular manner, i.e., including every inode in the current
    * tree and in snapshot copies, as well as the size of diff list.
-   * 
+   *
    * 2. For a {@link WithName} node, since the node must be in a snapshot, we 
    * only count the quota usage for those nodes that still existed at the 
    * creation time of the snapshot associated with the {@link WithName} node.
@@ -551,10 +552,10 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * @return The subtree quota counts.
    */
   public abstract QuotaCounts computeQuotaUsage(BlockStoragePolicySuite bsps,
-      byte blockStoragePolicyId, boolean useCache, int lastSnapshotId);
+                                                byte blockStoragePolicyId, boolean useCache, int lastSnapshotId);
 
   public final QuotaCounts computeQuotaUsage(BlockStoragePolicySuite bsps,
-      boolean useCache) {
+                                             boolean useCache) {
     final byte storagePolicyId = isSymlink() ?
         HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED : getStoragePolicyID();
     return computeQuotaUsage(bsps, storagePolicyId, useCache,
@@ -566,7 +567,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    */
   public final String getLocalName() {
     final byte[] name = getLocalNameBytes();
-    return name == null? null: DFSUtil.bytes2String(name);
+    return name == null ? null : DFSUtil.bytes2String(name);
   }
 
   @Override
@@ -660,8 +661,8 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
 
   /** @return the parent directory */
   public final INodeDirectory getParent() {
-    return parent == null? null
-        : parent.isReference()? getParentReference().getParent(): parent.asDirectory();
+    return parent == null ? null
+        : parent.isReference() ? getParentReference().getParent() : parent.asDirectory();
   }
 
   /**
@@ -669,7 +670,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    *         otherwise, return null.
    */
   public INodeReference getParentReference() {
-    return parent == null || !parent.isReference()? null: (INodeReference)parent;
+    return parent == null || !parent.isReference() ? null : (INodeReference) parent;
   }
 
   /**
@@ -681,7 +682,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     if (!(ref instanceof WithCount)) {
       return false;
     }
-    return ((WithCount)ref).getReferenceCount() == 1;
+    return ((WithCount) ref).getReferenceCount() == 1;
   }
 
   /** Set parent directory */
@@ -722,7 +723,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
 
   /** Set the last modification time of inode. */
   public final INode setModificationTime(long modificationTime,
-      int latestSnapshotId) {
+                                         int latestSnapshotId) {
     recordModification(latestSnapshotId);
     setModificationTime(modificationTime);
     return this;
@@ -752,7 +753,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Set last access time of inode.
    */
   public final INode setAccessTime(long accessTime, int latestSnapshotId,
-      boolean skipCaptureAccessTimeOnlyChangeInSnapshot) {
+                                   boolean skipCaptureAccessTimeOnlyChangeInSnapshot) {
     if (!skipCaptureAccessTimeOnlyChangeInSnapshot) {
       recordModification(latestSnapshotId);
     }
@@ -815,7 +816,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * @param path the absolute path to validate.
    * @return true if the path is valid.
    */
-  static boolean isValidAbsolutePath(final String path){
+  static boolean isValidAbsolutePath(final String path) {
     return path != null && path.startsWith(Path.SEPARATOR);
   }
 
@@ -845,16 +846,16 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
   @Override
   public final int hashCode() {
     long id = getId();
-    return (int)(id^(id>>>32));  
+    return (int) (id ^ (id >>> 32));
   }
-  
+
   /**
    * Dump the subtree starting from this inode.
    * @return a text representation of the tree.
    */
   @VisibleForTesting
   public final StringBuffer dumpTreeRecursively() {
-    final StringWriter out = new StringWriter(); 
+    final StringWriter out = new StringWriter();
     dumpTreeRecursively(new PrintWriter(out, true), new StringBuilder(),
         Snapshot.CURRENT_STATE_ID);
     return out.getBuffer();
@@ -871,11 +872,11 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    */
   @VisibleForTesting
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
-      int snapshotId) {
+                                  int snapshotId) {
     out.print(prefix);
     out.print(" ");
     final String name = getLocalName();
-    out.print(name.isEmpty()? "/": name);
+    out.print(name.isEmpty() ? "/" : name);
     out.print("   (");
     out.print(getObjectString());
     out.print("), ");
@@ -980,13 +981,13 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
 
     /**
      * @param bsps
- *          block storage policy suite to calculate intended storage type
- *          usage
+     *          block storage policy suite to calculate intended storage type
+     *          usage
      * @param collectedBlocks
-*          blocks collected from the descents for further block
-*          deletion/update will be added to the given map.
+     *          blocks collected from the descents for further block
+     *          deletion/update will be added to the given map.
      * @param removedINodes
-*          INodes collected from the descents for further cleaning up of
+     *          INodes collected from the descents for further cleaning up of
      * @param removedUCFiles
      */
     public ReclaimContext(
@@ -1051,6 +1052,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
         return targetReplication;
       }
     }
+
     /**
      * The list of blocks that need to be removed from blocksMap
      */
@@ -1064,7 +1066,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
       toDeleteList = new ChunkedArrayList<>();
       toUpdateReplicationInfo = new ChunkedArrayList<>();
     }
-    
+
     /**
      * @return The list of blocks that need to be removed from blocksMap
      */
@@ -1088,11 +1090,11 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
       // If the file is being truncated
       // the copy-on-truncate block should also be collected for deletion
       BlockUnderConstructionFeature uc = toDelete.getUnderConstructionFeature();
-      if(uc == null) {
+      if (uc == null) {
         return;
       }
       BlockInfo truncateBlock = uc.getTruncateBlock();
-      if(truncateBlock == null || truncateBlock.equals(toDelete)) {
+      if (truncateBlock == null || truncateBlock.equals(toDelete)) {
         return;
       }
       addDeleteBlock(truncateBlock);
@@ -1102,6 +1104,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
       toUpdateReplicationInfo.add(
           new UpdatedReplicationInfo(targetRepl, block));
     }
+
     /**
      * Clear {@link BlocksMapUpdateInfo#toDeleteList}
      */
@@ -1110,7 +1113,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     }
   }
 
-  /** 
+  /**
    * INode feature such as {@link FileUnderConstructionFeature}
    * and {@link DirectoryWithQuotaFeature}.
    */

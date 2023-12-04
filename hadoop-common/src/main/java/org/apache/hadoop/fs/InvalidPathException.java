@@ -11,7 +11,7 @@ public class InvalidPathException extends HadoopIllegalArgumentException {
 
   /**
    * Constructs exception with the specified detail message.
-   * 
+   *
    * @param path invalid path.
    */
   public InvalidPathException(final String path) {
@@ -20,7 +20,7 @@ public class InvalidPathException extends HadoopIllegalArgumentException {
 
   /**
    * Constructs exception with the specified detail message.
-   * 
+   *
    * @param path invalid path.
    * @param reason Reason <code>path</code> is invalid
    */

@@ -14,91 +14,91 @@ import java.util.Collection;
 
 public abstract class StateStoreDriver implements StateStoreRecordOperations {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(StateStoreDriver.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(StateStoreDriver.class);
 
 
-    private Configuration conf;
-    private String identifier;
-    private StateStoreMetrics metrics;
+  private Configuration conf;
+  private String identifier;
+  private StateStoreMetrics metrics;
 
 
-    public boolean init(final Configuration config, final String id,
-                        final Collection<Class<? extends BaseRecord>> records,
-                        final StateStoreMetrics stateStoreMetrics) {
+  public boolean init(final Configuration config, final String id,
+                      final Collection<Class<? extends BaseRecord>> records,
+                      final StateStoreMetrics stateStoreMetrics) {
 
-        this.conf = config;
-        this.identifier = id;
-        this.metrics = stateStoreMetrics;
+    this.conf = config;
+    this.identifier = id;
+    this.metrics = stateStoreMetrics;
 
-        if (this.identifier == null) {
-            LOG.warn("The identifier for the State Store connection is not set");
-        }
-
-        boolean success = initDriver();
-        if (!success) {
-            LOG.error("Cannot initialize driver for {}", getDriverName());
-            return false;
-        }
-
-        for (Class<? extends BaseRecord> cls : records) {
-            String recordString = StateStoreUtils.getRecordName(cls);
-            if (!initRecordStorage(recordString, cls)) {
-                LOG.error("Cannot initialize record store for {}", cls.getSimpleName());
-                return false;
-            }
-        }
-        return true;
+    if (this.identifier == null) {
+      LOG.warn("The identifier for the State Store connection is not set");
     }
 
-    protected Configuration getConf() {
-        return this.conf;
+    boolean success = initDriver();
+    if (!success) {
+      LOG.error("Cannot initialize driver for {}", getDriverName());
+      return false;
     }
 
-    // 获取正在运行的任务的唯一标识符, 一般是 router 地址
-    public String getIdentifier() {
-        return this.identifier;
+    for (Class<? extends BaseRecord> cls : records) {
+      String recordString = StateStoreUtils.getRecordName(cls);
+      if (!initRecordStorage(recordString, cls)) {
+        LOG.error("Cannot initialize record store for {}", cls.getSimpleName());
+        return false;
+      }
     }
+    return true;
+  }
 
-    public StateStoreMetrics getMetrics() {
-        return this.metrics;
+  protected Configuration getConf() {
+    return this.conf;
+  }
+
+  // 获取正在运行的任务的唯一标识符, 一般是 router 地址
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public StateStoreMetrics getMetrics() {
+    return this.metrics;
+  }
+
+  // 初始化 Driver
+  public abstract boolean initDriver();
+
+  // 初始化 RecordStorage
+  public abstract <T extends BaseRecord> boolean initRecordStorage(
+      String className, Class<T> clazz);
+
+  public abstract boolean isDriverReady();
+
+  public void verifyDriverReady() throws StateStoreUnavailableException {
+    if (!isDriverReady()) {
+      String driverName = getDriverName();
+      String hostname = getHostname();
+      throw new StateStoreUnavailableException("State Store driver " +
+          driverName + " in " + hostname + " is not ready.");
     }
+  }
 
-    // 初始化 Driver
-    public abstract boolean initDriver();
+  public abstract void close() throws Exception;
 
-    // 初始化 RecordStorage
-    public abstract <T extends BaseRecord> boolean initRecordStorage(
-            String className, Class<T> clazz);
+  public long getTime() {
+    return Time.now();
+  }
 
-    public abstract boolean isDriverReady();
+  private String getDriverName() {
+    return this.getClass().getSimpleName();
+  }
 
-    public void verifyDriverReady() throws StateStoreUnavailableException {
-        if (!isDriverReady()) {
-            String driverName = getDriverName();
-            String hostname = getHostname();
-            throw new StateStoreUnavailableException("State Store driver " +
-                    driverName + " in " + hostname + " is not ready.");
-        }
+  private String getHostname() {
+    String hostname = "Unknown";
+    try {
+      hostname = InetAddress.getLocalHost().getHostName();
+    } catch (Exception e) {
+      LOG.error("Cannot get local address", e);
     }
-
-    public abstract void close() throws Exception;
-
-    public long getTime() {
-        return Time.now();
-    }
-
-    private String getDriverName() {
-        return this.getClass().getSimpleName();
-    }
-
-    private String getHostname() {
-        String hostname = "Unknown";
-        try {
-            hostname = InetAddress.getLocalHost().getHostName();
-        } catch (Exception e) {
-            LOG.error("Cannot get local address", e);
-        }
-        return hostname;
-    }
+    return hostname;
+  }
 }

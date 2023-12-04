@@ -23,11 +23,11 @@
  */
 package org.apache.hadoop.io.compress.bzip2;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.io.IOException;
-
 import org.apache.hadoop.io.compress.SplittableCompressionCodec.READ_MODE;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -88,19 +88,19 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
   private byte array[] = new byte[1];
 
   /**
-  * Index of the last char in the block, so the block size == last + 1.
-  */
+   * Index of the last char in the block, so the block size == last + 1.
+   */
   private int last;
 
   /**
-  * Index in zptr[] of original string after sorting.
-  */
+   * Index in zptr[] of original string after sorting.
+   */
   private int origPtr;
 
   /**
-  * always: in the range 0 .. 9. The current block size is 100000 * this
-  * number.
-  */
+   * always: in the range 0 .. 9. The current block size is 100000 * this
+   * number.
+   */
   private int blockSize100k;
 
   private boolean blockRandomised = false;
@@ -121,7 +121,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
    */
   public enum STATE {
     EOF, START_BLOCK_STATE, RAND_PART_A_STATE, RAND_PART_B_STATE, RAND_PART_C_STATE, NO_RAND_PART_A_STATE, NO_RAND_PART_B_STATE, NO_RAND_PART_C_STATE, NO_PROCESS_STATE
-  };
+  }
+
+  ;
 
   private STATE currentState = STATE.START_BLOCK_STATE;
 
@@ -144,15 +146,15 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
   private char su_z;
 
   /**
-  * All memory intensive stuff. This field is initialized by initBlock().
-  */
+   * All memory intensive stuff. This field is initialized by initBlock().
+   */
   private CBZip2InputStream.Data data;
 
   /**
-  * This method reports the processed bytes so far. Please note that this
-  * statistic is only updated on block boundaries and only when the stream is
-  * initiated in BYBLOCK mode.
-  */
+   * This method reports the processed bytes so far. Please note that this
+   * statistic is only updated on block boundaries and only when the stream is
+   * initiated in BYBLOCK mode.
+   */
   public long getProcessedByteCount() {
     return reportedBytesReadFromCompressedStream;
   }
@@ -185,12 +187,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
   }
 
   /**
-  * This method reads a Byte from the compressed stream. Whenever we need to
-  * read from the underlying compressed stream, this method should be called
-  * instead of directly calling the read method of the underlying compressed
-  * stream. This method does important record keeping to have the statistic
-  * that how many bytes have been read off the compressed stream.
-  */
+   * This method reads a Byte from the compressed stream. Whenever we need to
+   * read from the underlying compressed stream, this method should be called
+   * instead of directly calling the read method of the underlying compressed
+   * stream. This method does important record keeping to have the statistic
+   * that how many bytes have been read off the compressed stream.
+   */
   private int readAByte(InputStream inStream) throws IOException {
     int read = inStream.read();
     if (read >= 0) {
@@ -273,21 +275,21 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
   }
 
   /**
-  * Constructs a new CBZip2InputStream which decompresses bytes read from the
-  * specified stream.
-  *
-  * <p>
-  * Although BZip2 headers are marked with the magic <tt>"Bz"</tt> this
-  * constructor expects the next byte in the stream to be the first one after
-  * the magic. Thus callers have to skip the first two bytes. Otherwise this
-  * constructor will throw an exception.
-  * </p>
-  *
-  * @throws IOException
-  *             if the stream content is malformed or an I/O error occurs.
-  * @throws NullPointerException
-  *             if <tt>in == null</tt>
-  */
+   * Constructs a new CBZip2InputStream which decompresses bytes read from the
+   * specified stream.
+   *
+   * <p>
+   * Although BZip2 headers are marked with the magic <tt>"Bz"</tt> this
+   * constructor expects the next byte in the stream to be the first one after
+   * the magic. Thus callers have to skip the first two bytes. Otherwise this
+   * constructor will throw an exception.
+   * </p>
+   *
+   * @throws IOException
+   *             if the stream content is malformed or an I/O error occurs.
+   * @throws NullPointerException
+   *             if <tt>in == null</tt>
+   */
   public CBZip2InputStream(final InputStream in, READ_MODE readMode)
       throws IOException {
     this(in, readMode, false);
@@ -304,14 +306,14 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     this.skipDecompression = skipDecompression;
     if (readMode == READ_MODE.CONTINUOUS) {
       currentState = STATE.START_BLOCK_STATE;
-      lazyInitialization = (in.available() == 0)?true:false;
-      if(!lazyInitialization){
-    init();
-  }
+      lazyInitialization = (in.available() == 0) ? true : false;
+      if (!lazyInitialization) {
+        init();
+      }
     } else if (readMode == READ_MODE.BYBLOCK) {
       this.currentState = STATE.NO_PROCESS_STATE;
-      skipResult = this.skipToNextMarker(CBZip2InputStream.BLOCK_DELIMITER,DELIMITER_BIT_LENGTH);
-      if(!skipDecompression){
+      skipResult = this.skipToNextMarker(CBZip2InputStream.BLOCK_DELIMITER, DELIMITER_BIT_LENGTH);
+      if (!skipDecompression) {
         changeStateToProcessABlock();
       }
     }
@@ -326,10 +328,10 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
    *
    * @return long Number of bytes between current stream position and the
    * next BZip2 block start marker.
- * @throws IOException
+   * @throws IOException
    *
    */
-  public static long numberOfBytesTillNextMarker(final InputStream in) throws IOException{
+  public static long numberOfBytesTillNextMarker(final InputStream in) throws IOException {
     CBZip2InputStream anObject = new CBZip2InputStream(in, READ_MODE.BYBLOCK, true);
     return anObject.getProcessedByteCount();
   }
@@ -400,12 +402,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       throw new IOException("stream closed");
     }
 
-    if(lazyInitialization){
+    if (lazyInitialization) {
       this.init();
       this.lazyInitialization = false;
     }
 
-    if(skipDecompression){
+    if (skipDecompression) {
       changeStateToProcessABlock();
       skipDecompression = false;
     }
@@ -415,8 +417,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     int b = 0;
 
 
-
-    for (; ((destOffs < hi) && ((b = read0())) >= 0);) {
+    for (; ((destOffs < hi) && ((b = read0())) >= 0); ) {
       dest[destOffs++] = (byte) b;
 
     }
@@ -437,39 +438,39 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     final int retChar = this.currentChar;
 
     switch (this.currentState) {
-    case EOF:
-      return END_OF_STREAM;// return -1
+      case EOF:
+        return END_OF_STREAM;// return -1
 
-    case NO_PROCESS_STATE:
-      return END_OF_BLOCK;// return -2
+      case NO_PROCESS_STATE:
+        return END_OF_BLOCK;// return -2
 
-    case START_BLOCK_STATE:
-      throw new IllegalStateException();
+      case START_BLOCK_STATE:
+        throw new IllegalStateException();
 
-    case RAND_PART_A_STATE:
-      throw new IllegalStateException();
+      case RAND_PART_A_STATE:
+        throw new IllegalStateException();
 
-    case RAND_PART_B_STATE:
-      setupRandPartB();
-      break;
+      case RAND_PART_B_STATE:
+        setupRandPartB();
+        break;
 
-    case RAND_PART_C_STATE:
-      setupRandPartC();
-      break;
+      case RAND_PART_C_STATE:
+        setupRandPartC();
+        break;
 
-    case NO_RAND_PART_A_STATE:
-      throw new IllegalStateException();
+      case NO_RAND_PART_A_STATE:
+        throw new IllegalStateException();
 
-    case NO_RAND_PART_B_STATE:
-      setupNoRandPartB();
-      break;
+      case NO_RAND_PART_B_STATE:
+        setupNoRandPartB();
+        break;
 
-    case NO_RAND_PART_C_STATE:
-      setupNoRandPartC();
-      break;
+      case NO_RAND_PART_C_STATE:
+        setupNoRandPartC();
+        break;
 
-    default:
-      throw new IllegalStateException();
+      default:
+        throw new IllegalStateException();
     }
 
     return retChar;
@@ -501,9 +502,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       this.blockRandomised = bsR(1) == 1;
 
       /**
-      * Allocate data here instead in constructor, so we do not allocate
-      * it if the input file is empty.
-      */
+       * Allocate data here instead in constructor, so we do not allocate
+       * it if the input file is empty.
+       */
       if (this.data == null) {
         this.data = new Data(this.blockSize100k);
       }
@@ -540,9 +541,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       this.blockRandomised = bsR(1) == 1;
 
       /**
-      * Allocate data here instead in constructor, so we do not allocate
-      * it if the input file is empty.
-      */
+       * Allocate data here instead in constructor, so we do not allocate
+       * it if the input file is empty.
+       */
       if (this.data == null) {
         this.data = new Data(this.blockSize100k);
       }
@@ -652,11 +653,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
   }
 
   /**
-  * Called by createHuffmanDecodingTables() exclusively.
-  */
+   * Called by createHuffmanDecodingTables() exclusively.
+   */
   private static void hbCreateDecodeTables(final int[] limit,
-      final int[] base, final int[] perm, final char[] length,
-      final int minLen, final int maxLen, final int alphaSize) {
+                                           final int[] base, final int[] perm, final char[] length,
+                                           final int minLen, final int maxLen, final int alphaSize) {
     for (int i = minLen, pp = 0; i <= maxLen; i++) {
       for (int j = 0; j < alphaSize; j++) {
         if (length[j] == i) {
@@ -665,7 +666,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       }
     }
 
-    for (int i = MAX_CODE_LEN; --i > 0;) {
+    for (int i = MAX_CODE_LEN; --i > 0; ) {
       base[i] = 0;
       limit[i] = 0;
     }
@@ -708,7 +709,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       }
     }
 
-    for (int i = 256; --i >= 0;) {
+    for (int i = 256; --i >= 0; ) {
       inUse[i] = false;
     }
 
@@ -739,7 +740,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     }
 
     /* Undo the MTF values for the selectors. */
-    for (int v = nGroups; --v >= 0;) {
+    for (int v = nGroups; --v >= 0; ) {
       pos[v] = (byte) v;
     }
 
@@ -774,10 +775,10 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
   }
 
   /**
-  * Called by recvDecodingTables() exclusively.
-  */
+   * Called by recvDecodingTables() exclusively.
+   */
   private void createHuffmanDecodingTables(final int alphaSize,
-      final int nGroups) {
+                                           final int nGroups) {
     final Data dataShadow = this.data;
     final char[][] len = dataShadow.temp_charArray2d;
     final int[] minLens = dataShadow.minLens;
@@ -789,7 +790,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       int minLen = 32;
       int maxLen = 0;
       final char[] len_t = len[t];
-      for (int i = alphaSize; --i >= 0;) {
+      for (int i = alphaSize; --i >= 0; ) {
         final char lent = len_t[i];
         if (lent > maxLen) {
           maxLen = lent;
@@ -822,11 +823,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     final int limitLast = this.blockSize100k * 100000;
 
     /*
-    * Setting up the unzftab entries here is not strictly necessary, but it
-    * does save having to do it later in a separate pass, and so saves a
-    * block's worth of cache misses.
-    */
-    for (int i = 256; --i >= 0;) {
+     * Setting up the unzftab entries here is not strictly necessary, but it
+     * does save having to do it later in a separate pass, and so saves a
+     * block's worth of cache misses.
+     */
+    for (int i = 256; --i >= 0; ) {
       yy[i] = (char) i;
       unzftab[i] = 0;
     }
@@ -924,12 +925,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         ll8[lastShadow] = seqToUnseq[tmp];
 
         /*
-        * This loop is hammered during decompression, hence avoid
-        * native method call overhead of System.arraycopy for very
-        * small ranges to copy.
-        */
+         * This loop is hammered during decompression, hence avoid
+         * native method call overhead of System.arraycopy for very
+         * small ranges to copy.
+         */
         if (nextSym <= 16) {
-          for (int j = nextSym - 1; j > 0;) {
+          for (int j = nextSym - 1; j > 0; ) {
             yy[j] = yy[--j];
           }
         } else {
@@ -1081,8 +1082,8 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     } else {
       endBlock();
       if (readMode == READ_MODE.CONTINUOUS) {
-      initBlock();
-      setupBlock();
+        initBlock();
+        setupBlock();
       } else if (readMode == READ_MODE.BYBLOCK) {
         this.currentState = STATE.NO_PROCESS_STATE;
       }
@@ -1103,8 +1104,8 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
       this.currentState = STATE.NO_RAND_PART_A_STATE;
       endBlock();
       if (readMode == READ_MODE.CONTINUOUS) {
-      initBlock();
-      setupBlock();
+        initBlock();
+        setupBlock();
       } else if (readMode == READ_MODE.BYBLOCK) {
         this.currentState = STATE.NO_PROCESS_STATE;
       }
@@ -1190,9 +1191,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     final byte[] selectorMtf = new byte[MAX_SELECTORS]; // 18002 byte
 
     /**
-    * Freq table collected to save a pass over the data during
-    * decompression.
-    */
+     * Freq table collected to save a pass over the data during
+     * decompression.
+     */
     final int[] unzftab = new int[256]; // 1024 byte
 
     final int[][] limit = new int[N_GROUPS][MAX_ALPHA_SIZE]; // 6192 byte
@@ -1203,7 +1204,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     final int[] cftab = new int[257]; // 1028 byte
     final char[] getAndMoveToFrontDecode_yy = new char[256]; // 512 byte
     final char[][] temp_charArray2d = new char[N_GROUPS][MAX_ALPHA_SIZE]; // 3096
-                                        // byte
+    // byte
     final byte[] recvDecodingTables_pos = new byte[N_GROUPS]; // 6 byte
     // ---------------
     // 60798 byte
@@ -1222,12 +1223,12 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
     }
 
     /**
-    * Initializes the {@link #tt} array.
-    *
-    * This method is called when the required length of the array is known.
-    * I don't initialize it at construction time to avoid unnecessary
-    * memory allocation when compressing small files.
-    */
+     * Initializes the {@link #tt} array.
+     *
+     * This method is called when the required length of the array is known.
+     * I don't initialize it at construction time to avoid unnecessary
+     * memory allocation when compressing small files.
+     */
     final int[] initTT(int length) {
       int[] ttShadow = this.tt;
 

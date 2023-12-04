@@ -1,4 +1,5 @@
 package org.apache.hadoop.util.hash;
+
 import org.apache.hadoop.conf.Configuration;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_UTIL_HASH_TYPE_DEFAULT;
@@ -13,8 +14,8 @@ public abstract class Hash {
   /** Constant to denote {@link JenkinsHash}. */
   public static final int JENKINS_HASH = 0;
   /** Constant to denote {@link MurmurHash}. */
-  public static final int MURMUR_HASH  = 1;
-  
+  public static final int MURMUR_HASH = 1;
+
   /**
    * This utility method converts String representation of hash function name
    * to a symbolic constant. Currently two function types are supported,
@@ -31,7 +32,7 @@ public abstract class Hash {
       return INVALID_HASH;
     }
   }
-  
+
   /**
    * This utility method converts the name of the configured
    * hash type to a symbolic constant.
@@ -43,23 +44,23 @@ public abstract class Hash {
         HADOOP_UTIL_HASH_TYPE_DEFAULT);
     return parseHashType(name);
   }
-  
+
   /**
    * Get a singleton instance of hash function of a given type.
    * @param type predefined hash type
    * @return hash function instance, or null if type is invalid
    */
   public static Hash getInstance(int type) {
-    switch(type) {
-    case JENKINS_HASH:
-      return JenkinsHash.getInstance();
-    case MURMUR_HASH:
-      return MurmurHash.getInstance();
-    default:
-      return null;
+    switch (type) {
+      case JENKINS_HASH:
+        return JenkinsHash.getInstance();
+      case MURMUR_HASH:
+        return MurmurHash.getInstance();
+      default:
+        return null;
     }
   }
-  
+
   /**
    * Get a singleton instance of hash function of a type
    * defined in the configuration.
@@ -70,7 +71,7 @@ public abstract class Hash {
     int type = getHashType(conf);
     return getInstance(type);
   }
-  
+
   /**
    * Calculate a hash using all bytes from the input argument, and
    * a seed of -1.
@@ -80,7 +81,7 @@ public abstract class Hash {
   public int hash(byte[] bytes) {
     return hash(bytes, bytes.length, -1);
   }
-  
+
   /**
    * Calculate a hash using all bytes from the input argument,
    * and a provided seed value.
@@ -91,7 +92,7 @@ public abstract class Hash {
   public int hash(byte[] bytes, int initval) {
     return hash(bytes, bytes.length, initval);
   }
-  
+
   /**
    * Calculate a hash using bytes from 0 to <code>length</code>, and
    * the provided seed value

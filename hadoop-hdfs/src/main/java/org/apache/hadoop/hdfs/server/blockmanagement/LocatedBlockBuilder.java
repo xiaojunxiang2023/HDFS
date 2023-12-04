@@ -1,14 +1,15 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.hadoop.fs.FileEncryptionInfo;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 class LocatedBlockBuilder {
 
   protected long flen;
@@ -43,8 +44,8 @@ class LocatedBlockBuilder {
 
   // return new block so tokens can be set
   LocatedBlock newLocatedBlock(ExtendedBlock eb,
-      DatanodeStorageInfo[] storage,
-      long pos, boolean isCorrupt) {
+                               DatanodeStorageInfo[] storage,
+                               long pos, boolean isCorrupt) {
     LocatedBlock blk =
         BlockManager.newLocatedBlock(eb, storage, pos, isCorrupt);
     return blk;

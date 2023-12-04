@@ -1,10 +1,10 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.FileSystem.Statistics.StatisticsData;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.fs.FileSystem.Statistics.StatisticsData;
 
 /**
  * A basic StorageStatistics instance which simply returns data from
@@ -66,28 +66,28 @@ public class FileSystemStorageStatistics extends StorageStatistics {
         "The stat key of FileSystemStorageStatistics should not be null!");
 
     switch (key) {
-    case "bytesRead":
-      return data.getBytesRead();
-    case "bytesWritten":
-      return data.getBytesWritten();
-    case "readOps":
-      return (long) (data.getReadOps() + data.getLargeReadOps());
-    case "largeReadOps":
-      return Long.valueOf(data.getLargeReadOps());
-    case "writeOps":
-      return Long.valueOf(data.getWriteOps());
-    case "bytesReadLocalHost":
-      return data.getBytesReadLocalHost();
-    case "bytesReadDistanceOfOneOrTwo":
-      return data.getBytesReadDistanceOfOneOrTwo();
-    case "bytesReadDistanceOfThreeOrFour":
-      return data.getBytesReadDistanceOfThreeOrFour();
-    case "bytesReadDistanceOfFiveOrLarger":
-      return data.getBytesReadDistanceOfFiveOrLarger();
-    case "bytesReadErasureCoded":
-      return data.getBytesReadErasureCoded();
-    default:
-      return null;
+      case "bytesRead":
+        return data.getBytesRead();
+      case "bytesWritten":
+        return data.getBytesWritten();
+      case "readOps":
+        return (long) (data.getReadOps() + data.getLargeReadOps());
+      case "largeReadOps":
+        return Long.valueOf(data.getLargeReadOps());
+      case "writeOps":
+        return Long.valueOf(data.getWriteOps());
+      case "bytesReadLocalHost":
+        return data.getBytesReadLocalHost();
+      case "bytesReadDistanceOfOneOrTwo":
+        return data.getBytesReadDistanceOfOneOrTwo();
+      case "bytesReadDistanceOfThreeOrFour":
+        return data.getBytesReadDistanceOfThreeOrFour();
+      case "bytesReadDistanceOfFiveOrLarger":
+        return data.getBytesReadDistanceOfFiveOrLarger();
+      case "bytesReadErasureCoded":
+        return data.getBytesReadErasureCoded();
+      default:
+        return null;
     }
   }
 
@@ -118,11 +118,11 @@ public class FileSystemStorageStatistics extends StorageStatistics {
   /**
    * Return true if a statistic is being tracked.
    *
-   * @return         True only if the statistic is being tracked.
+   * @return True only if the statistic is being tracked.
    */
   @Override
   public boolean isTracked(String key) {
-    for (String k: KEYS) {
+    for (String k : KEYS) {
       if (k.equals(key)) {
         return true;
       }

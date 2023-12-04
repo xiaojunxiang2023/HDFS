@@ -1,14 +1,15 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.util.StringUtils;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.List;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.util.StringUtils;
 
 /** Store the summary of a content (a directory or a file). */
-public class ContentSummary extends QuotaUsage implements Writable{
+public class ContentSummary extends QuotaUsage implements Writable {
   private long length;
   private long fileCount;
   private long directoryCount;
@@ -20,7 +21,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
   private String erasureCodingPolicy;
 
   /** We don't use generics. Instead override spaceConsumed and other methods
-      in order to keep backward compatibility. */
+   in order to keep backward compatibility. */
   public static class Builder extends QuotaUsage.Builder {
     public Builder() {
     }
@@ -66,7 +67,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
     }
 
     @Override
-    public Builder quota(long quota){
+    public Builder quota(long quota) {
       super.quota(quota);
       return this;
     }
@@ -125,8 +126,9 @@ public class ContentSummary extends QuotaUsage implements Writable{
 
   /** Constructor deprecated by ContentSummary.Builder*/
   @Deprecated
-  public ContentSummary() {}
-  
+  public ContentSummary() {
+  }
+
   /** Constructor, deprecated by ContentSummary.Builder
    *  This constructor implicitly set spaceConsumed the same as length.
    *  spaceConsumed and length must be set explicitly with
@@ -164,21 +166,27 @@ public class ContentSummary extends QuotaUsage implements Writable{
   }
 
   /** @return the length */
-  public long getLength() {return length;}
+  public long getLength() {
+    return length;
+  }
 
   public long getSnapshotLength() {
     return snapshotLength;
   }
 
   /** @return the directory count */
-  public long getDirectoryCount() {return directoryCount;}
+  public long getDirectoryCount() {
+    return directoryCount;
+  }
 
   public long getSnapshotDirectoryCount() {
     return snapshotDirectoryCount;
   }
 
   /** @return the file count */
-  public long getFileCount() {return fileCount;}
+  public long getFileCount() {
+    return fileCount;
+  }
 
   public long getSnapshotFileCount() {
     return snapshotFileCount;
@@ -249,7 +257,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
   private static final String SUMMARY_FORMAT = "%12s %12s %18s ";
 
   private static final String[] SUMMARY_HEADER_FIELDS =
-      new String[] {"DIR_COUNT", "FILE_COUNT", "CONTENT_SIZE"};
+      new String[]{"DIR_COUNT", "FILE_COUNT", "CONTENT_SIZE"};
 
   /** The header string */
   private static final String SUMMARY_HEADER = String.format(
@@ -265,7 +273,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
   private static final String SNAPSHOT_FORMAT = "%18s %24s %24s %28s ";
 
   private static final String[] SNAPSHOT_HEADER_FIELDS =
-      new String[] {"SNAPSHOT_LENGTH", "SNAPSHOT_FILE_COUNT",
+      new String[]{"SNAPSHOT_LENGTH", "SNAPSHOT_FILE_COUNT",
           "SNAPSHOT_DIR_COUNT", "SNAPSHOT_SPACE_CONSUMED"};
 
   /** The header string. */
@@ -276,7 +284,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
   /** Return the header of the output.
    * if qOption is false, output directory count, file count, and content size;
    * if qOption is true, output quota and remaining quota as well.
-   * 
+   *
    * @param qOption a flag indicating if quota needs to be printed or not
    * @return the header of the output
    */
@@ -290,7 +298,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
 
   /**
    * Returns the names of the fields from the summary header.
-   * 
+   *
    * @return names of fields as displayed in the header
    */
   public static String[] getHeaderFields() {
@@ -299,7 +307,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
 
   /**
    * Returns the names of the fields used in the quota summary.
-   * 
+   *
    * @return names of quota fields as displayed in the header
    */
   public static String[] getQuotaHeaderFields() {
@@ -317,7 +325,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
    *
    * @param qOption a flag indicating if quota needs to be printed or not
    * @return the string representation of the object
-  */
+   */
   @Override
   public String toString(boolean qOption) {
     return toString(qOption, false);
@@ -326,7 +334,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
   /** Return the string representation of the object in the output format.
    * For description of the options,
    * @see #toString(boolean, boolean, boolean, boolean, List)
-   * 
+   *
    * @param qOption a flag indicating if quota needs to be printed or not
    * @param hOption a flag indicating if human readable output if to be used
    * @return the string representation of the object
@@ -384,7 +392,7 @@ public class ContentSummary extends QuotaUsage implements Writable{
    * @return the string representation of the object
    */
   public String toString(boolean qOption, boolean hOption, boolean tOption,
-      boolean xOption, List<StorageType> types) {
+                         boolean xOption, List<StorageType> types) {
     String prefix = "";
 
     if (tOption) {
@@ -413,11 +421,11 @@ public class ContentSummary extends QuotaUsage implements Writable{
    * @param size value to be formatted
    * @param humanReadable flag indicating human readable or not
    * @return String representation of the size
-  */
+   */
   private String formatSize(long size, boolean humanReadable) {
     return humanReadable
-      ? StringUtils.TraditionalBinaryPrefix.long2String(size, "", 1)
-      : String.valueOf(size);
+        ? StringUtils.TraditionalBinaryPrefix.long2String(size, "", 1)
+        : String.valueOf(size);
   }
 
   /**

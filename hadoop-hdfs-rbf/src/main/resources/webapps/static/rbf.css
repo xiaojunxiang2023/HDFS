@@ -18,7 +18,7 @@
 @import url("hadoop.css");
 
 .federationhealth-namenode-capacity-bar {
-    margin-bottom:0;
+    margin-bottom: 0;
     width: 60%;
 }
 
@@ -39,7 +39,7 @@
 
 
 .federationhealth-router-capacity-bar {
-    margin-bottom:0;
+    margin-bottom: 0;
     width: 60%;
 }
 

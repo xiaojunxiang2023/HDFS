@@ -6,9 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_COMMAND;
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_PROCESS;
-import static org.apache.hadoop.fs.audit.AuditConstants.PARAM_THREAD1;
+import static org.apache.hadoop.fs.audit.AuditConstants.*;
 
 /**
  * The common audit context is a map of common context information
@@ -245,7 +243,7 @@ public final class CommonAuditContext {
    * @return an iterable to enumerate the values.
    */
   public static Iterable<Map.Entry<String, String>>
-      getGlobalContextEntries() {
+  getGlobalContextEntries() {
     return new GlobalIterable();
   }
 

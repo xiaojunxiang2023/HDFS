@@ -10,10 +10,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Objects;
 
-import static java.lang.invoke.MethodHandles.constant;
-import static java.lang.invoke.MethodHandles.dropArguments;
-import static java.lang.invoke.MethodHandles.filterReturnValue;
-import static java.lang.invoke.MethodHandles.guardWithTest;
+import static java.lang.invoke.MethodHandles.*;
 import static java.lang.invoke.MethodType.methodType;
 
 /**
@@ -26,7 +23,8 @@ import static java.lang.invoke.MethodType.methodType;
 public final class CleanerUtil {
 
   // Prevent instantiation
-  private CleanerUtil(){}
+  private CleanerUtil() {
+  }
 
   /**
    * <code>true</code>, if this platform supports unmapping mmapped files.

@@ -24,253 +24,253 @@ import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
  * types concurrently.
  */
 public class AvailableSpaceVolumeChoosingPolicy<V extends FsVolumeSpi>
-        implements VolumeChoosingPolicy<V>, Configurable {
+    implements VolumeChoosingPolicy<V>, Configurable {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(AvailableSpaceVolumeChoosingPolicy.class);
-    private final Random random;
-    private final VolumeChoosingPolicy<V> roundRobinPolicyBalanced =
-            new RoundRobinVolumeChoosingPolicy<V>();
-    private final VolumeChoosingPolicy<V> roundRobinPolicyHighAvailable =
-            new RoundRobinVolumeChoosingPolicy<V>();
-    private final VolumeChoosingPolicy<V> roundRobinPolicyLowAvailable =
-            new RoundRobinVolumeChoosingPolicy<V>();
-    private Object[] syncLocks;
-    private long balancedSpaceThreshold = DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_DEFAULT;
-    private float balancedPreferencePercent = DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT;
+  private static final Logger LOG =
+      LoggerFactory.getLogger(AvailableSpaceVolumeChoosingPolicy.class);
+  private final Random random;
+  private final VolumeChoosingPolicy<V> roundRobinPolicyBalanced =
+      new RoundRobinVolumeChoosingPolicy<V>();
+  private final VolumeChoosingPolicy<V> roundRobinPolicyHighAvailable =
+      new RoundRobinVolumeChoosingPolicy<V>();
+  private final VolumeChoosingPolicy<V> roundRobinPolicyLowAvailable =
+      new RoundRobinVolumeChoosingPolicy<V>();
+  private Object[] syncLocks;
+  private long balancedSpaceThreshold = DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_DEFAULT;
+  private float balancedPreferencePercent = DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT;
 
-    AvailableSpaceVolumeChoosingPolicy(Random random) {
-        this.random = random;
-        initLocks();
+  AvailableSpaceVolumeChoosingPolicy(Random random) {
+    this.random = random;
+    initLocks();
+  }
+
+  public AvailableSpaceVolumeChoosingPolicy() {
+    this(new Random());
+    initLocks();
+  }
+
+  private void initLocks() {
+    int numStorageTypes = StorageType.values().length;
+    syncLocks = new Object[numStorageTypes];
+    for (int i = 0; i < numStorageTypes; i++) {
+      syncLocks[i] = new Object();
+    }
+  }
+
+  @Override
+  public Configuration getConf() {
+    // Nothing to do. Only added to fulfill the Configurable contract.
+    return null;
+  }
+
+  @Override
+  public void setConf(Configuration conf) {
+    balancedSpaceThreshold = conf.getLongBytes(
+        DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_KEY,
+        DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_DEFAULT);
+    balancedPreferencePercent = conf.getFloat(
+        DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY,
+        DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT);
+
+    LOG.info("Available space volume choosing policy initialized: " +
+        DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_KEY +
+        " = " + balancedSpaceThreshold + ", " +
+        DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY +
+        " = " + balancedPreferencePercent);
+
+    if (balancedPreferencePercent > 1.0) {
+      LOG.warn("The value of " + DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY +
+          " is greater than 1.0 but should be in the range 0.0 - 1.0");
     }
 
-    public AvailableSpaceVolumeChoosingPolicy() {
-        this(new Random());
-        initLocks();
+    if (balancedPreferencePercent < 0.5) {
+      LOG.warn("The value of " + DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY +
+          " is less than 0.5 so volumes with less available disk space will receive more block allocations");
     }
+  }
 
-    private void initLocks() {
-        int numStorageTypes = StorageType.values().length;
-        syncLocks = new Object[numStorageTypes];
-        for (int i = 0; i < numStorageTypes; i++) {
-            syncLocks[i] = new Object();
-        }
+  @Override
+  public V chooseVolume(List<V> volumes, long replicaSize, String storageId)
+      throws IOException {
+    if (volumes.size() < 1) {
+      throw new DiskOutOfSpaceException("No more available volumes");
     }
+    // As all the items in volumes are with the same storage type,
+    // so only need to get the storage type index of the first item in volumes
+    StorageType storageType = volumes.get(0).getStorageType();
+    int index = storageType != null ?
+        storageType.ordinal() : StorageType.DEFAULT.ordinal();
 
-    @Override
-    public Configuration getConf() {
-        // Nothing to do. Only added to fulfill the Configurable contract.
-        return null;
+    synchronized (syncLocks[index]) {
+      return doChooseVolume(volumes, replicaSize, storageId);
     }
+  }
 
-    @Override
-    public void setConf(Configuration conf) {
-        balancedSpaceThreshold = conf.getLongBytes(
-                DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_KEY,
-                DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_DEFAULT);
-        balancedPreferencePercent = conf.getFloat(
-                DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY,
-                DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_DEFAULT);
+  private V doChooseVolume(final List<V> volumes, long replicaSize,
+                           String storageId) throws IOException {
+    AvailableSpaceVolumeList volumesWithSpaces =
+        new AvailableSpaceVolumeList(volumes);
 
-        LOG.info("Available space volume choosing policy initialized: " +
-                DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_THRESHOLD_KEY +
-                " = " + balancedSpaceThreshold + ", " +
-                DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY +
-                " = " + balancedPreferencePercent);
+    if (volumesWithSpaces.areAllVolumesWithinFreeSpaceThreshold()) {
+      // If they're actually not too far out of whack, fall back on pure round
+      // robin.
+      V volume = roundRobinPolicyBalanced.chooseVolume(volumes, replicaSize,
+          storageId);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("All volumes are within the configured free space balance " +
+            "threshold. Selecting " + volume + " for write of block size " +
+            replicaSize);
+      }
+      return volume;
+    } else {
+      V volume = null;
+      // If none of the volumes with low free space have enough space for the
+      // replica, always try to choose a volume with a lot of free space.
+      long mostAvailableAmongLowVolumes = volumesWithSpaces
+          .getMostAvailableSpaceAmongVolumesWithLowAvailableSpace();
 
-        if (balancedPreferencePercent > 1.0) {
-            LOG.warn("The value of " + DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY +
-                    " is greater than 1.0 but should be in the range 0.0 - 1.0");
+      List<V> highAvailableVolumes = extractVolumesFromPairs(
+          volumesWithSpaces.getVolumesWithHighAvailableSpace());
+      List<V> lowAvailableVolumes = extractVolumesFromPairs(
+          volumesWithSpaces.getVolumesWithLowAvailableSpace());
+
+      float preferencePercentScaler =
+          (highAvailableVolumes.size() * balancedPreferencePercent) +
+              (lowAvailableVolumes.size() * (1 - balancedPreferencePercent));
+      float scaledPreferencePercent =
+          (highAvailableVolumes.size() * balancedPreferencePercent) /
+              preferencePercentScaler;
+      if (mostAvailableAmongLowVolumes < replicaSize ||
+          random.nextFloat() < scaledPreferencePercent) {
+        volume = roundRobinPolicyHighAvailable.chooseVolume(
+            highAvailableVolumes, replicaSize, storageId);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Volumes are imbalanced. Selecting " + volume +
+              " from high available space volumes for write of block size "
+              + replicaSize);
         }
-
-        if (balancedPreferencePercent < 0.5) {
-            LOG.warn("The value of " + DFS_DATANODE_AVAILABLE_SPACE_VOLUME_CHOOSING_POLICY_BALANCED_SPACE_PREFERENCE_FRACTION_KEY +
-                    " is less than 0.5 so volumes with less available disk space will receive more block allocations");
+      } else {
+        volume = roundRobinPolicyLowAvailable.chooseVolume(
+            lowAvailableVolumes, replicaSize, storageId);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Volumes are imbalanced. Selecting " + volume +
+              " from low available space volumes for write of block size "
+              + replicaSize);
         }
+      }
+      return volume;
     }
+  }
 
-    @Override
-    public V chooseVolume(List<V> volumes, long replicaSize, String storageId)
-            throws IOException {
-        if (volumes.size() < 1) {
-            throw new DiskOutOfSpaceException("No more available volumes");
-        }
-        // As all the items in volumes are with the same storage type,
-        // so only need to get the storage type index of the first item in volumes
-        StorageType storageType = volumes.get(0).getStorageType();
-        int index = storageType != null ?
-                storageType.ordinal() : StorageType.DEFAULT.ordinal();
-
-        synchronized (syncLocks[index]) {
-            return doChooseVolume(volumes, replicaSize, storageId);
-        }
+  private List<V> extractVolumesFromPairs(List<AvailableSpaceVolumePair> volumes) {
+    List<V> ret = new ArrayList<V>();
+    for (AvailableSpaceVolumePair volume : volumes) {
+      ret.add(volume.getVolume());
     }
+    return ret;
+  }
 
-    private V doChooseVolume(final List<V> volumes, long replicaSize,
-                             String storageId) throws IOException {
-        AvailableSpaceVolumeList volumesWithSpaces =
-                new AvailableSpaceVolumeList(volumes);
+  /**
+   * Used to keep track of the list of volumes we're choosing from.
+   */
+  private class AvailableSpaceVolumeList {
+    private final List<AvailableSpaceVolumePair> volumes;
 
-        if (volumesWithSpaces.areAllVolumesWithinFreeSpaceThreshold()) {
-            // If they're actually not too far out of whack, fall back on pure round
-            // robin.
-            V volume = roundRobinPolicyBalanced.chooseVolume(volumes, replicaSize,
-                    storageId);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("All volumes are within the configured free space balance " +
-                        "threshold. Selecting " + volume + " for write of block size " +
-                        replicaSize);
-            }
-            return volume;
-        } else {
-            V volume = null;
-            // If none of the volumes with low free space have enough space for the
-            // replica, always try to choose a volume with a lot of free space.
-            long mostAvailableAmongLowVolumes = volumesWithSpaces
-                    .getMostAvailableSpaceAmongVolumesWithLowAvailableSpace();
-
-            List<V> highAvailableVolumes = extractVolumesFromPairs(
-                    volumesWithSpaces.getVolumesWithHighAvailableSpace());
-            List<V> lowAvailableVolumes = extractVolumesFromPairs(
-                    volumesWithSpaces.getVolumesWithLowAvailableSpace());
-
-            float preferencePercentScaler =
-                    (highAvailableVolumes.size() * balancedPreferencePercent) +
-                            (lowAvailableVolumes.size() * (1 - balancedPreferencePercent));
-            float scaledPreferencePercent =
-                    (highAvailableVolumes.size() * balancedPreferencePercent) /
-                            preferencePercentScaler;
-            if (mostAvailableAmongLowVolumes < replicaSize ||
-                    random.nextFloat() < scaledPreferencePercent) {
-                volume = roundRobinPolicyHighAvailable.chooseVolume(
-                        highAvailableVolumes, replicaSize, storageId);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Volumes are imbalanced. Selecting " + volume +
-                            " from high available space volumes for write of block size "
-                            + replicaSize);
-                }
-            } else {
-                volume = roundRobinPolicyLowAvailable.chooseVolume(
-                        lowAvailableVolumes, replicaSize, storageId);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Volumes are imbalanced. Selecting " + volume +
-                            " from low available space volumes for write of block size "
-                            + replicaSize);
-                }
-            }
-            return volume;
-        }
-    }
-
-    private List<V> extractVolumesFromPairs(List<AvailableSpaceVolumePair> volumes) {
-        List<V> ret = new ArrayList<V>();
-        for (AvailableSpaceVolumePair volume : volumes) {
-            ret.add(volume.getVolume());
-        }
-        return ret;
-    }
-
-    /**
-     * Used to keep track of the list of volumes we're choosing from.
-     */
-    private class AvailableSpaceVolumeList {
-        private final List<AvailableSpaceVolumePair> volumes;
-
-        public AvailableSpaceVolumeList(List<V> volumes) throws IOException {
-            this.volumes = new ArrayList<AvailableSpaceVolumePair>();
-            for (V volume : volumes) {
-                this.volumes.add(new AvailableSpaceVolumePair(volume));
-            }
-        }
-
-        /**
-         * @return true if all volumes' free space is within the
-         *         configured threshold, false otherwise.
-         */
-        public boolean areAllVolumesWithinFreeSpaceThreshold() {
-            long leastAvailable = Long.MAX_VALUE;
-            long mostAvailable = 0;
-            for (AvailableSpaceVolumePair volume : volumes) {
-                leastAvailable = Math.min(leastAvailable, volume.getAvailable());
-                mostAvailable = Math.max(mostAvailable, volume.getAvailable());
-            }
-            return (mostAvailable - leastAvailable) < balancedSpaceThreshold;
-        }
-
-        /**
-         * @return the minimum amount of space available on a single volume,
-         *         across all volumes.
-         */
-        private long getLeastAvailableSpace() {
-            long leastAvailable = Long.MAX_VALUE;
-            for (AvailableSpaceVolumePair volume : volumes) {
-                leastAvailable = Math.min(leastAvailable, volume.getAvailable());
-            }
-            return leastAvailable;
-        }
-
-        /**
-         * @return the maximum amount of space available across volumes with low space.
-         */
-        public long getMostAvailableSpaceAmongVolumesWithLowAvailableSpace() {
-            long mostAvailable = Long.MIN_VALUE;
-            for (AvailableSpaceVolumePair volume : getVolumesWithLowAvailableSpace()) {
-                mostAvailable = Math.max(mostAvailable, volume.getAvailable());
-            }
-            return mostAvailable;
-        }
-
-        /**
-         * @return the list of volumes with relatively low available space.
-         */
-        public List<AvailableSpaceVolumePair> getVolumesWithLowAvailableSpace() {
-            long leastAvailable = getLeastAvailableSpace();
-            List<AvailableSpaceVolumePair> ret = new ArrayList<AvailableSpaceVolumePair>();
-            for (AvailableSpaceVolumePair volume : volumes) {
-                if (volume.getAvailable() <= leastAvailable + balancedSpaceThreshold) {
-                    ret.add(volume);
-                }
-            }
-            return ret;
-        }
-
-        /**
-         * @return the list of volumes with a lot of available space.
-         */
-        public List<AvailableSpaceVolumePair> getVolumesWithHighAvailableSpace() {
-            long leastAvailable = getLeastAvailableSpace();
-            List<AvailableSpaceVolumePair> ret = new ArrayList<AvailableSpaceVolumePair>();
-            for (AvailableSpaceVolumePair volume : volumes) {
-                if (volume.getAvailable() > leastAvailable + balancedSpaceThreshold) {
-                    ret.add(volume);
-                }
-            }
-            return ret;
-        }
-
+    public AvailableSpaceVolumeList(List<V> volumes) throws IOException {
+      this.volumes = new ArrayList<AvailableSpaceVolumePair>();
+      for (V volume : volumes) {
+        this.volumes.add(new AvailableSpaceVolumePair(volume));
+      }
     }
 
     /**
-     * Used so that we only check the available space on a given volume once, at
-     * the beginning of
-     * {@link AvailableSpaceVolumeChoosingPolicy#chooseVolume}.
+     * @return true if all volumes' free space is within the
+     *         configured threshold, false otherwise.
      */
-    private class AvailableSpaceVolumePair {
-        private final V volume;
-        private final long availableSpace;
-
-        public AvailableSpaceVolumePair(V volume) throws IOException {
-            this.volume = volume;
-            this.availableSpace = volume.getAvailable();
-        }
-
-        public long getAvailable() {
-            return availableSpace;
-        }
-
-        public V getVolume() {
-            return volume;
-        }
+    public boolean areAllVolumesWithinFreeSpaceThreshold() {
+      long leastAvailable = Long.MAX_VALUE;
+      long mostAvailable = 0;
+      for (AvailableSpaceVolumePair volume : volumes) {
+        leastAvailable = Math.min(leastAvailable, volume.getAvailable());
+        mostAvailable = Math.max(mostAvailable, volume.getAvailable());
+      }
+      return (mostAvailable - leastAvailable) < balancedSpaceThreshold;
     }
+
+    /**
+     * @return the minimum amount of space available on a single volume,
+     *         across all volumes.
+     */
+    private long getLeastAvailableSpace() {
+      long leastAvailable = Long.MAX_VALUE;
+      for (AvailableSpaceVolumePair volume : volumes) {
+        leastAvailable = Math.min(leastAvailable, volume.getAvailable());
+      }
+      return leastAvailable;
+    }
+
+    /**
+     * @return the maximum amount of space available across volumes with low space.
+     */
+    public long getMostAvailableSpaceAmongVolumesWithLowAvailableSpace() {
+      long mostAvailable = Long.MIN_VALUE;
+      for (AvailableSpaceVolumePair volume : getVolumesWithLowAvailableSpace()) {
+        mostAvailable = Math.max(mostAvailable, volume.getAvailable());
+      }
+      return mostAvailable;
+    }
+
+    /**
+     * @return the list of volumes with relatively low available space.
+     */
+    public List<AvailableSpaceVolumePair> getVolumesWithLowAvailableSpace() {
+      long leastAvailable = getLeastAvailableSpace();
+      List<AvailableSpaceVolumePair> ret = new ArrayList<AvailableSpaceVolumePair>();
+      for (AvailableSpaceVolumePair volume : volumes) {
+        if (volume.getAvailable() <= leastAvailable + balancedSpaceThreshold) {
+          ret.add(volume);
+        }
+      }
+      return ret;
+    }
+
+    /**
+     * @return the list of volumes with a lot of available space.
+     */
+    public List<AvailableSpaceVolumePair> getVolumesWithHighAvailableSpace() {
+      long leastAvailable = getLeastAvailableSpace();
+      List<AvailableSpaceVolumePair> ret = new ArrayList<AvailableSpaceVolumePair>();
+      for (AvailableSpaceVolumePair volume : volumes) {
+        if (volume.getAvailable() > leastAvailable + balancedSpaceThreshold) {
+          ret.add(volume);
+        }
+      }
+      return ret;
+    }
+
+  }
+
+  /**
+   * Used so that we only check the available space on a given volume once, at
+   * the beginning of
+   * {@link AvailableSpaceVolumeChoosingPolicy#chooseVolume}.
+   */
+  private class AvailableSpaceVolumePair {
+    private final V volume;
+    private final long availableSpace;
+
+    public AvailableSpaceVolumePair(V volume) throws IOException {
+      this.volume = volume;
+      this.availableSpace = volume.getAvailable();
+    }
+
+    public long getAvailable() {
+      return availableSpace;
+    }
+
+    public V getVolume() {
+      return volume;
+    }
+  }
 
 }

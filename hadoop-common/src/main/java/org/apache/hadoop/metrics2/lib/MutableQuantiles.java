@@ -1,6 +1,13 @@
 package org.apache.hadoop.metrics2.lib;
 
-import static org.apache.hadoop.metrics2.lib.Interns.info;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.metrics2.MetricsInfo;
+import org.apache.hadoop.metrics2.MetricsRecordBuilder;
+import org.apache.hadoop.metrics2.util.Quantile;
+import org.apache.hadoop.metrics2.util.QuantileEstimator;
+import org.apache.hadoop.metrics2.util.SampleQuantiles;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -8,15 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.metrics2.MetricsInfo;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
-import org.apache.hadoop.metrics2.util.Quantile;
-import org.apache.hadoop.metrics2.util.QuantileEstimator;
-import org.apache.hadoop.metrics2.util.SampleQuantiles;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
+import static org.apache.hadoop.metrics2.lib.Interns.info;
 
 /**
  * Watches a stream of long values, maintaining online estimates of specific
@@ -26,9 +25,9 @@ import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFact
 public class MutableQuantiles extends MutableMetric {
 
   @VisibleForTesting
-  public static final Quantile[] quantiles = { new Quantile(0.50, 0.050),
+  public static final Quantile[] quantiles = {new Quantile(0.50, 0.050),
       new Quantile(0.75, 0.025), new Quantile(0.90, 0.010),
-      new Quantile(0.95, 0.005), new Quantile(0.99, 0.001) };
+      new Quantile(0.95, 0.005), new Quantile(0.99, 0.001)};
 
   private final MetricsInfo numInfo;
   private final MetricsInfo[] quantileInfos;
@@ -48,7 +47,7 @@ public class MutableQuantiles extends MutableMetric {
   /**
    * Instantiates a new {@link MutableQuantiles} for a metric that rolls itself
    * over on the specified time interval.
-   * 
+   *
    * @param name
    *          of the metric
    * @param description
@@ -61,7 +60,7 @@ public class MutableQuantiles extends MutableMetric {
    *          rollover interval (in seconds) of the estimator
    */
   public MutableQuantiles(String name, String description, String sampleName,
-      String valueName, int interval) {
+                          String valueName, int interval) {
     String ucName = StringUtils.capitalize(name);
     String usName = StringUtils.capitalize(sampleName);
     String uvName = StringUtils.capitalize(valueName);

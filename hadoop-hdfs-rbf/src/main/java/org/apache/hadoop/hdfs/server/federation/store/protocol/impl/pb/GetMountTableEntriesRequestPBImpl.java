@@ -13,46 +13,46 @@ import java.io.IOException;
  * GetMountTableEntriesRequest.
  */
 public class GetMountTableEntriesRequestPBImpl
-        extends GetMountTableEntriesRequest implements PBRecord {
+    extends GetMountTableEntriesRequest implements PBRecord {
 
-    private FederationProtocolPBTranslator<GetMountTableEntriesRequestProto,
-            GetMountTableEntriesRequestProto.Builder,
-            GetMountTableEntriesRequestProtoOrBuilder> translator =
-            new FederationProtocolPBTranslator<GetMountTableEntriesRequestProto,
-                    GetMountTableEntriesRequestProto.Builder,
-                    GetMountTableEntriesRequestProtoOrBuilder>(
-                    GetMountTableEntriesRequestProto.class);
+  private FederationProtocolPBTranslator<GetMountTableEntriesRequestProto,
+      GetMountTableEntriesRequestProto.Builder,
+      GetMountTableEntriesRequestProtoOrBuilder> translator =
+      new FederationProtocolPBTranslator<GetMountTableEntriesRequestProto,
+          GetMountTableEntriesRequestProto.Builder,
+          GetMountTableEntriesRequestProtoOrBuilder>(
+          GetMountTableEntriesRequestProto.class);
 
-    public GetMountTableEntriesRequestPBImpl() {
-    }
+  public GetMountTableEntriesRequestPBImpl() {
+  }
 
-    public GetMountTableEntriesRequestPBImpl(
-            GetMountTableEntriesRequestProto proto) {
-        this.translator.setProto(proto);
-    }
+  public GetMountTableEntriesRequestPBImpl(
+      GetMountTableEntriesRequestProto proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public GetMountTableEntriesRequestProto getProto() {
-        return this.translator.build();
-    }
+  @Override
+  public GetMountTableEntriesRequestProto getProto() {
+    return this.translator.build();
+  }
 
-    @Override
-    public void setProto(Message proto) {
-        this.translator.setProto(proto);
-    }
+  @Override
+  public void setProto(Message proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public void readInstance(String base64String) throws IOException {
-        this.translator.readInstance(base64String);
-    }
+  @Override
+  public void readInstance(String base64String) throws IOException {
+    this.translator.readInstance(base64String);
+  }
 
-    @Override
-    public String getSrcPath() {
-        return this.translator.getProtoOrBuilder().getSrcPath();
-    }
+  @Override
+  public String getSrcPath() {
+    return this.translator.getProtoOrBuilder().getSrcPath();
+  }
 
-    @Override
-    public void setSrcPath(String path) {
-        this.translator.getBuilder().setSrcPath(path);
-    }
+  @Override
+  public void setSrcPath(String path) {
+    this.translator.getBuilder().setSrcPath(path);
+  }
 }

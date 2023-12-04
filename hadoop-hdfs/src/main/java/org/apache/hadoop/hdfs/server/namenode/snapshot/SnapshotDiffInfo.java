@@ -1,12 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport.DiffReportEntry;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport.DiffType;
@@ -15,10 +8,11 @@ import org.apache.hadoop.hdfs.server.namenode.INodeDirectory;
 import org.apache.hadoop.hdfs.server.namenode.INodeFile;
 import org.apache.hadoop.hdfs.server.namenode.INodeReference;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature.ChildrenDiff;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.SignedBytes;
 import org.apache.hadoop.util.ChunkedArrayList;
+
+import java.util.*;
 
 /**
  * A class describing the difference between snapshots of a snapshottable
@@ -28,21 +22,21 @@ class SnapshotDiffInfo {
   /** Compare two inodes based on their full names */
   public static final Comparator<INode> INODE_COMPARATOR =
       new Comparator<INode>() {
-    @Override
-    public int compare(INode left, INode right) {
-      if (left == null) {
-        return right == null ? 0 : -1;
-      } else {
-        if (right == null) {
-          return 1;
-        } else {
-          int cmp = compare(left.getParent(), right.getParent());
-          return cmp == 0 ? SignedBytes.lexicographicalComparator().compare(
-              left.getLocalNameBytes(), right.getLocalNameBytes()) : cmp;
+        @Override
+        public int compare(INode left, INode right) {
+          if (left == null) {
+            return right == null ? 0 : -1;
+          } else {
+            if (right == null) {
+              return 1;
+            } else {
+              int cmp = compare(left.getParent(), right.getParent());
+              return cmp == 0 ? SignedBytes.lexicographicalComparator().compare(
+                  left.getLocalNameBytes(), right.getLocalNameBytes()) : cmp;
+            }
+          }
         }
-      }
-    }
-  };
+      };
 
   static class RenameEntry {
     private byte[][] sourcePath;
@@ -124,7 +118,7 @@ class SnapshotDiffInfo {
   private long childrenListingTime;
 
   SnapshotDiffInfo(INodeDirectory snapshotRootDir,
-      INodeDirectory snapshotDiffScopeDir, Snapshot start, Snapshot end) {
+                   INodeDirectory snapshotDiffScopeDir, Snapshot start, Snapshot end) {
     Preconditions.checkArgument(snapshotRootDir.isSnapshottable() &&
         snapshotDiffScopeDir.isDescendantOfSnapshotRoot(snapshotRootDir));
     this.snapshotRoot = snapshotRootDir;
@@ -218,7 +212,7 @@ class SnapshotDiffInfo {
    */
   public SnapshotDiffReport generateReport() {
     List<DiffReportEntry> diffReportList = new ChunkedArrayList<>();
-    for (Map.Entry<INode,byte[][]> drEntry : diffMap.entrySet()) {
+    for (Map.Entry<INode, byte[][]> drEntry : diffMap.entrySet()) {
       INode node = drEntry.getKey();
       byte[][] path = drEntry.getValue();
       diffReportList.add(new DiffReportEntry(DiffType.MODIFY, path, null));
@@ -249,7 +243,7 @@ class SnapshotDiffInfo {
    * @return A list of {@link DiffReportEntry} as the diff report.
    */
   private List<DiffReportEntry> generateReport(ChildrenDiff dirDiff,
-      byte[][] parentPath, boolean fromEarlier, Map<Long, RenameEntry> renameMap) {
+                                               byte[][] parentPath, boolean fromEarlier, Map<Long, RenameEntry> renameMap) {
     List<DiffReportEntry> list = new ChunkedArrayList<>();
     byte[][] fullPath = new byte[parentPath.length + 1][];
     System.arraycopy(parentPath, 0, fullPath, 0, parentPath.length);

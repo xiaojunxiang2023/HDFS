@@ -13,9 +13,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.protocolPB;
+ */
+package org.apache.hadoop.hdfs.protocolPB;
 
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.HAUtil;
 import org.apache.hadoop.hdfs.NameNodeProxies;
@@ -30,6 +30,7 @@ import org.apache.hadoop.hdfs.server.namenode.ha.InMemoryAliasMapFailoverProxyPr
 import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,8 @@ import static org.apache.hadoop.hdfs.DFSUtil.createUri;
 import static org.apache.hadoop.hdfs.DFSUtilClient.getNameServiceIds;
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.Failover.PROXY_PROVIDER_KEY_PREFIX;
 import static org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.*;
-import static org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.*;
+import static org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto;
+import static org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ProvidedStorageLocationProto;
 
 /**
  * This class is the client side translator to translate requests made to the
@@ -187,7 +189,7 @@ public class InMemoryAliasMapProtocolClientSideTranslatorPB
 
   @Override
   public void write(@Nonnull Block block,
-      @Nonnull ProvidedStorageLocation providedStorageLocation)
+                    @Nonnull ProvidedStorageLocation providedStorageLocation)
       throws IOException {
     if (block == null || providedStorageLocation == null) {
       throw new IOException("Provided block and location cannot be null");

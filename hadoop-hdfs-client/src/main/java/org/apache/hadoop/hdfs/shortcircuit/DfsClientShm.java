@@ -1,15 +1,14 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Iterator;
-
 import org.apache.hadoop.hdfs.net.DomainPeer;
 import org.apache.hadoop.hdfs.shortcircuit.DfsClientShmManager.EndpointShmManager;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.net.unix.DomainSocketWatcher;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * DfsClientShm is a subclass of ShortCircuitShm which is used by the
@@ -49,7 +48,7 @@ public class DfsClientShm extends ShortCircuitShm
   private boolean disconnected = false;
 
   DfsClientShm(ShmId shmId, FileInputStream stream, EndpointShmManager manager,
-      DomainPeer peer) throws IOException {
+               DomainPeer peer) throws IOException {
     super(shmId, stream);
     this.manager = manager;
     this.peer = peer;
@@ -68,7 +67,7 @@ public class DfsClientShm extends ShortCircuitShm
    *
    * This must be called with the DfsClientShmManager lock held.
    *
-   * @return   True if the shared memory segment is stale.
+   * @return True if the shared memory segment is stale.
    */
   public synchronized boolean isDisconnected() {
     return disconnected;

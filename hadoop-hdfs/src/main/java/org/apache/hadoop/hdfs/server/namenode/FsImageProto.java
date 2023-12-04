@@ -3,7 +3,9 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 public final class FsImageProto {
-  private FsImageProto() {}
+  private FsImageProto() {
+  }
+
   public static void registerAllExtensions(
       org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite registry) {
   }
@@ -13,6 +15,7 @@ public final class FsImageProto {
     registerAllExtensions(
         (org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite) registry);
   }
+
   public interface FileSummaryOrBuilder extends
       // @@protoc_insertion_point(interface_extends:hadoop.hdfs.fsimage.FileSummary)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
@@ -25,6 +28,7 @@ public final class FsImageProto {
      * <code>required uint32 ondiskVersion = 1;</code>
      */
     boolean hasOndiskVersion();
+
     /**
      * <pre>
      * The version of the above EBNF grammars.
@@ -43,6 +47,7 @@ public final class FsImageProto {
      * <code>required uint32 layoutVersion = 2;</code>
      */
     boolean hasLayoutVersion();
+
     /**
      * <pre>
      * layoutVersion describes which features are available in the
@@ -57,52 +62,61 @@ public final class FsImageProto {
      * <code>optional string codec = 3;</code>
      */
     boolean hasCodec();
+
     /**
      * <code>optional string codec = 3;</code>
      */
     java.lang.String getCodec();
+
     /**
      * <code>optional string codec = 3;</code>
      */
     org.apache.hadoop.thirdparty.protobuf.ByteString
-        getCodecBytes();
+    getCodecBytes();
 
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
-    java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section> 
-        getSectionsList();
+    java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section>
+    getSectionsList();
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
     org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section getSections(int index);
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
     int getSectionsCount();
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
-    java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder> 
-        getSectionsOrBuilderList();
+    java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder>
+    getSectionsOrBuilderList();
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
     org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder getSectionsOrBuilder(
         int index);
   }
+
   /**
    * Protobuf type {@code hadoop.hdfs.fsimage.FileSummary}
    */
-  public  static final class FileSummary extends
+  public static final class FileSummary extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.FileSummary)
       FileSummaryOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use FileSummary.newBuilder() to construct.
     private FileSummary(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private FileSummary() {
       codec_ = "";
       sections_ = java.util.Collections.emptyList();
@@ -113,6 +127,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private FileSummary(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -179,14 +194,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Builder.class);
@@ -200,20 +216,23 @@ public final class FsImageProto {
        * <code>optional string name = 1;</code>
        */
       boolean hasName();
+
       /**
        * <code>optional string name = 1;</code>
        */
       java.lang.String getName();
+
       /**
        * <code>optional string name = 1;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getNameBytes();
+      getNameBytes();
 
       /**
        * <code>optional uint64 length = 2;</code>
        */
       boolean hasLength();
+
       /**
        * <code>optional uint64 length = 2;</code>
        */
@@ -223,11 +242,13 @@ public final class FsImageProto {
        * <code>optional uint64 offset = 3;</code>
        */
       boolean hasOffset();
+
       /**
        * <code>optional uint64 offset = 3;</code>
        */
       long getOffset();
     }
+
     /**
      * <pre>
      * index for each section
@@ -235,15 +256,17 @@ public final class FsImageProto {
      *
      * Protobuf type {@code hadoop.hdfs.fsimage.FileSummary.Section}
      */
-    public  static final class Section extends
+    public static final class Section extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.FileSummary.Section)
         SectionOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use Section.newBuilder() to construct.
       private Section(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private Section() {
         name_ = "";
       }
@@ -253,6 +276,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private Section(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -307,14 +331,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_Section_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder.class);
@@ -323,12 +348,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int NAME_FIELD_NUMBER = 1;
       private volatile java.lang.Object name_;
+
       /**
        * <code>optional string name = 1;</code>
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional string name = 1;</code>
        */
@@ -337,7 +364,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -346,14 +373,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string name = 1;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getNameBytes() {
+      getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -365,12 +393,14 @@ public final class FsImageProto {
 
       public static final int LENGTH_FIELD_NUMBER = 2;
       private long length_;
+
       /**
        * <code>optional uint64 length = 2;</code>
        */
       public boolean hasLength() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint64 length = 2;</code>
        */
@@ -380,12 +410,14 @@ public final class FsImageProto {
 
       public static final int OFFSET_FIELD_NUMBER = 3;
       private long offset_;
+
       /**
        * <code>optional uint64 offset = 3;</code>
        */
       public boolean hasOffset() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional uint64 offset = 3;</code>
        */
@@ -394,6 +426,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -406,7 +439,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
         }
@@ -430,11 +463,11 @@ public final class FsImageProto {
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, length_);
+              .computeUInt64Size(2, length_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(3, offset_);
+              .computeUInt64Size(3, offset_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -444,7 +477,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section)) {
           return super.equals(obj);
@@ -501,38 +534,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -540,11 +580,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -552,12 +594,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -567,13 +611,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -586,6 +635,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * <pre>
        * index for each section
@@ -598,13 +648,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.FileSummary.Section)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_Section_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder.class);
@@ -620,11 +670,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -639,7 +691,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor;
         }
 
@@ -683,38 +735,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -722,7 +780,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.getDefaultInstance())
+            return this;
           if (other.hasName()) {
             bitField0_ |= 0x00000001;
             name_ = other.name_;
@@ -762,15 +821,18 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private java.lang.Object name_ = "";
+
         /**
          * <code>optional string name = 1;</code>
          */
         public boolean hasName() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional string name = 1;</code>
          */
@@ -788,14 +850,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string name = 1;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getNameBytes() {
+        getNameBytes() {
           java.lang.Object ref = name_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             name_ = b;
@@ -804,19 +867,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string name = 1;</code>
          */
         public Builder setName(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           name_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string name = 1;</code>
          */
@@ -826,33 +891,37 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string name = 1;</code>
          */
         public Builder setNameBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           name_ = value;
           onChanged();
           return this;
         }
 
-        private long length_ ;
+        private long length_;
+
         /**
          * <code>optional uint64 length = 2;</code>
          */
         public boolean hasLength() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional uint64 length = 2;</code>
          */
         public long getLength() {
           return length_;
         }
+
         /**
          * <code>optional uint64 length = 2;</code>
          */
@@ -862,6 +931,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 length = 2;</code>
          */
@@ -872,19 +942,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long offset_ ;
+        private long offset_;
+
         /**
          * <code>optional uint64 offset = 3;</code>
          */
         public boolean hasOffset() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional uint64 offset = 3;</code>
          */
         public long getOffset() {
           return offset_;
         }
+
         /**
          * <code>optional uint64 offset = 3;</code>
          */
@@ -894,6 +967,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 offset = 3;</code>
          */
@@ -903,6 +977,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -921,6 +996,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.FileSummary.Section)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section();
       }
@@ -929,7 +1005,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<Section>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<Section>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<Section>() {
         @java.lang.Override
         public Section parsePartialFrom(
@@ -959,6 +1036,7 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int ONDISKVERSION_FIELD_NUMBER = 1;
     private int ondiskVersion_;
+
     /**
      * <pre>
      * The version of the above EBNF grammars.
@@ -969,6 +1047,7 @@ public final class FsImageProto {
     public boolean hasOndiskVersion() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <pre>
      * The version of the above EBNF grammars.
@@ -982,6 +1061,7 @@ public final class FsImageProto {
 
     public static final int LAYOUTVERSION_FIELD_NUMBER = 2;
     private int layoutVersion_;
+
     /**
      * <pre>
      * layoutVersion describes which features are available in the
@@ -993,6 +1073,7 @@ public final class FsImageProto {
     public boolean hasLayoutVersion() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * layoutVersion describes which features are available in the
@@ -1007,12 +1088,14 @@ public final class FsImageProto {
 
     public static final int CODEC_FIELD_NUMBER = 3;
     private volatile java.lang.Object codec_;
+
     /**
      * <code>optional string codec = 3;</code>
      */
     public boolean hasCodec() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <code>optional string codec = 3;</code>
      */
@@ -1021,7 +1104,7 @@ public final class FsImageProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString bs =
             (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1030,14 +1113,15 @@ public final class FsImageProto {
         return s;
       }
     }
+
     /**
      * <code>optional string codec = 3;</code>
      */
     public org.apache.hadoop.thirdparty.protobuf.ByteString
-        getCodecBytes() {
+    getCodecBytes() {
       java.lang.Object ref = codec_;
       if (ref instanceof java.lang.String) {
-        org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+        org.apache.hadoop.thirdparty.protobuf.ByteString b =
             org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         codec_ = b;
@@ -1049,31 +1133,36 @@ public final class FsImageProto {
 
     public static final int SECTIONS_FIELD_NUMBER = 4;
     private java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section> sections_;
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
     public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section> getSectionsList() {
       return sections_;
     }
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
-    public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder> 
-        getSectionsOrBuilderList() {
+    public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder>
+    getSectionsOrBuilderList() {
       return sections_;
     }
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
     public int getSectionsCount() {
       return sections_.size();
     }
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
     public org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section getSections(int index) {
       return sections_.get(index);
     }
+
     /**
      * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
      */
@@ -1083,6 +1172,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1103,7 +1193,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, ondiskVersion_);
       }
@@ -1127,18 +1217,18 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, ondiskVersion_);
+            .computeUInt32Size(1, ondiskVersion_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(2, layoutVersion_);
+            .computeUInt32Size(2, layoutVersion_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(3, codec_);
       }
       for (int i = 0; i < sections_.size(); i++) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(4, sections_.get(i));
+            .computeMessageSize(4, sections_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1148,7 +1238,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary)) {
         return super.equals(obj);
@@ -1209,38 +1299,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1248,11 +1345,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1260,12 +1359,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1275,13 +1376,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -1294,6 +1400,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.FileSummary}
      */
@@ -1302,13 +1409,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.FileSummary)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummaryOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Builder.class);
@@ -1324,12 +1431,14 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
           getSectionsFieldBuilder();
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -1350,7 +1459,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor;
       }
 
@@ -1403,38 +1512,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1472,9 +1587,9 @@ public final class FsImageProto {
               sectionsBuilder_ = null;
               sections_ = other.sections_;
               bitField0_ = (bitField0_ & ~0x00000008);
-              sectionsBuilder_ = 
-                org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getSectionsFieldBuilder() : null;
+              sectionsBuilder_ =
+                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                      getSectionsFieldBuilder() : null;
             } else {
               sectionsBuilder_.addAllMessages(other.sections_);
             }
@@ -1514,9 +1629,11 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int ondiskVersion_ ;
+      private int ondiskVersion_;
+
       /**
        * <pre>
        * The version of the above EBNF grammars.
@@ -1527,6 +1644,7 @@ public final class FsImageProto {
       public boolean hasOndiskVersion() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        * The version of the above EBNF grammars.
@@ -1537,6 +1655,7 @@ public final class FsImageProto {
       public int getOndiskVersion() {
         return ondiskVersion_;
       }
+
       /**
        * <pre>
        * The version of the above EBNF grammars.
@@ -1550,6 +1669,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * The version of the above EBNF grammars.
@@ -1564,7 +1684,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private int layoutVersion_ ;
+      private int layoutVersion_;
+
       /**
        * <pre>
        * layoutVersion describes which features are available in the
@@ -1576,6 +1697,7 @@ public final class FsImageProto {
       public boolean hasLayoutVersion() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * layoutVersion describes which features are available in the
@@ -1587,6 +1709,7 @@ public final class FsImageProto {
       public int getLayoutVersion() {
         return layoutVersion_;
       }
+
       /**
        * <pre>
        * layoutVersion describes which features are available in the
@@ -1601,6 +1724,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * layoutVersion describes which features are available in the
@@ -1617,12 +1741,14 @@ public final class FsImageProto {
       }
 
       private java.lang.Object codec_ = "";
+
       /**
        * <code>optional string codec = 3;</code>
        */
       public boolean hasCodec() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional string codec = 3;</code>
        */
@@ -1640,14 +1766,15 @@ public final class FsImageProto {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>optional string codec = 3;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getCodecBytes() {
+      getCodecBytes() {
         java.lang.Object ref = codec_;
         if (ref instanceof String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           codec_ = b;
@@ -1656,19 +1783,21 @@ public final class FsImageProto {
           return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>optional string codec = 3;</code>
        */
       public Builder setCodec(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
         codec_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string codec = 3;</code>
        */
@@ -1678,27 +1807,29 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional string codec = 3;</code>
        */
       public Builder setCodecBytes(
           org.apache.hadoop.thirdparty.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
         codec_ = value;
         onChanged();
         return this;
       }
 
       private java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section> sections_ =
-        java.util.Collections.emptyList();
+          java.util.Collections.emptyList();
+
       private void ensureSectionsIsMutable() {
         if (!((bitField0_ & 0x00000008) != 0)) {
           sections_ = new java.util.ArrayList<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section>(sections_);
           bitField0_ |= 0x00000008;
-         }
+        }
       }
 
       private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -1714,6 +1845,7 @@ public final class FsImageProto {
           return sectionsBuilder_.getMessageList();
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1724,6 +1856,7 @@ public final class FsImageProto {
           return sectionsBuilder_.getCount();
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1734,6 +1867,7 @@ public final class FsImageProto {
           return sectionsBuilder_.getMessage(index);
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1751,6 +1885,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1765,6 +1900,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1781,6 +1917,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1798,6 +1935,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1812,6 +1950,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1826,6 +1965,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1841,6 +1981,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1854,6 +1995,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1867,6 +2009,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1874,27 +2017,31 @@ public final class FsImageProto {
           int index) {
         return getSectionsFieldBuilder().getBuilder(index);
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder getSectionsOrBuilder(
           int index) {
         if (sectionsBuilder_ == null) {
-          return sections_.get(index);  } else {
+          return sections_.get(index);
+        } else {
           return sectionsBuilder_.getMessageOrBuilder(index);
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder> 
-           getSectionsOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder>
+      getSectionsOrBuilderList() {
         if (sectionsBuilder_ != null) {
           return sectionsBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(sections_);
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1902,6 +2049,7 @@ public final class FsImageProto {
         return getSectionsFieldBuilder().addBuilder(
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.getDefaultInstance());
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
@@ -1910,27 +2058,30 @@ public final class FsImageProto {
         return getSectionsFieldBuilder().addBuilder(
             index, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.getDefaultInstance());
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.FileSummary.Section sections = 4;</code>
        */
-      public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder> 
-           getSectionsBuilderList() {
+      public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder>
+      getSectionsBuilderList() {
         return getSectionsFieldBuilder().getBuilderList();
       }
+
       private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-          org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder> 
-          getSectionsFieldBuilder() {
+          org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder>
+      getSectionsFieldBuilder() {
         if (sectionsBuilder_ == null) {
           sectionsBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.Section.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary.SectionOrBuilder>(
-                  sections_,
-                  ((bitField0_ & 0x00000008) != 0),
-                  getParentForChildren(),
-                  isClean());
+              sections_,
+              ((bitField0_ & 0x00000008) != 0),
+              getParentForChildren(),
+              isClean());
           sections_ = null;
         }
         return sectionsBuilder_;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -1949,6 +2100,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.FileSummary)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary();
     }
@@ -1957,7 +2109,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileSummary>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileSummary>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FileSummary>() {
       @java.lang.Override
       public FileSummary parsePartialFrom(
@@ -1992,6 +2145,7 @@ public final class FsImageProto {
      * <code>optional uint32 namespaceId = 1;</code>
      */
     boolean hasNamespaceId();
+
     /**
      * <code>optional uint32 namespaceId = 1;</code>
      */
@@ -2005,6 +2159,7 @@ public final class FsImageProto {
      * <code>optional uint64 genstampV1 = 2;</code>
      */
     boolean hasGenstampV1();
+
     /**
      * <pre>
      * legacy generation stamp
@@ -2022,6 +2177,7 @@ public final class FsImageProto {
      * <code>optional uint64 genstampV2 = 3;</code>
      */
     boolean hasGenstampV2();
+
     /**
      * <pre>
      * generation stamp of latest version
@@ -2035,6 +2191,7 @@ public final class FsImageProto {
      * <code>optional uint64 genstampV1Limit = 4;</code>
      */
     boolean hasGenstampV1Limit();
+
     /**
      * <code>optional uint64 genstampV1Limit = 4;</code>
      */
@@ -2044,6 +2201,7 @@ public final class FsImageProto {
      * <code>optional uint64 lastAllocatedBlockId = 5;</code>
      */
     boolean hasLastAllocatedBlockId();
+
     /**
      * <code>optional uint64 lastAllocatedBlockId = 5;</code>
      */
@@ -2053,6 +2211,7 @@ public final class FsImageProto {
      * <code>optional uint64 transactionId = 6;</code>
      */
     boolean hasTransactionId();
+
     /**
      * <code>optional uint64 transactionId = 6;</code>
      */
@@ -2062,6 +2221,7 @@ public final class FsImageProto {
      * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
      */
     boolean hasRollingUpgradeStartTime();
+
     /**
      * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
      */
@@ -2071,11 +2231,13 @@ public final class FsImageProto {
      * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
      */
     boolean hasLastAllocatedStripedBlockId();
+
     /**
      * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
      */
     long getLastAllocatedStripedBlockId();
   }
+
   /**
    * <pre>
    **
@@ -2084,15 +2246,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.NameSystemSection}
    */
-  public  static final class NameSystemSection extends
+  public static final class NameSystemSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.NameSystemSection)
       NameSystemSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use NameSystemSection.newBuilder() to construct.
     private NameSystemSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private NameSystemSection() {
     }
 
@@ -2101,6 +2265,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private NameSystemSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2179,14 +2344,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_NameSystemSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection.Builder.class);
@@ -2195,12 +2361,14 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int NAMESPACEID_FIELD_NUMBER = 1;
     private int namespaceId_;
+
     /**
      * <code>optional uint32 namespaceId = 1;</code>
      */
     public boolean hasNamespaceId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint32 namespaceId = 1;</code>
      */
@@ -2210,6 +2378,7 @@ public final class FsImageProto {
 
     public static final int GENSTAMPV1_FIELD_NUMBER = 2;
     private long genstampV1_;
+
     /**
      * <pre>
      * legacy generation stamp
@@ -2220,6 +2389,7 @@ public final class FsImageProto {
     public boolean hasGenstampV1() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * legacy generation stamp
@@ -2233,6 +2403,7 @@ public final class FsImageProto {
 
     public static final int GENSTAMPV2_FIELD_NUMBER = 3;
     private long genstampV2_;
+
     /**
      * <pre>
      * generation stamp of latest version
@@ -2243,6 +2414,7 @@ public final class FsImageProto {
     public boolean hasGenstampV2() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <pre>
      * generation stamp of latest version
@@ -2256,12 +2428,14 @@ public final class FsImageProto {
 
     public static final int GENSTAMPV1LIMIT_FIELD_NUMBER = 4;
     private long genstampV1Limit_;
+
     /**
      * <code>optional uint64 genstampV1Limit = 4;</code>
      */
     public boolean hasGenstampV1Limit() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      * <code>optional uint64 genstampV1Limit = 4;</code>
      */
@@ -2271,12 +2445,14 @@ public final class FsImageProto {
 
     public static final int LASTALLOCATEDBLOCKID_FIELD_NUMBER = 5;
     private long lastAllocatedBlockId_;
+
     /**
      * <code>optional uint64 lastAllocatedBlockId = 5;</code>
      */
     public boolean hasLastAllocatedBlockId() {
       return ((bitField0_ & 0x00000010) != 0);
     }
+
     /**
      * <code>optional uint64 lastAllocatedBlockId = 5;</code>
      */
@@ -2286,12 +2462,14 @@ public final class FsImageProto {
 
     public static final int TRANSACTIONID_FIELD_NUMBER = 6;
     private long transactionId_;
+
     /**
      * <code>optional uint64 transactionId = 6;</code>
      */
     public boolean hasTransactionId() {
       return ((bitField0_ & 0x00000020) != 0);
     }
+
     /**
      * <code>optional uint64 transactionId = 6;</code>
      */
@@ -2301,12 +2479,14 @@ public final class FsImageProto {
 
     public static final int ROLLINGUPGRADESTARTTIME_FIELD_NUMBER = 7;
     private long rollingUpgradeStartTime_;
+
     /**
      * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
      */
     public boolean hasRollingUpgradeStartTime() {
       return ((bitField0_ & 0x00000040) != 0);
     }
+
     /**
      * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
      */
@@ -2316,12 +2496,14 @@ public final class FsImageProto {
 
     public static final int LASTALLOCATEDSTRIPEDBLOCKID_FIELD_NUMBER = 8;
     private long lastAllocatedStripedBlockId_;
+
     /**
      * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
      */
     public boolean hasLastAllocatedStripedBlockId() {
       return ((bitField0_ & 0x00000080) != 0);
     }
+
     /**
      * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
      */
@@ -2330,6 +2512,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -2342,7 +2525,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, namespaceId_);
       }
@@ -2378,35 +2561,35 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, namespaceId_);
+            .computeUInt32Size(1, namespaceId_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(2, genstampV1_);
+            .computeUInt64Size(2, genstampV1_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(3, genstampV2_);
+            .computeUInt64Size(3, genstampV2_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(4, genstampV1Limit_);
+            .computeUInt64Size(4, genstampV1Limit_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(5, lastAllocatedBlockId_);
+            .computeUInt64Size(5, lastAllocatedBlockId_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(6, transactionId_);
+            .computeUInt64Size(6, transactionId_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(7, rollingUpgradeStartTime_);
+            .computeUInt64Size(7, rollingUpgradeStartTime_);
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(8, lastAllocatedStripedBlockId_);
+            .computeUInt64Size(8, lastAllocatedStripedBlockId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2416,7 +2599,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection)) {
         return super.equals(obj);
@@ -2523,38 +2706,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2562,11 +2752,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2574,12 +2766,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2589,13 +2783,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -2608,6 +2807,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -2621,13 +2821,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.NameSystemSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_NameSystemSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection.Builder.class);
@@ -2643,11 +2843,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -2672,7 +2874,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor;
       }
 
@@ -2736,38 +2938,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2775,7 +2983,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection.getDefaultInstance())
+          return this;
         if (other.hasNamespaceId()) {
           setNamespaceId(other.getNamespaceId());
         }
@@ -2828,21 +3037,25 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int namespaceId_ ;
+      private int namespaceId_;
+
       /**
        * <code>optional uint32 namespaceId = 1;</code>
        */
       public boolean hasNamespaceId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 namespaceId = 1;</code>
        */
       public int getNamespaceId() {
         return namespaceId_;
       }
+
       /**
        * <code>optional uint32 namespaceId = 1;</code>
        */
@@ -2852,6 +3065,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 namespaceId = 1;</code>
        */
@@ -2862,7 +3076,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private long genstampV1_ ;
+      private long genstampV1_;
+
       /**
        * <pre>
        * legacy generation stamp
@@ -2873,6 +3088,7 @@ public final class FsImageProto {
       public boolean hasGenstampV1() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * legacy generation stamp
@@ -2883,6 +3099,7 @@ public final class FsImageProto {
       public long getGenstampV1() {
         return genstampV1_;
       }
+
       /**
        * <pre>
        * legacy generation stamp
@@ -2896,6 +3113,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * legacy generation stamp
@@ -2910,7 +3128,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private long genstampV2_ ;
+      private long genstampV2_;
+
       /**
        * <pre>
        * generation stamp of latest version
@@ -2921,6 +3140,7 @@ public final class FsImageProto {
       public boolean hasGenstampV2() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * generation stamp of latest version
@@ -2931,6 +3151,7 @@ public final class FsImageProto {
       public long getGenstampV2() {
         return genstampV2_;
       }
+
       /**
        * <pre>
        * generation stamp of latest version
@@ -2944,6 +3165,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * generation stamp of latest version
@@ -2958,19 +3180,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private long genstampV1Limit_ ;
+      private long genstampV1Limit_;
+
       /**
        * <code>optional uint64 genstampV1Limit = 4;</code>
        */
       public boolean hasGenstampV1Limit() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional uint64 genstampV1Limit = 4;</code>
        */
       public long getGenstampV1Limit() {
         return genstampV1Limit_;
       }
+
       /**
        * <code>optional uint64 genstampV1Limit = 4;</code>
        */
@@ -2980,6 +3205,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 genstampV1Limit = 4;</code>
        */
@@ -2990,19 +3216,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private long lastAllocatedBlockId_ ;
+      private long lastAllocatedBlockId_;
+
       /**
        * <code>optional uint64 lastAllocatedBlockId = 5;</code>
        */
       public boolean hasLastAllocatedBlockId() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional uint64 lastAllocatedBlockId = 5;</code>
        */
       public long getLastAllocatedBlockId() {
         return lastAllocatedBlockId_;
       }
+
       /**
        * <code>optional uint64 lastAllocatedBlockId = 5;</code>
        */
@@ -3012,6 +3241,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 lastAllocatedBlockId = 5;</code>
        */
@@ -3022,19 +3252,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private long transactionId_ ;
+      private long transactionId_;
+
       /**
        * <code>optional uint64 transactionId = 6;</code>
        */
       public boolean hasTransactionId() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional uint64 transactionId = 6;</code>
        */
       public long getTransactionId() {
         return transactionId_;
       }
+
       /**
        * <code>optional uint64 transactionId = 6;</code>
        */
@@ -3044,6 +3277,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 transactionId = 6;</code>
        */
@@ -3054,19 +3288,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private long rollingUpgradeStartTime_ ;
+      private long rollingUpgradeStartTime_;
+
       /**
        * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
        */
       public boolean hasRollingUpgradeStartTime() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
        */
       public long getRollingUpgradeStartTime() {
         return rollingUpgradeStartTime_;
       }
+
       /**
        * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
        */
@@ -3076,6 +3313,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 rollingUpgradeStartTime = 7;</code>
        */
@@ -3086,19 +3324,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private long lastAllocatedStripedBlockId_ ;
+      private long lastAllocatedStripedBlockId_;
+
       /**
        * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
        */
       public boolean hasLastAllocatedStripedBlockId() {
         return ((bitField0_ & 0x00000080) != 0);
       }
+
       /**
        * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
        */
       public long getLastAllocatedStripedBlockId() {
         return lastAllocatedStripedBlockId_;
       }
+
       /**
        * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
        */
@@ -3108,6 +3349,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 lastAllocatedStripedBlockId = 8;</code>
        */
@@ -3117,6 +3359,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -3135,6 +3378,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.NameSystemSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.NameSystemSection();
     }
@@ -3143,7 +3387,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<NameSystemSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<NameSystemSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<NameSystemSection>() {
       @java.lang.Override
       public NameSystemSection parsePartialFrom(
@@ -3178,6 +3423,7 @@ public final class FsImageProto {
      * <code>optional uint64 lastInodeId = 1;</code>
      */
     boolean hasLastInodeId();
+
     /**
      * <code>optional uint64 lastInodeId = 1;</code>
      */
@@ -3191,6 +3437,7 @@ public final class FsImageProto {
      * <code>optional uint64 numInodes = 2;</code>
      */
     boolean hasNumInodes();
+
     /**
      * <pre>
      * repeated INodes..
@@ -3200,6 +3447,7 @@ public final class FsImageProto {
      */
     long getNumInodes();
   }
+
   /**
    * <pre>
    **
@@ -3211,15 +3459,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection}
    */
-  public  static final class INodeSection extends
+  public static final class INodeSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection)
       INodeSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use INodeSection.newBuilder() to construct.
     private INodeSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private INodeSection() {
     }
 
@@ -3228,6 +3478,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private INodeSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3276,14 +3527,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.Builder.class);
@@ -3297,30 +3549,35 @@ public final class FsImageProto {
        * <code>optional string clientName = 1;</code>
        */
       boolean hasClientName();
+
       /**
        * <code>optional string clientName = 1;</code>
        */
       java.lang.String getClientName();
+
       /**
        * <code>optional string clientName = 1;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getClientNameBytes();
+      getClientNameBytes();
 
       /**
        * <code>optional string clientMachine = 2;</code>
        */
       boolean hasClientMachine();
+
       /**
        * <code>optional string clientMachine = 2;</code>
        */
       java.lang.String getClientMachine();
+
       /**
        * <code>optional string clientMachine = 2;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getClientMachineBytes();
+      getClientMachineBytes();
     }
+
     /**
      * <pre>
      **
@@ -3329,15 +3586,17 @@ public final class FsImageProto {
      *
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature}
      */
-    public  static final class FileUnderConstructionFeature extends
+    public static final class FileUnderConstructionFeature extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature)
         FileUnderConstructionFeatureOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use FileUnderConstructionFeature.newBuilder() to construct.
       private FileUnderConstructionFeature(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private FileUnderConstructionFeature() {
         clientName_ = "";
         clientMachine_ = "";
@@ -3348,6 +3607,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private FileUnderConstructionFeature(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3398,14 +3658,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.Builder.class);
@@ -3414,12 +3675,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int CLIENTNAME_FIELD_NUMBER = 1;
       private volatile java.lang.Object clientName_;
+
       /**
        * <code>optional string clientName = 1;</code>
        */
       public boolean hasClientName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional string clientName = 1;</code>
        */
@@ -3428,7 +3691,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -3437,14 +3700,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string clientName = 1;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getClientNameBytes() {
+      getClientNameBytes() {
         java.lang.Object ref = clientName_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           clientName_ = b;
@@ -3456,12 +3720,14 @@ public final class FsImageProto {
 
       public static final int CLIENTMACHINE_FIELD_NUMBER = 2;
       private volatile java.lang.Object clientMachine_;
+
       /**
        * <code>optional string clientMachine = 2;</code>
        */
       public boolean hasClientMachine() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional string clientMachine = 2;</code>
        */
@@ -3470,7 +3736,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -3479,14 +3745,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string clientMachine = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getClientMachineBytes() {
+      getClientMachineBytes() {
         java.lang.Object ref = clientMachine_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           clientMachine_ = b;
@@ -3497,6 +3764,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -3509,7 +3777,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.writeString(output, 1, clientName_);
         }
@@ -3539,7 +3807,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature)) {
           return super.equals(obj);
@@ -3585,38 +3853,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3624,11 +3899,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3636,12 +3913,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3651,13 +3930,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -3670,6 +3954,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * <pre>
        **
@@ -3683,13 +3968,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeatureOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.Builder.class);
@@ -3705,11 +3990,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -3722,7 +4009,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor;
         }
 
@@ -3762,38 +4049,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -3801,7 +4094,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.getDefaultInstance())
+            return this;
           if (other.hasClientName()) {
             bitField0_ |= 0x00000001;
             clientName_ = other.clientName_;
@@ -3840,15 +4134,18 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private java.lang.Object clientName_ = "";
+
         /**
          * <code>optional string clientName = 1;</code>
          */
         public boolean hasClientName() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional string clientName = 1;</code>
          */
@@ -3866,14 +4163,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string clientName = 1;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getClientNameBytes() {
+        getClientNameBytes() {
           java.lang.Object ref = clientName_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             clientName_ = b;
@@ -3882,19 +4180,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string clientName = 1;</code>
          */
         public Builder setClientName(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           clientName_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string clientName = 1;</code>
          */
@@ -3904,27 +4204,30 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string clientName = 1;</code>
          */
         public Builder setClientNameBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           clientName_ = value;
           onChanged();
           return this;
         }
 
         private java.lang.Object clientMachine_ = "";
+
         /**
          * <code>optional string clientMachine = 2;</code>
          */
         public boolean hasClientMachine() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional string clientMachine = 2;</code>
          */
@@ -3942,14 +4245,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string clientMachine = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getClientMachineBytes() {
+        getClientMachineBytes() {
           java.lang.Object ref = clientMachine_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             clientMachine_ = b;
@@ -3958,19 +4262,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string clientMachine = 2;</code>
          */
         public Builder setClientMachine(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           clientMachine_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string clientMachine = 2;</code>
          */
@@ -3980,19 +4286,21 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string clientMachine = 2;</code>
          */
         public Builder setClientMachineBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           clientMachine_ = value;
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -4011,6 +4319,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature();
       }
@@ -4019,7 +4328,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileUnderConstructionFeature>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileUnderConstructionFeature>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FileUnderConstructionFeature>() {
         @java.lang.Override
         public FileUnderConstructionFeature parsePartialFrom(
@@ -4067,6 +4377,7 @@ public final class FsImageProto {
        * <code>repeated fixed32 entries = 2 [packed = true];</code>
        */
       java.util.List<java.lang.Integer> getEntriesList();
+
       /**
        * <pre>
        **
@@ -4084,6 +4395,7 @@ public final class FsImageProto {
        * <code>repeated fixed32 entries = 2 [packed = true];</code>
        */
       int getEntriesCount();
+
       /**
        * <pre>
        **
@@ -4102,18 +4414,21 @@ public final class FsImageProto {
        */
       int getEntries(int index);
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.AclFeatureProto}
      */
-    public  static final class AclFeatureProto extends
+    public static final class AclFeatureProto extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.AclFeatureProto)
         AclFeatureProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use AclFeatureProto.newBuilder() to construct.
       private AclFeatureProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private AclFeatureProto() {
         entries_ = emptyIntList();
       }
@@ -4123,6 +4438,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private AclFeatureProto(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4185,14 +4501,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder.class);
@@ -4200,6 +4517,7 @@ public final class FsImageProto {
 
       public static final int ENTRIES_FIELD_NUMBER = 2;
       private org.apache.hadoop.thirdparty.protobuf.Internal.IntList entries_;
+
       /**
        * <pre>
        **
@@ -4217,9 +4535,10 @@ public final class FsImageProto {
        * <code>repeated fixed32 entries = 2 [packed = true];</code>
        */
       public java.util.List<java.lang.Integer>
-          getEntriesList() {
+      getEntriesList() {
         return entries_;
       }
+
       /**
        * <pre>
        **
@@ -4239,6 +4558,7 @@ public final class FsImageProto {
       public int getEntriesCount() {
         return entries_.size();
       }
+
       /**
        * <pre>
        **
@@ -4258,9 +4578,11 @@ public final class FsImageProto {
       public int getEntries(int index) {
         return entries_.getInt(index);
       }
+
       private int entriesMemoizedSerializedSize = -1;
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -4273,7 +4595,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         getSerializedSize();
         if (getEntriesList().size() > 0) {
           output.writeUInt32NoTag(18);
@@ -4310,7 +4632,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto)) {
           return super.equals(obj);
@@ -4344,38 +4666,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4383,11 +4712,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4395,12 +4726,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4410,13 +4743,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -4429,6 +4767,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.AclFeatureProto}
        */
@@ -4437,13 +4776,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.AclFeatureProto)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder.class);
@@ -4459,11 +4798,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -4474,7 +4815,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor;
         }
 
@@ -4509,38 +4850,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -4548,7 +4895,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance())
+            return this;
           if (!other.entries_.isEmpty()) {
             if (entries_.isEmpty()) {
               entries_ = other.entries_;
@@ -4587,15 +4935,18 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private org.apache.hadoop.thirdparty.protobuf.Internal.IntList entries_ = emptyIntList();
+
         private void ensureEntriesIsMutable() {
           if (!((bitField0_ & 0x00000001) != 0)) {
             entries_ = mutableCopy(entries_);
             bitField0_ |= 0x00000001;
-           }
+          }
         }
+
         /**
          * <pre>
          **
@@ -4613,10 +4964,11 @@ public final class FsImageProto {
          * <code>repeated fixed32 entries = 2 [packed = true];</code>
          */
         public java.util.List<java.lang.Integer>
-            getEntriesList() {
+        getEntriesList() {
           return ((bitField0_ & 0x00000001) != 0) ?
-                   java.util.Collections.unmodifiableList(entries_) : entries_;
+              java.util.Collections.unmodifiableList(entries_) : entries_;
         }
+
         /**
          * <pre>
          **
@@ -4636,6 +4988,7 @@ public final class FsImageProto {
         public int getEntriesCount() {
           return entries_.size();
         }
+
         /**
          * <pre>
          **
@@ -4655,6 +5008,7 @@ public final class FsImageProto {
         public int getEntries(int index) {
           return entries_.getInt(index);
         }
+
         /**
          * <pre>
          **
@@ -4678,6 +5032,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          **
@@ -4700,6 +5055,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          **
@@ -4724,6 +5080,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          **
@@ -4746,6 +5103,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -4764,6 +5122,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.AclFeatureProto)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto();
       }
@@ -4772,7 +5131,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<AclFeatureProto>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<AclFeatureProto>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<AclFeatureProto>() {
         @java.lang.Override
         public AclFeatureProto parsePartialFrom(
@@ -4806,7 +5166,7 @@ public final class FsImageProto {
       /**
        * <pre>
        **
-       * 
+       *
        * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
        * [2:26) -- the name of the entry, which is an ID that points to a
        * string in the StringTableSection.
@@ -4820,10 +5180,11 @@ public final class FsImageProto {
        * <code>required fixed32 name = 1;</code>
        */
       boolean hasName();
+
       /**
        * <pre>
        **
-       * 
+       *
        * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
        * [2:26) -- the name of the entry, which is an ID that points to a
        * string in the StringTableSection.
@@ -4842,23 +5203,27 @@ public final class FsImageProto {
        * <code>optional bytes value = 2;</code>
        */
       boolean hasValue();
+
       /**
        * <code>optional bytes value = 2;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString getValue();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto}
      */
-    public  static final class XAttrCompactProto extends
+    public static final class XAttrCompactProto extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto)
         XAttrCompactProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use XAttrCompactProto.newBuilder() to construct.
       private XAttrCompactProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private XAttrCompactProto() {
         value_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
       }
@@ -4868,6 +5233,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private XAttrCompactProto(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4916,14 +5282,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder.class);
@@ -4932,10 +5299,11 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int NAME_FIELD_NUMBER = 1;
       private int name_;
+
       /**
        * <pre>
        **
-       * 
+       *
        * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
        * [2:26) -- the name of the entry, which is an ID that points to a
        * string in the StringTableSection.
@@ -4951,10 +5319,11 @@ public final class FsImageProto {
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        **
-       * 
+       *
        * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
        * [2:26) -- the name of the entry, which is an ID that points to a
        * string in the StringTableSection.
@@ -4973,12 +5342,14 @@ public final class FsImageProto {
 
       public static final int VALUE_FIELD_NUMBER = 2;
       private org.apache.hadoop.thirdparty.protobuf.ByteString value_;
+
       /**
        * <code>optional bytes value = 2;</code>
        */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional bytes value = 2;</code>
        */
@@ -4987,6 +5358,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -5003,7 +5375,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeFixed32(1, name_);
         }
@@ -5021,11 +5393,11 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeFixed32Size(1, name_);
+              .computeFixed32Size(1, name_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(2, value_);
+              .computeBytesSize(2, value_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -5035,7 +5407,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto)) {
           return super.equals(obj);
@@ -5081,38 +5453,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5120,11 +5499,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5132,12 +5513,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5147,13 +5530,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -5166,6 +5554,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto}
        */
@@ -5174,13 +5563,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder.class);
@@ -5196,11 +5585,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -5213,7 +5604,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor;
         }
 
@@ -5253,38 +5644,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -5292,7 +5689,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.getDefaultInstance())
+            return this;
           if (other.hasName()) {
             setName(other.getName());
           }
@@ -5330,13 +5728,15 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int name_ ;
+        private int name_;
+
         /**
          * <pre>
          **
-         * 
+         *
          * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
          * [2:26) -- the name of the entry, which is an ID that points to a
          * string in the StringTableSection.
@@ -5352,10 +5752,11 @@ public final class FsImageProto {
         public boolean hasName() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <pre>
          **
-         * 
+         *
          * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
          * [2:26) -- the name of the entry, which is an ID that points to a
          * string in the StringTableSection.
@@ -5371,10 +5772,11 @@ public final class FsImageProto {
         public int getName() {
           return name_;
         }
+
         /**
          * <pre>
          **
-         * 
+         *
          * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
          * [2:26) -- the name of the entry, which is an ID that points to a
          * string in the StringTableSection.
@@ -5393,10 +5795,11 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          **
-         * 
+         *
          * [0:2) -- the namespace of XAttr (XAttrNamespaceProto)
          * [2:26) -- the name of the entry, which is an ID that points to a
          * string in the StringTableSection.
@@ -5417,30 +5820,34 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString value_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes value = 2;</code>
          */
         public boolean hasValue() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional bytes value = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getValue() {
           return value_;
         }
+
         /**
          * <code>optional bytes value = 2;</code>
          */
         public Builder setValue(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           value_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes value = 2;</code>
          */
@@ -5450,6 +5857,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -5468,6 +5876,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto();
       }
@@ -5476,7 +5885,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<XAttrCompactProto>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<XAttrCompactProto>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<XAttrCompactProto>() {
         @java.lang.Override
         public XAttrCompactProto parsePartialFrom(
@@ -5510,39 +5920,46 @@ public final class FsImageProto {
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
-      java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto> 
-          getXAttrsList();
+      java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto>
+      getXAttrsList();
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto getXAttrs(int index);
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
       int getXAttrsCount();
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
-      java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder> 
-          getXAttrsOrBuilderList();
+      java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder>
+      getXAttrsOrBuilderList();
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder getXAttrsOrBuilder(
           int index);
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto}
      */
-    public  static final class XAttrFeatureProto extends
+    public static final class XAttrFeatureProto extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto)
         XAttrFeatureProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use XAttrFeatureProto.newBuilder() to construct.
       private XAttrFeatureProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private XAttrFeatureProto() {
         xAttrs_ = java.util.Collections.emptyList();
       }
@@ -5552,6 +5969,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private XAttrFeatureProto(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5602,14 +6020,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder.class);
@@ -5617,31 +6036,36 @@ public final class FsImageProto {
 
       public static final int XATTRS_FIELD_NUMBER = 1;
       private java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto> xAttrs_;
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
       public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto> getXAttrsList() {
         return xAttrs_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder> 
-          getXAttrsOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder>
+      getXAttrsOrBuilderList() {
         return xAttrs_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
       public int getXAttrsCount() {
         return xAttrs_.size();
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto getXAttrs(int index) {
         return xAttrs_.get(index);
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
        */
@@ -5651,6 +6075,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -5669,7 +6094,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         for (int i = 0; i < xAttrs_.size(); i++) {
           output.writeMessage(1, xAttrs_.get(i));
         }
@@ -5684,7 +6109,7 @@ public final class FsImageProto {
         size = 0;
         for (int i = 0; i < xAttrs_.size(); i++) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(1, xAttrs_.get(i));
+              .computeMessageSize(1, xAttrs_.get(i));
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -5694,7 +6119,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto)) {
           return super.equals(obj);
@@ -5728,38 +6153,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5767,11 +6199,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5779,12 +6213,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -5794,13 +6230,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -5813,6 +6254,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto}
        */
@@ -5821,13 +6263,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder.class);
@@ -5843,12 +6285,14 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getXAttrsFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -5863,7 +6307,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor;
         }
 
@@ -5902,38 +6346,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -5941,7 +6391,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance())
+            return this;
           if (xAttrsBuilder_ == null) {
             if (!other.xAttrs_.isEmpty()) {
               if (xAttrs_.isEmpty()) {
@@ -5960,9 +6411,9 @@ public final class FsImageProto {
                 xAttrsBuilder_ = null;
                 xAttrs_ = other.xAttrs_;
                 bitField0_ = (bitField0_ & ~0x00000001);
-                xAttrsBuilder_ = 
-                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                     getXAttrsFieldBuilder() : null;
+                xAttrsBuilder_ =
+                    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                        getXAttrsFieldBuilder() : null;
               } else {
                 xAttrsBuilder_.addAllMessages(other.xAttrs_);
               }
@@ -6001,15 +6452,17 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto> xAttrs_ =
-          java.util.Collections.emptyList();
+            java.util.Collections.emptyList();
+
         private void ensureXAttrsIsMutable() {
           if (!((bitField0_ & 0x00000001) != 0)) {
             xAttrs_ = new java.util.ArrayList<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto>(xAttrs_);
             bitField0_ |= 0x00000001;
-           }
+          }
         }
 
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -6025,6 +6478,7 @@ public final class FsImageProto {
             return xAttrsBuilder_.getMessageList();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6035,6 +6489,7 @@ public final class FsImageProto {
             return xAttrsBuilder_.getCount();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6045,6 +6500,7 @@ public final class FsImageProto {
             return xAttrsBuilder_.getMessage(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6062,6 +6518,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6076,6 +6533,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6092,6 +6550,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6109,6 +6568,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6123,6 +6583,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6137,6 +6598,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6152,6 +6614,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6165,6 +6628,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6178,6 +6642,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6185,27 +6650,31 @@ public final class FsImageProto {
             int index) {
           return getXAttrsFieldBuilder().getBuilder(index);
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
         public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder getXAttrsOrBuilder(
             int index) {
           if (xAttrsBuilder_ == null) {
-            return xAttrs_.get(index);  } else {
+            return xAttrs_.get(index);
+          } else {
             return xAttrsBuilder_.getMessageOrBuilder(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
-        public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder> 
-             getXAttrsOrBuilderList() {
+        public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder>
+        getXAttrsOrBuilderList() {
           if (xAttrsBuilder_ != null) {
             return xAttrsBuilder_.getMessageOrBuilderList();
           } else {
             return java.util.Collections.unmodifiableList(xAttrs_);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6213,6 +6682,7 @@ public final class FsImageProto {
           return getXAttrsFieldBuilder().addBuilder(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
@@ -6221,27 +6691,30 @@ public final class FsImageProto {
           return getXAttrsFieldBuilder().addBuilder(
               index, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.XAttrCompactProto xAttrs = 1;</code>
          */
-        public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder> 
-             getXAttrsBuilderList() {
+        public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder>
+        getXAttrsBuilderList() {
           return getXAttrsFieldBuilder().getBuilderList();
         }
+
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder> 
-            getXAttrsFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder>
+        getXAttrsFieldBuilder() {
           if (xAttrsBuilder_ == null) {
             xAttrsBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrCompactProtoOrBuilder>(
-                    xAttrs_,
-                    ((bitField0_ & 0x00000001) != 0),
-                    getParentForChildren(),
-                    isClean());
+                xAttrs_,
+                ((bitField0_ & 0x00000001) != 0),
+                getParentForChildren(),
+                isClean());
             xAttrs_ = null;
           }
           return xAttrsBuilder_;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -6260,6 +6733,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto();
       }
@@ -6268,7 +6742,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<XAttrFeatureProto>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<XAttrFeatureProto>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<XAttrFeatureProto>() {
         @java.lang.Override
         public XAttrFeatureProto parsePartialFrom(
@@ -6303,6 +6778,7 @@ public final class FsImageProto {
        * <code>optional uint32 replication = 1;</code>
        */
       boolean hasReplication();
+
       /**
        * <code>optional uint32 replication = 1;</code>
        */
@@ -6312,6 +6788,7 @@ public final class FsImageProto {
        * <code>optional uint64 modificationTime = 2;</code>
        */
       boolean hasModificationTime();
+
       /**
        * <code>optional uint64 modificationTime = 2;</code>
        */
@@ -6321,6 +6798,7 @@ public final class FsImageProto {
        * <code>optional uint64 accessTime = 3;</code>
        */
       boolean hasAccessTime();
+
       /**
        * <code>optional uint64 accessTime = 3;</code>
        */
@@ -6330,6 +6808,7 @@ public final class FsImageProto {
        * <code>optional uint64 preferredBlockSize = 4;</code>
        */
       boolean hasPreferredBlockSize();
+
       /**
        * <code>optional uint64 preferredBlockSize = 4;</code>
        */
@@ -6339,6 +6818,7 @@ public final class FsImageProto {
        * <code>optional fixed64 permission = 5;</code>
        */
       boolean hasPermission();
+
       /**
        * <code>optional fixed64 permission = 5;</code>
        */
@@ -6347,21 +6827,25 @@ public final class FsImageProto {
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
-      java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> 
-          getBlocksList();
+      java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto>
+      getBlocksList();
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
       org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto getBlocks(int index);
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
       int getBlocksCount();
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
-      java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-          getBlocksOrBuilderList();
+      java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+      getBlocksOrBuilderList();
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
@@ -6372,10 +6856,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
        */
       boolean hasFileUC();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature getFileUC();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
        */
@@ -6385,10 +6871,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
        */
       boolean hasAcl();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto getAcl();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
        */
@@ -6398,10 +6886,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
        */
       boolean hasXAttrs();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto getXAttrs();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
        */
@@ -6411,6 +6901,7 @@ public final class FsImageProto {
        * <code>optional uint32 storagePolicyID = 10;</code>
        */
       boolean hasStoragePolicyID();
+
       /**
        * <code>optional uint32 storagePolicyID = 10;</code>
        */
@@ -6420,6 +6911,7 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
        */
       boolean hasBlockType();
+
       /**
        * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
        */
@@ -6429,23 +6921,27 @@ public final class FsImageProto {
        * <code>optional uint32 erasureCodingPolicyID = 12;</code>
        */
       boolean hasErasureCodingPolicyID();
+
       /**
        * <code>optional uint32 erasureCodingPolicyID = 12;</code>
        */
       int getErasureCodingPolicyID();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INodeFile}
      */
-    public  static final class INodeFile extends
+    public static final class INodeFile extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.INodeFile)
         INodeFileOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use INodeFile.newBuilder() to construct.
       private INodeFile(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private INodeFile() {
         blocks_ = java.util.Collections.emptyList();
         blockType_ = 0;
@@ -6456,6 +6952,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private INodeFile(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -6555,7 +7052,7 @@ public final class FsImageProto {
               }
               case 88: {
                 int rawValue = input.readEnum();
-                  @SuppressWarnings("deprecation")
+                @SuppressWarnings("deprecation")
                 org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTypeProto value = org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTypeProto.valueOf(rawValue);
                 if (value == null) {
                   unknownFields.mergeVarintField(11, rawValue);
@@ -6592,14 +7089,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder.class);
@@ -6608,12 +7106,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int REPLICATION_FIELD_NUMBER = 1;
       private int replication_;
+
       /**
        * <code>optional uint32 replication = 1;</code>
        */
       public boolean hasReplication() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 replication = 1;</code>
        */
@@ -6623,12 +7123,14 @@ public final class FsImageProto {
 
       public static final int MODIFICATIONTIME_FIELD_NUMBER = 2;
       private long modificationTime_;
+
       /**
        * <code>optional uint64 modificationTime = 2;</code>
        */
       public boolean hasModificationTime() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint64 modificationTime = 2;</code>
        */
@@ -6638,12 +7140,14 @@ public final class FsImageProto {
 
       public static final int ACCESSTIME_FIELD_NUMBER = 3;
       private long accessTime_;
+
       /**
        * <code>optional uint64 accessTime = 3;</code>
        */
       public boolean hasAccessTime() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional uint64 accessTime = 3;</code>
        */
@@ -6653,12 +7157,14 @@ public final class FsImageProto {
 
       public static final int PREFERREDBLOCKSIZE_FIELD_NUMBER = 4;
       private long preferredBlockSize_;
+
       /**
        * <code>optional uint64 preferredBlockSize = 4;</code>
        */
       public boolean hasPreferredBlockSize() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional uint64 preferredBlockSize = 4;</code>
        */
@@ -6668,12 +7174,14 @@ public final class FsImageProto {
 
       public static final int PERMISSION_FIELD_NUMBER = 5;
       private long permission_;
+
       /**
        * <code>optional fixed64 permission = 5;</code>
        */
       public boolean hasPermission() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional fixed64 permission = 5;</code>
        */
@@ -6683,31 +7191,36 @@ public final class FsImageProto {
 
       public static final int BLOCKS_FIELD_NUMBER = 6;
       private java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> blocks_;
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
       public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> getBlocksList() {
         return blocks_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-          getBlocksOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+      getBlocksOrBuilderList() {
         return blocks_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
       public int getBlocksCount() {
         return blocks_.size();
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
       public org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto getBlocks(int index) {
         return blocks_.get(index);
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
        */
@@ -6718,18 +7231,21 @@ public final class FsImageProto {
 
       public static final int FILEUC_FIELD_NUMBER = 7;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature fileUC_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
        */
       public boolean hasFileUC() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature getFileUC() {
         return fileUC_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.getDefaultInstance() : fileUC_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
        */
@@ -6739,18 +7255,21 @@ public final class FsImageProto {
 
       public static final int ACL_FIELD_NUMBER = 8;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto acl_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
        */
       public boolean hasAcl() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto getAcl() {
         return acl_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance() : acl_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
        */
@@ -6760,18 +7279,21 @@ public final class FsImageProto {
 
       public static final int XATTRS_FIELD_NUMBER = 9;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto xAttrs_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
        */
       public boolean hasXAttrs() {
         return ((bitField0_ & 0x00000080) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto getXAttrs() {
         return xAttrs_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance() : xAttrs_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
        */
@@ -6781,12 +7303,14 @@ public final class FsImageProto {
 
       public static final int STORAGEPOLICYID_FIELD_NUMBER = 10;
       private int storagePolicyID_;
+
       /**
        * <code>optional uint32 storagePolicyID = 10;</code>
        */
       public boolean hasStoragePolicyID() {
         return ((bitField0_ & 0x00000100) != 0);
       }
+
       /**
        * <code>optional uint32 storagePolicyID = 10;</code>
        */
@@ -6796,12 +7320,14 @@ public final class FsImageProto {
 
       public static final int BLOCKTYPE_FIELD_NUMBER = 11;
       private int blockType_;
+
       /**
        * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
        */
       public boolean hasBlockType() {
         return ((bitField0_ & 0x00000200) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
        */
@@ -6813,12 +7339,14 @@ public final class FsImageProto {
 
       public static final int ERASURECODINGPOLICYID_FIELD_NUMBER = 12;
       private int erasureCodingPolicyID_;
+
       /**
        * <code>optional uint32 erasureCodingPolicyID = 12;</code>
        */
       public boolean hasErasureCodingPolicyID() {
         return ((bitField0_ & 0x00000400) != 0);
       }
+
       /**
        * <code>optional uint32 erasureCodingPolicyID = 12;</code>
        */
@@ -6827,6 +7355,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -6851,7 +7380,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, replication_);
         }
@@ -6899,51 +7428,51 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, replication_);
+              .computeUInt32Size(1, replication_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, modificationTime_);
+              .computeUInt64Size(2, modificationTime_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(3, accessTime_);
+              .computeUInt64Size(3, accessTime_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(4, preferredBlockSize_);
+              .computeUInt64Size(4, preferredBlockSize_);
         }
         if (((bitField0_ & 0x00000010) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeFixed64Size(5, permission_);
+              .computeFixed64Size(5, permission_);
         }
         for (int i = 0; i < blocks_.size(); i++) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(6, blocks_.get(i));
+              .computeMessageSize(6, blocks_.get(i));
         }
         if (((bitField0_ & 0x00000020) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(7, getFileUC());
+              .computeMessageSize(7, getFileUC());
         }
         if (((bitField0_ & 0x00000040) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(8, getAcl());
+              .computeMessageSize(8, getAcl());
         }
         if (((bitField0_ & 0x00000080) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(9, getXAttrs());
+              .computeMessageSize(9, getXAttrs());
         }
         if (((bitField0_ & 0x00000100) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(10, storagePolicyID_);
+              .computeUInt32Size(10, storagePolicyID_);
         }
         if (((bitField0_ & 0x00000200) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeEnumSize(11, blockType_);
+              .computeEnumSize(11, blockType_);
         }
         if (((bitField0_ & 0x00000400) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(12, erasureCodingPolicyID_);
+              .computeUInt32Size(12, erasureCodingPolicyID_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -6953,7 +7482,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile)) {
           return super.equals(obj);
@@ -7089,38 +7618,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7128,11 +7664,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7140,12 +7678,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -7155,13 +7695,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -7174,6 +7719,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INodeFile}
        */
@@ -7182,13 +7728,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.INodeFile)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder.class);
@@ -7204,15 +7750,17 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getBlocksFieldBuilder();
             getFileUCFieldBuilder();
             getAclFieldBuilder();
             getXAttrsFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -7261,7 +7809,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor;
         }
 
@@ -7358,38 +7906,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -7397,7 +7951,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance())
+            return this;
           if (other.hasReplication()) {
             setReplication(other.getReplication());
           }
@@ -7431,9 +7986,9 @@ public final class FsImageProto {
                 blocksBuilder_ = null;
                 blocks_ = other.blocks_;
                 bitField0_ = (bitField0_ & ~0x00000020);
-                blocksBuilder_ = 
-                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                     getBlocksFieldBuilder() : null;
+                blocksBuilder_ =
+                    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                        getBlocksFieldBuilder() : null;
               } else {
                 blocksBuilder_.addAllMessages(other.blocks_);
               }
@@ -7495,21 +8050,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int replication_ ;
+        private int replication_;
+
         /**
          * <code>optional uint32 replication = 1;</code>
          */
         public boolean hasReplication() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 replication = 1;</code>
          */
         public int getReplication() {
           return replication_;
         }
+
         /**
          * <code>optional uint32 replication = 1;</code>
          */
@@ -7519,6 +8078,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 replication = 1;</code>
          */
@@ -7529,19 +8089,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long modificationTime_ ;
+        private long modificationTime_;
+
         /**
          * <code>optional uint64 modificationTime = 2;</code>
          */
         public boolean hasModificationTime() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional uint64 modificationTime = 2;</code>
          */
         public long getModificationTime() {
           return modificationTime_;
         }
+
         /**
          * <code>optional uint64 modificationTime = 2;</code>
          */
@@ -7551,6 +8114,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 modificationTime = 2;</code>
          */
@@ -7561,19 +8125,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long accessTime_ ;
+        private long accessTime_;
+
         /**
          * <code>optional uint64 accessTime = 3;</code>
          */
         public boolean hasAccessTime() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional uint64 accessTime = 3;</code>
          */
         public long getAccessTime() {
           return accessTime_;
         }
+
         /**
          * <code>optional uint64 accessTime = 3;</code>
          */
@@ -7583,6 +8150,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 accessTime = 3;</code>
          */
@@ -7593,19 +8161,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long preferredBlockSize_ ;
+        private long preferredBlockSize_;
+
         /**
          * <code>optional uint64 preferredBlockSize = 4;</code>
          */
         public boolean hasPreferredBlockSize() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional uint64 preferredBlockSize = 4;</code>
          */
         public long getPreferredBlockSize() {
           return preferredBlockSize_;
         }
+
         /**
          * <code>optional uint64 preferredBlockSize = 4;</code>
          */
@@ -7615,6 +8186,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 preferredBlockSize = 4;</code>
          */
@@ -7625,19 +8197,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long permission_ ;
+        private long permission_;
+
         /**
          * <code>optional fixed64 permission = 5;</code>
          */
         public boolean hasPermission() {
           return ((bitField0_ & 0x00000010) != 0);
         }
+
         /**
          * <code>optional fixed64 permission = 5;</code>
          */
         public long getPermission() {
           return permission_;
         }
+
         /**
          * <code>optional fixed64 permission = 5;</code>
          */
@@ -7647,6 +8222,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional fixed64 permission = 5;</code>
          */
@@ -7658,12 +8234,13 @@ public final class FsImageProto {
         }
 
         private java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> blocks_ =
-          java.util.Collections.emptyList();
+            java.util.Collections.emptyList();
+
         private void ensureBlocksIsMutable() {
           if (!((bitField0_ & 0x00000020) != 0)) {
             blocks_ = new java.util.ArrayList<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto>(blocks_);
             bitField0_ |= 0x00000020;
-           }
+          }
         }
 
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -7679,6 +8256,7 @@ public final class FsImageProto {
             return blocksBuilder_.getMessageList();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7689,6 +8267,7 @@ public final class FsImageProto {
             return blocksBuilder_.getCount();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7699,6 +8278,7 @@ public final class FsImageProto {
             return blocksBuilder_.getMessage(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7716,6 +8296,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7730,6 +8311,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7746,6 +8328,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7763,6 +8346,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7777,6 +8361,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7791,6 +8376,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7806,6 +8392,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7819,6 +8406,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7832,6 +8420,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7839,27 +8428,31 @@ public final class FsImageProto {
             int index) {
           return getBlocksFieldBuilder().getBuilder(index);
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
         public org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder getBlocksOrBuilder(
             int index) {
           if (blocksBuilder_ == null) {
-            return blocks_.get(index);  } else {
+            return blocks_.get(index);
+          } else {
             return blocksBuilder_.getMessageOrBuilder(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
-        public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-             getBlocksOrBuilderList() {
+        public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+        getBlocksOrBuilderList() {
           if (blocksBuilder_ != null) {
             return blocksBuilder_.getMessageOrBuilderList();
           } else {
             return java.util.Collections.unmodifiableList(blocks_);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7867,6 +8460,7 @@ public final class FsImageProto {
           return getBlocksFieldBuilder().addBuilder(
               org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
@@ -7875,23 +8469,25 @@ public final class FsImageProto {
           return getBlocksFieldBuilder().addBuilder(
               index, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 6;</code>
          */
-        public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder> 
-             getBlocksBuilderList() {
+        public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder>
+        getBlocksBuilderList() {
           return getBlocksFieldBuilder().getBuilderList();
         }
+
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-            org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-            getBlocksFieldBuilder() {
+            org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+        getBlocksFieldBuilder() {
           if (blocksBuilder_ == null) {
             blocksBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
                 org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>(
-                    blocks_,
-                    ((bitField0_ & 0x00000020) != 0),
-                    getParentForChildren(),
-                    isClean());
+                blocks_,
+                ((bitField0_ & 0x00000020) != 0),
+                getParentForChildren(),
+                isClean());
             blocks_ = null;
           }
           return blocksBuilder_;
@@ -7900,12 +8496,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature fileUC_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeatureOrBuilder> fileUCBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
         public boolean hasFileUC() {
           return ((bitField0_ & 0x00000040) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7916,6 +8514,7 @@ public final class FsImageProto {
             return fileUCBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7932,6 +8531,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000040;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7946,6 +8546,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000040;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7955,7 +8556,7 @@ public final class FsImageProto {
                 fileUC_ != null &&
                 fileUC_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.getDefaultInstance()) {
               fileUC_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.newBuilder(fileUC_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.newBuilder(fileUC_).mergeFrom(value).buildPartial();
             } else {
               fileUC_ = value;
             }
@@ -7966,6 +8567,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000040;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7979,6 +8581,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000040);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7987,6 +8590,7 @@ public final class FsImageProto {
           onChanged();
           return getFileUCFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
@@ -7998,18 +8602,19 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.getDefaultInstance() : fileUC_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.FileUnderConstructionFeature fileUC = 7;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeatureOrBuilder> 
-            getFileUCFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeatureOrBuilder>
+        getFileUCFieldBuilder() {
           if (fileUCBuilder_ == null) {
             fileUCBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeature.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.FileUnderConstructionFeatureOrBuilder>(
-                    getFileUC(),
-                    getParentForChildren(),
-                    isClean());
+                getFileUC(),
+                getParentForChildren(),
+                isClean());
             fileUC_ = null;
           }
           return fileUCBuilder_;
@@ -8018,12 +8623,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto acl_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder> aclBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
         public boolean hasAcl() {
           return ((bitField0_ & 0x00000080) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8034,6 +8641,7 @@ public final class FsImageProto {
             return aclBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8050,6 +8658,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000080;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8064,6 +8673,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000080;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8073,7 +8683,7 @@ public final class FsImageProto {
                 acl_ != null &&
                 acl_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance()) {
               acl_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.newBuilder(acl_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.newBuilder(acl_).mergeFrom(value).buildPartial();
             } else {
               acl_ = value;
             }
@@ -8084,6 +8694,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000080;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8097,6 +8708,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000080);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8105,6 +8717,7 @@ public final class FsImageProto {
           onChanged();
           return getAclFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
@@ -8116,18 +8729,19 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance() : acl_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 8;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder> 
-            getAclFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder>
+        getAclFieldBuilder() {
           if (aclBuilder_ == null) {
             aclBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder>(
-                    getAcl(),
-                    getParentForChildren(),
-                    isClean());
+                getAcl(),
+                getParentForChildren(),
+                isClean());
             acl_ = null;
           }
           return aclBuilder_;
@@ -8136,12 +8750,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto xAttrs_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder> xAttrsBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
         public boolean hasXAttrs() {
           return ((bitField0_ & 0x00000100) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8152,6 +8768,7 @@ public final class FsImageProto {
             return xAttrsBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8168,6 +8785,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000100;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8182,6 +8800,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000100;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8191,7 +8810,7 @@ public final class FsImageProto {
                 xAttrs_ != null &&
                 xAttrs_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance()) {
               xAttrs_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.newBuilder(xAttrs_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.newBuilder(xAttrs_).mergeFrom(value).buildPartial();
             } else {
               xAttrs_ = value;
             }
@@ -8202,6 +8821,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000100;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8215,6 +8835,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000100);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8223,6 +8844,7 @@ public final class FsImageProto {
           onChanged();
           return getXAttrsFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
@@ -8234,36 +8856,40 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance() : xAttrs_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 9;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder> 
-            getXAttrsFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder>
+        getXAttrsFieldBuilder() {
           if (xAttrsBuilder_ == null) {
             xAttrsBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder>(
-                    getXAttrs(),
-                    getParentForChildren(),
-                    isClean());
+                getXAttrs(),
+                getParentForChildren(),
+                isClean());
             xAttrs_ = null;
           }
           return xAttrsBuilder_;
         }
 
-        private int storagePolicyID_ ;
+        private int storagePolicyID_;
+
         /**
          * <code>optional uint32 storagePolicyID = 10;</code>
          */
         public boolean hasStoragePolicyID() {
           return ((bitField0_ & 0x00000200) != 0);
         }
+
         /**
          * <code>optional uint32 storagePolicyID = 10;</code>
          */
         public int getStoragePolicyID() {
           return storagePolicyID_;
         }
+
         /**
          * <code>optional uint32 storagePolicyID = 10;</code>
          */
@@ -8273,6 +8899,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 storagePolicyID = 10;</code>
          */
@@ -8284,12 +8911,14 @@ public final class FsImageProto {
         }
 
         private int blockType_ = 0;
+
         /**
          * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
          */
         public boolean hasBlockType() {
           return ((bitField0_ & 0x00000400) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
          */
@@ -8298,6 +8927,7 @@ public final class FsImageProto {
           org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTypeProto result = org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTypeProto.valueOf(blockType_);
           return result == null ? org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTypeProto.CONTIGUOUS : result;
         }
+
         /**
          * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
          */
@@ -8310,6 +8940,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.BlockTypeProto blockType = 11;</code>
          */
@@ -8320,19 +8951,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private int erasureCodingPolicyID_ ;
+        private int erasureCodingPolicyID_;
+
         /**
          * <code>optional uint32 erasureCodingPolicyID = 12;</code>
          */
         public boolean hasErasureCodingPolicyID() {
           return ((bitField0_ & 0x00000800) != 0);
         }
+
         /**
          * <code>optional uint32 erasureCodingPolicyID = 12;</code>
          */
         public int getErasureCodingPolicyID() {
           return erasureCodingPolicyID_;
         }
+
         /**
          * <code>optional uint32 erasureCodingPolicyID = 12;</code>
          */
@@ -8342,6 +8976,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 erasureCodingPolicyID = 12;</code>
          */
@@ -8351,6 +8986,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -8369,6 +9005,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.INodeFile)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile();
       }
@@ -8377,7 +9014,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeFile>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeFile>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeFile>() {
         @java.lang.Override
         public INodeFile parsePartialFrom(
@@ -8412,6 +9050,7 @@ public final class FsImageProto {
        * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
        */
       boolean hasStorageType();
+
       /**
        * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
        */
@@ -8421,23 +9060,27 @@ public final class FsImageProto {
        * <code>required uint64 quota = 2;</code>
        */
       boolean hasQuota();
+
       /**
        * <code>required uint64 quota = 2;</code>
        */
       long getQuota();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto}
      */
-    public  static final class QuotaByStorageTypeEntryProto extends
+    public static final class QuotaByStorageTypeEntryProto extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto)
         QuotaByStorageTypeEntryProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use QuotaByStorageTypeEntryProto.newBuilder() to construct.
       private QuotaByStorageTypeEntryProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private QuotaByStorageTypeEntryProto() {
         storageType_ = 1;
       }
@@ -8447,6 +9090,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private QuotaByStorageTypeEntryProto(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -8468,7 +9112,7 @@ public final class FsImageProto {
                 break;
               case 8: {
                 int rawValue = input.readEnum();
-                  @SuppressWarnings("deprecation")
+                @SuppressWarnings("deprecation")
                 org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.StorageTypeProto value = org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.StorageTypeProto.valueOf(rawValue);
                 if (value == null) {
                   unknownFields.mergeVarintField(1, rawValue);
@@ -8502,14 +9146,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder.class);
@@ -8518,12 +9163,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int STORAGETYPE_FIELD_NUMBER = 1;
       private int storageType_;
+
       /**
        * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
        */
       public boolean hasStorageType() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
        */
@@ -8535,12 +9182,14 @@ public final class FsImageProto {
 
       public static final int QUOTA_FIELD_NUMBER = 2;
       private long quota_;
+
       /**
        * <code>required uint64 quota = 2;</code>
        */
       public boolean hasQuota() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required uint64 quota = 2;</code>
        */
@@ -8549,6 +9198,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -8569,7 +9219,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeEnum(1, storageType_);
         }
@@ -8587,11 +9237,11 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeEnumSize(1, storageType_);
+              .computeEnumSize(1, storageType_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, quota_);
+              .computeUInt64Size(2, quota_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -8601,7 +9251,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto)) {
           return super.equals(obj);
@@ -8647,38 +9297,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -8686,11 +9343,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -8698,12 +9357,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -8713,13 +9374,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -8732,6 +9398,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto}
        */
@@ -8740,13 +9407,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder.class);
@@ -8762,11 +9429,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -8779,7 +9448,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor;
         }
 
@@ -8819,38 +9488,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -8858,7 +9533,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.getDefaultInstance())
+            return this;
           if (other.hasStorageType()) {
             setStorageType(other.getStorageType());
           }
@@ -8899,15 +9575,18 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private int storageType_ = 1;
+
         /**
          * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
          */
         public boolean hasStorageType() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
          */
@@ -8916,6 +9595,7 @@ public final class FsImageProto {
           org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.StorageTypeProto result = org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.StorageTypeProto.valueOf(storageType_);
           return result == null ? org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.StorageTypeProto.DISK : result;
         }
+
         /**
          * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
          */
@@ -8928,6 +9608,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>required .hadoop.hdfs.StorageTypeProto storageType = 1;</code>
          */
@@ -8938,19 +9619,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long quota_ ;
+        private long quota_;
+
         /**
          * <code>required uint64 quota = 2;</code>
          */
         public boolean hasQuota() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>required uint64 quota = 2;</code>
          */
         public long getQuota() {
           return quota_;
         }
+
         /**
          * <code>required uint64 quota = 2;</code>
          */
@@ -8960,6 +9644,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>required uint64 quota = 2;</code>
          */
@@ -8969,6 +9654,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -8987,6 +9673,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto();
       }
@@ -8995,7 +9682,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<QuotaByStorageTypeEntryProto>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<QuotaByStorageTypeEntryProto>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<QuotaByStorageTypeEntryProto>() {
         @java.lang.Override
         public QuotaByStorageTypeEntryProto parsePartialFrom(
@@ -9029,39 +9717,46 @@ public final class FsImageProto {
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
-      java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto> 
-          getQuotasList();
+      java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto>
+      getQuotasList();
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto getQuotas(int index);
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
       int getQuotasCount();
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
-      java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder> 
-          getQuotasOrBuilderList();
+      java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder>
+      getQuotasOrBuilderList();
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder getQuotasOrBuilder(
           int index);
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto}
      */
-    public  static final class QuotaByStorageTypeFeatureProto extends
+    public static final class QuotaByStorageTypeFeatureProto extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto)
         QuotaByStorageTypeFeatureProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use QuotaByStorageTypeFeatureProto.newBuilder() to construct.
       private QuotaByStorageTypeFeatureProto(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private QuotaByStorageTypeFeatureProto() {
         quotas_ = java.util.Collections.emptyList();
       }
@@ -9071,6 +9766,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private QuotaByStorageTypeFeatureProto(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -9121,14 +9817,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.Builder.class);
@@ -9136,31 +9833,36 @@ public final class FsImageProto {
 
       public static final int QUOTAS_FIELD_NUMBER = 1;
       private java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto> quotas_;
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
       public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto> getQuotasList() {
         return quotas_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder> 
-          getQuotasOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder>
+      getQuotasOrBuilderList() {
         return quotas_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
       public int getQuotasCount() {
         return quotas_.size();
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto getQuotas(int index) {
         return quotas_.get(index);
       }
+
       /**
        * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
        */
@@ -9170,6 +9872,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -9188,7 +9891,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         for (int i = 0; i < quotas_.size(); i++) {
           output.writeMessage(1, quotas_.get(i));
         }
@@ -9203,7 +9906,7 @@ public final class FsImageProto {
         size = 0;
         for (int i = 0; i < quotas_.size(); i++) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(1, quotas_.get(i));
+              .computeMessageSize(1, quotas_.get(i));
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -9213,7 +9916,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto)) {
           return super.equals(obj);
@@ -9247,38 +9950,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -9286,11 +9996,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -9298,12 +10010,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -9313,13 +10027,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -9332,6 +10051,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto}
        */
@@ -9340,13 +10060,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProtoOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.Builder.class);
@@ -9362,12 +10082,14 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getQuotasFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -9382,7 +10104,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor;
         }
 
@@ -9421,38 +10143,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -9460,7 +10188,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.getDefaultInstance())
+            return this;
           if (quotasBuilder_ == null) {
             if (!other.quotas_.isEmpty()) {
               if (quotas_.isEmpty()) {
@@ -9479,9 +10208,9 @@ public final class FsImageProto {
                 quotasBuilder_ = null;
                 quotas_ = other.quotas_;
                 bitField0_ = (bitField0_ & ~0x00000001);
-                quotasBuilder_ = 
-                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                     getQuotasFieldBuilder() : null;
+                quotasBuilder_ =
+                    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                        getQuotasFieldBuilder() : null;
               } else {
                 quotasBuilder_.addAllMessages(other.quotas_);
               }
@@ -9520,15 +10249,17 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto> quotas_ =
-          java.util.Collections.emptyList();
+            java.util.Collections.emptyList();
+
         private void ensureQuotasIsMutable() {
           if (!((bitField0_ & 0x00000001) != 0)) {
             quotas_ = new java.util.ArrayList<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto>(quotas_);
             bitField0_ |= 0x00000001;
-           }
+          }
         }
 
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -9544,6 +10275,7 @@ public final class FsImageProto {
             return quotasBuilder_.getMessageList();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9554,6 +10286,7 @@ public final class FsImageProto {
             return quotasBuilder_.getCount();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9564,6 +10297,7 @@ public final class FsImageProto {
             return quotasBuilder_.getMessage(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9581,6 +10315,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9595,6 +10330,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9611,6 +10347,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9628,6 +10365,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9642,6 +10380,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9656,6 +10395,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9671,6 +10411,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9684,6 +10425,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9697,6 +10439,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9704,27 +10447,31 @@ public final class FsImageProto {
             int index) {
           return getQuotasFieldBuilder().getBuilder(index);
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
         public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder getQuotasOrBuilder(
             int index) {
           if (quotasBuilder_ == null) {
-            return quotas_.get(index);  } else {
+            return quotas_.get(index);
+          } else {
             return quotasBuilder_.getMessageOrBuilder(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
-        public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder> 
-             getQuotasOrBuilderList() {
+        public java.util.List<? extends org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder>
+        getQuotasOrBuilderList() {
           if (quotasBuilder_ != null) {
             return quotasBuilder_.getMessageOrBuilderList();
           } else {
             return java.util.Collections.unmodifiableList(quotas_);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9732,6 +10479,7 @@ public final class FsImageProto {
           return getQuotasFieldBuilder().addBuilder(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
@@ -9740,27 +10488,30 @@ public final class FsImageProto {
           return getQuotasFieldBuilder().addBuilder(
               index, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeEntryProto quotas = 1;</code>
          */
-        public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder> 
-             getQuotasBuilderList() {
+        public java.util.List<org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder>
+        getQuotasBuilderList() {
           return getQuotasFieldBuilder().getBuilderList();
         }
+
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder> 
-            getQuotasFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder>
+        getQuotasFieldBuilder() {
           if (quotasBuilder_ == null) {
             quotasBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeEntryProtoOrBuilder>(
-                    quotas_,
-                    ((bitField0_ & 0x00000001) != 0),
-                    getParentForChildren(),
-                    isClean());
+                quotas_,
+                ((bitField0_ & 0x00000001) != 0),
+                getParentForChildren(),
+                isClean());
             quotas_ = null;
           }
           return quotasBuilder_;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -9779,6 +10530,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto();
       }
@@ -9787,7 +10539,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<QuotaByStorageTypeFeatureProto>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<QuotaByStorageTypeFeatureProto>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<QuotaByStorageTypeFeatureProto>() {
         @java.lang.Override
         public QuotaByStorageTypeFeatureProto parsePartialFrom(
@@ -9822,6 +10575,7 @@ public final class FsImageProto {
        * <code>optional uint64 modificationTime = 1;</code>
        */
       boolean hasModificationTime();
+
       /**
        * <code>optional uint64 modificationTime = 1;</code>
        */
@@ -9835,6 +10589,7 @@ public final class FsImageProto {
        * <code>optional uint64 nsQuota = 2;</code>
        */
       boolean hasNsQuota();
+
       /**
        * <pre>
        * namespace quota
@@ -9852,6 +10607,7 @@ public final class FsImageProto {
        * <code>optional uint64 dsQuota = 3;</code>
        */
       boolean hasDsQuota();
+
       /**
        * <pre>
        * diskspace quota
@@ -9865,6 +10621,7 @@ public final class FsImageProto {
        * <code>optional fixed64 permission = 4;</code>
        */
       boolean hasPermission();
+
       /**
        * <code>optional fixed64 permission = 4;</code>
        */
@@ -9874,10 +10631,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
        */
       boolean hasAcl();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto getAcl();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
        */
@@ -9887,10 +10646,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
        */
       boolean hasXAttrs();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto getXAttrs();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
        */
@@ -9900,27 +10661,32 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
        */
       boolean hasTypeQuotas();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto getTypeQuotas();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProtoOrBuilder getTypeQuotasOrBuilder();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INodeDirectory}
      */
-    public  static final class INodeDirectory extends
+    public static final class INodeDirectory extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.INodeDirectory)
         INodeDirectoryOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use INodeDirectory.newBuilder() to construct.
       private INodeDirectory(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private INodeDirectory() {
       }
 
@@ -9929,6 +10695,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private INodeDirectory(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -10026,14 +10793,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder.class);
@@ -10042,12 +10810,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int MODIFICATIONTIME_FIELD_NUMBER = 1;
       private long modificationTime_;
+
       /**
        * <code>optional uint64 modificationTime = 1;</code>
        */
       public boolean hasModificationTime() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint64 modificationTime = 1;</code>
        */
@@ -10057,6 +10827,7 @@ public final class FsImageProto {
 
       public static final int NSQUOTA_FIELD_NUMBER = 2;
       private long nsQuota_;
+
       /**
        * <pre>
        * namespace quota
@@ -10067,6 +10838,7 @@ public final class FsImageProto {
       public boolean hasNsQuota() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * namespace quota
@@ -10080,6 +10852,7 @@ public final class FsImageProto {
 
       public static final int DSQUOTA_FIELD_NUMBER = 3;
       private long dsQuota_;
+
       /**
        * <pre>
        * diskspace quota
@@ -10090,6 +10863,7 @@ public final class FsImageProto {
       public boolean hasDsQuota() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * diskspace quota
@@ -10103,12 +10877,14 @@ public final class FsImageProto {
 
       public static final int PERMISSION_FIELD_NUMBER = 4;
       private long permission_;
+
       /**
        * <code>optional fixed64 permission = 4;</code>
        */
       public boolean hasPermission() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional fixed64 permission = 4;</code>
        */
@@ -10118,18 +10894,21 @@ public final class FsImageProto {
 
       public static final int ACL_FIELD_NUMBER = 5;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto acl_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
        */
       public boolean hasAcl() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto getAcl() {
         return acl_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance() : acl_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
        */
@@ -10139,18 +10918,21 @@ public final class FsImageProto {
 
       public static final int XATTRS_FIELD_NUMBER = 6;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto xAttrs_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
        */
       public boolean hasXAttrs() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto getXAttrs() {
         return xAttrs_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance() : xAttrs_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
        */
@@ -10160,18 +10942,21 @@ public final class FsImageProto {
 
       public static final int TYPEQUOTAS_FIELD_NUMBER = 7;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
        */
       public boolean hasTypeQuotas() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto getTypeQuotas() {
         return typeQuotas_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.getDefaultInstance() : typeQuotas_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
        */
@@ -10180,6 +10965,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -10204,7 +10990,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt64(1, modificationTime_);
         }
@@ -10237,31 +11023,31 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(1, modificationTime_);
+              .computeUInt64Size(1, modificationTime_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, nsQuota_);
+              .computeUInt64Size(2, nsQuota_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(3, dsQuota_);
+              .computeUInt64Size(3, dsQuota_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeFixed64Size(4, permission_);
+              .computeFixed64Size(4, permission_);
         }
         if (((bitField0_ & 0x00000010) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(5, getAcl());
+              .computeMessageSize(5, getAcl());
         }
         if (((bitField0_ & 0x00000020) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(6, getXAttrs());
+              .computeMessageSize(6, getXAttrs());
         }
         if (((bitField0_ & 0x00000040) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(7, getTypeQuotas());
+              .computeMessageSize(7, getTypeQuotas());
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -10271,7 +11057,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory)) {
           return super.equals(obj);
@@ -10366,38 +11152,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -10405,11 +11198,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -10417,12 +11212,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -10432,13 +11229,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -10451,6 +11253,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INodeDirectory}
        */
@@ -10459,13 +11262,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.INodeDirectory)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder.class);
@@ -10481,14 +11284,16 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getAclFieldBuilder();
             getXAttrsFieldBuilder();
             getTypeQuotasFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -10523,7 +11328,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor;
         }
 
@@ -10595,38 +11400,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -10634,7 +11445,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance())
+            return this;
           if (other.hasModificationTime()) {
             setModificationTime(other.getModificationTime());
           }
@@ -10694,21 +11506,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private long modificationTime_ ;
+        private long modificationTime_;
+
         /**
          * <code>optional uint64 modificationTime = 1;</code>
          */
         public boolean hasModificationTime() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint64 modificationTime = 1;</code>
          */
         public long getModificationTime() {
           return modificationTime_;
         }
+
         /**
          * <code>optional uint64 modificationTime = 1;</code>
          */
@@ -10718,6 +11534,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 modificationTime = 1;</code>
          */
@@ -10728,7 +11545,8 @@ public final class FsImageProto {
           return this;
         }
 
-        private long nsQuota_ ;
+        private long nsQuota_;
+
         /**
          * <pre>
          * namespace quota
@@ -10739,6 +11557,7 @@ public final class FsImageProto {
         public boolean hasNsQuota() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <pre>
          * namespace quota
@@ -10749,6 +11568,7 @@ public final class FsImageProto {
         public long getNsQuota() {
           return nsQuota_;
         }
+
         /**
          * <pre>
          * namespace quota
@@ -10762,6 +11582,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * namespace quota
@@ -10776,7 +11597,8 @@ public final class FsImageProto {
           return this;
         }
 
-        private long dsQuota_ ;
+        private long dsQuota_;
+
         /**
          * <pre>
          * diskspace quota
@@ -10787,6 +11609,7 @@ public final class FsImageProto {
         public boolean hasDsQuota() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <pre>
          * diskspace quota
@@ -10797,6 +11620,7 @@ public final class FsImageProto {
         public long getDsQuota() {
           return dsQuota_;
         }
+
         /**
          * <pre>
          * diskspace quota
@@ -10810,6 +11634,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * diskspace quota
@@ -10824,19 +11649,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long permission_ ;
+        private long permission_;
+
         /**
          * <code>optional fixed64 permission = 4;</code>
          */
         public boolean hasPermission() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional fixed64 permission = 4;</code>
          */
         public long getPermission() {
           return permission_;
         }
+
         /**
          * <code>optional fixed64 permission = 4;</code>
          */
@@ -10846,6 +11674,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional fixed64 permission = 4;</code>
          */
@@ -10859,12 +11688,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto acl_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder> aclBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
         public boolean hasAcl() {
           return ((bitField0_ & 0x00000010) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10875,6 +11706,7 @@ public final class FsImageProto {
             return aclBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10891,6 +11723,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10905,6 +11738,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10914,7 +11748,7 @@ public final class FsImageProto {
                 acl_ != null &&
                 acl_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance()) {
               acl_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.newBuilder(acl_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.newBuilder(acl_).mergeFrom(value).buildPartial();
             } else {
               acl_ = value;
             }
@@ -10925,6 +11759,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10938,6 +11773,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000010);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10946,6 +11782,7 @@ public final class FsImageProto {
           onChanged();
           return getAclFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
@@ -10957,18 +11794,19 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.getDefaultInstance() : acl_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.AclFeatureProto acl = 5;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder> 
-            getAclFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder>
+        getAclFieldBuilder() {
           if (aclBuilder_ == null) {
             aclBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.AclFeatureProtoOrBuilder>(
-                    getAcl(),
-                    getParentForChildren(),
-                    isClean());
+                getAcl(),
+                getParentForChildren(),
+                isClean());
             acl_ = null;
           }
           return aclBuilder_;
@@ -10977,12 +11815,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto xAttrs_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder> xAttrsBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
         public boolean hasXAttrs() {
           return ((bitField0_ & 0x00000020) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -10993,6 +11833,7 @@ public final class FsImageProto {
             return xAttrsBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -11009,6 +11850,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000020;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -11023,6 +11865,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000020;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -11032,7 +11875,7 @@ public final class FsImageProto {
                 xAttrs_ != null &&
                 xAttrs_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance()) {
               xAttrs_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.newBuilder(xAttrs_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.newBuilder(xAttrs_).mergeFrom(value).buildPartial();
             } else {
               xAttrs_ = value;
             }
@@ -11043,6 +11886,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000020;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -11056,6 +11900,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000020);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -11064,6 +11909,7 @@ public final class FsImageProto {
           onChanged();
           return getXAttrsFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
@@ -11075,18 +11921,19 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.getDefaultInstance() : xAttrs_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.XAttrFeatureProto xAttrs = 6;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder> 
-            getXAttrsFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder>
+        getXAttrsFieldBuilder() {
           if (xAttrsBuilder_ == null) {
             xAttrsBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.XAttrFeatureProtoOrBuilder>(
-                    getXAttrs(),
-                    getParentForChildren(),
-                    isClean());
+                getXAttrs(),
+                getParentForChildren(),
+                isClean());
             xAttrs_ = null;
           }
           return xAttrsBuilder_;
@@ -11095,12 +11942,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProtoOrBuilder> typeQuotasBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
         public boolean hasTypeQuotas() {
           return ((bitField0_ & 0x00000040) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11111,6 +11960,7 @@ public final class FsImageProto {
             return typeQuotasBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11127,6 +11977,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000040;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11141,6 +11992,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000040;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11150,7 +12002,7 @@ public final class FsImageProto {
                 typeQuotas_ != null &&
                 typeQuotas_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.getDefaultInstance()) {
               typeQuotas_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.newBuilder(typeQuotas_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.newBuilder(typeQuotas_).mergeFrom(value).buildPartial();
             } else {
               typeQuotas_ = value;
             }
@@ -11161,6 +12013,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000040;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11174,6 +12027,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000040);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11182,6 +12036,7 @@ public final class FsImageProto {
           onChanged();
           return getTypeQuotasFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
@@ -11193,22 +12048,24 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.getDefaultInstance() : typeQuotas_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.QuotaByStorageTypeFeatureProto typeQuotas = 7;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProtoOrBuilder> 
-            getTypeQuotasFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProtoOrBuilder>
+        getTypeQuotasFieldBuilder() {
           if (typeQuotasBuilder_ == null) {
             typeQuotasBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProto.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.QuotaByStorageTypeFeatureProtoOrBuilder>(
-                    getTypeQuotas(),
-                    getParentForChildren(),
-                    isClean());
+                getTypeQuotas(),
+                getParentForChildren(),
+                isClean());
             typeQuotas_ = null;
           }
           return typeQuotasBuilder_;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -11227,6 +12084,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.INodeDirectory)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory();
       }
@@ -11235,7 +12093,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeDirectory>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeDirectory>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeDirectory>() {
         @java.lang.Override
         public INodeDirectory parsePartialFrom(
@@ -11270,6 +12129,7 @@ public final class FsImageProto {
        * <code>optional fixed64 permission = 1;</code>
        */
       boolean hasPermission();
+
       /**
        * <code>optional fixed64 permission = 1;</code>
        */
@@ -11279,6 +12139,7 @@ public final class FsImageProto {
        * <code>optional bytes target = 2;</code>
        */
       boolean hasTarget();
+
       /**
        * <code>optional bytes target = 2;</code>
        */
@@ -11288,6 +12149,7 @@ public final class FsImageProto {
        * <code>optional uint64 modificationTime = 3;</code>
        */
       boolean hasModificationTime();
+
       /**
        * <code>optional uint64 modificationTime = 3;</code>
        */
@@ -11297,23 +12159,27 @@ public final class FsImageProto {
        * <code>optional uint64 accessTime = 4;</code>
        */
       boolean hasAccessTime();
+
       /**
        * <code>optional uint64 accessTime = 4;</code>
        */
       long getAccessTime();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INodeSymlink}
      */
-    public  static final class INodeSymlink extends
+    public static final class INodeSymlink extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.INodeSymlink)
         INodeSymlinkOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use INodeSymlink.newBuilder() to construct.
       private INodeSymlink(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private INodeSymlink() {
         target_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
       }
@@ -11323,6 +12189,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private INodeSymlink(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -11381,14 +12248,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.Builder.class);
@@ -11397,12 +12265,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int PERMISSION_FIELD_NUMBER = 1;
       private long permission_;
+
       /**
        * <code>optional fixed64 permission = 1;</code>
        */
       public boolean hasPermission() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional fixed64 permission = 1;</code>
        */
@@ -11412,12 +12282,14 @@ public final class FsImageProto {
 
       public static final int TARGET_FIELD_NUMBER = 2;
       private org.apache.hadoop.thirdparty.protobuf.ByteString target_;
+
       /**
        * <code>optional bytes target = 2;</code>
        */
       public boolean hasTarget() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional bytes target = 2;</code>
        */
@@ -11427,12 +12299,14 @@ public final class FsImageProto {
 
       public static final int MODIFICATIONTIME_FIELD_NUMBER = 3;
       private long modificationTime_;
+
       /**
        * <code>optional uint64 modificationTime = 3;</code>
        */
       public boolean hasModificationTime() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional uint64 modificationTime = 3;</code>
        */
@@ -11442,12 +12316,14 @@ public final class FsImageProto {
 
       public static final int ACCESSTIME_FIELD_NUMBER = 4;
       private long accessTime_;
+
       /**
        * <code>optional uint64 accessTime = 4;</code>
        */
       public boolean hasAccessTime() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional uint64 accessTime = 4;</code>
        */
@@ -11456,6 +12332,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -11468,7 +12345,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeFixed64(1, permission_);
         }
@@ -11492,19 +12369,19 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeFixed64Size(1, permission_);
+              .computeFixed64Size(1, permission_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(2, target_);
+              .computeBytesSize(2, target_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(3, modificationTime_);
+              .computeUInt64Size(3, modificationTime_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(4, accessTime_);
+              .computeUInt64Size(4, accessTime_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -11514,7 +12391,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink)) {
           return super.equals(obj);
@@ -11581,38 +12458,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -11620,11 +12504,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -11632,12 +12518,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -11647,13 +12535,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -11666,6 +12559,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INodeSymlink}
        */
@@ -11674,13 +12568,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.INodeSymlink)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlinkOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.Builder.class);
@@ -11696,11 +12590,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -11717,7 +12613,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor;
         }
 
@@ -11765,38 +12661,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -11804,7 +12706,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.getDefaultInstance())
+            return this;
           if (other.hasPermission()) {
             setPermission(other.getPermission());
           }
@@ -11845,21 +12748,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private long permission_ ;
+        private long permission_;
+
         /**
          * <code>optional fixed64 permission = 1;</code>
          */
         public boolean hasPermission() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional fixed64 permission = 1;</code>
          */
         public long getPermission() {
           return permission_;
         }
+
         /**
          * <code>optional fixed64 permission = 1;</code>
          */
@@ -11869,6 +12776,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional fixed64 permission = 1;</code>
          */
@@ -11880,30 +12788,34 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString target_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes target = 2;</code>
          */
         public boolean hasTarget() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional bytes target = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getTarget() {
           return target_;
         }
+
         /**
          * <code>optional bytes target = 2;</code>
          */
         public Builder setTarget(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           target_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes target = 2;</code>
          */
@@ -11914,19 +12826,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long modificationTime_ ;
+        private long modificationTime_;
+
         /**
          * <code>optional uint64 modificationTime = 3;</code>
          */
         public boolean hasModificationTime() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional uint64 modificationTime = 3;</code>
          */
         public long getModificationTime() {
           return modificationTime_;
         }
+
         /**
          * <code>optional uint64 modificationTime = 3;</code>
          */
@@ -11936,6 +12851,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 modificationTime = 3;</code>
          */
@@ -11946,19 +12862,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long accessTime_ ;
+        private long accessTime_;
+
         /**
          * <code>optional uint64 accessTime = 4;</code>
          */
         public boolean hasAccessTime() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional uint64 accessTime = 4;</code>
          */
         public long getAccessTime() {
           return accessTime_;
         }
+
         /**
          * <code>optional uint64 accessTime = 4;</code>
          */
@@ -11968,6 +12887,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 accessTime = 4;</code>
          */
@@ -11977,6 +12897,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -11995,6 +12916,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.INodeSymlink)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink();
       }
@@ -12003,7 +12925,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeSymlink>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeSymlink>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeSymlink>() {
         @java.lang.Override
         public INodeSymlink parsePartialFrom(
@@ -12038,6 +12961,7 @@ public final class FsImageProto {
        * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
        */
       boolean hasType();
+
       /**
        * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
        */
@@ -12047,6 +12971,7 @@ public final class FsImageProto {
        * <code>required uint64 id = 2;</code>
        */
       boolean hasId();
+
       /**
        * <code>required uint64 id = 2;</code>
        */
@@ -12056,6 +12981,7 @@ public final class FsImageProto {
        * <code>optional bytes name = 3;</code>
        */
       boolean hasName();
+
       /**
        * <code>optional bytes name = 3;</code>
        */
@@ -12065,10 +12991,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
        */
       boolean hasFile();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile getFile();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
        */
@@ -12078,10 +13006,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
        */
       boolean hasDirectory();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory getDirectory();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
        */
@@ -12091,27 +13021,32 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
        */
       boolean hasSymlink();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink getSymlink();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlinkOrBuilder getSymlinkOrBuilder();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INode}
      */
-    public  static final class INode extends
+    public static final class INode extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeSection.INode)
         INodeOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use INode.newBuilder() to construct.
       private INode(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private INode() {
         type_ = 1;
         name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
@@ -12122,6 +13057,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private INode(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -12143,7 +13079,7 @@ public final class FsImageProto {
                 break;
               case 8: {
                 int rawValue = input.readEnum();
-                  @SuppressWarnings("deprecation")
+                @SuppressWarnings("deprecation")
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Type value = org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Type.valueOf(rawValue);
                 if (value == null) {
                   unknownFields.mergeVarintField(1, rawValue);
@@ -12221,14 +13157,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INode_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Builder.class);
@@ -12281,35 +13218,42 @@ public final class FsImageProto {
 
         public static Type forNumber(int value) {
           switch (value) {
-            case 1: return FILE;
-            case 2: return DIRECTORY;
-            case 3: return SYMLINK;
-            default: return null;
+            case 1:
+              return FILE;
+            case 2:
+              return DIRECTORY;
+            case 3:
+              return SYMLINK;
+            default:
+              return null;
           }
         }
 
         public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Type>
-            internalGetValueMap() {
+        internalGetValueMap() {
           return internalValueMap;
         }
+
         private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
             Type> internalValueMap =
-              new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Type>() {
-                public Type findValueByNumber(int number) {
-                  return Type.forNumber(number);
-                }
-              };
+            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Type>() {
+              public Type findValueByNumber(int number) {
+                return Type.forNumber(number);
+              }
+            };
 
         public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-            getValueDescriptor() {
+        getValueDescriptor() {
           return getDescriptor().getValues().get(ordinal());
         }
+
         public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return getDescriptor();
         }
+
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.getDescriptor().getEnumTypes().get(0);
         }
 
@@ -12319,7 +13263,7 @@ public final class FsImageProto {
             org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
           if (desc.getType() != getDescriptor()) {
             throw new java.lang.IllegalArgumentException(
-              "EnumValueDescriptor is not for this type.");
+                "EnumValueDescriptor is not for this type.");
           }
           return VALUES[desc.getIndex()];
         }
@@ -12336,12 +13280,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int TYPE_FIELD_NUMBER = 1;
       private int type_;
+
       /**
        * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
        */
@@ -12353,12 +13299,14 @@ public final class FsImageProto {
 
       public static final int ID_FIELD_NUMBER = 2;
       private long id_;
+
       /**
        * <code>required uint64 id = 2;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required uint64 id = 2;</code>
        */
@@ -12368,12 +13316,14 @@ public final class FsImageProto {
 
       public static final int NAME_FIELD_NUMBER = 3;
       private org.apache.hadoop.thirdparty.protobuf.ByteString name_;
+
       /**
        * <code>optional bytes name = 3;</code>
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional bytes name = 3;</code>
        */
@@ -12383,18 +13333,21 @@ public final class FsImageProto {
 
       public static final int FILE_FIELD_NUMBER = 4;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile file_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
        */
       public boolean hasFile() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile getFile() {
         return file_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance() : file_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
        */
@@ -12404,18 +13357,21 @@ public final class FsImageProto {
 
       public static final int DIRECTORY_FIELD_NUMBER = 5;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory directory_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
        */
       public boolean hasDirectory() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory getDirectory() {
         return directory_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance() : directory_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
        */
@@ -12425,18 +13381,21 @@ public final class FsImageProto {
 
       public static final int SYMLINK_FIELD_NUMBER = 6;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink symlink_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
        */
       public boolean hasSymlink() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink getSymlink() {
         return symlink_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.getDefaultInstance() : symlink_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
        */
@@ -12445,6 +13404,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -12477,7 +13437,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeEnum(1, type_);
         }
@@ -12507,27 +13467,27 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeEnumSize(1, type_);
+              .computeEnumSize(1, type_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, id_);
+              .computeUInt64Size(2, id_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(3, name_);
+              .computeBytesSize(3, name_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(4, getFile());
+              .computeMessageSize(4, getFile());
         }
         if (((bitField0_ & 0x00000010) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(5, getDirectory());
+              .computeMessageSize(5, getDirectory());
         }
         if (((bitField0_ & 0x00000020) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(6, getSymlink());
+              .computeMessageSize(6, getSymlink());
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -12537,7 +13497,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode)) {
           return super.equals(obj);
@@ -12619,38 +13579,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -12658,11 +13625,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -12670,12 +13639,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -12685,13 +13656,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -12704,6 +13680,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeSection.INode}
        */
@@ -12712,13 +13689,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection.INode)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INode_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Builder.class);
@@ -12734,14 +13711,16 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getFileFieldBuilder();
             getDirectoryFieldBuilder();
             getSymlinkFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -12774,7 +13753,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor;
         }
 
@@ -12842,38 +13821,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -12881,7 +13866,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.getDefaultInstance())
+            return this;
           if (other.hasType()) {
             setType(other.getType());
           }
@@ -12944,15 +13930,18 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private int type_ = 1;
+
         /**
          * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
          */
         public boolean hasType() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
          */
@@ -12961,6 +13950,7 @@ public final class FsImageProto {
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Type result = org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Type.valueOf(type_);
           return result == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Type.FILE : result;
         }
+
         /**
          * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
          */
@@ -12973,6 +13963,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>required .hadoop.hdfs.fsimage.INodeSection.INode.Type type = 1;</code>
          */
@@ -12983,19 +13974,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long id_ ;
+        private long id_;
+
         /**
          * <code>required uint64 id = 2;</code>
          */
         public boolean hasId() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>required uint64 id = 2;</code>
          */
         public long getId() {
           return id_;
         }
+
         /**
          * <code>required uint64 id = 2;</code>
          */
@@ -13005,6 +13999,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>required uint64 id = 2;</code>
          */
@@ -13016,30 +14011,34 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes name = 3;</code>
          */
         public boolean hasName() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional bytes name = 3;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getName() {
           return name_;
         }
+
         /**
          * <code>optional bytes name = 3;</code>
          */
         public Builder setName(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           name_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes name = 3;</code>
          */
@@ -13053,12 +14052,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile file_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder> fileBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
         public boolean hasFile() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13069,6 +14070,7 @@ public final class FsImageProto {
             return fileBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13085,6 +14087,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000008;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13099,6 +14102,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000008;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13108,7 +14112,7 @@ public final class FsImageProto {
                 file_ != null &&
                 file_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance()) {
               file_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.newBuilder(file_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.newBuilder(file_).mergeFrom(value).buildPartial();
             } else {
               file_ = value;
             }
@@ -13119,6 +14123,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000008;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13132,6 +14137,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13140,6 +14146,7 @@ public final class FsImageProto {
           onChanged();
           return getFileFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
@@ -13151,18 +14158,19 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance() : file_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile file = 4;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder> 
-            getFileFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder>
+        getFileFieldBuilder() {
           if (fileBuilder_ == null) {
             fileBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder>(
-                    getFile(),
-                    getParentForChildren(),
-                    isClean());
+                getFile(),
+                getParentForChildren(),
+                isClean());
             file_ = null;
           }
           return fileBuilder_;
@@ -13171,12 +14179,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory directory_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder> directoryBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
         public boolean hasDirectory() {
           return ((bitField0_ & 0x00000010) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13187,6 +14197,7 @@ public final class FsImageProto {
             return directoryBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13203,6 +14214,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13217,6 +14229,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13226,7 +14239,7 @@ public final class FsImageProto {
                 directory_ != null &&
                 directory_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance()) {
               directory_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.newBuilder(directory_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.newBuilder(directory_).mergeFrom(value).buildPartial();
             } else {
               directory_ = value;
             }
@@ -13237,6 +14250,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13250,6 +14264,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000010);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13258,6 +14273,7 @@ public final class FsImageProto {
           onChanged();
           return getDirectoryFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
@@ -13269,18 +14285,19 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance() : directory_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory directory = 5;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder> 
-            getDirectoryFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder>
+        getDirectoryFieldBuilder() {
           if (directoryBuilder_ == null) {
             directoryBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder>(
-                    getDirectory(),
-                    getParentForChildren(),
-                    isClean());
+                getDirectory(),
+                getParentForChildren(),
+                isClean());
             directory_ = null;
           }
           return directoryBuilder_;
@@ -13289,12 +14306,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink symlink_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlinkOrBuilder> symlinkBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
         public boolean hasSymlink() {
           return ((bitField0_ & 0x00000020) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13305,6 +14324,7 @@ public final class FsImageProto {
             return symlinkBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13321,6 +14341,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000020;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13335,6 +14356,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000020;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13344,7 +14366,7 @@ public final class FsImageProto {
                 symlink_ != null &&
                 symlink_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.getDefaultInstance()) {
               symlink_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.newBuilder(symlink_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.newBuilder(symlink_).mergeFrom(value).buildPartial();
             } else {
               symlink_ = value;
             }
@@ -13355,6 +14377,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000020;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13368,6 +14391,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000020);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13376,6 +14400,7 @@ public final class FsImageProto {
           onChanged();
           return getSymlinkFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
@@ -13387,22 +14412,24 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.getDefaultInstance() : symlink_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeSymlink symlink = 6;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlinkOrBuilder> 
-            getSymlinkFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlinkOrBuilder>
+        getSymlinkFieldBuilder() {
           if (symlinkBuilder_ == null) {
             symlinkBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlink.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeSymlinkOrBuilder>(
-                    getSymlink(),
-                    getParentForChildren(),
-                    isClean());
+                getSymlink(),
+                getParentForChildren(),
+                isClean());
             symlink_ = null;
           }
           return symlinkBuilder_;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -13421,6 +14448,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection.INode)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode();
       }
@@ -13429,7 +14457,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INode>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<INode>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INode>() {
         @java.lang.Override
         public INode parsePartialFrom(
@@ -13459,12 +14488,14 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int LASTINODEID_FIELD_NUMBER = 1;
     private long lastInodeId_;
+
     /**
      * <code>optional uint64 lastInodeId = 1;</code>
      */
     public boolean hasLastInodeId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint64 lastInodeId = 1;</code>
      */
@@ -13474,6 +14505,7 @@ public final class FsImageProto {
 
     public static final int NUMINODES_FIELD_NUMBER = 2;
     private long numInodes_;
+
     /**
      * <pre>
      * repeated INodes..
@@ -13484,6 +14516,7 @@ public final class FsImageProto {
     public boolean hasNumInodes() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * repeated INodes..
@@ -13496,6 +14529,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -13508,7 +14542,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt64(1, lastInodeId_);
       }
@@ -13526,11 +14560,11 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(1, lastInodeId_);
+            .computeUInt64Size(1, lastInodeId_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(2, numInodes_);
+            .computeUInt64Size(2, numInodes_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -13540,7 +14574,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection)) {
         return super.equals(obj);
@@ -13588,38 +14622,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -13627,11 +14668,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -13639,12 +14682,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -13654,13 +14699,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -13673,6 +14723,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -13689,13 +14740,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.Builder.class);
@@ -13711,11 +14762,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -13728,7 +14781,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor;
       }
 
@@ -13768,38 +14821,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -13842,21 +14901,25 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private long lastInodeId_ ;
+      private long lastInodeId_;
+
       /**
        * <code>optional uint64 lastInodeId = 1;</code>
        */
       public boolean hasLastInodeId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint64 lastInodeId = 1;</code>
        */
       public long getLastInodeId() {
         return lastInodeId_;
       }
+
       /**
        * <code>optional uint64 lastInodeId = 1;</code>
        */
@@ -13866,6 +14929,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint64 lastInodeId = 1;</code>
        */
@@ -13876,7 +14940,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private long numInodes_ ;
+      private long numInodes_;
+
       /**
        * <pre>
        * repeated INodes..
@@ -13887,6 +14952,7 @@ public final class FsImageProto {
       public boolean hasNumInodes() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * repeated INodes..
@@ -13897,6 +14963,7 @@ public final class FsImageProto {
       public long getNumInodes() {
         return numInodes_;
       }
+
       /**
        * <pre>
        * repeated INodes..
@@ -13910,6 +14977,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * repeated INodes..
@@ -13923,6 +14991,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -13941,6 +15010,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection();
     }
@@ -13949,7 +15019,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeSection>() {
       @java.lang.Override
       public INodeSection parsePartialFrom(
@@ -13980,6 +15051,7 @@ public final class FsImageProto {
       // @@protoc_insertion_point(interface_extends:hadoop.hdfs.fsimage.FilesUnderConstructionSection)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
   }
+
   /**
    * <pre>
    **
@@ -13990,15 +15062,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.FilesUnderConstructionSection}
    */
-  public  static final class FilesUnderConstructionSection extends
+  public static final class FilesUnderConstructionSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.FilesUnderConstructionSection)
       FilesUnderConstructionSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use FilesUnderConstructionSection.newBuilder() to construct.
     private FilesUnderConstructionSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private FilesUnderConstructionSection() {
     }
 
@@ -14007,6 +15081,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private FilesUnderConstructionSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14044,14 +15119,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.Builder.class);
@@ -14065,6 +15141,7 @@ public final class FsImageProto {
        * <code>optional uint64 inodeId = 1;</code>
        */
       boolean hasInodeId();
+
       /**
        * <code>optional uint64 inodeId = 1;</code>
        */
@@ -14074,28 +15151,33 @@ public final class FsImageProto {
        * <code>optional string fullPath = 2;</code>
        */
       boolean hasFullPath();
+
       /**
        * <code>optional string fullPath = 2;</code>
        */
       java.lang.String getFullPath();
+
       /**
        * <code>optional string fullPath = 2;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getFullPathBytes();
+      getFullPathBytes();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.FilesUnderConstructionSection.FileUnderConstructionEntry}
      */
-    public  static final class FileUnderConstructionEntry extends
+    public static final class FileUnderConstructionEntry extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.FilesUnderConstructionSection.FileUnderConstructionEntry)
         FileUnderConstructionEntryOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use FileUnderConstructionEntry.newBuilder() to construct.
       private FileUnderConstructionEntry(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private FileUnderConstructionEntry() {
         fullPath_ = "";
       }
@@ -14105,6 +15187,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private FileUnderConstructionEntry(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14154,14 +15237,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry.Builder.class);
@@ -14170,12 +15254,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int INODEID_FIELD_NUMBER = 1;
       private long inodeId_;
+
       /**
        * <code>optional uint64 inodeId = 1;</code>
        */
       public boolean hasInodeId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint64 inodeId = 1;</code>
        */
@@ -14185,12 +15271,14 @@ public final class FsImageProto {
 
       public static final int FULLPATH_FIELD_NUMBER = 2;
       private volatile java.lang.Object fullPath_;
+
       /**
        * <code>optional string fullPath = 2;</code>
        */
       public boolean hasFullPath() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional string fullPath = 2;</code>
        */
@@ -14199,7 +15287,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -14208,14 +15296,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string fullPath = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getFullPathBytes() {
+      getFullPathBytes() {
         java.lang.Object ref = fullPath_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           fullPath_ = b;
@@ -14226,6 +15315,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -14238,7 +15328,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt64(1, inodeId_);
         }
@@ -14256,7 +15346,7 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(1, inodeId_);
+              .computeUInt64Size(1, inodeId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(2, fullPath_);
@@ -14269,7 +15359,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry)) {
           return super.equals(obj);
@@ -14316,38 +15406,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14355,11 +15452,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14367,12 +15466,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14382,13 +15483,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -14401,6 +15507,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.FilesUnderConstructionSection.FileUnderConstructionEntry}
        */
@@ -14409,13 +15516,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.FilesUnderConstructionSection.FileUnderConstructionEntry)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntryOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry.Builder.class);
@@ -14431,11 +15538,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -14448,7 +15557,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor;
         }
 
@@ -14488,38 +15597,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -14527,7 +15642,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry.getDefaultInstance())
+            return this;
           if (other.hasInodeId()) {
             setInodeId(other.getInodeId());
           }
@@ -14564,21 +15680,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private long inodeId_ ;
+        private long inodeId_;
+
         /**
          * <code>optional uint64 inodeId = 1;</code>
          */
         public boolean hasInodeId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint64 inodeId = 1;</code>
          */
         public long getInodeId() {
           return inodeId_;
         }
+
         /**
          * <code>optional uint64 inodeId = 1;</code>
          */
@@ -14588,6 +15708,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 inodeId = 1;</code>
          */
@@ -14599,12 +15720,14 @@ public final class FsImageProto {
         }
 
         private java.lang.Object fullPath_ = "";
+
         /**
          * <code>optional string fullPath = 2;</code>
          */
         public boolean hasFullPath() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional string fullPath = 2;</code>
          */
@@ -14622,14 +15745,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string fullPath = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getFullPathBytes() {
+        getFullPathBytes() {
           java.lang.Object ref = fullPath_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             fullPath_ = b;
@@ -14638,19 +15762,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string fullPath = 2;</code>
          */
         public Builder setFullPath(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           fullPath_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string fullPath = 2;</code>
          */
@@ -14660,19 +15786,21 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string fullPath = 2;</code>
          */
         public Builder setFullPathBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           fullPath_ = value;
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -14691,6 +15819,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.FilesUnderConstructionSection.FileUnderConstructionEntry)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.FileUnderConstructionEntry();
       }
@@ -14699,7 +15828,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileUnderConstructionEntry>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileUnderConstructionEntry>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FileUnderConstructionEntry>() {
         @java.lang.Override
         public FileUnderConstructionEntry parsePartialFrom(
@@ -14727,6 +15857,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -14739,7 +15870,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       unknownFields.writeTo(output);
     }
 
@@ -14757,7 +15888,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection)) {
         return super.equals(obj);
@@ -14785,38 +15916,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14824,11 +15962,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14836,12 +15976,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -14851,13 +15993,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -14870,6 +16017,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -14885,13 +16033,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.FilesUnderConstructionSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.Builder.class);
@@ -14907,11 +16055,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -14920,7 +16070,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor;
       }
 
@@ -14949,38 +16099,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -14988,7 +16144,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection.getDefaultInstance())
+          return this;
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -15017,6 +16174,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -15035,6 +16193,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.FilesUnderConstructionSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.FilesUnderConstructionSection();
     }
@@ -15043,7 +16202,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FilesUnderConstructionSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<FilesUnderConstructionSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FilesUnderConstructionSection>() {
       @java.lang.Override
       public FilesUnderConstructionSection parsePartialFrom(
@@ -15074,6 +16234,7 @@ public final class FsImageProto {
       // @@protoc_insertion_point(interface_extends:hadoop.hdfs.fsimage.INodeDirectorySection)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
   }
+
   /**
    * <pre>
    **
@@ -15083,15 +16244,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.INodeDirectorySection}
    */
-  public  static final class INodeDirectorySection extends
+  public static final class INodeDirectorySection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeDirectorySection)
       INodeDirectorySectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use INodeDirectorySection.newBuilder() to construct.
     private INodeDirectorySection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private INodeDirectorySection() {
     }
 
@@ -15100,6 +16263,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private INodeDirectorySection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -15137,14 +16301,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.Builder.class);
@@ -15158,6 +16323,7 @@ public final class FsImageProto {
        * <code>optional uint64 parent = 1;</code>
        */
       boolean hasParent();
+
       /**
        * <code>optional uint64 parent = 1;</code>
        */
@@ -15171,6 +16337,7 @@ public final class FsImageProto {
        * <code>repeated uint64 children = 2 [packed = true];</code>
        */
       java.util.List<java.lang.Long> getChildrenList();
+
       /**
        * <pre>
        * children that are not reference nodes
@@ -15179,6 +16346,7 @@ public final class FsImageProto {
        * <code>repeated uint64 children = 2 [packed = true];</code>
        */
       int getChildrenCount();
+
       /**
        * <pre>
        * children that are not reference nodes
@@ -15196,6 +16364,7 @@ public final class FsImageProto {
        * <code>repeated uint32 refChildren = 3 [packed = true];</code>
        */
       java.util.List<java.lang.Integer> getRefChildrenList();
+
       /**
        * <pre>
        * children that are reference nodes, each element is a reference node id
@@ -15204,6 +16373,7 @@ public final class FsImageProto {
        * <code>repeated uint32 refChildren = 3 [packed = true];</code>
        */
       int getRefChildrenCount();
+
       /**
        * <pre>
        * children that are reference nodes, each element is a reference node id
@@ -15213,6 +16383,7 @@ public final class FsImageProto {
        */
       int getRefChildren(int index);
     }
+
     /**
      * <pre>
      **
@@ -15222,15 +16393,17 @@ public final class FsImageProto {
      *
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeDirectorySection.DirEntry}
      */
-    public  static final class DirEntry extends
+    public static final class DirEntry extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeDirectorySection.DirEntry)
         DirEntryOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use DirEntry.newBuilder() to construct.
       private DirEntry(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private DirEntry() {
         children_ = emptyLongList();
         refChildren_ = emptyIntList();
@@ -15241,6 +16414,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private DirEntry(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -15332,14 +16506,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry.Builder.class);
@@ -15348,12 +16523,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int PARENT_FIELD_NUMBER = 1;
       private long parent_;
+
       /**
        * <code>optional uint64 parent = 1;</code>
        */
       public boolean hasParent() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint64 parent = 1;</code>
        */
@@ -15363,6 +16540,7 @@ public final class FsImageProto {
 
       public static final int CHILDREN_FIELD_NUMBER = 2;
       private org.apache.hadoop.thirdparty.protobuf.Internal.LongList children_;
+
       /**
        * <pre>
        * children that are not reference nodes
@@ -15371,9 +16549,10 @@ public final class FsImageProto {
        * <code>repeated uint64 children = 2 [packed = true];</code>
        */
       public java.util.List<java.lang.Long>
-          getChildrenList() {
+      getChildrenList() {
         return children_;
       }
+
       /**
        * <pre>
        * children that are not reference nodes
@@ -15384,6 +16563,7 @@ public final class FsImageProto {
       public int getChildrenCount() {
         return children_.size();
       }
+
       /**
        * <pre>
        * children that are not reference nodes
@@ -15394,10 +16574,12 @@ public final class FsImageProto {
       public long getChildren(int index) {
         return children_.getLong(index);
       }
+
       private int childrenMemoizedSerializedSize = -1;
 
       public static final int REFCHILDREN_FIELD_NUMBER = 3;
       private org.apache.hadoop.thirdparty.protobuf.Internal.IntList refChildren_;
+
       /**
        * <pre>
        * children that are reference nodes, each element is a reference node id
@@ -15406,9 +16588,10 @@ public final class FsImageProto {
        * <code>repeated uint32 refChildren = 3 [packed = true];</code>
        */
       public java.util.List<java.lang.Integer>
-          getRefChildrenList() {
+      getRefChildrenList() {
         return refChildren_;
       }
+
       /**
        * <pre>
        * children that are reference nodes, each element is a reference node id
@@ -15419,6 +16602,7 @@ public final class FsImageProto {
       public int getRefChildrenCount() {
         return refChildren_.size();
       }
+
       /**
        * <pre>
        * children that are reference nodes, each element is a reference node id
@@ -15429,9 +16613,11 @@ public final class FsImageProto {
       public int getRefChildren(int index) {
         return refChildren_.getInt(index);
       }
+
       private int refChildrenMemoizedSerializedSize = -1;
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -15444,7 +16630,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         getSerializedSize();
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt64(1, parent_);
@@ -15474,13 +16660,13 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(1, parent_);
+              .computeUInt64Size(1, parent_);
         }
         {
           int dataSize = 0;
           for (int i = 0; i < children_.size(); i++) {
             dataSize += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-              .computeUInt64SizeNoTag(children_.getLong(i));
+                .computeUInt64SizeNoTag(children_.getLong(i));
           }
           size += dataSize;
           if (!getChildrenList().isEmpty()) {
@@ -15494,7 +16680,7 @@ public final class FsImageProto {
           int dataSize = 0;
           for (int i = 0; i < refChildren_.size(); i++) {
             dataSize += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-              .computeUInt32SizeNoTag(refChildren_.getInt(i));
+                .computeUInt32SizeNoTag(refChildren_.getInt(i));
           }
           size += dataSize;
           if (!getRefChildrenList().isEmpty()) {
@@ -15512,7 +16698,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry)) {
           return super.equals(obj);
@@ -15562,38 +16748,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -15601,11 +16794,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -15613,12 +16808,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -15628,13 +16825,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -15647,6 +16849,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * <pre>
        **
@@ -15661,13 +16864,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeDirectorySection.DirEntry)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntryOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry.Builder.class);
@@ -15683,11 +16886,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -15702,7 +16907,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor;
         }
 
@@ -15748,38 +16953,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -15787,7 +16998,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry.getDefaultInstance())
+            return this;
           if (other.hasParent()) {
             setParent(other.getParent());
           }
@@ -15839,21 +17051,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private long parent_ ;
+        private long parent_;
+
         /**
          * <code>optional uint64 parent = 1;</code>
          */
         public boolean hasParent() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint64 parent = 1;</code>
          */
         public long getParent() {
           return parent_;
         }
+
         /**
          * <code>optional uint64 parent = 1;</code>
          */
@@ -15863,6 +17079,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 parent = 1;</code>
          */
@@ -15874,12 +17091,14 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.Internal.LongList children_ = emptyLongList();
+
         private void ensureChildrenIsMutable() {
           if (!((bitField0_ & 0x00000002) != 0)) {
             children_ = mutableCopy(children_);
             bitField0_ |= 0x00000002;
-           }
+          }
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15888,10 +17107,11 @@ public final class FsImageProto {
          * <code>repeated uint64 children = 2 [packed = true];</code>
          */
         public java.util.List<java.lang.Long>
-            getChildrenList() {
+        getChildrenList() {
           return ((bitField0_ & 0x00000002) != 0) ?
-                   java.util.Collections.unmodifiableList(children_) : children_;
+              java.util.Collections.unmodifiableList(children_) : children_;
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15902,6 +17122,7 @@ public final class FsImageProto {
         public int getChildrenCount() {
           return children_.size();
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15912,6 +17133,7 @@ public final class FsImageProto {
         public long getChildren(int index) {
           return children_.getLong(index);
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15926,6 +17148,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15939,6 +17162,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15954,6 +17178,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * children that are not reference nodes
@@ -15969,12 +17194,14 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.Internal.IntList refChildren_ = emptyIntList();
+
         private void ensureRefChildrenIsMutable() {
           if (!((bitField0_ & 0x00000004) != 0)) {
             refChildren_ = mutableCopy(refChildren_);
             bitField0_ |= 0x00000004;
-           }
+          }
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -15983,10 +17210,11 @@ public final class FsImageProto {
          * <code>repeated uint32 refChildren = 3 [packed = true];</code>
          */
         public java.util.List<java.lang.Integer>
-            getRefChildrenList() {
+        getRefChildrenList() {
           return ((bitField0_ & 0x00000004) != 0) ?
-                   java.util.Collections.unmodifiableList(refChildren_) : refChildren_;
+              java.util.Collections.unmodifiableList(refChildren_) : refChildren_;
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -15997,6 +17225,7 @@ public final class FsImageProto {
         public int getRefChildrenCount() {
           return refChildren_.size();
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -16007,6 +17236,7 @@ public final class FsImageProto {
         public int getRefChildren(int index) {
           return refChildren_.getInt(index);
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -16021,6 +17251,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -16034,6 +17265,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -16049,6 +17281,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * children that are reference nodes, each element is a reference node id
@@ -16062,6 +17295,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -16080,6 +17314,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeDirectorySection.DirEntry)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.DirEntry();
       }
@@ -16088,7 +17323,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<DirEntry>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<DirEntry>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<DirEntry>() {
         @java.lang.Override
         public DirEntry parsePartialFrom(
@@ -16116,6 +17352,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -16128,7 +17365,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       unknownFields.writeTo(output);
     }
 
@@ -16146,7 +17383,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection)) {
         return super.equals(obj);
@@ -16174,38 +17411,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16213,11 +17457,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16225,12 +17471,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16240,13 +17488,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -16259,6 +17512,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -16273,13 +17527,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeDirectorySection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.Builder.class);
@@ -16295,11 +17549,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -16308,7 +17564,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor;
       }
 
@@ -16337,38 +17593,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -16376,7 +17638,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection.getDefaultInstance())
+          return this;
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -16405,6 +17668,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -16423,6 +17687,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeDirectorySection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeDirectorySection();
     }
@@ -16431,7 +17696,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeDirectorySection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeDirectorySection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeDirectorySection>() {
       @java.lang.Override
       public INodeDirectorySection parsePartialFrom(
@@ -16462,18 +17728,21 @@ public final class FsImageProto {
       // @@protoc_insertion_point(interface_extends:hadoop.hdfs.fsimage.INodeReferenceSection)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
   }
+
   /**
    * Protobuf type {@code hadoop.hdfs.fsimage.INodeReferenceSection}
    */
-  public  static final class INodeReferenceSection extends
+  public static final class INodeReferenceSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeReferenceSection)
       INodeReferenceSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use INodeReferenceSection.newBuilder() to construct.
     private INodeReferenceSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private INodeReferenceSection() {
     }
 
@@ -16482,6 +17751,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private INodeReferenceSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16519,14 +17789,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.Builder.class);
@@ -16544,6 +17815,7 @@ public final class FsImageProto {
        * <code>optional uint64 referredId = 1;</code>
        */
       boolean hasReferredId();
+
       /**
        * <pre>
        * id of the referred inode
@@ -16561,6 +17833,7 @@ public final class FsImageProto {
        * <code>optional bytes name = 2;</code>
        */
       boolean hasName();
+
       /**
        * <pre>
        * local name recorded in WithName
@@ -16578,6 +17851,7 @@ public final class FsImageProto {
        * <code>optional uint32 dstSnapshotId = 3;</code>
        */
       boolean hasDstSnapshotId();
+
       /**
        * <pre>
        * recorded in DstReference
@@ -16595,6 +17869,7 @@ public final class FsImageProto {
        * <code>optional uint32 lastSnapshotId = 4;</code>
        */
       boolean hasLastSnapshotId();
+
       /**
        * <pre>
        * recorded in WithName
@@ -16604,18 +17879,21 @@ public final class FsImageProto {
        */
       int getLastSnapshotId();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeReferenceSection.INodeReference}
      */
-    public  static final class INodeReference extends
+    public static final class INodeReference extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.INodeReferenceSection.INodeReference)
         INodeReferenceOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use INodeReference.newBuilder() to construct.
       private INodeReference(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private INodeReference() {
         name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
       }
@@ -16625,6 +17903,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private INodeReference(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16683,14 +17962,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference.Builder.class);
@@ -16699,6 +17979,7 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int REFERREDID_FIELD_NUMBER = 1;
       private long referredId_;
+
       /**
        * <pre>
        * id of the referred inode
@@ -16709,6 +17990,7 @@ public final class FsImageProto {
       public boolean hasReferredId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <pre>
        * id of the referred inode
@@ -16722,6 +18004,7 @@ public final class FsImageProto {
 
       public static final int NAME_FIELD_NUMBER = 2;
       private org.apache.hadoop.thirdparty.protobuf.ByteString name_;
+
       /**
        * <pre>
        * local name recorded in WithName
@@ -16732,6 +18015,7 @@ public final class FsImageProto {
       public boolean hasName() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * local name recorded in WithName
@@ -16745,6 +18029,7 @@ public final class FsImageProto {
 
       public static final int DSTSNAPSHOTID_FIELD_NUMBER = 3;
       private int dstSnapshotId_;
+
       /**
        * <pre>
        * recorded in DstReference
@@ -16755,6 +18040,7 @@ public final class FsImageProto {
       public boolean hasDstSnapshotId() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * recorded in DstReference
@@ -16768,6 +18054,7 @@ public final class FsImageProto {
 
       public static final int LASTSNAPSHOTID_FIELD_NUMBER = 4;
       private int lastSnapshotId_;
+
       /**
        * <pre>
        * recorded in WithName
@@ -16778,6 +18065,7 @@ public final class FsImageProto {
       public boolean hasLastSnapshotId() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <pre>
        * recorded in WithName
@@ -16790,6 +18078,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -16802,7 +18091,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt64(1, referredId_);
         }
@@ -16826,19 +18115,19 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(1, referredId_);
+              .computeUInt64Size(1, referredId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(2, name_);
+              .computeBytesSize(2, name_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(3, dstSnapshotId_);
+              .computeUInt32Size(3, dstSnapshotId_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(4, lastSnapshotId_);
+              .computeUInt32Size(4, lastSnapshotId_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -16848,7 +18137,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference)) {
           return super.equals(obj);
@@ -16913,38 +18202,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16952,11 +18248,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16964,12 +18262,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -16979,13 +18279,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -16998,6 +18303,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.INodeReferenceSection.INodeReference}
        */
@@ -17006,13 +18312,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeReferenceSection.INodeReference)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReferenceOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference.Builder.class);
@@ -17028,11 +18334,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -17049,7 +18357,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor;
         }
 
@@ -17097,38 +18405,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -17136,7 +18450,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference.getDefaultInstance())
+            return this;
           if (other.hasReferredId()) {
             setReferredId(other.getReferredId());
           }
@@ -17177,9 +18492,11 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private long referredId_ ;
+        private long referredId_;
+
         /**
          * <pre>
          * id of the referred inode
@@ -17190,6 +18507,7 @@ public final class FsImageProto {
         public boolean hasReferredId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <pre>
          * id of the referred inode
@@ -17200,6 +18518,7 @@ public final class FsImageProto {
         public long getReferredId() {
           return referredId_;
         }
+
         /**
          * <pre>
          * id of the referred inode
@@ -17213,6 +18532,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of the referred inode
@@ -17228,6 +18548,7 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <pre>
          * local name recorded in WithName
@@ -17238,6 +18559,7 @@ public final class FsImageProto {
         public boolean hasName() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <pre>
          * local name recorded in WithName
@@ -17248,6 +18570,7 @@ public final class FsImageProto {
         public org.apache.hadoop.thirdparty.protobuf.ByteString getName() {
           return name_;
         }
+
         /**
          * <pre>
          * local name recorded in WithName
@@ -17257,13 +18580,14 @@ public final class FsImageProto {
          */
         public Builder setName(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           name_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * local name recorded in WithName
@@ -17278,7 +18602,8 @@ public final class FsImageProto {
           return this;
         }
 
-        private int dstSnapshotId_ ;
+        private int dstSnapshotId_;
+
         /**
          * <pre>
          * recorded in DstReference
@@ -17289,6 +18614,7 @@ public final class FsImageProto {
         public boolean hasDstSnapshotId() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <pre>
          * recorded in DstReference
@@ -17299,6 +18625,7 @@ public final class FsImageProto {
         public int getDstSnapshotId() {
           return dstSnapshotId_;
         }
+
         /**
          * <pre>
          * recorded in DstReference
@@ -17312,6 +18639,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * recorded in DstReference
@@ -17326,7 +18654,8 @@ public final class FsImageProto {
           return this;
         }
 
-        private int lastSnapshotId_ ;
+        private int lastSnapshotId_;
+
         /**
          * <pre>
          * recorded in WithName
@@ -17337,6 +18666,7 @@ public final class FsImageProto {
         public boolean hasLastSnapshotId() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <pre>
          * recorded in WithName
@@ -17347,6 +18677,7 @@ public final class FsImageProto {
         public int getLastSnapshotId() {
           return lastSnapshotId_;
         }
+
         /**
          * <pre>
          * recorded in WithName
@@ -17360,6 +18691,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * recorded in WithName
@@ -17373,6 +18705,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -17391,6 +18724,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeReferenceSection.INodeReference)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.INodeReference();
       }
@@ -17399,7 +18733,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeReference>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeReference>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeReference>() {
         @java.lang.Override
         public INodeReference parsePartialFrom(
@@ -17427,6 +18762,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -17439,7 +18775,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       unknownFields.writeTo(output);
     }
 
@@ -17457,7 +18793,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection)) {
         return super.equals(obj);
@@ -17485,38 +18821,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -17524,11 +18867,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -17536,12 +18881,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -17551,13 +18898,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -17570,6 +18922,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.INodeReferenceSection}
      */
@@ -17578,13 +18931,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.INodeReferenceSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.Builder.class);
@@ -17600,11 +18953,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -17613,7 +18968,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor;
       }
 
@@ -17642,38 +18997,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -17681,7 +19042,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection.getDefaultInstance())
+          return this;
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -17710,6 +19072,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -17728,6 +19091,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.INodeReferenceSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeReferenceSection();
     }
@@ -17736,7 +19100,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeReferenceSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<INodeReferenceSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<INodeReferenceSection>() {
       @java.lang.Override
       public INodeReferenceSection parsePartialFrom(
@@ -17771,6 +19136,7 @@ public final class FsImageProto {
      * <code>optional uint32 snapshotCounter = 1;</code>
      */
     boolean hasSnapshotCounter();
+
     /**
      * <code>optional uint32 snapshotCounter = 1;</code>
      */
@@ -17780,10 +19146,12 @@ public final class FsImageProto {
      * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
      */
     java.util.List<java.lang.Long> getSnapshottableDirList();
+
     /**
      * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
      */
     int getSnapshottableDirCount();
+
     /**
      * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
      */
@@ -17797,6 +19165,7 @@ public final class FsImageProto {
      * <code>optional uint32 numSnapshots = 3;</code>
      */
     boolean hasNumSnapshots();
+
     /**
      * <pre>
      * total number of snapshots
@@ -17806,6 +19175,7 @@ public final class FsImageProto {
      */
     int getNumSnapshots();
   }
+
   /**
    * <pre>
    **
@@ -17815,15 +19185,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotSection}
    */
-  public  static final class SnapshotSection extends
+  public static final class SnapshotSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotSection)
       SnapshotSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use SnapshotSection.newBuilder() to construct.
     private SnapshotSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private SnapshotSection() {
       snapshottableDir_ = emptyLongList();
     }
@@ -17833,6 +19205,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private SnapshotSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -17905,14 +19278,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Builder.class);
@@ -17926,6 +19300,7 @@ public final class FsImageProto {
        * <code>optional uint32 snapshotId = 1;</code>
        */
       boolean hasSnapshotId();
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
@@ -17939,6 +19314,7 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INode root = 2;</code>
        */
       boolean hasRoot();
+
       /**
        * <pre>
        * Snapshot root
@@ -17947,6 +19323,7 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INode root = 2;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode getRoot();
+
       /**
        * <pre>
        * Snapshot root
@@ -17956,18 +19333,21 @@ public final class FsImageProto {
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeOrBuilder getRootOrBuilder();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotSection.Snapshot}
      */
-    public  static final class Snapshot extends
+    public static final class Snapshot extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotSection.Snapshot)
         SnapshotOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use Snapshot.newBuilder() to construct.
       private Snapshot(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private Snapshot() {
       }
 
@@ -17976,6 +19356,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private Snapshot(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18032,14 +19413,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot.Builder.class);
@@ -18048,12 +19430,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int SNAPSHOTID_FIELD_NUMBER = 1;
       private int snapshotId_;
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
       public boolean hasSnapshotId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
@@ -18063,6 +19447,7 @@ public final class FsImageProto {
 
       public static final int ROOT_FIELD_NUMBER = 2;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode root_;
+
       /**
        * <pre>
        * Snapshot root
@@ -18073,6 +19458,7 @@ public final class FsImageProto {
       public boolean hasRoot() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * Snapshot root
@@ -18083,6 +19469,7 @@ public final class FsImageProto {
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode getRoot() {
         return root_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.getDefaultInstance() : root_;
       }
+
       /**
        * <pre>
        * Snapshot root
@@ -18095,6 +19482,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -18113,7 +19501,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, snapshotId_);
         }
@@ -18131,11 +19519,11 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, snapshotId_);
+              .computeUInt32Size(1, snapshotId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(2, getRoot());
+              .computeMessageSize(2, getRoot());
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -18145,7 +19533,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot)) {
           return super.equals(obj);
@@ -18191,38 +19579,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18230,11 +19625,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18242,12 +19639,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18257,13 +19656,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -18276,6 +19680,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotSection.Snapshot}
        */
@@ -18284,13 +19689,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotSection.Snapshot)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.SnapshotOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot.Builder.class);
@@ -18306,12 +19711,14 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getRootFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -18328,7 +19735,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor;
         }
 
@@ -18372,38 +19779,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -18411,7 +19824,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot.getDefaultInstance())
+            return this;
           if (other.hasSnapshotId()) {
             setSnapshotId(other.getSnapshotId());
           }
@@ -18451,21 +19865,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int snapshotId_ ;
+        private int snapshotId_;
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
         public boolean hasSnapshotId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
         public int getSnapshotId() {
           return snapshotId_;
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
@@ -18475,6 +19893,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
@@ -18488,6 +19907,7 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode root_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeOrBuilder> rootBuilder_;
+
         /**
          * <pre>
          * Snapshot root
@@ -18498,6 +19918,7 @@ public final class FsImageProto {
         public boolean hasRoot() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18512,6 +19933,7 @@ public final class FsImageProto {
             return rootBuilder_.getMessage();
           }
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18532,6 +19954,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000002;
           return this;
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18550,6 +19973,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000002;
           return this;
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18563,7 +19987,7 @@ public final class FsImageProto {
                 root_ != null &&
                 root_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.getDefaultInstance()) {
               root_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.newBuilder(root_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.newBuilder(root_).mergeFrom(value).buildPartial();
             } else {
               root_ = value;
             }
@@ -18574,6 +19998,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000002;
           return this;
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18591,6 +20016,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18603,6 +20029,7 @@ public final class FsImageProto {
           onChanged();
           return getRootFieldBuilder().getBuilder();
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18618,6 +20045,7 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.getDefaultInstance() : root_;
           }
         }
+
         /**
          * <pre>
          * Snapshot root
@@ -18626,18 +20054,19 @@ public final class FsImageProto {
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INode root = 2;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeOrBuilder> 
-            getRootFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeOrBuilder>
+        getRootFieldBuilder() {
           if (rootBuilder_ == null) {
             rootBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INode.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeOrBuilder>(
-                    getRoot(),
-                    getParentForChildren(),
-                    isClean());
+                getRoot(),
+                getParentForChildren(),
+                isClean());
             root_ = null;
           }
           return rootBuilder_;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -18656,6 +20085,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotSection.Snapshot)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Snapshot();
       }
@@ -18664,7 +20094,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<Snapshot>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<Snapshot>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<Snapshot>() {
         @java.lang.Override
         public Snapshot parsePartialFrom(
@@ -18694,12 +20125,14 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int SNAPSHOTCOUNTER_FIELD_NUMBER = 1;
     private int snapshotCounter_;
+
     /**
      * <code>optional uint32 snapshotCounter = 1;</code>
      */
     public boolean hasSnapshotCounter() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint32 snapshotCounter = 1;</code>
      */
@@ -18709,29 +20142,34 @@ public final class FsImageProto {
 
     public static final int SNAPSHOTTABLEDIR_FIELD_NUMBER = 2;
     private org.apache.hadoop.thirdparty.protobuf.Internal.LongList snapshottableDir_;
+
     /**
      * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
      */
     public java.util.List<java.lang.Long>
-        getSnapshottableDirList() {
+    getSnapshottableDirList() {
       return snapshottableDir_;
     }
+
     /**
      * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
      */
     public int getSnapshottableDirCount() {
       return snapshottableDir_.size();
     }
+
     /**
      * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
      */
     public long getSnapshottableDir(int index) {
       return snapshottableDir_.getLong(index);
     }
+
     private int snapshottableDirMemoizedSerializedSize = -1;
 
     public static final int NUMSNAPSHOTS_FIELD_NUMBER = 3;
     private int numSnapshots_;
+
     /**
      * <pre>
      * total number of snapshots
@@ -18742,6 +20180,7 @@ public final class FsImageProto {
     public boolean hasNumSnapshots() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * total number of snapshots
@@ -18754,6 +20193,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -18766,7 +20206,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, snapshotCounter_);
@@ -18792,13 +20232,13 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, snapshotCounter_);
+            .computeUInt32Size(1, snapshotCounter_);
       }
       {
         int dataSize = 0;
         for (int i = 0; i < snapshottableDir_.size(); i++) {
           dataSize += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64SizeNoTag(snapshottableDir_.getLong(i));
+              .computeUInt64SizeNoTag(snapshottableDir_.getLong(i));
         }
         size += dataSize;
         if (!getSnapshottableDirList().isEmpty()) {
@@ -18810,7 +20250,7 @@ public final class FsImageProto {
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(3, numSnapshots_);
+            .computeUInt32Size(3, numSnapshots_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -18820,7 +20260,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection)) {
         return super.equals(obj);
@@ -18872,38 +20312,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18911,11 +20358,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18923,12 +20372,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -18938,13 +20389,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -18957,6 +20413,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -18971,13 +20428,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.Builder.class);
@@ -18993,11 +20450,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -19012,7 +20471,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor;
       }
 
@@ -19057,38 +20516,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -19096,7 +20561,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection.getDefaultInstance())
+          return this;
         if (other.hasSnapshotCounter()) {
           setSnapshotCounter(other.getSnapshotCounter());
         }
@@ -19141,21 +20607,25 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int snapshotCounter_ ;
+      private int snapshotCounter_;
+
       /**
        * <code>optional uint32 snapshotCounter = 1;</code>
        */
       public boolean hasSnapshotCounter() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 snapshotCounter = 1;</code>
        */
       public int getSnapshotCounter() {
         return snapshotCounter_;
       }
+
       /**
        * <code>optional uint32 snapshotCounter = 1;</code>
        */
@@ -19165,6 +20635,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 snapshotCounter = 1;</code>
        */
@@ -19176,32 +20647,37 @@ public final class FsImageProto {
       }
 
       private org.apache.hadoop.thirdparty.protobuf.Internal.LongList snapshottableDir_ = emptyLongList();
+
       private void ensureSnapshottableDirIsMutable() {
         if (!((bitField0_ & 0x00000002) != 0)) {
           snapshottableDir_ = mutableCopy(snapshottableDir_);
           bitField0_ |= 0x00000002;
-         }
+        }
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
       public java.util.List<java.lang.Long>
-          getSnapshottableDirList() {
+      getSnapshottableDirList() {
         return ((bitField0_ & 0x00000002) != 0) ?
-                 java.util.Collections.unmodifiableList(snapshottableDir_) : snapshottableDir_;
+            java.util.Collections.unmodifiableList(snapshottableDir_) : snapshottableDir_;
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
       public int getSnapshottableDirCount() {
         return snapshottableDir_.size();
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
       public long getSnapshottableDir(int index) {
         return snapshottableDir_.getLong(index);
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
@@ -19212,6 +20688,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
@@ -19221,6 +20698,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
@@ -19232,6 +20710,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>repeated uint64 snapshottableDir = 2 [packed = true];</code>
        */
@@ -19242,7 +20721,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private int numSnapshots_ ;
+      private int numSnapshots_;
+
       /**
        * <pre>
        * total number of snapshots
@@ -19253,6 +20733,7 @@ public final class FsImageProto {
       public boolean hasNumSnapshots() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * total number of snapshots
@@ -19263,6 +20744,7 @@ public final class FsImageProto {
       public int getNumSnapshots() {
         return numSnapshots_;
       }
+
       /**
        * <pre>
        * total number of snapshots
@@ -19276,6 +20758,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * total number of snapshots
@@ -19289,6 +20772,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -19307,6 +20791,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotSection();
     }
@@ -19315,7 +20800,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<SnapshotSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<SnapshotSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<SnapshotSection>() {
       @java.lang.Override
       public SnapshotSection parsePartialFrom(
@@ -19346,6 +20832,7 @@ public final class FsImageProto {
       // @@protoc_insertion_point(interface_extends:hadoop.hdfs.fsimage.SnapshotDiffSection)
       org.apache.hadoop.thirdparty.protobuf.MessageOrBuilder {
   }
+
   /**
    * <pre>
    **
@@ -19355,15 +20842,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection}
    */
-  public  static final class SnapshotDiffSection extends
+  public static final class SnapshotDiffSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotDiffSection)
       SnapshotDiffSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use SnapshotDiffSection.newBuilder() to construct.
     private SnapshotDiffSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private SnapshotDiffSection() {
     }
 
@@ -19372,6 +20861,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private SnapshotDiffSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19409,14 +20899,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.Builder.class);
@@ -19430,23 +20921,27 @@ public final class FsImageProto {
        * <code>optional bytes name = 1;</code>
        */
       boolean hasName();
+
       /**
        * <code>optional bytes name = 1;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString getName();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.CreatedListEntry}
      */
-    public  static final class CreatedListEntry extends
+    public static final class CreatedListEntry extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.CreatedListEntry)
         CreatedListEntryOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use CreatedListEntry.newBuilder() to construct.
       private CreatedListEntry(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private CreatedListEntry() {
         name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
       }
@@ -19456,6 +20951,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private CreatedListEntry(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19499,14 +20995,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry.Builder.class);
@@ -19515,12 +21012,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int NAME_FIELD_NUMBER = 1;
       private org.apache.hadoop.thirdparty.protobuf.ByteString name_;
+
       /**
        * <code>optional bytes name = 1;</code>
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional bytes name = 1;</code>
        */
@@ -19529,6 +21028,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -19541,7 +21041,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeBytes(1, name_);
         }
@@ -19556,7 +21056,7 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(1, name_);
+              .computeBytesSize(1, name_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -19566,7 +21066,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry)) {
           return super.equals(obj);
@@ -19603,38 +21103,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19642,11 +21149,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19654,12 +21163,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19669,13 +21180,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -19688,6 +21204,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.CreatedListEntry}
        */
@@ -19696,13 +21213,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.CreatedListEntry)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntryOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry.Builder.class);
@@ -19718,11 +21235,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -19733,7 +21252,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor;
         }
 
@@ -19769,38 +21288,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -19808,7 +21333,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry.getDefaultInstance())
+            return this;
           if (other.hasName()) {
             setName(other.getName());
           }
@@ -19840,33 +21366,38 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes name = 1;</code>
          */
         public boolean hasName() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional bytes name = 1;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getName() {
           return name_;
         }
+
         /**
          * <code>optional bytes name = 1;</code>
          */
         public Builder setName(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
           name_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes name = 1;</code>
          */
@@ -19876,6 +21407,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -19894,6 +21426,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotDiffSection.CreatedListEntry)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.CreatedListEntry();
       }
@@ -19902,7 +21435,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<CreatedListEntry>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<CreatedListEntry>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<CreatedListEntry>() {
         @java.lang.Override
         public CreatedListEntry parsePartialFrom(
@@ -19937,6 +21471,7 @@ public final class FsImageProto {
        * <code>optional uint32 snapshotId = 1;</code>
        */
       boolean hasSnapshotId();
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
@@ -19946,6 +21481,7 @@ public final class FsImageProto {
        * <code>optional uint32 childrenSize = 2;</code>
        */
       boolean hasChildrenSize();
+
       /**
        * <code>optional uint32 childrenSize = 2;</code>
        */
@@ -19955,6 +21491,7 @@ public final class FsImageProto {
        * <code>optional bool isSnapshotRoot = 3;</code>
        */
       boolean hasIsSnapshotRoot();
+
       /**
        * <code>optional bool isSnapshotRoot = 3;</code>
        */
@@ -19964,6 +21501,7 @@ public final class FsImageProto {
        * <code>optional bytes name = 4;</code>
        */
       boolean hasName();
+
       /**
        * <code>optional bytes name = 4;</code>
        */
@@ -19973,10 +21511,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
        */
       boolean hasSnapshotCopy();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory getSnapshotCopy();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
        */
@@ -19986,6 +21526,7 @@ public final class FsImageProto {
        * <code>optional uint32 createdListSize = 6;</code>
        */
       boolean hasCreatedListSize();
+
       /**
        * <code>optional uint32 createdListSize = 6;</code>
        */
@@ -19999,6 +21540,7 @@ public final class FsImageProto {
        * <code>repeated uint64 deletedINode = 7 [packed = true];</code>
        */
       java.util.List<java.lang.Long> getDeletedINodeList();
+
       /**
        * <pre>
        * id of deleted inodes
@@ -20007,6 +21549,7 @@ public final class FsImageProto {
        * <code>repeated uint64 deletedINode = 7 [packed = true];</code>
        */
       int getDeletedINodeCount();
+
       /**
        * <pre>
        * id of deleted inodes
@@ -20024,6 +21567,7 @@ public final class FsImageProto {
        * <code>repeated uint32 deletedINodeRef = 8 [packed = true];</code>
        */
       java.util.List<java.lang.Integer> getDeletedINodeRefList();
+
       /**
        * <pre>
        * id of reference nodes in the deleted list
@@ -20032,6 +21576,7 @@ public final class FsImageProto {
        * <code>repeated uint32 deletedINodeRef = 8 [packed = true];</code>
        */
       int getDeletedINodeRefCount();
+
       /**
        * <pre>
        * id of reference nodes in the deleted list
@@ -20041,18 +21586,21 @@ public final class FsImageProto {
        */
       int getDeletedINodeRef(int index);
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.DirectoryDiff}
      */
-    public  static final class DirectoryDiff extends
+    public static final class DirectoryDiff extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.DirectoryDiff)
         DirectoryDiffOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use DirectoryDiff.newBuilder() to construct.
       private DirectoryDiff(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private DirectoryDiff() {
         name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
         deletedINode_ = emptyLongList();
@@ -20064,6 +21612,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private DirectoryDiff(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -20188,14 +21737,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff.Builder.class);
@@ -20204,12 +21754,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int SNAPSHOTID_FIELD_NUMBER = 1;
       private int snapshotId_;
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
       public boolean hasSnapshotId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
@@ -20219,12 +21771,14 @@ public final class FsImageProto {
 
       public static final int CHILDRENSIZE_FIELD_NUMBER = 2;
       private int childrenSize_;
+
       /**
        * <code>optional uint32 childrenSize = 2;</code>
        */
       public boolean hasChildrenSize() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint32 childrenSize = 2;</code>
        */
@@ -20234,12 +21788,14 @@ public final class FsImageProto {
 
       public static final int ISSNAPSHOTROOT_FIELD_NUMBER = 3;
       private boolean isSnapshotRoot_;
+
       /**
        * <code>optional bool isSnapshotRoot = 3;</code>
        */
       public boolean hasIsSnapshotRoot() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional bool isSnapshotRoot = 3;</code>
        */
@@ -20249,12 +21805,14 @@ public final class FsImageProto {
 
       public static final int NAME_FIELD_NUMBER = 4;
       private org.apache.hadoop.thirdparty.protobuf.ByteString name_;
+
       /**
        * <code>optional bytes name = 4;</code>
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional bytes name = 4;</code>
        */
@@ -20264,18 +21822,21 @@ public final class FsImageProto {
 
       public static final int SNAPSHOTCOPY_FIELD_NUMBER = 5;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory snapshotCopy_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
        */
       public boolean hasSnapshotCopy() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory getSnapshotCopy() {
         return snapshotCopy_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance() : snapshotCopy_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
        */
@@ -20285,12 +21846,14 @@ public final class FsImageProto {
 
       public static final int CREATEDLISTSIZE_FIELD_NUMBER = 6;
       private int createdListSize_;
+
       /**
        * <code>optional uint32 createdListSize = 6;</code>
        */
       public boolean hasCreatedListSize() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional uint32 createdListSize = 6;</code>
        */
@@ -20300,6 +21863,7 @@ public final class FsImageProto {
 
       public static final int DELETEDINODE_FIELD_NUMBER = 7;
       private org.apache.hadoop.thirdparty.protobuf.Internal.LongList deletedINode_;
+
       /**
        * <pre>
        * id of deleted inodes
@@ -20308,9 +21872,10 @@ public final class FsImageProto {
        * <code>repeated uint64 deletedINode = 7 [packed = true];</code>
        */
       public java.util.List<java.lang.Long>
-          getDeletedINodeList() {
+      getDeletedINodeList() {
         return deletedINode_;
       }
+
       /**
        * <pre>
        * id of deleted inodes
@@ -20321,6 +21886,7 @@ public final class FsImageProto {
       public int getDeletedINodeCount() {
         return deletedINode_.size();
       }
+
       /**
        * <pre>
        * id of deleted inodes
@@ -20331,10 +21897,12 @@ public final class FsImageProto {
       public long getDeletedINode(int index) {
         return deletedINode_.getLong(index);
       }
+
       private int deletedINodeMemoizedSerializedSize = -1;
 
       public static final int DELETEDINODEREF_FIELD_NUMBER = 8;
       private org.apache.hadoop.thirdparty.protobuf.Internal.IntList deletedINodeRef_;
+
       /**
        * <pre>
        * id of reference nodes in the deleted list
@@ -20343,9 +21911,10 @@ public final class FsImageProto {
        * <code>repeated uint32 deletedINodeRef = 8 [packed = true];</code>
        */
       public java.util.List<java.lang.Integer>
-          getDeletedINodeRefList() {
+      getDeletedINodeRefList() {
         return deletedINodeRef_;
       }
+
       /**
        * <pre>
        * id of reference nodes in the deleted list
@@ -20356,6 +21925,7 @@ public final class FsImageProto {
       public int getDeletedINodeRefCount() {
         return deletedINodeRef_.size();
       }
+
       /**
        * <pre>
        * id of reference nodes in the deleted list
@@ -20366,9 +21936,11 @@ public final class FsImageProto {
       public int getDeletedINodeRef(int index) {
         return deletedINodeRef_.getInt(index);
       }
+
       private int deletedINodeRefMemoizedSerializedSize = -1;
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -20387,7 +21959,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         getSerializedSize();
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, snapshotId_);
@@ -20432,33 +22004,33 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, snapshotId_);
+              .computeUInt32Size(1, snapshotId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(2, childrenSize_);
+              .computeUInt32Size(2, childrenSize_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBoolSize(3, isSnapshotRoot_);
+              .computeBoolSize(3, isSnapshotRoot_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(4, name_);
+              .computeBytesSize(4, name_);
         }
         if (((bitField0_ & 0x00000010) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(5, getSnapshotCopy());
+              .computeMessageSize(5, getSnapshotCopy());
         }
         if (((bitField0_ & 0x00000020) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(6, createdListSize_);
+              .computeUInt32Size(6, createdListSize_);
         }
         {
           int dataSize = 0;
           for (int i = 0; i < deletedINode_.size(); i++) {
             dataSize += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-              .computeUInt64SizeNoTag(deletedINode_.getLong(i));
+                .computeUInt64SizeNoTag(deletedINode_.getLong(i));
           }
           size += dataSize;
           if (!getDeletedINodeList().isEmpty()) {
@@ -20472,7 +22044,7 @@ public final class FsImageProto {
           int dataSize = 0;
           for (int i = 0; i < deletedINodeRef_.size(); i++) {
             dataSize += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-              .computeUInt32SizeNoTag(deletedINodeRef_.getInt(i));
+                .computeUInt32SizeNoTag(deletedINodeRef_.getInt(i));
           }
           size += dataSize;
           if (!getDeletedINodeRefList().isEmpty()) {
@@ -20490,7 +22062,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff)) {
           return super.equals(obj);
@@ -20585,38 +22157,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -20624,11 +22203,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -20636,12 +22217,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -20651,13 +22234,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -20670,6 +22258,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.DirectoryDiff}
        */
@@ -20678,13 +22267,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.DirectoryDiff)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiffOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff.Builder.class);
@@ -20700,12 +22289,14 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getSnapshotCopyFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -20734,7 +22325,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor;
         }
 
@@ -20804,38 +22395,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -20843,7 +22440,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff.getDefaultInstance())
+            return this;
           if (other.hasSnapshotId()) {
             setSnapshotId(other.getSnapshotId());
           }
@@ -20915,21 +22513,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int snapshotId_ ;
+        private int snapshotId_;
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
         public boolean hasSnapshotId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
         public int getSnapshotId() {
           return snapshotId_;
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
@@ -20939,6 +22541,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
@@ -20949,19 +22552,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private int childrenSize_ ;
+        private int childrenSize_;
+
         /**
          * <code>optional uint32 childrenSize = 2;</code>
          */
         public boolean hasChildrenSize() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional uint32 childrenSize = 2;</code>
          */
         public int getChildrenSize() {
           return childrenSize_;
         }
+
         /**
          * <code>optional uint32 childrenSize = 2;</code>
          */
@@ -20971,6 +22577,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 childrenSize = 2;</code>
          */
@@ -20981,19 +22588,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private boolean isSnapshotRoot_ ;
+        private boolean isSnapshotRoot_;
+
         /**
          * <code>optional bool isSnapshotRoot = 3;</code>
          */
         public boolean hasIsSnapshotRoot() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional bool isSnapshotRoot = 3;</code>
          */
         public boolean getIsSnapshotRoot() {
           return isSnapshotRoot_;
         }
+
         /**
          * <code>optional bool isSnapshotRoot = 3;</code>
          */
@@ -21003,6 +22613,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bool isSnapshotRoot = 3;</code>
          */
@@ -21014,30 +22625,34 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes name = 4;</code>
          */
         public boolean hasName() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional bytes name = 4;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getName() {
           return name_;
         }
+
         /**
          * <code>optional bytes name = 4;</code>
          */
         public Builder setName(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000008;
           name_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes name = 4;</code>
          */
@@ -21051,12 +22666,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory snapshotCopy_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder> snapshotCopyBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
         public boolean hasSnapshotCopy() {
           return ((bitField0_ & 0x00000010) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21067,6 +22684,7 @@ public final class FsImageProto {
             return snapshotCopyBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21083,6 +22701,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21097,6 +22716,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21106,7 +22726,7 @@ public final class FsImageProto {
                 snapshotCopy_ != null &&
                 snapshotCopy_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance()) {
               snapshotCopy_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.newBuilder(snapshotCopy_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.newBuilder(snapshotCopy_).mergeFrom(value).buildPartial();
             } else {
               snapshotCopy_ = value;
             }
@@ -21117,6 +22737,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000010;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21130,6 +22751,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000010);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21138,6 +22760,7 @@ public final class FsImageProto {
           onChanged();
           return getSnapshotCopyFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
@@ -21149,36 +22772,40 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.getDefaultInstance() : snapshotCopy_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeDirectory snapshotCopy = 5;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder> 
-            getSnapshotCopyFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder>
+        getSnapshotCopyFieldBuilder() {
           if (snapshotCopyBuilder_ == null) {
             snapshotCopyBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectory.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeDirectoryOrBuilder>(
-                    getSnapshotCopy(),
-                    getParentForChildren(),
-                    isClean());
+                getSnapshotCopy(),
+                getParentForChildren(),
+                isClean());
             snapshotCopy_ = null;
           }
           return snapshotCopyBuilder_;
         }
 
-        private int createdListSize_ ;
+        private int createdListSize_;
+
         /**
          * <code>optional uint32 createdListSize = 6;</code>
          */
         public boolean hasCreatedListSize() {
           return ((bitField0_ & 0x00000020) != 0);
         }
+
         /**
          * <code>optional uint32 createdListSize = 6;</code>
          */
         public int getCreatedListSize() {
           return createdListSize_;
         }
+
         /**
          * <code>optional uint32 createdListSize = 6;</code>
          */
@@ -21188,6 +22815,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 createdListSize = 6;</code>
          */
@@ -21199,12 +22827,14 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.Internal.LongList deletedINode_ = emptyLongList();
+
         private void ensureDeletedINodeIsMutable() {
           if (!((bitField0_ & 0x00000040) != 0)) {
             deletedINode_ = mutableCopy(deletedINode_);
             bitField0_ |= 0x00000040;
-           }
+          }
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21213,10 +22843,11 @@ public final class FsImageProto {
          * <code>repeated uint64 deletedINode = 7 [packed = true];</code>
          */
         public java.util.List<java.lang.Long>
-            getDeletedINodeList() {
+        getDeletedINodeList() {
           return ((bitField0_ & 0x00000040) != 0) ?
-                   java.util.Collections.unmodifiableList(deletedINode_) : deletedINode_;
+              java.util.Collections.unmodifiableList(deletedINode_) : deletedINode_;
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21227,6 +22858,7 @@ public final class FsImageProto {
         public int getDeletedINodeCount() {
           return deletedINode_.size();
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21237,6 +22869,7 @@ public final class FsImageProto {
         public long getDeletedINode(int index) {
           return deletedINode_.getLong(index);
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21251,6 +22884,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21264,6 +22898,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21279,6 +22914,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of deleted inodes
@@ -21294,12 +22930,14 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.Internal.IntList deletedINodeRef_ = emptyIntList();
+
         private void ensureDeletedINodeRefIsMutable() {
           if (!((bitField0_ & 0x00000080) != 0)) {
             deletedINodeRef_ = mutableCopy(deletedINodeRef_);
             bitField0_ |= 0x00000080;
-           }
+          }
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21308,10 +22946,11 @@ public final class FsImageProto {
          * <code>repeated uint32 deletedINodeRef = 8 [packed = true];</code>
          */
         public java.util.List<java.lang.Integer>
-            getDeletedINodeRefList() {
+        getDeletedINodeRefList() {
           return ((bitField0_ & 0x00000080) != 0) ?
-                   java.util.Collections.unmodifiableList(deletedINodeRef_) : deletedINodeRef_;
+              java.util.Collections.unmodifiableList(deletedINodeRef_) : deletedINodeRef_;
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21322,6 +22961,7 @@ public final class FsImageProto {
         public int getDeletedINodeRefCount() {
           return deletedINodeRef_.size();
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21332,6 +22972,7 @@ public final class FsImageProto {
         public int getDeletedINodeRef(int index) {
           return deletedINodeRef_.getInt(index);
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21346,6 +22987,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21359,6 +23001,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21374,6 +23017,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <pre>
          * id of reference nodes in the deleted list
@@ -21387,6 +23031,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -21405,6 +23050,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotDiffSection.DirectoryDiff)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DirectoryDiff();
       }
@@ -21413,7 +23059,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<DirectoryDiff>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<DirectoryDiff>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<DirectoryDiff>() {
         @java.lang.Override
         public DirectoryDiff parsePartialFrom(
@@ -21448,6 +23095,7 @@ public final class FsImageProto {
        * <code>optional uint32 snapshotId = 1;</code>
        */
       boolean hasSnapshotId();
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
@@ -21457,6 +23105,7 @@ public final class FsImageProto {
        * <code>optional uint64 fileSize = 2;</code>
        */
       boolean hasFileSize();
+
       /**
        * <code>optional uint64 fileSize = 2;</code>
        */
@@ -21466,6 +23115,7 @@ public final class FsImageProto {
        * <code>optional bytes name = 3;</code>
        */
       boolean hasName();
+
       /**
        * <code>optional bytes name = 3;</code>
        */
@@ -21475,10 +23125,12 @@ public final class FsImageProto {
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
        */
       boolean hasSnapshotCopy();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
        */
       org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile getSnapshotCopy();
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
        */
@@ -21487,39 +23139,46 @@ public final class FsImageProto {
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
-      java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> 
-          getBlocksList();
+      java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto>
+      getBlocksList();
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
       org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto getBlocks(int index);
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
       int getBlocksCount();
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
-      java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-          getBlocksOrBuilderList();
+      java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+      getBlocksOrBuilderList();
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
       org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder getBlocksOrBuilder(
           int index);
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.FileDiff}
      */
-    public  static final class FileDiff extends
+    public static final class FileDiff extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.FileDiff)
         FileDiffOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use FileDiff.newBuilder() to construct.
       private FileDiff(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private FileDiff() {
         name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
         blocks_ = java.util.Collections.emptyList();
@@ -21530,6 +23189,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private FileDiff(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -21608,14 +23268,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff.Builder.class);
@@ -21624,12 +23285,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int SNAPSHOTID_FIELD_NUMBER = 1;
       private int snapshotId_;
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
       public boolean hasSnapshotId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 snapshotId = 1;</code>
        */
@@ -21639,12 +23302,14 @@ public final class FsImageProto {
 
       public static final int FILESIZE_FIELD_NUMBER = 2;
       private long fileSize_;
+
       /**
        * <code>optional uint64 fileSize = 2;</code>
        */
       public boolean hasFileSize() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint64 fileSize = 2;</code>
        */
@@ -21654,12 +23319,14 @@ public final class FsImageProto {
 
       public static final int NAME_FIELD_NUMBER = 3;
       private org.apache.hadoop.thirdparty.protobuf.ByteString name_;
+
       /**
        * <code>optional bytes name = 3;</code>
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional bytes name = 3;</code>
        */
@@ -21669,18 +23336,21 @@ public final class FsImageProto {
 
       public static final int SNAPSHOTCOPY_FIELD_NUMBER = 4;
       private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile snapshotCopy_;
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
        */
       public boolean hasSnapshotCopy() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
        */
       public org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile getSnapshotCopy() {
         return snapshotCopy_ == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance() : snapshotCopy_;
       }
+
       /**
        * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
        */
@@ -21690,31 +23360,36 @@ public final class FsImageProto {
 
       public static final int BLOCKS_FIELD_NUMBER = 5;
       private java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> blocks_;
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
       public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> getBlocksList() {
         return blocks_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-          getBlocksOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+      getBlocksOrBuilderList() {
         return blocks_;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
       public int getBlocksCount() {
         return blocks_.size();
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
       public org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto getBlocks(int index) {
         return blocks_.get(index);
       }
+
       /**
        * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
        */
@@ -21724,6 +23399,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -21748,7 +23424,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, snapshotId_);
         }
@@ -21775,23 +23451,23 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, snapshotId_);
+              .computeUInt32Size(1, snapshotId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, fileSize_);
+              .computeUInt64Size(2, fileSize_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(3, name_);
+              .computeBytesSize(3, name_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(4, getSnapshotCopy());
+              .computeMessageSize(4, getSnapshotCopy());
         }
         for (int i = 0; i < blocks_.size(); i++) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeMessageSize(5, blocks_.get(i));
+              .computeMessageSize(5, blocks_.get(i));
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -21801,7 +23477,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff)) {
           return super.equals(obj);
@@ -21872,38 +23548,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -21911,11 +23594,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -21923,12 +23608,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -21938,13 +23625,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -21957,6 +23649,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.FileDiff}
        */
@@ -21965,13 +23658,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.FileDiff)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiffOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff.Builder.class);
@@ -21987,13 +23680,15 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
             getSnapshotCopyFieldBuilder();
             getBlocksFieldBuilder();
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -22020,7 +23715,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor;
         }
 
@@ -22081,38 +23776,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -22120,7 +23821,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff.getDefaultInstance())
+            return this;
           if (other.hasSnapshotId()) {
             setSnapshotId(other.getSnapshotId());
           }
@@ -22151,9 +23853,9 @@ public final class FsImageProto {
                 blocksBuilder_ = null;
                 blocks_ = other.blocks_;
                 bitField0_ = (bitField0_ & ~0x00000010);
-                blocksBuilder_ = 
-                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                     getBlocksFieldBuilder() : null;
+                blocksBuilder_ =
+                    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                        getBlocksFieldBuilder() : null;
               } else {
                 blocksBuilder_.addAllMessages(other.blocks_);
               }
@@ -22197,21 +23899,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int snapshotId_ ;
+        private int snapshotId_;
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
         public boolean hasSnapshotId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
         public int getSnapshotId() {
           return snapshotId_;
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
@@ -22221,6 +23927,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 snapshotId = 1;</code>
          */
@@ -22231,19 +23938,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long fileSize_ ;
+        private long fileSize_;
+
         /**
          * <code>optional uint64 fileSize = 2;</code>
          */
         public boolean hasFileSize() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional uint64 fileSize = 2;</code>
          */
         public long getFileSize() {
           return fileSize_;
         }
+
         /**
          * <code>optional uint64 fileSize = 2;</code>
          */
@@ -22253,6 +23963,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 fileSize = 2;</code>
          */
@@ -22264,30 +23975,34 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString name_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes name = 3;</code>
          */
         public boolean hasName() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional bytes name = 3;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getName() {
           return name_;
         }
+
         /**
          * <code>optional bytes name = 3;</code>
          */
         public Builder setName(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           name_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes name = 3;</code>
          */
@@ -22301,12 +24016,14 @@ public final class FsImageProto {
         private org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile snapshotCopy_;
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
             org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder> snapshotCopyBuilder_;
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
         public boolean hasSnapshotCopy() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22317,6 +24034,7 @@ public final class FsImageProto {
             return snapshotCopyBuilder_.getMessage();
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22333,6 +24051,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000008;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22347,6 +24066,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000008;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22356,7 +24076,7 @@ public final class FsImageProto {
                 snapshotCopy_ != null &&
                 snapshotCopy_ != org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance()) {
               snapshotCopy_ =
-                org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.newBuilder(snapshotCopy_).mergeFrom(value).buildPartial();
+                  org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.newBuilder(snapshotCopy_).mergeFrom(value).buildPartial();
             } else {
               snapshotCopy_ = value;
             }
@@ -22367,6 +24087,7 @@ public final class FsImageProto {
           bitField0_ |= 0x00000008;
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22380,6 +24101,7 @@ public final class FsImageProto {
           bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22388,6 +24110,7 @@ public final class FsImageProto {
           onChanged();
           return getSnapshotCopyFieldBuilder().getBuilder();
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
@@ -22399,30 +24122,32 @@ public final class FsImageProto {
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.getDefaultInstance() : snapshotCopy_;
           }
         }
+
         /**
          * <code>optional .hadoop.hdfs.fsimage.INodeSection.INodeFile snapshotCopy = 4;</code>
          */
         private org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
-            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder> 
-            getSnapshotCopyFieldBuilder() {
+            org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder>
+        getSnapshotCopyFieldBuilder() {
           if (snapshotCopyBuilder_ == null) {
             snapshotCopyBuilder_ = new org.apache.hadoop.thirdparty.protobuf.SingleFieldBuilderV3<
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFile.Builder, org.apache.hadoop.hdfs.server.namenode.FsImageProto.INodeSection.INodeFileOrBuilder>(
-                    getSnapshotCopy(),
-                    getParentForChildren(),
-                    isClean());
+                getSnapshotCopy(),
+                getParentForChildren(),
+                isClean());
             snapshotCopy_ = null;
           }
           return snapshotCopyBuilder_;
         }
 
         private java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto> blocks_ =
-          java.util.Collections.emptyList();
+            java.util.Collections.emptyList();
+
         private void ensureBlocksIsMutable() {
           if (!((bitField0_ & 0x00000010) != 0)) {
             blocks_ = new java.util.ArrayList<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto>(blocks_);
             bitField0_ |= 0x00000010;
-           }
+          }
         }
 
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -22438,6 +24163,7 @@ public final class FsImageProto {
             return blocksBuilder_.getMessageList();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22448,6 +24174,7 @@ public final class FsImageProto {
             return blocksBuilder_.getCount();
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22458,6 +24185,7 @@ public final class FsImageProto {
             return blocksBuilder_.getMessage(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22475,6 +24203,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22489,6 +24218,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22505,6 +24235,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22522,6 +24253,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22536,6 +24268,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22550,6 +24283,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22565,6 +24299,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22578,6 +24313,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22591,6 +24327,7 @@ public final class FsImageProto {
           }
           return this;
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22598,27 +24335,31 @@ public final class FsImageProto {
             int index) {
           return getBlocksFieldBuilder().getBuilder(index);
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
         public org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder getBlocksOrBuilder(
             int index) {
           if (blocksBuilder_ == null) {
-            return blocks_.get(index);  } else {
+            return blocks_.get(index);
+          } else {
             return blocksBuilder_.getMessageOrBuilder(index);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
-        public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-             getBlocksOrBuilderList() {
+        public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+        getBlocksOrBuilderList() {
           if (blocksBuilder_ != null) {
             return blocksBuilder_.getMessageOrBuilderList();
           } else {
             return java.util.Collections.unmodifiableList(blocks_);
           }
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22626,6 +24367,7 @@ public final class FsImageProto {
           return getBlocksFieldBuilder().addBuilder(
               org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
@@ -22634,27 +24376,30 @@ public final class FsImageProto {
           return getBlocksFieldBuilder().addBuilder(
               index, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.getDefaultInstance());
         }
+
         /**
          * <code>repeated .hadoop.hdfs.BlockProto blocks = 5;</code>
          */
-        public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder> 
-             getBlocksBuilderList() {
+        public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder>
+        getBlocksBuilderList() {
           return getBlocksFieldBuilder().getBuilderList();
         }
+
         private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-            org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder> 
-            getBlocksFieldBuilder() {
+            org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>
+        getBlocksFieldBuilder() {
           if (blocksBuilder_ == null) {
             blocksBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
                 org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProtoOrBuilder>(
-                    blocks_,
-                    ((bitField0_ & 0x00000010) != 0),
-                    getParentForChildren(),
-                    isClean());
+                blocks_,
+                ((bitField0_ & 0x00000010) != 0),
+                getParentForChildren(),
+                isClean());
             blocks_ = null;
           }
           return blocksBuilder_;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -22673,6 +24418,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotDiffSection.FileDiff)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.FileDiff();
       }
@@ -22681,7 +24427,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileDiff>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<FileDiff>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<FileDiff>() {
         @java.lang.Override
         public FileDiff parsePartialFrom(
@@ -22716,6 +24463,7 @@ public final class FsImageProto {
        * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
        */
       boolean hasType();
+
       /**
        * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
        */
@@ -22725,6 +24473,7 @@ public final class FsImageProto {
        * <code>optional uint64 inodeId = 2;</code>
        */
       boolean hasInodeId();
+
       /**
        * <code>optional uint64 inodeId = 2;</code>
        */
@@ -22734,23 +24483,27 @@ public final class FsImageProto {
        * <code>optional uint32 numOfDiff = 3;</code>
        */
       boolean hasNumOfDiff();
+
       /**
        * <code>optional uint32 numOfDiff = 3;</code>
        */
       int getNumOfDiff();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry}
      */
-    public  static final class DiffEntry extends
+    public static final class DiffEntry extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry)
         DiffEntryOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use DiffEntry.newBuilder() to construct.
       private DiffEntry(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private DiffEntry() {
         type_ = 1;
       }
@@ -22760,6 +24513,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private DiffEntry(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -22781,7 +24535,7 @@ public final class FsImageProto {
                 break;
               case 8: {
                 int rawValue = input.readEnum();
-                  @SuppressWarnings("deprecation")
+                @SuppressWarnings("deprecation")
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Type value = org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Type.valueOf(rawValue);
                 if (value == null) {
                   unknownFields.mergeVarintField(1, rawValue);
@@ -22820,14 +24574,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Builder.class);
@@ -22872,34 +24627,40 @@ public final class FsImageProto {
 
         public static Type forNumber(int value) {
           switch (value) {
-            case 1: return FILEDIFF;
-            case 2: return DIRECTORYDIFF;
-            default: return null;
+            case 1:
+              return FILEDIFF;
+            case 2:
+              return DIRECTORYDIFF;
+            default:
+              return null;
           }
         }
 
         public static org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Type>
-            internalGetValueMap() {
+        internalGetValueMap() {
           return internalValueMap;
         }
+
         private static final org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<
             Type> internalValueMap =
-              new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Type>() {
-                public Type findValueByNumber(int number) {
-                  return Type.forNumber(number);
-                }
-              };
+            new org.apache.hadoop.thirdparty.protobuf.Internal.EnumLiteMap<Type>() {
+              public Type findValueByNumber(int number) {
+                return Type.forNumber(number);
+              }
+            };
 
         public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor
-            getValueDescriptor() {
+        getValueDescriptor() {
           return getDescriptor().getValues().get(ordinal());
         }
+
         public final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return getDescriptor();
         }
+
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumDescriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.getDescriptor().getEnumTypes().get(0);
         }
 
@@ -22909,7 +24670,7 @@ public final class FsImageProto {
             org.apache.hadoop.thirdparty.protobuf.Descriptors.EnumValueDescriptor desc) {
           if (desc.getType() != getDescriptor()) {
             throw new java.lang.IllegalArgumentException(
-              "EnumValueDescriptor is not for this type.");
+                "EnumValueDescriptor is not for this type.");
           }
           return VALUES[desc.getIndex()];
         }
@@ -22926,12 +24687,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int TYPE_FIELD_NUMBER = 1;
       private int type_;
+
       /**
        * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
        */
@@ -22943,12 +24706,14 @@ public final class FsImageProto {
 
       public static final int INODEID_FIELD_NUMBER = 2;
       private long inodeId_;
+
       /**
        * <code>optional uint64 inodeId = 2;</code>
        */
       public boolean hasInodeId() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint64 inodeId = 2;</code>
        */
@@ -22958,12 +24723,14 @@ public final class FsImageProto {
 
       public static final int NUMOFDIFF_FIELD_NUMBER = 3;
       private int numOfDiff_;
+
       /**
        * <code>optional uint32 numOfDiff = 3;</code>
        */
       public boolean hasNumOfDiff() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional uint32 numOfDiff = 3;</code>
        */
@@ -22972,6 +24739,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -22988,7 +24756,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeEnum(1, type_);
         }
@@ -23009,15 +24777,15 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeEnumSize(1, type_);
+              .computeEnumSize(1, type_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, inodeId_);
+              .computeUInt64Size(2, inodeId_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(3, numOfDiff_);
+              .computeUInt32Size(3, numOfDiff_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -23027,7 +24795,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry)) {
           return super.equals(obj);
@@ -23082,38 +24850,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23121,11 +24896,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23133,12 +24910,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23148,13 +24927,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -23167,6 +24951,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry}
        */
@@ -23175,13 +24960,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntryOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Builder.class);
@@ -23197,11 +24982,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -23216,7 +25003,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor;
         }
 
@@ -23260,38 +25047,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -23299,7 +25092,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.getDefaultInstance())
+            return this;
           if (other.hasType()) {
             setType(other.getType());
           }
@@ -23340,15 +25134,18 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
         private int type_ = 1;
+
         /**
          * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
          */
         public boolean hasType() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
          */
@@ -23357,6 +25154,7 @@ public final class FsImageProto {
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Type result = org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Type.valueOf(type_);
           return result == null ? org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry.Type.FILEDIFF : result;
         }
+
         /**
          * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
          */
@@ -23369,6 +25167,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>required .hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry.Type type = 1;</code>
          */
@@ -23379,19 +25178,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long inodeId_ ;
+        private long inodeId_;
+
         /**
          * <code>optional uint64 inodeId = 2;</code>
          */
         public boolean hasInodeId() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional uint64 inodeId = 2;</code>
          */
         public long getInodeId() {
           return inodeId_;
         }
+
         /**
          * <code>optional uint64 inodeId = 2;</code>
          */
@@ -23401,6 +25203,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 inodeId = 2;</code>
          */
@@ -23411,19 +25214,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private int numOfDiff_ ;
+        private int numOfDiff_;
+
         /**
          * <code>optional uint32 numOfDiff = 3;</code>
          */
         public boolean hasNumOfDiff() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional uint32 numOfDiff = 3;</code>
          */
         public int getNumOfDiff() {
           return numOfDiff_;
         }
+
         /**
          * <code>optional uint32 numOfDiff = 3;</code>
          */
@@ -23433,6 +25239,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 numOfDiff = 3;</code>
          */
@@ -23442,6 +25249,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -23460,6 +25268,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotDiffSection.DiffEntry)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.DiffEntry();
       }
@@ -23468,7 +25277,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<DiffEntry>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<DiffEntry>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<DiffEntry>() {
         @java.lang.Override
         public DiffEntry parsePartialFrom(
@@ -23496,6 +25306,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -23508,7 +25319,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       unknownFields.writeTo(output);
     }
 
@@ -23526,7 +25337,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection)) {
         return super.equals(obj);
@@ -23554,38 +25365,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23593,11 +25411,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23605,12 +25425,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23620,13 +25442,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -23639,6 +25466,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -23653,13 +25481,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SnapshotDiffSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.Builder.class);
@@ -23675,11 +25503,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -23688,7 +25518,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor;
       }
 
@@ -23717,38 +25547,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -23756,7 +25592,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection.getDefaultInstance())
+          return this;
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -23785,6 +25622,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -23803,6 +25641,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SnapshotDiffSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SnapshotDiffSection();
     }
@@ -23811,7 +25650,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<SnapshotDiffSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<SnapshotDiffSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<SnapshotDiffSection>() {
       @java.lang.Override
       public SnapshotDiffSection parsePartialFrom(
@@ -23846,6 +25686,7 @@ public final class FsImageProto {
      * <code>optional uint32 numEntry = 1;</code>
      */
     boolean hasNumEntry();
+
     /**
      * <code>optional uint32 numEntry = 1;</code>
      */
@@ -23859,6 +25700,7 @@ public final class FsImageProto {
      * <code>optional uint32 maskBits = 2 [default = 0];</code>
      */
     boolean hasMaskBits();
+
     /**
      * <pre>
      * repeated Entry
@@ -23868,6 +25710,7 @@ public final class FsImageProto {
      */
     int getMaskBits();
   }
+
   /**
    * <pre>
    **
@@ -23877,15 +25720,17 @@ public final class FsImageProto {
    *
    * Protobuf type {@code hadoop.hdfs.fsimage.StringTableSection}
    */
-  public  static final class StringTableSection extends
+  public static final class StringTableSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.StringTableSection)
       StringTableSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use StringTableSection.newBuilder() to construct.
     private StringTableSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private StringTableSection() {
     }
 
@@ -23894,6 +25739,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private StringTableSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -23942,14 +25788,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Builder.class);
@@ -23963,6 +25810,7 @@ public final class FsImageProto {
        * <code>optional uint32 id = 1;</code>
        */
       boolean hasId();
+
       /**
        * <code>optional uint32 id = 1;</code>
        */
@@ -23972,28 +25820,33 @@ public final class FsImageProto {
        * <code>optional string str = 2;</code>
        */
       boolean hasStr();
+
       /**
        * <code>optional string str = 2;</code>
        */
       java.lang.String getStr();
+
       /**
        * <code>optional string str = 2;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getStrBytes();
+      getStrBytes();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.StringTableSection.Entry}
      */
-    public  static final class Entry extends
+    public static final class Entry extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.StringTableSection.Entry)
         EntryOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use Entry.newBuilder() to construct.
       private Entry(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private Entry() {
         str_ = "";
       }
@@ -24003,6 +25856,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private Entry(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24052,14 +25906,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry.Builder.class);
@@ -24068,12 +25923,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int ID_FIELD_NUMBER = 1;
       private int id_;
+
       /**
        * <code>optional uint32 id = 1;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 id = 1;</code>
        */
@@ -24083,12 +25940,14 @@ public final class FsImageProto {
 
       public static final int STR_FIELD_NUMBER = 2;
       private volatile java.lang.Object str_;
+
       /**
        * <code>optional string str = 2;</code>
        */
       public boolean hasStr() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional string str = 2;</code>
        */
@@ -24097,7 +25956,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -24106,14 +25965,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string str = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getStrBytes() {
+      getStrBytes() {
         java.lang.Object ref = str_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           str_ = b;
@@ -24124,6 +25984,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -24136,7 +25997,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, id_);
         }
@@ -24154,7 +26015,7 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, id_);
+              .computeUInt32Size(1, id_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(2, str_);
@@ -24167,7 +26028,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry)) {
           return super.equals(obj);
@@ -24213,38 +26074,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24252,11 +26120,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24264,12 +26134,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24279,13 +26151,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -24298,6 +26175,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.StringTableSection.Entry}
        */
@@ -24306,13 +26184,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.StringTableSection.Entry)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.EntryOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry.Builder.class);
@@ -24328,11 +26206,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -24345,7 +26225,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor;
         }
 
@@ -24385,38 +26265,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -24424,7 +26310,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry.getDefaultInstance())
+            return this;
           if (other.hasId()) {
             setId(other.getId());
           }
@@ -24461,21 +26348,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int id_ ;
+        private int id_;
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
         public boolean hasId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
         public int getId() {
           return id_;
         }
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
@@ -24485,6 +26376,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
@@ -24496,12 +26388,14 @@ public final class FsImageProto {
         }
 
         private java.lang.Object str_ = "";
+
         /**
          * <code>optional string str = 2;</code>
          */
         public boolean hasStr() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional string str = 2;</code>
          */
@@ -24519,14 +26413,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string str = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getStrBytes() {
+        getStrBytes() {
           java.lang.Object ref = str_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             str_ = b;
@@ -24535,19 +26430,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string str = 2;</code>
          */
         public Builder setStr(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           str_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string str = 2;</code>
          */
@@ -24557,19 +26454,21 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string str = 2;</code>
          */
         public Builder setStrBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           str_ = value;
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -24588,6 +26487,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.StringTableSection.Entry)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Entry();
       }
@@ -24596,7 +26496,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<Entry>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<Entry>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<Entry>() {
         @java.lang.Override
         public Entry parsePartialFrom(
@@ -24626,12 +26527,14 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int NUMENTRY_FIELD_NUMBER = 1;
     private int numEntry_;
+
     /**
      * <code>optional uint32 numEntry = 1;</code>
      */
     public boolean hasNumEntry() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint32 numEntry = 1;</code>
      */
@@ -24641,6 +26544,7 @@ public final class FsImageProto {
 
     public static final int MASKBITS_FIELD_NUMBER = 2;
     private int maskBits_;
+
     /**
      * <pre>
      * repeated Entry
@@ -24651,6 +26555,7 @@ public final class FsImageProto {
     public boolean hasMaskBits() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <pre>
      * repeated Entry
@@ -24663,6 +26568,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -24675,7 +26581,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, numEntry_);
       }
@@ -24693,11 +26599,11 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, numEntry_);
+            .computeUInt32Size(1, numEntry_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(2, maskBits_);
+            .computeUInt32Size(2, maskBits_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -24707,7 +26613,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection)) {
         return super.equals(obj);
@@ -24753,38 +26659,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24792,11 +26705,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24804,12 +26719,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -24819,13 +26736,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -24838,6 +26760,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * <pre>
      **
@@ -24852,13 +26775,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.StringTableSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.Builder.class);
@@ -24874,11 +26797,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -24891,7 +26816,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor;
       }
 
@@ -24931,38 +26856,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -24970,7 +26901,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection.getDefaultInstance())
+          return this;
         if (other.hasNumEntry()) {
           setNumEntry(other.getNumEntry());
         }
@@ -25005,21 +26937,25 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int numEntry_ ;
+      private int numEntry_;
+
       /**
        * <code>optional uint32 numEntry = 1;</code>
        */
       public boolean hasNumEntry() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 numEntry = 1;</code>
        */
       public int getNumEntry() {
         return numEntry_;
       }
+
       /**
        * <code>optional uint32 numEntry = 1;</code>
        */
@@ -25029,6 +26965,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 numEntry = 1;</code>
        */
@@ -25039,7 +26976,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private int maskBits_ ;
+      private int maskBits_;
+
       /**
        * <pre>
        * repeated Entry
@@ -25050,6 +26988,7 @@ public final class FsImageProto {
       public boolean hasMaskBits() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <pre>
        * repeated Entry
@@ -25060,6 +26999,7 @@ public final class FsImageProto {
       public int getMaskBits() {
         return maskBits_;
       }
+
       /**
        * <pre>
        * repeated Entry
@@ -25073,6 +27013,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * repeated Entry
@@ -25086,6 +27027,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -25104,6 +27046,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.StringTableSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.StringTableSection();
     }
@@ -25112,7 +27055,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<StringTableSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<StringTableSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<StringTableSection>() {
       @java.lang.Override
       public StringTableSection parsePartialFrom(
@@ -25147,6 +27091,7 @@ public final class FsImageProto {
      * <code>optional uint32 currentId = 1;</code>
      */
     boolean hasCurrentId();
+
     /**
      * <code>optional uint32 currentId = 1;</code>
      */
@@ -25156,6 +27101,7 @@ public final class FsImageProto {
      * <code>optional uint32 tokenSequenceNumber = 2;</code>
      */
     boolean hasTokenSequenceNumber();
+
     /**
      * <code>optional uint32 tokenSequenceNumber = 2;</code>
      */
@@ -25165,6 +27111,7 @@ public final class FsImageProto {
      * <code>optional uint32 numKeys = 3;</code>
      */
     boolean hasNumKeys();
+
     /**
      * <code>optional uint32 numKeys = 3;</code>
      */
@@ -25179,6 +27126,7 @@ public final class FsImageProto {
      * <code>optional uint32 numTokens = 4;</code>
      */
     boolean hasNumTokens();
+
     /**
      * <pre>
      * repeated DelegationKey keys
@@ -25189,18 +27137,21 @@ public final class FsImageProto {
      */
     int getNumTokens();
   }
+
   /**
    * Protobuf type {@code hadoop.hdfs.fsimage.SecretManagerSection}
    */
-  public  static final class SecretManagerSection extends
+  public static final class SecretManagerSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SecretManagerSection)
       SecretManagerSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use SecretManagerSection.newBuilder() to construct.
     private SecretManagerSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private SecretManagerSection() {
     }
 
@@ -25209,6 +27160,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private SecretManagerSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -25267,14 +27219,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.Builder.class);
@@ -25288,6 +27241,7 @@ public final class FsImageProto {
        * <code>optional uint32 id = 1;</code>
        */
       boolean hasId();
+
       /**
        * <code>optional uint32 id = 1;</code>
        */
@@ -25297,6 +27251,7 @@ public final class FsImageProto {
        * <code>optional uint64 expiryDate = 2;</code>
        */
       boolean hasExpiryDate();
+
       /**
        * <code>optional uint64 expiryDate = 2;</code>
        */
@@ -25306,23 +27261,27 @@ public final class FsImageProto {
        * <code>optional bytes key = 3;</code>
        */
       boolean hasKey();
+
       /**
        * <code>optional bytes key = 3;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString getKey();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SecretManagerSection.DelegationKey}
      */
-    public  static final class DelegationKey extends
+    public static final class DelegationKey extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SecretManagerSection.DelegationKey)
         DelegationKeyOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use DelegationKey.newBuilder() to construct.
       private DelegationKey(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private DelegationKey() {
         key_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
       }
@@ -25332,6 +27291,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private DelegationKey(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -25385,14 +27345,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey.Builder.class);
@@ -25401,12 +27362,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int ID_FIELD_NUMBER = 1;
       private int id_;
+
       /**
        * <code>optional uint32 id = 1;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 id = 1;</code>
        */
@@ -25416,12 +27379,14 @@ public final class FsImageProto {
 
       public static final int EXPIRYDATE_FIELD_NUMBER = 2;
       private long expiryDate_;
+
       /**
        * <code>optional uint64 expiryDate = 2;</code>
        */
       public boolean hasExpiryDate() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint64 expiryDate = 2;</code>
        */
@@ -25431,12 +27396,14 @@ public final class FsImageProto {
 
       public static final int KEY_FIELD_NUMBER = 3;
       private org.apache.hadoop.thirdparty.protobuf.ByteString key_;
+
       /**
        * <code>optional bytes key = 3;</code>
        */
       public boolean hasKey() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional bytes key = 3;</code>
        */
@@ -25445,6 +27412,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -25457,7 +27425,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, id_);
         }
@@ -25478,15 +27446,15 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, id_);
+              .computeUInt32Size(1, id_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(2, expiryDate_);
+              .computeUInt64Size(2, expiryDate_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeBytesSize(3, key_);
+              .computeBytesSize(3, key_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -25496,7 +27464,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey)) {
           return super.equals(obj);
@@ -25552,38 +27520,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -25591,11 +27566,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -25603,12 +27580,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -25618,13 +27597,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -25637,6 +27621,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SecretManagerSection.DelegationKey}
        */
@@ -25645,13 +27630,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SecretManagerSection.DelegationKey)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKeyOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey.Builder.class);
@@ -25667,11 +27652,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -25686,7 +27673,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor;
         }
 
@@ -25730,38 +27717,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -25769,7 +27762,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey.getDefaultInstance())
+            return this;
           if (other.hasId()) {
             setId(other.getId());
           }
@@ -25807,21 +27801,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int id_ ;
+        private int id_;
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
         public boolean hasId() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
         public int getId() {
           return id_;
         }
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
@@ -25831,6 +27829,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 id = 1;</code>
          */
@@ -25841,19 +27840,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long expiryDate_ ;
+        private long expiryDate_;
+
         /**
          * <code>optional uint64 expiryDate = 2;</code>
          */
         public boolean hasExpiryDate() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional uint64 expiryDate = 2;</code>
          */
         public long getExpiryDate() {
           return expiryDate_;
         }
+
         /**
          * <code>optional uint64 expiryDate = 2;</code>
          */
@@ -25863,6 +27865,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 expiryDate = 2;</code>
          */
@@ -25874,30 +27877,34 @@ public final class FsImageProto {
         }
 
         private org.apache.hadoop.thirdparty.protobuf.ByteString key_ = org.apache.hadoop.thirdparty.protobuf.ByteString.EMPTY;
+
         /**
          * <code>optional bytes key = 3;</code>
          */
         public boolean hasKey() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional bytes key = 3;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString getKey() {
           return key_;
         }
+
         /**
          * <code>optional bytes key = 3;</code>
          */
         public Builder setKey(org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           key_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional bytes key = 3;</code>
          */
@@ -25907,6 +27914,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -25925,6 +27933,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SecretManagerSection.DelegationKey)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.DelegationKey();
       }
@@ -25933,7 +27942,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<DelegationKey>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<DelegationKey>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<DelegationKey>() {
         @java.lang.Override
         public DelegationKey parsePartialFrom(
@@ -25968,6 +27978,7 @@ public final class FsImageProto {
        * <code>optional uint32 version = 1;</code>
        */
       boolean hasVersion();
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
@@ -25977,48 +27988,55 @@ public final class FsImageProto {
        * <code>optional string owner = 2;</code>
        */
       boolean hasOwner();
+
       /**
        * <code>optional string owner = 2;</code>
        */
       java.lang.String getOwner();
+
       /**
        * <code>optional string owner = 2;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getOwnerBytes();
+      getOwnerBytes();
 
       /**
        * <code>optional string renewer = 3;</code>
        */
       boolean hasRenewer();
+
       /**
        * <code>optional string renewer = 3;</code>
        */
       java.lang.String getRenewer();
+
       /**
        * <code>optional string renewer = 3;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getRenewerBytes();
+      getRenewerBytes();
 
       /**
        * <code>optional string realUser = 4;</code>
        */
       boolean hasRealUser();
+
       /**
        * <code>optional string realUser = 4;</code>
        */
       java.lang.String getRealUser();
+
       /**
        * <code>optional string realUser = 4;</code>
        */
       org.apache.hadoop.thirdparty.protobuf.ByteString
-          getRealUserBytes();
+      getRealUserBytes();
 
       /**
        * <code>optional uint64 issueDate = 5;</code>
        */
       boolean hasIssueDate();
+
       /**
        * <code>optional uint64 issueDate = 5;</code>
        */
@@ -26028,6 +28046,7 @@ public final class FsImageProto {
        * <code>optional uint64 maxDate = 6;</code>
        */
       boolean hasMaxDate();
+
       /**
        * <code>optional uint64 maxDate = 6;</code>
        */
@@ -26037,6 +28056,7 @@ public final class FsImageProto {
        * <code>optional uint32 sequenceNumber = 7;</code>
        */
       boolean hasSequenceNumber();
+
       /**
        * <code>optional uint32 sequenceNumber = 7;</code>
        */
@@ -26046,6 +28066,7 @@ public final class FsImageProto {
        * <code>optional uint32 masterKeyId = 8;</code>
        */
       boolean hasMasterKeyId();
+
       /**
        * <code>optional uint32 masterKeyId = 8;</code>
        */
@@ -26055,23 +28076,27 @@ public final class FsImageProto {
        * <code>optional uint64 expiryDate = 9;</code>
        */
       boolean hasExpiryDate();
+
       /**
        * <code>optional uint64 expiryDate = 9;</code>
        */
       long getExpiryDate();
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SecretManagerSection.PersistToken}
      */
-    public  static final class PersistToken extends
+    public static final class PersistToken extends
         org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
         // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.SecretManagerSection.PersistToken)
         PersistTokenOrBuilder {
-    private static final long serialVersionUID = 0L;
+      private static final long serialVersionUID = 0L;
+
       // Use PersistToken.newBuilder() to construct.
       private PersistToken(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
       }
+
       private PersistToken() {
         owner_ = "";
         renewer_ = "";
@@ -26083,6 +28108,7 @@ public final class FsImageProto {
       getUnknownFields() {
         return this.unknownFields;
       }
+
       private PersistToken(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -26169,14 +28195,15 @@ public final class FsImageProto {
           makeExtensionsImmutable();
         }
       }
+
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken.Builder.class);
@@ -26185,12 +28212,14 @@ public final class FsImageProto {
       private int bitField0_;
       public static final int VERSION_FIELD_NUMBER = 1;
       private int version_;
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
       public boolean hasVersion() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 version = 1;</code>
        */
@@ -26200,12 +28229,14 @@ public final class FsImageProto {
 
       public static final int OWNER_FIELD_NUMBER = 2;
       private volatile java.lang.Object owner_;
+
       /**
        * <code>optional string owner = 2;</code>
        */
       public boolean hasOwner() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional string owner = 2;</code>
        */
@@ -26214,7 +28245,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -26223,14 +28254,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string owner = 2;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getOwnerBytes() {
+      getOwnerBytes() {
         java.lang.Object ref = owner_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           owner_ = b;
@@ -26242,12 +28274,14 @@ public final class FsImageProto {
 
       public static final int RENEWER_FIELD_NUMBER = 3;
       private volatile java.lang.Object renewer_;
+
       /**
        * <code>optional string renewer = 3;</code>
        */
       public boolean hasRenewer() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional string renewer = 3;</code>
        */
@@ -26256,7 +28290,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -26265,14 +28299,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string renewer = 3;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getRenewerBytes() {
+      getRenewerBytes() {
         java.lang.Object ref = renewer_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           renewer_ = b;
@@ -26284,12 +28319,14 @@ public final class FsImageProto {
 
       public static final int REALUSER_FIELD_NUMBER = 4;
       private volatile java.lang.Object realUser_;
+
       /**
        * <code>optional string realUser = 4;</code>
        */
       public boolean hasRealUser() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <code>optional string realUser = 4;</code>
        */
@@ -26298,7 +28335,7 @@ public final class FsImageProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          org.apache.hadoop.thirdparty.protobuf.ByteString bs = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString bs =
               (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -26307,14 +28344,15 @@ public final class FsImageProto {
           return s;
         }
       }
+
       /**
        * <code>optional string realUser = 4;</code>
        */
       public org.apache.hadoop.thirdparty.protobuf.ByteString
-          getRealUserBytes() {
+      getRealUserBytes() {
         java.lang.Object ref = realUser_;
         if (ref instanceof java.lang.String) {
-          org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+          org.apache.hadoop.thirdparty.protobuf.ByteString b =
               org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           realUser_ = b;
@@ -26326,12 +28364,14 @@ public final class FsImageProto {
 
       public static final int ISSUEDATE_FIELD_NUMBER = 5;
       private long issueDate_;
+
       /**
        * <code>optional uint64 issueDate = 5;</code>
        */
       public boolean hasIssueDate() {
         return ((bitField0_ & 0x00000010) != 0);
       }
+
       /**
        * <code>optional uint64 issueDate = 5;</code>
        */
@@ -26341,12 +28381,14 @@ public final class FsImageProto {
 
       public static final int MAXDATE_FIELD_NUMBER = 6;
       private long maxDate_;
+
       /**
        * <code>optional uint64 maxDate = 6;</code>
        */
       public boolean hasMaxDate() {
         return ((bitField0_ & 0x00000020) != 0);
       }
+
       /**
        * <code>optional uint64 maxDate = 6;</code>
        */
@@ -26356,12 +28398,14 @@ public final class FsImageProto {
 
       public static final int SEQUENCENUMBER_FIELD_NUMBER = 7;
       private int sequenceNumber_;
+
       /**
        * <code>optional uint32 sequenceNumber = 7;</code>
        */
       public boolean hasSequenceNumber() {
         return ((bitField0_ & 0x00000040) != 0);
       }
+
       /**
        * <code>optional uint32 sequenceNumber = 7;</code>
        */
@@ -26371,12 +28415,14 @@ public final class FsImageProto {
 
       public static final int MASTERKEYID_FIELD_NUMBER = 8;
       private int masterKeyId_;
+
       /**
        * <code>optional uint32 masterKeyId = 8;</code>
        */
       public boolean hasMasterKeyId() {
         return ((bitField0_ & 0x00000080) != 0);
       }
+
       /**
        * <code>optional uint32 masterKeyId = 8;</code>
        */
@@ -26386,12 +28432,14 @@ public final class FsImageProto {
 
       public static final int EXPIRYDATE_FIELD_NUMBER = 9;
       private long expiryDate_;
+
       /**
        * <code>optional uint64 expiryDate = 9;</code>
        */
       public boolean hasExpiryDate() {
         return ((bitField0_ & 0x00000100) != 0);
       }
+
       /**
        * <code>optional uint64 expiryDate = 9;</code>
        */
@@ -26400,6 +28448,7 @@ public final class FsImageProto {
       }
 
       private byte memoizedIsInitialized = -1;
+
       @java.lang.Override
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -26412,7 +28461,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
+          throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
           output.writeUInt32(1, version_);
         }
@@ -26451,7 +28500,7 @@ public final class FsImageProto {
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(1, version_);
+              .computeUInt32Size(1, version_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.computeStringSize(2, owner_);
@@ -26464,23 +28513,23 @@ public final class FsImageProto {
         }
         if (((bitField0_ & 0x00000010) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(5, issueDate_);
+              .computeUInt64Size(5, issueDate_);
         }
         if (((bitField0_ & 0x00000020) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(6, maxDate_);
+              .computeUInt64Size(6, maxDate_);
         }
         if (((bitField0_ & 0x00000040) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(7, sequenceNumber_);
+              .computeUInt32Size(7, sequenceNumber_);
         }
         if (((bitField0_ & 0x00000080) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt32Size(8, masterKeyId_);
+              .computeUInt32Size(8, masterKeyId_);
         }
         if (((bitField0_ & 0x00000100) != 0)) {
           size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-            .computeUInt64Size(9, expiryDate_);
+              .computeUInt64Size(9, expiryDate_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -26490,7 +28539,7 @@ public final class FsImageProto {
       @java.lang.Override
       public boolean equals(final java.lang.Object obj) {
         if (obj == this) {
-         return true;
+          return true;
         }
         if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken)) {
           return super.equals(obj);
@@ -26602,38 +28651,45 @@ public final class FsImageProto {
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           java.nio.ByteBuffer data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           org.apache.hadoop.thirdparty.protobuf.ByteString data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(byte[] data)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           byte[] data,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
           throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -26641,11 +28697,13 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseDelimitedFrom(
           java.io.InputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -26653,12 +28711,14 @@ public final class FsImageProto {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
+
       public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken parseFrom(
           org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
           org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -26668,13 +28728,18 @@ public final class FsImageProto {
       }
 
       @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
+      public Builder newBuilderForType() {
+        return newBuilder();
+      }
+
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
+
       public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
+
       @java.lang.Override
       public Builder toBuilder() {
         return this == DEFAULT_INSTANCE
@@ -26687,6 +28752,7 @@ public final class FsImageProto {
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        * Protobuf type {@code hadoop.hdfs.fsimage.SecretManagerSection.PersistToken}
        */
@@ -26695,13 +28761,13 @@ public final class FsImageProto {
           // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SecretManagerSection.PersistToken)
           org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistTokenOrBuilder {
         public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptor() {
+        getDescriptor() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor;
         }
 
         @java.lang.Override
         protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
                   org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken.Builder.class);
@@ -26717,11 +28783,13 @@ public final class FsImageProto {
           super(parent);
           maybeForceBuilderInitialization();
         }
+
         private void maybeForceBuilderInitialization() {
           if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
+              .alwaysUseFieldBuilders) {
           }
         }
+
         @java.lang.Override
         public Builder clear() {
           super.clear();
@@ -26748,7 +28816,7 @@ public final class FsImageProto {
 
         @java.lang.Override
         public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
+        getDescriptorForType() {
           return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor;
         }
 
@@ -26816,38 +28884,44 @@ public final class FsImageProto {
         public Builder clone() {
           return super.clone();
         }
+
         @java.lang.Override
         public Builder setField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.setField(field, value);
         }
+
         @java.lang.Override
         public Builder clearField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
           return super.clearField(field);
         }
+
         @java.lang.Override
         public Builder clearOneof(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
           return super.clearOneof(oneof);
         }
+
         @java.lang.Override
         public Builder setRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             int index, java.lang.Object value) {
           return super.setRepeatedField(field, index, value);
         }
+
         @java.lang.Override
         public Builder addRepeatedField(
             org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
             java.lang.Object value) {
           return super.addRepeatedField(field, value);
         }
+
         @java.lang.Override
         public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
           if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken) {
-            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken)other);
+            return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken) other);
           } else {
             super.mergeFrom(other);
             return this;
@@ -26855,7 +28929,8 @@ public final class FsImageProto {
         }
 
         public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken other) {
-          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken.getDefaultInstance()) return this;
+          if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken.getDefaultInstance())
+            return this;
           if (other.hasVersion()) {
             setVersion(other.getVersion());
           }
@@ -26917,21 +28992,25 @@ public final class FsImageProto {
           }
           return this;
         }
+
         private int bitField0_;
 
-        private int version_ ;
+        private int version_;
+
         /**
          * <code>optional uint32 version = 1;</code>
          */
         public boolean hasVersion() {
           return ((bitField0_ & 0x00000001) != 0);
         }
+
         /**
          * <code>optional uint32 version = 1;</code>
          */
         public int getVersion() {
           return version_;
         }
+
         /**
          * <code>optional uint32 version = 1;</code>
          */
@@ -26941,6 +29020,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 version = 1;</code>
          */
@@ -26952,12 +29032,14 @@ public final class FsImageProto {
         }
 
         private java.lang.Object owner_ = "";
+
         /**
          * <code>optional string owner = 2;</code>
          */
         public boolean hasOwner() {
           return ((bitField0_ & 0x00000002) != 0);
         }
+
         /**
          * <code>optional string owner = 2;</code>
          */
@@ -26975,14 +29057,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string owner = 2;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getOwnerBytes() {
+        getOwnerBytes() {
           java.lang.Object ref = owner_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             owner_ = b;
@@ -26991,19 +29074,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string owner = 2;</code>
          */
         public Builder setOwner(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           owner_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string owner = 2;</code>
          */
@@ -27013,27 +29098,30 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string owner = 2;</code>
          */
         public Builder setOwnerBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
           owner_ = value;
           onChanged();
           return this;
         }
 
         private java.lang.Object renewer_ = "";
+
         /**
          * <code>optional string renewer = 3;</code>
          */
         public boolean hasRenewer() {
           return ((bitField0_ & 0x00000004) != 0);
         }
+
         /**
          * <code>optional string renewer = 3;</code>
          */
@@ -27051,14 +29139,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string renewer = 3;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getRenewerBytes() {
+        getRenewerBytes() {
           java.lang.Object ref = renewer_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             renewer_ = b;
@@ -27067,19 +29156,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string renewer = 3;</code>
          */
         public Builder setRenewer(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           renewer_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string renewer = 3;</code>
          */
@@ -27089,27 +29180,30 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string renewer = 3;</code>
          */
         public Builder setRenewerBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000004;
           renewer_ = value;
           onChanged();
           return this;
         }
 
         private java.lang.Object realUser_ = "";
+
         /**
          * <code>optional string realUser = 4;</code>
          */
         public boolean hasRealUser() {
           return ((bitField0_ & 0x00000008) != 0);
         }
+
         /**
          * <code>optional string realUser = 4;</code>
          */
@@ -27127,14 +29221,15 @@ public final class FsImageProto {
             return (java.lang.String) ref;
           }
         }
+
         /**
          * <code>optional string realUser = 4;</code>
          */
         public org.apache.hadoop.thirdparty.protobuf.ByteString
-            getRealUserBytes() {
+        getRealUserBytes() {
           java.lang.Object ref = realUser_;
           if (ref instanceof String) {
-            org.apache.hadoop.thirdparty.protobuf.ByteString b = 
+            org.apache.hadoop.thirdparty.protobuf.ByteString b =
                 org.apache.hadoop.thirdparty.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             realUser_ = b;
@@ -27143,19 +29238,21 @@ public final class FsImageProto {
             return (org.apache.hadoop.thirdparty.protobuf.ByteString) ref;
           }
         }
+
         /**
          * <code>optional string realUser = 4;</code>
          */
         public Builder setRealUser(
             java.lang.String value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000008;
           realUser_ = value;
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string realUser = 4;</code>
          */
@@ -27165,33 +29262,37 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional string realUser = 4;</code>
          */
         public Builder setRealUserBytes(
             org.apache.hadoop.thirdparty.protobuf.ByteString value) {
           if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000008;
           realUser_ = value;
           onChanged();
           return this;
         }
 
-        private long issueDate_ ;
+        private long issueDate_;
+
         /**
          * <code>optional uint64 issueDate = 5;</code>
          */
         public boolean hasIssueDate() {
           return ((bitField0_ & 0x00000010) != 0);
         }
+
         /**
          * <code>optional uint64 issueDate = 5;</code>
          */
         public long getIssueDate() {
           return issueDate_;
         }
+
         /**
          * <code>optional uint64 issueDate = 5;</code>
          */
@@ -27201,6 +29302,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 issueDate = 5;</code>
          */
@@ -27211,19 +29313,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long maxDate_ ;
+        private long maxDate_;
+
         /**
          * <code>optional uint64 maxDate = 6;</code>
          */
         public boolean hasMaxDate() {
           return ((bitField0_ & 0x00000020) != 0);
         }
+
         /**
          * <code>optional uint64 maxDate = 6;</code>
          */
         public long getMaxDate() {
           return maxDate_;
         }
+
         /**
          * <code>optional uint64 maxDate = 6;</code>
          */
@@ -27233,6 +29338,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 maxDate = 6;</code>
          */
@@ -27243,19 +29349,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private int sequenceNumber_ ;
+        private int sequenceNumber_;
+
         /**
          * <code>optional uint32 sequenceNumber = 7;</code>
          */
         public boolean hasSequenceNumber() {
           return ((bitField0_ & 0x00000040) != 0);
         }
+
         /**
          * <code>optional uint32 sequenceNumber = 7;</code>
          */
         public int getSequenceNumber() {
           return sequenceNumber_;
         }
+
         /**
          * <code>optional uint32 sequenceNumber = 7;</code>
          */
@@ -27265,6 +29374,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 sequenceNumber = 7;</code>
          */
@@ -27275,19 +29385,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private int masterKeyId_ ;
+        private int masterKeyId_;
+
         /**
          * <code>optional uint32 masterKeyId = 8;</code>
          */
         public boolean hasMasterKeyId() {
           return ((bitField0_ & 0x00000080) != 0);
         }
+
         /**
          * <code>optional uint32 masterKeyId = 8;</code>
          */
         public int getMasterKeyId() {
           return masterKeyId_;
         }
+
         /**
          * <code>optional uint32 masterKeyId = 8;</code>
          */
@@ -27297,6 +29410,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint32 masterKeyId = 8;</code>
          */
@@ -27307,19 +29421,22 @@ public final class FsImageProto {
           return this;
         }
 
-        private long expiryDate_ ;
+        private long expiryDate_;
+
         /**
          * <code>optional uint64 expiryDate = 9;</code>
          */
         public boolean hasExpiryDate() {
           return ((bitField0_ & 0x00000100) != 0);
         }
+
         /**
          * <code>optional uint64 expiryDate = 9;</code>
          */
         public long getExpiryDate() {
           return expiryDate_;
         }
+
         /**
          * <code>optional uint64 expiryDate = 9;</code>
          */
@@ -27329,6 +29446,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         /**
          * <code>optional uint64 expiryDate = 9;</code>
          */
@@ -27338,6 +29456,7 @@ public final class FsImageProto {
           onChanged();
           return this;
         }
+
         @java.lang.Override
         public final Builder setUnknownFields(
             final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -27356,6 +29475,7 @@ public final class FsImageProto {
 
       // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SecretManagerSection.PersistToken)
       private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken DEFAULT_INSTANCE;
+
       static {
         DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.PersistToken();
       }
@@ -27364,7 +29484,8 @@ public final class FsImageProto {
         return DEFAULT_INSTANCE;
       }
 
-      @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<PersistToken>
+      @java.lang.Deprecated
+      public static final org.apache.hadoop.thirdparty.protobuf.Parser<PersistToken>
           PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<PersistToken>() {
         @java.lang.Override
         public PersistToken parsePartialFrom(
@@ -27394,12 +29515,14 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int CURRENTID_FIELD_NUMBER = 1;
     private int currentId_;
+
     /**
      * <code>optional uint32 currentId = 1;</code>
      */
     public boolean hasCurrentId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional uint32 currentId = 1;</code>
      */
@@ -27409,12 +29532,14 @@ public final class FsImageProto {
 
     public static final int TOKENSEQUENCENUMBER_FIELD_NUMBER = 2;
     private int tokenSequenceNumber_;
+
     /**
      * <code>optional uint32 tokenSequenceNumber = 2;</code>
      */
     public boolean hasTokenSequenceNumber() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>optional uint32 tokenSequenceNumber = 2;</code>
      */
@@ -27424,12 +29549,14 @@ public final class FsImageProto {
 
     public static final int NUMKEYS_FIELD_NUMBER = 3;
     private int numKeys_;
+
     /**
      * <code>optional uint32 numKeys = 3;</code>
      */
     public boolean hasNumKeys() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <code>optional uint32 numKeys = 3;</code>
      */
@@ -27439,6 +29566,7 @@ public final class FsImageProto {
 
     public static final int NUMTOKENS_FIELD_NUMBER = 4;
     private int numTokens_;
+
     /**
      * <pre>
      * repeated DelegationKey keys
@@ -27450,6 +29578,7 @@ public final class FsImageProto {
     public boolean hasNumTokens() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      * <pre>
      * repeated DelegationKey keys
@@ -27463,6 +29592,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -27475,7 +29605,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt32(1, currentId_);
       }
@@ -27499,19 +29629,19 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(1, currentId_);
+            .computeUInt32Size(1, currentId_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(2, tokenSequenceNumber_);
+            .computeUInt32Size(2, tokenSequenceNumber_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(3, numKeys_);
+            .computeUInt32Size(3, numKeys_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(4, numTokens_);
+            .computeUInt32Size(4, numTokens_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -27521,7 +29651,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection)) {
         return super.equals(obj);
@@ -27585,38 +29715,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -27624,11 +29761,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -27636,12 +29775,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -27651,13 +29792,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -27670,6 +29816,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.SecretManagerSection}
      */
@@ -27678,13 +29825,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.SecretManagerSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.Builder.class);
@@ -27700,11 +29847,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -27721,7 +29870,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor;
       }
 
@@ -27769,38 +29918,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -27808,7 +29963,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection.getDefaultInstance())
+          return this;
         if (other.hasCurrentId()) {
           setCurrentId(other.getCurrentId());
         }
@@ -27849,21 +30005,25 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private int currentId_ ;
+      private int currentId_;
+
       /**
        * <code>optional uint32 currentId = 1;</code>
        */
       public boolean hasCurrentId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>optional uint32 currentId = 1;</code>
        */
       public int getCurrentId() {
         return currentId_;
       }
+
       /**
        * <code>optional uint32 currentId = 1;</code>
        */
@@ -27873,6 +30033,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 currentId = 1;</code>
        */
@@ -27883,19 +30044,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private int tokenSequenceNumber_ ;
+      private int tokenSequenceNumber_;
+
       /**
        * <code>optional uint32 tokenSequenceNumber = 2;</code>
        */
       public boolean hasTokenSequenceNumber() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>optional uint32 tokenSequenceNumber = 2;</code>
        */
       public int getTokenSequenceNumber() {
         return tokenSequenceNumber_;
       }
+
       /**
        * <code>optional uint32 tokenSequenceNumber = 2;</code>
        */
@@ -27905,6 +30069,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 tokenSequenceNumber = 2;</code>
        */
@@ -27915,19 +30080,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private int numKeys_ ;
+      private int numKeys_;
+
       /**
        * <code>optional uint32 numKeys = 3;</code>
        */
       public boolean hasNumKeys() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <code>optional uint32 numKeys = 3;</code>
        */
       public int getNumKeys() {
         return numKeys_;
       }
+
       /**
        * <code>optional uint32 numKeys = 3;</code>
        */
@@ -27937,6 +30105,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>optional uint32 numKeys = 3;</code>
        */
@@ -27947,7 +30116,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private int numTokens_ ;
+      private int numTokens_;
+
       /**
        * <pre>
        * repeated DelegationKey keys
@@ -27959,6 +30129,7 @@ public final class FsImageProto {
       public boolean hasNumTokens() {
         return ((bitField0_ & 0x00000008) != 0);
       }
+
       /**
        * <pre>
        * repeated DelegationKey keys
@@ -27970,6 +30141,7 @@ public final class FsImageProto {
       public int getNumTokens() {
         return numTokens_;
       }
+
       /**
        * <pre>
        * repeated DelegationKey keys
@@ -27984,6 +30156,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * repeated DelegationKey keys
@@ -27998,6 +30171,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -28016,6 +30190,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.SecretManagerSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.SecretManagerSection();
     }
@@ -28024,7 +30199,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<SecretManagerSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<SecretManagerSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<SecretManagerSection>() {
       @java.lang.Override
       public SecretManagerSection parsePartialFrom(
@@ -28059,6 +30235,7 @@ public final class FsImageProto {
      * <code>required uint64 nextDirectiveId = 1;</code>
      */
     boolean hasNextDirectiveId();
+
     /**
      * <code>required uint64 nextDirectiveId = 1;</code>
      */
@@ -28068,6 +30245,7 @@ public final class FsImageProto {
      * <code>required uint32 numPools = 2;</code>
      */
     boolean hasNumPools();
+
     /**
      * <code>required uint32 numPools = 2;</code>
      */
@@ -28082,6 +30260,7 @@ public final class FsImageProto {
      * <code>required uint32 numDirectives = 3;</code>
      */
     boolean hasNumDirectives();
+
     /**
      * <pre>
      * repeated CachePoolInfoProto pools
@@ -28092,18 +30271,21 @@ public final class FsImageProto {
      */
     int getNumDirectives();
   }
+
   /**
    * Protobuf type {@code hadoop.hdfs.fsimage.CacheManagerSection}
    */
-  public  static final class CacheManagerSection extends
+  public static final class CacheManagerSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.CacheManagerSection)
       CacheManagerSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use CacheManagerSection.newBuilder() to construct.
     private CacheManagerSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private CacheManagerSection() {
     }
 
@@ -28112,6 +30294,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private CacheManagerSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -28165,14 +30348,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_CacheManagerSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection.Builder.class);
@@ -28181,12 +30365,14 @@ public final class FsImageProto {
     private int bitField0_;
     public static final int NEXTDIRECTIVEID_FIELD_NUMBER = 1;
     private long nextDirectiveId_;
+
     /**
      * <code>required uint64 nextDirectiveId = 1;</code>
      */
     public boolean hasNextDirectiveId() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>required uint64 nextDirectiveId = 1;</code>
      */
@@ -28196,12 +30382,14 @@ public final class FsImageProto {
 
     public static final int NUMPOOLS_FIELD_NUMBER = 2;
     private int numPools_;
+
     /**
      * <code>required uint32 numPools = 2;</code>
      */
     public boolean hasNumPools() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>required uint32 numPools = 2;</code>
      */
@@ -28211,6 +30399,7 @@ public final class FsImageProto {
 
     public static final int NUMDIRECTIVES_FIELD_NUMBER = 3;
     private int numDirectives_;
+
     /**
      * <pre>
      * repeated CachePoolInfoProto pools
@@ -28222,6 +30411,7 @@ public final class FsImageProto {
     public boolean hasNumDirectives() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      * <pre>
      * repeated CachePoolInfoProto pools
@@ -28235,6 +30425,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -28259,7 +30450,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeUInt64(1, nextDirectiveId_);
       }
@@ -28280,15 +30471,15 @@ public final class FsImageProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt64Size(1, nextDirectiveId_);
+            .computeUInt64Size(1, nextDirectiveId_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(2, numPools_);
+            .computeUInt32Size(2, numPools_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeUInt32Size(3, numDirectives_);
+            .computeUInt32Size(3, numDirectives_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -28298,7 +30489,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection)) {
         return super.equals(obj);
@@ -28354,38 +30545,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -28393,11 +30591,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -28405,12 +30605,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -28420,13 +30622,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -28439,6 +30646,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.CacheManagerSection}
      */
@@ -28447,13 +30655,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.CacheManagerSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_CacheManagerSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection.Builder.class);
@@ -28469,11 +30677,13 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -28488,7 +30698,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor;
       }
 
@@ -28532,38 +30742,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -28571,7 +30787,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection.getDefaultInstance())
+          return this;
         if (other.hasNextDirectiveId()) {
           setNextDirectiveId(other.getNextDirectiveId());
         }
@@ -28618,21 +30835,25 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
-      private long nextDirectiveId_ ;
+      private long nextDirectiveId_;
+
       /**
        * <code>required uint64 nextDirectiveId = 1;</code>
        */
       public boolean hasNextDirectiveId() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        * <code>required uint64 nextDirectiveId = 1;</code>
        */
       public long getNextDirectiveId() {
         return nextDirectiveId_;
       }
+
       /**
        * <code>required uint64 nextDirectiveId = 1;</code>
        */
@@ -28642,6 +30863,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>required uint64 nextDirectiveId = 1;</code>
        */
@@ -28652,19 +30874,22 @@ public final class FsImageProto {
         return this;
       }
 
-      private int numPools_ ;
+      private int numPools_;
+
       /**
        * <code>required uint32 numPools = 2;</code>
        */
       public boolean hasNumPools() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        * <code>required uint32 numPools = 2;</code>
        */
       public int getNumPools() {
         return numPools_;
       }
+
       /**
        * <code>required uint32 numPools = 2;</code>
        */
@@ -28674,6 +30899,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <code>required uint32 numPools = 2;</code>
        */
@@ -28684,7 +30910,8 @@ public final class FsImageProto {
         return this;
       }
 
-      private int numDirectives_ ;
+      private int numDirectives_;
+
       /**
        * <pre>
        * repeated CachePoolInfoProto pools
@@ -28696,6 +30923,7 @@ public final class FsImageProto {
       public boolean hasNumDirectives() {
         return ((bitField0_ & 0x00000004) != 0);
       }
+
       /**
        * <pre>
        * repeated CachePoolInfoProto pools
@@ -28707,6 +30935,7 @@ public final class FsImageProto {
       public int getNumDirectives() {
         return numDirectives_;
       }
+
       /**
        * <pre>
        * repeated CachePoolInfoProto pools
@@ -28721,6 +30950,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       /**
        * <pre>
        * repeated CachePoolInfoProto pools
@@ -28735,6 +30965,7 @@ public final class FsImageProto {
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -28753,6 +30984,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.CacheManagerSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.CacheManagerSection();
     }
@@ -28761,7 +30993,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<CacheManagerSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<CacheManagerSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<CacheManagerSection>() {
       @java.lang.Override
       public CacheManagerSection parsePartialFrom(
@@ -28795,39 +31028,46 @@ public final class FsImageProto {
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
-    java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto> 
-        getPoliciesList();
+    java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto>
+    getPoliciesList();
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
     org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto getPolicies(int index);
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
     int getPoliciesCount();
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
-    java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder> 
-        getPoliciesOrBuilderList();
+    java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder>
+    getPoliciesOrBuilderList();
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
     org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder getPoliciesOrBuilder(
         int index);
   }
+
   /**
    * Protobuf type {@code hadoop.hdfs.fsimage.ErasureCodingSection}
    */
-  public  static final class ErasureCodingSection extends
+  public static final class ErasureCodingSection extends
       org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:hadoop.hdfs.fsimage.ErasureCodingSection)
       ErasureCodingSectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
+
     // Use ErasureCodingSection.newBuilder() to construct.
     private ErasureCodingSection(org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private ErasureCodingSection() {
       policies_ = java.util.Collections.emptyList();
     }
@@ -28837,6 +31077,7 @@ public final class FsImageProto {
     getUnknownFields() {
       return this.unknownFields;
     }
+
     private ErasureCodingSection(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -28887,14 +31128,15 @@ public final class FsImageProto {
         makeExtensionsImmutable();
       }
     }
+
     public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor;
     }
 
     @java.lang.Override
     protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection.Builder.class);
@@ -28902,31 +31144,36 @@ public final class FsImageProto {
 
     public static final int POLICIES_FIELD_NUMBER = 1;
     private java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto> policies_;
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
     public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto> getPoliciesList() {
       return policies_;
     }
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
-    public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder> 
-        getPoliciesOrBuilderList() {
+    public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder>
+    getPoliciesOrBuilderList() {
       return policies_;
     }
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
     public int getPoliciesCount() {
       return policies_.size();
     }
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
     public org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto getPolicies(int index) {
       return policies_.get(index);
     }
+
     /**
      * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
      */
@@ -28936,6 +31183,7 @@ public final class FsImageProto {
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -28954,7 +31202,7 @@ public final class FsImageProto {
 
     @java.lang.Override
     public void writeTo(org.apache.hadoop.thirdparty.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       for (int i = 0; i < policies_.size(); i++) {
         output.writeMessage(1, policies_.get(i));
       }
@@ -28969,7 +31217,7 @@ public final class FsImageProto {
       size = 0;
       for (int i = 0; i < policies_.size(); i++) {
         size += org.apache.hadoop.thirdparty.protobuf.CodedOutputStream
-          .computeMessageSize(1, policies_.get(i));
+            .computeMessageSize(1, policies_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -28979,7 +31227,7 @@ public final class FsImageProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection)) {
         return super.equals(obj);
@@ -29013,38 +31261,45 @@ public final class FsImageProto {
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         java.nio.ByteBuffer data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.ByteString data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(byte[] data)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         byte[] data,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
         throws org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -29052,11 +31307,13 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseDelimitedFrom(
         java.io.InputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -29064,12 +31321,14 @@ public final class FsImageProto {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
+
     public static org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection parseFrom(
         org.apache.hadoop.thirdparty.protobuf.CodedInputStream input,
         org.apache.hadoop.thirdparty.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -29079,13 +31338,18 @@ public final class FsImageProto {
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
+
     public static Builder newBuilder(org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -29098,6 +31362,7 @@ public final class FsImageProto {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.hdfs.fsimage.ErasureCodingSection}
      */
@@ -29106,13 +31371,13 @@ public final class FsImageProto {
         // @@protoc_insertion_point(builder_implements:hadoop.hdfs.fsimage.ErasureCodingSection)
         org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSectionOrBuilder {
       public static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor;
       }
 
       @java.lang.Override
       protected org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection.class, org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection.Builder.class);
@@ -29128,12 +31393,14 @@ public final class FsImageProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+            .alwaysUseFieldBuilders) {
           getPoliciesFieldBuilder();
         }
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -29148,7 +31415,7 @@ public final class FsImageProto {
 
       @java.lang.Override
       public org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.hdfs.server.namenode.FsImageProto.internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor;
       }
 
@@ -29187,38 +31454,44 @@ public final class FsImageProto {
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
       public Builder clearField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
       public Builder clearOneof(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
           org.apache.hadoop.thirdparty.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(org.apache.hadoop.thirdparty.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection) {
-          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection)other);
+          return mergeFrom((org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -29226,7 +31499,8 @@ public final class FsImageProto {
       }
 
       public Builder mergeFrom(org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection other) {
-        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection.getDefaultInstance())
+          return this;
         if (policiesBuilder_ == null) {
           if (!other.policies_.isEmpty()) {
             if (policies_.isEmpty()) {
@@ -29245,9 +31519,9 @@ public final class FsImageProto {
               policiesBuilder_ = null;
               policies_ = other.policies_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              policiesBuilder_ = 
-                org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getPoliciesFieldBuilder() : null;
+              policiesBuilder_ =
+                  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                      getPoliciesFieldBuilder() : null;
             } else {
               policiesBuilder_.addAllMessages(other.policies_);
             }
@@ -29286,15 +31560,17 @@ public final class FsImageProto {
         }
         return this;
       }
+
       private int bitField0_;
 
       private java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto> policies_ =
-        java.util.Collections.emptyList();
+          java.util.Collections.emptyList();
+
       private void ensurePoliciesIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
           policies_ = new java.util.ArrayList<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto>(policies_);
           bitField0_ |= 0x00000001;
-         }
+        }
       }
 
       private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
@@ -29310,6 +31586,7 @@ public final class FsImageProto {
           return policiesBuilder_.getMessageList();
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29320,6 +31597,7 @@ public final class FsImageProto {
           return policiesBuilder_.getCount();
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29330,6 +31608,7 @@ public final class FsImageProto {
           return policiesBuilder_.getMessage(index);
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29347,6 +31626,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29361,6 +31641,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29377,6 +31658,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29394,6 +31676,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29408,6 +31691,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29422,6 +31706,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29437,6 +31722,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29450,6 +31736,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29463,6 +31750,7 @@ public final class FsImageProto {
         }
         return this;
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29470,27 +31758,31 @@ public final class FsImageProto {
           int index) {
         return getPoliciesFieldBuilder().getBuilder(index);
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
       public org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder getPoliciesOrBuilder(
           int index) {
         if (policiesBuilder_ == null) {
-          return policies_.get(index);  } else {
+          return policies_.get(index);
+        } else {
           return policiesBuilder_.getMessageOrBuilder(index);
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
-      public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder> 
-           getPoliciesOrBuilderList() {
+      public java.util.List<? extends org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder>
+      getPoliciesOrBuilderList() {
         if (policiesBuilder_ != null) {
           return policiesBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(policies_);
         }
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29498,6 +31790,7 @@ public final class FsImageProto {
         return getPoliciesFieldBuilder().addBuilder(
             org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.getDefaultInstance());
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
@@ -29506,27 +31799,30 @@ public final class FsImageProto {
         return getPoliciesFieldBuilder().addBuilder(
             index, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.getDefaultInstance());
       }
+
       /**
        * <code>repeated .hadoop.hdfs.ErasureCodingPolicyProto policies = 1;</code>
        */
-      public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.Builder> 
-           getPoliciesBuilderList() {
+      public java.util.List<org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.Builder>
+      getPoliciesBuilderList() {
         return getPoliciesFieldBuilder().getBuilderList();
       }
+
       private org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
-          org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder> 
-          getPoliciesFieldBuilder() {
+          org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder>
+      getPoliciesFieldBuilder() {
         if (policiesBuilder_ == null) {
           policiesBuilder_ = new org.apache.hadoop.thirdparty.protobuf.RepeatedFieldBuilderV3<
               org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto.Builder, org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProtoOrBuilder>(
-                  policies_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
+              policies_,
+              ((bitField0_ & 0x00000001) != 0),
+              getParentForChildren(),
+              isClean());
           policies_ = null;
         }
         return policiesBuilder_;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final org.apache.hadoop.thirdparty.protobuf.UnknownFieldSet unknownFields) {
@@ -29545,6 +31841,7 @@ public final class FsImageProto {
 
     // @@protoc_insertion_point(class_scope:hadoop.hdfs.fsimage.ErasureCodingSection)
     private static final org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.apache.hadoop.hdfs.server.namenode.FsImageProto.ErasureCodingSection();
     }
@@ -29553,7 +31850,8 @@ public final class FsImageProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final org.apache.hadoop.thirdparty.protobuf.Parser<ErasureCodingSection>
+    @java.lang.Deprecated
+    public static final org.apache.hadoop.thirdparty.protobuf.Parser<ErasureCodingSection>
         PARSER = new org.apache.hadoop.thirdparty.protobuf.AbstractParser<ErasureCodingSection>() {
       @java.lang.Override
       public ErasureCodingSection parsePartialFrom(
@@ -29581,290 +31879,292 @@ public final class FsImageProto {
   }
 
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_FileSummary_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_FileSummary_Section_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_NameSystemSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeSection_INode_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_StringTableSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SecretManagerSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_CacheManagerSection_fieldAccessorTable;
   private static final org.apache.hadoop.thirdparty.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor;
-  private static final 
-    org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor;
+  private static final
+  org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_fieldAccessorTable;
 
   public static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
-  private static  org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
+
+  private static org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
       descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n\rfsimage.proto\022\023hadoop.hdfs.fsimage\032\nhd" +
-      "fs.proto\032\tacl.proto\032\013xattr.proto\"\277\001\n\013Fil" +
-      "eSummary\022\025\n\rondiskVersion\030\001 \002(\r\022\025\n\rlayou" +
-      "tVersion\030\002 \002(\r\022\r\n\005codec\030\003 \001(\t\022:\n\010section" +
-      "s\030\004 \003(\0132(.hadoop.hdfs.fsimage.FileSummar" +
-      "y.Section\0327\n\007Section\022\014\n\004name\030\001 \001(\t\022\016\n\006le" +
-      "ngth\030\002 \001(\004\022\016\n\006offset\030\003 \001(\004\"\344\001\n\021NameSyste" +
-      "mSection\022\023\n\013namespaceId\030\001 \001(\r\022\022\n\ngenstam" +
-      "pV1\030\002 \001(\004\022\022\n\ngenstampV2\030\003 \001(\004\022\027\n\017genstam" +
-      "pV1Limit\030\004 \001(\004\022\034\n\024lastAllocatedBlockId\030\005" +
-      " \001(\004\022\025\n\rtransactionId\030\006 \001(\004\022\037\n\027rollingUp" +
-      "gradeStartTime\030\007 \001(\004\022#\n\033lastAllocatedStr" +
-      "ipedBlockId\030\010 \001(\004\"\340\r\n\014INodeSection\022\023\n\013la" +
-      "stInodeId\030\001 \001(\004\022\021\n\tnumInodes\030\002 \001(\004\032I\n\034Fi" +
-      "leUnderConstructionFeature\022\022\n\nclientName" +
-      "\030\001 \001(\t\022\025\n\rclientMachine\030\002 \001(\t\032&\n\017AclFeat" +
-      "ureProto\022\023\n\007entries\030\002 \003(\007B\002\020\001\0320\n\021XAttrCo" +
-      "mpactProto\022\014\n\004name\030\001 \002(\007\022\r\n\005value\030\002 \001(\014\032" +
-      "X\n\021XAttrFeatureProto\022C\n\006xAttrs\030\001 \003(\01323.h" +
-      "adoop.hdfs.fsimage.INodeSection.XAttrCom" +
-      "pactProto\032\344\003\n\tINodeFile\022\023\n\013replication\030\001" +
-      " \001(\r\022\030\n\020modificationTime\030\002 \001(\004\022\022\n\naccess" +
-      "Time\030\003 \001(\004\022\032\n\022preferredBlockSize\030\004 \001(\004\022\022" +
-      "\n\npermission\030\005 \001(\006\022\'\n\006blocks\030\006 \003(\0132\027.had" +
-      "oop.hdfs.BlockProto\022N\n\006fileUC\030\007 \001(\0132>.ha" +
-      "doop.hdfs.fsimage.INodeSection.FileUnder" +
-      "ConstructionFeature\022>\n\003acl\030\010 \001(\01321.hadoo" +
-      "p.hdfs.fsimage.INodeSection.AclFeaturePr" +
-      "oto\022C\n\006xAttrs\030\t \001(\01323.hadoop.hdfs.fsimag" +
-      "e.INodeSection.XAttrFeatureProto\022\027\n\017stor" +
-      "agePolicyID\030\n \001(\r\022.\n\tblockType\030\013 \001(\0162\033.h" +
-      "adoop.hdfs.BlockTypeProto\022\035\n\025erasureCodi" +
-      "ngPolicyID\030\014 \001(\r\032a\n\034QuotaByStorageTypeEn" +
-      "tryProto\0222\n\013storageType\030\001 \002(\0162\035.hadoop.h" +
-      "dfs.StorageTypeProto\022\r\n\005quota\030\002 \002(\004\032p\n\036Q" +
-      "uotaByStorageTypeFeatureProto\022N\n\006quotas\030" +
-      "\001 \003(\0132>.hadoop.hdfs.fsimage.INodeSection" +
-      ".QuotaByStorageTypeEntryProto\032\273\002\n\016INodeD" +
-      "irectory\022\030\n\020modificationTime\030\001 \001(\004\022\017\n\007ns" +
-      "Quota\030\002 \001(\004\022\017\n\007dsQuota\030\003 \001(\004\022\022\n\npermissi" +
-      "on\030\004 \001(\006\022>\n\003acl\030\005 \001(\01321.hadoop.hdfs.fsim" +
-      "age.INodeSection.AclFeatureProto\022C\n\006xAtt" +
-      "rs\030\006 \001(\01323.hadoop.hdfs.fsimage.INodeSect" +
-      "ion.XAttrFeatureProto\022T\n\ntypeQuotas\030\007 \001(" +
-      "\0132@.hadoop.hdfs.fsimage.INodeSection.Quo" +
-      "taByStorageTypeFeatureProto\032`\n\014INodeSyml" +
-      "ink\022\022\n\npermission\030\001 \001(\006\022\016\n\006target\030\002 \001(\014\022" +
-      "\030\n\020modificationTime\030\003 \001(\004\022\022\n\naccessTime\030" +
-      "\004 \001(\004\032\314\002\n\005INode\022:\n\004type\030\001 \002(\0162,.hadoop.h" +
-      "dfs.fsimage.INodeSection.INode.Type\022\n\n\002i" +
-      "d\030\002 \002(\004\022\014\n\004name\030\003 \001(\014\0229\n\004file\030\004 \001(\0132+.ha" +
-      "doop.hdfs.fsimage.INodeSection.INodeFile" +
-      "\022C\n\tdirectory\030\005 \001(\01320.hadoop.hdfs.fsimag" +
-      "e.INodeSection.INodeDirectory\022?\n\007symlink" +
-      "\030\006 \001(\0132..hadoop.hdfs.fsimage.INodeSectio" +
-      "n.INodeSymlink\",\n\004Type\022\010\n\004FILE\020\001\022\r\n\tDIRE" +
-      "CTORY\020\002\022\013\n\007SYMLINK\020\003\"`\n\035FilesUnderConstr" +
-      "uctionSection\032?\n\032FileUnderConstructionEn" +
-      "try\022\017\n\007inodeId\030\001 \001(\004\022\020\n\010fullPath\030\002 \001(\t\"b" +
-      "\n\025INodeDirectorySection\032I\n\010DirEntry\022\016\n\006p" +
-      "arent\030\001 \001(\004\022\024\n\010children\030\002 \003(\004B\002\020\001\022\027\n\013ref" +
-      "Children\030\003 \003(\rB\002\020\001\"z\n\025INodeReferenceSect" +
-      "ion\032a\n\016INodeReference\022\022\n\nreferredId\030\001 \001(" +
-      "\004\022\014\n\004name\030\002 \001(\014\022\025\n\rdstSnapshotId\030\003 \001(\r\022\026" +
-      "\n\016lastSnapshotId\030\004 \001(\r\"\265\001\n\017SnapshotSecti" +
-      "on\022\027\n\017snapshotCounter\030\001 \001(\r\022\034\n\020snapshott" +
-      "ableDir\030\002 \003(\004B\002\020\001\022\024\n\014numSnapshots\030\003 \001(\r\032" +
-      "U\n\010Snapshot\022\022\n\nsnapshotId\030\001 \001(\r\0225\n\004root\030" +
-      "\002 \001(\0132\'.hadoop.hdfs.fsimage.INodeSection" +
-      ".INode\"\200\005\n\023SnapshotDiffSection\032 \n\020Create" +
-      "dListEntry\022\014\n\004name\030\001 \001(\014\032\367\001\n\rDirectoryDi" +
-      "ff\022\022\n\nsnapshotId\030\001 \001(\r\022\024\n\014childrenSize\030\002" +
-      " \001(\r\022\026\n\016isSnapshotRoot\030\003 \001(\010\022\014\n\004name\030\004 \001" +
-      "(\014\022F\n\014snapshotCopy\030\005 \001(\01320.hadoop.hdfs.f" +
-      "simage.INodeSection.INodeDirectory\022\027\n\017cr" +
-      "eatedListSize\030\006 \001(\r\022\030\n\014deletedINode\030\007 \003(" +
-      "\004B\002\020\001\022\033\n\017deletedINodeRef\030\010 \003(\rB\002\020\001\032\252\001\n\010F" +
-      "ileDiff\022\022\n\nsnapshotId\030\001 \001(\r\022\020\n\010fileSize\030" +
-      "\002 \001(\004\022\014\n\004name\030\003 \001(\014\022A\n\014snapshotCopy\030\004 \001(" +
-      "\0132+.hadoop.hdfs.fsimage.INodeSection.INo" +
-      "deFile\022\'\n\006blocks\030\005 \003(\0132\027.hadoop.hdfs.Blo" +
-      "ckProto\032\237\001\n\tDiffEntry\022E\n\004type\030\001 \002(\01627.ha" +
-      "doop.hdfs.fsimage.SnapshotDiffSection.Di" +
-      "ffEntry.Type\022\017\n\007inodeId\030\002 \001(\004\022\021\n\tnumOfDi" +
-      "ff\030\003 \001(\r\"\'\n\004Type\022\014\n\010FILEDIFF\020\001\022\021\n\rDIRECT" +
-      "ORYDIFF\020\002\"]\n\022StringTableSection\022\020\n\010numEn" +
-      "try\030\001 \001(\r\022\023\n\010maskBits\030\002 \001(\r:\0010\032 \n\005Entry\022" +
-      "\n\n\002id\030\001 \001(\r\022\013\n\003str\030\002 \001(\t\"\341\002\n\024SecretManag" +
-      "erSection\022\021\n\tcurrentId\030\001 \001(\r\022\033\n\023tokenSeq" +
-      "uenceNumber\030\002 \001(\r\022\017\n\007numKeys\030\003 \001(\r\022\021\n\tnu" +
-      "mTokens\030\004 \001(\r\032<\n\rDelegationKey\022\n\n\002id\030\001 \001" +
-      "(\r\022\022\n\nexpiryDate\030\002 \001(\004\022\013\n\003key\030\003 \001(\014\032\266\001\n\014" +
-      "PersistToken\022\017\n\007version\030\001 \001(\r\022\r\n\005owner\030\002" +
-      " \001(\t\022\017\n\007renewer\030\003 \001(\t\022\020\n\010realUser\030\004 \001(\t\022" +
-      "\021\n\tissueDate\030\005 \001(\004\022\017\n\007maxDate\030\006 \001(\004\022\026\n\016s" +
-      "equenceNumber\030\007 \001(\r\022\023\n\013masterKeyId\030\010 \001(\r" +
-      "\022\022\n\nexpiryDate\030\t \001(\004\"W\n\023CacheManagerSect" +
-      "ion\022\027\n\017nextDirectiveId\030\001 \002(\004\022\020\n\010numPools" +
-      "\030\002 \002(\r\022\025\n\rnumDirectives\030\003 \002(\r\"O\n\024Erasure" +
-      "CodingSection\0227\n\010policies\030\001 \003(\0132%.hadoop" +
-      ".hdfs.ErasureCodingPolicyProtoB6\n&org.ap" +
-      "ache.hadoop.hdfs.server.namenodeB\014FsImag" +
-      "eProto"
+        "\n\rfsimage.proto\022\023hadoop.hdfs.fsimage\032\nhd" +
+            "fs.proto\032\tacl.proto\032\013xattr.proto\"\277\001\n\013Fil" +
+            "eSummary\022\025\n\rondiskVersion\030\001 \002(\r\022\025\n\rlayou" +
+            "tVersion\030\002 \002(\r\022\r\n\005codec\030\003 \001(\t\022:\n\010section" +
+            "s\030\004 \003(\0132(.hadoop.hdfs.fsimage.FileSummar" +
+            "y.Section\0327\n\007Section\022\014\n\004name\030\001 \001(\t\022\016\n\006le" +
+            "ngth\030\002 \001(\004\022\016\n\006offset\030\003 \001(\004\"\344\001\n\021NameSyste" +
+            "mSection\022\023\n\013namespaceId\030\001 \001(\r\022\022\n\ngenstam" +
+            "pV1\030\002 \001(\004\022\022\n\ngenstampV2\030\003 \001(\004\022\027\n\017genstam" +
+            "pV1Limit\030\004 \001(\004\022\034\n\024lastAllocatedBlockId\030\005" +
+            " \001(\004\022\025\n\rtransactionId\030\006 \001(\004\022\037\n\027rollingUp" +
+            "gradeStartTime\030\007 \001(\004\022#\n\033lastAllocatedStr" +
+            "ipedBlockId\030\010 \001(\004\"\340\r\n\014INodeSection\022\023\n\013la" +
+            "stInodeId\030\001 \001(\004\022\021\n\tnumInodes\030\002 \001(\004\032I\n\034Fi" +
+            "leUnderConstructionFeature\022\022\n\nclientName" +
+            "\030\001 \001(\t\022\025\n\rclientMachine\030\002 \001(\t\032&\n\017AclFeat" +
+            "ureProto\022\023\n\007entries\030\002 \003(\007B\002\020\001\0320\n\021XAttrCo" +
+            "mpactProto\022\014\n\004name\030\001 \002(\007\022\r\n\005value\030\002 \001(\014\032" +
+            "X\n\021XAttrFeatureProto\022C\n\006xAttrs\030\001 \003(\01323.h" +
+            "adoop.hdfs.fsimage.INodeSection.XAttrCom" +
+            "pactProto\032\344\003\n\tINodeFile\022\023\n\013replication\030\001" +
+            " \001(\r\022\030\n\020modificationTime\030\002 \001(\004\022\022\n\naccess" +
+            "Time\030\003 \001(\004\022\032\n\022preferredBlockSize\030\004 \001(\004\022\022" +
+            "\n\npermission\030\005 \001(\006\022\'\n\006blocks\030\006 \003(\0132\027.had" +
+            "oop.hdfs.BlockProto\022N\n\006fileUC\030\007 \001(\0132>.ha" +
+            "doop.hdfs.fsimage.INodeSection.FileUnder" +
+            "ConstructionFeature\022>\n\003acl\030\010 \001(\01321.hadoo" +
+            "p.hdfs.fsimage.INodeSection.AclFeaturePr" +
+            "oto\022C\n\006xAttrs\030\t \001(\01323.hadoop.hdfs.fsimag" +
+            "e.INodeSection.XAttrFeatureProto\022\027\n\017stor" +
+            "agePolicyID\030\n \001(\r\022.\n\tblockType\030\013 \001(\0162\033.h" +
+            "adoop.hdfs.BlockTypeProto\022\035\n\025erasureCodi" +
+            "ngPolicyID\030\014 \001(\r\032a\n\034QuotaByStorageTypeEn" +
+            "tryProto\0222\n\013storageType\030\001 \002(\0162\035.hadoop.h" +
+            "dfs.StorageTypeProto\022\r\n\005quota\030\002 \002(\004\032p\n\036Q" +
+            "uotaByStorageTypeFeatureProto\022N\n\006quotas\030" +
+            "\001 \003(\0132>.hadoop.hdfs.fsimage.INodeSection" +
+            ".QuotaByStorageTypeEntryProto\032\273\002\n\016INodeD" +
+            "irectory\022\030\n\020modificationTime\030\001 \001(\004\022\017\n\007ns" +
+            "Quota\030\002 \001(\004\022\017\n\007dsQuota\030\003 \001(\004\022\022\n\npermissi" +
+            "on\030\004 \001(\006\022>\n\003acl\030\005 \001(\01321.hadoop.hdfs.fsim" +
+            "age.INodeSection.AclFeatureProto\022C\n\006xAtt" +
+            "rs\030\006 \001(\01323.hadoop.hdfs.fsimage.INodeSect" +
+            "ion.XAttrFeatureProto\022T\n\ntypeQuotas\030\007 \001(" +
+            "\0132@.hadoop.hdfs.fsimage.INodeSection.Quo" +
+            "taByStorageTypeFeatureProto\032`\n\014INodeSyml" +
+            "ink\022\022\n\npermission\030\001 \001(\006\022\016\n\006target\030\002 \001(\014\022" +
+            "\030\n\020modificationTime\030\003 \001(\004\022\022\n\naccessTime\030" +
+            "\004 \001(\004\032\314\002\n\005INode\022:\n\004type\030\001 \002(\0162,.hadoop.h" +
+            "dfs.fsimage.INodeSection.INode.Type\022\n\n\002i" +
+            "d\030\002 \002(\004\022\014\n\004name\030\003 \001(\014\0229\n\004file\030\004 \001(\0132+.ha" +
+            "doop.hdfs.fsimage.INodeSection.INodeFile" +
+            "\022C\n\tdirectory\030\005 \001(\01320.hadoop.hdfs.fsimag" +
+            "e.INodeSection.INodeDirectory\022?\n\007symlink" +
+            "\030\006 \001(\0132..hadoop.hdfs.fsimage.INodeSectio" +
+            "n.INodeSymlink\",\n\004Type\022\010\n\004FILE\020\001\022\r\n\tDIRE" +
+            "CTORY\020\002\022\013\n\007SYMLINK\020\003\"`\n\035FilesUnderConstr" +
+            "uctionSection\032?\n\032FileUnderConstructionEn" +
+            "try\022\017\n\007inodeId\030\001 \001(\004\022\020\n\010fullPath\030\002 \001(\t\"b" +
+            "\n\025INodeDirectorySection\032I\n\010DirEntry\022\016\n\006p" +
+            "arent\030\001 \001(\004\022\024\n\010children\030\002 \003(\004B\002\020\001\022\027\n\013ref" +
+            "Children\030\003 \003(\rB\002\020\001\"z\n\025INodeReferenceSect" +
+            "ion\032a\n\016INodeReference\022\022\n\nreferredId\030\001 \001(" +
+            "\004\022\014\n\004name\030\002 \001(\014\022\025\n\rdstSnapshotId\030\003 \001(\r\022\026" +
+            "\n\016lastSnapshotId\030\004 \001(\r\"\265\001\n\017SnapshotSecti" +
+            "on\022\027\n\017snapshotCounter\030\001 \001(\r\022\034\n\020snapshott" +
+            "ableDir\030\002 \003(\004B\002\020\001\022\024\n\014numSnapshots\030\003 \001(\r\032" +
+            "U\n\010Snapshot\022\022\n\nsnapshotId\030\001 \001(\r\0225\n\004root\030" +
+            "\002 \001(\0132\'.hadoop.hdfs.fsimage.INodeSection" +
+            ".INode\"\200\005\n\023SnapshotDiffSection\032 \n\020Create" +
+            "dListEntry\022\014\n\004name\030\001 \001(\014\032\367\001\n\rDirectoryDi" +
+            "ff\022\022\n\nsnapshotId\030\001 \001(\r\022\024\n\014childrenSize\030\002" +
+            " \001(\r\022\026\n\016isSnapshotRoot\030\003 \001(\010\022\014\n\004name\030\004 \001" +
+            "(\014\022F\n\014snapshotCopy\030\005 \001(\01320.hadoop.hdfs.f" +
+            "simage.INodeSection.INodeDirectory\022\027\n\017cr" +
+            "eatedListSize\030\006 \001(\r\022\030\n\014deletedINode\030\007 \003(" +
+            "\004B\002\020\001\022\033\n\017deletedINodeRef\030\010 \003(\rB\002\020\001\032\252\001\n\010F" +
+            "ileDiff\022\022\n\nsnapshotId\030\001 \001(\r\022\020\n\010fileSize\030" +
+            "\002 \001(\004\022\014\n\004name\030\003 \001(\014\022A\n\014snapshotCopy\030\004 \001(" +
+            "\0132+.hadoop.hdfs.fsimage.INodeSection.INo" +
+            "deFile\022\'\n\006blocks\030\005 \003(\0132\027.hadoop.hdfs.Blo" +
+            "ckProto\032\237\001\n\tDiffEntry\022E\n\004type\030\001 \002(\01627.ha" +
+            "doop.hdfs.fsimage.SnapshotDiffSection.Di" +
+            "ffEntry.Type\022\017\n\007inodeId\030\002 \001(\004\022\021\n\tnumOfDi" +
+            "ff\030\003 \001(\r\"\'\n\004Type\022\014\n\010FILEDIFF\020\001\022\021\n\rDIRECT" +
+            "ORYDIFF\020\002\"]\n\022StringTableSection\022\020\n\010numEn" +
+            "try\030\001 \001(\r\022\023\n\010maskBits\030\002 \001(\r:\0010\032 \n\005Entry\022" +
+            "\n\n\002id\030\001 \001(\r\022\013\n\003str\030\002 \001(\t\"\341\002\n\024SecretManag" +
+            "erSection\022\021\n\tcurrentId\030\001 \001(\r\022\033\n\023tokenSeq" +
+            "uenceNumber\030\002 \001(\r\022\017\n\007numKeys\030\003 \001(\r\022\021\n\tnu" +
+            "mTokens\030\004 \001(\r\032<\n\rDelegationKey\022\n\n\002id\030\001 \001" +
+            "(\r\022\022\n\nexpiryDate\030\002 \001(\004\022\013\n\003key\030\003 \001(\014\032\266\001\n\014" +
+            "PersistToken\022\017\n\007version\030\001 \001(\r\022\r\n\005owner\030\002" +
+            " \001(\t\022\017\n\007renewer\030\003 \001(\t\022\020\n\010realUser\030\004 \001(\t\022" +
+            "\021\n\tissueDate\030\005 \001(\004\022\017\n\007maxDate\030\006 \001(\004\022\026\n\016s" +
+            "equenceNumber\030\007 \001(\r\022\023\n\013masterKeyId\030\010 \001(\r" +
+            "\022\022\n\nexpiryDate\030\t \001(\004\"W\n\023CacheManagerSect" +
+            "ion\022\027\n\017nextDirectiveId\030\001 \002(\004\022\020\n\010numPools" +
+            "\030\002 \002(\r\022\025\n\rnumDirectives\030\003 \002(\r\"O\n\024Erasure" +
+            "CodingSection\0227\n\010policies\030\001 \003(\0132%.hadoop" +
+            ".hdfs.ErasureCodingPolicyProtoB6\n&org.ap" +
+            "ache.hadoop.hdfs.server.namenodeB\014FsImag" +
+            "eProto"
     };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
           public org.apache.hadoop.thirdparty.protobuf.ExtensionRegistry assignDescriptors(
               org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor root) {
             descriptor = root;
@@ -29872,216 +32172,216 @@ public final class FsImageProto {
           }
         };
     org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[] {
-          org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.getDescriptor(),
-          org.apache.hadoop.hdfs.protocol.proto.AclProtos.getDescriptor(),
-          org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.getDescriptor(),
-        }, assigner);
+        .internalBuildGeneratedFileFrom(descriptorData,
+            new org.apache.hadoop.thirdparty.protobuf.Descriptors.FileDescriptor[]{
+                org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.getDescriptor(),
+                org.apache.hadoop.hdfs.protocol.proto.AclProtos.getDescriptor(),
+                org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.getDescriptor(),
+            }, assigner);
     internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+        getDescriptor().getMessageTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_FileSummary_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor,
-        new java.lang.String[] { "OndiskVersion", "LayoutVersion", "Codec", "Sections", });
+        new java.lang.String[]{"OndiskVersion", "LayoutVersion", "Codec", "Sections",});
     internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor =
-      internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_FileSummary_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_FileSummary_Section_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_FileSummary_Section_descriptor,
-        new java.lang.String[] { "Name", "Length", "Offset", });
+        new java.lang.String[]{"Name", "Length", "Offset",});
     internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+        getDescriptor().getMessageTypes().get(1);
     internal_static_hadoop_hdfs_fsimage_NameSystemSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_NameSystemSection_descriptor,
-        new java.lang.String[] { "NamespaceId", "GenstampV1", "GenstampV2", "GenstampV1Limit", "LastAllocatedBlockId", "TransactionId", "RollingUpgradeStartTime", "LastAllocatedStripedBlockId", });
+        new java.lang.String[]{"NamespaceId", "GenstampV1", "GenstampV2", "GenstampV1Limit", "LastAllocatedBlockId", "TransactionId", "RollingUpgradeStartTime", "LastAllocatedStripedBlockId",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+        getDescriptor().getMessageTypes().get(2);
     internal_static_hadoop_hdfs_fsimage_INodeSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor,
-        new java.lang.String[] { "LastInodeId", "NumInodes", });
+        new java.lang.String[]{"LastInodeId", "NumInodes",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_FileUnderConstructionFeature_descriptor,
-        new java.lang.String[] { "ClientName", "ClientMachine", });
+        new java.lang.String[]{"ClientName", "ClientMachine",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(1);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(1);
     internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_AclFeatureProto_descriptor,
-        new java.lang.String[] { "Entries", });
+        new java.lang.String[]{"Entries",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(2);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(2);
     internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrCompactProto_descriptor,
-        new java.lang.String[] { "Name", "Value", });
+        new java.lang.String[]{"Name", "Value",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(3);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(3);
     internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_XAttrFeatureProto_descriptor,
-        new java.lang.String[] { "XAttrs", });
+        new java.lang.String[]{"XAttrs",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(4);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(4);
     internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_INodeFile_descriptor,
-        new java.lang.String[] { "Replication", "ModificationTime", "AccessTime", "PreferredBlockSize", "Permission", "Blocks", "FileUC", "Acl", "XAttrs", "StoragePolicyID", "BlockType", "ErasureCodingPolicyID", });
+        new java.lang.String[]{"Replication", "ModificationTime", "AccessTime", "PreferredBlockSize", "Permission", "Blocks", "FileUC", "Acl", "XAttrs", "StoragePolicyID", "BlockType", "ErasureCodingPolicyID",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(5);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(5);
     internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeEntryProto_descriptor,
-        new java.lang.String[] { "StorageType", "Quota", });
+        new java.lang.String[]{"StorageType", "Quota",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(6);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(6);
     internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_QuotaByStorageTypeFeatureProto_descriptor,
-        new java.lang.String[] { "Quotas", });
+        new java.lang.String[]{"Quotas",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(7);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(7);
     internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_INodeDirectory_descriptor,
-        new java.lang.String[] { "ModificationTime", "NsQuota", "DsQuota", "Permission", "Acl", "XAttrs", "TypeQuotas", });
+        new java.lang.String[]{"ModificationTime", "NsQuota", "DsQuota", "Permission", "Acl", "XAttrs", "TypeQuotas",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(8);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(8);
     internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_INodeSymlink_descriptor,
-        new java.lang.String[] { "Permission", "Target", "ModificationTime", "AccessTime", });
+        new java.lang.String[]{"Permission", "Target", "ModificationTime", "AccessTime",});
     internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(9);
+        internal_static_hadoop_hdfs_fsimage_INodeSection_descriptor.getNestedTypes().get(9);
     internal_static_hadoop_hdfs_fsimage_INodeSection_INode_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeSection_INode_descriptor,
-        new java.lang.String[] { "Type", "Id", "Name", "File", "Directory", "Symlink", });
+        new java.lang.String[]{"Type", "Id", "Name", "File", "Directory", "Symlink",});
     internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+        getDescriptor().getMessageTypes().get(3);
     internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[]{});
     internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor =
-      internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_FilesUnderConstructionSection_FileUnderConstructionEntry_descriptor,
-        new java.lang.String[] { "InodeId", "FullPath", });
+        new java.lang.String[]{"InodeId", "FullPath",});
     internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+        getDescriptor().getMessageTypes().get(4);
     internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[]{});
     internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeDirectorySection_DirEntry_descriptor,
-        new java.lang.String[] { "Parent", "Children", "RefChildren", });
+        new java.lang.String[]{"Parent", "Children", "RefChildren",});
     internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+        getDescriptor().getMessageTypes().get(5);
     internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[]{});
     internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor =
-      internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_INodeReferenceSection_INodeReference_descriptor,
-        new java.lang.String[] { "ReferredId", "Name", "DstSnapshotId", "LastSnapshotId", });
+        new java.lang.String[]{"ReferredId", "Name", "DstSnapshotId", "LastSnapshotId",});
     internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+        getDescriptor().getMessageTypes().get(6);
     internal_static_hadoop_hdfs_fsimage_SnapshotSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor,
-        new java.lang.String[] { "SnapshotCounter", "SnapshottableDir", "NumSnapshots", });
+        new java.lang.String[]{"SnapshotCounter", "SnapshottableDir", "NumSnapshots",});
     internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_SnapshotSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotSection_Snapshot_descriptor,
-        new java.lang.String[] { "SnapshotId", "Root", });
+        new java.lang.String[]{"SnapshotId", "Root",});
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+        getDescriptor().getMessageTypes().get(7);
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[]{});
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_CreatedListEntry_descriptor,
-        new java.lang.String[] { "Name", });
+        new java.lang.String[]{"Name",});
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(1);
+        internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(1);
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DirectoryDiff_descriptor,
-        new java.lang.String[] { "SnapshotId", "ChildrenSize", "IsSnapshotRoot", "Name", "SnapshotCopy", "CreatedListSize", "DeletedINode", "DeletedINodeRef", });
+        new java.lang.String[]{"SnapshotId", "ChildrenSize", "IsSnapshotRoot", "Name", "SnapshotCopy", "CreatedListSize", "DeletedINode", "DeletedINodeRef",});
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(2);
+        internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(2);
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_FileDiff_descriptor,
-        new java.lang.String[] { "SnapshotId", "FileSize", "Name", "SnapshotCopy", "Blocks", });
+        new java.lang.String[]{"SnapshotId", "FileSize", "Name", "SnapshotCopy", "Blocks",});
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(3);
+        internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_descriptor.getNestedTypes().get(3);
     internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SnapshotDiffSection_DiffEntry_descriptor,
-        new java.lang.String[] { "Type", "InodeId", "NumOfDiff", });
+        new java.lang.String[]{"Type", "InodeId", "NumOfDiff",});
     internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+        getDescriptor().getMessageTypes().get(8);
     internal_static_hadoop_hdfs_fsimage_StringTableSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor,
-        new java.lang.String[] { "NumEntry", "MaskBits", });
+        new java.lang.String[]{"NumEntry", "MaskBits",});
     internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor =
-      internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_StringTableSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_StringTableSection_Entry_descriptor,
-        new java.lang.String[] { "Id", "Str", });
+        new java.lang.String[]{"Id", "Str",});
     internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+        getDescriptor().getMessageTypes().get(9);
     internal_static_hadoop_hdfs_fsimage_SecretManagerSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor,
-        new java.lang.String[] { "CurrentId", "TokenSequenceNumber", "NumKeys", "NumTokens", });
+        new java.lang.String[]{"CurrentId", "TokenSequenceNumber", "NumKeys", "NumTokens",});
     internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor.getNestedTypes().get(0);
+        internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor.getNestedTypes().get(0);
     internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SecretManagerSection_DelegationKey_descriptor,
-        new java.lang.String[] { "Id", "ExpiryDate", "Key", });
+        new java.lang.String[]{"Id", "ExpiryDate", "Key",});
     internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor =
-      internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor.getNestedTypes().get(1);
+        internal_static_hadoop_hdfs_fsimage_SecretManagerSection_descriptor.getNestedTypes().get(1);
     internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_SecretManagerSection_PersistToken_descriptor,
-        new java.lang.String[] { "Version", "Owner", "Renewer", "RealUser", "IssueDate", "MaxDate", "SequenceNumber", "MasterKeyId", "ExpiryDate", });
+        new java.lang.String[]{"Version", "Owner", "Renewer", "RealUser", "IssueDate", "MaxDate", "SequenceNumber", "MasterKeyId", "ExpiryDate",});
     internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+        getDescriptor().getMessageTypes().get(10);
     internal_static_hadoop_hdfs_fsimage_CacheManagerSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_CacheManagerSection_descriptor,
-        new java.lang.String[] { "NextDirectiveId", "NumPools", "NumDirectives", });
+        new java.lang.String[]{"NextDirectiveId", "NumPools", "NumDirectives",});
     internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+        getDescriptor().getMessageTypes().get(11);
     internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_fieldAccessorTable = new
-      org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        org.apache.hadoop.thirdparty.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_hadoop_hdfs_fsimage_ErasureCodingSection_descriptor,
-        new java.lang.String[] { "Policies", });
+        new java.lang.String[]{"Policies",});
     org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.getDescriptor();
     org.apache.hadoop.hdfs.protocol.proto.AclProtos.getDescriptor();
     org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.getDescriptor();

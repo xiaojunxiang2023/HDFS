@@ -2,8 +2,9 @@ package org.apache.hadoop.crypto;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
 public interface Decryptor {
-  
+
   /**
    * Initialize the decryptor and the internal decryption context. 
    * reset.
@@ -12,7 +13,7 @@ public interface Decryptor {
    * @throws IOException if initialization fails
    */
   public void init(byte[] key, byte[] iv) throws IOException;
-  
+
   /**
    * Indicate whether the decryption context is reset.
    * <p>
@@ -23,7 +24,7 @@ public interface Decryptor {
    * @return boolean whether context is reset.
    */
   public boolean isContextReset();
-  
+
   /**
    * This presents a direct interface decrypting with direct ByteBuffers.
    * <p>
@@ -44,6 +45,6 @@ public interface Decryptor {
    * not be null and outBuffer.remaining() must be {@literal >} 0
    * @throws IOException if decryption fails
    */
-  public void decrypt(ByteBuffer inBuffer, ByteBuffer outBuffer) 
+  public void decrypt(ByteBuffer inBuffer, ByteBuffer outBuffer)
       throws IOException;
 }

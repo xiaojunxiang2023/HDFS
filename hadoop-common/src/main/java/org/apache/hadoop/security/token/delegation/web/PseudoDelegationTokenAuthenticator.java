@@ -1,6 +1,7 @@
 package org.apache.hadoop.security.token.delegation.web;
-import org.apache.hadoop.security.UserGroupInformation;
+
 import org.apache.hadoop.auth.client.ticator.PseudoAuthenticator;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.IOException;
 

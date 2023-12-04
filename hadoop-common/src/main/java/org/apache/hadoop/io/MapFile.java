@@ -1,11 +1,5 @@
 package org.apache.hadoop.io;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -14,14 +8,20 @@ import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.util.Options;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.ReflectionUtils;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAP_INDEX_SKIP_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_MAP_INDEX_SKIP_KEY;
 
 /** A file-based map from keys to values.
- * 
+ *
  * <p>A map is a directory containing two files, the <code>data</code> file,
  * containing all keys and values in the map, and a smaller <code>index</code>
  * file, containing a fraction of the keys.  The fraction is determined by
@@ -45,7 +45,8 @@ public class MapFile {
   /** The name of the data file. */
   public static final String DATA_FILE_NAME = "data";
 
-  protected MapFile() {}                          // no public ctor
+  protected MapFile() {
+  }                          // no public ctor
 
   /** Writes a new map. */
   public static class Writer implements java.io.Closeable {
@@ -80,7 +81,7 @@ public class MapFile {
      */
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
-                  Class<? extends WritableComparable> keyClass, 
+                  Class<? extends WritableComparable> keyClass,
                   Class valClass) throws IOException {
       this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass));
     }
@@ -91,10 +92,10 @@ public class MapFile {
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
                   Class<? extends WritableComparable> keyClass, Class valClass,
-                  CompressionType compress, 
+                  CompressionType compress,
                   Progressable progress) throws IOException {
       this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass),
-           compression(compress), progressable(progress));
+          compression(compress), progressable(progress));
     }
 
     /** Create the named map for keys of the named class. 
@@ -106,7 +107,7 @@ public class MapFile {
                   CompressionType compress, CompressionCodec codec,
                   Progressable progress) throws IOException {
       this(conf, new Path(dirName), keyClass(keyClass), valueClass(valClass),
-           compression(compress, codec), progressable(progress));
+          compression(compress, codec), progressable(progress));
     }
 
     /** Create the named map for keys of the named class. 
@@ -117,7 +118,7 @@ public class MapFile {
                   Class<? extends WritableComparable> keyClass, Class valClass,
                   CompressionType compress) throws IOException {
       this(conf, new Path(dirName), keyClass(keyClass),
-           valueClass(valClass), compression(compress));
+          valueClass(valClass), compression(compress));
     }
 
     /** Create the named map using the named key comparator. 
@@ -126,9 +127,9 @@ public class MapFile {
     @Deprecated
     public Writer(Configuration conf, FileSystem fs, String dirName,
                   WritableComparator comparator, Class valClass
-                  ) throws IOException {
-      this(conf, new Path(dirName), comparator(comparator), 
-           valueClass(valClass));
+    ) throws IOException {
+      this(conf, new Path(dirName), comparator(comparator),
+          valueClass(valClass));
     }
 
     /** Create the named map using the named key comparator. 
@@ -139,7 +140,7 @@ public class MapFile {
                   WritableComparator comparator, Class valClass,
                   SequenceFile.CompressionType compress) throws IOException {
       this(conf, new Path(dirName), comparator(comparator),
-           valueClass(valClass), compression(compress));
+          valueClass(valClass), compression(compress));
     }
 
     /** Create the named map using the named key comparator. 
@@ -151,8 +152,8 @@ public class MapFile {
                   SequenceFile.CompressionType compress,
                   Progressable progress) throws IOException {
       this(conf, new Path(dirName), comparator(comparator),
-           valueClass(valClass), compression(compress),
-           progressable(progress));
+          valueClass(valClass), compression(compress),
+          progressable(progress));
     }
 
     /** Create the named map using the named key comparator. 
@@ -164,25 +165,28 @@ public class MapFile {
                   SequenceFile.CompressionType compress, CompressionCodec codec,
                   Progressable progress) throws IOException {
       this(conf, new Path(dirName), comparator(comparator),
-           valueClass(valClass), compression(compress, codec),
-           progressable(progress));
+          valueClass(valClass), compression(compress, codec),
+          progressable(progress));
     }
-    
+
     // our options are a superset of sequence file writer options
-    public static interface Option extends SequenceFile.Writer.Option { }
-    
+    public static interface Option extends SequenceFile.Writer.Option {
+    }
+
     private static class KeyClassOption extends Options.ClassOption
-                                        implements Option {
+        implements Option {
       KeyClassOption(Class<?> value) {
         super(value);
       }
     }
-    
+
     private static class ComparatorOption implements Option {
       private final WritableComparator value;
+
       ComparatorOption(WritableComparator value) {
         this.value = value;
       }
+
       WritableComparator getValue() {
         return value;
       }
@@ -191,7 +195,7 @@ public class MapFile {
     public static Option keyClass(Class<? extends WritableComparable> value) {
       return new KeyClassOption(value);
     }
-    
+
     public static Option comparator(WritableComparator value) {
       return new ComparatorOption(value);
     }
@@ -199,15 +203,13 @@ public class MapFile {
     public static SequenceFile.Writer.Option valueClass(Class<?> value) {
       return SequenceFile.Writer.valueClass(value);
     }
-    
-    public static 
-    SequenceFile.Writer.Option compression(CompressionType type) {
+
+    public static SequenceFile.Writer.Option compression(CompressionType type) {
       return SequenceFile.Writer.compression(type);
     }
 
-    public static 
-    SequenceFile.Writer.Option compression(CompressionType type,
-        CompressionCodec codec) {
+    public static SequenceFile.Writer.Option compression(CompressionType type,
+                                                         CompressionCodec codec) {
       return SequenceFile.Writer.compression(type, codec);
     }
 
@@ -216,17 +218,17 @@ public class MapFile {
     }
 
     @SuppressWarnings("unchecked")
-    public Writer(Configuration conf, 
+    public Writer(Configuration conf,
                   Path dirName,
                   SequenceFile.Writer.Option... opts
-                  ) throws IOException {
-      KeyClassOption keyClassOption = 
-        Options.getOption(KeyClassOption.class, opts);
+    ) throws IOException {
+      KeyClassOption keyClassOption =
+          Options.getOption(KeyClassOption.class, opts);
       ComparatorOption comparatorOption =
-        Options.getOption(ComparatorOption.class, opts);
+          Options.getOption(ComparatorOption.class, opts);
       if ((keyClassOption == null) == (comparatorOption == null)) {
         throw new IllegalArgumentException("key class or comparator option "
-                                           + "must be set");
+            + "must be set");
       }
       this.indexInterval = conf.getInt(INDEX_INTERVAL, this.indexInterval);
 
@@ -235,8 +237,8 @@ public class MapFile {
         this.comparator = comparatorOption.getValue();
         keyClass = comparator.getKeyClass();
       } else {
-        keyClass= 
-          (Class<? extends WritableComparable>) keyClassOption.getValue();
+        keyClass =
+            (Class<? extends WritableComparable>) keyClassOption.getValue();
         this.comparator = WritableComparator.get(keyClass, conf);
       }
       this.lastKey = comparator.newKey();
@@ -249,26 +251,30 @@ public class MapFile {
       Path indexFile = new Path(dirName, INDEX_FILE_NAME);
 
       SequenceFile.Writer.Option[] dataOptions =
-        Options.prependOptions(opts, 
-                               SequenceFile.Writer.file(dataFile),
-                               SequenceFile.Writer.keyClass(keyClass));
+          Options.prependOptions(opts,
+              SequenceFile.Writer.file(dataFile),
+              SequenceFile.Writer.keyClass(keyClass));
       this.data = SequenceFile.createWriter(conf, dataOptions);
 
       SequenceFile.Writer.Option[] indexOptions =
-        Options.prependOptions(opts, SequenceFile.Writer.file(indexFile),
-            SequenceFile.Writer.keyClass(keyClass),
-            SequenceFile.Writer.valueClass(LongWritable.class),
-            SequenceFile.Writer.compression(CompressionType.BLOCK));
-      this.index = SequenceFile.createWriter(conf, indexOptions);      
+          Options.prependOptions(opts, SequenceFile.Writer.file(indexFile),
+              SequenceFile.Writer.keyClass(keyClass),
+              SequenceFile.Writer.valueClass(LongWritable.class),
+              SequenceFile.Writer.compression(CompressionType.BLOCK));
+      this.index = SequenceFile.createWriter(conf, indexOptions);
     }
 
     /** The number of entries that are added before an index entry is added.*/
-    public int getIndexInterval() { return indexInterval; }
+    public int getIndexInterval() {
+      return indexInterval;
+    }
 
     /** Sets the index interval.
      * @see #getIndexInterval()
      */
-    public void setIndexInterval(int interval) { indexInterval = interval; }
+    public void setIndexInterval(int interval) {
+      indexInterval = interval;
+    }
 
     /** Sets the index interval and stores it in conf
      * @see #getIndexInterval()
@@ -287,11 +293,11 @@ public class MapFile {
     /** Append a key/value pair to the map.  The key must be greater or equal
      * to the previous key added to the map. */
     public synchronized void append(WritableComparable key, Writable val)
-      throws IOException {
+        throws IOException {
 
       checkKey(key);
 
-      long pos = data.getLength();      
+      long pos = data.getLength();
       // Only write an index if we've changed positions. In a block compressed
       // file, this means we write an entry at the start of each block      
       if (size >= lastIndexKeyCount + indexInterval && pos > lastIndexPos) {
@@ -308,8 +314,8 @@ public class MapFile {
     private void checkKey(WritableComparable key) throws IOException {
       // check that keys are well-ordered
       if (size != 0 && comparator.compare(lastKey, key) > 0)
-        throw new IOException("key out of order: "+key+" after "+lastKey);
-          
+        throw new IOException("key out of order: " + key + " after " + lastKey);
+
       // update lastKey with a copy of key by writing and reading
       outBuf.reset();
       key.write(outBuf);                          // write new key
@@ -319,15 +325,15 @@ public class MapFile {
     }
 
   }
-  
+
   /** Provide access to an existing map. */
   public static class Reader implements java.io.Closeable {
-      
+
     /** Number of index entries to skip between each entry.  Zero by default.
      * Setting this to values larger than zero can facilitate opening large map
      * files using less memory. */
     private int INDEX_SKIP = 0;
-      
+
     private WritableComparator comparator;
 
     private WritableComparable nextKey;
@@ -348,22 +354,29 @@ public class MapFile {
     private long[] positions;
 
     /** Returns the class of keys in this file. */
-    public Class<?> getKeyClass() { return data.getKeyClass(); }
+    public Class<?> getKeyClass() {
+      return data.getKeyClass();
+    }
 
     /** Returns the class of values in this file. */
-    public Class<?> getValueClass() { return data.getValueClass(); }
+    public Class<?> getValueClass() {
+      return data.getValueClass();
+    }
 
-    public static interface Option extends SequenceFile.Reader.Option {}
-    
+    public static interface Option extends SequenceFile.Reader.Option {
+    }
+
     public static Option comparator(WritableComparator value) {
       return new ComparatorOption(value);
     }
 
     static class ComparatorOption implements Option {
       private final WritableComparator value;
+
       ComparatorOption(WritableComparator value) {
         this.value = value;
       }
+
       WritableComparator getValue() {
         return value;
       }
@@ -371,20 +384,20 @@ public class MapFile {
 
     public Reader(Path dir, Configuration conf,
                   SequenceFile.Reader.Option... opts) throws IOException {
-      ComparatorOption comparatorOption = 
-        Options.getOption(ComparatorOption.class, opts);
+      ComparatorOption comparatorOption =
+          Options.getOption(ComparatorOption.class, opts);
       WritableComparator comparator =
-        comparatorOption == null ? null : comparatorOption.getValue();
+          comparatorOption == null ? null : comparatorOption.getValue();
       INDEX_SKIP = conf.getInt(
           IO_MAP_INDEX_SKIP_KEY, IO_MAP_INDEX_SKIP_DEFAULT);
       open(dir, comparator, conf, opts);
     }
- 
+
     /** Construct a map reader for the named map.
      * @deprecated
      */
     @Deprecated
-    public Reader(FileSystem fs, String dirName, 
+    public Reader(FileSystem fs, String dirName,
                   Configuration conf) throws IOException {
       this(new Path(dirName), conf);
     }
@@ -393,16 +406,16 @@ public class MapFile {
      * @deprecated
      */
     @Deprecated
-    public Reader(FileSystem fs, String dirName, WritableComparator comparator, 
+    public Reader(FileSystem fs, String dirName, WritableComparator comparator,
                   Configuration conf) throws IOException {
       this(new Path(dirName), conf, comparator(comparator));
     }
-    
+
     protected synchronized void open(Path dir,
                                      WritableComparator comparator,
-                                     Configuration conf, 
+                                     Configuration conf,
                                      SequenceFile.Reader.Option... options
-                                     ) throws IOException {
+    ) throws IOException {
       Path dataFile = new Path(dir, DATA_FILE_NAME);
       Path indexFile = new Path(dir, INDEX_FILE_NAME);
 
@@ -420,7 +433,7 @@ public class MapFile {
 
       // open the index
       SequenceFile.Reader.Option[] indexOptions =
-        Options.prependOptions(options, SequenceFile.Reader.file(indexFile));
+          Options.prependOptions(options, SequenceFile.Reader.file(indexFile));
       this.index = new SequenceFile.Reader(conf, indexOptions);
     }
 
@@ -428,12 +441,12 @@ public class MapFile {
      * Override this method to specialize the type of
      * {@link SequenceFile.Reader} returned.
      */
-    protected SequenceFile.Reader 
-      createDataFileReader(Path dataFile, Configuration conf,
-                           SequenceFile.Reader.Option... options
-                           ) throws IOException {
+    protected SequenceFile.Reader
+    createDataFileReader(Path dataFile, Configuration conf,
+                         SequenceFile.Reader.Option... options
+    ) throws IOException {
       SequenceFile.Reader.Option[] newOptions =
-        Options.prependOptions(options, SequenceFile.Reader.file(dataFile));
+          Options.prependOptions(options, SequenceFile.Reader.file(dataFile));
       return new SequenceFile.Reader(conf, newOptions);
     }
 
@@ -458,7 +471,7 @@ public class MapFile {
 
           // check order to make sure comparator is compatible
           if (lastKey != null && comparator.compare(lastKey, k) > 0)
-            throw new IOException("key out of order: "+k+" after "+lastKey);
+            throw new IOException("key out of order: " + k + " after " + lastKey);
           lastKey = k;
           if (skip > 0) {
             skip--;
@@ -467,14 +480,14 @@ public class MapFile {
             skip = INDEX_SKIP;                    // reset skip
           }
 
-	  // don't read an index that is the same as the previous one. Block
-	  // compressed map files used to do this (multiple entries would point
-	  // at the same block)
-	  if (position.get() == lastIndex)
-	    continue;
+          // don't read an index that is the same as the previous one. Block
+          // compressed map files used to do this (multiple entries would point
+          // at the same block)
+          if (position.get() == lastIndex)
+            continue;
 
           if (count == positions.length) {
-	    positions = Arrays.copyOf(positions, positions.length * 2);
+            positions = Arrays.copyOf(positions, positions.length * 2);
           }
 
           keyBuilder.add(k);
@@ -486,9 +499,9 @@ public class MapFile {
         positions = Arrays.copyOf(positions, count);
       } catch (EOFException e) {
         LOG.warn("Unexpected EOF reading " + index +
-                              " at entry #" + count + ".  Ignoring.");
+            " at entry #" + count + ".  Ignoring.");
       } finally {
-	indexClosed = true;
+        indexClosed = true;
         index.close();
       }
     }
@@ -507,26 +520,27 @@ public class MapFile {
       if (count == 0) {
         return null;
       }
-    
+
       return keys[(count - 1) / 2];
     }
-    
+
     /** Reads the final key from the file.
      *
      * @param key key to read into
      */
     public synchronized void finalKey(WritableComparable key)
-      throws IOException {
+        throws IOException {
 
       long originalPosition = data.getPosition(); // save position
       try {
         readIndex();                              // make sure index is valid
         if (count > 0) {
-          data.seek(positions[count-1]);          // skip to last indexed entry
+          data.seek(positions[count - 1]);          // skip to last indexed entry
         } else {
           reset();                                // start at the beginning
         }
-        while (data.next(key)) {}                 // scan to eof
+        while (data.next(key)) {
+        }                 // scan to eof
 
       } finally {
         data.seek(originalPosition);              // restore position
@@ -541,46 +555,46 @@ public class MapFile {
       return seekInternal(key) == 0;
     }
 
-    /** 
+    /**
      * Positions the reader at the named key, or if none such exists, at the
      * first entry after the named key.
      *
-     * @return  0   - exact match found
+     * @return 0   - exact match found
      *          < 0 - positioned at next record
      *          1   - no more records in file
      */
     private synchronized int seekInternal(WritableComparable key)
-      throws IOException {
+        throws IOException {
       return seekInternal(key, false);
     }
 
-    /** 
+    /**
      * Positions the reader at the named key, or if none such exists, at the
      * key that falls just before or just after dependent on how the
      * <code>before</code> parameter is set.
-     * 
+     *
      * @param before - IF true, and <code>key</code> does not exist, position
      * file at entry that falls just before <code>key</code>.  Otherwise,
      * position file at record that sorts just after.
-     * @return  0   - exact match found
+     * @return 0   - exact match found
      *          < 0 - positioned at next record
      *          1   - no more records in file
      */
     private synchronized int seekInternal(WritableComparable key,
-        final boolean before)
-      throws IOException {
+                                          final boolean before)
+        throws IOException {
       readIndex();                                // make sure index is read
 
       if (seekIndex != -1                         // seeked before
-          && seekIndex+1 < count           
-          && comparator.compare(key, keys[seekIndex+1])<0 // before next indexed
+          && seekIndex + 1 < count
+          && comparator.compare(key, keys[seekIndex + 1]) < 0 // before next indexed
           && comparator.compare(key, nextKey)
           >= 0) {                                 // but after last seeked
         // do nothing
       } else {
         seekIndex = binarySearch(key);
         if (seekIndex < 0)                        // decode insertion point
-          seekIndex = -seekIndex-2;
+          seekIndex = -seekIndex - 2;
 
         if (seekIndex == -1)                      // belongs before first entry
           seekPosition = firstPosition;           // use beginning of file
@@ -588,10 +602,10 @@ public class MapFile {
           seekPosition = positions[seekIndex];    // else use index
       }
       data.seek(seekPosition);
-      
+
       if (nextKey == null)
         nextKey = comparator.newKey();
-     
+
       // If we're looking for the key before, we need to keep track
       // of the position we got the current key as well as the position
       // of the key before it.
@@ -629,7 +643,7 @@ public class MapFile {
 
     private int binarySearch(WritableComparable key) {
       int low = 0;
-      int high = count-1;
+      int high = count - 1;
 
       while (low <= high) {
         int mid = (low + high) >>> 1;
@@ -650,13 +664,13 @@ public class MapFile {
      * <code>val</code>.  Returns true if such a pair exists and false when at
      * the end of the map */
     public synchronized boolean next(WritableComparable key, Writable val)
-      throws IOException {
+        throws IOException {
       return data.next(key, val);
     }
 
     /** Return the value for the named key, or null if none exists. */
     public synchronized Writable get(WritableComparable key, Writable val)
-      throws IOException {
+        throws IOException {
       if (seek(key)) {
         data.getCurrentValue(val);
         return val;
@@ -664,24 +678,24 @@ public class MapFile {
         return null;
     }
 
-    /** 
+    /**
      * Finds the record that is the closest match to the specified key.
      * Returns <code>key</code> or if it does not exist, at the first entry
      * after the named key.
-     * 
--     * @param key       - key that we're trying to find
--     * @param val       - data value if key is found
--     * @return          - the key that was the closest match or null if eof.
+     *
+     -     * @param key       - key that we're trying to find
+     -     * @param val       - data value if key is found
+     -     * @return          - the key that was the closest match or null if eof.
      */
     public synchronized WritableComparable getClosest(WritableComparable key,
-      Writable val)
-    throws IOException {
+                                                      Writable val)
+        throws IOException {
       return getClosest(key, val, false);
     }
 
-    /** 
+    /**
      * Finds the record that is the closest match to the specified key.
-     * 
+     *
      * @param key       - key that we're trying to find
      * @param val       - data value if key is found
      * @param before    - IF true, and <code>key</code> does not exist, return
@@ -690,9 +704,9 @@ public class MapFile {
      * @return          - the key that was the closest match or null if eof.
      */
     public synchronized WritableComparable getClosest(WritableComparable key,
-        Writable val, final boolean before)
-      throws IOException {
-     
+                                                      Writable val, final boolean before)
+        throws IOException {
+
       int c = seekInternal(key, before);
 
       // If we didn't get an exact match, and we ended up in the wrong
@@ -720,7 +734,7 @@ public class MapFile {
 
   /** Renames an existing map directory. */
   public static void rename(FileSystem fs, String oldName, String newName)
-    throws IOException {
+      throws IOException {
     Path oldDir = new Path(oldName);
     Path newDir = new Path(newName);
     if (!fs.rename(oldDir, newDir)) {
@@ -765,27 +779,27 @@ public class MapFile {
       // no fixing needed
       return -1;
     }
-    SequenceFile.Reader dataReader = 
-      new SequenceFile.Reader(conf, SequenceFile.Reader.file(data));
+    SequenceFile.Reader dataReader =
+        new SequenceFile.Reader(conf, SequenceFile.Reader.file(data));
     if (!dataReader.getKeyClass().equals(keyClass)) {
       throw new Exception(dr + "Wrong key class in " + dir + ", expected" + keyClass.getName() +
-                          ", got " + dataReader.getKeyClass().getName());
+          ", got " + dataReader.getKeyClass().getName());
     }
     if (!dataReader.getValueClass().equals(valueClass)) {
       throw new Exception(dr + "Wrong value class in " + dir + ", expected" + valueClass.getName() +
-                          ", got " + dataReader.getValueClass().getName());
+          ", got " + dataReader.getValueClass().getName());
     }
     long cnt = 0L;
     Writable key = ReflectionUtils.newInstance(keyClass, conf);
     Writable value = ReflectionUtils.newInstance(valueClass, conf);
     SequenceFile.Writer indexWriter = null;
     if (!dryrun) {
-      indexWriter = 
-        SequenceFile.createWriter(conf, 
-                                  SequenceFile.Writer.file(index), 
-                                  SequenceFile.Writer.keyClass(keyClass), 
-                                  SequenceFile.Writer.valueClass
-                                    (LongWritable.class));
+      indexWriter =
+          SequenceFile.createWriter(conf,
+              SequenceFile.Writer.file(index),
+              SequenceFile.Writer.keyClass(keyClass),
+              SequenceFile.Writer.valueClass
+                  (LongWritable.class));
     }
     try {
       /** What's the position (in bytes) we wrote when we got the last index */
@@ -800,7 +814,7 @@ public class MapFile {
       LongWritable position = new LongWritable();
       long nextBlock = pos;
       boolean blockCompressed = dataReader.isBlockCompressed();
-      while(dataReader.next(key, value)) {
+      while (dataReader.next(key, value)) {
         if (blockCompressed) {
           long curPos = dataReader.getPosition();
           if (curPos > nextBlock) {
@@ -823,7 +837,7 @@ public class MapFile {
         }
         cnt++;
       }
-    } catch(Throwable t) {
+    } catch (Throwable t) {
       // truncated data file. swallow it.
     }
     dataReader.close();
@@ -854,7 +868,7 @@ public class MapFile {
      * @throws IOException
      */
     public void merge(Path[] inMapFiles, boolean deleteInputs,
-        Path outMapFile) throws IOException {
+                      Path outMapFile) throws IOException {
       try {
         open(inMapFiles, outMapFile);
         mergePass();
@@ -976,12 +990,12 @@ public class MapFile {
 
   public static void main(String[] args) throws Exception {
     String usage = "Usage: MapFile inFile outFile";
-      
+
     if (args.length != 2) {
       System.err.println(usage);
       System.exit(-1);
     }
-      
+
     String in = args[0];
     String out = args[1];
 
@@ -993,11 +1007,11 @@ public class MapFile {
       WritableComparable<?> key = ReflectionUtils.newInstance(
           reader.getKeyClass().asSubclass(WritableComparable.class), conf);
       Writable value = ReflectionUtils.newInstance(reader.getValueClass()
-        .asSubclass(Writable.class), conf);
+          .asSubclass(Writable.class), conf);
 
       try (MapFile.Writer writer = new MapFile.Writer(conf, fs, out,
-            reader.getKeyClass().asSubclass(WritableComparable.class),
-            reader.getValueClass())) {
+          reader.getKeyClass().asSubclass(WritableComparable.class),
+          reader.getValueClass())) {
         while (reader.next(key, value)) {             // copy all entries
           writer.append(key, value);
         }

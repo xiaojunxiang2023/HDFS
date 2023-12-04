@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This class describes a replica that has been finalized.
@@ -14,6 +14,7 @@ import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 public class FinalizedReplica extends LocalReplica {
   private byte[] lastPartialChunkChecksum;
   private int metaLength = -1;
+
   /**
    * Constructor.
    * @param blockId block id
@@ -23,7 +24,7 @@ public class FinalizedReplica extends LocalReplica {
    * @param dir directory path where block and meta files are located
    */
   public FinalizedReplica(long blockId, long len, long genStamp,
-      FsVolumeSpi vol, File dir) {
+                          FsVolumeSpi vol, File dir) {
     this(blockId, len, genStamp, vol, dir, null);
   }
 
@@ -37,7 +38,7 @@ public class FinalizedReplica extends LocalReplica {
    * @param checksum the last partial chunk checksum
    */
   public FinalizedReplica(long blockId, long len, long genStamp,
-      FsVolumeSpi vol, File dir, byte[] checksum) {
+                          FsVolumeSpi vol, File dir, byte[] checksum) {
     super(blockId, len, genStamp, vol, dir);
     this.setLastPartialChunkChecksum(checksum);
   }
@@ -60,7 +61,7 @@ public class FinalizedReplica extends LocalReplica {
    * @param checksum the last partial chunk checksum
    */
   public FinalizedReplica(Block block, FsVolumeSpi vol, File dir,
-      byte[] checksum) {
+                          byte[] checksum) {
     super(block, vol, dir);
     this.setLastPartialChunkChecksum(checksum);
   }
@@ -78,7 +79,7 @@ public class FinalizedReplica extends LocalReplica {
   public ReplicaState getState() {
     return ReplicaState.FINALIZED;
   }
-  
+
   @Override
   public long getVisibleLength() {
     return getNumBytes();       // all bytes are visible
@@ -93,12 +94,12 @@ public class FinalizedReplica extends LocalReplica {
   public boolean equals(Object o) {
     return super.equals(o);
   }
-  
+
   @Override  // Object
   public int hashCode() {
     return super.hashCode();
   }
-  
+
   @Override
   public String toString() {
     return super.toString();
@@ -131,7 +132,7 @@ public class FinalizedReplica extends LocalReplica {
   @Override
   public long getMetadataLength() {
     if (metaLength < 0) {
-      metaLength = (int)super.getMetadataLength();
+      metaLength = (int) super.getMetadataLength();
     }
     return metaLength;
   }

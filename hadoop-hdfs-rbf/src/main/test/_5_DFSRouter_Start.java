@@ -7,10 +7,10 @@ import org.junit.Test;
  * @Description:
  */
 public class _5_DFSRouter_Start {
-    @Test
-    public void startDFSRouter() throws Exception {
-        String[] args = new String[]{};
-        DFSRouter.main(args);
-        Thread.sleep(System.currentTimeMillis());
-    }
+  @Test
+  public void startDFSRouter() throws Exception {
+    String[] args = new String[]{};
+    DFSRouter.main(args);
+    Thread.sleep(System.currentTimeMillis());
+  }
 }

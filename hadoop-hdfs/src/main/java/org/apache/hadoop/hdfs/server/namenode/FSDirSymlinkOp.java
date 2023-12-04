@@ -65,8 +65,8 @@ class FSDirSymlinkOp {
   }
 
   static INodeSymlink unprotectedAddSymlink(FSDirectory fsd, INodesInPath iip,
-      byte[] localName, long id, String target, long mtime, long atime,
-      PermissionStatus perm)
+                                            byte[] localName, long id, String target, long mtime, long atime,
+                                            PermissionStatus perm)
       throws UnresolvedLinkException, QuotaExceededException {
     assert fsd.hasWriteLock();
     final INodeSymlink symlink = new INodeSymlink(id, null, perm, mtime, atime,
@@ -80,8 +80,8 @@ class FSDirSymlinkOp {
    * Add the given symbolic link to the fs. Record it in the edits log.
    */
   private static INodeSymlink addSymlink(FSDirectory fsd, String path,
-      INodesInPath iip, String target, PermissionStatus dirPerms,
-      boolean createParent, boolean logRetryCache) throws IOException {
+                                         INodesInPath iip, String target, PermissionStatus dirPerms,
+                                         boolean createParent, boolean logRetryCache) throws IOException {
     final long mtime = now();
     final INodesInPath parent;
     if (createParent) {
@@ -105,7 +105,7 @@ class FSDirSymlinkOp {
     fsd.getEditLog().logSymlink(path, target, mtime, mtime, newNode,
         logRetryCache);
 
-    if(NameNode.stateChangeLog.isDebugEnabled()) {
+    if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("addSymlink: " + path + " is added");
     }
     return newNode;

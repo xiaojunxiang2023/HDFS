@@ -1,6 +1,19 @@
 package org.apache.hadoop.fs;
 
-import java.io.*;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Options.ChecksumOpt;
+import org.apache.hadoop.fs.Options.HandleOpt;
+import org.apache.hadoop.fs.Options.Rename;
+import org.apache.hadoop.fs.impl.OpenFileParameters;
+import org.apache.hadoop.fs.permission.AclEntry;
+import org.apache.hadoop.fs.permission.AclStatus;
+import org.apache.hadoop.fs.permission.FsAction;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.util.Progressable;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -8,17 +21,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.impl.OpenFileParameters;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclStatus;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.Options.ChecksumOpt;
-import org.apache.hadoop.fs.Options.HandleOpt;
-import org.apache.hadoop.fs.Options.Rename;
-import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.util.Progressable;
 
 import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapabilityArgs;
 
@@ -38,16 +40,16 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  *
  *****************************************************************/
 public class FilterFileSystem extends FileSystem {
-  
+
   protected FileSystem fs;
   protected String swapScheme;
-  
+
   /*
    * so that extending classes can define it
    */
   public FilterFileSystem() {
   }
-  
+
   public FilterFileSystem(FileSystem fs) {
     this.fs = fs;
     this.statistics = fs.statistics;
@@ -85,8 +87,8 @@ public class FilterFileSystem extends FileSystem {
   public URI getUri() {
     return fs.getUri();
   }
-  
-  
+
+
   @Override
   protected URI getCanonicalUri() {
     return fs.getCanonicalUri();
@@ -114,7 +116,7 @@ public class FilterFileSystem extends FileSystem {
     }
     return fqPath;
   }
-  
+
   ///////////////////////////////////////////////////////////////
   // FileSystem
   ///////////////////////////////////////////////////////////////
@@ -127,14 +129,15 @@ public class FilterFileSystem extends FileSystem {
 
   @Override
   public BlockLocation[] getFileBlockLocations(FileStatus file, long start,
-    long len) throws IOException {
-      return fs.getFileBlockLocations(file, start, len);
+                                               long len) throws IOException {
+    return fs.getFileBlockLocations(file, start, len);
   }
 
   @Override
   public Path resolvePath(final Path p) throws IOException {
     return fs.resolvePath(p);
   }
+
   /**
    * Opens an FSDataInputStream at the indicated Path.
    * @param f the file name to open
@@ -158,7 +161,7 @@ public class FilterFileSystem extends FileSystem {
 
   @Override
   public FSDataOutputStream append(Path f, int bufferSize,
-      Progressable progress) throws IOException {
+                                   Progressable progress) throws IOException {
     return fs.append(f, bufferSize, progress);
   }
 
@@ -169,45 +172,45 @@ public class FilterFileSystem extends FileSystem {
 
   @Override
   public FSDataOutputStream create(Path f, FsPermission permission,
-      boolean overwrite, int bufferSize, short replication, long blockSize,
-      Progressable progress) throws IOException {
+                                   boolean overwrite, int bufferSize, short replication, long blockSize,
+                                   Progressable progress) throws IOException {
     return fs.create(f, permission,
         overwrite, bufferSize, replication, blockSize, progress);
   }
 
   @Override
   public FSDataOutputStream create(Path f,
-        FsPermission permission,
-        EnumSet<CreateFlag> flags,
-        int bufferSize,
-        short replication,
-        long blockSize,
-        Progressable progress,
-        ChecksumOpt checksumOpt) throws IOException {
+                                   FsPermission permission,
+                                   EnumSet<CreateFlag> flags,
+                                   int bufferSize,
+                                   short replication,
+                                   long blockSize,
+                                   Progressable progress,
+                                   ChecksumOpt checksumOpt) throws IOException {
     return fs.create(f, permission,
-      flags, bufferSize, replication, blockSize, progress, checksumOpt);
+        flags, bufferSize, replication, blockSize, progress, checksumOpt);
   }
 
   @Override
   protected RemoteIterator<LocatedFileStatus> listLocatedStatus(final Path f,
-      final PathFilter filter)
-  throws FileNotFoundException, IOException {
+                                                                final PathFilter filter)
+      throws FileNotFoundException, IOException {
     return fs.listLocatedStatus(f, filter);
   }
 
 
   @Override
   public FSDataOutputStream createNonRecursive(Path f, FsPermission permission,
-      EnumSet<CreateFlag> flags, int bufferSize, short replication, long blockSize,
-      Progressable progress) throws IOException {
-    
+                                               EnumSet<CreateFlag> flags, int bufferSize, short replication, long blockSize,
+                                               Progressable progress) throws IOException {
+
     return fs.createNonRecursive(f, permission, flags, bufferSize, replication, blockSize,
         progress);
   }
 
   /**
    * Set replication for an existing file.
-   * 
+   *
    * @param src file name
    * @param replication new replication
    * @throws IOException
@@ -218,7 +221,7 @@ public class FilterFileSystem extends FileSystem {
   public boolean setReplication(Path src, short replication) throws IOException {
     return fs.setReplication(src, replication);
   }
-  
+
   /**
    * Renames Path src to Path dst.  Can take place on local fs
    * or remote DFS.
@@ -238,13 +241,13 @@ public class FilterFileSystem extends FileSystem {
   public boolean truncate(Path f, final long newLength) throws IOException {
     return fs.truncate(f, newLength);
   }
-  
+
   /** Delete a file */
   @Override
   public boolean delete(Path f, boolean recursive) throws IOException {
     return fs.delete(f, recursive);
   }
-  
+
   /** List files in a directory. */
   @Override
   public FileStatus[] listStatus(Path f) throws IOException {
@@ -253,23 +256,23 @@ public class FilterFileSystem extends FileSystem {
 
   @Override
   public RemoteIterator<Path> listCorruptFileBlocks(Path path)
-    throws IOException {
+      throws IOException {
     return fs.listCorruptFileBlocks(path);
   }
 
   /** List files and its block locations in a directory. */
   @Override
   public RemoteIterator<LocatedFileStatus> listLocatedStatus(Path f)
-  throws IOException {
+      throws IOException {
     return fs.listLocatedStatus(f);
   }
-  
+
   /** Return a remote iterator for listing in a directory */
   @Override
   public RemoteIterator<FileStatus> listStatusIterator(Path f)
-  throws IOException {
+      throws IOException {
     return fs.listStatusIterator(f);
-   }
+  }
 
   @Override
   public Path getHomeDirectory() {
@@ -280,34 +283,34 @@ public class FilterFileSystem extends FileSystem {
   /**
    * Set the current working directory for the given file system. All relative
    * paths will be resolved relative to it.
-   * 
+   *
    * @param newDir
    */
   @Override
   public void setWorkingDirectory(Path newDir) {
     fs.setWorkingDirectory(newDir);
   }
-  
+
   /**
    * Get the current working directory for the given file system
-   * 
+   *
    * @return the directory pathname
    */
   @Override
   public Path getWorkingDirectory() {
     return fs.getWorkingDirectory();
   }
-  
+
   @Override
   protected Path getInitialWorkingDirectory() {
     return fs.getInitialWorkingDirectory();
   }
-  
+
   @Override
   public FsStatus getStatus(Path p) throws IOException {
     return fs.getStatus(p);
   }
-  
+
   @Override
   public boolean mkdirs(Path f, FsPermission permission) throws IOException {
     return fs.mkdirs(f, permission);
@@ -325,31 +328,31 @@ public class FilterFileSystem extends FileSystem {
    */
   @Override
   public void copyFromLocalFile(boolean delSrc, Path src, Path dst)
-    throws IOException {
+      throws IOException {
     fs.copyFromLocalFile(delSrc, src, dst);
   }
-  
+
   /**
    * The src files are on the local disk.  Add it to FS at
    * the given dst name.
    * delSrc indicates if the source should be removed
    */
   @Override
-  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
+  public void copyFromLocalFile(boolean delSrc, boolean overwrite,
                                 Path[] srcs, Path dst)
-    throws IOException {
+      throws IOException {
     fs.copyFromLocalFile(delSrc, overwrite, srcs, dst);
   }
-  
+
   /**
    * The src file is on the local disk.  Add it to FS at
    * the given dst name.
    * delSrc indicates if the source should be removed
    */
   @Override
-  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
+  public void copyFromLocalFile(boolean delSrc, boolean overwrite,
                                 Path src, Path dst)
-    throws IOException {
+      throws IOException {
     fs.copyFromLocalFile(delSrc, overwrite, src, dst);
   }
 
@@ -357,13 +360,13 @@ public class FilterFileSystem extends FileSystem {
    * The src file is under FS, and the dst is on the local disk.
    * Copy it from FS control to the local dst name.
    * delSrc indicates if the src will be removed or not.
-   */   
+   */
   @Override
   public void copyToLocalFile(boolean delSrc, Path src, Path dst)
-    throws IOException {
+      throws IOException {
     fs.copyToLocalFile(delSrc, src, dst);
   }
-  
+
   /**
    * Returns a local File that the user can write output to.  The caller
    * provides both the eventual FS target name and the local working
@@ -372,7 +375,7 @@ public class FilterFileSystem extends FileSystem {
    */
   @Override
   public Path startLocalOutput(Path fsOutputFile, Path tmpLocalFile)
-    throws IOException {
+      throws IOException {
     return fs.startLocalOutput(fsOutputFile, tmpLocalFile);
   }
 
@@ -384,13 +387,13 @@ public class FilterFileSystem extends FileSystem {
    */
   @Override
   public void completeLocalOutput(Path fsOutputFile, Path tmpLocalFile)
-    throws IOException {
+      throws IOException {
     fs.completeLocalOutput(fsOutputFile, tmpLocalFile);
   }
 
   /** Return the total size of all files in the filesystem.*/
   @Override
-  public long getUsed() throws IOException{
+  public long getUsed() throws IOException {
     return fs.getUsed();
   }
 
@@ -404,7 +407,7 @@ public class FilterFileSystem extends FileSystem {
   public long getDefaultBlockSize() {
     return fs.getDefaultBlockSize();
   }
-  
+
   @Override
   public short getDefaultReplication() {
     return fs.getDefaultReplication();
@@ -451,9 +454,9 @@ public class FilterFileSystem extends FileSystem {
   }
 
   public void createSymlink(final Path target, final Path link,
-      final boolean createParent) throws AccessControlException,
+                            final boolean createParent) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
-      ParentNotDirectoryException, UnsupportedFileSystemException, 
+      ParentNotDirectoryException, UnsupportedFileSystemException,
       IOException {
     fs.createSymlink(target, link, createParent);
   }
@@ -490,7 +493,7 @@ public class FilterFileSystem extends FileSystem {
   public void setVerifyChecksum(boolean verifyChecksum) {
     fs.setVerifyChecksum(verifyChecksum);
   }
-  
+
   @Override
   public void setWriteChecksum(boolean writeChecksum) {
     fs.setWriteChecksum(writeChecksum);
@@ -500,7 +503,7 @@ public class FilterFileSystem extends FileSystem {
   public Configuration getConf() {
     return fs.getConf();
   }
-  
+
   @Override
   public void close() throws IOException {
     super.close();
@@ -509,27 +512,27 @@ public class FilterFileSystem extends FileSystem {
 
   @Override
   public void setOwner(Path p, String username, String groupname
-      ) throws IOException {
+  ) throws IOException {
     fs.setOwner(p, username, groupname);
   }
 
   @Override
   public void setTimes(Path p, long mtime, long atime
-      ) throws IOException {
+  ) throws IOException {
     fs.setTimes(p, mtime, atime);
   }
 
   @Override
   public void setPermission(Path p, FsPermission permission
-      ) throws IOException {
+  ) throws IOException {
     fs.setPermission(p, permission);
   }
 
   @Override
   protected FSDataOutputStream primitiveCreate(Path f,
-      FsPermission absolutePermission, EnumSet<CreateFlag> flag,
-      int bufferSize, short replication, long blockSize,
-      Progressable progress, ChecksumOpt checksumOpt)
+                                               FsPermission absolutePermission, EnumSet<CreateFlag> flag,
+                                               int bufferSize, short replication, long blockSize,
+                                               Progressable progress, ChecksumOpt checksumOpt)
       throws IOException {
     return fs.primitiveCreate(f, absolutePermission, flag,
         bufferSize, replication, blockSize, progress, checksumOpt);
@@ -541,7 +544,7 @@ public class FilterFileSystem extends FileSystem {
       throws IOException {
     return fs.primitiveMkdir(f, abdolutePermission);
   }
-  
+
   @Override // FileSystem
   public FileSystem[] getChildFileSystems() {
     return new FileSystem[]{fs};
@@ -552,13 +555,13 @@ public class FilterFileSystem extends FileSystem {
       throws IOException {
     return fs.createSnapshot(path, snapshotName);
   }
-  
+
   @Override // FileSystem
   public void renameSnapshot(Path path, String snapshotOldName,
-      String snapshotNewName) throws IOException {
+                             String snapshotNewName) throws IOException {
     fs.renameSnapshot(path, snapshotOldName, snapshotNewName);
   }
-  
+
   @Override // FileSystem
   public void deleteSnapshot(Path path, String snapshotName)
       throws IOException {
@@ -605,7 +608,7 @@ public class FilterFileSystem extends FileSystem {
 
   @Override
   public void setXAttr(Path path, String name, byte[] value,
-      EnumSet<XAttrSetFlag> flag) throws IOException {
+                       EnumSet<XAttrSetFlag> flag) throws IOException {
     fs.setXAttr(path, name, value, flag);
   }
 
@@ -713,14 +716,14 @@ public class FilterFileSystem extends FileSystem {
   public boolean hasPathCapability(final Path path, final String capability)
       throws IOException {
     switch (validatePathCapabilityArgs(makeQualified(path), capability)) {
-    case CommonPathCapabilities.FS_MULTIPART_UPLOADER:
-    case CommonPathCapabilities.FS_EXPERIMENTAL_BATCH_LISTING:
-      // operations known to be unsupported, irrespective of what
-      // the wrapped class implements.
-      return false;
-    default:
-      // the feature is not implemented.
-      return fs.hasPathCapability(path, capability);
+      case CommonPathCapabilities.FS_MULTIPART_UPLOADER:
+      case CommonPathCapabilities.FS_EXPERIMENTAL_BATCH_LISTING:
+        // operations known to be unsupported, irrespective of what
+        // the wrapped class implements.
+        return false;
+      default:
+        // the feature is not implemented.
+        return fs.hasPathCapability(path, capability);
     }
   }
 

@@ -1,7 +1,8 @@
 package org.apache.hadoop.hdfs.qjournal.protocol;
+
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.qjournal.server.JournalNode;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
+import org.apache.hadoop.hdfs.qjournal.server.JournalNode;
 import org.apache.hadoop.security.KerberosInfo;
 
 import java.io.IOException;

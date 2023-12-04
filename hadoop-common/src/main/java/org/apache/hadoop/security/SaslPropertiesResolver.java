@@ -1,17 +1,16 @@
 package org.apache.hadoop.security;
 
-import java.net.InetAddress;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.security.sasl.Sasl;
-
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.security.SaslRpcServer.QualityOfProtection;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.StringUtils;
+
+import javax.security.sasl.Sasl;
+import java.net.InetAddress;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Provides SaslProperties to be used for a connection.
@@ -20,8 +19,8 @@ import org.apache.hadoop.util.StringUtils;
  * The custom class can be specified via configuration.
  *
  */
-public class SaslPropertiesResolver implements Configurable{
-  private Map<String,String> properties;
+public class SaslPropertiesResolver implements Configurable {
+  private Map<String, String> properties;
   Configuration conf;
 
   /**
@@ -34,20 +33,20 @@ public class SaslPropertiesResolver implements Configurable{
    */
   public static SaslPropertiesResolver getInstance(Configuration conf) {
     Class<? extends SaslPropertiesResolver> clazz =
-      conf.getClass(
-          CommonConfigurationKeysPublic.HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS,
-          SaslPropertiesResolver.class, SaslPropertiesResolver.class);
+        conf.getClass(
+            CommonConfigurationKeysPublic.HADOOP_SECURITY_SASL_PROPS_RESOLVER_CLASS,
+            SaslPropertiesResolver.class, SaslPropertiesResolver.class);
     return ReflectionUtils.newInstance(clazz, conf);
   }
 
   @Override
   public void setConf(Configuration conf) {
     this.conf = conf;
-    properties = new TreeMap<String,String>();
+    properties = new TreeMap<String, String>();
     String[] qop = conf.getTrimmedStrings(
         CommonConfigurationKeysPublic.HADOOP_RPC_PROTECTION,
         QualityOfProtection.AUTHENTICATION.toString());
-    for (int i=0; i < qop.length; i++) {
+    for (int i = 0; i < qop.length; i++) {
       qop[i] = QualityOfProtection.valueOf(
           StringUtils.toUpperCase(qop[i])).getSaslQop();
     }
@@ -64,7 +63,7 @@ public class SaslPropertiesResolver implements Configurable{
    * The default Sasl Properties read from the configuration
    * @return sasl Properties
    */
-  public Map<String,String> getDefaultProperties() {
+  public Map<String, String> getDefaultProperties() {
     return properties;
   }
 
@@ -73,7 +72,7 @@ public class SaslPropertiesResolver implements Configurable{
    * @param clientAddress client's address
    * @return the sasl properties to be used for the connection.
    */
-  public Map<String, String> getServerProperties(InetAddress clientAddress){
+  public Map<String, String> getServerProperties(InetAddress clientAddress) {
     return properties;
   }
 
@@ -84,7 +83,7 @@ public class SaslPropertiesResolver implements Configurable{
    * @return the sasl properties to be used for the connection.
    */
   public Map<String, String> getServerProperties(InetAddress clientAddress,
-      int ingressPort){
+                                                 int ingressPort) {
     return getServerProperties(clientAddress);
   }
 
@@ -93,7 +92,7 @@ public class SaslPropertiesResolver implements Configurable{
    * @param serverAddress server's address
    * @return the sasl properties to be used for the connection.
    */
-  public Map<String, String> getClientProperties(InetAddress serverAddress){
+  public Map<String, String> getClientProperties(InetAddress serverAddress) {
     return properties;
   }
 
@@ -104,7 +103,7 @@ public class SaslPropertiesResolver implements Configurable{
    * @return the sasl properties to be used for the connection.
    */
   public Map<String, String> getClientProperties(InetAddress serverAddress,
-      int ingressPort) {
+                                                 int ingressPort) {
     return getClientProperties(serverAddress);
   }
 
@@ -117,11 +116,11 @@ public class SaslPropertiesResolver implements Configurable{
    * @return sasl property associated with the given key
    */
   static Map<String, String> getSaslProperties(Configuration conf,
-      String configKey, QualityOfProtection defaultQOP) {
+                                               String configKey, QualityOfProtection defaultQOP) {
     Map<String, String> saslProps = new TreeMap<>();
     String[] qop = conf.getStrings(configKey, defaultQOP.toString());
 
-    for (int i=0; i < qop.length; i++) {
+    for (int i = 0; i < qop.length; i++) {
       qop[i] = QualityOfProtection.valueOf(
           StringUtils.toUpperCase(qop[i])).getSaslQop();
     }

@@ -1,32 +1,23 @@
 package org.apache.hadoop.metrics2.impl;
 
-import java.util.HashMap;
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.AttributeNotFoundException;
-import javax.management.DynamicMBean;
-import javax.management.InvalidAttributeValueException;
-import javax.management.MBeanException;
-import javax.management.MBeanInfo;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
-
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
-
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsFilter;
 import org.apache.hadoop.metrics2.MetricsSource;
 import org.apache.hadoop.metrics2.MetricsTag;
-import static org.apache.hadoop.metrics2.impl.MetricsConfig.*;
 import org.apache.hadoop.metrics2.util.MBeans;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.hadoop.metrics2.util.Contracts.*;
+import javax.management.*;
+import java.util.HashMap;
+
+import static org.apache.hadoop.metrics2.impl.MetricsConfig.*;
+import static org.apache.hadoop.metrics2.util.Contracts.checkArg;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * An adapter class for metrics source and associated filter and jmx impl
@@ -73,10 +64,10 @@ class MetricsSourceAdapter implements DynamicMBean {
                        MetricsSource source, Iterable<MetricsTag> injectedTags,
                        long period, MetricsConfig conf) {
     this(prefix, name, description, source, injectedTags,
-         conf.getFilter(RECORD_FILTER_KEY),
-         conf.getFilter(METRIC_FILTER_KEY),
-         period + 1, // hack to avoid most of the "innocuous" races.
-         conf.getBoolean(START_MBEANS_KEY, true));
+        conf.getFilter(RECORD_FILTER_KEY),
+        conf.getFilter(METRIC_FILTER_KEY),
+        period + 1, // hack to avoid most of the "innocuous" races.
+        conf.getBoolean(START_MBEANS_KEY, true));
   }
 
   void start() {
@@ -87,13 +78,13 @@ class MetricsSourceAdapter implements DynamicMBean {
   public Object getAttribute(String attribute)
       throws AttributeNotFoundException, MBeanException, ReflectionException {
     updateJmxCache();
-    synchronized(this) {
+    synchronized (this) {
       Attribute a = attrCache.get(attribute);
       if (a == null) {
-        throw new AttributeNotFoundException(attribute +" not found");
+        throw new AttributeNotFoundException(attribute + " not found");
       }
       if (LOG.isDebugEnabled()) {
-        LOG.debug(attribute +": "+ a);
+        LOG.debug(attribute + ": " + a);
       }
       return a.getValue();
     }
@@ -102,19 +93,19 @@ class MetricsSourceAdapter implements DynamicMBean {
   @Override
   public void setAttribute(Attribute attribute)
       throws AttributeNotFoundException, InvalidAttributeValueException,
-             MBeanException, ReflectionException {
+      MBeanException, ReflectionException {
     throw new UnsupportedOperationException("Metrics are read-only.");
   }
 
   @Override
   public AttributeList getAttributes(String[] attributes) {
     updateJmxCache();
-    synchronized(this) {
+    synchronized (this) {
       AttributeList ret = new AttributeList();
       for (String key : attributes) {
         Attribute attr = attrCache.get(key);
         if (LOG.isDebugEnabled()) {
-          LOG.debug(key +": "+ attr);
+          LOG.debug(key + ": " + attr);
         }
         ret.add(attr);
       }
@@ -141,7 +132,7 @@ class MetricsSourceAdapter implements DynamicMBean {
 
   private void updateJmxCache() {
     boolean getAllMetrics = false;
-    synchronized(this) {
+    synchronized (this) {
       if (Time.now() - jmxCacheTS >= jmxCacheTTL) {
         // temporarilly advance the expiry while updating the cache
         jmxCacheTS = Time.now() + jmxCacheTTL;
@@ -152,8 +143,7 @@ class MetricsSourceAdapter implements DynamicMBean {
           getAllMetrics = true;
           lastRecsCleared = false;
         }
-      }
-      else {
+      } else {
         return;
       }
     }
@@ -181,7 +171,7 @@ class MetricsSourceAdapter implements DynamicMBean {
     try {
       source.getMetrics(builder, all);
     } catch (Exception e) {
-      LOG.error("Error getting metrics from source "+ name, e);
+      LOG.error("Error getting metrics from source " + name, e);
     }
     for (MetricsRecordBuilderImpl rb : builder) {
       for (MetricsTag t : injectedTags) {
@@ -197,12 +187,12 @@ class MetricsSourceAdapter implements DynamicMBean {
 
   synchronized void startMBeans() {
     if (mbeanName != null) {
-      LOG.warn("MBean "+ name +" already initialized!");
+      LOG.warn("MBean " + name + " already initialized!");
       LOG.debug("Stacktrace: ", new Throwable());
       return;
     }
     mbeanName = MBeans.register(prefix, name, this);
-    LOG.debug("MBean for source "+ name +" registered.");
+    LOG.debug("MBean for source " + name + " registered.");
   }
 
   synchronized void stopMBeans() {
@@ -211,7 +201,7 @@ class MetricsSourceAdapter implements DynamicMBean {
       mbeanName = null;
     }
   }
-  
+
   @VisibleForTesting
   ObjectName getMBeanName() {
     return mbeanName;
@@ -245,7 +235,7 @@ class MetricsSourceAdapter implements DynamicMBean {
       }
       ++recNo;
     }
-    LOG.debug("Done. # tags & metrics="+ numMetrics);
+    LOG.debug("Done. # tags & metrics=" + numMetrics);
     return numMetrics;
   }
 

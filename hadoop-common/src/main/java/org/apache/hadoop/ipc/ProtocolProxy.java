@@ -8,7 +8,7 @@ import java.util.HashSet;
 /**
  * a class wraps around a server's proxy, 
  * containing a list of its supported methods.
- * 
+ *
  * A list of methods with a value of null indicates that the client and server
  * have the same protocol.
  */
@@ -18,10 +18,10 @@ public class ProtocolProxy<T> {
   private HashSet<Integer> serverMethods = null;
   final private boolean supportServerMethodCheck;
   private boolean serverMethodsFetched = false;
-  
+
   /**
    * Constructor
-   * 
+   *
    * @param protocol protocol class
    * @param proxy its proxy
    * @param supportServerMethodCheck If false proxy will never fetch server
@@ -30,12 +30,12 @@ public class ProtocolProxy<T> {
    *        isMethodSupported. 
    */
   public ProtocolProxy(Class<T> protocol, T proxy,
-      boolean supportServerMethodCheck) {
+                       boolean supportServerMethodCheck) {
     this.protocol = protocol;
     this.proxy = proxy;
     this.supportServerMethodCheck = supportServerMethodCheck;
   }
-  
+
   private void fetchServerMethods(Method method) throws IOException {
     long clientVersion;
     clientVersion = RPC.getProtocolVersion(method.getDeclaringClass());
@@ -65,17 +65,17 @@ public class ProtocolProxy<T> {
   public T getProxy() {
     return proxy;
   }
-  
+
   /**
    * Check if a method is supported by the server or not
-   * 
+   *
    * @param methodName a method's name in String format
    * @param parameterTypes a method's parameter types
    * @return true if the method is supported by the server
    */
   public synchronized boolean isMethodSupported(String methodName,
-                                   Class<?>... parameterTypes)
-  throws IOException {
+                                                Class<?>... parameterTypes)
+      throws IOException {
     if (!supportServerMethodCheck) {
       return true;
     }

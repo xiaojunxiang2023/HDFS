@@ -1,10 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.io.IOException;
-import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.ha.micro.ServiceFailedException;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
+
+import java.io.IOException;
 
 /**
  * Active state of the namenode. In this state, namenode provides the namenode
@@ -20,12 +21,12 @@ public class ActiveState extends HAState {
   public void checkOperation(HAContext context, OperationCategory op) {
     return; // All operations are allowed in active state
   }
-  
+
   @Override
   public boolean shouldPopulateReplQueues() {
     return true;
   }
-  
+
   @Override
   public void setState(HAContext context, HAState s) throws ServiceFailedException {
     if (s == NameNode.STANDBY_STATE) {

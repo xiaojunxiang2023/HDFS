@@ -26,10 +26,18 @@ import java.io.*;
 public class OutputBuffer extends FilterOutputStream {
 
   private static class Buffer extends ByteArrayOutputStream {
-    public byte[] getData() { return buf; }
-    public int getLength() { return count; }
+    public byte[] getData() {
+      return buf;
+    }
+
+    public int getLength() {
+      return count;
+    }
+
     @Override
-    public void reset() { count = 0; }
+    public void reset() {
+      count = 0;
+    }
 
     public void write(InputStream in, int len) throws IOException {
       int newcount = count + len;
@@ -44,12 +52,12 @@ public class OutputBuffer extends FilterOutputStream {
   }
 
   private Buffer buffer;
-  
+
   /** Constructs a new empty buffer. */
   public OutputBuffer() {
     this(new Buffer());
   }
-  
+
   private OutputBuffer(Buffer buffer) {
     super(buffer);
     this.buffer = buffer;
@@ -58,10 +66,14 @@ public class OutputBuffer extends FilterOutputStream {
   /** Returns the current contents of the buffer.
    *  Data is only valid to {@link #getLength()}.
    */
-  public byte[] getData() { return buffer.getData(); }
+  public byte[] getData() {
+    return buffer.getData();
+  }
 
   /** Returns the length of the valid data currently in the buffer. */
-  public int getLength() { return buffer.getLength(); }
+  public int getLength() {
+    return buffer.getLength();
+  }
 
   /** Resets the buffer to empty. */
   public OutputBuffer reset() {

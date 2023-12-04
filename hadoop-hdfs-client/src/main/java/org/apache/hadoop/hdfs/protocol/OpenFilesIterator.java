@@ -1,10 +1,11 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-import java.util.EnumSet;
 import org.apache.hadoop.fs.BatchedRemoteIterator;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
+
+import java.io.IOException;
+import java.util.EnumSet;
 
 /**
  * OpenFilesIterator is a remote iterator that iterates over the open files list
@@ -26,6 +27,7 @@ public class OpenFilesIterator extends
     BLOCKING_DECOMMISSION((short) 0x02);
 
     private final short mode;
+
     OpenFilesType(short mode) {
       this.mode = mode;
     }
@@ -51,7 +53,7 @@ public class OpenFilesIterator extends
   private String path;
 
   public OpenFilesIterator(ClientProtocol namenode, Tracer tracer,
-      EnumSet<OpenFilesType> types, String path) {
+                           EnumSet<OpenFilesType> types, String path) {
     super(HdfsConstants.GRANDFATHER_INODE_ID);
     this.namenode = namenode;
     this.tracer = tracer;

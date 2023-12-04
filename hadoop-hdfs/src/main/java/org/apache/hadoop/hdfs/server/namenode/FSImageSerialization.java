@@ -1,21 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.DeprecatedUTF8;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo;
-import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
-import org.apache.hadoop.hdfs.protocol.LayoutVersion;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoContiguous;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.SnapshotFSImageFormat;
@@ -23,17 +13,18 @@ import org.apache.hadoop.hdfs.server.namenode.snapshot.SnapshotFSImageFormat.Ref
 import org.apache.hadoop.hdfs.util.XMLUtils;
 import org.apache.hadoop.hdfs.util.XMLUtils.InvalidXmlException;
 import org.apache.hadoop.hdfs.util.XMLUtils.Stanza;
-import org.apache.hadoop.io.BooleanWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.ShortWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableUtils;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.io.erasurecode.ECSchema;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Static utility functions for serializing various pieces of data in the correct
@@ -46,20 +37,21 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 public class FSImageSerialization {
 
   // Static-only class
-  private FSImageSerialization() {}
-  
+  private FSImageSerialization() {
+  }
+
   /**
    * In order to reduce allocation, we reuse some static objects. However, the methods
    * in this class should be thread-safe since image-saving is multithreaded, so 
    * we need to keep the static objects in a thread-local.
    */
   static private final ThreadLocal<TLData> TL_DATA =
-    new ThreadLocal<TLData>() {
-    @Override
-    protected TLData initialValue() {
-      return new TLData();
-    }
-  };
+      new ThreadLocal<TLData>() {
+        @Override
+        protected TLData initialValue() {
+          return new TLData();
+        }
+      };
 
   /**
    * Simple container "struct" for threadlocal data.
@@ -74,14 +66,14 @@ public class FSImageSerialization {
   }
 
   private static void writePermissionStatus(INodeAttributes inode,
-      DataOutput out) throws IOException {
+                                            DataOutput out) throws IOException {
     final FsPermission p = TL_DATA.get().FILE_PERM;
     p.fromShort(inode.getFsPermissionShort());
     PermissionStatus.write(out, inode.getUserName(), inode.getGroupName(), p);
   }
 
   private static void writeBlocks(final Block[] blocks,
-      final DataOutput out) throws IOException {
+                                  final DataOutput out) throws IOException {
     if (blocks == null) {
       out.writeInt(0);
     } else {
@@ -117,7 +109,7 @@ public class FSImageSerialization {
       blocksContiguous[i] = new BlockInfoContiguous(blk, blockReplication);
     }
     // last block is UNDER_CONSTRUCTION
-    if(numBlocks > 0) {
+    if (numBlocks > 0) {
       blk.readFields(in);
       blocksContiguous[i] = new BlockInfoContiguous(blk, blockReplication);
       blocksContiguous[i].convertToBlockUnderConstruction(
@@ -145,7 +137,7 @@ public class FSImageSerialization {
   // into the output stream
   //
   static void writeINodeUnderConstruction(DataOutputStream out, INodeFile cons,
-      String path) throws IOException {
+                                          String path) throws IOException {
     writeString(path, out);
     out.writeLong(cons.getId());
     out.writeShort(cons.getFileReplication());
@@ -169,7 +161,7 @@ public class FSImageSerialization {
    * @param writeUnderConstruction Whether to write under construction information
    */
   public static void writeINodeFile(INodeFile file, DataOutput out,
-      boolean writeUnderConstruction) throws IOException {
+                                    boolean writeUnderConstruction) throws IOException {
     writeLocalName(file, out);
     out.writeLong(file.getId());
     out.writeShort(file.getFileReplication());
@@ -196,7 +188,7 @@ public class FSImageSerialization {
 
   /** Serialize an {@link INodeFileAttributes}. */
   public static void writeINodeFileAttributes(INodeFileAttributes file,
-      DataOutput out) throws IOException {
+                                              DataOutput out) throws IOException {
     writeLocalName(file, out);
     writePermissionStatus(file, out);
     out.writeLong(file.getModificationTime());
@@ -273,8 +265,8 @@ public class FSImageSerialization {
 
   /** Serialize a {@link INodeReference} node */
   private static void writeINodeReference(INodeReference ref, DataOutput out,
-      boolean writeUnderConstruction, ReferenceMap referenceMap
-      ) throws IOException {
+                                          boolean writeUnderConstruction, ReferenceMap referenceMap
+  ) throws IOException {
     writeLocalName(ref, out);
     out.writeLong(ref.getId());
     out.writeShort(0);  // replication
@@ -295,7 +287,7 @@ public class FSImageSerialization {
     }
 
     final INodeReference.WithCount withCount
-        = (INodeReference.WithCount)ref.getReferredINode();
+        = (INodeReference.WithCount) ref.getReferredINode();
     referenceMap.writeINodeReferenceWithCount(withCount, out,
         writeUnderConstruction);
   }
@@ -304,7 +296,7 @@ public class FSImageSerialization {
    * Save one inode's attributes to the image.
    */
   public static void saveINode2Image(INode node, DataOutput out,
-      boolean writeUnderConstruction, ReferenceMap referenceMap)
+                                     boolean writeUnderConstruction, ReferenceMap referenceMap)
       throws IOException {
     if (node.isReference()) {
       writeINodeReference(node.asReference(), out, writeUnderConstruction,
@@ -330,7 +322,7 @@ public class FSImageSerialization {
 
   static String readString_EmptyAsNull(DataInput in) throws IOException {
     final String s = readString(in);
-    return s.isEmpty()? null: s;
+    return s.isEmpty() ? null : s;
   }
 
   @SuppressWarnings("deprecation")
@@ -340,7 +332,7 @@ public class FSImageSerialization {
     ustr.write(out);
   }
 
-  
+
   /** read the long value */
   static long readLong(DataInput in) throws IOException {
     LongWritable uLong = TL_DATA.get().U_LONG;
@@ -354,22 +346,22 @@ public class FSImageSerialization {
     uLong.set(value);
     uLong.write(out);
   }
-  
+
   /** read the boolean value */
   static boolean readBoolean(DataInput in) throws IOException {
     BooleanWritable uBoolean = TL_DATA.get().U_BOOLEAN;
     uBoolean.readFields(in);
     return uBoolean.get();
   }
-  
+
   /** write the boolean value */
-  static void writeBoolean(boolean value, DataOutputStream out) 
+  static void writeBoolean(boolean value, DataOutputStream out)
       throws IOException {
     BooleanWritable uBoolean = TL_DATA.get().U_BOOLEAN;
     uBoolean.set(value);
     uBoolean.write(out);
   }
-  
+
   /** write the byte value */
   static void writeByte(byte value, DataOutputStream out)
       throws IOException {
@@ -382,7 +374,7 @@ public class FSImageSerialization {
     uInt.readFields(in);
     return uInt.get();
   }
-  
+
   /** write the int value */
   static void writeInt(int value, DataOutputStream out) throws IOException {
     IntWritable uInt = TL_DATA.get().U_INT;
@@ -403,7 +395,7 @@ public class FSImageSerialization {
     uShort.set(value);
     uShort.write(out);
   }
-  
+
   // Same comments apply for this method as for readString()
   @SuppressWarnings("deprecation")
   public static byte[] readBytes(DataInput in) throws IOException {
@@ -431,12 +423,12 @@ public class FSImageSerialization {
   public static byte[][] readPathComponents(DataInput in)
       throws IOException {
     DeprecatedUTF8 ustr = TL_DATA.get().U_STR;
-    
+
     ustr.readFields(in);
     return DFSUtil.bytes2byteArray(ustr.getBytes(),
-      ustr.getLength(), (byte) Path.SEPARATOR_CHAR);
+        ustr.getLength(), (byte) Path.SEPARATOR_CHAR);
   }
-  
+
   public static byte[] readLocalName(DataInput in) throws IOException {
     byte[] createdNodeName = new byte[in.readShort()];
     in.readFully(createdNodeName);
@@ -448,7 +440,7 @@ public class FSImageSerialization {
     final byte[] name = inode.getLocalNameBytes();
     writeBytes(name, out);
   }
-  
+
   public static void writeBytes(byte[] data, DataOutput out)
       throws IOException {
     out.writeShort(data.length);
@@ -476,7 +468,7 @@ public class FSImageSerialization {
       prev = b;
     }
   }
-  
+
   public static Block[] readCompactBlockArray(
       DataInput in, int logVersion) throws IOException {
     int num = WritableUtils.readVInt(in);
@@ -498,13 +490,13 @@ public class FSImageSerialization {
   }
 
   public static void writeCacheDirectiveInfo(DataOutputStream out,
-      CacheDirectiveInfo directive) throws IOException {
+                                             CacheDirectiveInfo directive) throws IOException {
     writeLong(directive.getId(), out);
     int flags =
         ((directive.getPath() != null) ? 0x1 : 0) |
-        ((directive.getReplication() != null) ? 0x2 : 0) |
-        ((directive.getPool() != null) ? 0x4 : 0) |
-        ((directive.getExpiration() != null) ? 0x8 : 0);
+            ((directive.getReplication() != null) ? 0x2 : 0) |
+            ((directive.getPool() != null) ? 0x4 : 0) |
+            ((directive.getExpiration() != null) ? 0x8 : 0);
     out.writeInt(flags);
     if (directive.getPath() != null) {
       writeString(directive.getPath().toUri().getPath(), out);
@@ -572,7 +564,7 @@ public class FSImageSerialization {
   }
 
   public static void writeCacheDirectiveInfo(ContentHandler contentHandler,
-      CacheDirectiveInfo directive) throws SAXException {
+                                             CacheDirectiveInfo directive) throws SAXException {
     XMLUtils.addSaxString(contentHandler, "ID",
         Long.toString(directive.getId()));
     if (directive.getPath() != null) {
@@ -604,7 +596,7 @@ public class FSImageSerialization {
     final Short defaultReplication = info.getDefaultReplication();
 
     boolean hasOwner, hasGroup, hasMode, hasLimit,
-            hasMaxRelativeExpiry, hasDefaultReplication;
+        hasMaxRelativeExpiry, hasDefaultReplication;
     hasOwner = ownerName != null;
     hasGroup = groupName != null;
     hasMode = mode != null;
@@ -614,11 +606,11 @@ public class FSImageSerialization {
 
     int flags =
         (hasOwner ? 0x1 : 0) |
-        (hasGroup ? 0x2 : 0) |
-        (hasMode  ? 0x4 : 0) |
-        (hasLimit ? 0x8 : 0) |
-        (hasMaxRelativeExpiry ? 0x10 : 0) |
-        (hasDefaultReplication ? 0x20 : 0);
+            (hasGroup ? 0x2 : 0) |
+            (hasMode ? 0x4 : 0) |
+            (hasLimit ? 0x8 : 0) |
+            (hasMaxRelativeExpiry ? 0x10 : 0) |
+            (hasDefaultReplication ? 0x20 : 0);
 
     writeInt(flags, out);
 
@@ -650,7 +642,7 @@ public class FSImageSerialization {
     if ((flags & 0x1) != 0) {
       info.setOwnerName(readString(in));
     }
-    if ((flags & 0x2) != 0)  {
+    if ((flags & 0x2) != 0) {
       info.setGroupName(readString(in));
     }
     if ((flags & 0x4) != 0) {
@@ -672,7 +664,7 @@ public class FSImageSerialization {
   }
 
   public static void writeCachePoolInfo(ContentHandler contentHandler,
-      CachePoolInfo info) throws SAXException {
+                                        CachePoolInfo info) throws SAXException {
     XMLUtils.addSaxString(contentHandler, "POOLNAME", info.getPoolName());
 
     final String ownerName = info.getOwnerName();
@@ -733,7 +725,7 @@ public class FSImageSerialization {
   }
 
   public static void writeErasureCodingPolicy(DataOutputStream out,
-      ErasureCodingPolicy ecPolicy) throws IOException {
+                                              ErasureCodingPolicy ecPolicy) throws IOException {
     writeString(ecPolicy.getSchema().getCodecName(), out);
     writeInt(ecPolicy.getNumDataUnits(), out);
     writeInt(ecPolicy.getNumParityUnits(), out);

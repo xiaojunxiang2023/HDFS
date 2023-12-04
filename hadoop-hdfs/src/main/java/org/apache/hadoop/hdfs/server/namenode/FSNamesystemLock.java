@@ -1,5 +1,14 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ipc.Server;
+import org.apache.hadoop.log.LogThrottlingHelper;
+import org.apache.hadoop.metrics2.lib.MutableRatesWithAggregation;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.Timer;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -8,25 +17,7 @@ import java.util.concurrent.atomic.LongAdder;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ipc.Server;
-import org.apache.hadoop.log.LogThrottlingHelper;
-import org.apache.hadoop.metrics2.lib.MutableRatesWithAggregation;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.util.Time;
-import org.apache.hadoop.util.Timer;
-
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_LOCK_SUPPRESS_WARNING_INTERVAL_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_LOCK_SUPPRESS_WARNING_INTERVAL_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_FSLOCK_FAIR_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_FSLOCK_FAIR_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_LOCK_DETAILED_METRICS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_LOCK_DETAILED_METRICS_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_READ_LOCK_REPORTING_THRESHOLD_MS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_READ_LOCK_REPORTING_THRESHOLD_MS_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_WRITE_LOCK_REPORTING_THRESHOLD_MS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_WRITE_LOCK_REPORTING_THRESHOLD_MS_KEY;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
 import static org.apache.hadoop.ipc.ProcessingDetails.Timing;
 import static org.apache.hadoop.log.LogThrottlingHelper.LogAction;
 
@@ -111,13 +102,13 @@ class FSNamesystemLock {
   private static final String OVERALL_METRIC_NAME = "Overall";
 
   FSNamesystemLock(Configuration conf,
-      MutableRatesWithAggregation detailedHoldTimeMetrics) {
+                   MutableRatesWithAggregation detailedHoldTimeMetrics) {
     this(conf, detailedHoldTimeMetrics, new Timer());
   }
 
   @VisibleForTesting
   FSNamesystemLock(Configuration conf,
-      MutableRatesWithAggregation detailedHoldTimeMetrics, Timer timer) {
+                   MutableRatesWithAggregation detailedHoldTimeMetrics, Timer timer) {
     boolean fair = conf.getBoolean(DFS_NAMENODE_FSLOCK_FAIR_KEY,
         DFS_NAMENODE_FSLOCK_FAIR_DEFAULT);
     FSNamesystem.LOG.info("fsLock is fair: " + fair);
@@ -201,7 +192,7 @@ class FSNamesystemLock {
           lockHeldInfo.getIntervalMs(), lockHeldInfo.getStackTrace());
     }
   }
-  
+
   public void writeLock() {
     doLock(true);
   }
@@ -284,11 +275,11 @@ class FSNamesystemLock {
   public int getReadHoldCount() {
     return coarseLock.getReadHoldCount();
   }
-  
+
   public int getWriteHoldCount() {
     return coarseLock.getWriteHoldCount();
   }
-  
+
   public boolean isWriteLockedByCurrentThread() {
     return coarseLock.isWriteLockedByCurrentThread();
   }

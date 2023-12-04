@@ -10,10 +10,11 @@ import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.Rpc
  */
 public class RpcNoSuchMethodException extends RpcServerException {
   private static final long serialVersionUID = 1L;
+
   public RpcNoSuchMethodException(final String message) {
     super(message);
   }
-  
+
   /**
    * get the rpc status corresponding to this exception
    */

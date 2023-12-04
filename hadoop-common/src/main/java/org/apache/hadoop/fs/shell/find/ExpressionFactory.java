@@ -1,13 +1,13 @@
 package org.apache.hadoop.fs.shell.find;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.apache.hadoop.util.StringUtils;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.ReflectionUtils;
-import org.apache.hadoop.util.StringUtils;
 
 /**
  * Factory class for registering and searching for expressions for use in the
@@ -62,7 +62,7 @@ final class ExpressionFactory {
    *           if the expression is not of an expected type
    */
   void addClass(Class<? extends Expression> expressionClass,
-      String... names) throws IOException {
+                String... names) throws IOException {
     for (String name : names)
       expressionMap.put(name, expressionClass);
   }
@@ -126,7 +126,7 @@ final class ExpressionFactory {
    * @return a new instance of the requested {@link Expression} class
    */
   Expression createExpression(String expressionClassname,
-      Configuration conf) {
+                              Configuration conf) {
     try {
       Class<? extends Expression> expressionClass = Class.forName(
           expressionClassname).asSubclass(Expression.class);

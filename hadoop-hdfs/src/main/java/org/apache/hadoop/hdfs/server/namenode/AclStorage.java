@@ -1,21 +1,15 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.fs.permission.AclEntryScope;
-import org.apache.hadoop.fs.permission.AclEntryType;
-import org.apache.hadoop.fs.permission.AclUtil;
-import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.permission.ScopedAclEntries;
+import org.apache.hadoop.fs.permission.*;
 import org.apache.hadoop.hdfs.protocol.AclException;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
 import org.apache.hadoop.hdfs.util.ReferenceCountMap;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * AclStorage contains utility methods that define how ACL data is stored in the
@@ -73,19 +67,19 @@ public final class AclStorage {
 
     // Pre-allocate list size for access entries to copy from parent.
     List<AclEntry> accessEntries = Lists.newArrayListWithCapacity(
-      parentDefaultEntries.size());
+        parentDefaultEntries.size());
 
     FsPermission childPerm = child.getFsPermission();
 
     // Copy each default ACL entry from parent to new child's access ACL.
     boolean parentDefaultIsMinimal = AclUtil.isMinimalAcl(parentDefaultEntries);
-    for (AclEntry entry: parentDefaultEntries) {
+    for (AclEntry entry : parentDefaultEntries) {
       AclEntryType type = entry.getType();
       String name = entry.getName();
       AclEntry.Builder builder = new AclEntry.Builder()
-        .setScope(AclEntryScope.ACCESS)
-        .setType(type)
-        .setName(name);
+          .setScope(AclEntryScope.ACCESS)
+          .setType(type)
+          .setName(name);
 
       // The child's initial permission bits are treated as the mode parameter,
       // which can filter copied permission values for owner, mask and other.
@@ -112,7 +106,7 @@ public final class AclStorage {
 
     // A new directory also receives a copy of the parent's default ACL.
     List<AclEntry> defaultEntries = child.isDirectory() ? parentDefaultEntries :
-      Collections.<AclEntry>emptyList();
+        Collections.<AclEntry>emptyList();
 
     final FsPermission newPerm;
     if (!AclUtil.isMinimalAcl(accessEntries) || !defaultEntries.isEmpty()) {
@@ -162,7 +156,7 @@ public final class AclStorage {
   @VisibleForTesting
   static ImmutableList<AclEntry> getEntriesFromAclFeature(AclFeature aclFeature) {
     if (aclFeature == null) {
-      return ImmutableList.<AclEntry> of();
+      return ImmutableList.<AclEntry>of();
     }
     ImmutableList.Builder<AclEntry> b = new ImmutableList.Builder<AclEntry>();
     for (int pos = 0, entry; pos < aclFeature.getEntriesSize(); pos++) {
@@ -248,7 +242,7 @@ public final class AclStorage {
    * @throws QuotaExceededException if quota limit is exceeded
    */
   public static void updateINodeAcl(INode inode, List<AclEntry> newAcl,
-      int snapshotId) throws AclException, QuotaExceededException {
+                                    int snapshotId) throws AclException, QuotaExceededException {
     assert newAcl.size() >= 3;
     FsPermission perm = inode.getFsPermission();
     final FsPermission newPerm;
@@ -261,8 +255,8 @@ public final class AclStorage {
       // Only directories may have a default ACL.
       if (!defaultEntries.isEmpty() && !inode.isDirectory()) {
         throw new AclException(
-          "Invalid ACL: only directories may have a default ACL. "
-            + "Path: " + inode.getFullPathName());
+            "Invalid ACL: only directories may have a default ACL. "
+                + "Path: " + inode.getFullPathName());
       }
 
       // Attach entries to the feature.
@@ -270,7 +264,7 @@ public final class AclStorage {
         inode.removeAclFeature(snapshotId);
       }
       inode.addAclFeature(createAclFeature(accessEntries, defaultEntries),
-        snapshotId);
+          snapshotId);
       newPerm = createFsPermissionForExtendedAcl(accessEntries, perm);
     } else {
       // This is a minimal ACL.  Remove the ACL feature if it previously had one.
@@ -297,19 +291,19 @@ public final class AclStorage {
    * @return AclFeature containing the required ACL entries
    */
   private static AclFeature createAclFeature(List<AclEntry> accessEntries,
-      List<AclEntry> defaultEntries) {
+                                             List<AclEntry> defaultEntries) {
     // Pre-allocate list size for the explicit entries stored in the feature,
     // which is all entries minus the 3 entries implicitly stored in the
     // permission bits.
     List<AclEntry> featureEntries = Lists.newArrayListWithCapacity(
-      (accessEntries.size() - 3) + defaultEntries.size());
+        (accessEntries.size() - 3) + defaultEntries.size());
 
     // For the access ACL, the feature only needs to hold the named user and
     // group entries.  For a correctly sorted ACL, these will be in a
     // predictable range.
     if (!AclUtil.isMinimalAcl(accessEntries)) {
       featureEntries.addAll(
-        accessEntries.subList(1, accessEntries.size() - 2));
+          accessEntries.subList(1, accessEntries.size() - 2));
     }
 
     // Add all default entries to the feature.
@@ -334,9 +328,9 @@ public final class AclStorage {
   private static FsPermission createFsPermissionForExtendedAcl(
       List<AclEntry> accessEntries, FsPermission existingPerm) {
     return new FsPermission(accessEntries.get(0).getPermission(),
-      accessEntries.get(accessEntries.size() - 2).getPermission(),
-      accessEntries.get(accessEntries.size() - 1).getPermission(),
-      existingPerm.getStickyBit());
+        accessEntries.get(accessEntries.size() - 2).getPermission(),
+        accessEntries.get(accessEntries.size() - 1).getPermission(),
+        existingPerm.getStickyBit());
   }
 
   /**
@@ -352,9 +346,9 @@ public final class AclStorage {
   private static FsPermission createFsPermissionForMinimalAcl(
       List<AclEntry> accessEntries, FsPermission existingPerm) {
     return new FsPermission(accessEntries.get(0).getPermission(),
-      accessEntries.get(1).getPermission(),
-      accessEntries.get(2).getPermission(),
-      existingPerm.getStickyBit());
+        accessEntries.get(1).getPermission(),
+        accessEntries.get(2).getPermission(),
+        existingPerm.getStickyBit());
   }
 
   @VisibleForTesting
@@ -364,7 +358,7 @@ public final class AclStorage {
 
   /**
    * Add reference for the said AclFeature
-   * 
+   *
    * @param aclFeature
    * @return Referenced AclFeature
    */
@@ -374,7 +368,7 @@ public final class AclStorage {
 
   /**
    * Remove reference to the AclFeature
-   * 
+   *
    * @param aclFeature
    */
   public static void removeAclFeature(AclFeature aclFeature) {

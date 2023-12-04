@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode;
-import org.apache.hadoop.fs.permission.PermissionStatus;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.util.EnumCounters;
 
+import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.fs.permission.PermissionStatus;
+import org.apache.hadoop.hdfs.util.EnumCounters;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
@@ -12,13 +12,13 @@ public interface INodeDirectoryAttributes extends INodeAttributes {
   public QuotaCounts getQuotaCounts();
 
   public boolean metadataEquals(INodeDirectoryAttributes other);
-  
+
   /** A copy of the inode directory attributes */
   public static class SnapshotCopy extends INodeAttributes.SnapshotCopy
       implements INodeDirectoryAttributes {
     public SnapshotCopy(byte[] name, PermissionStatus permissions,
-        AclFeature aclFeature, long modificationTime, 
-        XAttrFeature xAttrsFeature) {
+                        AclFeature aclFeature, long modificationTime,
+                        XAttrFeature xAttrsFeature) {
       super(name, permissions, aclFeature, modificationTime, 0L, xAttrsFeature);
     }
 
@@ -50,8 +50,8 @@ public interface INodeDirectoryAttributes extends INodeAttributes {
     private QuotaCounts quota;
 
     public CopyWithQuota(byte[] name, PermissionStatus permissions,
-        AclFeature aclFeature, long modificationTime, long nsQuota,
-        long dsQuota, EnumCounters<StorageType> typeQuotas, XAttrFeature xAttrsFeature) {
+                         AclFeature aclFeature, long modificationTime, long nsQuota,
+                         long dsQuota, EnumCounters<StorageType> typeQuotas, XAttrFeature xAttrsFeature) {
       super(name, permissions, aclFeature, modificationTime, xAttrsFeature);
       this.quota = new QuotaCounts.Builder().nameSpace(nsQuota).
           storageSpace(dsQuota).typeSpaces(typeQuotas).build();

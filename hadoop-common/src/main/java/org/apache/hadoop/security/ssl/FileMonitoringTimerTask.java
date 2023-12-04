@@ -82,7 +82,7 @@ public class FileMonitoringTimerTask extends TimerTask {
       try {
         onFileChange.accept(filePath);
       } catch (Throwable t) {
-        if (onChangeFailure  != null) {
+        if (onChangeFailure != null) {
           onChangeFailure.accept(t);
         } else {
           LOG.error(PROCESS_ERROR_MESSAGE + filePath.toString(), t);

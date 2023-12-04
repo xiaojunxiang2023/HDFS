@@ -19,30 +19,30 @@ import java.util.List;
 // 靠 router.getRpcServer().getDatanodeReport()，底层又请求 NameNode
 public class RouterNetworkTopologyServlet extends NetworkTopologyServlet {
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        final ServletContext context = getServletContext();
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    final ServletContext context = getServletContext();
 
-        String format = parseAcceptHeader(request);
-        if (FORMAT_TEXT.equals(format)) {
-            response.setContentType("text/plain; charset=UTF-8");
-        } else if (FORMAT_JSON.equals(format)) {
-            response.setContentType("application/json; charset=UTF-8");
-        }
-
-        Router router = RouterHttpServer.getRouterFromContext(context);
-        DatanodeInfo[] datanodeReport = router.getRpcServer().getDatanodeReport(HdfsConstants.DatanodeReportType.ALL);
-        List<Node> datanodeInfos = Arrays.asList(datanodeReport);
-
-        try (PrintStream out = new PrintStream(response.getOutputStream(), false, "UTF-8")) {
-            printTopology(out, datanodeInfos, format);
-        } catch (Throwable t) {
-            String errMsg = "Print network topology failed. " + StringUtils.stringifyException(t);
-            response.sendError(HttpServletResponse.SC_GONE, errMsg);
-            throw new IOException(errMsg);
-        } finally {
-            response.getOutputStream().close();
-        }
+    String format = parseAcceptHeader(request);
+    if (FORMAT_TEXT.equals(format)) {
+      response.setContentType("text/plain; charset=UTF-8");
+    } else if (FORMAT_JSON.equals(format)) {
+      response.setContentType("application/json; charset=UTF-8");
     }
+
+    Router router = RouterHttpServer.getRouterFromContext(context);
+    DatanodeInfo[] datanodeReport = router.getRpcServer().getDatanodeReport(HdfsConstants.DatanodeReportType.ALL);
+    List<Node> datanodeInfos = Arrays.asList(datanodeReport);
+
+    try (PrintStream out = new PrintStream(response.getOutputStream(), false, "UTF-8")) {
+      printTopology(out, datanodeInfos, format);
+    } catch (Throwable t) {
+      String errMsg = "Print network topology failed. " + StringUtils.stringifyException(t);
+      response.sendError(HttpServletResponse.SC_GONE, errMsg);
+      throw new IOException(errMsg);
+    } finally {
+      response.getOutputStream().close();
+    }
+  }
 }

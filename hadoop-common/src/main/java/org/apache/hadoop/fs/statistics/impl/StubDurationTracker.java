@@ -1,8 +1,8 @@
 package org.apache.hadoop.fs.statistics.impl;
 
-import java.time.Duration;
-
 import org.apache.hadoop.fs.statistics.DurationTracker;
+
+import java.time.Duration;
 
 /**
  * A simple stub duration tracker which can be issued in interfaces

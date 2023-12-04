@@ -7,7 +7,7 @@ public class FenceResponse {
   private final long previousEpoch;
   private final long lastTransactionId;
   private final boolean isInSync;
-  
+
   public FenceResponse(long previousEpoch, long lastTransId, boolean inSync) {
     this.previousEpoch = previousEpoch;
     this.lastTransactionId = lastTransId;

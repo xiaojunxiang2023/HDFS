@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.net;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
 import org.apache.hadoop.net.unix.DomainSocket;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.ReadableByteChannel;
@@ -35,7 +35,7 @@ public class EncryptedPeer implements Peer {
     this.in = ios.in;
     this.out = ios.out;
     this.channel = ios.in instanceof ReadableByteChannel ?
-        (ReadableByteChannel)ios.in : null;
+        (ReadableByteChannel) ios.in : null;
   }
 
   @Override

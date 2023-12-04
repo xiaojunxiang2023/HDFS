@@ -28,7 +28,7 @@ public final class BBPartHandle implements PartHandle {
 
   private final byte[] bytes;
 
-  private BBPartHandle(ByteBuffer byteBuffer){
+  private BBPartHandle(ByteBuffer byteBuffer) {
     this.bytes = byteBuffer.array();
   }
 

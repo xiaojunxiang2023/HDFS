@@ -1,5 +1,13 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
+import org.apache.hadoop.hdfs.DFSUtil;
+import org.apache.hadoop.hdfs.server.namenode.*;
+import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature.DirectoryDiff;
+import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature.DirectoryDiffList;
+import org.apache.hadoop.hdfs.tools.snapshot.SnapshotDiff;
+import org.apache.hadoop.hdfs.util.ReadOnlyList;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -7,23 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.server.namenode.FSImageFormat;
-import org.apache.hadoop.hdfs.server.namenode.FSImageSerialization;
-import org.apache.hadoop.hdfs.server.namenode.INode;
-import org.apache.hadoop.hdfs.server.namenode.INodeAttributes;
-import org.apache.hadoop.hdfs.server.namenode.INodeDirectory;
-import org.apache.hadoop.hdfs.server.namenode.INodeDirectoryAttributes;
-import org.apache.hadoop.hdfs.server.namenode.INodeFile;
-import org.apache.hadoop.hdfs.server.namenode.INodeFileAttributes;
-import org.apache.hadoop.hdfs.server.namenode.INodeReference;
-import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature.DirectoryDiff;
-import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature.DirectoryDiffList;
-import org.apache.hadoop.hdfs.tools.snapshot.SnapshotDiff;
-import org.apache.hadoop.hdfs.util.ReadOnlyList;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * A helper class defining static methods for reading/writing snapshot related
@@ -57,8 +48,8 @@ public class SnapshotFSImageFormat {
    * @param out The {@link DataOutput} to write.
    */
   private static <N extends INode, A extends INodeAttributes, D extends AbstractINodeDiff<N, A, D>>
-      void saveINodeDiffs(final AbstractINodeDiffList<N, A, D> diffs,
-      final DataOutput out, ReferenceMap referenceMap) throws IOException {
+  void saveINodeDiffs(final AbstractINodeDiffList<N, A, D> diffs,
+                      final DataOutput out, ReferenceMap referenceMap) throws IOException {
     // Record the diffs in reversed order, so that we can find the correct
     // reference for INodes in the created list when loading the FSImage
     if (diffs == null) {
@@ -74,25 +65,25 @@ public class SnapshotFSImageFormat {
   }
 
   public static void saveDirectoryDiffList(final INodeDirectory dir,
-      final DataOutput out, final ReferenceMap referenceMap
-      ) throws IOException {
+                                           final DataOutput out, final ReferenceMap referenceMap
+  ) throws IOException {
     saveINodeDiffs(dir.getDiffs(), out, referenceMap);
   }
 
   public static void saveFileDiffList(final INodeFile file,
-      final DataOutput out) throws IOException {
+                                      final DataOutput out) throws IOException {
     saveINodeDiffs(file.getDiffs(), out, null);
   }
 
   public static FileDiffList loadFileDiffList(DataInput in,
-      FSImageFormat.Loader loader) throws IOException {
+                                              FSImageFormat.Loader loader) throws IOException {
     final int size = in.readInt();
     if (size == -1) {
       return null;
     } else {
       final FileDiffList diffs = new FileDiffList();
       FileDiff posterior = null;
-      for(int i = 0; i < size; i++) {
+      for (int i = 0; i < size; i++) {
         final FileDiff d = loadFileDiff(posterior, in, loader);
         diffs.addFirst(d);
         posterior = d;
@@ -102,17 +93,17 @@ public class SnapshotFSImageFormat {
   }
 
   private static FileDiff loadFileDiff(FileDiff posterior, DataInput in,
-      FSImageFormat.Loader loader) throws IOException {
+                                       FSImageFormat.Loader loader) throws IOException {
     // 1. Read the id of the Snapshot root to identify the Snapshot
     final Snapshot snapshot = loader.getSnapshot(in);
 
     // 2. Load file size
     final long fileSize = in.readLong();
-    
+
     // 3. Load snapshotINode 
-    final INodeFileAttributes snapshotINode = in.readBoolean()?
-        loader.loadINodeFileAttributes(in): null;
-    
+    final INodeFileAttributes snapshotINode = in.readBoolean() ?
+        loader.loadINodeFileAttributes(in) : null;
+
     return new FileDiff(snapshot.getId(), snapshotINode, posterior, fileSize);
   }
 
@@ -123,7 +114,7 @@ public class SnapshotFSImageFormat {
    * @return The created node.
    */
   public static INode loadCreated(byte[] createdNodeName,
-      INodeDirectory parent) throws IOException {
+                                  INodeDirectory parent) throws IOException {
     // the INode in the created list should be a reference to another INode
     // in posterior SnapshotDiffs or one of the current children
     for (DirectoryDiff postDiff : parent.getDiffs()) {
@@ -131,7 +122,7 @@ public class SnapshotFSImageFormat {
       if (d != null) {
         return d;
       } // else go to the next SnapshotDiff
-    } 
+    }
     // use the current child
     INode currentChild = parent.getChild(createdNodeName,
         Snapshot.CURRENT_STATE_ID);
@@ -142,7 +133,7 @@ public class SnapshotFSImageFormat {
     }
     return currentChild;
   }
-  
+
   /**
    * Load the created list from fsimage.
    * @param parent The directory that the created list belongs to.
@@ -150,7 +141,7 @@ public class SnapshotFSImageFormat {
    * @return The created list.
    */
   private static List<INode> loadCreatedList(INodeDirectory parent,
-      DataInput in) throws IOException {
+                                             DataInput in) throws IOException {
     // read the size of the created list
     int createdSize = in.readInt();
     List<INode> createdList = new ArrayList<INode>(createdSize);
@@ -161,10 +152,10 @@ public class SnapshotFSImageFormat {
     }
     return createdList;
   }
-    
+
   /**
    * Load the deleted list from the fsimage.
-   * 
+   *
    * @param parent The directory that the deleted list belongs to.
    * @param createdList The created list associated with the deleted list in 
    *                    the same Diff.
@@ -173,7 +164,7 @@ public class SnapshotFSImageFormat {
    * @return The deleted list.
    */
   private static List<INode> loadDeletedList(INodeDirectory parent,
-      List<INode> createdList, DataInput in, FSImageFormat.Loader loader)
+                                             List<INode> createdList, DataInput in, FSImageFormat.Loader loader)
       throws IOException {
     int deletedSize = in.readInt();
     List<INode> deletedList = new ArrayList<INode>(deletedSize);
@@ -190,7 +181,7 @@ public class SnapshotFSImageFormat {
     }
     return deletedList;
   }
-  
+
   /**
    * Load snapshots and snapshotQuota for a Snapshottable directory.
    *
@@ -202,7 +193,7 @@ public class SnapshotFSImageFormat {
    *          The loader
    */
   public static void loadSnapshotList(INodeDirectory snapshottableParent,
-      int numSnapshots, DataInput in, FSImageFormat.Loader loader)
+                                      int numSnapshots, DataInput in, FSImageFormat.Loader loader)
       throws IOException {
     DirectorySnapshottableFeature sf = snapshottableParent
         .getDirectorySnapshottableFeature();
@@ -229,7 +220,7 @@ public class SnapshotFSImageFormat {
    *          The loader
    */
   public static void loadDirectoryDiffList(INodeDirectory dir,
-      DataInput in, FSImageFormat.Loader loader) throws IOException {
+                                           DataInput in, FSImageFormat.Loader loader) throws IOException {
     final int size = in.readInt();
     if (dir.isWithSnapshot()) {
       DirectoryDiffList diffs = dir.getDiffs();
@@ -251,15 +242,15 @@ public class SnapshotFSImageFormat {
       Snapshot snapshot, DataInput in, FSImageFormat.Loader loader)
       throws IOException {
     // read the boolean indicating whether snapshotINode == Snapshot.Root
-    boolean useRoot = in.readBoolean();      
+    boolean useRoot = in.readBoolean();
     if (useRoot) {
       return snapshot.getRoot();
     } else {
       // another boolean is used to indicate whether snapshotINode is non-null
-      return in.readBoolean()? loader.loadINodeDirectoryAttributes(in): null;
+      return in.readBoolean() ? loader.loadINodeDirectoryAttributes(in) : null;
     }
   }
-   
+
   /**
    * Load {@link DirectoryDiff} from fsimage.
    * @param parent The directory that the SnapshotDiff belongs to.
@@ -269,23 +260,23 @@ public class SnapshotFSImageFormat {
    * @return A {@link DirectoryDiff}.
    */
   private static DirectoryDiff loadDirectoryDiff(INodeDirectory parent,
-      DataInput in, FSImageFormat.Loader loader) throws IOException {
+                                                 DataInput in, FSImageFormat.Loader loader) throws IOException {
     // 1. Read the full path of the Snapshot root to identify the Snapshot
     final Snapshot snapshot = loader.getSnapshot(in);
 
     // 2. Load DirectoryDiff#childrenSize
     int childrenSize = in.readInt();
-    
+
     // 3. Load DirectoryDiff#snapshotINode 
     INodeDirectoryAttributes snapshotINode = loadSnapshotINodeInDirectoryDiff(
         snapshot, in, loader);
-    
+
     // 4. Load the created list in SnapshotDiff#Diff
     List<INode> createdList = loadCreatedList(parent, in);
-    
+
     // 5. Load the deleted list in SnapshotDiff#Diff
     List<INode> deletedList = loadDeletedList(parent, createdList, in, loader);
-    
+
     // 6. Compose the SnapshotDiff
     DiffList<DirectoryDiff> diffs = parent.getDiffs().asList();
     DirectoryDiff sdiff = new DirectoryDiff(snapshot.getId(), snapshotINode,
@@ -293,7 +284,7 @@ public class SnapshotFSImageFormat {
         deletedList, snapshotINode == snapshot.getRoot());
     return sdiff;
   }
-  
+
 
   /** A reference map for fsimage serialization. */
   public static class ReferenceMap {
@@ -323,7 +314,7 @@ public class SnapshotFSImageFormat {
         out.writeLong(id);
       }
     }
-    
+
     public boolean toProcessSubtree(long id) {
       if (dirMap.containsKey(id)) {
         return false;
@@ -332,10 +323,10 @@ public class SnapshotFSImageFormat {
         return true;
       }
     }
-    
+
     public INodeReference.WithCount loadINodeReferenceWithCount(
         boolean isSnapshotINode, DataInput in, FSImageFormat.Loader loader
-        ) throws IOException {
+    ) throws IOException {
       final boolean firstReferred = in.readBoolean();
 
       final INodeReference.WithCount withCount;

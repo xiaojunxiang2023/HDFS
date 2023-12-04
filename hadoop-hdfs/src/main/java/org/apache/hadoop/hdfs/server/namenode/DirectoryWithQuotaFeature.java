@@ -1,11 +1,7 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.protocol.DSQuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.NSQuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.QuotaByStorageTypeExceededException;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.hdfs.util.EnumCounters;
 import org.apache.hadoop.security.AccessControlException;
@@ -67,7 +63,7 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
   }
 
   /** Set this directory's quota
-   * 
+   *
    * @param nsQuota Namespace quota to be set
    * @param ssQuota Storagespace quota to be set
    * @param type Storage type of the storage space quota to be set.
@@ -109,7 +105,7 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
   }
 
   ContentSummaryComputationContext computeContentSummary(final INodeDirectory dir,
-      final ContentSummaryComputationContext summary)
+                                                         final ContentSummaryComputationContext summary)
       throws AccessControlException {
     final long original = summary.getCounts().getStoragespace();
     long oldYieldCount = summary.getYieldCount();
@@ -130,24 +126,24 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
   }
 
   /** Update the space/namespace/type usage of the tree
-   * 
+   *
    * @param delta the change of the namespace/space/type usage
    */
   public void addSpaceConsumed2Cache(QuotaCounts delta) {
     usage.add(delta);
   }
 
-  /** 
+  /**
    * Sets namespace and storagespace take by the directory rooted
    * at this INode. This should be used carefully. It does not check 
    * for quota violations.
-   * 
+   *
    * @param namespace size of the directory to be set
    * @param storagespace storage space take by all the nodes under this directory
    * @param typespaces counters of storage type usage
    */
   void setSpaceConsumed(long namespace, long storagespace,
-      EnumCounters<StorageType> typespaces) {
+                        EnumCounters<StorageType> typespaces) {
     usage.setNameSpace(namespace);
     usage.setStorageSpace(storagespace);
     usage.setTypeSpaces(typespaces);
@@ -176,6 +172,7 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
           usage.getNameSpace() + delta);
     }
   }
+
   /** Verify if the storagespace quota is violated after applying delta. */
   private void verifyStoragespaceQuota(long delta) throws DSQuotaExceededException {
     if (Quota.isViolated(quota.getStorageSpace(), usage.getStorageSpace(), delta)) {
@@ -189,14 +186,14 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
     if (!isQuotaByStorageTypeSet()) {
       return;
     }
-    for (StorageType t: StorageType.getTypesSupportingQuota()) {
+    for (StorageType t : StorageType.getTypesSupportingQuota()) {
       if (!isQuotaByStorageTypeSet(t)) {
         continue;
       }
       if (Quota.isViolated(quota.getTypeSpace(t), usage.getTypeSpace(t),
           typeDelta.get(t))) {
         throw new QuotaByStorageTypeExceededException(
-          quota.getTypeSpace(t), usage.getTypeSpace(t) + typeDelta.get(t), t);
+            quota.getTypeSpace(t), usage.getTypeSpace(t) + typeDelta.get(t), t);
       }
     }
   }
@@ -225,11 +222,12 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
   }
 
   private String namespaceString() {
-    return "namespace: " + (quota.getNameSpace() < 0? "-":
+    return "namespace: " + (quota.getNameSpace() < 0 ? "-" :
         usage.getNameSpace() + "/" + quota.getNameSpace());
   }
+
   private String storagespaceString() {
-    return "storagespace: " + (quota.getStorageSpace() < 0? "-":
+    return "storagespace: " + (quota.getStorageSpace() < 0 ? "-" :
         usage.getStorageSpace() + "/" + quota.getStorageSpace());
   }
 
@@ -237,8 +235,8 @@ public final class DirectoryWithQuotaFeature implements INode.Feature {
     StringBuilder sb = new StringBuilder();
     for (StorageType t : StorageType.getTypesSupportingQuota()) {
       sb.append("StorageType: " + t +
-          (quota.getTypeSpace(t) < 0? "-":
-          usage.getTypeSpace(t) + "/" + usage.getTypeSpace(t)));
+          (quota.getTypeSpace(t) < 0 ? "-" :
+              usage.getTypeSpace(t) + "/" + usage.getTypeSpace(t)));
     }
     return sb.toString();
   }

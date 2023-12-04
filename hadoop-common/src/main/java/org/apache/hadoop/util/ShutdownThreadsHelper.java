@@ -34,7 +34,7 @@ public class ShutdownThreadsHelper {
    * <tt>false</tt> otherwise
    */
   public static boolean shutdownThread(Thread thread,
-                                    long timeoutInMilliSeconds) {
+                                       long timeoutInMilliSeconds) {
     if (thread == null) {
       return true;
     }
@@ -70,7 +70,7 @@ public class ShutdownThreadsHelper {
    * @throws InterruptedException
    */
   public static boolean shutdownExecutorService(ExecutorService service,
-                                        long timeoutInMs)
+                                                long timeoutInMs)
       throws InterruptedException {
     if (service == null) {
       return true;

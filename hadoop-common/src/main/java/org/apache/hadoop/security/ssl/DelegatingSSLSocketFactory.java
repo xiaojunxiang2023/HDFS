@@ -1,5 +1,12 @@
 package org.apache.hadoop.security.ssl;
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -7,14 +14,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link SSLSocketFactory} that can delegate to various SSL implementations.
@@ -65,7 +64,7 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
 
   private static DelegatingSSLSocketFactory instance = null;
   private static final Logger LOG = LoggerFactory.getLogger(
-          DelegatingSSLSocketFactory.class);
+      DelegatingSSLSocketFactory.class);
   private String providerName;
   private SSLContext ctx;
   private String[] ciphers;
@@ -136,32 +135,32 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
     LOG.debug("Initializing SSL Context to channel mode {}",
         preferredChannelMode);
     switch (preferredChannelMode) {
-    case Default:
-      try {
+      case Default:
+        try {
+          bindToOpenSSLProvider();
+          channelMode = SSLChannelMode.OpenSSL;
+        } catch (LinkageError | NoSuchAlgorithmException | RuntimeException e) {
+          LOG.debug("Failed to load OpenSSL. Falling back to the JSSE default.",
+              e);
+          ctx = SSLContext.getDefault();
+          channelMode = SSLChannelMode.Default_JSSE;
+        }
+        break;
+      case OpenSSL:
         bindToOpenSSLProvider();
         channelMode = SSLChannelMode.OpenSSL;
-      } catch (LinkageError | NoSuchAlgorithmException | RuntimeException e) {
-        LOG.debug("Failed to load OpenSSL. Falling back to the JSSE default.",
-            e);
+        break;
+      case Default_JSSE:
         ctx = SSLContext.getDefault();
         channelMode = SSLChannelMode.Default_JSSE;
-      }
-      break;
-    case OpenSSL:
-      bindToOpenSSLProvider();
-      channelMode = SSLChannelMode.OpenSSL;
-      break;
-    case Default_JSSE:
-      ctx = SSLContext.getDefault();
-      channelMode = SSLChannelMode.Default_JSSE;
-      break;
-    case Default_JSSE_with_GCM:
-      ctx = SSLContext.getDefault();
-      channelMode = SSLChannelMode.Default_JSSE_with_GCM;
-      break;
-    default:
-      throw new IOException("Unknown channel mode: "
-          + preferredChannelMode);
+        break;
+      case Default_JSSE_with_GCM:
+        ctx = SSLContext.getDefault();
+        channelMode = SSLChannelMode.Default_JSSE_with_GCM;
+        break;
+      default:
+        throw new IOException("Unknown channel mode: "
+            + preferredChannelMode);
     }
   }
 
@@ -273,7 +272,7 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
     for (int i = 0; i < defaultCiphers.length; i++) {
       if (defaultCiphers[i].contains("_GCM_")) {
         LOG.debug("Removed Cipher - {} from list of enabled SSLSocket ciphers",
-                defaultCiphers[i]);
+            defaultCiphers[i]);
       } else {
         preferredSuites.add(defaultCiphers[i]);
       }

@@ -1,16 +1,17 @@
 package org.apache.hadoop.util;
 
-import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
  * A {@link GSet} is set,
  * which supports the {@link #get(Object)} operation.
  * The {@link #get(Object)} operation uses a key to lookup an element.
- * 
+ *
  * Null element is not supported.
- * 
+ *
  * @param <K> The type of the keys.
  * @param <E> The type of the elements, which must be a subclass of the keys.
  */
@@ -64,8 +65,8 @@ public interface GSet<K, E extends K> extends Iterable<E> {
    * @param key The key of the element being removed.
    * @return If such element exists, return it.
    *         Otherwise, return null. 
-    * @throws NullPointerException if key == null.
-  */
+   * @throws NullPointerException if key == null.
+   */
   E remove(K key);
 
   /**

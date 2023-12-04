@@ -1,22 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.hadoop.conf.Configuration;
@@ -38,15 +21,25 @@ import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import static org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_LIST_REENCRYPTION_STATUS_NUM_RESPONSES_DEFAULT;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_LIST_REENCRYPTION_STATUS_NUM_RESPONSES_KEY;
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants
-    .CRYPTO_XATTR_ENCRYPTION_ZONE;
+import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.CRYPTO_XATTR_ENCRYPTION_ZONE;
 
 /**
  * Manages the list of encryption zones in the filesystem.
@@ -72,7 +65,7 @@ public class EncryptionZoneManager {
     private final String keyName;
 
     EncryptionZoneInt(long inodeId, CipherSuite suite,
-        CryptoProtocolVersion version, String keyName) {
+                      CryptoProtocolVersion version, String keyName) {
       Preconditions.checkArgument(suite != CipherSuite.UNKNOWN);
       Preconditions.checkArgument(version != CryptoProtocolVersion.UNKNOWN);
       this.inodeId = inodeId;
@@ -89,7 +82,9 @@ public class EncryptionZoneManager {
       return suite;
     }
 
-    CryptoProtocolVersion getVersion() { return version; }
+    CryptoProtocolVersion getVersion() {
+      return version;
+    }
 
     String getKeyName() {
       return keyName;
@@ -104,7 +99,7 @@ public class EncryptionZoneManager {
         return false;
       }
 
-      EncryptionZoneInt b = (EncryptionZoneInt)o;
+      EncryptionZoneInt b = (EncryptionZoneInt) o;
       return new EqualsBuilder()
           .append(inodeId, b.getINodeId())
           .append(suite, b.getSuite())
@@ -167,7 +162,7 @@ public class EncryptionZoneManager {
 
   @VisibleForTesting
   public void pauseForTestingAfterNthCheckpoint(final String zone,
-      final int count) throws IOException {
+                                                final int count) throws IOException {
     INodesInPath iip;
     final FSPermissionChecker pc = dir.getPermissionChecker();
     dir.getFSNamesystem().readLock();
@@ -284,7 +279,7 @@ public class EncryptionZoneManager {
    * @param keyName encryption zone key name
    */
   void addEncryptionZone(Long inodeId, CipherSuite suite,
-      CryptoProtocolVersion version, String keyName) {
+                         CryptoProtocolVersion version, String keyName) {
     assert dir.hasWriteLock();
     unprotectedAddEncryptionZone(inodeId, suite, version, keyName);
   }
@@ -298,7 +293,7 @@ public class EncryptionZoneManager {
    * @param keyName encryption zone key name
    */
   void unprotectedAddEncryptionZone(Long inodeId,
-      CipherSuite suite, CryptoProtocolVersion version, String keyName) {
+                                    CipherSuite suite, CryptoProtocolVersion version, String keyName) {
     final EncryptionZoneInt ez = new EncryptionZoneInt(
         inodeId, suite, version, keyName);
     if (encryptionZones == null) {
@@ -372,7 +367,7 @@ public class EncryptionZoneManager {
    * Called while holding the FSDirectory lock.
    */
   private EncryptionZoneInt getEncryptionZoneForPath(INodesInPath iip)
-      throws  IOException{
+      throws IOException {
     assert dir.hasReadLock();
     Preconditions.checkNotNull(iip);
     if (!hasCreatedEncryptionZone()) {
@@ -421,7 +416,7 @@ public class EncryptionZoneManager {
    * Called while holding the FSDirectory lock.
    */
   private EncryptionZoneInt getParentEncryptionZoneForPath(INodesInPath iip)
-      throws  IOException {
+      throws IOException {
     assert dir.hasReadLock();
     Preconditions.checkNotNull(iip);
     INodesInPath parentIIP = iip.getParentINodesInPath();
@@ -495,7 +490,7 @@ public class EncryptionZoneManager {
   }
 
   private void checkMoveValidityForReencryption(final String pathName,
-      final long zoneId) throws IOException {
+                                                final long zoneId) throws IOException {
     assert dir.hasReadLock();
     final ZoneReencryptionStatus zs = reencryptionStatus.getZoneStatus(zoneId);
     if (zs != null && zs.getState() != ZoneReencryptionStatus.State.Completed) {
@@ -513,7 +508,7 @@ public class EncryptionZoneManager {
    * Called while holding the FSDirectory lock.
    */
   XAttr createEncryptionZone(INodesInPath srcIIP, CipherSuite suite,
-      CryptoProtocolVersion version, String keyName)
+                             CryptoProtocolVersion version, String keyName)
       throws IOException {
     assert dir.hasWriteLock();
 
@@ -547,7 +542,7 @@ public class EncryptionZoneManager {
     // updating the xattr will call addEncryptionZone,
     // done this way to handle edit log loading
     FSDirXAttrOp.unprotectedSetXAttrs(dir, srcIIP, xattrs,
-                                      EnumSet.of(XAttrSetFlag.CREATE));
+        EnumSet.of(XAttrSetFlag.CREATE));
     return ezXAttr;
   }
 
@@ -632,7 +627,7 @@ public class EncryptionZoneManager {
    * @throws IOException
    */
   List<XAttr> reencryptEncryptionZone(final INodesInPath zoneIIP,
-      final String keyVersionName) throws IOException {
+                                      final String keyVersionName) throws IOException {
     assert dir.hasWriteLock();
     if (reencryptionHandler == null) {
       throw new IOException("No key provider configured, re-encryption "

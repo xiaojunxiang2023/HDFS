@@ -1,7 +1,7 @@
 package org.apache.hadoop.security.ssl;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,25 +41,25 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
    * certificate file has changed.
    */
   public static final String SSL_STORES_RELOAD_INTERVAL_TPL_KEY =
-    "ssl.{0}.stores.reload.interval";
+      "ssl.{0}.stores.reload.interval";
 
   public static final String SSL_KEYSTORE_LOCATION_TPL_KEY =
-    "ssl.{0}.keystore.location";
+      "ssl.{0}.keystore.location";
   public static final String SSL_KEYSTORE_PASSWORD_TPL_KEY =
-    "ssl.{0}.keystore.password";
+      "ssl.{0}.keystore.password";
   public static final String SSL_KEYSTORE_KEYPASSWORD_TPL_KEY =
-    "ssl.{0}.keystore.keypassword";
+      "ssl.{0}.keystore.keypassword";
   public static final String SSL_KEYSTORE_TYPE_TPL_KEY =
-    "ssl.{0}.keystore.type";
+      "ssl.{0}.keystore.type";
 
   public static final String SSL_TRUSTSTORE_RELOAD_INTERVAL_TPL_KEY =
-    "ssl.{0}.truststore.reload.interval";
+      "ssl.{0}.truststore.reload.interval";
   public static final String SSL_TRUSTSTORE_LOCATION_TPL_KEY =
-    "ssl.{0}.truststore.location";
+      "ssl.{0}.truststore.location";
   public static final String SSL_TRUSTSTORE_PASSWORD_TPL_KEY =
-    "ssl.{0}.truststore.password";
+      "ssl.{0}.truststore.password";
   public static final String SSL_TRUSTSTORE_TYPE_TPL_KEY =
-    "ssl.{0}.truststore.type";
+      "ssl.{0}.truststore.type";
   public static final String SSL_EXCLUDE_CIPHER_LIST =
       "ssl.{0}.exclude.cipher.list";
 
@@ -164,7 +164,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
       LOG.debug(mode.toString() + " KeyStore: " + keystoreLocation);
     }
 
-    ReloadingX509KeystoreManager keystoreManager =  new ReloadingX509KeystoreManager(
+    ReloadingX509KeystoreManager keystoreManager = new ReloadingX509KeystoreManager(
         keystoreType,
         keystoreLocation,
         keystorePassword,
@@ -180,7 +180,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
           storesReloadInterval);
     }
 
-    keyManagers = new KeyManager[] { keystoreManager };
+    keyManagers = new KeyManager[]{keystoreManager};
   }
 
   /**
@@ -230,11 +230,11 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
    */
   @Override
   public void init(SSLFactory.Mode mode)
-    throws IOException, GeneralSecurityException {
+      throws IOException, GeneralSecurityException {
 
     boolean requireClientCert =
-      conf.getBoolean(SSLFactory.SSL_REQUIRE_CLIENT_CERT_KEY,
-          SSLFactory.SSL_REQUIRE_CLIENT_CERT_DEFAULT);
+        conf.getBoolean(SSLFactory.SSL_REQUIRE_CLIENT_CERT_KEY,
+            SSLFactory.SSL_REQUIRE_CLIENT_CERT_DEFAULT);
 
     long storesReloadInterval = conf.getLong(
         resolvePropertyName(mode, SSL_STORES_RELOAD_INTERVAL_TPL_KEY),
@@ -245,7 +245,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
     // certificate store
     String keystoreType =
         conf.get(resolvePropertyName(mode, SSL_KEYSTORE_TYPE_TPL_KEY),
-                 DEFAULT_KEYSTORE_TYPE);
+            DEFAULT_KEYSTORE_TYPE);
 
     if (requireClientCert || mode == SSLFactory.Mode.SERVER) {
       createKeyManagersFromConfiguration(mode, keystoreType, storesReloadInterval);
@@ -253,7 +253,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
       KeyStore keystore = KeyStore.getInstance(keystoreType);
       keystore.load(null, null);
       KeyManagerFactory keyMgrFactory = KeyManagerFactory
-              .getInstance(SSLFactory.SSLCERTIFICATE);
+          .getInstance(SSLFactory.SSLCERTIFICATE);
 
       keyMgrFactory.init(keystore, null);
       keyManagers = keyMgrFactory.getKeyManagers();
@@ -261,11 +261,11 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
 
     //trust store
     String truststoreType =
-      conf.get(resolvePropertyName(mode, SSL_TRUSTSTORE_TYPE_TPL_KEY),
-               DEFAULT_KEYSTORE_TYPE);
+        conf.get(resolvePropertyName(mode, SSL_TRUSTSTORE_TYPE_TPL_KEY),
+            DEFAULT_KEYSTORE_TYPE);
 
     String locationProperty =
-      resolvePropertyName(mode, SSL_TRUSTSTORE_LOCATION_TPL_KEY);
+        resolvePropertyName(mode, SSL_TRUSTSTORE_LOCATION_TPL_KEY);
     String truststoreLocation = conf.get(locationProperty, "");
     if (!truststoreLocation.isEmpty()) {
       createTrustManagersFromConfiguration(mode, truststoreType, truststoreLocation, storesReloadInterval);
@@ -285,8 +285,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
       if (passchars != null) {
         password = new String(passchars);
       }
-    }
-    catch (IOException ioe) {
+    } catch (IOException ioe) {
       LOG.warn("Exception while trying to get password for alias " + alias +
           ": " + ioe.getMessage());
     }

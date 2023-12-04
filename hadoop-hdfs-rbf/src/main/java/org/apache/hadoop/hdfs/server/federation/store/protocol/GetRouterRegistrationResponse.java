@@ -13,15 +13,15 @@ import java.io.IOException;
  */
 public abstract class GetRouterRegistrationResponse {
 
-    public static GetRouterRegistrationResponse newInstance() throws IOException {
-        return StateStoreSerializer.newRecord(GetRouterRegistrationResponse.class);
-    }
+  public static GetRouterRegistrationResponse newInstance() throws IOException {
+    return StateStoreSerializer.newRecord(GetRouterRegistrationResponse.class);
+  }
 
-    @Public
-    @Unstable
-    public abstract RouterState getRouter() throws IOException;
+  @Public
+  @Unstable
+  public abstract RouterState getRouter() throws IOException;
 
-    @Public
-    @Unstable
-    public abstract void setRouter(RouterState router) throws IOException;
+  @Public
+  @Unstable
+  public abstract void setRouter(RouterState router) throws IOException;
 }

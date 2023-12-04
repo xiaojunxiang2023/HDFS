@@ -1,14 +1,13 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.XAttrHelper;
 import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,10 +66,10 @@ public class BlockStoragePolicySuite {
         StorageType.EMPTY_ARRAY);
     final byte providedId = HdfsConstants.PROVIDED_STORAGE_POLICY_ID;
     policies[providedId] = new BlockStoragePolicy(providedId,
-      HdfsConstants.PROVIDED_STORAGE_POLICY_NAME,
-      new StorageType[]{StorageType.PROVIDED, StorageType.DISK},
-      new StorageType[]{StorageType.PROVIDED, StorageType.DISK},
-      new StorageType[]{StorageType.PROVIDED, StorageType.DISK});
+        HdfsConstants.PROVIDED_STORAGE_POLICY_NAME,
+        new StorageType[]{StorageType.PROVIDED, StorageType.DISK},
+        new StorageType[]{StorageType.PROVIDED, StorageType.DISK},
+        new StorageType[]{StorageType.PROVIDED, StorageType.DISK});
     return new BlockStoragePolicySuite(hotId, policies);
   }
 
@@ -78,7 +77,7 @@ public class BlockStoragePolicySuite {
   private final BlockStoragePolicy[] policies;
 
   public BlockStoragePolicySuite(byte defaultPolicyID,
-      BlockStoragePolicy[] policies) {
+                                 BlockStoragePolicy[] policies) {
     this.defaultPolicyID = defaultPolicyID;
     this.policies = policies;
   }
@@ -86,7 +85,7 @@ public class BlockStoragePolicySuite {
   /** @return the corresponding policy. */
   public BlockStoragePolicy getPolicy(byte id) {
     // id == 0 means policy not specified.
-    return id == 0? getDefaultPolicy(): policies[id];
+    return id == 0 ? getDefaultPolicy() : policies[id];
   }
 
   /** @return the default policy. */

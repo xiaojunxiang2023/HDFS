@@ -1,26 +1,5 @@
 package org.apache.hadoop.security;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.PrivilegedExceptionAction;
-import java.security.Security;
-import java.util.Map;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.sasl.AuthorizeCallback;
-import javax.security.sasl.RealmCallback;
-import javax.security.sasl.SaslException;
-import javax.security.sasl.SaslServer;
-import javax.security.sasl.SaslServerFactory;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.RetriableException;
@@ -32,6 +11,14 @@ import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.callback.*;
+import javax.security.sasl.*;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivilegedExceptionAction;
+import java.security.Security;
+import java.util.Map;
 
 /**
  * A utility class for dealing with SASL on RPC server
@@ -46,24 +33,26 @@ public class SaslRpcServer {
     AUTHENTICATION("auth"),
     INTEGRITY("auth-int"),
     PRIVACY("auth-conf");
-    
+
     public final String saslQop;
-    
+
     private QualityOfProtection(String saslQop) {
       this.saslQop = saslQop;
     }
-    
+
     public String getSaslQop() {
       return saslQop;
     }
   }
+
   public AuthMethod authMethod;
   public String mechanism;
   public String protocol;
   public String serverId;
+
   public SaslRpcServer(AuthMethod authMethod) throws IOException {
     this.authMethod = authMethod;
-    mechanism = authMethod.getMechanismName();    
+    mechanism = authMethod.getMechanismName();
     switch (authMethod) {
       case SIMPLE: {
         return; // no sasl for simple
@@ -91,10 +80,11 @@ public class SaslRpcServer {
             "Server does not support SASL " + authMethod);
     }
   }
+
   public SaslServer create(final Connection connection,
-                           final Map<String,?> saslProperties,
+                           final Map<String, ?> saslProperties,
                            SecretManager<TokenIdentifier> secretManager
-      ) throws IOException, InterruptedException {
+  ) throws IOException, InterruptedException {
     UserGroupInformation ugi = null;
     final CallbackHandler callback;
     switch (authMethod) {
@@ -117,17 +107,17 @@ public class SaslRpcServer {
         throw new AccessControlException(
             "Server does not support SASL " + authMethod);
     }
-    
+
     final SaslServer saslServer;
     if (ugi != null) {
       saslServer = ugi.doAs(
-        new PrivilegedExceptionAction<SaslServer>() {
-          @Override
-          public SaslServer run() throws SaslException  {
-            return saslFactory.createSaslServer(mechanism, protocol, serverId,
-                saslProperties, callback);
-          }
-        });
+          new PrivilegedExceptionAction<SaslServer>() {
+            @Override
+            public SaslServer run() throws SaslException {
+              return saslFactory.createSaslServer(mechanism, protocol, serverId,
+                  saslProperties, callback);
+            }
+          });
     } else {
       saslServer = saslFactory.createSaslServer(mechanism, protocol, serverId,
           saslProperties, callback);
@@ -150,7 +140,7 @@ public class SaslRpcServer {
       saslFactory = new FastSaslServerFactory(null);
     }
   }
-  
+
   static String encodeIdentifier(byte[] identifier) {
     return new String(Base64.encodeBase64(identifier), StandardCharsets.UTF_8);
   }
@@ -160,7 +150,7 @@ public class SaslRpcServer {
   }
 
   public static <T extends TokenIdentifier> T getIdentifier(String id,
-      SecretManager<T> secretManager) throws InvalidToken {
+                                                            SecretManager<T> secretManager) throws InvalidToken {
     byte[] tokenId = decodeIdentifier(id);
     T tokenIdentifier = secretManager.createIdentifier();
     try {
@@ -175,7 +165,7 @@ public class SaslRpcServer {
 
   static char[] encodePassword(byte[] password) {
     return new String(Base64.encodeBase64(password),
-                      StandardCharsets.UTF_8).toCharArray();
+        StandardCharsets.UTF_8).toCharArray();
   }
 
   /** Splitting fully qualified Kerberos name into parts */
@@ -196,7 +186,7 @@ public class SaslRpcServer {
     public final byte code;
     public final String mechanismName;
 
-    private AuthMethod(byte code, String mechanismName) { 
+    private AuthMethod(byte code, String mechanismName) {
       this.code = code;
       this.mechanismName = mechanismName;
     }
@@ -223,13 +213,15 @@ public class SaslRpcServer {
     public void write(DataOutput out) throws IOException {
       out.write(code);
     }
-  };
+  }
+
+  ;
 
   /** CallbackHandler for SASL DIGEST-MD5 mechanism */
   public static class SaslDigestCallbackHandler implements CallbackHandler {
     private SecretManager<TokenIdentifier> secretManager;
-    private Server.Connection connection; 
-    
+    private Server.Connection connection;
+
     public SaslDigestCallbackHandler(
         SecretManager<TokenIdentifier> secretManager,
         Server.Connection connection) {
@@ -270,7 +262,7 @@ public class SaslRpcServer {
         UserGroupInformation user = null;
         user = tokenIdentifier.getUser(); // may throw exception
         connection.attemptingUser = user;
-        
+
         if (LOG.isDebugEnabled()) {
           LOG.debug("SASL server DIGEST-MD5 callback: setting password "
               + "for client: " + tokenIdentifier.getUser());
@@ -288,7 +280,7 @@ public class SaslRpcServer {
         if (ac.isAuthorized()) {
           if (LOG.isDebugEnabled()) {
             UserGroupInformation logUser =
-              getIdentifier(authzid, secretManager).getUser();
+                getIdentifier(authzid, secretManager).getUser();
             String username = logUser == null ? null : logUser.getUserName();
             LOG.debug("SASL server DIGEST-MD5 callback: setting "
                 + "canonicalized client ID: " + username);

@@ -13,46 +13,46 @@ import java.io.IOException;
  * UpdateMountTableEntryResponse.
  */
 public class UpdateMountTableEntryResponsePBImpl
-        extends UpdateMountTableEntryResponse implements PBRecord {
+    extends UpdateMountTableEntryResponse implements PBRecord {
 
-    private FederationProtocolPBTranslator<UpdateMountTableEntryResponseProto,
-            UpdateMountTableEntryResponseProto.Builder,
-            UpdateMountTableEntryResponseProtoOrBuilder> translator =
-            new FederationProtocolPBTranslator<UpdateMountTableEntryResponseProto,
-                    UpdateMountTableEntryResponseProto.Builder,
-                    UpdateMountTableEntryResponseProtoOrBuilder>(
-                    UpdateMountTableEntryResponseProto.class);
+  private FederationProtocolPBTranslator<UpdateMountTableEntryResponseProto,
+      UpdateMountTableEntryResponseProto.Builder,
+      UpdateMountTableEntryResponseProtoOrBuilder> translator =
+      new FederationProtocolPBTranslator<UpdateMountTableEntryResponseProto,
+          UpdateMountTableEntryResponseProto.Builder,
+          UpdateMountTableEntryResponseProtoOrBuilder>(
+          UpdateMountTableEntryResponseProto.class);
 
-    public UpdateMountTableEntryResponsePBImpl() {
-    }
+  public UpdateMountTableEntryResponsePBImpl() {
+  }
 
-    public UpdateMountTableEntryResponsePBImpl(
-            UpdateMountTableEntryResponseProto proto) {
-        this.setProto(proto);
-    }
+  public UpdateMountTableEntryResponsePBImpl(
+      UpdateMountTableEntryResponseProto proto) {
+    this.setProto(proto);
+  }
 
-    @Override
-    public UpdateMountTableEntryResponseProto getProto() {
-        return this.translator.build();
-    }
+  @Override
+  public UpdateMountTableEntryResponseProto getProto() {
+    return this.translator.build();
+  }
 
-    @Override
-    public void setProto(Message proto) {
-        this.translator.setProto(proto);
-    }
+  @Override
+  public void setProto(Message proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public void readInstance(String base64String) throws IOException {
-        this.translator.readInstance(base64String);
-    }
+  @Override
+  public void readInstance(String base64String) throws IOException {
+    this.translator.readInstance(base64String);
+  }
 
-    @Override
-    public boolean getStatus() {
-        return this.translator.getProtoOrBuilder().getStatus();
-    }
+  @Override
+  public boolean getStatus() {
+    return this.translator.getProtoOrBuilder().getStatus();
+  }
 
-    @Override
-    public void setStatus(boolean result) {
-        this.translator.getBuilder().setStatus(result);
-    }
+  @Override
+  public void setStatus(boolean result) {
+    this.translator.getBuilder().setStatus(result);
+  }
 }

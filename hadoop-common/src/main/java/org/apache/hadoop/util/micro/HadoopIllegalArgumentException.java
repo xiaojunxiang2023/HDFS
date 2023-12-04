@@ -7,7 +7,7 @@ package org.apache.hadoop.util.micro;
  */
 public class HadoopIllegalArgumentException extends IllegalArgumentException {
   private static final long serialVersionUID = 1L;
-  
+
   /**
    * Constructs exception with the specified detail message. 
    * @param message detailed message.

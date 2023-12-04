@@ -1,11 +1,11 @@
 package org.apache.hadoop.service.launcher;
 
-import java.lang.ref.WeakReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.service.Service;
 import org.apache.hadoop.util.ShutdownHookManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.ref.WeakReference;
 
 /**
  * JVM Shutdown hook for Service which will stop the

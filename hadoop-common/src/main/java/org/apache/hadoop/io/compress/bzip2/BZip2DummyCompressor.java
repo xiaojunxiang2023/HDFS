@@ -18,10 +18,10 @@
 
 package org.apache.hadoop.io.compress.bzip2;
 
-import java.io.IOException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.compress.Compressor;
+
+import java.io.IOException;
 
 /**
  * This is a dummy compressor for BZip2.

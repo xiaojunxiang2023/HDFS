@@ -1,33 +1,14 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.hadoop.hdfs.server.namenode.DfsServlet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.qjournal.client.QuorumJournalManager;
 import org.apache.hadoop.hdfs.server.common.JspHelper;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
-import org.apache.hadoop.hdfs.server.namenode.FileJournalManager;
+import org.apache.hadoop.hdfs.server.namenode.*;
 import org.apache.hadoop.hdfs.server.namenode.FileJournalManager.EditLogFile;
-import org.apache.hadoop.hdfs.server.namenode.ImageServlet;
-import org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode;
-import org.apache.hadoop.hdfs.server.namenode.TransferFsImage;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 import org.apache.hadoop.hdfs.util.DataTransferThrottler;
 import org.apache.hadoop.io.IOUtils;
@@ -35,6 +16,20 @@ import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.ServletUtil;
 import org.apache.hadoop.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This servlet is used in two cases:
@@ -71,18 +66,18 @@ public class GetJournalEditServlet extends DfsServlet {
     try {
       validRequestors.add(
           SecurityUtil.getServerPrincipal(conf
-              .get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
+                  .get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
               SecondaryNameNode.getHttpAddress(conf).getHostName()));
     } catch (Exception e) {
       // Don't halt if SecondaryNameNode principal could not be added.
       LOG.debug("SecondaryNameNode principal could not be added", e);
       String msg = String.format(
-        "SecondaryNameNode principal not considered, %s = %s, %s = %s",
-        DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY,
-        conf.get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
-        DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
-        conf.get(DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
-          DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_DEFAULT));
+          "SecondaryNameNode principal not considered, %s = %s, %s = %s",
+          DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY,
+          conf.get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
+          DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
+          conf.get(DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
+              DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_DEFAULT));
       LOG.warn(msg);
     }
 
@@ -101,7 +96,7 @@ public class GetJournalEditServlet extends DfsServlet {
     // username, because we want to allow requests from other JNs during
     // recovery, but we can't enumerate the full list of JNs.
     if (ugi.getShortUserName().equals(
-          UserGroupInformation.getLoginUser().getShortUserName())) {
+        UserGroupInformation.getLoginUser().getShortUserName())) {
       if (LOG.isDebugEnabled())
         LOG.debug("isValidRequestor is allowing other JN principal: " +
             ugi.getUserName());
@@ -112,10 +107,10 @@ public class GetJournalEditServlet extends DfsServlet {
       LOG.debug("isValidRequestor is rejecting: " + ugi.getUserName());
     return false;
   }
-  
+
   private boolean checkRequestorOrSendError(Configuration conf,
-      HttpServletRequest request, HttpServletResponse response)
-          throws IOException {
+                                            HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
     if (UserGroupInformation.isSecurityEnabled()
         && !isValidRequestor(request, conf)) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN,
@@ -126,13 +121,13 @@ public class GetJournalEditServlet extends DfsServlet {
     }
     return true;
   }
-  
+
   private boolean checkStorageInfoOrSendError(JNStorage storage,
-      HttpServletRequest request, HttpServletResponse response)
+                                              HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     int myNsId = storage.getNamespaceID();
     String myClusterId = storage.getClusterID();
-    
+
     String theirStorageInfoString = StringEscapeUtils.escapeHtml4(
         request.getParameter(STORAGEINFO_PARAM));
 
@@ -153,10 +148,10 @@ public class GetJournalEditServlet extends DfsServlet {
     }
     return true;
   }
-  
+
   @Override
   public void doGet(final HttpServletRequest request,
-      final HttpServletResponse response) throws ServletException, IOException {
+                    final HttpServletResponse response) throws ServletException, IOException {
     FileInputStream editFileIn = null;
     try {
       final ServletContext context = getServletContext();
@@ -184,7 +179,7 @@ public class GetJournalEditServlet extends DfsServlet {
       if (!checkStorageInfoOrSendError(storage, request, response)) {
         return;
       }
-      
+
       long segmentTxId = ServletUtil.parseLongParam(request,
           SEGMENT_TXID_PARAM);
 
@@ -206,7 +201,7 @@ public class GetJournalEditServlet extends DfsServlet {
         ImageServlet.setFileNameHeaders(response, editFile);
         editFileIn = new FileInputStream(editFile);
       }
-      
+
       DataTransferThrottler throttler = ImageServlet.getThrottler(conf);
 
       // send edits
@@ -223,7 +218,7 @@ public class GetJournalEditServlet extends DfsServlet {
   }
 
   public static String buildPath(String journalId, long segmentTxId,
-      NamespaceInfo nsInfo, boolean inProgressOk) {
+                                 NamespaceInfo nsInfo, boolean inProgressOk) {
     StringBuilder path = new StringBuilder("/getJournal?");
     try {
       path.append(JOURNAL_ID_PARAM).append("=")

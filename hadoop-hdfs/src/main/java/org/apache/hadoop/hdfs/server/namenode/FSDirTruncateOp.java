@@ -1,28 +1,22 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.IOException;
-import java.util.Set;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.UnresolvedLinkException;
 import org.apache.hadoop.fs.permission.FsAction;
-import org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
-import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.SnapshotAccessControlException;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoContiguous;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
-import org.apache.hadoop.hdfs.protocol.BlockType;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockUnderConstructionFeature;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.FSNamesystem.RecoverLeaseOp;
 import org.apache.hadoop.hdfs.server.namenode.INode.BlocksMapUpdateInfo;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * Helper class to perform truncate operation.
@@ -33,7 +27,8 @@ final class FSDirTruncateOp {
    * Private constructor for preventing FSDirTruncateOp object creation.
    * Static-only class.
    */
-  private FSDirTruncateOp() {}
+  private FSDirTruncateOp() {
+  }
 
   /**
    * Truncate a file to a given size.
@@ -50,9 +45,9 @@ final class FSDirTruncateOp {
    * @throws IOException
    */
   static TruncateResult truncate(final FSNamesystem fsn, final String srcArg,
-      final long newLength, final String clientName,
-      final String clientMachine, final long mtime,
-      final BlocksMapUpdateInfo toRemoveBlocks, final FSPermissionChecker pc)
+                                 final long newLength, final String clientName,
+                                 final String clientMachine, final long mtime,
+                                 final BlocksMapUpdateInfo toRemoveBlocks, final FSPermissionChecker pc)
       throws IOException, UnresolvedLinkException {
     assert fsn.hasWriteLock();
 
@@ -153,9 +148,9 @@ final class FSDirTruncateOp {
    * @throws IOException
    */
   static void unprotectedTruncate(final FSNamesystem fsn,
-      final INodesInPath iip,
-      final String clientName, final String clientMachine,
-      final long newLength, final long mtime, final Block truncateBlock)
+                                  final INodesInPath iip,
+                                  final String clientName, final String clientMachine,
+                                  final long newLength, final long mtime, final Block truncateBlock)
       throws UnresolvedLinkException, QuotaExceededException,
       SnapshotAccessControlException, IOException {
     assert fsn.hasWriteLock();
@@ -180,7 +175,7 @@ final class FSDirTruncateOp {
       }
     }
     assert onBlockBoundary == (truncateBlock == null) :
-      "truncateBlock is null iff on block boundary: " + truncateBlock;
+        "truncateBlock is null iff on block boundary: " + truncateBlock;
     fsn.getBlockManager().removeBlocksAndUpdateSafemodeTotal(collectedBlocks);
   }
 
@@ -200,8 +195,8 @@ final class FSDirTruncateOp {
    */
   @VisibleForTesting
   static Block prepareFileForTruncate(FSNamesystem fsn, INodesInPath iip,
-      String leaseHolder, String clientMachine, long lastBlockDelta,
-      Block newBlock) throws IOException {
+                                      String leaseHolder, String clientMachine, long lastBlockDelta,
+                                      Block newBlock) throws IOException {
     assert fsn.hasWriteLock();
 
     INodeFile file = iip.getLastINode().asFile();
@@ -258,7 +253,7 @@ final class FSDirTruncateOp {
       truncatedBlockUC = oldBlock;
 
       NameNode.stateChangeLog.debug("BLOCK* prepareFileForTruncate: " +
-          "{} Scheduling in-place block truncate to new size {}",
+              "{} Scheduling in-place block truncate to new size {}",
           uc, uc.getTruncateBlock().getNumBytes());
     }
     if (shouldRecoverNow) {
@@ -284,8 +279,8 @@ final class FSDirTruncateOp {
    * @return true if on the block boundary or false if recovery is need
    */
   private static boolean unprotectedTruncate(FSNamesystem fsn,
-      INodesInPath iip, long newLength, BlocksMapUpdateInfo collectedBlocks,
-      long mtime, QuotaCounts delta) throws IOException {
+                                             INodesInPath iip, long newLength, BlocksMapUpdateInfo collectedBlocks,
+                                             long mtime, QuotaCounts delta) throws IOException {
     assert fsn.hasWriteLock();
 
     INodeFile file = iip.getLastINode().asFile();
@@ -303,7 +298,7 @@ final class FSDirTruncateOp {
   }
 
   private static void verifyQuotaForTruncate(FSNamesystem fsn,
-      INodesInPath iip, INodeFile file, long newLength, QuotaCounts delta)
+                                             INodesInPath iip, INodeFile file, long newLength, QuotaCounts delta)
       throws QuotaExceededException {
     FSDirectory fsd = fsn.getFSDirectory();
     if (!fsn.isImageLoaded() || fsd.shouldSkipQuotaChecks()) {
@@ -326,7 +321,7 @@ final class FSDirTruncateOp {
    * can be truncated in place.
    */
   private static boolean shouldCopyOnTruncate(FSNamesystem fsn, INodeFile file,
-      BlockInfo blk) {
+                                              BlockInfo blk) {
     if (!fsn.isUpgradeFinalized()) {
       return true;
     }

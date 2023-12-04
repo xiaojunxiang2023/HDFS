@@ -1,16 +1,17 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-import java.util.List;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.hdfs.client.BlockReportOptions;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenSelector;
+import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus;
 import org.apache.hadoop.security.KerberosInfo;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenInfo;
-import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus;
+
+import java.io.IOException;
+import java.util.List;
 
 /** An client-datanode protocol for block recovery
  */
@@ -87,7 +88,7 @@ public interface ClientDatanodeProtocol {
    *           on error
    */
   BlockLocalPathInfo getBlockLocalPathInfo(ExtendedBlock block,
-      Token<BlockTokenIdentifier> token) throws IOException;
+                                           Token<BlockTokenIdentifier> token) throws IOException;
 
   /**
    * Shuts down a datanode.
@@ -134,7 +135,7 @@ public interface ClientDatanodeProtocol {
    * Trigger a new block report.
    */
   void triggerBlockReport(BlockReportOptions options)
-    throws IOException;
+      throws IOException;
 
   /**
    * Get current value of the balancer bandwidth in bytes per second.
@@ -153,7 +154,7 @@ public interface ClientDatanodeProtocol {
    */
   void submitDiskBalancerPlan(String planID, long planVersion, String planFile,
                               String planData, boolean skipDateCheck)
-       throws IOException;
+      throws IOException;
 
   /**
    * Cancel an executing plan.

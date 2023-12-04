@@ -1,17 +1,17 @@
 package org.apache.hadoop.fs.shell;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FsShell;
 import org.apache.hadoop.fs.QuotaUsage;
 import org.apache.hadoop.fs.StorageType;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Count the number of directories, files, bytes, quota, and remaining quota.
@@ -72,7 +72,7 @@ public class Count extends FsCommand {
           "It can also pass the value '', 'all' or 'ALL' to specify all " +
           "the storage types.\n" +
           "The -" + OPTION_QUOTA_AND_USAGE + " option shows the quota and \n" +
-          "the usage against the quota without the detailed content summary."+
+          "the usage against the quota without the detailed content summary." +
           "The -" + OPTION_ECPOLICY + " option shows the erasure coding policy."
           + "The -" + OPTION_SNAPSHOT_COUNT + " option shows snapshot counts.";
 
@@ -86,8 +86,9 @@ public class Count extends FsCommand {
   private boolean showSnapshot;
 
   /** Constructor */
-  public Count() {}
-  
+  public Count() {
+  }
+
   /** Constructor
    * @deprecated invoke via {@link FsShell}
    * @param cmd the count command
@@ -145,7 +146,7 @@ public class Count extends FsCommand {
           headString.append(ContentSummary.getHeader(showQuotas));
         }
       }
-      if(displayECPolicy){
+      if (displayECPolicy) {
         headString.append("ERASURECODING_POLICY ");
       }
       if (showSnapshot) {
@@ -183,9 +184,9 @@ public class Count extends FsCommand {
       outputString.append(summary.toString(
           showQuotas, isHumanReadable(), excludeSnapshots));
     }
-    if(displayECPolicy){
+    if (displayECPolicy) {
       ContentSummary summary = src.fs.getContentSummary(src.path);
-      if(!summary.getErasureCodingPolicy().equals("Replicated")){
+      if (!summary.getErasureCodingPolicy().equals("Replicated")) {
         outputString.append("EC:");
       }
       outputString.append(summary.getErasureCodingPolicy())
@@ -206,7 +207,7 @@ public class Count extends FsCommand {
   boolean isShowQuotas() {
     return showQuotas;
   }
-  
+
   /**
    * Should sizes be shown in human readable format rather than bytes?
    * @return true if human readable format

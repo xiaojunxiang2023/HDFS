@@ -1,6 +1,5 @@
 package org.apache.hadoop.ipc;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
@@ -15,10 +14,11 @@ import org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.util.Time;
-import org.apache.hadoop.util.concurrent.AsyncGet;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.concurrent.AsyncGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,27 +57,27 @@ public class ProtobufRpcEngine implements RpcEngine {
   }
 
   public <T> ProtocolProxy<T> getProxy(Class<T> protocol, long clientVersion,
-      InetSocketAddress addr, UserGroupInformation ticket, Configuration conf,
-      SocketFactory factory, int rpcTimeout) throws IOException {
+                                       InetSocketAddress addr, UserGroupInformation ticket, Configuration conf,
+                                       SocketFactory factory, int rpcTimeout) throws IOException {
     return getProxy(protocol, clientVersion, addr, ticket, conf, factory,
         rpcTimeout, null);
   }
 
   @Override
   public <T> ProtocolProxy<T> getProxy(Class<T> protocol, long clientVersion,
-      InetSocketAddress addr, UserGroupInformation ticket, Configuration conf,
-      SocketFactory factory, int rpcTimeout, RetryPolicy connectionRetryPolicy
-      ) throws IOException {
+                                       InetSocketAddress addr, UserGroupInformation ticket, Configuration conf,
+                                       SocketFactory factory, int rpcTimeout, RetryPolicy connectionRetryPolicy
+  ) throws IOException {
     return getProxy(protocol, clientVersion, addr, ticket, conf, factory,
-      rpcTimeout, connectionRetryPolicy, null, null);
+        rpcTimeout, connectionRetryPolicy, null, null);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public <T> ProtocolProxy<T> getProxy(Class<T> protocol, long clientVersion,
-      InetSocketAddress addr, UserGroupInformation ticket, Configuration conf,
-      SocketFactory factory, int rpcTimeout, RetryPolicy connectionRetryPolicy,
-      AtomicBoolean fallbackToSimpleAuth, AlignmentContext alignmentContext)
+                                       InetSocketAddress addr, UserGroupInformation ticket, Configuration conf,
+                                       SocketFactory factory, int rpcTimeout, RetryPolicy connectionRetryPolicy,
+                                       AtomicBoolean fallbackToSimpleAuth, AlignmentContext alignmentContext)
       throws IOException {
 
     final Invoker invoker = new Invoker(protocol, addr, ticket, conf, factory,
@@ -86,7 +86,7 @@ public class ProtobufRpcEngine implements RpcEngine {
     return new ProtocolProxy<T>(protocol, (T) Proxy.newProxyInstance(
         protocol.getClassLoader(), new Class[]{protocol}, invoker), false);
   }
-  
+
   @Override
   public ProtocolProxy<ProtocolMetaInfoPB> getProtocolMetaInfoProxy(
       ConnectionId connId, Configuration conf, SocketFactory factory)
@@ -94,12 +94,12 @@ public class ProtobufRpcEngine implements RpcEngine {
     Class<ProtocolMetaInfoPB> protocol = ProtocolMetaInfoPB.class;
     return new ProtocolProxy<ProtocolMetaInfoPB>(protocol,
         (ProtocolMetaInfoPB) Proxy.newProxyInstance(protocol.getClassLoader(),
-            new Class[] { protocol }, new Invoker(protocol, connId, conf,
+            new Class[]{protocol}, new Invoker(protocol, connId, conf,
                 factory)), false);
   }
 
   protected static class Invoker implements RpcInvocationHandler {
-    private final Map<String, Message> returnTypes = 
+    private final Map<String, Message> returnTypes =
         new ConcurrentHashMap<String, Message>();
     private boolean isClosed = false;
     private final Client.ConnectionId remoteId;
@@ -110,9 +110,9 @@ public class ProtobufRpcEngine implements RpcEngine {
     private AlignmentContext alignmentContext;
 
     protected Invoker(Class<?> protocol, InetSocketAddress addr,
-        UserGroupInformation ticket, Configuration conf, SocketFactory factory,
-        int rpcTimeout, RetryPolicy connectionRetryPolicy,
-        AtomicBoolean fallbackToSimpleAuth, AlignmentContext alignmentContext)
+                      UserGroupInformation ticket, Configuration conf, SocketFactory factory,
+                      int rpcTimeout, RetryPolicy connectionRetryPolicy,
+                      AtomicBoolean fallbackToSimpleAuth, AlignmentContext alignmentContext)
         throws IOException {
       this(protocol, Client.ConnectionId.getConnectionId(
           addr, protocol, ticket, rpcTimeout, connectionRetryPolicy, conf),
@@ -120,12 +120,12 @@ public class ProtobufRpcEngine implements RpcEngine {
       this.fallbackToSimpleAuth = fallbackToSimpleAuth;
       this.alignmentContext = alignmentContext;
     }
-    
+
     /**
      * This constructor takes a connectionId, instead of creating a new one.
      */
     protected Invoker(Class<?> protocol, Client.ConnectionId connId,
-        Configuration conf, SocketFactory factory) {
+                      Configuration conf, SocketFactory factory) {
       this.remoteId = connId;
       this.client = CLIENTS.getClient(conf, factory, RpcWritable.Buffer.class);
       this.protocolName = RPC.getProtocolName(protocol);
@@ -137,7 +137,7 @@ public class ProtobufRpcEngine implements RpcEngine {
       RequestHeaderProto.Builder builder = RequestHeaderProto
           .newBuilder();
       builder.setMethodName(method.getName());
-     
+
 
       // For protobuf, {@code protocol} used when creating client side proxy is
       // the interface extending BlockingInterface, which has the annotations 
@@ -159,7 +159,7 @@ public class ProtobufRpcEngine implements RpcEngine {
      * This is the client side invoker of RPC method. It only throws
      * ServiceException, since the invocation proxy expects only
      * ServiceException to be thrown by the method in case protobuf service.
-     * 
+     *
      * ServiceException has the following causes:
      * <ol>
      * <li>Exceptions encountered on the client side in this method are 
@@ -167,7 +167,7 @@ public class ProtobufRpcEngine implements RpcEngine {
      * <li>Exceptions from the server are wrapped in RemoteException and are
      * set as cause in ServiceException</li>
      * </ol>
-     * 
+     *
      * Note that the client calling protobuf RPC methods, must handle
      * ServiceException by getting the cause from the ServiceException. If the
      * cause is RemoteException, then unwrap it to get the exception thrown by
@@ -180,12 +180,12 @@ public class ProtobufRpcEngine implements RpcEngine {
       if (LOG.isDebugEnabled()) {
         startTime = Time.now();
       }
-      
+
       if (args.length != 2) { // RpcController + Message
         throw new ServiceException(
             "Too many or few parameters for request. Method: ["
-            + method.getName() + "]" + ", Expected: 2, Actual: "
-            + args.length);
+                + method.getName() + "]" + ", Expected: 2, Actual: "
+                + args.length);
       }
       if (args[1] == null) {
         throw new ServiceException("null param while calling Method: ["
@@ -219,7 +219,7 @@ public class ProtobufRpcEngine implements RpcEngine {
         if (LOG.isTraceEnabled()) {
           LOG.trace(Thread.currentThread().getId() + ": Exception <- " +
               remoteId + ": " + method.getName() +
-                " {" + e + "}");
+              " {" + e + "}");
         }
         if (traceScope != null) {
           traceScope.addTimelineAnnotation("Call got exception: " +
@@ -234,7 +234,7 @@ public class ProtobufRpcEngine implements RpcEngine {
         long callTime = Time.now() - startTime;
         LOG.debug("Call: " + method.getName() + " took " + callTime + "ms");
       }
-      
+
       if (Client.isAsynchronousMode()) {
         final AsyncGet<RpcWritable.Buffer, IOException> arr
             = Client.getAsyncRpcResponse();
@@ -263,7 +263,7 @@ public class ProtobufRpcEngine implements RpcEngine {
     }
 
     private Message getReturnMessage(final Method method,
-        final RpcWritable.Buffer buf) throws ServiceException {
+                                     final RpcWritable.Buffer buf) throws ServiceException {
       Message prototype = null;
       try {
         prototype = getReturnProtoType(method);
@@ -277,7 +277,7 @@ public class ProtobufRpcEngine implements RpcEngine {
         if (LOG.isTraceEnabled()) {
           LOG.trace(Thread.currentThread().getId() + ": Response <- " +
               remoteId + ": " + method.getName() +
-                " {" + TextFormat.shortDebugString(returnMessage) + "}");
+              " {" + TextFormat.shortDebugString(returnMessage) + "}");
         }
 
       } catch (Throwable e) {
@@ -298,7 +298,7 @@ public class ProtobufRpcEngine implements RpcEngine {
       if (returnTypes.containsKey(method.getName())) {
         return returnTypes.get(method.getName());
       }
-      
+
       Class<?> returnType = method.getReturnType();
       Method newInstMethod = returnType.getMethod("getDefaultInstance");
       newInstMethod.setAccessible(true);
@@ -329,10 +329,10 @@ public class ProtobufRpcEngine implements RpcEngine {
 
   @Override
   public RPC.Server getServer(Class<?> protocol, Object protocolImpl,
-      String bindAddress, int port, int numHandlers, int numReaders,
-      int queueSizePerHandler, boolean verbose, Configuration conf,
-      SecretManager<? extends TokenIdentifier> secretManager,
-      String portRangeConfig, AlignmentContext alignmentContext)
+                              String bindAddress, int port, int numHandlers, int numReaders,
+                              int queueSizePerHandler, boolean verbose, Configuration conf,
+                              SecretManager<? extends TokenIdentifier> secretManager,
+                              String portRangeConfig, AlignmentContext alignmentContext)
       throws IOException {
     return new Server(protocol, protocolImpl, conf, bindAddress, port,
         numHandlers, numReaders, queueSizePerHandler, verbose, secretManager,
@@ -379,6 +379,7 @@ public class ProtobufRpcEngine implements RpcEngine {
         call.setDeferredError(t);
       }
     }
+
     public static ProtobufRpcEngineCallback registerForDeferredResponse() {
       ProtobufRpcEngineCallback callback = new ProtobufRpcEngineCallbackImpl();
       currentCallback.set(callback);
@@ -387,7 +388,7 @@ public class ProtobufRpcEngine implements RpcEngine {
 
     /**
      * Construct an RPC server.
-     * 
+     *
      * @param protocolClass the class of protocol
      * @param protocolImpl the protocolImpl whose methods will be called
      * @param conf the configuration to use
@@ -400,10 +401,10 @@ public class ProtobufRpcEngine implements RpcEngine {
      * @param alignmentContext provides server state info on client responses
      */
     public Server(Class<?> protocolClass, Object protocolImpl,
-        Configuration conf, String bindAddress, int port, int numHandlers,
-        int numReaders, int queueSizePerHandler, boolean verbose,
-        SecretManager<? extends TokenIdentifier> secretManager, 
-        String portRangeConfig, AlignmentContext alignmentContext)
+                  Configuration conf, String bindAddress, int port, int numHandlers,
+                  int numReaders, int queueSizePerHandler, boolean verbose,
+                  SecretManager<? extends TokenIdentifier> secretManager,
+                  String portRangeConfig, AlignmentContext alignmentContext)
         throws IOException {
       super(protocolClass, protocolImpl, conf, bindAddress, port, numHandlers,
           numReaders, queueSizePerHandler, verbose, secretManager,
@@ -417,14 +418,14 @@ public class ProtobufRpcEngine implements RpcEngine {
      * protobuf version (default 2.5.0).
      */
     static RpcWritable processCall(RPC.Server server,
-        String connectionProtocolName, RpcWritable.Buffer request,
-        String methodName, ProtoClassProtoImpl protocolImpl) throws Exception {
+                                   String connectionProtocolName, RpcWritable.Buffer request,
+                                   String methodName, ProtoClassProtoImpl protocolImpl) throws Exception {
       BlockingService service = (BlockingService) protocolImpl.protocolImpl;
       MethodDescriptor methodDescriptor = service.getDescriptorForType()
           .findMethodByName(methodName);
       if (methodDescriptor == null) {
         String msg = "Unknown method " + methodName + " called on "
-                              + connectionProtocolName + " protocol.";
+            + connectionProtocolName + " protocol.";
         LOG.warn(msg);
         throw new RpcNoSuchMethodException(msg);
       }
@@ -496,7 +497,7 @@ public class ProtobufRpcEngine implements RpcEngine {
       try {
         RequestHeaderProto header = getRequestHeader();
         return header.getDeclaringClassProtocolName() + "." +
-               header.getMethodName();
+            header.getMethodName();
       } catch (IOException e) {
         throw new IllegalArgumentException(e);
       }

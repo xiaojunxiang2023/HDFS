@@ -14,7 +14,7 @@ public class CacheableIPList implements IPList {
   private volatile FileBasedIPList ipList;
 
   public CacheableIPList(FileBasedIPList ipList, long cacheTimeout) {
-    this.cacheTimeout =  cacheTimeout;
+    this.cacheTimeout = cacheTimeout;
     this.ipList = ipList;
     updateCacheExpiryTime();
   }
@@ -22,7 +22,7 @@ public class CacheableIPList implements IPList {
   /**
    * Reloads the ip list
    */
-  private  void  reset() {
+  private void reset() {
     ipList = ipList.reload();
     updateCacheExpiryTime();
   }
@@ -30,7 +30,7 @@ public class CacheableIPList implements IPList {
   private void updateCacheExpiryTime() {
     if (cacheTimeout < 0) {
       cacheExpiryTimeStamp = -1; // no automatic cache expiry.
-    }else {
+    } else {
       cacheExpiryTimeStamp = System.currentTimeMillis() + cacheTimeout;
     }
   }
@@ -38,7 +38,7 @@ public class CacheableIPList implements IPList {
   /**
    * Refreshes the ip list
    */
-  public  void refresh () {
+  public void refresh() {
     cacheExpiryTimeStamp = 0;
   }
 
@@ -47,7 +47,7 @@ public class CacheableIPList implements IPList {
     //is cache expired
     //Uses Double Checked Locking using volatile
     if (cacheExpiryTimeStamp >= 0 && cacheExpiryTimeStamp < System.currentTimeMillis()) {
-      synchronized(this) {
+      synchronized (this) {
         //check if cache expired again
         if (cacheExpiryTimeStamp < System.currentTimeMillis()) {
           reset();

@@ -8,7 +8,7 @@ import java.util.Objects;
  * @Description:
  */
 public class AzInfo {
-  
+
   public String az;
   public String rack;
 
@@ -27,7 +27,7 @@ public class AzInfo {
     if (o == null || getClass() != o.getClass()) return false;
     AzInfo azInfo = (AzInfo) o;
     return Objects.equals(az, azInfo.az) &&
-      Objects.equals(rack, azInfo.rack);
+        Objects.equals(rack, azInfo.rack);
   }
 
   @Override

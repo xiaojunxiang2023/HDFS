@@ -1,12 +1,13 @@
 package org.apache.hadoop.security.authorize;
 
+import org.apache.hadoop.security.AccessControlException;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import org.apache.hadoop.security.AccessControlException;
 
 /**
  * An exception class for authorization-related issues.
- * 
+ *
  * This class <em>does not</em> provide the stack trace for security purposes.
  */
 public class AuthorizationException extends AccessControlException {
@@ -19,7 +20,7 @@ public class AuthorizationException extends AccessControlException {
   public AuthorizationException(String message) {
     super(message);
   }
-  
+
   /**
    * Constructs a new exception with the specified cause and a detail
    * message of <tt>(cause==null ? null : cause.toString())</tt> (which
@@ -32,8 +33,9 @@ public class AuthorizationException extends AccessControlException {
   public AuthorizationException(Throwable cause) {
     super(cause);
   }
-  
+
   private static StackTraceElement[] stackTrace = new StackTraceElement[0];
+
   @Override
   public StackTraceElement[] getStackTrace() {
     // Do not provide the stack-trace

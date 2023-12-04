@@ -1,10 +1,12 @@
 package org.apache.hadoop.hdfs.protocol;
+
 public final class NSQuotaExceededException extends QuotaExceededException {
   protected static final long serialVersionUID = 1L;
 
   private String prefix;
 
-  public NSQuotaExceededException() {}
+  public NSQuotaExceededException() {
+  }
 
   public NSQuotaExceededException(String msg) {
     super(msg);
@@ -19,7 +21,7 @@ public final class NSQuotaExceededException extends QuotaExceededException {
     String msg = super.getMessage();
     if (msg == null) {
       msg = "The NameSpace quota (directories and files)" +
-          (pathName==null?"":(" of directory " + pathName)) +
+          (pathName == null ? "" : (" of directory " + pathName)) +
           " is exceeded: quota=" + quota + " file count=" + count;
 
       if (prefix != null) {

@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.XAttr;
@@ -18,6 +14,10 @@ import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.security.AccessControlException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,10 +25,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.ListIterator;
 
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.CRYPTO_XATTR_ENCRYPTION_ZONE;
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.SECURITY_XATTR_UNREADABLE_BY_SUPERUSER;
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.XATTR_SATISFY_STORAGE_POLICY;
-import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.CRYPTO_XATTR_FILE_ENCRYPTION_INFO;
+import static org.apache.hadoop.hdfs.server.common.HdfsServerConstants.*;
 
 class FSDirXAttrOp {
   private static final XAttr KEYID_XATTR =
@@ -78,7 +75,7 @@ class FSDirXAttrOp {
   }
 
   static List<XAttr> getXAttrs(FSDirectory fsd, FSPermissionChecker pc,
-      final String srcArg, List<XAttr> xAttrs) throws IOException {
+                               final String srcArg, List<XAttr> xAttrs) throws IOException {
     String src = srcArg;
     checkXAttrsConfigFlag(fsd);
     final boolean isRawPath = FSDirectory.isReservedRawName(src);
@@ -188,7 +185,7 @@ class FSDirXAttrOp {
     List<XAttr> existingXAttrs = XAttrStorage.readINodeXAttrs(inode);
     List<XAttr> removedXAttrs = Lists.newArrayListWithCapacity(toRemove.size());
     List<XAttr> newXAttrs = filterINodeXAttrs(existingXAttrs, toRemove,
-                                              removedXAttrs);
+        removedXAttrs);
     if (existingXAttrs.size() != newXAttrs.size()) {
       XAttrStorage.updateINodeXAttrs(inode, newXAttrs, snapshotId);
       return removedXAttrs;
@@ -211,7 +208,7 @@ class FSDirXAttrOp {
   static List<XAttr> filterINodeXAttrs(
       final List<XAttr> existingXAttrs, final List<XAttr> toFilter,
       final List<XAttr> filtered)
-    throws AccessControlException {
+      throws AccessControlException {
     if (existingXAttrs == null || existingXAttrs.isEmpty() ||
         toFilter == null || toFilter.isEmpty()) {
       return existingXAttrs;
@@ -223,7 +220,7 @@ class FSDirXAttrOp {
     for (XAttr a : existingXAttrs) {
       boolean add = true;
       for (ListIterator<XAttr> it = toFilter.listIterator(); it.hasNext()
-          ;) {
+          ; ) {
         XAttr filter = it.next();
         Preconditions.checkArgument(
             !KEYID_XATTR.equalsIgnoreValue(filter),
@@ -267,19 +264,19 @@ class FSDirXAttrOp {
 
       if (CRYPTO_XATTR_FILE_ENCRYPTION_INFO.equals(xaName)) {
         HdfsProtos.PerFileEncryptionInfoProto fileProto = HdfsProtos.
-                PerFileEncryptionInfoProto.parseFrom(xattr.getValue());
+            PerFileEncryptionInfoProto.parseFrom(xattr.getValue());
         String keyVersionName = fileProto.getEzKeyVersionName();
         String zoneKeyName = fsd.ezManager.getKeyName(iip);
         if (zoneKeyName == null) {
           throw new IOException("Cannot add raw feInfo XAttr to a file in a " +
-                  "non-encryption zone");
+              "non-encryption zone");
         }
 
         if (!KeyProviderCryptoExtension.
-                getBaseName(keyVersionName).equals(zoneKeyName)) {
+            getBaseName(keyVersionName).equals(zoneKeyName)) {
           throw new IllegalArgumentException(String.format(
-                  "KeyVersion '%s' does not belong to the key '%s'",
-                  keyVersionName, zoneKeyName));
+              "KeyVersion '%s' does not belong to the key '%s'",
+              keyVersionName, zoneKeyName));
         }
       }
 
@@ -339,7 +336,7 @@ class FSDirXAttrOp {
     List<XAttr> xAttrs = Lists.newArrayListWithCapacity(newSize);
 
     // Check if the XAttr already exists to validate with the provided flag
-    for (XAttr xAttr: toSet) {
+    for (XAttr xAttr : toSet) {
       boolean exist = false;
       if (existingXAttrs != null) {
         for (XAttr a : existingXAttrs) {
@@ -385,7 +382,7 @@ class FSDirXAttrOp {
   }
 
   static XAttr getXAttrByPrefixedName(FSDirectory fsd, INodesInPath iip,
-      String prefixedName) throws IOException {
+                                      String prefixedName) throws IOException {
     fsd.readLock();
     try {
       return XAttrStorage.readINodeXAttrByPrefixedName(iip.getLastINode(),
@@ -433,13 +430,13 @@ class FSDirXAttrOp {
     if (size > fsd.getXattrMaxSize()) {
       throw new HadoopIllegalArgumentException(
           "The XAttr is too big. The maximum combined size of the"
-          + " name and value is " + fsd.getXattrMaxSize()
-          + ", but the total size is " + size);
+              + " name and value is " + fsd.getXattrMaxSize()
+              + ", but the total size is " + size);
     }
   }
 
   private static void checkXAttrsConfigFlag(FSDirectory fsd) throws
-                                                             IOException {
+      IOException {
     if (!fsd.isXattrsEnabled()) {
       throw new IOException(String.format(
           "The XAttr operation has been rejected.  "

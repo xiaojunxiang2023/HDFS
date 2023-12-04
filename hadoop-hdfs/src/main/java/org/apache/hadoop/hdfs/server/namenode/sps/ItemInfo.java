@@ -16,7 +16,7 @@ public class ItemInfo {
   }
 
   public ItemInfo(final long startPathId, final long fileId,
-      final int retryCount) {
+                  final int retryCount) {
     this.startPathId = startPathId;
     this.fileId = fileId;
     this.retryCount = retryCount;

@@ -18,15 +18,15 @@
 
 package org.apache.hadoop.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * This class returns build information about Hadoop components.
@@ -44,11 +44,11 @@ public class VersionInfo {
     InputStream is = null;
     try {
       is = ThreadUtil.getResourceAsStream(VersionInfo.class.getClassLoader(),
-              versionInfoFile);
+          versionInfoFile);
       info.load(is);
     } catch (IOException ex) {
       LoggerFactory.getLogger(getClass()).warn("Could not read '" +
-              versionInfoFile + "', " + ex.toString(), ex);
+          versionInfoFile + "', " + ex.toString(), ex);
     } finally {
       IOUtils.closeStream(is);
     }
@@ -82,11 +82,11 @@ public class VersionInfo {
     return info.getProperty("srcChecksum", "Unknown");
   }
 
-  protected String _getBuildVersion(){
+  protected String _getBuildVersion() {
     return _getVersion() +
-            " from " + _getRevision() +
-            " by " + _getUser() +
-            " source checksum " + _getSrcChecksum();
+        " from " + _getRevision() +
+        " by " + _getUser() +
+        " source checksum " + _getSrcChecksum();
   }
 
   protected String _getProtocVersion() {
@@ -94,6 +94,7 @@ public class VersionInfo {
   }
 
   private static VersionInfo COMMON_VERSION_INFO = new VersionInfo("common");
+
   /**
    * Get the Hadoop version.
    * @return the Hadoop version string, eg. "0.6.3-dev"
@@ -155,7 +156,7 @@ public class VersionInfo {
    * revision, user and date.
    * @return the buildVersion
    */
-  public static String getBuildVersion(){
+  public static String getBuildVersion() {
     return COMMON_VERSION_INFO._getBuildVersion();
   }
 
@@ -163,19 +164,19 @@ public class VersionInfo {
    * Returns the protoc version used for the build.
    * @return the protoc version
    */
-  public static String getProtocVersion(){
+  public static String getProtocVersion() {
     return COMMON_VERSION_INFO._getProtocVersion();
   }
 
   public static void main(String[] args) {
-    LOG.debug("version: "+ getVersion());
+    LOG.debug("version: " + getVersion());
     System.out.println("Hadoop " + getVersion());
     System.out.println("Source code repository " + getUrl() + " -r " +
-            getRevision());
+        getRevision());
     System.out.println("Compiled by " + getUser() + " on " + getDate());
     System.out.println("Compiled with protoc " + getProtocVersion());
     System.out.println("From source with checksum " + getSrcChecksum());
     System.out.println("This command was run using " +
-            ClassUtil.findContainingJar(VersionInfo.class));
+        ClassUtil.findContainingJar(VersionInfo.class));
   }
 }

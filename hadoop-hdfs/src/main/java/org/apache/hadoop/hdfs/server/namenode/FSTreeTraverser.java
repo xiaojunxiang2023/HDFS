@@ -1,21 +1,21 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_READ_LOCK_REPORTING_THRESHOLD_MS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_READ_LOCK_REPORTING_THRESHOLD_MS_KEY;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
+import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
+import org.apache.hadoop.hdfs.util.ReadOnlyList;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
-import org.apache.hadoop.hdfs.util.ReadOnlyList;
-import org.apache.hadoop.util.Timer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_READ_LOCK_REPORTING_THRESHOLD_MS_DEFAULT;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_READ_LOCK_REPORTING_THRESHOLD_MS_KEY;
 
 /**
  * FSTreeTraverser traverse directory recursively and process files
@@ -65,7 +65,7 @@ public abstract class FSTreeTraverser {
    * @throws InterruptedException
    */
   protected void traverseDir(final INodeDirectory parent, final long startId,
-      byte[] startAfter, final TraverseInfo traverseInfo)
+                             byte[] startAfter, final TraverseInfo traverseInfo)
       throws IOException, InterruptedException {
     List<byte[]> startAfters = new ArrayList<>();
     if (parent == null) {
@@ -104,7 +104,7 @@ public abstract class FSTreeTraverser {
    * @throws InterruptedException
    */
   protected INode traverseDirInt(final long startId, INode curr,
-      List<byte[]> startAfters, final TraverseInfo traverseInfo)
+                                 List<byte[]> startAfters, final TraverseInfo traverseInfo)
       throws IOException, InterruptedException {
     assert dir.hasReadLock();
     assert dir.getFSNamesystem().hasReadLock();
@@ -264,7 +264,7 @@ public abstract class FSTreeTraverser {
    * @throws InterruptedException
    */
   protected abstract boolean processFileInode(INode inode,
-      TraverseInfo traverseInfo) throws IOException, InterruptedException;
+                                              TraverseInfo traverseInfo) throws IOException, InterruptedException;
 
   /**
    * Check whether current batch can be submitted for the processing.

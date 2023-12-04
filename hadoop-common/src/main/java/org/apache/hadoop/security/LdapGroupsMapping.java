@@ -1,10 +1,23 @@
 package org.apache.hadoop.security;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import org.apache.hadoop.classification.VisibleForTesting;
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Iterators;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.naming.AuthenticationException;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.*;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
+import javax.naming.spi.InitialContextFactory;
+import javax.net.SocketFactory;
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -12,46 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.Set;
-
-import javax.naming.AuthenticationException;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
-import javax.naming.spi.InitialContextFactory;
-import javax.net.SocketFactory;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-
-import org.apache.hadoop.classification.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Iterators;
-import org.apache.hadoop.conf.Configurable;
-import org.apache.hadoop.conf.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
  * An implementation of {@link GroupMappingServiceProvider} which
  * connects directly to an LDAP server for determining group membership.
- * 
+ *
  * This provider should be used only if it is necessary to map users to
  * groups that reside exclusively in an Active Directory or LDAP installation.
  * The common case for a Hadoop installation will be that LDAP users and groups
@@ -60,15 +39,15 @@ import org.slf4j.LoggerFactory;
  * those users and groups aren't materialized in Unix, but need to be used for
  * access control, this class may be used to communicate directly with the LDAP
  * server.
- * 
+ *
  * It is important to note that resolving group mappings will incur network
  * traffic, and may cause degraded performance, although user-group mappings
  * will be cached via the infrastructure provided by {@link Groups}.
- * 
+ *
  * This implementation does not support configurable search limits. If a filter
  * is used for searching users or groups which returns more results than are
  * allowed by the server, an exception will be thrown.
- * 
+ *
  * The implementation attempts to resolve group hierarchies,
  * to a configurable limit.
  * If the limit is 0, in order to be considered a member of a group,
@@ -78,7 +57,7 @@ import org.slf4j.LoggerFactory;
 // MapReduce也可见
 public class LdapGroupsMapping
     implements GroupMappingServiceProvider, Configurable {
-  
+
   public static final String LDAP_CONFIG_PREFIX = "hadoop.security.group.mapping.ldap";
 
   /*
@@ -104,7 +83,7 @@ public class LdapGroupsMapping
    */
   public static final String LDAP_KEYSTORE_PASSWORD_KEY = LDAP_CONFIG_PREFIX + ".ssl.keystore.password";
   public static final String LDAP_KEYSTORE_PASSWORD_DEFAULT = "";
-  
+
   public static final String LDAP_KEYSTORE_PASSWORD_FILE_KEY = LDAP_KEYSTORE_PASSWORD_KEY + ".file";
   public static final String LDAP_KEYSTORE_PASSWORD_FILE_DEFAULT = "";
 
@@ -120,7 +99,7 @@ public class LdapGroupsMapping
    * the LDAP SSL truststore
    */
   public static final String LDAP_TRUSTSTORE_PASSWORD_KEY =
-      LDAP_CONFIG_PREFIX +".ssl.truststore.password";
+      LDAP_CONFIG_PREFIX + ".ssl.truststore.password";
 
   /**
    * The path to a file containing the password for
@@ -175,13 +154,13 @@ public class LdapGroupsMapping
    * Base DN used in user search.
    */
   public static final String USER_BASE_DN_KEY =
-          LDAP_CONFIG_PREFIX + ".userbase";
+      LDAP_CONFIG_PREFIX + ".userbase";
 
   /*
    * Base DN used in group search.
    */
   public static final String GROUP_BASE_DN_KEY =
-          LDAP_CONFIG_PREFIX + ".groupbase";
+      LDAP_CONFIG_PREFIX + ".groupbase";
 
 
   /*
@@ -197,8 +176,8 @@ public class LdapGroupsMapping
   public static final String GROUP_SEARCH_FILTER_DEFAULT = "(objectClass=group)";
 
   /*
-     * LDAP attribute to use for determining group membership
-     */
+   * LDAP attribute to use for determining group membership
+   */
   public static final String MEMBEROF_ATTR_KEY =
       LDAP_CONFIG_PREFIX + ".search.attr.memberof";
   public static final String MEMBEROF_ATTR_DEFAULT = "";
@@ -219,7 +198,7 @@ public class LdapGroupsMapping
    * How many levels to traverse when checking for groups in the org hierarchy
    */
   public static final String GROUP_HIERARCHY_LEVELS_KEY =
-        LDAP_CONFIG_PREFIX + ".search.group.hierarchy.levels";
+      LDAP_CONFIG_PREFIX + ".search.group.hierarchy.levels";
   public static final int GROUP_HIERARCHY_LEVELS_DEFAULT = 0;
 
   /*
@@ -242,7 +221,7 @@ public class LdapGroupsMapping
    * for an invoked directory search. Prevents infinite wait cases.
    */
   public static final String DIRECTORY_SEARCH_TIMEOUT =
-    LDAP_CONFIG_PREFIX + ".directory.search.timeout";
+      LDAP_CONFIG_PREFIX + ".directory.search.timeout";
   public static final int DIRECTORY_SEARCH_TIMEOUT_DEFAULT = 10000; // 10s
 
   public static final String CONNECTION_TIMEOUT =
@@ -278,6 +257,7 @@ public class LdapGroupsMapping
       LoggerFactory.getLogger(LdapGroupsMapping.class);
 
   static final SearchControls SEARCH_CONTROLS = new SearchControls();
+
   static {
     SEARCH_CONTROLS.setSearchScope(SearchControls.SUBTREE_SCOPE);
   }
@@ -319,7 +299,7 @@ public class LdapGroupsMapping
 
   /**
    * Returns list of groups for a user.
-   * 
+   *
    * The LdapCtx which underlies the DirContext object is not thread-safe, so
    * we need to block around this whole method. The caching infrastructure will
    * ensure that performance stays in an acceptable range.
@@ -359,7 +339,7 @@ public class LdapGroupsMapping
       // Reset ctx so that new DirContext can be created with new connection
       this.ctx = null;
     }
-    
+
     return Collections.emptyList();
   }
 
@@ -379,13 +359,13 @@ public class LdapGroupsMapping
     if (rdns.isEmpty()) {
       throw new NamingException("DN is empty");
     }
-    Rdn rdn = rdns.get(rdns.size()-1);
+    Rdn rdn = rdns.get(rdns.size() - 1);
     if (rdn.getType().equalsIgnoreCase(groupNameAttr)) {
-      String groupName = (String)rdn.getValue();
+      String groupName = (String) rdn.getValue();
       return groupName;
     }
     throw new NamingException("Unable to find RDN: The DN " +
-    distinguishedName + " is malformed.");
+        distinguishedName + " is malformed.");
   }
 
   /**
@@ -400,7 +380,7 @@ public class LdapGroupsMapping
    * semantics.
    */
   private NamingEnumeration<SearchResult> lookupPosixGroup(SearchResult result,
-      DirContext c) throws NamingException {
+                                                           DirContext c) throws NamingException {
     String gidNumber = null;
     String uidNumber = null;
     Attribute gidAttribute = result.getAttributes().get(posixGidAttr);
@@ -418,10 +398,10 @@ public class LdapGroupsMapping
     }
     if (uidNumber != null && gidNumber != null) {
       return c.search(groupbaseDN,
-              "(&"+ groupSearchFilter + "(|(" + posixGidAttr + "={0})" +
-                  "(" + groupMemberAttr + "={1})))",
-              new Object[] {gidNumber, uidNumber},
-              SEARCH_CONTROLS);
+          "(&" + groupSearchFilter + "(|(" + posixGidAttr + "={0})" +
+              "(" + groupMemberAttr + "={1})))",
+          new Object[]{gidNumber, uidNumber},
+          SEARCH_CONTROLS);
     }
     throw new NamingException("The server does not support posixGroups " +
         "semantics. Reason: " + reason +
@@ -441,7 +421,7 @@ public class LdapGroupsMapping
    */
   @VisibleForTesting
   List<String> lookupGroup(SearchResult result, DirContext c,
-      int goUpHierarchy)
+                           int goUpHierarchy)
       throws NamingException {
     List<String> groups = new ArrayList<>();
     Set<String> groupDNs = new HashSet<>();
@@ -528,7 +508,7 @@ public class LdapGroupsMapping
         // In order to force the fallback, we need to reset groups collection.
         groups.clear();
         LOG.info("Failed to get groups from the first lookup. Initiating " +
-                "the second LDAP query using the user's DN.", e);
+            "the second LDAP query using the user's DN.", e);
       }
     }
     if (groups.isEmpty() || goUpHierarchy > 0) {
@@ -539,14 +519,14 @@ public class LdapGroupsMapping
   }
 
   /* Helper function to get group name from search results.
-  */
+   */
   void getGroupNames(SearchResult groupResult, Collection<String> groups,
                      Collection<String> groupDNs, boolean doGetDNs)
-                     throws NamingException {
+      throws NamingException {
     Attribute groupName = groupResult.getAttributes().get(groupNameAttr);
     if (groupName == null) {
       throw new NamingException("The group object does not have " +
-        "attribute '" + groupNameAttr + "'.");
+          "attribute '" + groupNameAttr + "'.");
     }
     groups.add(groupName.get().toString());
     if (doGetDNs) {
@@ -570,7 +550,7 @@ public class LdapGroupsMapping
    *    want to look up
    * @param goUpHierarchy - the number of levels to go up,
    * @param groups - Output variable to store all groups that will be added
-  */
+   */
   void goUpGroupHierarchy(Set<String> groupDNs,
                           int goUpHierarchy,
                           Set<String> groups)
@@ -584,14 +564,14 @@ public class LdapGroupsMapping
     filter.append("(&").append(groupSearchFilter).append("(|");
     for (String dn : groupDNs) {
       filter.append("(").append(groupMemberAttr).append("=")
-        .append(dn).append(")");
+          .append(dn).append(")");
     }
     filter.append("))");
     LOG.debug("Ldap group query string: " + filter.toString());
     NamingEnumeration<SearchResult> groupResults =
         context.search(groupbaseDN,
-           filter.toString(),
-           SEARCH_CONTROLS);
+            filter.toString(),
+            SEARCH_CONTROLS);
     while (groupResults.hasMoreElements()) {
       SearchResult groupResult = groupResults.nextElement();
       getGroupNames(groupResult, groups, nextLevelGroups, true);
@@ -686,7 +666,7 @@ public class LdapGroupsMapping
     }
     return ctx;
   }
-  
+
   /**
    * Caches groups, no need to do that for this provider
    */
@@ -695,7 +675,7 @@ public class LdapGroupsMapping
     // does nothing in this provider of user to groups mapping
   }
 
-  /** 
+  /**
    * Adds groups to cache, no need to do that for this provider
    *
    * @param groups unused
@@ -766,10 +746,10 @@ public class LdapGroupsMapping
     // See HADOOP-10626 and HADOOP-12001 for more details.
     String[] returningAttributes;
     if (useOneQuery) {
-      returningAttributes = new String[] {
+      returningAttributes = new String[]{
           groupNameAttr, posixUidAttr, posixGidAttr, memberOfAttr};
     } else {
-      returningAttributes = new String[] {
+      returningAttributes = new String[]{
           groupNameAttr, posixUidAttr, posixGidAttr};
     }
     SEARCH_CONTROLS.setReturningAttributes(returningAttributes);
@@ -779,7 +759,7 @@ public class LdapGroupsMapping
     // creating the instance for now.
     Class<? extends InitialContextFactory> ldapCtxFactoryClass =
         conf.getClass(LDAP_CTX_FACTORY_CLASS_KEY, null,
-        InitialContextFactory.class);
+            InitialContextFactory.class);
     if (ldapCtxFactoryClass != null) {
       ldapCtxFactoryClassName = ldapCtxFactoryClass.getName();
     } else {
@@ -839,7 +819,7 @@ public class LdapGroupsMapping
   /**
    * Passwords should not be stored in configuration. Use
    * {@link #getPasswordFromCredentialProviders(
-   *            Configuration, String, String)}
+   *Configuration, String, String)}
    * to avoid reading passwords from a configuration file.
    */
   @Deprecated
@@ -869,7 +849,7 @@ public class LdapGroupsMapping
         Files.newInputStream(Paths.get(pwFile)), StandardCharsets.UTF_8)) {
       int c = reader.read();
       while (c > -1) {
-        password.append((char)c);
+        password.append((char) c);
         c = reader.read();
       }
       return password.toString().trim();
@@ -997,8 +977,8 @@ public class LdapGroupsMapping
     }
 
     static synchronized void setConfigurations(String newKeyStoreLocation,
-        String newKeyStorePassword, String newTrustStoreLocation,
-        String newTrustStorePassword) {
+                                               String newKeyStorePassword, String newTrustStoreLocation,
+                                               String newTrustStorePassword) {
       LdapSslSocketFactory.keyStoreLocation = newKeyStoreLocation;
       LdapSslSocketFactory.keyStorePassword = newKeyStorePassword;
       LdapSslSocketFactory.trustStoreLocation = newTrustStoreLocation;
@@ -1057,7 +1037,7 @@ public class LdapGroupsMapping
 
     @Override
     public Socket createSocket(String host, int port, InetAddress localHost,
-        int localPort) throws IOException {
+                               int localPort) throws IOException {
       return socketFactory.createSocket(host, port, localHost, localPort);
     }
 
@@ -1068,7 +1048,7 @@ public class LdapGroupsMapping
 
     @Override
     public Socket createSocket(InetAddress address, int port,
-        InetAddress localAddress, int localPort) throws IOException {
+                               InetAddress localAddress, int localPort) throws IOException {
       return socketFactory.createSocket(address, port, localAddress, localPort);
     }
   }

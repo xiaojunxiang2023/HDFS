@@ -1,6 +1,14 @@
 package org.apache.hadoop.metrics2.sink;
 
+import org.apache.commons.configuration2.SubsetConfiguration;
+import org.apache.commons.lang3.time.FastDateFormat;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.metrics2.*;
+import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -8,31 +16,11 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.commons.lang3.time.FastDateFormat;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocatedFileStatus;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RemoteIterator;
-import org.apache.hadoop.metrics2.AbstractMetric;
-import org.apache.hadoop.metrics2.MetricsException;
-import org.apache.hadoop.metrics2.MetricsRecord;
-import org.apache.hadoop.metrics2.MetricsSink;
-import org.apache.hadoop.metrics2.MetricsTag;
-import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.security.UserGroupInformation;
 
 /**
  * <p>This class is a metrics sink that uses
@@ -203,7 +191,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
    */
   @VisibleForTesting
   protected RollingFileSystemSink(long flushIntervalMillis,
-      long flushOffsetIntervalMillis) {
+                                  long flushOffsetIntervalMillis) {
     this.rollIntervalMillis = flushIntervalMillis;
     this.rollOffsetIntervalMillis = flushOffsetIntervalMillis;
   }
@@ -217,7 +205,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
     allowAppend = properties.getBoolean(ALLOW_APPEND_KEY, DEFAULT_ALLOW_APPEND);
     rollOffsetIntervalMillis =
         getNonNegative(ROLL_OFFSET_INTERVAL_MILLIS_KEY,
-          DEFAULT_ROLL_OFFSET_INTERVAL_MILLIS);
+            DEFAULT_ROLL_OFFSET_INTERVAL_MILLIS);
     rollIntervalMillis = getRollInterval();
 
     conf = loadConf();
@@ -340,26 +328,26 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
         millis = TimeUnit.HOURS.toMillis(rollIntervalInt);
       } else {
         switch (flushUnit.toLowerCase()) {
-        case "m":
-        case "min":
-        case "minute":
-        case "minutes":
-          millis = TimeUnit.MINUTES.toMillis(rollIntervalInt);
-          break;
-        case "h":
-        case "hr":
-        case "hour":
-        case "hours":
-          millis = TimeUnit.HOURS.toMillis(rollIntervalInt);
-          break;
-        case "d":
-        case "day":
-        case "days":
-          millis = TimeUnit.DAYS.toMillis(rollIntervalInt);
-          break;
-        default:
-          throw new MetricsException("Unrecognized unit for flush interval: "
-              + flushUnit + ". Must be one of: minute, hour, day");
+          case "m":
+          case "min":
+          case "minute":
+          case "minutes":
+            millis = TimeUnit.MINUTES.toMillis(rollIntervalInt);
+            break;
+          case "h":
+          case "hr":
+          case "hour":
+          case "hours":
+            millis = TimeUnit.HOURS.toMillis(rollIntervalInt);
+            break;
+          case "d":
+          case "day":
+          case "days":
+            millis = TimeUnit.DAYS.toMillis(rollIntervalInt);
+            break;
+          default:
+            throw new MetricsException("Unrecognized unit for flush interval: "
+                + flushUnit + ". Must be one of: minute, hour, day");
         }
       }
     } else {
@@ -572,7 +560,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
     // original random offset.
     int millis =
         (int) (((now.getTime() - nextFlush.getTimeInMillis())
-        / rollIntervalMillis + 1) * rollIntervalMillis);
+            / rollIntervalMillis + 1) * rollIntervalMillis);
 
     nextFlush.add(Calendar.MILLISECOND, millis);
   }

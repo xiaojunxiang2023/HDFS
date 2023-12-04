@@ -1,18 +1,17 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.lang.reflect.Method;
-
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.hadoop.metrics2.MetricsException;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.MetricsInfo;
+import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.hadoop.metrics2.util.Contracts.*;
+import java.lang.reflect.Method;
+
+import static org.apache.hadoop.metrics2.util.Contracts.checkArg;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Metric generated from a method, mostly used by annotation
@@ -28,7 +27,7 @@ class MethodMetric extends MutableMetric {
   MethodMetric(Object obj, Method method, MetricsInfo info, Metric.Type type) {
     this.obj = checkNotNull(obj, "object");
     this.method = checkArg(method, method.getParameterTypes().length == 0,
-                           "Metric method should have no arguments");
+        "Metric method should have no arguments");
     this.method.setAccessible(true);
     this.info = checkNotNull(info, "info");
     impl = newImpl(checkNotNull(type, "metric type"));
@@ -54,18 +53,19 @@ class MethodMetric extends MutableMetric {
   MutableMetric newCounter(final Class<?> type) {
     if (isInt(type) || isLong(type)) {
       return new MutableMetric() {
-        @Override public void snapshot(MetricsRecordBuilder rb, boolean all) {
+        @Override
+        public void snapshot(MetricsRecordBuilder rb, boolean all) {
           try {
-            Object ret = method.invoke(obj, (Object[])null);
+            Object ret = method.invoke(obj, (Object[]) null);
             if (isInt(type)) rb.addCounter(info, ((Integer) ret).intValue());
             else rb.addCounter(info, ((Long) ret).longValue());
           } catch (Exception ex) {
-            LOG.error("Error invoking method "+ method.getName(), ex);
+            LOG.error("Error invoking method " + method.getName(), ex);
           }
         }
       };
     }
-    throw new MetricsException("Unsupported counter type: "+ type.getName());
+    throw new MetricsException("Unsupported counter type: " + type.getName());
   }
 
   static boolean isInt(Class<?> type) {
@@ -88,7 +88,8 @@ class MethodMetric extends MutableMetric {
   MutableMetric newGauge(final Class<?> t) {
     if (isInt(t) || isLong(t) || isFloat(t) || isDouble(t)) {
       return new MutableMetric() {
-        @Override public void snapshot(MetricsRecordBuilder rb, boolean all) {
+        @Override
+        public void snapshot(MetricsRecordBuilder rb, boolean all) {
           try {
             Object ret = method.invoke(obj, (Object[]) null);
             if (isInt(t)) rb.addGauge(info, ((Integer) ret).intValue());
@@ -96,36 +97,38 @@ class MethodMetric extends MutableMetric {
             else if (isFloat(t)) rb.addGauge(info, ((Float) ret).floatValue());
             else rb.addGauge(info, ((Double) ret).doubleValue());
           } catch (Exception ex) {
-            LOG.error("Error invoking method "+ method.getName(), ex);
+            LOG.error("Error invoking method " + method.getName(), ex);
           }
         }
       };
     }
-    throw new MetricsException("Unsupported gauge type: "+ t.getName());
+    throw new MetricsException("Unsupported gauge type: " + t.getName());
   }
 
   MutableMetric newTag(Class<?> resType) {
     if (resType == String.class) {
       return new MutableMetric() {
-        @Override public void snapshot(MetricsRecordBuilder rb, boolean all) {
+        @Override
+        public void snapshot(MetricsRecordBuilder rb, boolean all) {
           try {
             Object ret = method.invoke(obj, (Object[]) null);
             rb.tag(info, (String) ret);
           } catch (Exception ex) {
-            LOG.error("Error invoking method "+ method.getName(), ex);
+            LOG.error("Error invoking method " + method.getName(), ex);
           }
         }
       };
     }
-    throw new MetricsException("Unsupported tag type: "+ resType.getName());
+    throw new MetricsException("Unsupported tag type: " + resType.getName());
   }
 
-  @Override public void snapshot(MetricsRecordBuilder builder, boolean all) {
+  @Override
+  public void snapshot(MetricsRecordBuilder builder, boolean all) {
     impl.snapshot(builder, all);
   }
 
   static MetricsInfo metricInfo(Method method) {
-    return Interns.info(nameFrom(method), "Metric for "+ method.getName());
+    return Interns.info(nameFrom(method), "Metric for " + method.getName());
   }
 
   static String nameFrom(Method method) {

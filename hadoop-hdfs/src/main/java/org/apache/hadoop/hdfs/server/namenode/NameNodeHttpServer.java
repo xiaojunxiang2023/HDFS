@@ -1,19 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_REST_CSRF_ENABLED_DEFAULT;
-import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_REST_CSRF_ENABLED_KEY;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Map;
-import java.util.HashMap;
-
-import javax.servlet.ServletContext;
-
-import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
-import org.apache.hadoop.security.AuthenticationFilterInitializer;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
 import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
@@ -30,9 +19,18 @@ import org.apache.hadoop.hdfs.web.resources.UserParam;
 import org.apache.hadoop.http.HttpConfig;
 import org.apache.hadoop.http.HttpServer2;
 import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.security.AuthenticationFilterInitializer;
 import org.apache.hadoop.security.http.RestCsrfPreventionFilter;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
-import com.sun.jersey.api.core.ResourceConfig;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_REST_CSRF_ENABLED_DEFAULT;
+import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_WEBHDFS_REST_CSRF_ENABLED_KEY;
 
 /**
  * Encapsulates the HTTP server started by the NameNode.
@@ -50,20 +48,20 @@ public class NameNodeHttpServer {
   public static final String FSIMAGE_ATTRIBUTE_KEY = "name.system.image";
   protected static final String NAMENODE_ATTRIBUTE_KEY = "name.node";
   public static final String STARTUP_PROGRESS_ATTRIBUTE_KEY = "startup.progress";
-  public static final String NN_SIMPLE_ANONYMOUS_ALLOWE  = "hadoop.http.namenode.authentication.simple.anonymous.allowed";
+  public static final String NN_SIMPLE_ANONYMOUS_ALLOWE = "hadoop.http.namenode.authentication.simple.anonymous.allowed";
 
   public static final String ALIASMAP_ATTRIBUTE_KEY = "name.system.aliasmap";
 
   NameNodeHttpServer(Configuration conf, NameNode nn,
-      InetSocketAddress bindAddress) {
+                     InetSocketAddress bindAddress) {
     this.conf = conf;
     this.nn = nn;
     this.bindAddress = bindAddress;
   }
 
   public static void initWebHdfs(Configuration conf, String hostname,
-      String httpKeytab,
-      HttpServer2 httpServer2, String jerseyResourcePackage)
+                                 String httpKeytab,
+                                 HttpServer2 httpServer2, String jerseyResourcePackage)
       throws IOException {
     // set user pattern based on configuration file
     UserParam.setUserPattern(conf.get(
@@ -83,7 +81,7 @@ public class NameNodeHttpServer {
       String restCsrfClassName = RestCsrfPreventionFilter.class.getName();
       HttpServer2.defineFilter(httpServer2.getWebAppContext(),
           restCsrfClassName, restCsrfClassName, restCsrfParams,
-          new String[] {pathSpec});
+          new String[]{pathSpec});
     }
 
     // add webhdfs packages
@@ -120,8 +118,8 @@ public class NameNodeHttpServer {
     }
 
     // hadoop.http.namenode.authentication.simple.anonymous.allowed 配置覆盖 hadoop.http.authentication.simple.anonymous.allowed 配置
-    if( conf.get(NN_SIMPLE_ANONYMOUS_ALLOWE) !=null ){
-      conf.set(AuthenticationFilterInitializer.PREFIX + PseudoAuthenticationHandler.ANONYMOUS_ALLOWED, conf.get(NN_SIMPLE_ANONYMOUS_ALLOWE) );
+    if (conf.get(NN_SIMPLE_ANONYMOUS_ALLOWE) != null) {
+      conf.set(AuthenticationFilterInitializer.PREFIX + PseudoAuthenticationHandler.ANONYMOUS_ALLOWED, conf.get(NN_SIMPLE_ANONYMOUS_ALLOWE));
     }
 
     HttpServer2.Builder builder = DFSUtil.httpServerTemplateForNNAndJN(conf,
@@ -248,20 +246,20 @@ public class NameNodeHttpServer {
   }
 
   static FSImage getFsImageFromContext(ServletContext context) {
-    return (FSImage)context.getAttribute(FSIMAGE_ATTRIBUTE_KEY);
+    return (FSImage) context.getAttribute(FSIMAGE_ATTRIBUTE_KEY);
   }
 
   public static NameNode getNameNodeFromContext(ServletContext context) {
-    return (NameNode)context.getAttribute(NAMENODE_ATTRIBUTE_KEY);
+    return (NameNode) context.getAttribute(NAMENODE_ATTRIBUTE_KEY);
   }
 
   public static TokenVerifier
-      getTokenVerifierFromContext(ServletContext context) {
+  getTokenVerifierFromContext(ServletContext context) {
     return (TokenVerifier) context.getAttribute(NAMENODE_ATTRIBUTE_KEY);
   }
 
   static Configuration getConfFromContext(ServletContext context) {
-    return (Configuration)context.getAttribute(JspHelper.CURRENT_CONF);
+    return (Configuration) context.getAttribute(JspHelper.CURRENT_CONF);
   }
 
   static InMemoryAliasMap getAliasMapFromContext(ServletContext context) {
@@ -270,7 +268,7 @@ public class NameNodeHttpServer {
 
   public static InetSocketAddress getNameNodeAddressFromContext(
       ServletContext context) {
-    return (InetSocketAddress)context.getAttribute(
+    return (InetSocketAddress) context.getAttribute(
         NAMENODE_ADDRESS_ATTRIBUTE_KEY);
   }
 
@@ -282,7 +280,7 @@ public class NameNodeHttpServer {
    */
   static StartupProgress getStartupProgressFromContext(
       ServletContext context) {
-    return (StartupProgress)context.getAttribute(STARTUP_PROGRESS_ATTRIBUTE_KEY);
+    return (StartupProgress) context.getAttribute(STARTUP_PROGRESS_ATTRIBUTE_KEY);
   }
 
   public static HAServiceProtocol.HAServiceState getNameNodeStateFromContext(ServletContext context) {

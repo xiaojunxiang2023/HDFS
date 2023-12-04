@@ -1,9 +1,10 @@
 package org.apache.hadoop.hdfs.web.resources;
 
+import org.apache.hadoop.util.StringUtils;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
-import org.apache.hadoop.util.StringUtils;
 
 abstract class EnumSetParam<E extends Enum<E>>
     extends Param<EnumSet<E>, EnumSetParam.Domain<E>> {
@@ -15,7 +16,7 @@ abstract class EnumSetParam<E extends Enum<E>>
       final StringBuilder b = new StringBuilder();
       final Iterator<E> i = set.iterator();
       b.append(i.next());
-      for(; i.hasNext(); ) {
+      for (; i.hasNext(); ) {
         b.append(',').append(i.next());
       }
       return b.toString();
@@ -23,7 +24,7 @@ abstract class EnumSetParam<E extends Enum<E>>
   }
 
   static <E extends Enum<E>> EnumSet<E> toEnumSet(final Class<E> clazz,
-      final E[] values) {
+                                                  final E[] values) {
     final EnumSet<E> set = EnumSet.noneOf(clazz);
     set.addAll(Arrays.asList(values));
     return set;
@@ -63,10 +64,10 @@ abstract class EnumSetParam<E extends Enum<E>>
     final EnumSet<E> parse(final String str) {
       final EnumSet<E> set = EnumSet.noneOf(enumClass);
       if (!str.isEmpty()) {
-        for(int i, j = 0; j >= 0; ) {
+        for (int i, j = 0; j >= 0; ) {
           i = j > 0 ? j + 1 : 0;
           j = str.indexOf(',', i);
-          final String sub = j >= 0? str.substring(i, j): str.substring(i);
+          final String sub = j >= 0 ? str.substring(i, j) : str.substring(i);
           set.add(Enum.valueOf(enumClass, StringUtils.toUpperCase(sub.trim())));
         }
       }

@@ -1,12 +1,14 @@
 package org.apache.hadoop.hdfs.qjournal.protocol;
+
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+
 public class RequestInfo {
   private final String jid;
   private long epoch;
   private long ipcSerialNumber;
   private final long committedTxId;
   private final String nameServiceId;
-  
+
   public RequestInfo(String jid, String nameServiceId,
                      long epoch, long ipcSerialNumber,
                      long committedTxId) {
@@ -28,7 +30,7 @@ public class RequestInfo {
   public void setEpoch(long epoch) {
     this.epoch = epoch;
   }
-  
+
   public String getJournalId() {
     return jid;
   }

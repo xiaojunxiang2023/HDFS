@@ -18,11 +18,11 @@ public class DefaultRpcScheduler implements RpcScheduler {
 
   @Override
   public void addResponseTime(String callName, Schedulable schedulable,
-      ProcessingDetails details) {
+                              ProcessingDetails details) {
   }
 
   public DefaultRpcScheduler(int priorityLevels, String namespace,
-      Configuration conf) {
+                             Configuration conf) {
   }
 
   @Override

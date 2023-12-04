@@ -1,21 +1,16 @@
 package org.apache.hadoop.fs.impl;
 
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.Options.ChecksumOpt;
+import org.apache.hadoop.fs.permission.FsPermission;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.EnumSet;
-import org.apache.hadoop.fs.CreateFlag;
-import org.apache.hadoop.fs.FileContext;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FsServerDefaults;
-import org.apache.hadoop.fs.MultipartUploader;
-import org.apache.hadoop.fs.MultipartUploaderBuilder;
-import org.apache.hadoop.fs.Options.ChecksumOpt;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.permission.FsPermission;
 
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builder for {@link MultipartUploader} implementations.
@@ -52,7 +47,7 @@ public abstract class MultipartUploaderBuilderImpl
    * @throws IOException failure
    */
   protected MultipartUploaderBuilderImpl(@Nonnull FileContext fc,
-      @Nonnull Path p) throws IOException {
+                                         @Nonnull Path p) throws IOException {
     super(checkNotNull(p));
     checkNotNull(fc);
     this.fs = null;
@@ -67,7 +62,7 @@ public abstract class MultipartUploaderBuilderImpl
    * Constructor.
    */
   protected MultipartUploaderBuilderImpl(@Nonnull FileSystem fileSystem,
-      @Nonnull Path p) {
+                                         @Nonnull Path p) {
     super(fileSystem.makeQualified(checkNotNull(p)));
     checkNotNull(fileSystem);
     fs = fileSystem;

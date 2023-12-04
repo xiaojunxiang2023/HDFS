@@ -1,9 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.avro.file.SeekableInput;
+
 import java.io.Closeable;
 import java.io.IOException;
-
-import org.apache.avro.file.SeekableInput;
 
 /** Adapts an {@link FSDataInputStream} to Avro's SeekableInput interface. */
 public class AvroFSInput implements Closeable, SeekableInput {

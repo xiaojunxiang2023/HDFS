@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
+
 import org.apache.hadoop.io.erasurecode.ECChunk;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
@@ -62,7 +63,7 @@ public abstract class RawErasureDecoder {
    *                erasedIndexes, ready for read after the call
    */
   public synchronized void decode(ByteBuffer[] inputs, int[] erasedIndexes,
-                     ByteBuffer[] outputs) throws IOException {
+                                  ByteBuffer[] outputs) throws IOException {
     ByteBufferDecodingState decodingState = new ByteBufferDecodingState(this,
         inputs, erasedIndexes, outputs);
 
@@ -144,7 +145,7 @@ public abstract class RawErasureDecoder {
    * @throws IOException if the decoder is closed
    */
   public synchronized void decode(ECChunk[] inputs, int[] erasedIndexes,
-                     ECChunk[] outputs) throws IOException {
+                                  ECChunk[] outputs) throws IOException {
     ByteBuffer[] newInputs = CoderUtil.toBuffers(inputs);
     ByteBuffer[] newOutputs = CoderUtil.toBuffers(outputs);
     decode(newInputs, erasedIndexes, newOutputs);

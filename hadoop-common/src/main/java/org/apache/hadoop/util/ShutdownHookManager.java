@@ -1,23 +1,18 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.concurrent.HadoopExecutors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.SERVICE_SHUTDOWN_TIMEOUT;
@@ -62,24 +57,24 @@ public final class ShutdownHookManager {
   static {
     try {
       Runtime.getRuntime().addShutdownHook(
-        new Thread() {
-          @Override
-          public void run() {
-            if (MGR.shutdownInProgress.getAndSet(true)) {
-              LOG.info("Shutdown process invoked a second time: ignoring");
-              return;
+          new Thread() {
+            @Override
+            public void run() {
+              if (MGR.shutdownInProgress.getAndSet(true)) {
+                LOG.info("Shutdown process invoked a second time: ignoring");
+                return;
+              }
+              long started = System.currentTimeMillis();
+              int timeoutCount = MGR.executeShutdown();
+              long ended = System.currentTimeMillis();
+              LOG.debug(String.format(
+                  "Completed shutdown in %.3f seconds; Timeouts: %d",
+                  (ended - started) / 1000.0, timeoutCount));
+              // each of the hooks have executed; now shut down the
+              // executor itself.
+              shutdownExecutor(new Configuration());
             }
-            long started = System.currentTimeMillis();
-            int timeoutCount = MGR.executeShutdown();
-            long ended = System.currentTimeMillis();
-            LOG.debug(String.format(
-                "Completed shutdown in %.3f seconds; Timeouts: %d",
-                (ended-started)/1000.0, timeoutCount));
-            // each of the hooks have executed; now shut down the
-            // executor itself.
-            shutdownExecutor(new Configuration());
           }
-        }
       );
     } catch (IllegalStateException ex) {
       // JVM is being shut down. Ignore
@@ -95,7 +90,7 @@ public final class ShutdownHookManager {
   @VisibleForTesting
   int executeShutdown() {
     int timeouts = 0;
-    for (HookEntry entry: getShutdownHooksInOrder()) {
+    for (HookEntry entry : getShutdownHooksInOrder()) {
       Future<?> future = EXECUTOR.submit(entry.getHook());
       try {
         future.get(entry.getTimeout(), entry.getTimeUnit());
@@ -199,7 +194,7 @@ public final class ShutdownHookManager {
       boolean eq = false;
       if (obj != null) {
         if (obj instanceof HookEntry) {
-          eq = (hook == ((HookEntry)obj).hook);
+          eq = (hook == ((HookEntry) obj).hook);
         }
       }
       return eq;
@@ -287,7 +282,7 @@ public final class ShutdownHookManager {
    * @param unit unit of the timeout <code>TimeUnit</code>
    */
   public void addShutdownHook(Runnable shutdownHook, int priority, long timeout,
-      TimeUnit unit) {
+                              TimeUnit unit) {
     if (shutdownHook == null) {
       throw new IllegalArgumentException("shutdownHook cannot be NULL");
     }
@@ -312,7 +307,7 @@ public final class ShutdownHookManager {
     }
     // hooks are only == by runnable
     return hooks.remove(new HookEntry(shutdownHook, 0, TIMEOUT_MINIMUM,
-      TIME_UNIT_DEFAULT));
+        TIME_UNIT_DEFAULT));
   }
 
   /**
@@ -323,12 +318,12 @@ public final class ShutdownHookManager {
    */
   public boolean hasShutdownHook(Runnable shutdownHook) {
     return hooks.contains(new HookEntry(shutdownHook, 0, TIMEOUT_MINIMUM,
-      TIME_UNIT_DEFAULT));
+        TIME_UNIT_DEFAULT));
   }
-  
+
   /**
    * Indicates if shutdown is in progress or not.
-   * 
+   *
    * @return TRUE if the shutdown is in progress, otherwise FALSE.
    */
   public boolean isShutdownInProgress() {

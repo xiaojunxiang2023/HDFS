@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import java.io.IOException;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.io.IOException;
 
 /**
  * Used for injecting faults in QuorumJournalManager tests.
@@ -16,6 +16,9 @@ public class JournalFaultInjector {
     return instance;
   }
 
-  public void beforePersistPaxosData() throws IOException {}
-  public void afterPersistPaxosData() throws IOException {}
+  public void beforePersistPaxosData() throws IOException {
+  }
+
+  public void afterPersistPaxosData() throws IOException {
+  }
 }

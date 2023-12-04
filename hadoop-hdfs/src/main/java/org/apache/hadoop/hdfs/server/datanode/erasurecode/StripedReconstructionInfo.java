@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
+
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
@@ -23,24 +24,24 @@ public class StripedReconstructionInfo {
   private final String[] targetStorageIds;
 
   public StripedReconstructionInfo(ExtendedBlock blockGroup,
-      ErasureCodingPolicy ecPolicy, byte[] liveIndices, DatanodeInfo[] sources,
-      byte[] targetIndices) {
+                                   ErasureCodingPolicy ecPolicy, byte[] liveIndices, DatanodeInfo[] sources,
+                                   byte[] targetIndices) {
     this(blockGroup, ecPolicy, liveIndices, sources, targetIndices, null,
         null, null);
   }
 
   StripedReconstructionInfo(ExtendedBlock blockGroup,
-      ErasureCodingPolicy ecPolicy, byte[] liveIndices, DatanodeInfo[] sources,
-      DatanodeInfo[] targets, StorageType[] targetStorageTypes,
-      String[] targetStorageIds) {
+                            ErasureCodingPolicy ecPolicy, byte[] liveIndices, DatanodeInfo[] sources,
+                            DatanodeInfo[] targets, StorageType[] targetStorageTypes,
+                            String[] targetStorageIds) {
     this(blockGroup, ecPolicy, liveIndices, sources, null, targets,
         targetStorageTypes, targetStorageIds);
   }
 
   private StripedReconstructionInfo(ExtendedBlock blockGroup,
-      ErasureCodingPolicy ecPolicy, byte[] liveIndices, DatanodeInfo[] sources,
-      byte[] targetIndices, DatanodeInfo[] targets,
-      StorageType[] targetStorageTypes, String[] targetStorageIds) {
+                                    ErasureCodingPolicy ecPolicy, byte[] liveIndices, DatanodeInfo[] sources,
+                                    byte[] targetIndices, DatanodeInfo[] targets,
+                                    StorageType[] targetStorageTypes, String[] targetStorageIds) {
 
     this.blockGroup = blockGroup;
     this.ecPolicy = ecPolicy;

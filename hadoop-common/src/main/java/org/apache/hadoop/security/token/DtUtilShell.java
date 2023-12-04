@@ -1,9 +1,5 @@
 package org.apache.hadoop.security.token;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -11,6 +7,10 @@ import org.apache.hadoop.tools.CommandShell;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *  DtUtilShell is a set of command line token file management operations.
@@ -24,7 +24,7 @@ public class DtUtilShell extends CommandShell {
   public static final String DT_USAGE = "hadoop dtutil " +
       "[-keytab <keytab_file> -principal <principal_name>] " +
       "subcommand (help|print|get|edit|append|cancel|remove|renew) " +
-         FORMAT_SUBSTRING + " [-alias <alias>] filename...";
+      FORMAT_SUBSTRING + " [-alias <alias>] filename...";
 
   // command line options
   private static final String HELP = "help";
@@ -62,7 +62,7 @@ public class DtUtilShell extends CommandShell {
    * Return the pruned args array if either flag is present.
    */
   private String[] maybeDoLoginFromKeytabAndPrincipal(String[] args)
-      throws IOException{
+      throws IOException {
     ArrayList<String> savedArgs = new ArrayList<String>(args.length);
     for (int i = 0; i < args.length; i++) {
       String current = args[i];
@@ -80,7 +80,7 @@ public class DtUtilShell extends CommandShell {
         UserGroupInformation.loginUserFromKeytab(principal, keytab);
       } else {
         LOG.warn("-principal and -keytab not both specified!  " +
-                 "Kerberos login not attempted.");
+            "Kerberos login not attempted.");
       }
       return savedArgs.toArray(new String[newSize]);
     }
@@ -135,8 +135,8 @@ public class DtUtilShell extends CommandShell {
         if (!format.equals(DtFileOperations.FORMAT_JAVA) &&
             !format.equals(DtFileOperations.FORMAT_PB)) {
           LOG.error("-format must be '" + DtFileOperations.FORMAT_JAVA +
-                    "' or '" + DtFileOperations.FORMAT_PB + "' not '" +
-                    format + "'");
+              "' or '" + DtFileOperations.FORMAT_PB + "' not '" +
+              format + "'");
           return 1;
         }
       } else {
@@ -194,7 +194,8 @@ public class DtUtilShell extends CommandShell {
 
     private String url = null;
 
-    public Get() { }
+    public Get() {
+    }
 
     public Get(String arg) {
       url = arg;
@@ -235,7 +236,7 @@ public class DtUtilShell extends CommandShell {
   private class Edit extends SubCommand {
     public static final String EDIT_USAGE =
         "dtutil edit -service <service> -alias <alias> " +
-        FORMAT_SUBSTRING + "filename...";
+            FORMAT_SUBSTRING + "filename...";
 
     @Override
     public boolean validate() {
@@ -345,11 +346,12 @@ public class DtUtilShell extends CommandShell {
   private class Import extends SubCommand {
     public static final String IMPORT_USAGE =
         "dtutil import <base64> [-alias <alias>] " +
-        FORMAT_SUBSTRING + " filename";
+            FORMAT_SUBSTRING + " filename";
 
     private String base64 = null;
 
-    Import() { }
+    Import() {
+    }
 
     Import(String arg) {
       base64 = arg;

@@ -10,7 +10,9 @@ import java.util.NoSuchElementException;
 public abstract class BatchedRemoteIterator<K, E> implements RemoteIterator<E> {
   public interface BatchedEntries<E> {
     public E get(int i);
+
     public int size();
+
     public boolean hasMore();
   }
 
@@ -48,7 +50,7 @@ public abstract class BatchedRemoteIterator<K, E> implements RemoteIterator<E> {
 
   /**
    * Perform the actual remote request.
-   * 
+   *
    * @param prevKey The key to send.
    * @return A list of replies.
    */

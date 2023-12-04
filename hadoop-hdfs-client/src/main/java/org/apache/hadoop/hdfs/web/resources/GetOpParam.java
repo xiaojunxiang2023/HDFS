@@ -56,7 +56,7 @@ public class GetOpParam extends HttpOpParam<GetOpParam.Op> {
     }
 
     Op(final boolean redirect, final int expectedHttpResponseCode,
-        final boolean requireAuth) {
+       final boolean requireAuth) {
       this.redirect = redirect;
       this.expectedHttpResponseCode = expectedHttpResponseCode;
       this.requireAuth = requireAuth;

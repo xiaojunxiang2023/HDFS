@@ -1,17 +1,6 @@
 package org.apache.hadoop.security.token;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
-
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -19,6 +8,12 @@ import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  * DtFileOperations is a collection of delegation token file operations.
@@ -28,7 +23,8 @@ public final class DtFileOperations {
       LoggerFactory.getLogger(DtFileOperations.class);
 
   /** No public constructor as per checkstyle. */
-  private DtFileOperations() { }
+  private DtFileOperations() {
+  }
 
   /**
    * Use FORMAT_* as arguments to format parameters.
@@ -61,7 +57,7 @@ public final class DtFileOperations {
       DtFetcher fetcher, Text service, String url) {
     Text sName = fetcher.getServiceName();
     return (service == null && url.startsWith(sName.toString() + "://")) ||
-           (service != null && service.equals(sName));
+        (service != null && service.equals(sName));
   }
 
   /** Format a long integer type into a date string. */
@@ -125,7 +121,7 @@ public final class DtFileOperations {
       if (matchAlias(token, alias)) {
         if (tokenHeader) {
           out.printf(fmt, "Token kind", "Service", "Renewer", "Exp date",
-                     "URL enc token");
+              "URL enc token");
           out.println(StringUtils.repeat("-", 80));
           tokenHeader = false;
         }
@@ -137,9 +133,9 @@ public final class DtFileOperations {
           id = null;
         }
         out.printf(fmt, token.getKind(), token.getService(),
-                   (id != null) ? id.getRenewer() : NA_STRING,
-                   (id != null) ? formatDate(id.getMaxDate()) : NA_STRING,
-                   token.encodeToUrlString());
+            (id != null) ? id.getRenewer() : NA_STRING,
+            (id != null) ? formatDate(id.getMaxDate()) : NA_STRING,
+            token.encodeToUrlString());
       }
     }
   }
@@ -155,7 +151,7 @@ public final class DtFileOperations {
    *  @throws IOException
    */
   public static void getTokenFile(File tokenFile, String fileFormat,
-      Text alias, Text service, String url, String renewer, Configuration conf)
+                                  Text alias, Text service, String url, String renewer, Configuration conf)
       throws Exception {
     Token<?> token = null;
     Credentials creds = tokenFile.exists() ?
@@ -182,7 +178,7 @@ public final class DtFileOperations {
           throw new IllegalArgumentException(message);
         }
         token = fetcher.addDelegationTokens(conf, creds, renewer,
-                                            stripPrefix(url));
+            stripPrefix(url));
       }
     }
     if (alias != null) {
@@ -210,7 +206,7 @@ public final class DtFileOperations {
    *  @throws IOException
    */
   public static void aliasTokenFile(File tokenFile, String fileFormat,
-      Text alias, Text service, Configuration conf) throws Exception {
+                                    Text alias, Text service, Configuration conf) throws Exception {
     Credentials newCreds = new Credentials();
     Credentials creds = Credentials.readTokenStorageFile(tokenFile, conf);
     for (Token<?> token : creds.getAllTokens()) {
@@ -255,7 +251,7 @@ public final class DtFileOperations {
    *  @throws InterruptedException
    */
   public static void removeTokenFromFile(boolean cancel,
-      File tokenFile, String fileFormat, Text alias, Configuration conf)
+                                         File tokenFile, String fileFormat, Text alias, Configuration conf)
       throws IOException, InterruptedException {
     Credentials newCreds = new Credentials();
     Credentials creds = Credentials.readTokenStorageFile(tokenFile, conf);
@@ -288,7 +284,7 @@ public final class DtFileOperations {
       if (token.isManaged() && matchAlias(token, alias)) {
         long result = token.renew(conf);
         LOG.info("Renewed" + token.getKind() + ":" + token.getService() +
-                 " until " + formatDate(result));
+            " until " + formatDate(result));
       }
     }
     doFormattedWrite(tokenFile, fileFormat, creds, conf);
@@ -303,7 +299,7 @@ public final class DtFileOperations {
    * @throws IOException Error to import the token into the file.
    */
   public static void importTokenFile(File tokenFile, String fileFormat,
-      Text alias, String base64, Configuration conf)
+                                     Text alias, String base64, Configuration conf)
       throws IOException {
 
     Credentials creds = tokenFile.exists() ?

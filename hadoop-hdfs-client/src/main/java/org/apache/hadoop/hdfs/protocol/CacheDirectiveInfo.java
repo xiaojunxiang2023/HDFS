@@ -1,13 +1,12 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.util.Date;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.hadoop.fs.Path;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.hdfs.DFSUtilClient;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.util.Date;
 
 /**
  * Describes a path-based cache directive.
@@ -236,7 +235,7 @@ public class CacheDirectiveInfo {
   private final Expiration expiration;
 
   CacheDirectiveInfo(Long id, Path path, Short replication, String pool,
-      Expiration expiration) {
+                     Expiration expiration) {
     this.id = id;
     this.path = path;
     this.replication = replication;
@@ -287,7 +286,7 @@ public class CacheDirectiveInfo {
     if (getClass() != o.getClass()) {
       return false;
     }
-    CacheDirectiveInfo other = (CacheDirectiveInfo)o;
+    CacheDirectiveInfo other = (CacheDirectiveInfo) o;
     return new EqualsBuilder().append(getId(), other.getId()).
         append(getPath(), other.getPath()).
         append(getReplication(), other.getReplication()).

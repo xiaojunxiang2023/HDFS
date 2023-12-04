@@ -1,17 +1,16 @@
 package org.apache.hadoop.fs.impl;
 
+import org.apache.hadoop.fs.MultipartUploader;
+import org.apache.hadoop.fs.PartHandle;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.UploadHandle;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
-import org.apache.hadoop.fs.MultipartUploader;
-import org.apache.hadoop.fs.PartHandle;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.UploadHandle;
 
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
 
@@ -96,10 +95,10 @@ public abstract class AbstractMultipartUploader implements MultipartUploader {
    * @throws IllegalArgumentException invalid argument
    */
   protected void checkPutArguments(Path filePath,
-      InputStream inputStream,
-      int partNumber,
-      UploadHandle uploadId,
-      long lengthInBytes) throws IllegalArgumentException {
+                                   InputStream inputStream,
+                                   int partNumber,
+                                   UploadHandle uploadId,
+                                   long lengthInBytes) throws IllegalArgumentException {
     checkPath(filePath);
     checkArgument(inputStream != null, "null inputStream");
     checkArgument(partNumber > 0, "Invalid part number: %d", partNumber);

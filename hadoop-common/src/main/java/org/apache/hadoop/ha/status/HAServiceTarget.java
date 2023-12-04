@@ -1,10 +1,5 @@
 package org.apache.hadoop.ha.status;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Map;
-
-import javax.net.SocketFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.ha.fc.ZKFCProtocol;
@@ -12,10 +7,13 @@ import org.apache.hadoop.ha.fence.NodeFencer;
 import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
 import org.apache.hadoop.ha.protocolPB.HAServiceProtocolClientSideTranslatorPB;
 import org.apache.hadoop.ha.protocolPB.ZKFCProtocolClientSideTranslatorPB;
-import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.net.NetUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
+
+import javax.net.SocketFactory;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.Map;
 
 public abstract class HAServiceTarget {
 
@@ -34,9 +32,9 @@ public abstract class HAServiceTarget {
   public abstract InetSocketAddress getZKFCAddress();
 
   public abstract NodeFencer getFencer();
-  
+
   public abstract void checkFencingConfigured() throws BadFencingConfigurationException;
-  
+
   public HAServiceProtocol getProxy(Configuration conf, int timeoutMs)
       throws IOException {
     return getProxyForAddress(conf, timeoutMs, getAddress());
@@ -61,13 +59,13 @@ public abstract class HAServiceTarget {
   }
 
   private HAServiceProtocol getProxyForAddress(Configuration conf,
-      int timeoutMs, InetSocketAddress addr) throws IOException {
+                                               int timeoutMs, InetSocketAddress addr) throws IOException {
     // Lower the timeout by setting retries to 1, so we quickly fail to connect
     return getProxyForAddress(conf, timeoutMs, 1, addr);
   }
 
   private HAServiceProtocol getProxyForAddress(Configuration conf,
-      int timeoutMs, int retries, InetSocketAddress addr) throws IOException {
+                                               int timeoutMs, int retries, InetSocketAddress addr) throws IOException {
     Configuration confCopy = new Configuration(conf);
     confCopy.setInt(
         CommonConfigurationKeysPublic.IPC_CLIENT_CONNECT_MAX_RETRIES_KEY,
@@ -91,13 +89,13 @@ public abstract class HAServiceTarget {
         getZKFCAddress(),
         confCopy, factory, timeoutMs);
   }
-  
+
   public final Map<String, String> getFencingParameters() {
     Map<String, String> ret = Maps.newHashMap();
     addFencingParameters(ret);
     return ret;
   }
-  
+
   /**
    * Hook to allow subclasses to add any parameters they would like to
    * expose to fencing implementations/scripts. Fencing methods are free

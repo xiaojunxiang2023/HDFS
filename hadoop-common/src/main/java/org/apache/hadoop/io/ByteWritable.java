@@ -1,20 +1,29 @@
 package org.apache.hadoop.io;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /** A WritableComparable for a single byte. */
 public class ByteWritable implements WritableComparable<ByteWritable> {
   private byte value;
 
-  public ByteWritable() {}
+  public ByteWritable() {
+  }
 
-  public ByteWritable(byte value) { set(value); }
+  public ByteWritable(byte value) {
+    set(value);
+  }
 
   /** Set the value of this ByteWritable. */
-  public void set(byte value) { this.value = value; }
+  public void set(byte value) {
+    this.value = value;
+  }
 
   /** Return the value of this ByteWritable. */
-  public byte get() { return value; }
+  public byte get() {
+    return value;
+  }
 
   @Override
   public void readFields(DataInput in) throws IOException {
@@ -32,13 +41,13 @@ public class ByteWritable implements WritableComparable<ByteWritable> {
     if (!(o instanceof ByteWritable)) {
       return false;
     }
-    ByteWritable other = (ByteWritable)o;
+    ByteWritable other = (ByteWritable) o;
     return this.value == other.value;
   }
 
   @Override
   public int hashCode() {
-    return (int)value;
+    return (int) value;
   }
 
   /** Compares two ByteWritables. */
@@ -54,7 +63,7 @@ public class ByteWritable implements WritableComparable<ByteWritable> {
     return Byte.toString(value);
   }
 
-  /** A Comparator optimized for ByteWritable. */ 
+  /** A Comparator optimized for ByteWritable. */
   public static class Comparator extends WritableComparator {
     public Comparator() {
       super(ByteWritable.class);

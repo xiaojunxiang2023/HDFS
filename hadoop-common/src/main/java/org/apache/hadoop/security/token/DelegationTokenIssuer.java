@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.token;
+
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.Credentials;
 

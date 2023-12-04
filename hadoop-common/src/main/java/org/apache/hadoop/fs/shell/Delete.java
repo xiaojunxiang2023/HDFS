@@ -1,19 +1,12 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.util.ToolRunner;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
-import org.apache.hadoop.fs.ContentSummary;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.fs.PathIsDirectoryException;
-import org.apache.hadoop.fs.PathIsNotDirectoryException;
-import org.apache.hadoop.fs.PathIsNotEmptyDirectoryException;
-import org.apache.hadoop.fs.PathNotFoundException;
-import org.apache.hadoop.fs.Trash;
-import org.apache.hadoop.util.ToolRunner;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SHELL_SAFELY_DELETE_LIMIT_NUM_FILES;
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SHELL_SAFELY_DELETE_LIMIT_NUM_FILES_DEFAULT;
@@ -129,7 +122,7 @@ class Delete {
       if (!skipTrash) {
         try {
           success = Trash.moveToAppropriateTrash(item.fs, item.path, getConf());
-        } catch(FileNotFoundException fnfe) {
+        } catch (FileNotFoundException fnfe) {
           throw fnfe;
         } catch (IOException ioe) {
           String msg = ioe.getMessage();
@@ -142,11 +135,11 @@ class Delete {
       return success;
     }
   }
-  
+
   /** remove any path */
   static class Rmr extends Rm {
     public static final String NAME = "rmr";
-    
+
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {
       args.addFirst("-r");
@@ -163,13 +156,13 @@ class Delete {
   static class Rmdir extends FsCommand {
     public static final String NAME = "rmdir";
     public static final String USAGE =
-      "[--ignore-fail-on-non-empty] <dir> ...";
+        "[--ignore-fail-on-non-empty] <dir> ...";
     public static final String DESCRIPTION =
-      "Removes the directory entry specified by each directory argument, " +
-      "provided it is empty.\n"; 
-    
+        "Removes the directory entry specified by each directory argument, " +
+            "provided it is empty.\n";
+
     private boolean ignoreNonEmpty = false;
-    
+
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {
       CommandFormat cf = new CommandFormat(
@@ -182,7 +175,7 @@ class Delete {
     protected void processPath(PathData item) throws IOException {
       if (!item.stat.isDirectory()) {
         throw new PathIsNotDirectoryException(item.toString());
-      }      
+      }
       if (item.fs.listStatus(item.path).length == 0) {
         if (!item.fs.delete(item.path, false)) {
           throw new PathIOException(item.toString());
@@ -219,7 +212,7 @@ class Delete {
 
     @Override
     protected void processArguments(LinkedList<PathData> args)
-    throws IOException {
+        throws IOException {
       if (fsArgument != null && fsArgument.length() != 0) {
         getConf().set(
             CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY, fsArgument);

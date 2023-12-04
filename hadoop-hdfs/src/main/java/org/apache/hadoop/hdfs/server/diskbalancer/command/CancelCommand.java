@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */package org.apache.hadoop.hdfs.server.diskbalancer.command;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.command;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -28,6 +28,7 @@ import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
 import org.apache.hadoop.hdfs.server.diskbalancer.DiskBalancerException;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.NodePlan;
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -62,7 +63,7 @@ public class CancelCommand extends Command {
 
     // We can cancel a plan using datanode address and plan ID
     // that you can read from a datanode using queryStatus
-    if(cmd.hasOption(DiskBalancerCLI.NODE)) {
+    if (cmd.hasOption(DiskBalancerCLI.NODE)) {
       String nodeAddress = cmd.getOptionValue(DiskBalancerCLI.NODE);
       String planHash = cmd.getOptionValue(DiskBalancerCLI.CANCEL);
       cancelPlanUsingHash(nodeAddress, planHash);
@@ -141,7 +142,7 @@ public class CancelCommand extends Command {
 
     HelpFormatter helpFormatter = new HelpFormatter();
     helpFormatter.printHelp("hdfs diskbalancer -cancel <planFile> | -cancel " +
-        "<planID> -node <hostname>",
+            "<planID> -node <hostname>",
         header, DiskBalancerCLI.getCancelOptions(), footer);
   }
 }

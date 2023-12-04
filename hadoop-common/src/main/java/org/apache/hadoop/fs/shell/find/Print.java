@@ -1,8 +1,8 @@
 package org.apache.hadoop.fs.shell.find;
 
-import java.io.IOException;
-
 import org.apache.hadoop.fs.shell.PathData;
+
+import java.io.IOException;
 
 /**
  * Implements the -print expression for the
@@ -16,12 +16,12 @@ final class Print extends BaseExpression {
     factory.addClass(Print0.class, "-print0");
   }
 
-  private static final String[] USAGE = { "-print", "-print0" };
+  private static final String[] USAGE = {"-print", "-print0"};
   private static final String[] HELP = {
       "Always evaluates to true. Causes the current pathname to be",
       "written to standard output followed by a newline. If the -print0",
       "expression is used then an ASCII NULL character is appended rather",
-      "than a newline." };
+      "than a newline."};
 
   private final String suffix;
 

@@ -4,7 +4,7 @@ package org.apache.hadoop.auth.util.micro;
  * Exception thrown when an authentication error occurs.
  */
 public class AuthenticationException extends Exception {
-  
+
   static final long serialVersionUID = 0;
 
   public AuthenticationException(Throwable cause) {

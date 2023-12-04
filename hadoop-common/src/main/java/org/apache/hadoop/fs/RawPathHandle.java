@@ -1,10 +1,6 @@
 package org.apache.hadoop.fs;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
+import java.io.*;
 import java.nio.ByteBuffer;
 
 /**

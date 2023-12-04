@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs;
 
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.BiFunction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.Progressable;
+
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * This class contains options related to file system operations.
@@ -16,123 +17,168 @@ public final class Options {
    *
    */
   public static class CreateOpts {
-    private CreateOpts() { };
-    public static BlockSize blockSize(long bs) { 
+    private CreateOpts() {
+    }
+
+    ;
+
+    public static BlockSize blockSize(long bs) {
       return new BlockSize(bs);
     }
-    public static BufferSize bufferSize(int bs) { 
+
+    public static BufferSize bufferSize(int bs) {
       return new BufferSize(bs);
     }
-    public static ReplicationFactor repFac(short rf) { 
+
+    public static ReplicationFactor repFac(short rf) {
       return new ReplicationFactor(rf);
     }
+
     public static BytesPerChecksum bytesPerChecksum(short crc) {
       return new BytesPerChecksum(crc);
     }
+
     public static ChecksumParam checksumParam(
         ChecksumOpt csumOpt) {
       return new ChecksumParam(csumOpt);
     }
+
     public static Progress progress(Progressable prog) {
       return new Progress(prog);
     }
+
     public static Perms perms(FsPermission perm) {
       return new Perms(perm);
     }
+
     public static CreateParent createParent() {
       return new CreateParent(true);
     }
+
     public static CreateParent donotCreateParent() {
       return new CreateParent(false);
     }
-    
+
     public static class BlockSize extends CreateOpts {
       private final long blockSize;
+
       protected BlockSize(long bs) {
         if (bs <= 0) {
           throw new IllegalArgumentException(
-                        "Block size must be greater than 0");
+              "Block size must be greater than 0");
         }
-        blockSize = bs; 
+        blockSize = bs;
       }
-      public long getValue() { return blockSize; }
+
+      public long getValue() {
+        return blockSize;
+      }
     }
-    
+
     public static class ReplicationFactor extends CreateOpts {
       private final short replication;
-      protected ReplicationFactor(short rf) { 
+
+      protected ReplicationFactor(short rf) {
         if (rf <= 0) {
           throw new IllegalArgumentException(
-                      "Replication must be greater than 0");
+              "Replication must be greater than 0");
         }
         replication = rf;
       }
-      public short getValue() { return replication; }
+
+      public short getValue() {
+        return replication;
+      }
     }
-    
+
     public static class BufferSize extends CreateOpts {
       private final int bufferSize;
+
       protected BufferSize(int bs) {
         if (bs <= 0) {
           throw new IllegalArgumentException(
-                        "Buffer size must be greater than 0");
+              "Buffer size must be greater than 0");
         }
-        bufferSize = bs; 
+        bufferSize = bs;
       }
-      public int getValue() { return bufferSize; }
+
+      public int getValue() {
+        return bufferSize;
+      }
     }
 
     /** This is not needed if ChecksumParam is specified. **/
     public static class BytesPerChecksum extends CreateOpts {
       private final int bytesPerChecksum;
-      protected BytesPerChecksum(short bpc) { 
+
+      protected BytesPerChecksum(short bpc) {
         if (bpc <= 0) {
           throw new IllegalArgumentException(
-                        "Bytes per checksum must be greater than 0");
+              "Bytes per checksum must be greater than 0");
         }
-        bytesPerChecksum = bpc; 
+        bytesPerChecksum = bpc;
       }
-      public int getValue() { return bytesPerChecksum; }
+
+      public int getValue() {
+        return bytesPerChecksum;
+      }
     }
 
     public static class ChecksumParam extends CreateOpts {
       private final ChecksumOpt checksumOpt;
+
       protected ChecksumParam(ChecksumOpt csumOpt) {
         checksumOpt = csumOpt;
       }
-      public ChecksumOpt getValue() { return checksumOpt; }
+
+      public ChecksumOpt getValue() {
+        return checksumOpt;
+      }
     }
-    
+
     public static class Perms extends CreateOpts {
       private final FsPermission permissions;
-      protected Perms(FsPermission perm) { 
-        if(perm == null) {
+
+      protected Perms(FsPermission perm) {
+        if (perm == null) {
           throw new IllegalArgumentException("Permissions must not be null");
         }
-        permissions = perm; 
+        permissions = perm;
       }
-      public FsPermission getValue() { return permissions; }
+
+      public FsPermission getValue() {
+        return permissions;
+      }
     }
-    
+
     public static class Progress extends CreateOpts {
       private final Progressable progress;
-      protected Progress(Progressable prog) { 
-        if(prog == null) {
+
+      protected Progress(Progressable prog) {
+        if (prog == null) {
           throw new IllegalArgumentException("Progress must not be null");
         }
         progress = prog;
       }
-      public Progressable getValue() { return progress; }
-    }
-    
-    public static class CreateParent extends CreateOpts {
-      private final boolean createParent;
-      protected CreateParent(boolean createPar) {
-        createParent = createPar;}
-      public boolean getValue() { return createParent; }
+
+      public Progressable getValue() {
+        return progress;
+      }
     }
 
-    
+    public static class CreateParent extends CreateOpts {
+      private final boolean createParent;
+
+      protected CreateParent(boolean createPar) {
+        createParent = createPar;
+      }
+
+      public boolean getValue() {
+        return createParent;
+      }
+    }
+
+
     /**
      * Get an option of desired type
      * @param clazz is the desired class of the opt
@@ -152,12 +198,13 @@ public final class Options {
           }
 
           @SuppressWarnings("unchecked")
-          T t = (T)opts[i];
+          T t = (T) opts[i];
           result = t;
         }
       }
       return result;
     }
+
     /**
      * set an option
      * @param newValue  the option to be set
@@ -165,7 +212,7 @@ public final class Options {
      * @return updated CreateOpts[] == opts + newValue
      */
     static <T extends CreateOpts> CreateOpts[] setOpt(final T newValue,
-        final CreateOpts... opts) {
+                                                      final CreateOpts... opts) {
       final Class<?> clazz = newValue.getClass();
       boolean alreadyInOpts = false;
       if (opts != null) {
@@ -181,7 +228,7 @@ public final class Options {
       }
       CreateOpts[] resultOpt = opts;
       if (!alreadyInOpts) { // no newValue in opt
-        final int oldLength = opts == null? 0: opts.length;
+        final int oldLength = opts == null ? 0 : opts.length;
         CreateOpts[] newOpts = new CreateOpts[oldLength + 1];
         if (oldLength > 0) {
           System.arraycopy(opts, 0, newOpts, 0, oldLength);
@@ -199,10 +246,10 @@ public final class Options {
   public enum Rename {
     NONE((byte) 0), // No options
     OVERWRITE((byte) 1), // Overwrite the rename destination
-    TO_TRASH ((byte) 2); // Rename to trash
+    TO_TRASH((byte) 2); // Rename to trash
 
     private final byte code;
-    
+
     private Rename(byte code) {
       this.code = code;
     }
@@ -247,7 +294,7 @@ public final class Options {
     public DataChecksum.Type getChecksumType() {
       return checksumType;
     }
-    
+
     @Override
     public String toString() {
       return checksumType + ":" + bytesPerChecksum;
@@ -270,11 +317,11 @@ public final class Options {
      * @param userBytesPerChecksum User-specified bytesPerChecksum
      *                Ignored if {@literal <} 0.
      */
-    public static ChecksumOpt processChecksumOpt(ChecksumOpt defaultOpt, 
-        ChecksumOpt userOpt, int userBytesPerChecksum) {
+    public static ChecksumOpt processChecksumOpt(ChecksumOpt defaultOpt,
+                                                 ChecksumOpt userOpt, int userBytesPerChecksum) {
       final boolean useDefaultType;
       final DataChecksum.Type type;
-      if (userOpt != null 
+      if (userOpt != null
           && userOpt.getChecksumType() != DataChecksum.Type.DEFAULT) {
         useDefaultType = false;
         type = userOpt.getChecksumType();
@@ -290,10 +337,10 @@ public final class Options {
       if (userBytesPerChecksum > 0) {
         return new ChecksumOpt(type, userBytesPerChecksum);
       } else if (userOpt != null && userOpt.getBytesPerChecksum() > 0) {
-        return !useDefaultType? userOpt
+        return !useDefaultType ? userOpt
             : new ChecksumOpt(type, userOpt.getBytesPerChecksum());
       } else {
-        return useDefaultType? defaultOpt
+        return useDefaultType ? defaultOpt
             : new ChecksumOpt(type, defaultOpt.getBytesPerChecksum());
       }
     }
@@ -306,7 +353,7 @@ public final class Options {
      * @param userOpt User-specified checksum option
      */
     public static ChecksumOpt processChecksumOpt(ChecksumOpt defaultOpt,
-        ChecksumOpt userOpt) {
+                                                 ChecksumOpt userOpt) {
       return processChecksumOpt(defaultOpt, userOpt, -1);
     }
   }
@@ -351,7 +398,7 @@ public final class Options {
      * be unchanged between calls.
      */
     public static HandleOpt[] exact() {
-      return new HandleOpt[] {changed(false), moved(false) };
+      return new HandleOpt[]{changed(false), moved(false)};
     }
 
     /**
@@ -361,7 +408,7 @@ public final class Options {
      * but it may be at a different location.
      */
     public static HandleOpt[] content() {
-      return new HandleOpt[] {changed(false), moved(true)  };
+      return new HandleOpt[]{changed(false), moved(true)};
     }
 
     /**
@@ -371,7 +418,7 @@ public final class Options {
      * but its content may have changed.
      */
     public static HandleOpt[] path() {
-      return new HandleOpt[] {changed(true),  moved(false) };
+      return new HandleOpt[]{changed(true), moved(false)};
     }
 
     /**
@@ -381,7 +428,7 @@ public final class Options {
      * to this entity regardless of changes to content or location.
      */
     public static HandleOpt[] reference() {
-      return new HandleOpt[] {changed(true),  moved(true)  };
+      return new HandleOpt[]{changed(true), moved(true)};
     }
 
     /**
@@ -437,6 +484,7 @@ public final class Options {
      */
     public static class Data extends HandleOpt {
       private final boolean allowChanged;
+
       Data(boolean allowChanged) {
         this.allowChanged = allowChanged;
       }
@@ -448,11 +496,12 @@ public final class Options {
       public boolean allowChange() {
         return allowChanged;
       }
+
       @Override
       public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("data(allowChange=")
-          .append(allowChanged).append(")");
+            .append(allowChanged).append(")");
         return sb.toString();
       }
     }
@@ -462,6 +511,7 @@ public final class Options {
      */
     public static class Location extends HandleOpt {
       private final boolean allowChanged;
+
       Location(boolean allowChanged) {
         this.allowChanged = allowChanged;
       }
@@ -474,6 +524,7 @@ public final class Options {
       public boolean allowChange() {
         return allowChanged;
       }
+
       @Override
       public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -7,11 +7,11 @@ import org.junit.Test;
  * @Description:
  */
 public class _3_ZKFC_Starter {
-    @Test
-    public void startZKFC() throws Exception {
+  @Test
+  public void startZKFC() throws Exception {
 //        String[] args = new String[]{"-formatZK"};
-        String[] args = new String[]{};
-        DFSZKFailoverController.main(args);
-        Thread.sleep(System.currentTimeMillis());
-    }
+    String[] args = new String[]{};
+    DFSZKFailoverController.main(args);
+    Thread.sleep(System.currentTimeMillis());
+  }
 }

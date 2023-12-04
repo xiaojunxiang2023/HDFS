@@ -1,9 +1,9 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
 
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.DumpUtil;
 import org.apache.hadoop.io.erasurecode.rawcoder.util.RSUtil;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 /**
  * A raw erasure encoder in RS code scheme in pure Java in case native one

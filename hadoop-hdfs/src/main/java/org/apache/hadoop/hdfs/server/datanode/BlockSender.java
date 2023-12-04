@@ -1,20 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.logging.Log;
 import org.apache.hadoop.fs.ChecksumException;
 import org.apache.hadoop.fs.FsTracer;
@@ -32,20 +17,27 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.ReadaheadPool.ReadaheadRequest;
 import org.apache.hadoop.net.SocketOutputStream;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.util.AutoCloseableLock;
 import org.apache.hadoop.util.DataChecksum;
-import org.apache.hadoop.tracing.TraceScope;
+import org.slf4j.Logger;
+
+import java.io.*;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_DONTNEED;
 import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_SEQUENTIAL;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-
 /**
  * Reads a block from the disk and sends it to a recipient.
- * 
+ *
  * Data sent from the BlockeSender in the following format:
  * <br><b>Data format:</b> <pre>
  *    +--------------------------------------------------+
@@ -58,7 +50,7 @@ import org.slf4j.Logger;
  *    +--------------------------------------------------+ 
  * </pre>   
  * An empty packet is sent to mark the end of block and read completion.
- * 
+ *
  * PACKET Contains a packet header, checksum and data. Amount of data
  * carried is set by BUFFER_SIZE.
  * <pre>
@@ -69,16 +61,16 @@ import org.slf4j.Logger;
  *   +-----------------------------------------------------+
  *   | actual data ......                                  |
  *   +-----------------------------------------------------+
- * 
+ *
  *   Data is made of Chunks. Each chunk is of length <= BYTES_PER_CHECKSUM.
  *   A checksum is calculated for each chunk.
- *  
+ *
  *   x = (length of data + BYTE_PER_CHECKSUM - 1)/BYTES_PER_CHECKSUM *
  *       CHECKSUM_SIZE
- *  
+ *
  *   CHECKSUM_SIZE depends on CHECKSUM_TYPE (usually, 4 for CRC32) 
  *  </pre>
- *  
+ *
  *  The client reads data until it receives a packet with 
  *  "LastPacketInBlock" set to true or with a zero length. If there is 
  *  no checksum error, it replies to DataNode with OP_STATUS_CHECKSUM_OK.
@@ -86,22 +78,24 @@ import org.slf4j.Logger;
 class BlockSender implements java.io.Closeable {
   static final Logger LOG = DataNode.LOG;
   static final Log ClientTraceLog = DataNode.ClientTraceLog;
-  private static final boolean is32Bit = 
+  private static final boolean is32Bit =
       System.getProperty("sun.arch.data.model").equals("32");
   /**
    * Minimum buffer used while sending data to clients. Used only if
    * transferTo() is enabled. 64KB is not that large. It could be larger, but
    * not sure if there will be much more improvement.
    */
-  private static final int MIN_BUFFER_WITH_TRANSFERTO = 64*1024;
+  private static final int MIN_BUFFER_WITH_TRANSFERTO = 64 * 1024;
   private static final int IO_FILE_BUFFER_SIZE;
+
   static {
     HdfsConfiguration conf = new HdfsConfiguration();
     IO_FILE_BUFFER_SIZE = DFSUtilClient.getIoFileBufferSize(conf);
   }
+
   private static final int TRANSFERTO_BUFFER_SIZE = Math.max(
       IO_FILE_BUFFER_SIZE, MIN_BUFFER_WITH_TRANSFERTO);
-  
+
   /** the block to read from */
   private final ExtendedBlock block;
 
@@ -145,17 +139,17 @@ class BlockSender implements java.io.Closeable {
   private ReadaheadRequest curReadahead;
 
   private final boolean alwaysReadahead;
-  
+
   private final boolean dropCacheBehindLargeReads;
-  
+
   private final boolean dropCacheBehindAllReads;
-  
+
   private long lastCacheDropOffset;
   private final FileIoProvider fileIoProvider;
-  
+
   @VisibleForTesting
   static long CACHE_DROP_INTERVAL_BYTES = 1024 * 1024; // 1MB
-  
+
   /**
    * See {{@link BlockSender#isLongRead()}
    */
@@ -169,9 +163,10 @@ class BlockSender implements java.io.Closeable {
   private static final long CHUNK_SIZE = 512;
 
   private static final String EIO_ERROR = "Input/output error";
+
   /**
    * Constructor
-   * 
+   *
    * @param block Block that is being read
    * @param startOffset starting offset to read from
    * @param length length of data to read
@@ -210,7 +205,7 @@ class BlockSender implements java.io.Closeable {
       } else {
         this.dropCacheBehindAllReads =
             this.dropCacheBehindLargeReads =
-                 cachingStrategy.getDropBehind().booleanValue();
+                cachingStrategy.getDropBehind().booleanValue();
       }
       /*
        * Similarly, if readahead was explicitly requested, we always do it.
@@ -225,7 +220,7 @@ class BlockSender implements java.io.Closeable {
         this.readaheadLength = cachingStrategy.getReadahead().longValue();
       }
       this.datanode = datanode;
-      
+
       if (verifyChecksum) {
         // To simplify implementation, callers may not specify verification
         // without sending.
@@ -239,7 +234,7 @@ class BlockSender implements java.io.Closeable {
       // the append write.
       ChunkChecksum chunkChecksum = null;
       final long replicaVisibleLength;
-      try(AutoCloseableLock lock = datanode.data.acquireDatasetReadLock()) {
+      try (AutoCloseableLock lock = datanode.data.acquireDatasetReadLock()) {
         replica = getReplica(block, datanode);
         replicaVisibleLength = replica.getVisibleLength();
       }
@@ -250,7 +245,7 @@ class BlockSender implements java.io.Closeable {
       }
       if (replica instanceof FinalizedReplica) {
         chunkChecksum = getPartialChunkChecksumForFinalized(
-            (FinalizedReplica)replica);
+            (FinalizedReplica) replica);
       }
 
       if (replica.getGenerationStamp() < block.getGenerationStamp()) {
@@ -275,15 +270,15 @@ class BlockSender implements java.io.Closeable {
       // transferToFully() fails on 32 bit platforms for block sizes >= 2GB,
       // use normal transfer in those cases
       this.transferToAllowed = datanode.getDnConf().transferToAllowed &&
-        (!is32Bit || length <= Integer.MAX_VALUE);
+          (!is32Bit || length <= Integer.MAX_VALUE);
 
       // Obtain a reference before reading data
       volumeRef = datanode.data.getVolume(block).obtainReference();
 
-      /* 
+      /*
        * (corruptChecksumOK, meta_file_exist): operation
-       * True,   True: will verify checksum  
-       * True,  False: No verify, e.g., need to read data from a corrupted file 
+       * True,   True: will verify checksum
+       * True,  False: No verify, e.g., need to read data from a corrupted file
        * False,  True: will verify checksum
        * False, False: throws IOException file not found
        */
@@ -321,10 +316,10 @@ class BlockSender implements java.io.Closeable {
             } else if (!replica.isOnTransientStorage() &&
                 metaIn.getLength() < expectedHeaderSize) {
               LOG.warn("The meta file length {} is less than the expected " +
-                  "header length {}, indicating the meta file is corrupt",
+                      "header length {}, indicating the meta file is corrupt",
                   metaIn.getLength(), expectedHeaderSize);
-              throw new CorruptMetaHeaderException("The meta file length "+
-                  metaIn.getLength()+" is less than the expected length "+
+              throw new CorruptMetaHeaderException("The meta file length " +
+                  metaIn.getLength() + " is less than the expected length " +
                   expectedHeaderSize);
             }
           } else {
@@ -337,7 +332,7 @@ class BlockSender implements java.io.Closeable {
             datanode
                 .notifyNamenodeDeletedBlock(block, replica.getStorageUuid());
             datanode.data.invalidate(block.getBlockPoolId(),
-                new Block[] {block.getLocalBlock()});
+                new Block[]{block.getLocalBlock()});
           }
           throw e;
         } finally {
@@ -348,18 +343,18 @@ class BlockSender implements java.io.Closeable {
       }
       if (csum == null) {
         csum = DataChecksum.newDataChecksum(DataChecksum.Type.NULL,
-            (int)CHUNK_SIZE);
+            (int) CHUNK_SIZE);
       }
 
       /*
        * If chunkSize is very large, then the metadata file is mostly
        * corrupted. For now just truncate bytesPerchecksum to blockLength.
-       */       
+       */
       int size = csum.getBytesPerChecksum();
-      if (size > 10*1024*1024 && size > replicaVisibleLength) {
+      if (size > 10 * 1024 * 1024 && size > replicaVisibleLength) {
         csum = DataChecksum.newDataChecksum(csum.getChecksumType(),
-            Math.max((int)replicaVisibleLength, 10*1024*1024));
-        size = csum.getBytesPerChecksum();        
+            Math.max((int) replicaVisibleLength, 10 * 1024 * 1024));
+        size = csum.getBytesPerChecksum();
       }
       chunkSize = size;
       checksum = csum;
@@ -373,12 +368,12 @@ class BlockSender implements java.io.Closeable {
       if (startOffset < 0 || startOffset > end
           || (length + startOffset) > end) {
         String msg = " Offset " + startOffset + " and length " + length
-        + " don't match block " + block + " ( blockLen " + end + " )";
+            + " don't match block " + block + " ( blockLen " + end + " )";
         LOG.warn(datanode.getDNRegistrationForBP(block.getBlockPoolId()) +
             ":sendBlock() : " + msg);
         throw new IOException(msg);
       }
-      
+
       // Ensure read offset is position at the beginning of chunk
       offset = startOffset - (startOffset % chunkSize);
       if (length >= 0) {
@@ -461,7 +456,7 @@ class BlockSender implements java.io.Closeable {
   public void close() throws IOException {
     if (ris.getDataInFd() != null &&
         ((dropCacheBehindAllReads) ||
-         (dropCacheBehindLargeReads && isLongRead()))) {
+            (dropCacheBehindLargeReads && isLongRead()))) {
       try {
         ris.dropCacheBehindReads(block.getBlockName(), lastCacheDropOffset,
             offset - lastCacheDropOffset, POSIX_FADV_DONTNEED);
@@ -480,7 +475,7 @@ class BlockSender implements java.io.Closeable {
       ris = null;
     }
   }
-  
+
   private static Replica getReplica(ExtendedBlock block, DataNode datanode)
       throws ReplicaNotFoundException {
     Replica replica = datanode.data.getReplica(block.getBlockPoolId(),
@@ -503,7 +498,7 @@ class BlockSender implements java.io.Closeable {
       IOException se = new SocketException("Original Exception : " + ioe);
       se.initCause(ioe);
       /* Change the stacktrace so that original trace is not truncated
-       * when printed.*/ 
+       * when printed.*/
       se.setStackTrace(ioe.getStackTrace());
       return se;
     }
@@ -516,12 +511,12 @@ class BlockSender implements java.io.Closeable {
    * @return number of chunks for data of given size
    */
   private int numberOfChunks(long datalen) {
-    return (int) ((datalen + chunkSize - 1)/chunkSize);
+    return (int) ((datalen + chunkSize - 1) / chunkSize);
   }
-  
+
   /**
    * Sends a packet with up to maxChunks chunks of data.
-   * 
+   *
    * @param pkt buffer used for writing packet data
    * @param maxChunks maximum number of chunks to send
    * @param out stream to send data to
@@ -529,10 +524,10 @@ class BlockSender implements java.io.Closeable {
    * @param throttler used for throttling data transfer bandwidth
    */
   private int sendPacket(ByteBuffer pkt, int maxChunks, OutputStream out,
-      boolean transferTo, DataTransferThrottler throttler) throws IOException {
+                         boolean transferTo, DataTransferThrottler throttler) throws IOException {
     int dataLen = (int) Math.min(endOffset - offset,
-                             (chunkSize * (long) maxChunks));
-    
+        (chunkSize * (long) maxChunks));
+
     int numChunks = numberOfChunks(dataLen); // Number of chunks be sent in the packet
     int checksumDataLen = numChunks * checksumSize;
     int packetLen = dataLen + checksumDataLen + 4;
@@ -547,16 +542,16 @@ class BlockSender implements java.io.Closeable {
     // H = header and length prefixes
     // C = checksums
     // D? = data, if transferTo is false.
-    
+
     int headerLen = writePacketHeader(pkt, dataLen, packetLen);
-    
+
     // Per above, the header doesn't start at the beginning of the
     // buffer
     int headerOff = pkt.position() - headerLen;
-    
+
     int checksumOff = pkt.position();
     byte[] buf = pkt.array();
-    
+
     if (checksumSize > 0 && ris.getChecksumIn() != null) {
       readChecksum(buf, checksumOff, checksumDataLen);
 
@@ -569,7 +564,7 @@ class BlockSender implements java.io.Closeable {
         }
       }
     }
-    
+
     int dataOff = checksumOff + checksumDataLen;
     if (!transferTo) { // normal transfer
       try {
@@ -585,15 +580,15 @@ class BlockSender implements java.io.Closeable {
         verifyChecksum(buf, dataOff, dataLen, numChunks, checksumOff);
       }
     }
-    
+
     try {
       if (transferTo) {
-        SocketOutputStream sockOut = (SocketOutputStream)out;
+        SocketOutputStream sockOut = (SocketOutputStream) out;
         // First write header and checksums
         sockOut.write(buf, headerOff, dataOff - headerOff);
 
         // no need to flush since we know out is not a buffered stream
-        FileChannel fileCh = ((FileInputStream)ris.getDataIn()).getChannel();
+        FileChannel fileCh = ((FileInputStream) ris.getDataIn()).getChannel();
         LongWritable waitTime = new LongWritable();
         LongWritable transferTime = new LongWritable();
         fileIoProvider.transferToSocketFully(
@@ -612,7 +607,7 @@ class BlockSender implements java.io.Closeable {
          * writing to client timed out.  This happens if the client reads
          * part of a block and then decides not to read the rest (but leaves
          * the socket open).
-         * 
+         *
          * Reporting of this case is done in DataXceiver#run
          */
         LOG.warn("Sending packets timed out.", e);
@@ -653,7 +648,7 @@ class BlockSender implements java.io.Closeable {
 
     return dataLen;
   }
-  
+
   /**
    * Read checksum into given buffer
    * @param buf buffer to read the checksum into
@@ -662,7 +657,7 @@ class BlockSender implements java.io.Closeable {
    * @throws IOException on error
    */
   private void readChecksum(byte[] buf, final int checksumOffset,
-      final int checksumLen) throws IOException {
+                            final int checksumLen) throws IOException {
     if (checksumSize <= 0 && ris.getChecksumIn() == null) {
       return;
     }
@@ -687,7 +682,7 @@ class BlockSender implements java.io.Closeable {
   /**
    * Compute checksum for chunks and verify the checksum that is read from
    * the metadata file is correct.
-   * 
+   *
    * @param buf buffer that has checksum and data
    * @param dataOffset position where data is written in the buf
    * @param datalen length of data
@@ -696,7 +691,7 @@ class BlockSender implements java.io.Closeable {
    * @throws ChecksumException on failed checksum verification
    */
   public void verifyChecksum(final byte[] buf, final int dataOffset,
-      final int datalen, final int numChunks, final int checksumOffset)
+                             final int datalen, final int numChunks, final int checksumOffset)
       throws ChecksumException {
     int dOff = dataOffset;
     int cOff = checksumOffset;
@@ -720,21 +715,21 @@ class BlockSender implements java.io.Closeable {
       cOff += checksumSize;
     }
   }
-  
+
   /**
    * sendBlock() is used to read block and its metadata and stream the data to
    * either a client or to another datanode. 
-   * 
+   *
    * @param out  stream to which the block is written to
    * @param baseStream optional. if non-null, <code>out</code> is assumed to 
    *        be a wrapper over this stream. This enables optimizations for
    *        sending the data, e.g. 
-   *        {@link SocketOutputStream#transferToFully(FileChannel, 
+   *        {@link SocketOutputStream#transferToFully(FileChannel,
    *        long, int)}.
    * @param throttler for sending data.
    * @return total bytes read, including checksum data.
    */
-  long sendBlock(DataOutputStream out, OutputStream baseStream, 
+  long sendBlock(DataOutputStream out, OutputStream baseStream,
                  DataTransferThrottler throttler) throws IOException {
     final TraceScope scope = FsTracer.get(null)
         .newScope("sendBlock_" + block.getBlockId());
@@ -746,14 +741,14 @@ class BlockSender implements java.io.Closeable {
   }
 
   private long doSendBlock(DataOutputStream out, OutputStream baseStream,
-        DataTransferThrottler throttler) throws IOException {
+                           DataTransferThrottler throttler) throws IOException {
     if (out == null) {
-      throw new IOException( "out stream is null" );
+      throw new IOException("out stream is null");
     }
     initialOffset = offset;
     long totalRead = 0;
     OutputStream streamForSendChunks = out;
-    
+
     lastCacheDropOffset = initialOffset;
 
     if (isLongRead() && ris.getDataInFd() != null) {
@@ -761,7 +756,7 @@ class BlockSender implements java.io.Closeable {
       ris.dropCacheBehindReads(block.getBlockName(), 0, 0,
           POSIX_FADV_SEQUENTIAL);
     }
-    
+
     // Trigger readahead of beginning of file if configured.
     manageOsCache();
 
@@ -774,11 +769,11 @@ class BlockSender implements java.io.Closeable {
           && ris.getDataIn() instanceof FileInputStream;
       if (transferTo) {
         FileChannel fileChannel =
-            ((FileInputStream)ris.getDataIn()).getChannel();
+            ((FileInputStream) ris.getDataIn()).getChannel();
         blockInPosition = fileChannel.position();
         streamForSendChunks = baseStream;
         maxChunksPerPacket = numberOfChunks(TRANSFERTO_BUFFER_SIZE);
-        
+
         // Smaller packet size to only hold checksum when doing transferTo
         pktBufSize += checksumSize * maxChunksPerPacket;
       } else {
@@ -835,7 +830,7 @@ class BlockSender implements java.io.Closeable {
 
     // Perform readahead if necessary
     if ((readaheadLength > 0) && (datanode.readaheadPool != null) &&
-          (alwaysReadahead || isLongRead())) {
+        (alwaysReadahead || isLongRead())) {
       curReadahead = datanode.readaheadPool.readaheadStream(
           clientTraceFmt, ris.getDataInFd(), offset, readaheadLength,
           Long.MAX_VALUE, curReadahead);
@@ -863,7 +858,7 @@ class BlockSender implements java.io.Closeable {
    *
    * Note that if the client explicitly asked for dropBehind, we will do it
    * even on short reads.
-   * 
+   *
    * This is also used to determine when to invoke
    * posix_fadvise(POSIX_FADV_SEQUENTIAL).
    */
@@ -880,13 +875,13 @@ class BlockSender implements java.io.Closeable {
     // both syncBlock and syncPacket are false
     PacketHeader header = new PacketHeader(packetLen, offset, seqno,
         (dataLen == 0), dataLen, false);
-    
+
     int size = header.getSerializedSize();
     pkt.position(PacketHeader.PKT_MAX_HEADER_LEN - size);
     header.putInBuffer(pkt);
     return size;
   }
-  
+
   boolean didSendEntireByteRange() {
     return sentEntireByteRange;
   }

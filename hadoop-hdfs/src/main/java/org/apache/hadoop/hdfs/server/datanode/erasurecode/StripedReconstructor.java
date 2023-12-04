@@ -1,9 +1,7 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.io.erasurecode.rawcoder.DecodingValidator;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
@@ -15,8 +13,10 @@ import org.apache.hadoop.io.ByteBufferPool;
 import org.apache.hadoop.io.ElasticByteBufferPool;
 import org.apache.hadoop.io.erasurecode.CodecUtil;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
+import org.apache.hadoop.io.erasurecode.rawcoder.DecodingValidator;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
 import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DataChecksum;
 import org.slf4j.Logger;
 
@@ -108,7 +108,7 @@ abstract class StripedReconstructor {
   private AtomicLong remoteBytesRead = new AtomicLong(0);
 
   StripedReconstructor(ErasureCodingWorker worker,
-      StripedReconstructionInfo stripedReconInfo) {
+                       StripedReconstructionInfo stripedReconInfo) {
     this.erasureCodingWorker = worker;
     this.datanode = worker.getDatanode();
     this.conf = worker.getConf();
@@ -294,7 +294,7 @@ abstract class StripedReconstructor {
   }
 
   protected static void markBuffers(ByteBuffer[] buffers) {
-    for (ByteBuffer buffer: buffers) {
+    for (ByteBuffer buffer : buffers) {
       if (buffer != null) {
         buffer.mark();
       }
@@ -302,7 +302,7 @@ abstract class StripedReconstructor {
   }
 
   protected static void resetBuffers(ByteBuffer[] buffers) {
-    for (ByteBuffer buffer: buffers) {
+    for (ByteBuffer buffer : buffers) {
       if (buffer != null) {
         buffer.reset();
       }

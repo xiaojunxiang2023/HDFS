@@ -3,6 +3,7 @@ package org.apache.hadoop.fs;
 /** EACCES */
 public class PathAccessDeniedException extends PathIOException {
   static final long serialVersionUID = 0L;
+
   /** @param path for the exception */
   public PathAccessDeniedException(String path) {
     super(path, "Permission denied");
@@ -13,8 +14,8 @@ public class PathAccessDeniedException extends PathIOException {
   }
 
   public PathAccessDeniedException(String path,
-      String error,
-      Throwable cause) {
+                                   String error,
+                                   Throwable cause) {
     super(path, error, cause);
   }
 }

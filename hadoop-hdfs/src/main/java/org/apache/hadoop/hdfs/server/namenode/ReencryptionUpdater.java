@@ -14,11 +14,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.namenode;
+ */
+package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension.EncryptedKeyVersion;
 import org.apache.hadoop.fs.FileEncryptionInfo;
@@ -27,21 +25,16 @@ import org.apache.hadoop.fs.XAttrSetFlag;
 import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionHandler.ReencryptionBatch;
 import org.apache.hadoop.ipc.RetriableException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_THROTTLE_LIMIT_UPDATER_RATIO_DEFAULT;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_THROTTLE_LIMIT_UPDATER_RATIO_KEY;
@@ -136,7 +129,7 @@ public final class ReencryptionUpdater implements Runnable {
     private final ReencryptionBatch batch;
 
     ReencryptionTask(final long id, final int failures,
-        final ReencryptionBatch theBatch) {
+                     final ReencryptionBatch theBatch) {
       zoneId = id;
       numFailures = failures;
       batch = theBatch;
@@ -217,8 +210,8 @@ public final class ReencryptionUpdater implements Runnable {
   private final ReencryptionHandler handler;
 
   ReencryptionUpdater(final FSDirectory fsd,
-      final CompletionService<ReencryptionTask> service,
-      final ReencryptionHandler rh, final Configuration conf) {
+                      final CompletionService<ReencryptionTask> service,
+                      final ReencryptionHandler rh, final Configuration conf) {
     dir = fsd;
     batchService = service;
     handler = rh;
@@ -287,7 +280,7 @@ public final class ReencryptionUpdater implements Runnable {
    * @throws InterruptedException
    */
   private void processTaskEntries(final String zoneNodePath,
-      final ReencryptionTask task) throws IOException, InterruptedException {
+                                  final ReencryptionTask task) throws IOException, InterruptedException {
     assert dir.hasWriteLock();
     if (!task.batch.isEmpty() && task.numFailures == 0) {
       LOG.debug(
@@ -295,7 +288,7 @@ public final class ReencryptionUpdater implements Runnable {
           zoneNodePath, task.batch.getFirstFilePath());
       final int batchSize = task.batch.size();
       for (Iterator<FileEdekInfo> it = task.batch.getBatch().iterator();
-           it.hasNext();) {
+           it.hasNext(); ) {
         FileEdekInfo entry = it.next();
         // resolve the inode again, and skip if it's doesn't exist
         LOG.trace("Updating {} for re-encryption.", entry.getInodeId());
@@ -367,7 +360,7 @@ public final class ReencryptionUpdater implements Runnable {
    * @throws InterruptedException
    */
   private List<XAttr> processCheckpoints(final INode zoneNode,
-      final ZoneSubmissionTracker tracker)
+                                         final ZoneSubmissionTracker tracker)
       throws ExecutionException, IOException, InterruptedException {
     assert dir.hasWriteLock();
     final long zoneId = zoneNode.getId();
@@ -402,7 +395,7 @@ public final class ReencryptionUpdater implements Runnable {
           xAttrs.add(xattr);
         } catch (IOException ie) {
           LOG.warn("Failed to update re-encrypted progress to xattr" +
-                  " for zone {}", zonePath, ie);
+              " for zone {}", zonePath, ie);
           ++task.numFailures;
         }
         ++tracker.numCheckpointed;
@@ -411,7 +404,7 @@ public final class ReencryptionUpdater implements Runnable {
     }
     if (tracker.isCompleted()) {
       LOG.debug("Removed re-encryption tracker for zone {} because it completed"
-              + " with {} tasks.", zonePath, tracker.numCheckpointed);
+          + " with {} tasks.", zonePath, tracker.numCheckpointed);
       return handler.completeReencryption(zoneNode);
     }
     return xAttrs;
@@ -438,7 +431,7 @@ public final class ReencryptionUpdater implements Runnable {
       } catch (RetriableException | SafeModeException re) {
         // Keep retrying until succeed.
         LOG.info("Exception when processing re-encryption task for zone {}, "
-                + "retrying...", task.zoneId, re);
+            + "retrying...", task.zoneId, re);
         shouldRetry = true;
         Thread.sleep(faultRetryInterval);
       } catch (IOException ioe) {

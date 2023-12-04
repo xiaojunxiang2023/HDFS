@@ -1,4 +1,5 @@
 package org.apache.hadoop.crypto;
+
 import org.apache.hadoop.util.StringUtils;
 
 /**
@@ -52,7 +53,7 @@ public enum CipherSuite {
     builder.append("}");
     return builder.toString();
   }
-  
+
   /**
    * Convert to CipherSuite from name, {@link #algoBlockSize} is fixed for
    * certain cipher suite, just need to compare the name.
@@ -68,7 +69,7 @@ public enum CipherSuite {
     }
     throw new IllegalArgumentException("Invalid cipher suite name: " + name);
   }
-  
+
   /**
    * Returns suffix of cipher suite configuration.
    * @return String configuration suffix
@@ -79,7 +80,7 @@ public enum CipherSuite {
     for (String part : parts) {
       suffix.append(".").append(StringUtils.toLowerCase(part));
     }
-    
+
     return suffix.toString();
   }
 }

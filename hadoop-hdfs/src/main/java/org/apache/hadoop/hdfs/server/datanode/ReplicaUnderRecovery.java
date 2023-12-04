@@ -15,13 +15,13 @@ import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 public class ReplicaUnderRecovery extends LocalReplica {
   private LocalReplica original; // original replica to be recovered
   private long recoveryId; // recovery id; it is also the generation stamp 
-                           // that the replica will be bumped to after recovery
+  // that the replica will be bumped to after recovery
 
   public ReplicaUnderRecovery(ReplicaInfo replica, long recoveryId) {
-    super(replica, replica.getVolume(), ((LocalReplica)replica).getDir());
-    if ( replica.getState() != ReplicaState.FINALIZED &&
-         replica.getState() != ReplicaState.RBW &&
-         replica.getState() != ReplicaState.RWR ) {
+    super(replica, replica.getVolume(), ((LocalReplica) replica).getDir());
+    if (replica.getState() != ReplicaState.FINALIZED &&
+        replica.getState() != ReplicaState.RBW &&
+        replica.getState() != ReplicaState.RWR) {
       throw new IllegalArgumentException("Cannot recover replica: " + replica);
     }
     this.original = (LocalReplica) replica;
@@ -61,12 +61,12 @@ public class ReplicaUnderRecovery extends LocalReplica {
   public ReplicaInfo getOriginalReplica() {
     return original;
   }
-  
+
   @Override //ReplicaInfo
   public ReplicaState getState() {
     return ReplicaState.RUR;
   }
-  
+
   @Override
   public long getVisibleLength() {
     return original.getVisibleLength();
@@ -88,30 +88,31 @@ public class ReplicaUnderRecovery extends LocalReplica {
     super.setGenerationStamp(gs);
     original.setGenerationStamp(gs);
   }
-  
+
   @Override //org.apache.hadoop.hdfs.protocol.Block
   public void setNumBytes(long numBytes) {
     super.setNumBytes(numBytes);
     original.setNumBytes(numBytes);
   }
-  
+
   @Override //ReplicaInfo
   public void updateWithReplica(StorageLocation replicaLocation) {
     super.updateWithReplica(replicaLocation);
     original.updateWithReplica(replicaLocation);
   }
-  
-  @Override //ReplicaInfo
+
+  @Override
+    //ReplicaInfo
   void setVolume(FsVolumeSpi vol) {
     super.setVolume(vol);
     original.setVolume(vol);
   }
-  
+
   @Override  // Object
   public boolean equals(Object o) {
     return super.equals(o);
   }
-  
+
   @Override  // Object
   public int hashCode() {
     return super.hashCode();
@@ -126,8 +127,8 @@ public class ReplicaUnderRecovery extends LocalReplica {
 
   @Override
   public ReplicaRecoveryInfo createInfo() {
-    return new ReplicaRecoveryInfo(original.getBlockId(), 
+    return new ReplicaRecoveryInfo(original.getBlockId(),
         original.getBytesOnDisk(), original.getGenerationStamp(),
-        original.getState()); 
+        original.getState());
   }
 }

@@ -1,16 +1,15 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.fs.XAttr;
+import org.apache.hadoop.hdfs.XAttrHelper;
+import org.apache.hadoop.hdfs.util.LongBitFormat;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.hadoop.fs.XAttr;
-import org.apache.hadoop.hdfs.XAttrHelper;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
-import org.apache.hadoop.hdfs.util.LongBitFormat;
 
 /**
  * Class to pack XAttrs into byte[].<br>
@@ -51,7 +50,7 @@ public enum XAttrFormat implements LongBitFormat.Enum {
   }
 
   public static String getName(int record) {
-    int nid = (int)NAME.BITS.retrieve(record);
+    int nid = (int) NAME.BITS.retrieve(record);
     return SerialNumberManager.XATTR.getString(nid);
   }
 
@@ -61,12 +60,12 @@ public enum XAttrFormat implements LongBitFormat.Enum {
     long value = NS.BITS.combine(nsOrd & NS_MASK, 0L);
     value = NS_EXT.BITS.combine(nsOrd >>> NS_EXT_SHIFT, value);
     value = NAME.BITS.combine(nid, value);
-    return (int)value;
+    return (int) value;
   }
 
   static XAttr toXAttr(int record, byte[] value,
                        SerialNumberManager.StringTable stringTable) {
-    int nid = (int)NAME.BITS.retrieve(record);
+    int nid = (int) NAME.BITS.retrieve(record);
     String name = SerialNumberManager.XATTR.getString(nid, stringTable);
     return new XAttr.Builder()
         .setNameSpace(getNamespace(record))
@@ -77,7 +76,7 @@ public enum XAttrFormat implements LongBitFormat.Enum {
 
   /**
    * Unpack byte[] to XAttrs.
-   * 
+   *
    * @param attrs the packed bytes of XAttrs
    * @return XAttrs list
    */
@@ -86,7 +85,7 @@ public enum XAttrFormat implements LongBitFormat.Enum {
     if (attrs == null || attrs.length == 0) {
       return xAttrs;
     }
-    for (int i = 0; i < attrs.length;) {
+    for (int i = 0; i < attrs.length; ) {
       XAttr.Builder builder = new XAttr.Builder();
       // big-endian
       int v = Ints.fromBytes(attrs[i], attrs[i + 1],
@@ -110,7 +109,7 @@ public enum XAttrFormat implements LongBitFormat.Enum {
   /**
    * Get XAttr by name with prefix.
    * Will unpack the byte[] until find the specific XAttr
-   * 
+   *
    * @param attrs the packed bytes of XAttrs
    * @param prefixedName the XAttr name with prefix
    * @return the XAttr
@@ -121,7 +120,7 @@ public enum XAttrFormat implements LongBitFormat.Enum {
     }
 
     XAttr xAttr = XAttrHelper.buildXAttr(prefixedName);
-    for (int i = 0; i < attrs.length;) {
+    for (int i = 0; i < attrs.length; ) {
       // big-endian
       int v = Ints.fromBytes(attrs[i], attrs[i + 1],
           attrs[i + 2], attrs[i + 3]);
@@ -147,7 +146,7 @@ public enum XAttrFormat implements LongBitFormat.Enum {
 
   /**
    * Pack the XAttrs to byte[].
-   * 
+   *
    * @param xAttrs the XAttrs
    * @return the packed bytes
    */
@@ -164,8 +163,8 @@ public enum XAttrFormat implements LongBitFormat.Enum {
         int vlen = a.getValue() == null ? 0 : a.getValue().length;
         Preconditions.checkArgument(vlen < XATTR_VALUE_LEN_MAX,
             "The length of xAttr values is too long.");
-        out.write((byte)(vlen >> 8));
-        out.write((byte)(vlen));
+        out.write((byte) (vlen >> 8));
+        out.write((byte) (vlen));
         if (vlen > 0) {
           out.write(a.getValue());
         }

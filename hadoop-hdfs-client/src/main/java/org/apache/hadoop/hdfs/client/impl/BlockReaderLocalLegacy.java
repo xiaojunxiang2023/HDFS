@@ -1,16 +1,5 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.security.PrivilegedExceptionAction;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ReadOption;
 import org.apache.hadoop.fs.StorageType;
@@ -34,6 +23,14 @@ import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.DirectBufferPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.security.PrivilegedExceptionAction;
+import java.util.*;
 
 /**
  * BlockReaderLocalLegacy enables local short circuited reads. If the DFS client
@@ -116,7 +113,7 @@ class BlockReaderLocalLegacy implements BlockReader {
     }
 
     private void setBlockLocalPathInfo(ExtendedBlock b,
-        BlockLocalPathInfo info) {
+                                       BlockLocalPathInfo info) {
       cache.put(b, info);
     }
 
@@ -167,10 +164,10 @@ class BlockReaderLocalLegacy implements BlockReader {
    * The only way this object can be instantiated.
    */
   static BlockReaderLocalLegacy newBlockReader(DfsClientConf conf,
-      UserGroupInformation userGroupInformation,
-      Configuration configuration, String file, ExtendedBlock blk,
-      Token<BlockTokenIdentifier> token, DatanodeInfo node,
-      long startOffset, long length, StorageType storageType)
+                                               UserGroupInformation userGroupInformation,
+                                               Configuration configuration, String file, ExtendedBlock blk,
+                                               Token<BlockTokenIdentifier> token, DatanodeInfo node,
+                                               long startOffset, long length, StorageType storageType)
       throws IOException {
     final ShortCircuitConf scConf = conf.getShortCircuitConf();
     LocalDatanodeInfo localDatanodeInfo = getLocalDatanodeInfo(node
@@ -251,9 +248,9 @@ class BlockReaderLocalLegacy implements BlockReader {
   }
 
   private static BlockLocalPathInfo getBlockPathInfo(UserGroupInformation ugi,
-      ExtendedBlock blk, DatanodeInfo node, Configuration conf, int timeout,
-      Token<BlockTokenIdentifier> token, boolean connectToDnViaHostname,
-      StorageType storageType) throws IOException {
+                                                     ExtendedBlock blk, DatanodeInfo node, Configuration conf, int timeout,
+                                                     Token<BlockTokenIdentifier> token, boolean connectToDnViaHostname,
+                                                     StorageType storageType) throws IOException {
     LocalDatanodeInfo localDatanodeInfo =
         getLocalDatanodeInfo(node.getIpcPort());
     BlockLocalPathInfo pathinfo;
@@ -282,11 +279,11 @@ class BlockReaderLocalLegacy implements BlockReader {
   }
 
   private static int getSlowReadBufferNumChunks(int bufferSizeBytes,
-      int bytesPerChecksum) {
+                                                int bytesPerChecksum) {
     if (bufferSizeBytes < bytesPerChecksum) {
       throw new IllegalArgumentException("Configured BlockReaderLocalLegacy " +
           "buffer size (" + bufferSizeBytes + ") is not large enough to hold " +
-          "a single chunk (" + bytesPerChecksum +  "). Please configure " +
+          "a single chunk (" + bytesPerChecksum + "). Please configure " +
           HdfsClientConfigKeys.Read.ShortCircuit.BUFFER_SIZE_KEY +
           " appropriately");
     }
@@ -296,7 +293,7 @@ class BlockReaderLocalLegacy implements BlockReader {
   }
 
   private BlockReaderLocalLegacy(ShortCircuitConf conf, String hdfsfile,
-      ExtendedBlock block, long startOffset, FileInputStream dataIn)
+                                 ExtendedBlock block, long startOffset, FileInputStream dataIn)
       throws IOException {
     this(conf, hdfsfile, block, startOffset,
         DataChecksum.newDataChecksum(DataChecksum.Type.NULL, 4), false,
@@ -304,9 +301,9 @@ class BlockReaderLocalLegacy implements BlockReader {
   }
 
   private BlockReaderLocalLegacy(ShortCircuitConf conf, String hdfsfile,
-      ExtendedBlock block, long startOffset, DataChecksum checksum,
-      boolean verifyChecksum, FileInputStream dataIn, long firstChunkOffset,
-      FileInputStream checksumIn) throws IOException {
+                                 ExtendedBlock block, long startOffset, DataChecksum checksum,
+                                 boolean verifyChecksum, FileInputStream dataIn, long firstChunkOffset,
+                                 FileInputStream checksumIn) throws IOException {
     this.filename = hdfsfile;
     this.checksum = checksum;
     this.verifyChecksum = verifyChecksum;
@@ -318,7 +315,7 @@ class BlockReaderLocalLegacy implements BlockReader {
 
     this.dataIn = dataIn;
     this.checksumIn = checksumIn;
-    this.offsetFromChunkBoundary = (int) (startOffset-firstChunkOffset);
+    this.offsetFromChunkBoundary = (int) (startOffset - firstChunkOffset);
 
     final int chunksPerChecksumRead = getSlowReadBufferNumChunks(
         conf.getShortCircuitBufferSize(), bytesPerChecksum);
@@ -611,7 +608,7 @@ class BlockReaderLocalLegacy implements BlockReader {
     // caller made sure newPosition is not beyond EOF.
     int remaining = slowReadBuff.remaining();
     int position = slowReadBuff.position();
-    int newPosition = position + (int)n;
+    int newPosition = position + (int) n;
 
     // if the new offset is already read into dataBuff, just reposition
     if (n <= remaining) {
@@ -626,7 +623,7 @@ class BlockReaderLocalLegacy implements BlockReader {
       if (skipBuf == null) {
         skipBuf = new byte[bytesPerChecksum];
       }
-      int ret = read(skipBuf, 0, (int)(n - remaining));
+      int ret = read(skipBuf, 0, (int) (n - remaining));
       return (remaining + ret);
     }
 

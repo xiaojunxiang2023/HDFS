@@ -1,18 +1,19 @@
 package org.apache.hadoop.hdfs.net;
 
+import org.apache.hadoop.net.unix.DomainSocket;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.ReadableByteChannel;
-import org.apache.hadoop.net.unix.DomainSocket;
 
 /**
  * Represents a connection to a peer.
  */
 public interface Peer extends Closeable {
   /**
-   * @return                The input stream channel associated with this
+   * @return The input stream channel associated with this
    *                        peer, or null if it has none.
    */
   ReadableByteChannel getInputStreamChannel();
@@ -25,12 +26,12 @@ public interface Peer extends Closeable {
   void setReadTimeout(int timeoutMs) throws IOException;
 
   /**
-   * @return                The receive buffer size.
+   * @return The receive buffer size.
    */
   int getReceiveBufferSize() throws IOException;
 
   /**
-   * @return                True if TCP_NODELAY is turned on.
+   * @return True if TCP_NODELAY is turned on.
    */
   boolean getTcpNoDelay() throws IOException;
 
@@ -45,7 +46,7 @@ public interface Peer extends Closeable {
   void setWriteTimeout(int timeoutMs) throws IOException;
 
   /**
-   * @return                true only if the peer is closed.
+   * @return true only if the peer is closed.
    */
   boolean isClosed();
 
@@ -57,39 +58,39 @@ public interface Peer extends Closeable {
   void close() throws IOException;
 
   /**
-   * @return               A string representing the remote end of our
+   * @return A string representing the remote end of our
    *                       connection to the peer.
    */
   String getRemoteAddressString();
 
   /**
-   * @return               A string representing the local end of our
+   * @return A string representing the local end of our
    *                       connection to the peer.
    */
   String getLocalAddressString();
 
   /**
-   * @return               An InputStream associated with the Peer.
+   * @return An InputStream associated with the Peer.
    *                       This InputStream will be valid until you close
    *                       this peer with Peer#close.
    */
   InputStream getInputStream() throws IOException;
 
   /**
-   * @return               An OutputStream associated with the Peer.
+   * @return An OutputStream associated with the Peer.
    *                       This OutputStream will be valid until you close
    *                       this peer with Peer#close.
    */
   OutputStream getOutputStream() throws IOException;
 
   /**
-   * @return               True if the peer resides on the same
+   * @return True if the peer resides on the same
    *                       computer as we.
    */
   boolean isLocal();
 
   /**
-   * @return               The DomainSocket associated with the current
+   * @return The DomainSocket associated with the current
    *                       peer, or null if there is none.
    */
   DomainSocket getDomainSocket();
@@ -97,7 +98,7 @@ public interface Peer extends Closeable {
   /**
    * Return true if the channel is secure.
    *
-   * @return               True if our channel to this peer is not
+   * @return True if our channel to this peer is not
    *                       susceptible to man-in-the-middle attacks.
    */
   boolean hasSecureChannel();

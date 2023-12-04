@@ -1,19 +1,18 @@
 package org.apache.hadoop.crypto;
 
-import java.nio.ByteBuffer;
-import java.security.NoSuchAlgorithmException;
-import java.util.StringTokenizer;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.NativeCodeLoader;
+import org.apache.hadoop.util.PerformanceAdvisory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
-import org.apache.hadoop.util.NativeCodeLoader;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.util.PerformanceAdvisory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.nio.ByteBuffer;
+import java.security.NoSuchAlgorithmException;
+import java.util.StringTokenizer;
 
 /**
  * OpenSSL cipher using JNI.
@@ -25,25 +24,25 @@ public final class OpensslCipher {
       LoggerFactory.getLogger(OpensslCipher.class.getName());
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
-  
+
   /** Currently only support AES/CTR/NoPadding. */
   private enum AlgMode {
     AES_CTR;
-    
-    static int get(String algorithm, String mode) 
+
+    static int get(String algorithm, String mode)
         throws NoSuchAlgorithmException {
       try {
         return AlgMode.valueOf(algorithm + "_" + mode).ordinal();
       } catch (Exception e) {
-        throw new NoSuchAlgorithmException("Doesn't support algorithm: " + 
+        throw new NoSuchAlgorithmException("Doesn't support algorithm: " +
             algorithm + " and mode: " + mode);
       }
     }
   }
-  
+
   private enum Padding {
     NoPadding;
-    
+
     static int get(String padding) throws NoSuchPaddingException {
       try {
         return Padding.valueOf(padding).ordinal();
@@ -52,11 +51,11 @@ public final class OpensslCipher {
       }
     }
   }
-  
+
   private long context = 0;
   private final int alg;
   private final int padding;
-  
+
   private static final String loadingFailureReason;
 
   static {
@@ -75,21 +74,21 @@ public final class OpensslCipher {
       loadingFailureReason = loadingFailure;
     }
   }
-  
+
   public static String getLoadingFailureReason() {
     return loadingFailureReason;
   }
-  
+
   private OpensslCipher(long context, int alg, int padding) {
     this.context = context;
     this.alg = alg;
     this.padding = padding;
   }
-  
+
   /**
    * Return an <code>OpensslCipher</code> object that implements the specified
    * transformation.
-   * 
+   *
    * @param transformation the name of the transformation, e.g., 
    * AES/CTR/NoPadding.
    * @return OpensslCipher an <code>OpensslCipher</code> object
@@ -99,7 +98,7 @@ public final class OpensslCipher {
    * @throws NoSuchPaddingException if <code>transformation</code> contains 
    * a padding scheme that is not available.
    */
-  public static final OpensslCipher getInstance(String transformation) 
+  public static final OpensslCipher getInstance(String transformation)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     Transform transform = tokenizeTransformation(transformation);
     int algMode = AlgMode.get(transform.alg, transform.mode);
@@ -107,29 +106,29 @@ public final class OpensslCipher {
     long context = initContext(algMode, padding);
     return new OpensslCipher(context, algMode, padding);
   }
-  
+
   /** Nested class for algorithm, mode and padding. */
   private static class Transform {
     final String alg;
     final String mode;
     final String padding;
-    
+
     public Transform(String alg, String mode, String padding) {
       this.alg = alg;
       this.mode = mode;
       this.padding = padding;
     }
   }
-  
-  private static Transform tokenizeTransformation(String transformation) 
+
+  private static Transform tokenizeTransformation(String transformation)
       throws NoSuchAlgorithmException {
     if (transformation == null) {
       throw new NoSuchAlgorithmException("No transformation given.");
     }
-    
+
     /*
      * Array containing the components of a Cipher transformation:
-     * 
+     *
      * index 0: algorithm (e.g., AES)
      * index 1: mode (e.g., CTR)
      * index 2: padding (e.g., NoPadding)
@@ -141,15 +140,15 @@ public final class OpensslCipher {
       parts[count++] = parser.nextToken().trim();
     }
     if (count != 3 || parser.hasMoreTokens()) {
-      throw new NoSuchAlgorithmException("Invalid transformation format: " + 
+      throw new NoSuchAlgorithmException("Invalid transformation format: " +
           transformation);
     }
     return new Transform(parts[0], parts[1], parts[2]);
   }
-  
+
   /**
    * Initialize this cipher with a key and IV.
-   * 
+   *
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key
    * @param iv crypto iv
@@ -157,36 +156,36 @@ public final class OpensslCipher {
   public void init(int mode, byte[] key, byte[] iv) {
     context = init(context, mode, alg, padding, key, iv);
   }
-  
+
   /**
    * Continues a multiple-part encryption or decryption operation. The data
    * is encrypted or decrypted, depending on how this cipher was initialized.
    * <p>
-   * 
+   *
    * All <code>input.remaining()</code> bytes starting at 
    * <code>input.position()</code> are processed. The result is stored in
    * the output buffer.
    * <p>
-   * 
+   *
    * Upon return, the input buffer's position will be equal to its limit;
    * its limit will not have changed. The output buffer's position will have
    * advanced by n, when n is the value returned by this method; the output
    * buffer's limit will not have changed.
    * <p>
-   * 
+   *
    * If <code>output.remaining()</code> bytes are insufficient to hold the
    * result, a <code>ShortBufferException</code> is thrown.
-   * 
+   *
    * @param input the input ByteBuffer
    * @param output the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
    * @throws ShortBufferException if there is insufficient space in the
    * output buffer
    */
-  public int update(ByteBuffer input, ByteBuffer output) 
+  public int update(ByteBuffer input, ByteBuffer output)
       throws ShortBufferException {
     checkState();
-    Preconditions.checkArgument(input.isDirect() && output.isDirect(), 
+    Preconditions.checkArgument(input.isDirect() && output.isDirect(),
         "Direct buffers are required.");
     int len = update(context, input, input.position(), input.remaining(),
         output, output.position(), output.remaining());
@@ -194,36 +193,36 @@ public final class OpensslCipher {
     output.position(output.position() + len);
     return len;
   }
-  
+
   /**
    * Finishes a multiple-part operation. The data is encrypted or decrypted,
    * depending on how this cipher was initialized.
    * <p>
-   * 
+   *
    * The result is stored in the output buffer. Upon return, the output buffer's
    * position will have advanced by n, where n is the value returned by this
    * method; the output buffer's limit will not have changed.
    * <p>
-   * 
+   *
    * If <code>output.remaining()</code> bytes are insufficient to hold the result,
    * a <code>ShortBufferException</code> is thrown.
    * <p>
-   * 
+   *
    * Upon finishing, this method resets this cipher object to the state it was
    * in when previously initialized. That is, the object is available to encrypt
    * or decrypt more data.
    * <p>
-   * 
+   *
    * If any exception is thrown, this cipher object need to be reset before it 
    * can be used again.
-   * 
+   *
    * @param output the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
    * @throws ShortBufferException
    * @throws IllegalBlockSizeException
    * @throws BadPaddingException
    */
-  public int doFinal(ByteBuffer output) throws ShortBufferException, 
+  public int doFinal(ByteBuffer output) throws ShortBufferException,
       IllegalBlockSizeException, BadPaddingException {
     checkState();
     Preconditions.checkArgument(output.isDirect(), "Direct buffer is required.");
@@ -231,7 +230,7 @@ public final class OpensslCipher {
     output.position(output.position() + len);
     return len;
   }
-  
+
   /** Forcibly clean the context. */
   public void clean() {
     if (context != 0) {
@@ -244,26 +243,26 @@ public final class OpensslCipher {
   private void checkState() {
     Preconditions.checkState(context != 0);
   }
-  
+
   @Override
   protected void finalize() throws Throwable {
     clean();
   }
 
   private native static void initIDs();
-  
+
   private native static long initContext(int alg, int padding);
-  
-  private native long init(long context, int mode, int alg, int padding, 
-      byte[] key, byte[] iv);
-  
-  private native int update(long context, ByteBuffer input, int inputOffset, 
-      int inputLength, ByteBuffer output, int outputOffset, int maxOutputLength);
-  
-  private native int doFinal(long context, ByteBuffer output, int offset, 
-      int maxOutputLength);
-  
+
+  private native long init(long context, int mode, int alg, int padding,
+                           byte[] key, byte[] iv);
+
+  private native int update(long context, ByteBuffer input, int inputOffset,
+                            int inputLength, ByteBuffer output, int outputOffset, int maxOutputLength);
+
+  private native int doFinal(long context, ByteBuffer output, int offset,
+                             int maxOutputLength);
+
   private native void clean(long context);
-  
+
   public native static String getLibraryName();
 }

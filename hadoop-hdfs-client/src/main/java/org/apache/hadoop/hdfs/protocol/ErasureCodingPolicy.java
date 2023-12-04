@@ -1,10 +1,10 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.hadoop.io.erasurecode.ECSchema;
 import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public final class ErasureCodingPolicy implements Serializable {
   private final byte id;
 
   public ErasureCodingPolicy(String name, ECSchema schema,
-      int cellSize, byte id) {
+                             int cellSize, byte id) {
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(schema);
     Preconditions.checkArgument(cellSize > 0, "cellSize must be positive");

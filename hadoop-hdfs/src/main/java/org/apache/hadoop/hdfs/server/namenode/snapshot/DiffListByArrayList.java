@@ -65,7 +65,7 @@ public class DiffListByArrayList<T extends Comparable<Integer>>
 
   @Override
   public List<T> getMinListForRange(int startIndex, int endIndex,
-      INodeDirectory dir) {
+                                    INodeDirectory dir) {
     return list.subList(startIndex, endIndex);
   }
 }

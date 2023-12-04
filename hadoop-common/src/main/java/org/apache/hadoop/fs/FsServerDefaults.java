@@ -1,17 +1,18 @@
 package org.apache.hadoop.fs;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableFactories;
 import org.apache.hadoop.io.WritableFactory;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.util.DataChecksum;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 /****************************************************
  * Provides server default configuration values to clients.
- * 
+ *
  ****************************************************/
 public class FsServerDefaults implements Writable {
 
@@ -39,28 +40,28 @@ public class FsServerDefaults implements Writable {
   }
 
   public FsServerDefaults(long blockSize, int bytesPerChecksum,
-      int writePacketSize, short replication, int fileBufferSize,
-      boolean encryptDataTransfer, long trashInterval,
-      DataChecksum.Type checksumType) {
+                          int writePacketSize, short replication, int fileBufferSize,
+                          boolean encryptDataTransfer, long trashInterval,
+                          DataChecksum.Type checksumType) {
     this(blockSize, bytesPerChecksum, writePacketSize, replication,
         fileBufferSize, encryptDataTransfer, trashInterval, checksumType,
         null, (byte) 0);
   }
 
   public FsServerDefaults(long blockSize, int bytesPerChecksum,
-      int writePacketSize, short replication, int fileBufferSize,
-      boolean encryptDataTransfer, long trashInterval,
-      DataChecksum.Type checksumType, String keyProviderUri) {
+                          int writePacketSize, short replication, int fileBufferSize,
+                          boolean encryptDataTransfer, long trashInterval,
+                          DataChecksum.Type checksumType, String keyProviderUri) {
     this(blockSize, bytesPerChecksum, writePacketSize, replication,
         fileBufferSize, encryptDataTransfer, trashInterval, checksumType,
         keyProviderUri, (byte) 0);
   }
 
   public FsServerDefaults(long blockSize, int bytesPerChecksum,
-      int writePacketSize, short replication, int fileBufferSize,
-      boolean encryptDataTransfer, long trashInterval,
-      DataChecksum.Type checksumType,
-      String keyProviderUri, byte storagepolicy) {
+                          int writePacketSize, short replication, int fileBufferSize,
+                          boolean encryptDataTransfer, long trashInterval,
+                          DataChecksum.Type checksumType,
+                          String keyProviderUri, byte storagepolicy) {
     this.blockSize = blockSize;
     this.bytesPerChecksum = bytesPerChecksum;
     this.writePacketSize = writePacketSize;
@@ -92,7 +93,7 @@ public class FsServerDefaults implements Writable {
   public int getFileBufferSize() {
     return fileBufferSize;
   }
-  
+
   public boolean getEncryptDataTransfer() {
     return encryptDataTransfer;
   }

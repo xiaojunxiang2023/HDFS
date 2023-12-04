@@ -1,34 +1,32 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.LinkedList;
-
 import org.apache.hadoop.util.NativeCodeLoader;
-
-import org.apache.hadoop.security.NetgroupCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * A JNI-based implementation of {@link GroupMappingServiceProvider} 
+ * A JNI-based implementation of {@link GroupMappingServiceProvider}
  * that invokes libC calls to get the group
  * memberships of a given user.
  */
 // MapReduce也可见
 public class JniBasedUnixGroupsNetgroupMapping
-  extends JniBasedUnixGroupsMapping {
-  
+    extends JniBasedUnixGroupsMapping {
+
   private static final Logger LOG = LoggerFactory.getLogger(
-    JniBasedUnixGroupsNetgroupMapping.class);
+      JniBasedUnixGroupsNetgroupMapping.class);
 
   native String[] getUsersForNetgroupJNI(String group);
 
   static {
     if (!NativeCodeLoader.isNativeCodeLoaded()) {
       throw new RuntimeException("Bailing out since native library couldn't " +
-        "be loaded");
+          "be loaded");
     }
     LOG.debug("Using JniBasedUnixGroupsNetgroupMapping for Netgroup resolution");
   }
@@ -66,11 +64,11 @@ public class JniBasedUnixGroupsNetgroupMapping
    */
   @Override
   public void cacheGroupsAdd(List<String> groups) throws IOException {
-    for(String group: groups) {
-      if(group.length() == 0) {
+    for (String group : groups) {
+      if (group.length() == 0) {
         // better safe than sorry (should never happen)
-      } else if(group.charAt(0) == '@') {
-        if(!NetgroupCache.isCached(group)) {
+      } else if (group.charAt(0) == '@') {
+        if (!NetgroupCache.isCached(group)) {
           NetgroupCache.add(group, getUsersForNetgroup(group));
         }
       } else {
@@ -96,7 +94,7 @@ public class JniBasedUnixGroupsNetgroupMapping
       if (LOG.isDebugEnabled()) {
         LOG.debug("Error getting users for netgroup " + netgroup, e);
       } else {
-        LOG.info("Error getting users for netgroup " + netgroup + 
+        LOG.info("Error getting users for netgroup " + netgroup +
             ": " + e.getMessage());
       }
     }

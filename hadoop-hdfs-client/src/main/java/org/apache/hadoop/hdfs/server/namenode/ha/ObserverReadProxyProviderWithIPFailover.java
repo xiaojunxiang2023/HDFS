@@ -14,18 +14,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.namenode.ha;
+ */
+package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.net.InetSocketAddress;
-import java.net.URI;
-
-import java.util.Collections;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.HAUtilClient;
+import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.Collections;
 
 /**
  * Extends {@link ObserverReadProxyProvider} to support NameNode IP failover.

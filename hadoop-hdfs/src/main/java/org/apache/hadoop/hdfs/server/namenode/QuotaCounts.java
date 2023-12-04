@@ -1,10 +1,10 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.util.ConstEnumCounters;
 import org.apache.hadoop.hdfs.util.EnumCounters;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.function.Consumer;
 
@@ -37,7 +37,7 @@ public class QuotaCounts {
    * @return the modified counter.
    */
   static <T extends Enum<T>> EnumCounters<T> modify(EnumCounters<T> counter,
-      Consumer<EnumCounters<T>> action) {
+                                                    Consumer<EnumCounters<T>> action) {
     if (counter instanceof ConstEnumCounters) {
       counter = counter.deepCopyEnumCounter();
     }
@@ -145,7 +145,7 @@ public class QuotaCounts {
     return ret;
   }
 
-  public long getNameSpace(){
+  public long getNameSpace() {
     return nsSsCounts.get(Quota.NAMESPACE);
   }
 
@@ -159,7 +159,7 @@ public class QuotaCounts {
     nsSsCounts = modify(nsSsCounts, ec -> ec.add(Quota.NAMESPACE, nsDelta));
   }
 
-  public long getStorageSpace(){
+  public long getStorageSpace() {
     return nsSsCounts.get(Quota.STORAGESPACE);
   }
 
@@ -201,7 +201,7 @@ public class QuotaCounts {
   }
 
   public boolean anyNsSsCountGreaterOrEqual(long val) {
-  if (nsSsCounts == QUOTA_DEFAULT) {
+    if (nsSsCounts == QUOTA_DEFAULT) {
       return val <= 0;
     } else if (nsSsCounts == QUOTA_RESET) {
       return val <= HdfsConstants.QUOTA_RESET;
@@ -255,7 +255,7 @@ public class QuotaCounts {
     } else if (obj == null || !(obj instanceof QuotaCounts)) {
       return false;
     }
-    final QuotaCounts that = (QuotaCounts)obj;
+    final QuotaCounts that = (QuotaCounts) obj;
     return this.nsSsCounts.equals(that.nsSsCounts)
         && this.tsCounts.equals(that.tsCounts);
   }

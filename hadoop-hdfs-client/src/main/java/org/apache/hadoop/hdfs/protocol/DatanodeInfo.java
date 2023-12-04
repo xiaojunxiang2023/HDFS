@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.NetworkTopology;
@@ -113,14 +114,14 @@ public class DatanodeInfo extends DatanodeID implements Node {
 
   /** Constructor. */
   private DatanodeInfo(final String ipAddr, final String hostName,
-      final String datanodeUuid, final int xferPort, final int infoPort,
-      final int infoSecurePort, final int ipcPort, final long capacity,
-      final long dfsUsed, final long nonDfsUsed, final long remaining,
-      final long blockPoolUsed, final long cacheCapacity, final long cacheUsed,
-      final long lastUpdate, final long lastUpdateMonotonic,
-      final int xceiverCount, final String networkLocation,
-      final AdminStates adminState, final String upgradeDomain,
-      final long lastBlockReportTime, final long lastBlockReportMonotonic,
+                       final String datanodeUuid, final int xferPort, final int infoPort,
+                       final int infoSecurePort, final int ipcPort, final long capacity,
+                       final long dfsUsed, final long nonDfsUsed, final long remaining,
+                       final long blockPoolUsed, final long cacheCapacity, final long cacheUsed,
+                       final long lastUpdate, final long lastUpdateMonotonic,
+                       final int xceiverCount, final String networkLocation,
+                       final AdminStates adminState, final String upgradeDomain,
+                       final long lastBlockReportTime, final long lastBlockReportMonotonic,
                        final int blockCount) {
     super(ipAddr, hostName, datanodeUuid, xferPort, infoPort, infoSecurePort,
         ipcPort);
@@ -149,13 +150,19 @@ public class DatanodeInfo extends DatanodeID implements Node {
   }
 
   /** The raw capacity. */
-  public long getCapacity() { return capacity; }
+  public long getCapacity() {
+    return capacity;
+  }
 
   /** The used space by the data node. */
-  public long getDfsUsed() { return dfsUsed; }
+  public long getDfsUsed() {
+    return dfsUsed;
+  }
 
   /** The used space by the block pool on data node. */
-  public long getBlockPoolUsed() { return blockPoolUsed; }
+  public long getBlockPoolUsed() {
+    return blockPoolUsed;
+  }
 
   /** The used space by the data node. */
   public long getNonDfsUsed() {
@@ -168,7 +175,9 @@ public class DatanodeInfo extends DatanodeID implements Node {
   }
 
   /** The raw free space. */
-  public long getRemaining() { return remaining; }
+  public long getRemaining() {
+    return remaining;
+  }
 
   /** Used space by the block pool as percentage of present capacity */
   public float getBlockPoolUsedPercent() {
@@ -220,14 +229,18 @@ public class DatanodeInfo extends DatanodeID implements Node {
    * Get the last update timestamp.
    * Return value is suitable for Date conversion.
    */
-  public long getLastUpdate() { return lastUpdate; }
+  public long getLastUpdate() {
+    return lastUpdate;
+  }
 
   /**
    * The time when this information was accurate. <br>
    * Ps: So return value is ideal for calculation of time differences.
    * Should not be used to convert to Date.
    */
-  public long getLastUpdateMonotonic() { return lastUpdateMonotonic;}
+  public long getLastUpdateMonotonic() {
+    return lastUpdateMonotonic;
+  }
 
   /**
    * @return Num of Blocks
@@ -244,7 +257,9 @@ public class DatanodeInfo extends DatanodeID implements Node {
   }
 
   /** number of active connections */
-  public int getXceiverCount() { return xceiverCount; }
+  public int getXceiverCount() {
+    return xceiverCount;
+  }
 
   /** Sets raw capacity. */
   public void setCapacity(long capacity) {
@@ -298,7 +313,9 @@ public class DatanodeInfo extends DatanodeID implements Node {
 
   /** network location */
   @Override
-  public String getNetworkLocation() {return location;}
+  public String getNetworkLocation() {
+    return location;
+  }
 
   /** Sets the network location */
   @Override
@@ -504,8 +521,8 @@ public class DatanodeInfo extends DatanodeID implements Node {
   }
 
   /**
-  * @param maintenanceExpireTimeInMS the time that the DataNode is in the
-  *        maintenance mode until in the unit of milliseconds.   */
+   * @param maintenanceExpireTimeInMS the time that the DataNode is in the
+   *        maintenance mode until in the unit of milliseconds.   */
   public void setMaintenanceExpireTimeInMS(long maintenanceExpireTimeInMS) {
     this.maintenanceExpireTimeInMS = maintenanceExpireTimeInMS;
   }
@@ -544,6 +561,7 @@ public class DatanodeInfo extends DatanodeID implements Node {
   public static boolean maintenanceNotExpired(long maintenanceExpireTimeInMS) {
     return Time.now() < maintenanceExpireTimeInMS;
   }
+
   /**
    * Returns true if the node is is entering_maintenance
    */
@@ -606,8 +624,7 @@ public class DatanodeInfo extends DatanodeID implements Node {
   protected void setAdminState(AdminStates newState) {
     if (newState == AdminStates.NORMAL) {
       adminState = null;
-    }
-    else {
+    } else {
       adminState = newState;
     }
   }
@@ -617,17 +634,27 @@ public class DatanodeInfo extends DatanodeID implements Node {
 
   /** Return this node's parent */
   @Override
-  public Node getParent() { return parent; }
+  public Node getParent() {
+    return parent;
+  }
+
   @Override
-  public void setParent(Node parent) {this.parent = parent;}
+  public void setParent(Node parent) {
+    this.parent = parent;
+  }
 
   /** Return this node's level in the tree.
    * E.g. the root of a tree returns 0 and its children return 1
    */
   @Override
-  public int getLevel() { return level; }
+  public int getLevel() {
+    return level;
+  }
+
   @Override
-  public void setLevel(int level) {this.level = level;}
+  public void setLevel(int level) {
+    this.level = level;
+  }
 
   @Override
   public int hashCode() {
@@ -822,6 +849,7 @@ public class DatanodeInfo extends DatanodeID implements Node {
       this.lastBlockReportMonotonic = time;
       return this;
     }
+
     public DatanodeInfoBuilder setNumBlocks(int blockCount) {
       this.numBlocks = blockCount;
       return this;

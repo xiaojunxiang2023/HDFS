@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient.CorruptedBlocks;
@@ -11,21 +9,18 @@ import org.apache.hadoop.hdfs.server.datanode.DataNode;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.BlockReadStats;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil.StripingChunkReadResult;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.DataChecksum;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Manage striped readers that performs reading of block data from remote to
@@ -67,7 +62,7 @@ class StripedReader {
   private final CompletionService<BlockReadStats> readService;
 
   StripedReader(StripedReconstructor reconstructor, DataNode datanode,
-      Configuration conf, StripedReconstructionInfo stripedReconInfo) {
+                Configuration conf, StripedReconstructionInfo stripedReconInfo) {
     stripedReadTimeoutInMills = conf.getInt(
         DFSConfigKeys.DFS_DN_EC_RECONSTRUCTION_STRIPED_READ_TIMEOUT_MILLIS_KEY,
         DFSConfigKeys.DFS_DN_EC_RECONSTRUCTION_STRIPED_READ_TIMEOUT_MILLIS_DEFAULT);
@@ -96,7 +91,7 @@ class StripedReader {
     // or targets.
     xmits = Math.max(minRequiredSources,
         stripedReconInfo.getTargets() != null ?
-        stripedReconInfo.getTargets().length : 0);
+            stripedReconInfo.getTargets().length : 0);
 
     this.liveIndices = stripedReconInfo.getLiveIndices();
     assert liveIndices != null;
@@ -186,7 +181,7 @@ class StripedReader {
     for (int i = 0; i < dataBlkNum + parityBlkNum; i++) {
       if (!bitset.get(i)) {
         if (reconstructor.getBlockLen(i) <= 0) {
-          zeroStripeIndices[k++] = (short)i;
+          zeroStripeIndices[k++] = (short) i;
         }
       }
     }
@@ -207,7 +202,7 @@ class StripedReader {
       StripedBlockReader reader = getReader(index);
       ByteBuffer buffer = reader.getReadBuffer();
       paddingBufferToLen(buffer, toReconstructLen);
-      inputs[reader.getIndex()] = (ByteBuffer)buffer.flip();
+      inputs[reader.getIndex()] = (ByteBuffer) buffer.flip();
     }
 
     if (successList.length < dataBlkNum) {
@@ -215,7 +210,7 @@ class StripedReader {
         ByteBuffer buffer = zeroStripeBuffers[i];
         paddingBufferToLen(buffer, toReconstructLen);
         int index = zeroStripeIndices[i];
-        inputs[index] = (ByteBuffer)buffer.flip();
+        inputs[index] = (ByteBuffer) buffer.flip();
       }
     }
 

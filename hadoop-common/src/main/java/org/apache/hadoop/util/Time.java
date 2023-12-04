@@ -19,11 +19,11 @@ public final class Time {
 
   private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT =
       new ThreadLocal<SimpleDateFormat>() {
-    @Override
-    protected SimpleDateFormat initialValue() {
-      return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSSZ");
-    }
-  };
+        @Override
+        protected SimpleDateFormat initialValue() {
+          return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSSZ");
+        }
+      };
 
   /**
    * Current system time.  Do not use this to calculate a duration or interval
@@ -34,7 +34,7 @@ public final class Time {
   public static long now() {
     return System.currentTimeMillis();
   }
-  
+
   /**
    * Current time from some arbitrary time base in the past, counting in
    * milliseconds, and not affected by settimeofday or similar system clock

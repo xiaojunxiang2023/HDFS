@@ -1,17 +1,18 @@
 package org.apache.hadoop.fs;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.util.DataChecksum;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 /** MD5 of MD5 of CRC32. */
 public class MD5MD5CRC32FileChecksum extends FileChecksum {
   public static final int LENGTH = MD5Hash.MD5_LEN
-      + (Integer.SIZE + Long.SIZE)/Byte.SIZE;
+      + (Integer.SIZE + Long.SIZE) / Byte.SIZE;
 
   private int bytesPerCRC;
   private long crcPerBlock;
@@ -47,7 +48,9 @@ public class MD5MD5CRC32FileChecksum extends FileChecksum {
   }
 
   @Override
-  public int getLength() {return LENGTH;}
+  public int getLength() {
+    return LENGTH;
+  }
 
   @Override
   public byte[] getBytes() {

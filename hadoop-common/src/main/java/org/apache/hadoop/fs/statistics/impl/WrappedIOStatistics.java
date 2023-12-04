@@ -1,11 +1,10 @@
 package org.apache.hadoop.fs.statistics.impl;
 
-import java.util.Map;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.MeanStatistic;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.util.Map;
 
 import static org.apache.hadoop.fs.statistics.IOStatisticsLogging.ioStatisticsToString;
 

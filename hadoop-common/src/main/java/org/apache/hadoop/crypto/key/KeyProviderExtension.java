@@ -10,7 +10,7 @@ import java.util.List;
  * of the KeyProvider by delegating it to the provided KeyProvider.
  */
 public abstract class KeyProviderExtension
-<E extends KeyProviderExtension.Extension> extends KeyProvider {
+    <E extends KeyProviderExtension.Extension> extends KeyProvider {
 
   /**
    * A marker interface for the KeyProviderExtension subclass implement.
@@ -26,11 +26,11 @@ public abstract class KeyProviderExtension
     this.keyProvider = keyProvider;
     this.extension = extensions;
   }
-  
+
   protected E getExtension() {
     return extension;
   }
-  
+
   protected KeyProvider getKeyProvider() {
     return keyProvider;
   }

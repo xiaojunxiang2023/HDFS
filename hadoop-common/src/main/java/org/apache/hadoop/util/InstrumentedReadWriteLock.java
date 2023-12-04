@@ -1,9 +1,10 @@
 package org.apache.hadoop.util;
 
+import org.slf4j.Logger;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.slf4j.Logger;
 
 /**
  * This is a wrap class of a {@link ReentrantReadWriteLock}.
@@ -16,7 +17,7 @@ public class InstrumentedReadWriteLock implements ReadWriteLock {
   private final Lock writeLock;
 
   public InstrumentedReadWriteLock(boolean fair, String name, Logger logger,
-      long minLoggingGapMs, long lockWarningThresholdMs) {
+                                   long minLoggingGapMs, long lockWarningThresholdMs) {
     ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(fair);
     readLock = new InstrumentedReadLock(name, logger, readWriteLock,
         minLoggingGapMs, lockWarningThresholdMs);

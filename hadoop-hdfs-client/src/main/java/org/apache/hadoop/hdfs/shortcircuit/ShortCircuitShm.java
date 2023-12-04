@@ -1,5 +1,20 @@
 package org.apache.hadoop.hdfs.shortcircuit;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.hadoop.fs.InvalidRequestException;
+import org.apache.hadoop.hdfs.ExtendedBlockId;
+import org.apache.hadoop.io.nativeio.NativeIO;
+import org.apache.hadoop.io.nativeio.NativeIO.POSIX;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
+import org.apache.hadoop.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.misc.Unsafe;
+
+import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -7,26 +22,6 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.hadoop.fs.InvalidRequestException;
-import org.apache.hadoop.hdfs.ExtendedBlockId;
-import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.io.nativeio.NativeIO.POSIX;
-import org.apache.hadoop.util.Shell;
-import org.apache.hadoop.util.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sun.misc.Unsafe;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
-
-import javax.annotation.Nonnull;
 
 /**
  * A shared memory segment used to implement short-circuit reads.
@@ -43,7 +38,7 @@ public class ShortCircuitShm {
     try {
       Field f = Unsafe.class.getDeclaredField("theUnsafe");
       f.setAccessible(true);
-      return (Unsafe)f.get(null);
+      return (Unsafe) f.get(null);
     } catch (Throwable e) {
       LOG.error("failed to load misc.Unsafe", e);
     }
@@ -55,7 +50,7 @@ public class ShortCircuitShm {
    * We round down to a multiple of the slot size and do some validation.
    *
    * @param stream The stream we're using.
-   * @return       The usable size of the shared memory segment.
+   * @return The usable size of the shared memory segment.
    */
   private static int getUsableLength(FileInputStream stream)
       throws IOException {
@@ -105,7 +100,7 @@ public class ShortCircuitShm {
       if ((o == null) || (o.getClass() != this.getClass())) {
         return false;
       }
-      ShmId other = (ShmId)o;
+      ShmId other = (ShmId) o;
       return new EqualsBuilder().
           append(hi, other.hi).
           append(lo, other.lo).
@@ -159,7 +154,7 @@ public class ShortCircuitShm {
       if ((o == null) || (o.getClass() != this.getClass())) {
         return false;
       }
-      SlotId other = (SlotId)o;
+      SlotId other = (SlotId) o;
       return new EqualsBuilder().
           append(shmId, other.shmId).
           append(slotIdx, other.slotIdx).
@@ -234,12 +229,12 @@ public class ShortCircuitShm {
      * is no longer valid.  The client itself also clears this flag when it
      * believes that the DataNode is no longer using this slot to communicate.
      */
-    private static final long VALID_FLAG =          1L<<63;
+    private static final long VALID_FLAG = 1L << 63;
 
     /**
      * Flag indicating that the slot can be anchored.
      */
-    private static final long ANCHORABLE_FLAG =     1L<<62;
+    private static final long ANCHORABLE_FLAG = 1L << 62;
 
     /**
      * The slot address in memory.
@@ -259,7 +254,7 @@ public class ShortCircuitShm {
     /**
      * Get the short-circuit memory segment associated with this Slot.
      *
-     * @return      The enclosing short-circuit memory segment.
+     * @return The enclosing short-circuit memory segment.
      */
     public ShortCircuitShm getShm() {
       return ShortCircuitShm.this;
@@ -268,7 +263,7 @@ public class ShortCircuitShm {
     /**
      * Get the ExtendedBlockId associated with this slot.
      *
-     * @return      The ExtendedBlockId of this slot.
+     * @return The ExtendedBlockId of this slot.
      */
     public ExtendedBlockId getBlockId() {
       return blockId;
@@ -277,7 +272,7 @@ public class ShortCircuitShm {
     /**
      * Get the SlotId of this slot, containing both shmId and slotIdx.
      *
-     * @return      The SlotId of this slot.
+     * @return The SlotId of this slot.
      */
     public SlotId getSlotId() {
       return new SlotId(getShmId(), getSlotIdx());
@@ -286,7 +281,7 @@ public class ShortCircuitShm {
     /**
      * Get the Slot index.
      *
-     * @return      The index of this slot.
+     * @return The index of this slot.
      */
     public int getSlotIdx() {
       return Ints.checkedCast(
@@ -313,7 +308,7 @@ public class ShortCircuitShm {
           return;
         }
       } while (!unsafe.compareAndSwapLong(null, this.slotAddress,
-                  prev, prev | flag));
+          prev, prev | flag));
     }
 
     private void clearFlag(long flag) {
@@ -324,7 +319,7 @@ public class ShortCircuitShm {
           return;
         }
       } while (!unsafe.compareAndSwapLong(null, this.slotAddress,
-                  prev, prev & (~flag)));
+          prev, prev & (~flag)));
     }
 
     public boolean isValid() {
@@ -363,7 +358,7 @@ public class ShortCircuitShm {
      * When a slot is anchored, we know that the block it refers to is resident
      * in memory.
      *
-     * @return          True if the slot is anchored.
+     * @return True if the slot is anchored.
      */
     public boolean addAnchor() {
       long prev;
@@ -382,7 +377,7 @@ public class ShortCircuitShm {
           return false;
         }
       } while (!unsafe.compareAndSwapLong(null, this.slotAddress,
-                  prev, prev + 1));
+          prev, prev + 1));
       return true;
     }
 
@@ -394,10 +389,10 @@ public class ShortCircuitShm {
       do {
         prev = unsafe.getLongVolatile(null, this.slotAddress);
         Preconditions.checkState((prev & 0x7fffffff) != 0,
-            "Tried to remove anchor for slot " + slotAddress +", which was " +
-            "not anchored.");
+            "Tried to remove anchor for slot " + slotAddress + ", which was " +
+                "not anchored.");
       } while (!unsafe.compareAndSwapLong(null, this.slotAddress,
-                  prev, prev - 1));
+          prev, prev - 1));
     }
 
     @Override
@@ -448,14 +443,14 @@ public class ShortCircuitShm {
    *                    unlike FileInputStream.
    */
   public ShortCircuitShm(ShmId shmId, FileInputStream stream)
-        throws IOException {
+      throws IOException {
     if (!NativeIO.isAvailable()) {
       throw new UnsupportedOperationException("NativeIO is not available.");
     }
     if (unsafe == null) {
       throw new UnsupportedOperationException(
           "can't use DfsClientShm because we failed to " +
-          "load misc.Unsafe.");
+              "load misc.Unsafe.");
     }
     this.shmId = shmId;
     this.mmappedLength = getUsableLength(stream);
@@ -464,7 +459,7 @@ public class ShortCircuitShm {
     this.slots = new Slot[mmappedLength / BYTES_PER_SLOT];
     this.allocatedSlots = new BitSet(slots.length);
     LOG.trace("creating {}(shmId={}, mmappedLength={}, baseAddress={}, "
-        + "slots.length={})", this.getClass().getSimpleName(), shmId,
+            + "slots.length={})", this.getClass().getSimpleName(), shmId,
         mmappedLength, String.format("%x", baseAddress), slots.length);
   }
 
@@ -475,7 +470,7 @@ public class ShortCircuitShm {
   /**
    * Determine if this shared memory object is empty.
    *
-   * @return    True if the shared memory object is empty.
+   * @return True if the shared memory object is empty.
    */
   synchronized final public boolean isEmpty() {
     return allocatedSlots.nextSetBit(0) == -1;
@@ -484,7 +479,7 @@ public class ShortCircuitShm {
   /**
    * Determine if this shared memory object is full.
    *
-   * @return    True if the shared memory object is full.
+   * @return True if the shared memory object is full.
    */
   synchronized final public boolean isFull() {
     return allocatedSlots.nextClearBit(0) >= slots.length;
@@ -494,7 +489,7 @@ public class ShortCircuitShm {
    * Calculate the base address of a slot.
    *
    * @param slotIdx   Index of the slot.
-   * @return          The base address of the slot.
+   * @return The base address of the slot.
    */
   private long calculateSlotAddress(int slotIdx) {
     long offset = slotIdx;
@@ -508,7 +503,7 @@ public class ShortCircuitShm {
    * This function chooses an empty slot, initializes it, and then returns
    * the relevant Slot object.
    *
-   * @return    The new slot.
+   * @return The new slot.
    */
   synchronized public final Slot allocAndRegisterSlot(
       ExtendedBlockId blockId) {
@@ -523,7 +518,7 @@ public class ShortCircuitShm {
     slots[idx] = slot;
     if (LOG.isTraceEnabled()) {
       LOG.trace(this + ": allocAndRegisterSlot " + idx + ": allocatedSlots=" + allocatedSlots +
-                  StringUtils.getStackTrace(Thread.currentThread()));
+          StringUtils.getStackTrace(Thread.currentThread()));
     }
     return slot;
   }
@@ -544,14 +539,14 @@ public class ShortCircuitShm {
    * another process), and registers it with us.  Then, it returns the
    * relevant Slot object.
    *
-   * @return    The slot.
+   * @return The slot.
    *
    * @throws InvalidRequestException
    *            If the slot index we're trying to allocate has not been
    *            initialized, or is already in use.
    */
   synchronized public final Slot registerSlot(int slotIdx,
-      ExtendedBlockId blockId) throws InvalidRequestException {
+                                              ExtendedBlockId blockId) throws InvalidRequestException {
     if (slotIdx < 0) {
       throw new InvalidRequestException(this + ": invalid negative slot " +
           "index " + slotIdx);
@@ -573,7 +568,7 @@ public class ShortCircuitShm {
     allocatedSlots.set(slotIdx, true);
     if (LOG.isTraceEnabled()) {
       LOG.trace(this + ": registerSlot " + slotIdx + ": allocatedSlots=" + allocatedSlots +
-                  StringUtils.getStackTrace(Thread.currentThread()));
+          StringUtils.getStackTrace(Thread.currentThread()));
     }
     return slot;
   }
@@ -598,7 +593,7 @@ public class ShortCircuitShm {
    *
    * Note that this method isn't safe if
    *
-   * @return        The slot iterator.
+   * @return The slot iterator.
    */
   public SlotIterator slotIterator() {
     return new SlotIterator();

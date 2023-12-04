@@ -12,22 +12,22 @@ import java.io.IOException;
  */
 public abstract class DisableNameserviceResponse {
 
-    public static DisableNameserviceResponse newInstance() throws IOException {
-        return StateStoreSerializer.newRecord(DisableNameserviceResponse.class);
-    }
+  public static DisableNameserviceResponse newInstance() throws IOException {
+    return StateStoreSerializer.newRecord(DisableNameserviceResponse.class);
+  }
 
-    public static DisableNameserviceResponse newInstance(boolean status)
-            throws IOException {
-        DisableNameserviceResponse response = newInstance();
-        response.setStatus(status);
-        return response;
-    }
+  public static DisableNameserviceResponse newInstance(boolean status)
+      throws IOException {
+    DisableNameserviceResponse response = newInstance();
+    response.setStatus(status);
+    return response;
+  }
 
-    @Public
-    @Unstable
-    public abstract boolean getStatus();
+  @Public
+  @Unstable
+  public abstract boolean getStatus();
 
-    @Public
-    @Unstable
-    public abstract void setStatus(boolean result);
+  @Public
+  @Unstable
+  public abstract void setStatus(boolean result);
 }

@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
+
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.util.StringUtils;
 
@@ -15,8 +16,8 @@ public class DatanodeVolumeInfo {
   private String path;
 
   public DatanodeVolumeInfo(String path, long usedSpace, long freeSpace,
-      long reservedSpace, long reservedSpaceForReplicas, long numBlocks,
-      StorageType type) {
+                            long reservedSpace, long reservedSpaceForReplicas, long numBlocks,
+                            StorageType type) {
     this.usedSpace = usedSpace;
     this.freeSpace = freeSpace;
     this.reservedSpace = reservedSpace;

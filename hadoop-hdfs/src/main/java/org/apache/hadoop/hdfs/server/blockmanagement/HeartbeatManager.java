@@ -1,25 +1,20 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
 import org.apache.hadoop.hdfs.server.protocol.VolumeFailureSummary;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Manage the heartbeats received from datanodes.
@@ -64,7 +59,7 @@ class HeartbeatManager implements DatanodeStatistics {
   private final Set<DatanodeDescriptor> staleDataNodes = new HashSet<>();
 
   HeartbeatManager(final Namesystem namesystem,
-      final BlockManager blockManager, final Configuration conf) {
+                   final BlockManager blockManager, final Configuration conf) {
     this.namesystem = namesystem;
     this.blockManager = blockManager;
     boolean avoidStaleDataNodesForWrite = conf.getBoolean(
@@ -103,7 +98,7 @@ class HeartbeatManager implements DatanodeStatistics {
     } catch (InterruptedException ignored) {
     }
   }
-  
+
   synchronized int getLiveDatanodeCount() {
     return datanodes.size();
   }
@@ -152,17 +147,17 @@ class HeartbeatManager implements DatanodeStatistics {
   public int getXceiverCount() {
     return stats.getXceiverCount();
   }
-  
+
   @Override
   public int getInServiceXceiverCount() {
     return stats.getNodesInServiceXceiverCount();
   }
-  
+
   @Override
   public int getNumDatanodesInService() {
     return stats.getNodesInService();
   }
-  
+
   @Override
   public long getCacheCapacity() {
     return stats.getCacheCapacity();
@@ -175,15 +170,15 @@ class HeartbeatManager implements DatanodeStatistics {
 
   @Override
   public synchronized long[] getStats() {
-    return new long[] {getCapacityTotal(),
-                       getCapacityUsed(),
-                       getCapacityRemaining(),
-                       -1L,
-                       -1L,
-                       -1L,
-                       -1L,
-                       -1L,
-                       -1L};
+    return new long[]{getCapacityTotal(),
+        getCapacityUsed(),
+        getCapacityRemaining(),
+        -1L,
+        -1L,
+        -1L,
+        -1L,
+        -1L,
+        -1L};
   }
 
   @Override
@@ -221,7 +216,7 @@ class HeartbeatManager implements DatanodeStatistics {
     d.setAlive(true);
   }
 
-  void updateDnStat(final DatanodeDescriptor d){
+  void updateDnStat(final DatanodeDescriptor d) {
     stats.add(d);
   }
 
@@ -235,9 +230,9 @@ class HeartbeatManager implements DatanodeStatistics {
   }
 
   synchronized void updateHeartbeat(final DatanodeDescriptor node,
-      StorageReport[] reports, long cacheCapacity, long cacheUsed,
-      int xceiverCount, int failedVolumes,
-      VolumeFailureSummary volumeFailureSummary) {
+                                    StorageReport[] reports, long cacheCapacity, long cacheUsed,
+                                    int xceiverCount, int failedVolumes,
+                                    VolumeFailureSummary volumeFailureSummary) {
     stats.subtract(node);
     blockManager.updateHeartbeat(node, reports, cacheCapacity, cacheUsed,
         xceiverCount, failedVolumes, volumeFailureSummary);
@@ -245,9 +240,9 @@ class HeartbeatManager implements DatanodeStatistics {
   }
 
   synchronized void updateLifeline(final DatanodeDescriptor node,
-      StorageReport[] reports, long cacheCapacity, long cacheUsed,
-      int xceiverCount, int failedVolumes,
-      VolumeFailureSummary volumeFailureSummary) {
+                                   StorageReport[] reports, long cacheCapacity, long cacheUsed,
+                                   int xceiverCount, int failedVolumes,
+                                   VolumeFailureSummary volumeFailureSummary) {
     stats.subtract(node);
     // This intentionally calls updateHeartbeatState instead of
     // updateHeartbeat, because we don't want to modify the
@@ -347,7 +342,7 @@ class HeartbeatManager implements DatanodeStatistics {
    * @return true if the node was already in the stale list.
    */
   private boolean removeNodeFromStaleList(DatanodeDescriptor d,
-      boolean isDead) {
+                                          boolean isDead) {
     boolean result = false;
     result = staleDataNodes.remove(d);
     if (enableLogStaleNodes && result) {
@@ -423,7 +418,7 @@ class HeartbeatManager implements DatanodeStatistics {
       // check the number of stale storages
       int numOfStaleStorages = 0;
       List<DatanodeDescriptor> staleNodes = new ArrayList<>();
-      synchronized(this) {
+      synchronized (this) {
         for (DatanodeDescriptor d : datanodes) {
           // check if an excessive GC pause has occurred
           if (shouldAbortHeartbeatCheck(0)) {
@@ -448,7 +443,7 @@ class HeartbeatManager implements DatanodeStatistics {
           }
 
           DatanodeStorageInfo[] storageInfos = d.getStorageInfos();
-          for(DatanodeStorageInfo storageInfo : storageInfos) {
+          for (DatanodeStorageInfo storageInfo : storageInfos) {
             if (storageInfo.areBlockContentsStale()) {
               numOfStaleStorages++;
             }
@@ -460,7 +455,7 @@ class HeartbeatManager implements DatanodeStatistics {
             }
           }
         }
-        
+
         // Set the number of stale nodes in the DatanodeManager
         dm.setNumStaleNodes(staleDataNodes.size());
         dm.setNumStaleStorages(numOfStaleStorages);
@@ -502,7 +497,7 @@ class HeartbeatManager implements DatanodeStatistics {
 
     @Override
     public void run() {
-      while(namesystem.isRunning()) {
+      while (namesystem.isRunning()) {
         restartHeartbeatStopWatch();
         try {
           final long now = Time.monotonicNow();
@@ -511,8 +506,8 @@ class HeartbeatManager implements DatanodeStatistics {
             lastHeartbeatCheck = now;
           }
           if (blockManager.shouldUpdateBlockKey(now - lastBlockKeyUpdate)) {
-            synchronized(HeartbeatManager.this) {
-              for(DatanodeDescriptor d : datanodes) {
+            synchronized (HeartbeatManager.this) {
+              for (DatanodeDescriptor d : datanodes) {
                 d.setNeedKeyUpdate(true);
               }
             }

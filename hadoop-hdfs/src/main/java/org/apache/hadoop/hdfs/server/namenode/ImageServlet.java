@@ -1,39 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.concurrent.TimeUnit;
-import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap;
-import org.apache.hadoop.hdfs.server.common.Util;
-
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_CHECKPOINT_PERIOD_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_CHECKPOINT_PERIOD_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_CHECKPOINT_TXNS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_CHECKPOINT_TXNS_KEY;
-import static org.apache.hadoop.util.Time.monotonicNow;
-
-import java.net.HttpURLConnection;
-import java.security.PrivilegedExceptionAction;
-import java.util.*;
-import java.io.*;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ha.status.HAServiceProtocol;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.DFSUtilClient;
-import org.apache.hadoop.security.SecurityUtil;
-import org.eclipse.jetty.server.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSUtil;
+import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.HAUtil;
+import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap;
 import org.apache.hadoop.hdfs.server.common.JspHelper;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
+import org.apache.hadoop.hdfs.server.common.Util;
 import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
 import org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics;
 import org.apache.hadoop.hdfs.server.protocol.RemoteEditLog;
@@ -42,12 +19,29 @@ import org.apache.hadoop.hdfs.util.MD5FileUtils;
 import org.apache.hadoop.http.HttpServer2;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MD5Hash;
+import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.util.ServletUtil;
-import org.apache.hadoop.util.StringUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.ServletUtil;
+import org.apache.hadoop.util.StringUtils;
+import org.eclipse.jetty.server.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.security.PrivilegedExceptionAction;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * This class is used in Namesystem's jetty to retrieve/upload a file 
@@ -65,7 +59,7 @@ public class ImageServlet extends HttpServlet {
 
   public final static String CONTENT_DISPOSITION = "Content-Disposition";
   public final static String HADOOP_IMAGE_EDITS_HEADER = "X-Image-Edits-Name";
-  
+
   private static final String TXID_PARAM = "txid";
   private static final String START_TXID_PARAM = "startTxId";
   private static final String END_TXID_PARAM = "endTxId";
@@ -75,7 +69,7 @@ public class ImageServlet extends HttpServlet {
   private static final String IS_BOOTSTRAP_STANDBY = "bootstrapstandby";
 
   private SortedSet<ImageUploadRequest> currentlyDownloadingCheckpoints = Collections
-      .<ImageUploadRequest> synchronizedSortedSet(new TreeSet<ImageUploadRequest>());
+      .<ImageUploadRequest>synchronizedSortedSet(new TreeSet<ImageUploadRequest>());
 
   public static final String RECENT_IMAGE_CHECK_ENABLED =
       "recent.image.check.enabled";
@@ -95,7 +89,7 @@ public class ImageServlet extends HttpServlet {
   }
 
   private FSImage getAndValidateFSImage(ServletContext context,
-      final HttpServletResponse response)
+                                        final HttpServletResponse response)
       throws IOException {
     final FSImage nnImage = NameNodeHttpServer.getFsImageFromContext(context);
     if (nnImage == null) {
@@ -109,7 +103,7 @@ public class ImageServlet extends HttpServlet {
 
   @Override
   public void doGet(final HttpServletRequest request,
-      final HttpServletResponse response) throws ServletException, IOException {
+                    final HttpServletResponse response) throws ServletException, IOException {
     try {
       final ServletContext context = getServletContext();
       final FSImage nnImage = getAndValidateFSImage(context, response);
@@ -149,7 +143,7 @@ public class ImageServlet extends HttpServlet {
           } else if (parsedParams.isGetEdit()) {
             long startTxId = parsedParams.getStartTxId();
             long endTxId = parsedParams.getEndTxId();
-            
+
             File editFile = nnImage.getStorage()
                 .findFinalizedEditsFile(startTxId, endTxId);
             long start = monotonicNow();
@@ -191,13 +185,13 @@ public class ImageServlet extends HttpServlet {
             DataTransferThrottler throttler = parsedParams.isBootstrapStandby ?
                 getThrottlerForBootstrapStandby(conf) : getThrottler(conf);
             TransferFsImage.copyFileToStream(response.getOutputStream(),
-               file, fis, throttler);
+                file, fis, throttler);
           } finally {
             IOUtils.closeStream(fis);
           }
         }
       });
-      
+
     } catch (Throwable t) {
       String errMsg = "GetImage failed. " + StringUtils.stringifyException(t);
       sendError(response, HttpServletResponse.SC_GONE, errMsg);
@@ -208,12 +202,12 @@ public class ImageServlet extends HttpServlet {
   }
 
   private void validateRequest(ServletContext context, Configuration conf,
-      HttpServletRequest request, HttpServletResponse response,
-      FSImage nnImage, String theirStorageInfoString) throws IOException {
+                               HttpServletRequest request, HttpServletResponse response,
+                               FSImage nnImage, String theirStorageInfoString) throws IOException {
 
     if (UserGroupInformation.isSecurityEnabled()
         && !isValidRequestor(context, request.getUserPrincipal().getName(),
-            conf)) {
+        conf)) {
       String errorMsg = "Only Namenode, Secondary Namenode, and administrators may access "
           + "this servlet";
       sendError(response, HttpServletResponse.SC_FORBIDDEN, errorMsg);
@@ -237,12 +231,12 @@ public class ImageServlet extends HttpServlet {
   }
 
   public static void setFileNameHeaders(HttpServletResponse response,
-      File file) {
+                                        File file) {
     response.setHeader(CONTENT_DISPOSITION, "attachment; filename=" +
         file.getName());
     response.setHeader(HADOOP_IMAGE_EDITS_HEADER, file.getName());
   }
-  
+
   /**
    * Construct a throttler from conf
    * @param conf configuration
@@ -274,7 +268,7 @@ public class ImageServlet extends HttpServlet {
 
   @VisibleForTesting
   static boolean isValidRequestor(ServletContext context, String remoteUser,
-      Configuration conf) throws IOException {
+                                  Configuration conf) throws IOException {
     if (remoteUser == null) { // This really shouldn't happen...
       LOG.warn("Received null remoteUser while authorizing access to getImage servlet");
       return false;
@@ -283,23 +277,23 @@ public class ImageServlet extends HttpServlet {
     Set<String> validRequestors = new HashSet<String>();
 
     validRequestors.add(SecurityUtil.getServerPrincipal(conf
-        .get(DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY),
+            .get(DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY),
         DFSUtilClient.getNNAddress(conf).getHostName()));
     try {
       validRequestors.add(
           SecurityUtil.getServerPrincipal(conf
-              .get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
+                  .get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
               SecondaryNameNode.getHttpAddress(conf).getHostName()));
     } catch (Exception e) {
       // Don't halt if SecondaryNameNode principal could not be added.
       LOG.debug("SecondaryNameNode principal could not be added", e);
       String msg = String.format(
-        "SecondaryNameNode principal not considered, %s = %s, %s = %s",
-        DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY,
-        conf.get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
-        DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
-        conf.getTrimmed(DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
-          DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_DEFAULT));
+          "SecondaryNameNode principal not considered, %s = %s, %s = %s",
+          DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY,
+          conf.get(DFSConfigKeys.DFS_SECONDARY_NAMENODE_KERBEROS_PRINCIPAL_KEY),
+          DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
+          conf.getTrimmed(DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_KEY,
+              DFSConfigKeys.DFS_NAMENODE_SECONDARY_HTTP_ADDRESS_DEFAULT));
       LOG.warn(msg);
     }
 
@@ -327,13 +321,13 @@ public class ImageServlet extends HttpServlet {
     LOG.info("ImageServlet rejecting: " + remoteUser);
     return false;
   }
-  
+
   /**
    * Set headers for content length, and, if available, md5.
-   * @throws IOException 
+   * @throws IOException
    */
   public static void setVerificationHeadersForGet(HttpServletResponse response,
-      File file) throws IOException {
+                                                  File file) throws IOException {
     response.setHeader(
         Util.CONTENT_LENGTH,
         String.valueOf(file.length()));
@@ -342,32 +336,32 @@ public class ImageServlet extends HttpServlet {
       response.setHeader(Util.MD5_HEADER, hash.toString());
     }
   }
-  
+
   static String getParamStringForMostRecentImage() {
     return "getimage=1&" + TXID_PARAM + "=" + LATEST_FSIMAGE_VALUE;
   }
 
   static String getParamStringForImage(NameNodeFile nnf, long txid,
-      StorageInfo remoteStorageInfo, boolean isBootstrapStandby) {
+                                       StorageInfo remoteStorageInfo, boolean isBootstrapStandby) {
     final String imageType = nnf == null ? "" : "&" + IMAGE_FILE_TYPE + "="
         + nnf.name();
     return "getimage=1&" + TXID_PARAM + "=" + txid
-      + imageType
-      + "&" + STORAGEINFO_PARAM + "="
-      + remoteStorageInfo.toColonSeparatedString() + "&"
-      + IS_BOOTSTRAP_STANDBY + "=" + isBootstrapStandby;
+        + imageType
+        + "&" + STORAGEINFO_PARAM + "="
+        + remoteStorageInfo.toColonSeparatedString() + "&"
+        + IS_BOOTSTRAP_STANDBY + "=" + isBootstrapStandby;
   }
 
   static String getParamStringForLog(RemoteEditLog log,
-      StorageInfo remoteStorageInfo) {
+                                     StorageInfo remoteStorageInfo) {
     return "getedit=1&" + START_TXID_PARAM + "=" + log.getStartTxId()
         + "&" + END_TXID_PARAM + "=" + log.getEndTxId()
         + "&" + STORAGEINFO_PARAM + "=" +
-          remoteStorageInfo.toColonSeparatedString();
+        remoteStorageInfo.toColonSeparatedString();
   }
 
   static String getParamStringForAliasMap(
-        boolean isBootstrapStandby) {
+      boolean isBootstrapStandby) {
     return "getaliasmap=1&" + IS_BOOTSTRAP_STANDBY + "=" + isBootstrapStandby;
   }
 
@@ -388,7 +382,7 @@ public class ImageServlet extends HttpServlet {
      */
     public GetImageParams(HttpServletRequest request,
                           HttpServletResponse response
-                           ) throws IOException {
+    ) throws IOException {
       @SuppressWarnings("unchecked")
       Map<String, String[]> pmap = request.getParameterMap();
       isGetImage = isGetEdit = fetchLatest = isBootstrapStandby = false;
@@ -396,7 +390,7 @@ public class ImageServlet extends HttpServlet {
       for (Map.Entry<String, String[]> entry : pmap.entrySet()) {
         String key = entry.getKey();
         String[] val = entry.getValue();
-        if (key.equals("getimage")) { 
+        if (key.equals("getimage")) {
           isGetImage = true;
           try {
             txId = ServletUtil.parseLongParam(request, TXID_PARAM);
@@ -414,7 +408,7 @@ public class ImageServlet extends HttpServlet {
               throw nfe;
             }
           }
-        } else if (key.equals("getedit")) { 
+        } else if (key.equals("getedit")) {
           isGetEdit = true;
           startTxId = ServletUtil.parseLongParam(request, START_TXID_PARAM);
           endTxId = ServletUtil.parseLongParam(request, END_TXID_PARAM);
@@ -429,7 +423,7 @@ public class ImageServlet extends HttpServlet {
         }
       }
 
-      int numGets = (isGetImage?1:0) + (isGetEdit?1:0) + (isGetAliasMap?1:0);
+      int numGets = (isGetImage ? 1 : 0) + (isGetEdit ? 1 : 0) + (isGetAliasMap ? 1 : 0);
       if ((numGets > 1) || (numGets == 0)) {
         throw new IOException("Illegal parameters to TransferFsImage");
       }
@@ -453,7 +447,7 @@ public class ImageServlet extends HttpServlet {
       Preconditions.checkState(isGetEdit);
       return startTxId;
     }
-    
+
     public long getEndTxId() {
       Preconditions.checkState(isGetEdit);
       return endTxId;
@@ -478,11 +472,11 @@ public class ImageServlet extends HttpServlet {
 
   /**
    * Set headers for image length and if available, md5.
-   * 
+   *
    * @throws IOException
    */
   static void setVerificationHeadersForPut(HttpURLConnection connection,
-      File file) throws IOException {
+                                           File file) throws IOException {
     connection.setRequestProperty(
         Util.CONTENT_LENGTH,
         String.valueOf(file.length()));
@@ -495,7 +489,7 @@ public class ImageServlet extends HttpServlet {
 
   /**
    * Set the required parameters for uploading image
-   * 
+   *
    * @param storage colon separated storageInfo string
    * @param txid txid of the image
    * @param imageFileSize size of the imagefile to be uploaded
@@ -503,7 +497,7 @@ public class ImageServlet extends HttpServlet {
    * @return Returns map of parameters to be used with PUT request.
    */
   static Map<String, String> getParamsForPutImage(Storage storage, long txid,
-      long imageFileSize, NameNodeFile nnf) {
+                                                  long imageFileSize, NameNodeFile nnf) {
     Map<String, String> params = new HashMap<String, String>();
     params.put(TXID_PARAM, Long.toString(txid));
     params.put(STORAGEINFO_PARAM, storage.toColonSeparatedString());
@@ -516,7 +510,7 @@ public class ImageServlet extends HttpServlet {
 
   @Override
   protected void doPut(final HttpServletRequest request,
-      final HttpServletResponse response) throws ServletException, IOException {
+                       final HttpServletResponse response) throws ServletException, IOException {
     try {
       ServletContext context = getServletContext();
       final FSImage nnImage = getAndValidateFSImage(context, response);
@@ -561,8 +555,8 @@ public class ImageServlet extends HttpServlet {
                 // from the failure to upload due to (1) security, or (2) other checkpoints already
                 // present
                 sendError(response, HttpServletResponse.SC_EXPECTATION_FAILED,
-                    "Nameode "+request.getLocalAddr()+" is currently not in a state which can "
-                        + "accept uploads of new fsimages. State: "+state);
+                    "Nameode " + request.getLocalAddr() + " is currently not in a state which can "
+                        + "accept uploads of new fsimages. State: " + state);
                 return null;
               }
 
@@ -685,7 +679,7 @@ public class ImageServlet extends HttpServlet {
   private void sendError(HttpServletResponse response, int code, String message)
       throws IOException {
     if (response instanceof Response) {
-      ((Response)response).setStatusWithReason(code, message);
+      ((Response) response).setStatusWithReason(code, message);
     }
 
     response.sendError(code, message);
@@ -701,7 +695,7 @@ public class ImageServlet extends HttpServlet {
     private NameNodeFile nnf;
 
     public PutImageParams(HttpServletRequest request,
-        HttpServletResponse response, Configuration conf) throws IOException {
+                          HttpServletResponse response, Configuration conf) throws IOException {
       txId = ServletUtil.parseLongParam(request, TXID_PARAM);
       storageInfoString = ServletUtil.getParameter(request, STORAGEINFO_PARAM);
       fileSize = ServletUtil.parseLongParam(request,
@@ -762,11 +756,13 @@ public class ImageServlet extends HttpServlet {
       return result;
     }
 
-    @Override public int compareTo(ImageUploadRequest other) {
+    @Override
+    public int compareTo(ImageUploadRequest other) {
       return Long.compare(txId, other.txId);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "ImageRequest{" +
           "txId=" + txId +
           ", address='" + address + '\'' +

@@ -1,8 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.fs.permission.FsPermission;
+
 import java.io.IOException;
 import java.util.Set;
-import org.apache.hadoop.fs.permission.FsPermission;
 
 /**
  * This class defines a FileStatus that includes a file's block locations.
@@ -40,7 +41,7 @@ public class LocatedFileStatus extends FileStatus {
 
   /**
    * Constructor
-   * 
+   *
    * @param length a file's length
    * @param isdir if the path is a directory
    * @param block_replication the file's replication factor
@@ -56,10 +57,10 @@ public class LocatedFileStatus extends FileStatus {
    */
   @Deprecated
   public LocatedFileStatus(long length, boolean isdir,
-          int block_replication,
-          long blocksize, long modification_time, long access_time,
-          FsPermission permission, String owner, String group, 
-          Path symlink, Path path, BlockLocation[] locations) {
+                           int block_replication,
+                           long blocksize, long modification_time, long access_time,
+                           FsPermission permission, String owner, String group,
+                           Path symlink, Path path, BlockLocation[] locations) {
     this(length, isdir, block_replication, blocksize, modification_time,
         access_time, permission, owner, group, symlink, path,
         permission == null ? false : permission.getAclBit(),
@@ -88,11 +89,11 @@ public class LocatedFileStatus extends FileStatus {
    * @param locations a file's block locations
    */
   public LocatedFileStatus(long length, boolean isdir,
-      int block_replication, long blocksize, long modification_time,
-      long access_time, FsPermission permission, String owner, String group,
-      Path symlink, Path path,
-      boolean hasAcl, boolean isEncrypted, boolean isErasureCoded,
-      BlockLocation[] locations) {
+                           int block_replication, long blocksize, long modification_time,
+                           long access_time, FsPermission permission, String owner, String group,
+                           Path symlink, Path path,
+                           boolean hasAcl, boolean isEncrypted, boolean isErasureCoded,
+                           BlockLocation[] locations) {
     this(length, isdir, block_replication, blocksize, modification_time,
         access_time, permission, owner, group, symlink, path,
         attributes(hasAcl, isEncrypted, isErasureCoded, false), locations);
@@ -117,9 +118,9 @@ public class LocatedFileStatus extends FileStatus {
    * @param locations a file's block locations
    */
   public LocatedFileStatus(long length, boolean isdir, int block_replication,
-      long blocksize, long modification_time, long access_time,
-      FsPermission permission, String owner, String group, Path symlink,
-      Path path, Set<AttrFlags> attr, BlockLocation[] locations) {
+                           long blocksize, long modification_time, long access_time,
+                           FsPermission permission, String owner, String group, Path symlink,
+                           Path path, Set<AttrFlags> attr, BlockLocation[] locations) {
     super(length, isdir, block_replication, blocksize, modification_time,
         access_time, permission, owner, group, symlink, path, attr);
     this.locations = locations;
@@ -152,28 +153,28 @@ public class LocatedFileStatus extends FileStatus {
   /**
    * Compare this FileStatus to another FileStatus
    * @param   o the FileStatus to be compared.
-   * @return  a negative integer, zero, or a positive integer as this object
+   * @return a negative integer, zero, or a positive integer as this object
    *   is less than, equal to, or greater than the specified object.
    */
   @Override
   public int compareTo(FileStatus o) {
     return super.compareTo(o);
   }
-  
+
   /** Compare if this object is equal to another object
    * @param   o the object to be compared.
-   * @return  true if two file status has the same path name; false if not.
+   * @return true if two file status has the same path name; false if not.
    */
   @Override
   public boolean equals(Object o) {
     return super.equals(o);
   }
-  
+
   /**
    * Returns a hash code value for the object, which is defined as
    * the hash code of the path name.
    *
-   * @return  a hash code value for the path name.
+   * @return a hash code value for the path name.
    */
   @Override
   public int hashCode() {

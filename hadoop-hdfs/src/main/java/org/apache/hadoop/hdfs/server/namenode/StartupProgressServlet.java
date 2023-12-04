@@ -5,29 +5,25 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */package org.apache.hadoop.hdfs.server.namenode;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+ */
+package org.apache.hadoop.hdfs.server.namenode;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.Phase;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgressView;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.Step;
-import org.apache.hadoop.hdfs.server.namenode.startupprogress.StepType;
+import org.apache.hadoop.hdfs.server.namenode.startupprogress.*;
 import org.apache.hadoop.io.IOUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Servlet that provides a JSON representation of the namenode's current startup
@@ -55,7 +51,7 @@ public class StartupProgressServlet extends DfsServlet {
       throws IOException {
     resp.setContentType("application/json; charset=UTF-8");
     StartupProgress prog = NameNodeHttpServer.getStartupProgressFromContext(
-      getServletContext());
+        getServletContext());
     StartupProgressView view = prog.createView();
     JsonGenerator json = new JsonFactory().createGenerator(resp.getWriter());
     try {
@@ -64,7 +60,7 @@ public class StartupProgressServlet extends DfsServlet {
       json.writeNumberField(PERCENT_COMPLETE, view.getPercentComplete());
       json.writeArrayFieldStart(PHASES);
 
-      for (Phase phase: view.getPhases()) {
+      for (Phase phase : view.getPhases()) {
         json.writeStartObject();
         json.writeStringField(NAME, phase.getName());
         json.writeStringField(DESC, phase.getDescription());
@@ -75,7 +71,7 @@ public class StartupProgressServlet extends DfsServlet {
         writeNumberFieldIfDefined(json, SIZE, view.getSize(phase));
         json.writeArrayFieldStart(STEPS);
 
-        for (Step step: view.getSteps(phase)) {
+        for (Step step : view.getSteps(phase)) {
           json.writeStartObject();
           StepType type = step.getType();
           if (type != null) {
@@ -87,7 +83,7 @@ public class StartupProgressServlet extends DfsServlet {
           writeNumberFieldIfDefined(json, SIZE, step.getSize());
           json.writeNumberField(TOTAL, view.getTotal(phase, step));
           json.writeNumberField(PERCENT_COMPLETE, view.getPercentComplete(phase,
-            step));
+              step));
           json.writeNumberField(ELAPSED_TIME, view.getElapsedTime(phase, step));
           json.writeEndObject();
         }
@@ -105,14 +101,14 @@ public class StartupProgressServlet extends DfsServlet {
 
   /**
    * Writes a JSON number field only if the value is defined.
-   * 
+   *
    * @param json JsonGenerator to receive output
    * @param key String key to put
    * @param value long value to put
    * @throws IOException if there is an I/O error
    */
   private static void writeNumberFieldIfDefined(JsonGenerator json, String key,
-      long value) throws IOException {
+                                                long value) throws IOException {
     if (value != Long.MIN_VALUE) {
       json.writeNumberField(key, value);
     }
@@ -120,14 +116,14 @@ public class StartupProgressServlet extends DfsServlet {
 
   /**
    * Writes a JSON string field only if the value is non-null.
-   * 
+   *
    * @param json JsonGenerator to receive output
    * @param key String key to put
    * @param value String value to put
    * @throws IOException if there is an I/O error
    */
   private static void writeStringFieldIfNotNull(JsonGenerator json, String key,
-      String value) throws IOException {
+                                                String value) throws IOException {
     if (value != null) {
       json.writeStringField(key, value);
     }

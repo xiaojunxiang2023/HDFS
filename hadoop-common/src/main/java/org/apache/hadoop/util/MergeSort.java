@@ -1,7 +1,8 @@
 package org.apache.hadoop.util;
 
-import java.util.Comparator;
 import org.apache.hadoop.io.IntWritable;
+
+import java.util.Comparator;
 
 /** An implementation of the core algorithm of MergeSort. */
 // 仅 MapReduce可见
@@ -9,25 +10,25 @@ public class MergeSort {
   //Reusable IntWritables
   IntWritable I = new IntWritable(0);
   IntWritable J = new IntWritable(0);
-  
+
   //the comparator that the algo should use
   private Comparator<IntWritable> comparator;
-  
+
   public MergeSort(Comparator<IntWritable> comparator) {
     this.comparator = comparator;
   }
-  
+
   public void mergeSort(int src[], int dest[], int low, int high) {
     int length = high - low;
 
     // Insertion sort on smallest arrays
     if (length < 7) {
-      for (int i=low; i<high; i++) {
-        for (int j=i;j > low; j--) {
-          I.set(dest[j-1]);
+      for (int i = low; i < high; i++) {
+        for (int j = i; j > low; j--) {
+          I.set(dest[j - 1]);
           J.set(dest[j]);
-          if (comparator.compare(I, J)>0)
-            swap(dest, j, j-1);
+          if (comparator.compare(I, J) > 0)
+            swap(dest, j, j - 1);
         }
       }
       return;
@@ -38,7 +39,7 @@ public class MergeSort {
     mergeSort(dest, src, low, mid);
     mergeSort(dest, src, mid, high);
 
-    I.set(src[mid-1]);
+    I.set(src[mid - 1]);
     J.set(src[mid]);
     // If list is already sorted, just copy from src to dest.  This is an
     // optimization that results in faster sorts for nearly ordered lists.
@@ -53,7 +54,7 @@ public class MergeSort {
         I.set(src[p]);
         J.set(src[q]);
       }
-      if (q>=high || p<mid && comparator.compare(I, J) <= 0)
+      if (q >= high || p < mid && comparator.compare(I, J) <= 0)
         dest[i] = src[p++];
       else
         dest[i] = src[q++];

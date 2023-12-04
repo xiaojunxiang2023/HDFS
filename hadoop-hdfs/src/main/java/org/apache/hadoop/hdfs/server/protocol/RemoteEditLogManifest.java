@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.util.Collections;
-import java.util.List;
-
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An enumeration of logs available on a remote NameNode.
@@ -28,14 +28,14 @@ public class RemoteEditLogManifest {
     this.committedTxnId = committedTxnId;
     checkState();
   }
-  
-  
+
+
   /**
    * Check that the logs are non-overlapping sequences of transactions,
    * in sorted order. They do not need to be contiguous.
    * @throws IllegalStateException if incorrect
    */
-  private void checkState()  {
+  private void checkState() {
     Preconditions.checkNotNull(logs);
 
     RemoteEditLog prev = null;
@@ -44,13 +44,13 @@ public class RemoteEditLogManifest {
         if (log.getStartTxId() <= prev.getEndTxId()) {
           throw new IllegalStateException(
               "Invalid log manifest (log " + log + " overlaps " + prev + ")\n"
-              + this);
+                  + this);
         }
       }
       prev = log;
     }
   }
-  
+
   public List<RemoteEditLog> getLogs() {
     return Collections.unmodifiableList(logs);
   }

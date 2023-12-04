@@ -1,50 +1,13 @@
 package org.apache.hadoop.http;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.PrintStream;
-import java.net.BindException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Enumeration;
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+import org.apache.hadoop.auth.util.provider.SignerSecretProvider;
 import org.apache.hadoop.conf.ConfServlet;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configuration.IntegerRanges;
+import org.apache.hadoop.filter.AuthenticationFilter;
+import org.apache.hadoop.filter.ProxyUserAuthenticationFilterInitializer;
+import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.jmx.JMXJsonServlet;
@@ -54,39 +17,25 @@ import org.apache.hadoop.metrics2.sink.PrometheusMetricsSink;
 import org.apache.hadoop.security.AuthenticationFilterInitializer;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.filter.ProxyUserAuthenticationFilterInitializer;
-import org.apache.hadoop.filter.handler.PseudoAuthenticationHandler;
-import org.apache.hadoop.auth.util.provider.SignerSecretProvider;
 import org.apache.hadoop.security.authorize.AccessControlList;
 import org.apache.hadoop.security.ssl.FileBasedKeyStoresFactory;
 import org.apache.hadoop.security.ssl.FileMonitoringTimerTask;
 import org.apache.hadoop.security.ssl.SSLFactory;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.eclipse.jetty.http.HttpVersion;
-import org.eclipse.jetty.server.ConnectionFactory;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.RequestLog;
-import org.eclipse.jetty.server.SecureRequestCustomizer;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.session.SessionHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.servlet.FilterMapping;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.servlet.ServletMapping;
+import org.eclipse.jetty.servlet.*;
 import org.eclipse.jetty.util.ArrayUtil;
 import org.eclipse.jetty.util.MultiException;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -94,6 +43,19 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Create a Jetty embedded server to answer http requests. The primary goal is
@@ -174,14 +136,14 @@ public final class HttpServer2 implements FilterContainer {
   private boolean xFrameOptionIsEnabled;
   public static final String HTTP_HEADER_PREFIX = "hadoop.http.header.";
   private static final String HTTP_HEADER_REGEX =
-          "hadoop\\.http\\.header\\.([a-zA-Z\\-_]+)";
-  static final String X_XSS_PROTECTION  =
-          "X-XSS-Protection:1; mode=block";
+      "hadoop\\.http\\.header\\.([a-zA-Z\\-_]+)";
+  static final String X_XSS_PROTECTION =
+      "X-XSS-Protection:1; mode=block";
   static final String X_CONTENT_TYPE_OPTIONS =
-          "X-Content-Type-Options:nosniff";
+      "X-Content-Type-Options:nosniff";
   private static final String X_FRAME_OPTIONS = "X-FRAME-OPTIONS";
   private static final Pattern PATTERN_HTTP_HEADER_REGEX =
-          Pattern.compile(HTTP_HEADER_REGEX);
+      Pattern.compile(HTTP_HEADER_REGEX);
 
   private boolean prometheusSupport;
   protected static final String PROMETHEUS_SINK = "PROMETHEUS_SINK";
@@ -227,7 +189,7 @@ public final class HttpServer2 implements FilterContainer {
 
     private Optional<Timer> configurationChangeMonitor = Optional.empty();
 
-    public Builder setName(String name){
+    public Builder setName(String name) {
       this.name = name;
       return this;
     }
@@ -364,7 +326,7 @@ public final class HttpServer2 implements FilterContainer {
      * @param option - String DENY, SAMEORIGIN or ALLOW-FROM are the only valid
      *               options. Any other value will throw IllegalArgument
      *               Exception.
-     * @return  Builder.
+     * @return Builder.
      */
     public Builder setXFrameOption(String option) {
       this.xFrameOption = XFrameOption.getEnum(option);
@@ -448,7 +410,7 @@ public final class HttpServer2 implements FilterContainer {
 
       if (this.securityEnabled &&
           !this.conf.get(authFilterConfigurationPrefix + "type").
-          equals(PseudoAuthenticationHandler.TYPE)) {
+              equals(PseudoAuthenticationHandler.TYPE)) {
         server.initSpnego(conf, hostName, usernameConfKey, keytabConfKey);
       }
 
@@ -513,7 +475,7 @@ public final class HttpServer2 implements FilterContainer {
           conf.getInt(HTTP_SELECTOR_COUNT_KEY, HTTP_SELECTOR_COUNT_DEFAULT));
       ConnectionFactory connFactory = new HttpConnectionFactory(httpConfig);
       conn.addConnectionFactory(connFactory);
-      if(Shell.WINDOWS) {
+      if (Shell.WINDOWS) {
         // result of setting the SO_REUSEADDR flag is different on Windows
         // http://msdn.microsoft.com/en-us/library/ms740621(v=vs.85).aspx
         // without this 2 NN's can start on the same machine and listen on
@@ -550,7 +512,7 @@ public final class HttpServer2 implements FilterContainer {
           sslContextFactory.setTrustStorePassword(trustStorePassword);
         }
       }
-      if(null != excludeCiphers && !excludeCiphers.isEmpty()) {
+      if (null != excludeCiphers && !excludeCiphers.isEmpty()) {
         sslContextFactory.setExcludeCipherSuites(
             StringUtils.getTrimmedStrings(excludeCiphers));
         LOG.info("Excluded Cipher List:" + excludeCiphers);
@@ -575,7 +537,7 @@ public final class HttpServer2 implements FilterContainer {
     }
 
     private Timer makeConfigurationChangeMonitor(long reloadInterval,
-        SslContextFactory.Server sslContextFactory) {
+                                                 SslContextFactory.Server sslContextFactory) {
       java.util.Timer timer = new java.util.Timer(FileBasedKeyStoresFactory.SSL_MONITORING_THREAD_NAME, true);
       ArrayList<Path> locations = new ArrayList<Path>();
       if (keyStore != null) {
@@ -589,18 +551,19 @@ public final class HttpServer2 implements FilterContainer {
       // truststore and keystore certificates.
       //
       timer.schedule(new FileMonitoringTimerTask(
-            locations,
-            path -> {
-              LOG.info("Reloading keystore and truststore certificates.");
-              try {
-                sslContextFactory.reload(factory -> { });
-              } catch (Exception ex) {
-                LOG.error("Failed to reload SSL keystore " +
-                    "and truststore certificates", ex);
-              }
-            },null),
-        reloadInterval,
-        reloadInterval
+              locations,
+              path -> {
+                LOG.info("Reloading keystore and truststore certificates.");
+                try {
+                  sslContextFactory.reload(factory -> {
+                  });
+                } catch (Exception ex) {
+                  LOG.error("Failed to reload SSL keystore " +
+                      "and truststore certificates", ex);
+                }
+              }, null),
+          reloadInterval,
+          reloadInterval
       );
       return timer;
     }
@@ -620,7 +583,7 @@ public final class HttpServer2 implements FilterContainer {
             Arrays.asList(enabledProtocolsArray);
 
         List<String> resetExcludedProtocols = new ArrayList<>();
-        for (String jettyExcludedProtocol: jettyExcludedProtocols) {
+        for (String jettyExcludedProtocol : jettyExcludedProtocols) {
           if (!enabledProtocolsList.contains(jettyExcludedProtocol)) {
             resetExcludedProtocols.add(jettyExcludedProtocol);
           } else {
@@ -654,8 +617,8 @@ public final class HttpServer2 implements FilterContainer {
           constructSecretProvider(b, webAppContext.getServletContext());
       this.webAppContext.getServletContext().setAttribute
           (AuthenticationFilter.SIGNER_SECRET_PROVIDER_ATTRIBUTE,
-           secretProvider);
-    } catch(IOException e) {
+              secretProvider);
+    } catch (IOException e) {
       throw e;
     } catch (Exception e) {
       throw new IOException(e);
@@ -667,7 +630,7 @@ public final class HttpServer2 implements FilterContainer {
   }
 
   private void initializeWebServer(String name, String hostName,
-      Configuration conf, String[] pathSpecs)
+                                   Configuration conf, String[] pathSpecs)
       throws IOException {
 
     Preconditions.checkNotNull(webAppContext);
@@ -732,18 +695,18 @@ public final class HttpServer2 implements FilterContainer {
   }
 
   private static WebAppContext createWebAppContext(Builder b,
-      AccessControlList adminsAcl, final String appDir) {
+                                                   AccessControlList adminsAcl, final String appDir) {
     WebAppContext ctx = new WebAppContext();
     ctx.setDefaultsDescriptor(null);
     ServletHolder holder = new ServletHolder(new WebServlet());
-    Map<String, String> params = ImmutableMap. <String, String> builder()
-            .put("acceptRanges", "true")
-            .put("dirAllowed", "false")
-            .put("gzip", "true")
-            .put("useFileMappedBuffer", "true")
-            .build();
+    Map<String, String> params = ImmutableMap.<String, String>builder()
+        .put("acceptRanges", "true")
+        .put("dirAllowed", "false")
+        .put("gzip", "true")
+        .put("useFileMappedBuffer", "true")
+        .build();
     holder.setInitParameters(params);
-    ctx.setWelcomeFiles(new String[] {"index.html"});
+    ctx.setWelcomeFiles(new String[]{"index.html"});
     ctx.addServlet(holder, "/");
     ctx.setDisplayName(b.name);
     ctx.setContextPath("/");
@@ -760,11 +723,11 @@ public final class HttpServer2 implements FilterContainer {
   }
 
   private static SignerSecretProvider constructSecretProvider(final Builder b,
-      ServletContext ctx)
+                                                              ServletContext ctx)
       throws Exception {
     final Configuration conf = b.conf;
     Properties config = getFilterProperties(conf,
-                                            b.authFilterConfigurationPrefix);
+        b.authFilterConfigurationPrefix);
     return AuthenticationFilter.constructSecretProvider(
         ctx, config, b.disallowFallbackToRandomSignerSecretProvider);
   }
@@ -780,7 +743,7 @@ public final class HttpServer2 implements FilterContainer {
 
   private static void addNoCacheFilter(ServletContextHandler ctxt) {
     defineFilter(ctxt, NO_CACHE_FILTER, NoCacheFilter.class.getName(),
-                 Collections.<String, String> emptyMap(), new String[] { "/*" });
+        Collections.<String, String>emptyMap(), new String[]{"/*"});
   }
 
   /** Get an array of FilterConfiguration specified in the conf */
@@ -801,8 +764,8 @@ public final class HttpServer2 implements FilterContainer {
     }
 
     FilterInitializer[] initializers = new FilterInitializer[classList.size()];
-    for(int i = 0; i < classList.size(); i++) {
-      initializers[i] = (FilterInitializer)ReflectionUtils.newInstance(
+    for (int i = 0; i < classList.size(); i++) {
+      initializers[i] = (FilterInitializer) ReflectionUtils.newInstance(
           classList.get(i), conf);
     }
     return initializers;
@@ -814,7 +777,7 @@ public final class HttpServer2 implements FilterContainer {
    * @throws IOException
    */
   protected void addDefaultApps(ContextHandlerCollection parent,
-      final String appDir, Configuration conf) throws IOException {
+                                final String appDir, Configuration conf) throws IOException {
     // set up the context for "/logs/" if "hadoop.log.dir" property is defined
     // and it's enabled.
     String logDir = System.getProperty("hadoop.log.dir");
@@ -901,7 +864,7 @@ public final class HttpServer2 implements FilterContainer {
    * @param pathSpec The path spec for the servlet
    */
   public void addJerseyResourcePackage(final String packageName,
-      final String pathSpec) {
+                                       final String pathSpec) {
     addJerseyResourcePackage(packageName, pathSpec,
         Collections.<String, String>emptyMap());
   }
@@ -913,7 +876,7 @@ public final class HttpServer2 implements FilterContainer {
    * @param params properties and features for ResourceConfig
    */
   public void addJerseyResourcePackage(final String packageName,
-      final String pathSpec, Map<String, String> params) {
+                                       final String pathSpec, Map<String, String> params) {
     LOG.info("addJerseyResourcePackage: packageName=" + packageName
         + ", pathSpec=" + pathSpec);
     final ServletHolder sh = new ServletHolder(ServletContainer.class);
@@ -933,7 +896,7 @@ public final class HttpServer2 implements FilterContainer {
    * @param clazz The servlet class
    */
   public void addServlet(String name, String pathSpec,
-      Class<? extends HttpServlet> clazz) {
+                         Class<? extends HttpServlet> clazz) {
     addInternalServlet(name, pathSpec, clazz, false);
   }
 
@@ -948,7 +911,7 @@ public final class HttpServer2 implements FilterContainer {
    * @param clazz The servlet class
    */
   public void addInternalServlet(String name, String pathSpec,
-      Class<? extends HttpServlet> clazz) {
+                                 Class<? extends HttpServlet> clazz) {
     addInternalServlet(name, pathSpec, clazz, false);
   }
 
@@ -966,7 +929,7 @@ public final class HttpServer2 implements FilterContainer {
    * @param requireAuth Require Kerberos authenticate to access servlet
    */
   public void addInternalServlet(String name, String pathSpec,
-      Class<? extends HttpServlet> clazz, boolean requireAuth) {
+                                 Class<? extends HttpServlet> clazz, boolean requireAuth) {
     ServletHolder holder = new ServletHolder(clazz);
     if (name != null) {
       holder.setName(name);
@@ -1006,7 +969,7 @@ public final class HttpServer2 implements FilterContainer {
    * @param params init parameters
    */
   public void addInternalServlet(String name, String pathSpec,
-      Class<? extends HttpServlet> clazz, Map<String, String> params) {
+                                 Class<? extends HttpServlet> clazz, Map<String, String> params) {
     // Jetty doesn't like the same path spec mapping to different servlets, so
     // if there's already a mapping for this pathSpec, remove it and assume that
     // the newest one is the one we want
@@ -1054,16 +1017,16 @@ public final class HttpServer2 implements FilterContainer {
 
   @Override
   public void addFilter(String name, String classname,
-      Map<String, String> parameters) {
+                        Map<String, String> parameters) {
 
     FilterHolder filterHolder = getFilterHolder(name, classname, parameters);
-    final String[] userFacingUrls = {"/", "/*" };
+    final String[] userFacingUrls = {"/", "/*"};
     FilterMapping fmap = getFilterMapping(name, userFacingUrls);
     defineFilter(webAppContext, filterHolder, fmap);
     LOG.info(
         "Added filter " + name + " (class=" + classname + ") to context "
             + webAppContext.getDisplayName());
-    final String[] ALL_URLS = { "/*" };
+    final String[] ALL_URLS = {"/*"};
     fmap = getFilterMapping(name, ALL_URLS);
     for (Map.Entry<ServletContextHandler, Boolean> e
         : defaultContexts.entrySet()) {
@@ -1079,8 +1042,8 @@ public final class HttpServer2 implements FilterContainer {
 
   @Override
   public void addGlobalFilter(String name, String classname,
-      Map<String, String> parameters) {
-    final String[] ALL_URLS = { "/*" };
+                              Map<String, String> parameters) {
+    final String[] ALL_URLS = {"/*"};
     FilterHolder filterHolder = getFilterHolder(name, classname, parameters);
     FilterMapping fmap = getFilterMapping(name, ALL_URLS);
     defineFilter(webAppContext, filterHolder, fmap);
@@ -1094,7 +1057,7 @@ public final class HttpServer2 implements FilterContainer {
    * Define a filter for a context and set up default url mappings.
    */
   public static void defineFilter(ServletContextHandler ctx, String name,
-      String classname, Map<String,String> parameters, String[] urls) {
+                                  String classname, Map<String, String> parameters, String[] urls) {
     FilterHolder filterHolder = getFilterHolder(name, classname, parameters);
     FilterMapping fmap = getFilterMapping(name, urls);
     defineFilter(ctx, filterHolder, fmap);
@@ -1118,7 +1081,7 @@ public final class HttpServer2 implements FilterContainer {
   }
 
   private static FilterHolder getFilterHolder(String name, String classname,
-      Map<String, String> parameters) {
+                                              Map<String, String> parameters) {
     FilterHolder holder = new FilterHolder();
     holder.setName(name);
     holder.setClassName(classname);
@@ -1134,9 +1097,9 @@ public final class HttpServer2 implements FilterContainer {
    * @param webAppCtx The WebApplicationContext to add to
    */
   protected void addFilterPathMapping(String pathSpec,
-      ServletContextHandler webAppCtx) {
+                                      ServletContextHandler webAppCtx) {
     ServletHandler handler = webAppCtx.getServletHandler();
-    for(String name : filterNames) {
+    for (String name : filterNames) {
       FilterMapping fmap = new FilterMapping();
       fmap.setPathSpec(pathSpec);
       fmap.setFilterName(name);
@@ -1154,7 +1117,7 @@ public final class HttpServer2 implements FilterContainer {
     return webAppContext.getAttribute(name);
   }
 
-  public WebAppContext getWebAppContext(){
+  public WebAppContext getWebAppContext() {
     return this.webAppContext;
   }
 
@@ -1196,7 +1159,7 @@ public final class HttpServer2 implements FilterContainer {
    */
   @Deprecated
   public int getPort() {
-    return ((ServerConnector)webServer.getConnectors()[0]).getLocalPort();
+    return ((ServerConnector) webServer.getConnectors()[0]).getLocalPort();
   }
 
   /**
@@ -1210,7 +1173,7 @@ public final class HttpServer2 implements FilterContainer {
     if (index > webServer.getConnectors().length)
       return null;
 
-    ServerConnector c = (ServerConnector)webServer.getConnectors()[index];
+    ServerConnector c = (ServerConnector) webServer.getConnectors()[index];
     if (c.getLocalPort() == -1 || c.getLocalPort() == -2) {
       // The connector is not bounded or was closed
       return null;
@@ -1229,7 +1192,7 @@ public final class HttpServer2 implements FilterContainer {
   }
 
   private void initSpnego(Configuration conf, String hostName,
-      String usernameConfKey, String keytabConfKey) throws IOException {
+                          String usernameConfKey, String keytabConfKey) throws IOException {
     Map<String, String> params = new HashMap<>();
     String principalInConf = conf.get(usernameConfKey);
     if (principalInConf != null && !principalInConf.isEmpty()) {
@@ -1242,7 +1205,7 @@ public final class HttpServer2 implements FilterContainer {
     }
     params.put(AuthenticationFilter.AUTH_TYPE, "kerberos");
     defineFilter(webAppContext, SPNEGO_FILTER,
-                 AuthenticationFilter.class.getName(), params, null);
+        AuthenticationFilter.class.getName(), params, null);
   }
 
   /**
@@ -1318,7 +1281,7 @@ public final class HttpServer2 implements FilterContainer {
    * @return
    */
   private static BindException constructBindException(ServerConnector listener,
-      IOException ex) {
+                                                      IOException ex) {
     BindException be = new BindException("Port in use: "
         + listener.getHost() + ":" + listener.getPort());
     if (ex != null) {
@@ -1368,7 +1331,7 @@ public final class HttpServer2 implements FilterContainer {
       // Ignore exception.
       ioException = ex;
     }
-    for(Integer port : portRanges) {
+    for (Integer port : portRanges) {
       if (port == startPort) {
         continue;
       }
@@ -1463,7 +1426,7 @@ public final class HttpServer2 implements FilterContainer {
   }
 
   private MultiException addMultiException(MultiException exception, Exception e) {
-    if(exception == null){
+    if (exception == null) {
       exception = new MultiException();
     }
     exception.add(e);
@@ -1487,7 +1450,7 @@ public final class HttpServer2 implements FilterContainer {
     Preconditions.checkState(!listeners.isEmpty());
     StringBuilder sb = new StringBuilder("HttpServer (")
         .append(isAlive() ? STATE_DESCRIPTION_ALIVE
-                    : STATE_DESCRIPTION_NOT_LIVE)
+            : STATE_DESCRIPTION_NOT_LIVE)
         .append("), listening at:");
     for (ServerConnector l : listeners) {
       sb.append(l.getHost()).append(":").append(l.getPort()).append("/,");
@@ -1511,15 +1474,15 @@ public final class HttpServer2 implements FilterContainer {
    * @return TRUE/FALSE based on the logic decribed above.
    */
   public static boolean isInstrumentationAccessAllowed(
-    ServletContext servletContext, HttpServletRequest request,
-    HttpServletResponse response) throws IOException {
+      ServletContext servletContext, HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
     Configuration conf =
-      (Configuration) servletContext.getAttribute(CONF_CONTEXT_ATTRIBUTE);
+        (Configuration) servletContext.getAttribute(CONF_CONTEXT_ATTRIBUTE);
 
     boolean access = true;
     boolean adminAccess = conf.getBoolean(
-      CommonConfigurationKeys.HADOOP_SECURITY_INSTRUMENTATION_REQUIRES_ADMIN,
-      false);
+        CommonConfigurationKeys.HADOOP_SECURITY_INSTRUMENTATION_REQUIRES_ADMIN,
+        false);
     if (adminAccess) {
       access = hasAdministratorAccess(servletContext, request, response);
     }
@@ -1548,8 +1511,8 @@ public final class HttpServer2 implements FilterContainer {
     String remoteUser = request.getRemoteUser();
     if (remoteUser == null) {
       response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                         "Unauthenticated users are not " +
-                         "authorized to access this page.");
+          "Unauthenticated users are not " +
+              "authorized to access this page.");
       return false;
     }
 
@@ -1576,7 +1539,7 @@ public final class HttpServer2 implements FilterContainer {
    *         the user is not present
    */
   public static boolean userHasAdministratorAccess(ServletContext servletContext,
-      String remoteUser) {
+                                                   String remoteUser) {
     AccessControlList adminsAcl = (AccessControlList) servletContext
         .getAttribute(ADMINS_ACL);
     UserGroupInformation remoteUserUGI =
@@ -1595,9 +1558,9 @@ public final class HttpServer2 implements FilterContainer {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+        throws ServletException, IOException {
       if (!HttpServer2.isInstrumentationAccessAllowed(getServletContext(),
-                                                      request, response)) {
+          request, response)) {
         return;
       }
       response.setContentType("text/plain; charset=UTF-8");
@@ -1636,7 +1599,8 @@ public final class HttpServer2 implements FilterContainer {
       public Enumeration<String> getParameterNames() {
         return new Enumeration<String>() {
           private Enumeration<String> rawIterator =
-            rawRequest.getParameterNames();
+              rawRequest.getParameterNames();
+
           @Override
           public boolean hasMoreElements() {
             return rawIterator.hasMoreElements();
@@ -1655,7 +1619,7 @@ public final class HttpServer2 implements FilterContainer {
       @Override
       public String getParameter(String name) {
         return HtmlQuoting.quoteHtmlChars(rawRequest.getParameter
-                                     (HtmlQuoting.unquoteHtmlChars(name)));
+            (HtmlQuoting.unquoteHtmlChars(name)));
       }
 
       @Override
@@ -1666,7 +1630,7 @@ public final class HttpServer2 implements FilterContainer {
           return null;
         }
         String[] result = new String[unquoteValue.length];
-        for(int i=0; i < result.length; ++i) {
+        for (int i = 0; i < result.length; ++i) {
           result[i] = HtmlQuoting.quoteHtmlChars(unquoteValue[i]);
         }
         return result;
@@ -1677,10 +1641,10 @@ public final class HttpServer2 implements FilterContainer {
       public Map<String, String[]> getParameterMap() {
         Map<String, String[]> result = new HashMap<>();
         Map<String, String[]> raw = rawRequest.getParameterMap();
-        for (Map.Entry<String,String[]> item: raw.entrySet()) {
+        for (Map.Entry<String, String[]> item : raw.entrySet()) {
           String[] rawValue = item.getValue();
           String[] cookedValue = new String[rawValue.length];
-          for(int i=0; i< rawValue.length; ++i) {
+          for (int i = 0; i < rawValue.length; ++i) {
             cookedValue[i] = HtmlQuoting.quoteHtmlChars(rawValue[i]);
           }
           result.put(HtmlQuoting.quoteHtmlChars(item.getKey()), cookedValue);
@@ -1693,7 +1657,7 @@ public final class HttpServer2 implements FilterContainer {
        * can't inject attacks.
        */
       @Override
-      public StringBuffer getRequestURL(){
+      public StringBuffer getRequestURL() {
         String url = rawRequest.getRequestURL().toString();
         return new StringBuffer(HtmlQuoting.quoteHtmlChars(url));
       }
@@ -1722,9 +1686,9 @@ public final class HttpServer2 implements FilterContainer {
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain
-                         ) throws IOException, ServletException {
+    ) throws IOException, ServletException {
       HttpServletRequestWrapper quoted =
-        new RequestQuoter((HttpServletRequest) request);
+          new RequestQuoter((HttpServletRequest) request);
       HttpServletResponse httpResponse = (HttpServletResponse) response;
 
       String mime = inferMimeType(request);
@@ -1748,9 +1712,9 @@ public final class HttpServer2 implements FilterContainer {
      * URI. Returns null if unknown.
      */
     private String inferMimeType(ServletRequest request) {
-      String path = ((HttpServletRequest)request).getRequestURI();
+      String path = ((HttpServletRequest) request).getRequestURI();
       ServletContextHandler.Context sContext =
-          (ServletContextHandler.Context)config.getServletContext();
+          (ServletContextHandler.Context) config.getServletContext();
       String mime = sContext.getMimeType(path);
       return (mime == null) ? null : mime;
     }
@@ -1768,10 +1732,11 @@ public final class HttpServer2 implements FilterContainer {
       }
     }
   }
-    /**
-     * The X-FRAME-OPTIONS header in HTTP response to mitigate clickjacking
-     * attack.
-     */
+
+  /**
+   * The X-FRAME-OPTIONS header in HTTP response to mitigate clickjacking
+   * attack.
+   */
   public enum XFrameOption {
     DENY("DENY"), SAMEORIGIN("SAMEORIGIN"), ALLOWFROM("ALLOW-FROM");
 
@@ -1809,12 +1774,12 @@ public final class HttpServer2 implements FilterContainer {
   private Map<String, String> setHeaders(Configuration conf) {
     Map<String, String> xFrameParams = new HashMap<>();
     Map<String, String> headerConfigMap =
-            conf.getValByRegex(HTTP_HEADER_REGEX);
+        conf.getValByRegex(HTTP_HEADER_REGEX);
 
     xFrameParams.putAll(getDefaultHeaders());
-    if(this.xFrameOptionIsEnabled) {
-      xFrameParams.put(HTTP_HEADER_PREFIX+X_FRAME_OPTIONS,
-              this.xFrameOption.toString());
+    if (this.xFrameOptionIsEnabled) {
+      xFrameParams.put(HTTP_HEADER_PREFIX + X_FRAME_OPTIONS,
+          this.xFrameOption.toString());
     }
     xFrameParams.putAll(headerConfigMap);
     return xFrameParams;
@@ -1824,10 +1789,10 @@ public final class HttpServer2 implements FilterContainer {
     Map<String, String> headers = new HashMap<>();
     String[] splitVal = X_CONTENT_TYPE_OPTIONS.split(":");
     headers.put(HTTP_HEADER_PREFIX + splitVal[0],
-            splitVal[1]);
+        splitVal[1]);
     splitVal = X_XSS_PROTECTION.split(":");
     headers.put(HTTP_HEADER_PREFIX + splitVal[0],
-            splitVal[1]);
+        splitVal[1]);
     return headers;
   }
 }

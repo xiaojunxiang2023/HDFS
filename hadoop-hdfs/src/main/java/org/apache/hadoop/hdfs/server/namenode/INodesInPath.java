@@ -1,16 +1,15 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 import static org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot.CURRENT_STATE_ID;
 import static org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot.ID_INTEGER_COMPARATOR;
@@ -102,24 +101,24 @@ public class INodesInPath {
    * Example: <br>
    * Given the path /c1/c2/c3 where only /c1/c2 exists, resulting in the
    * following path components: ["","c1","c2","c3"]
-   * 
+   *
    * <p>
    * <code>getExistingPathINodes(["","c1","c2"])</code> should fill
    * the array with [rootINode,c1,c2], <br>
    * <code>getExistingPathINodes(["","c1","c2","c3"])</code> should
    * fill the array with [rootINode,c1,c2,null]
-   * 
+   *
    * @param startingDir the starting directory
    * @param components array of path component name
    * @return the specified number of existing INodes in the path
    */
   static INodesInPath resolve(final INodeDirectory startingDir,
-      final byte[][] components) {
+                              final byte[][] components) {
     return resolve(startingDir, components, false);
   }
 
   static INodesInPath resolve(final INodeDirectory startingDir,
-      byte[][] components, final boolean isRaw) {
+                              byte[][] components, final boolean isRaw) {
     Preconditions.checkArgument(startingDir.compareTo(components[0]) == 0);
 
     INode curNode = startingDir;
@@ -134,7 +133,7 @@ public class INodesInPath {
       inodes[inodeNum++] = curNode;
       final boolean isRef = curNode.isReference();
       final boolean isDir = curNode.isDirectory();
-      final INodeDirectory dir = isDir? curNode.asDirectory(): null;
+      final INodeDirectory dir = isDir ? curNode.asDirectory() : null;
       if (!isRef && isDir && dir.isWithSnapshot()) {
         //if the path is a non-snapshot path, update the latest snapshot.
         if (!isSnapshot && shouldUpdateLatestId(
@@ -157,10 +156,10 @@ public class INodesInPath {
           int dstSnapshotId = curNode.asReference().getDstSnapshotId();
           if (snapshotId == CURRENT_STATE_ID || // no snapshot in dst tree of rename
               (dstSnapshotId != CURRENT_STATE_ID &&
-               dstSnapshotId >= snapshotId)) { // the above scenario
+                  dstSnapshotId >= snapshotId)) { // the above scenario
             int lastSnapshot = CURRENT_STATE_ID;
             DirectoryWithSnapshotFeature sf;
-            if (curNode.isDirectory() && 
+            if (curNode.isDirectory() &&
                 (sf = curNode.asDirectory().getDirectoryWithSnapshotFeature()) != null) {
               lastSnapshot = sf.getLastSnapshotId();
             }
@@ -241,7 +240,7 @@ public class INodesInPath {
    * appended to the end of the new INodesInPath.
    */
   public static INodesInPath append(INodesInPath iip, INode child,
-      byte[] childName) {
+                                    byte[] childName) {
     Preconditions.checkArgument(iip.length() > 0);
     Preconditions.checkArgument(iip.getLastINode() != null && iip
         .getLastINode().isDirectory());
@@ -282,7 +281,7 @@ public class INodesInPath {
   private final int snapshotId;
 
   private INodesInPath(INode[] inodes, byte[][] path, boolean isRaw,
-      boolean isSnapshot,int snapshotId) {
+                       boolean isSnapshot, int snapshotId) {
     Preconditions.checkArgument(inodes != null && path != null);
     this.inodes = inodes;
     this.path = path;
@@ -302,7 +301,7 @@ public class INodesInPath {
     Preconditions.checkState(!isSnapshot);
     return snapshotId;
   }
-  
+
   /**
    * For snapshot paths, return the id of the snapshot specified in the path.
    * For non-snapshot paths, return {@link Snapshot#CURRENT_STATE_ID}.
@@ -453,7 +452,7 @@ public class INodesInPath {
   }
 
   private static String toString(INode inode) {
-    return inode == null? null: inode.getLocalName();
+    return inode == null ? null : inode.getLocalName();
   }
 
   @Override
@@ -475,13 +474,13 @@ public class INodesInPath {
       b.append("[]");
     } else {
       b.append("[").append(toString(inodes[0]));
-      for(int i = 1; i < inodes.length; i++) {
+      for (int i = 1; i < inodes.length; i++) {
         b.append(", ").append(toString(inodes[i]));
       }
       b.append("], length=").append(inodes.length);
     }
     b.append("\n  isSnapshot        = ").append(isSnapshot)
-     .append("\n  snapshotId        = ").append(snapshotId);
+        .append("\n  snapshotId        = ").append(snapshotId);
     return b.toString();
   }
 
@@ -489,17 +488,17 @@ public class INodesInPath {
     // check parent up to snapshotRootIndex if this is a snapshot path
     int i = 0;
     if (inodes[i] != null) {
-      for(i++; i < inodes.length && inodes[i] != null; i++) {
+      for (i++; i < inodes.length && inodes[i] != null; i++) {
         final INodeDirectory parent_i = inodes[i].getParent();
-        final INodeDirectory parent_i_1 = inodes[i-1].getParent();
-        if (parent_i != inodes[i-1] &&
+        final INodeDirectory parent_i_1 = inodes[i - 1].getParent();
+        if (parent_i != inodes[i - 1] &&
             (parent_i_1 == null || !parent_i_1.isSnapshottable()
                 || parent_i != parent_i_1)) {
           throw new AssertionError(
-              "inodes[" + i + "].getParent() != inodes[" + (i-1)
-              + "]\n  inodes[" + i + "]=" + inodes[i].toDetailString()
-              + "\n  inodes[" + (i-1) + "]=" + inodes[i-1].toDetailString()
-              + "\n this=" + toString(false));
+              "inodes[" + i + "].getParent() != inodes[" + (i - 1)
+                  + "]\n  inodes[" + i + "]=" + inodes[i].toDetailString()
+                  + "\n  inodes[" + (i - 1) + "]=" + inodes[i - 1].toDetailString()
+                  + "\n this=" + toString(false));
         }
       }
     }

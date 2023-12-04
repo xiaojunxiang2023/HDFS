@@ -26,7 +26,7 @@ public class CpuTimeTracker {
     this.cpuUsage = UNAVAILABLE;
     this.sampleTime = UNAVAILABLE;
     this.lastSampleTime = UNAVAILABLE;
-    minimumTimeInterval =  10 * jiffyLengthInMillis;
+    minimumTimeInterval = 10 * jiffyLengthInMillis;
   }
 
   /**
@@ -53,7 +53,7 @@ public class CpuTimeTracker {
     if (sampleTime > lastSampleTime + minimumTimeInterval) {
       cpuUsage =
           ((cumulativeCpuTime.subtract(lastCumulativeCpuTime)).floatValue())
-          * 100F / ((float) (sampleTime - lastSampleTime));
+              * 100F / ((float) (sampleTime - lastSampleTime));
       lastSampleTime = sampleTime;
       lastCumulativeCpuTime = cumulativeCpuTime;
     }
@@ -76,7 +76,7 @@ public class CpuTimeTracker {
   public void updateElapsedJiffies(BigInteger elapsedJiffies, long newTime) {
     BigInteger newValue = elapsedJiffies.multiply(jiffyLengthInMillis);
     cumulativeCpuTime = newValue.compareTo(cumulativeCpuTime) >= 0 ?
-            newValue : cumulativeCpuTime;
+        newValue : cumulativeCpuTime;
     sampleTime = newTime;
   }
 

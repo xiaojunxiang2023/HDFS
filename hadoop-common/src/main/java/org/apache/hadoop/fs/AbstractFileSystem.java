@@ -1,24 +1,5 @@
 package org.apache.hadoop.fs;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.Options.ChecksumOpt;
@@ -34,12 +15,22 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.LambdaUtils;
 import org.apache.hadoop.util.Progressable;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapabilityArgs;
 
@@ -47,7 +38,7 @@ import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapa
  * This class provides an interface for implementors of a Hadoop file system
  * (analogous to the VFS of Unix). Applications do not access this class;
  * instead they access files across all file systems using {@link FileContext}.
- * 
+ *
  * Pathnames passed to AbstractFileSystem can be fully qualified URI that
  * matches the "this" file system (ie same scheme and authority) 
  * or a Slash-relative name that is assumed to be relative
@@ -57,52 +48,52 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   static final Logger LOG = LoggerFactory.getLogger(AbstractFileSystem.class);
 
   /** Recording statistics per a file system class. */
-  private static final Map<URI, Statistics> 
+  private static final Map<URI, Statistics>
       STATISTICS_TABLE = new HashMap<URI, Statistics>();
-  
+
   /** Cache of constructors for each file system class. */
-  private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = 
-    new ConcurrentHashMap<Class<?>, Constructor<?>>();
-  
-  private static final Class<?>[] URI_CONFIG_ARGS = 
-    new Class[]{URI.class, Configuration.class};
-  
+  private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE =
+      new ConcurrentHashMap<Class<?>, Constructor<?>>();
+
+  private static final Class<?>[] URI_CONFIG_ARGS =
+      new Class[]{URI.class, Configuration.class};
+
   /** The statistics for this file system. */
   protected Statistics statistics;
 
   @VisibleForTesting
   static final String NO_ABSTRACT_FS_ERROR = "No AbstractFileSystem configured for scheme";
-  
+
   private final URI myUri;
-  
+
   public Statistics getStatistics() {
     return statistics;
   }
-  
+
   /**
    * Returns true if the specified string is considered valid in the path part
    * of a URI by this file system.  The default implementation enforces the rules
    * of HDFS, but subclasses may override this method to implement specific
    * validation rules for specific file systems.
-   * 
+   *
    * @param src String source filename to check, path part of the URI
    * @return boolean true if the specified string is considered valid
    */
   public boolean isValidName(String src) {
     // Prohibit ".." "." and anything containing ":"
     StringTokenizer tokens = new StringTokenizer(src, Path.SEPARATOR);
-    while(tokens.hasMoreTokens()) {
+    while (tokens.hasMoreTokens()) {
       String element = tokens.nextToken();
       if (element.equals("") ||
-          element.equals(".")  ||
+          element.equals(".") ||
           (element.indexOf(":") >= 0)) {
         return false;
       }
     }
     return true;
   }
-  
-  /** 
+
+  /**
    * Create an object for the given class and initialize it from conf.
    * @param theClass class of which an object is created
    * @param conf Configuration
@@ -110,7 +101,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    */
   @SuppressWarnings("unchecked")
   static <T> T newInstance(Class<T> theClass,
-    URI uri, Configuration conf) {
+                           URI uri, Configuration conf) {
     T result;
     try {
       Constructor<T> meth = (Constructor<T>) CONSTRUCTOR_CACHE.get(theClass);
@@ -132,7 +123,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     return result;
   }
-  
+
   /**
    * Create a file system instance for the specified uri using the conf. The
    * conf is used to find the class name that implements the file system. The
@@ -140,7 +131,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    *
    * @param uri URI of the file system
    * @param conf Configuration for the file system
-   * 
+   *
    * @return Returns the file system for the given URI
    *
    * @throws UnsupportedFileSystemException file system for <code>uri</code> is
@@ -162,7 +153,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
 
   /**
    * Get the statistics for a particular file system.
-   * 
+   *
    * @param uri
    *          used as key to lookup STATISTICS_TABLE. Only scheme and authority
    *          part of the uri are used.
@@ -182,7 +173,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     return result;
   }
-  
+
   private static URI getBaseUri(URI uri) {
     String scheme = uri.getScheme();
     String authority = uri.getAuthority();
@@ -194,9 +185,9 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     return URI.create(baseUriString);
   }
-  
+
   public static synchronized void clearStatistics() {
-    for(Statistics stat: STATISTICS_TABLE.values()) {
+    for (Statistics stat : STATISTICS_TABLE.values()) {
       stat.reset();
     }
   }
@@ -210,7 +201,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
           + pair.getKey().getAuthority() + ": " + pair.getValue());
     }
   }
-  
+
   protected static synchronized Map<URI, Statistics> getAllStatistics() {
     Map<URI, Statistics> statsMap = new HashMap<URI, Statistics>(
         STATISTICS_TABLE.size());
@@ -229,14 +220,14 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * determines a configuration property name,
    * <tt>fs.AbstractFileSystem.<i>scheme</i>.impl</tt> whose value names the
    * AbstractFileSystem class.
-   * 
+   *
    * The entire URI and conf is passed to the AbstractFileSystem factory method.
-   * 
+   *
    * @param uri for the file system to be created.
    * @param conf which is passed to the file system impl.
-   * 
+   *
    * @return file system for the given URI.
-   * 
+   *
    * @throws UnsupportedFileSystemException if the file system for
    *           <code>uri</code> is not supported.
    */
@@ -247,7 +238,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
 
   /**
    * Constructor to be called by subclasses.
-   * 
+   *
    * @param uri for this file system.
    * @param supportedScheme the scheme supported by the implementor
    * @param authorityNeeded if true then theURI must have authority, if false
@@ -256,12 +247,12 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws URISyntaxException <code>uri</code> has syntax error
    */
   public AbstractFileSystem(final URI uri, final String supportedScheme,
-      final boolean authorityNeeded, final int defaultPort)
+                            final boolean authorityNeeded, final int defaultPort)
       throws URISyntaxException {
     myUri = getUri(uri, supportedScheme, authorityNeeded, defaultPort);
-    statistics = getStatistics(uri); 
+    statistics = getStatistics(uri);
   }
-  
+
   /**
    * Check that the Uri's scheme matches
    * @param uri
@@ -282,18 +273,18 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * Get the URI for the file system based on the given URI. The path, query
    * part of the given URI is stripped out and default file system port is used
    * to form the URI.
-   * 
+   *
    * @param uri FileSystem URI.
    * @param authorityNeeded if true authority cannot be null in the URI. If
    *          false authority must be null.
    * @param defaultPort default port to use if port is not specified in the URI.
-   * 
+   *
    * @return URI of the file system
-   * 
+   *
    * @throws URISyntaxException <code>uri</code> has syntax error
    */
   private URI getUri(URI uri, String supportedScheme,
-      boolean authorityNeeded, int defaultPort) throws URISyntaxException {
+                     boolean authorityNeeded, int defaultPort) throws URISyntaxException {
     checkScheme(uri, supportedScheme);
     // A file system implementation that requires authority must always
     // specify default port
@@ -304,11 +295,11 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     String authority = uri.getAuthority();
     if (authority == null) {
-       if (authorityNeeded) {
-         throw new HadoopIllegalArgumentException("Uri without authority: " + uri);
-       } else {
-         return new URI(supportedScheme + ":///");
-       }   
+      if (authorityNeeded) {
+        throw new HadoopIllegalArgumentException("Uri without authority: " + uri);
+      } else {
+        return new URI(supportedScheme + ":///");
+      }
     }
     // authority is non null  - AuthorityNeeded may be true or false.
     int port = uri.getPort();
@@ -318,10 +309,10 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     return new URI(supportedScheme + "://" + uri.getHost() + ":" + port);
   }
-  
+
   /**
    * The default port of this file system.
-   * 
+   *
    * @return default port of this file system's Uri scheme
    *         A uri with a port of -1 =&gt; default port;
    */
@@ -329,20 +320,20 @@ public abstract class AbstractFileSystem implements PathCapabilities {
 
   /**
    * Returns a URI whose scheme and authority identify this FileSystem.
-   * 
+   *
    * @return the uri of this file system.
    */
   public URI getUri() {
     return myUri;
   }
-  
+
   /**
    * Check that a Path belongs to this FileSystem.
-   * 
+   *
    * If the path is fully qualified URI, then its scheme and authority
    * matches that of this file system. Otherwise the path must be 
    * slash-relative name.
-   * 
+   *
    * @throws InvalidPathException if the path is invalid
    */
   public void checkPath(Path path) {
@@ -354,7 +345,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
         if (path.isUriPathAbsolute()) {
           return;
         }
-        throw new InvalidPathException("relative paths not allowed:" + 
+        throw new InvalidPathException("relative paths not allowed:" +
             path);
       } else {
         throw new InvalidPathException(
@@ -364,17 +355,17 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     String thisScheme = this.getUri().getScheme();
     String thisHost = this.getUri().getHost();
     String thatHost = uri.getHost();
-    
+
     // Schemes and hosts must match.
     // Allow for null Authority for file:///
     if (!thisScheme.equalsIgnoreCase(thatScheme) ||
-       (thisHost != null && 
+        (thisHost != null &&
             !thisHost.equalsIgnoreCase(thatHost)) ||
-       (thisHost == null && thatHost != null)) {
+        (thisHost == null && thatHost != null)) {
       throw new InvalidPathException("Wrong FS: " + path + ", expected: "
           + this.getUri());
     }
-    
+
     // Ports must match, unless this FS instance is using the default port, in
     // which case the port may be omitted from the given URI
     int thisPort = this.getUri().getPort();
@@ -390,13 +381,13 @@ public abstract class AbstractFileSystem implements PathCapabilities {
           + " with port=" + thisPort);
     }
   }
-  
+
   /**
    * Get the path-part of a pathname. Checks that URI matches this file system
    * and that the path-part is a valid name.
-   * 
+   *
    * @param p path
-   * 
+   *
    * @return path-part of the Path p
    */
   public String getUriPath(final Path p) {
@@ -408,7 +399,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     return s;
   }
-  
+
   /**
    * Make the path fully qualified to this file system
    * @param path
@@ -418,30 +409,30 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     checkPath(path);
     return path.makeQualified(this.getUri(), null);
   }
-  
+
   /**
    * Some file systems like LocalFileSystem have an initial workingDir
    * that is used as the starting workingDir. For other file systems
    * like HDFS there is no built in notion of an initial workingDir.
-   * 
+   *
    * @return the initial workingDir if the file system has such a notion
    *         otherwise return a null.
    */
   public Path getInitialWorkingDirectory() {
     return null;
   }
-  
-  /** 
+
+  /**
    * Return the current user's home directory in this file system.
    * The default implementation returns "/user/$USER/".
-   * 
+   *
    * @return current user's home directory.
    */
   public Path getHomeDirectory() {
     String username;
     try {
       username = UserGroupInformation.getCurrentUser().getShortUserName();
-    } catch(IOException ex) {
+    } catch (IOException ex) {
       LOG.warn("Unable to get user name. Fall back to system property " +
           "user.name", ex);
       username = System.getProperty("user.name");
@@ -449,17 +440,17 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     return new Path("/user/" + username)
         .makeQualified(getUri(), null);
   }
-  
+
   /**
    * Return a set of server default configuration values.
-   * 
+   *
    * @return server default configuration values
-   * 
+   *
    * @throws IOException an I/O error occurred
    * @deprecated use {@link #getServerDefaults(Path)} instead
    */
   @Deprecated
-  public abstract FsServerDefaults getServerDefaults() throws IOException; 
+  public abstract FsServerDefaults getServerDefaults() throws IOException;
 
   /**
    * Return a set of server default configuration values based on path.
@@ -482,12 +473,12 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws UnresolvedLinkException if symbolic link on path cannot be
    * resolved internally
    */
-   public Path resolvePath(final Path p) throws FileNotFoundException,
-           UnresolvedLinkException, AccessControlException, IOException {
-     checkPath(p);
-     return getFileStatus(p).getPath(); // default impl is to return the path
-   }
-  
+  public Path resolvePath(final Path p) throws FileNotFoundException,
+      UnresolvedLinkException, AccessControlException, IOException {
+    checkPath(p);
+    return getFileStatus(p).getPath(); // default impl is to return the path
+  }
+
   /**
    * The specification of this method matches that of
    * {@link FileContext#create(Path, EnumSet, Options.CreateOpts...)} except
@@ -495,7 +486,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * (i.e. umask has been applied).
    */
   public final FSDataOutputStream create(final Path f,
-      final EnumSet<CreateFlag> createFlag, Options.CreateOpts... opts)
+                                         final EnumSet<CreateFlag> createFlag, Options.CreateOpts... opts)
       throws AccessControlException, FileAlreadyExistsException,
       FileNotFoundException, ParentNotDirectoryException,
       UnsupportedFileSystemException, UnresolvedLinkException, IOException {
@@ -508,7 +499,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     FsPermission permission = null;
     Progressable progress = null;
     Boolean createParent = null;
- 
+
     for (CreateOpts iOpt : opts) {
       if (CreateOpts.BlockSize.class.isInstance(iOpt)) {
         if (blockSize != -1) {
@@ -536,7 +527,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
         bytesPerChecksum = ((CreateOpts.BytesPerChecksum) iOpt).getValue();
       } else if (CreateOpts.ChecksumParam.class.isInstance(iOpt)) {
         if (checksumOpt != null) {
-          throw new  HadoopIllegalArgumentException(
+          throw new HadoopIllegalArgumentException(
               "CreateChecksumType option is set multiple times");
         }
         checksumOpt = ((CreateOpts.ChecksumParam) iOpt).getValue();
@@ -570,10 +561,10 @@ public abstract class AbstractFileSystem implements PathCapabilities {
 
     FsServerDefaults ssDef = getServerDefaults(f);
     if (ssDef.getBlockSize() % ssDef.getBytesPerChecksum() != 0) {
-      throw new IOException("Internal error: default blockSize is" + 
+      throw new IOException("Internal error: default blockSize is" +
           " not a multiple of default bytesPerChecksum ");
     }
-    
+
     if (blockSize == -1) {
       blockSize = ssDef.getBlockSize();
     }
@@ -599,11 +590,11 @@ public abstract class AbstractFileSystem implements PathCapabilities {
 
     if (blockSize % bytesPerChecksum != 0) {
       throw new HadoopIllegalArgumentException(
-             "blockSize should be a multiple of checksumsize");
+          "blockSize should be a multiple of checksumsize");
     }
 
     return this.createInternal(f, createFlag, permission, bufferSize,
-      replication, blockSize, progress, checksumOpt, createParent);
+        replication, blockSize, progress, checksumOpt, createParent);
   }
 
   /**
@@ -612,9 +603,9 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * have been declared explicitly.
    */
   public abstract FSDataOutputStream createInternal(Path f,
-      EnumSet<CreateFlag> flag, FsPermission absolutePermission,
-      int bufferSize, short replication, long blockSize, Progressable progress,
-      ChecksumOpt checksumOpt, boolean createParent)
+                                                    EnumSet<CreateFlag> flag, FsPermission absolutePermission,
+                                                    int bufferSize, short replication, long blockSize, Progressable progress,
+                                                    ChecksumOpt checksumOpt, boolean createParent)
       throws AccessControlException, FileAlreadyExistsException,
       FileNotFoundException, ParentNotDirectoryException,
       UnsupportedFileSystemException, UnresolvedLinkException, IOException;
@@ -626,7 +617,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * umask has been applied).
    */
   public abstract void mkdir(final Path dir, final FsPermission permission,
-      final boolean createParent) throws AccessControlException,
+                             final boolean createParent) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
       UnresolvedLinkException, IOException;
 
@@ -676,7 +667,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * for this file system.
    */
   public abstract boolean setReplication(final Path f,
-      final short replication) throws AccessControlException,
+                                         final short replication) throws AccessControlException,
       FileNotFoundException, UnresolvedLinkException, IOException;
 
   /**
@@ -685,7 +676,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * f must be for this file system.
    */
   public final void rename(final Path src, final Path dst,
-      final Options.Rename... options) throws AccessControlException,
+                           final Options.Rename... options) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
       ParentNotDirectoryException, UnresolvedLinkException, IOException {
     boolean overwrite = false;
@@ -698,12 +689,12 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     renameInternal(src, dst, overwrite);
   }
-  
+
   /**
    * The specification of this method matches that of
    * {@link FileContext#rename(Path, Path, Options.Rename...)} except that Path
    * f must be for this file system and NO OVERWRITE is performed.
-   * 
+   *
    * File systems that do not have a built in overwrite need implement only this
    * method and can take advantage of the default impl of the other
    * {@link #renameInternal(Path, Path, boolean)}
@@ -712,14 +703,14 @@ public abstract class AbstractFileSystem implements PathCapabilities {
       throws AccessControlException, FileAlreadyExistsException,
       FileNotFoundException, ParentNotDirectoryException,
       UnresolvedLinkException, IOException;
-  
+
   /**
    * The specification of this method matches that of
    * {@link FileContext#rename(Path, Path, Options.Rename...)} except that Path
    * f must be for this file system.
    */
   public void renameInternal(final Path src, final Path dst,
-      boolean overwrite) throws AccessControlException,
+                             boolean overwrite) throws AccessControlException,
       FileAlreadyExistsException, FileNotFoundException,
       ParentNotDirectoryException, UnresolvedLinkException, IOException {
     // Default implementation deals with overwrite in a non-atomic way
@@ -734,11 +725,11 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     if (dstStatus != null) {
       if (dst.equals(src)) {
         throw new FileAlreadyExistsException(
-            "The source "+src+" and destination "+dst+" are the same");
+            "The source " + src + " and destination " + dst + " are the same");
       }
       if (srcStatus.isSymlink() && dst.equals(srcStatus.getSymlink())) {
         throw new FileAlreadyExistsException(
-            "Cannot rename symlink "+src+" to its target "+dst);
+            "Cannot rename symlink " + src + " to its target " + dst);
       }
       // It's OK to rename a file to a symlink and vice versa
       if (srcStatus.isDirectory() != dstStatus.isDirectory()) {
@@ -768,7 +759,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     }
     renameInternal(src, dst);
   }
-  
+
   /**
    * Returns true if the file system supports symlinks, false otherwise.
    * @return true if filesystem supports symlinks
@@ -776,14 +767,14 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   public boolean supportsSymlinks() {
     return false;
   }
-  
+
   /**
    * The specification of this method matches that of  
    * {@link FileContext#createSymlink(Path, Path, boolean)};
    */
   public void createSymlink(final Path target, final Path link,
-      final boolean createParent) throws IOException, UnresolvedLinkException {
-    throw new IOException("File system does not support symlinks");    
+                            final boolean createParent) throws IOException, UnresolvedLinkException {
+    throw new IOException("File system does not support symlinks");
   }
 
   /**
@@ -797,14 +788,14 @@ public abstract class AbstractFileSystem implements PathCapabilities {
         + " that threw an UnresolvedLinkException, causing this method to be"
         + " called, needs to override this method.");
   }
-    
+
   /**
    * The specification of this method matches that of
    * {@link FileContext#setPermission(Path, FsPermission)} except that Path f
    * must be for this file system.
    */
   public abstract void setPermission(final Path f,
-      final FsPermission permission) throws AccessControlException,
+                                     final FsPermission permission) throws AccessControlException,
       FileNotFoundException, UnresolvedLinkException, IOException;
 
   /**
@@ -813,7 +804,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * be for this file system.
    */
   public abstract void setOwner(final Path f, final String username,
-      final String groupname) throws AccessControlException,
+                                final String groupname) throws AccessControlException,
       FileNotFoundException, UnresolvedLinkException, IOException;
 
   /**
@@ -822,7 +813,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * for this file system.
    */
   public abstract void setTimes(final Path f, final long mtime,
-    final long atime) throws AccessControlException, FileNotFoundException,
+                                final long atime) throws AccessControlException, FileNotFoundException,
       UnresolvedLinkException, IOException;
 
   /**
@@ -833,10 +824,10 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   public abstract FileChecksum getFileChecksum(final Path f)
       throws AccessControlException, FileNotFoundException,
       UnresolvedLinkException, IOException;
-  
+
   /**
    * The specification of this method matches that of
-   * {@link FileContext#getFileStatus(Path)} 
+   * {@link FileContext#getFileStatus(Path)}
    * except that an UnresolvedLinkException may be thrown if a symlink is 
    * encountered in the path.
    */
@@ -889,7 +880,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * Path f must be for this file system.
    */
   public abstract BlockLocation[] getFileBlockLocations(final Path f,
-      final long start, final long len) throws AccessControlException,
+                                                        final long start, final long len) throws AccessControlException,
       FileNotFoundException, UnresolvedLinkException, IOException;
 
   /**
@@ -902,7 +893,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     // default impl gets FsStatus of root
     return getFsStatus();
   }
-  
+
   /**
    * The specification of this method matches that of
    * {@link FileContext#getFsStatus(Path)}.
@@ -921,12 +912,12 @@ public abstract class AbstractFileSystem implements PathCapabilities {
     return new RemoteIterator<FileStatus>() {
       private int i = 0;
       private FileStatus[] statusList = listStatus(f);
-      
+
       @Override
       public boolean hasNext() {
         return i < statusList.length;
       }
-      
+
       @Override
       public FileStatus next() {
         if (!hasNext()) {
@@ -952,12 +943,12 @@ public abstract class AbstractFileSystem implements PathCapabilities {
       UnresolvedLinkException, IOException {
     return new RemoteIterator<LocatedFileStatus>() {
       private RemoteIterator<FileStatus> itor = listStatusIterator(f);
-      
+
       @Override
       public boolean hasNext() throws IOException {
         return itor.hasNext();
       }
-      
+
       @Override
       public LocatedFileStatus next() throws IOException {
         if (!hasNext()) {
@@ -989,10 +980,10 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws IOException
    */
   public RemoteIterator<Path> listCorruptFileBlocks(Path path)
-    throws IOException {
+      throws IOException {
     throw new UnsupportedOperationException(getClass().getCanonicalName() +
-                                            " does not support" +
-                                            " listCorruptFileBlocks");
+        " does not support" +
+        " listCorruptFileBlocks");
   }
 
   /**
@@ -1002,7 +993,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    */
   public abstract void setVerifyChecksum(final boolean verifyChecksum)
       throws AccessControlException, IOException;
-  
+
   /**
    * Get a canonical name for this file system.
    * @return a URI string that uniquely identifies this file system
@@ -1010,13 +1001,13 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   public String getCanonicalServiceName() {
     return SecurityUtil.buildDTServiceName(getUri(), getUriDefaultPort());
   }
-  
+
   /**
    * Get one or more delegation tokens associated with the filesystem. Normally
    * a file system returns a single delegation token. A file system that manages
    * multiple file systems underneath, could return set of delegation tokens for
    * all the file systems it manages
-   * 
+   *
    * @param renewer the account name that is allowed to renew the token.
    * @return List of delegation tokens.
    *   If delegation tokens not supported then return a list of size zero.
@@ -1142,7 +1133,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws IOException
    */
   public void setXAttr(Path path, String name, byte[] value,
-      EnumSet<XAttrSetFlag> flag) throws IOException {
+                       EnumSet<XAttrSetFlag> flag) throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
         + " doesn't support setXAttr");
   }
@@ -1214,9 +1205,9 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws IOException
    */
   public List<String> listXAttrs(Path path)
-          throws IOException {
+      throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
-            + " doesn't support listXAttrs");
+        + " doesn't support listXAttrs");
   }
 
   /**
@@ -1250,7 +1241,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * {@link FileContext#renameSnapshot(Path, String, String)}.
    */
   public void renameSnapshot(final Path path, final String snapshotOldName,
-      final String snapshotNewName) throws IOException {
+                             final String snapshotNewName) throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
         + " doesn't support renameSnapshot");
   }
@@ -1329,7 +1320,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   public int hashCode() {
     return myUri.hashCode();
   }
-  
+
   @Override //Object
   public boolean equals(Object other) {
     if (other == null || !(other instanceof AbstractFileSystem)) {
@@ -1353,7 +1344,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    * @throws IllegalArgumentException unknown mandatory key
    */
   public CompletableFuture<FSDataInputStream> openFileWithOptions(Path path,
-      final OpenFileParameters parameters) throws IOException {
+                                                                  final OpenFileParameters parameters) throws IOException {
     AbstractFSBuilderImpl.rejectUnknownMandatoryKeys(
         parameters.getMandatoryKeys(),
         Collections.emptySet(),
@@ -1364,15 +1355,15 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   }
 
   public boolean hasPathCapability(final Path path,
-      final String capability)
+                                   final String capability)
       throws IOException {
     switch (validatePathCapabilityArgs(makeQualified(path), capability)) {
-    case CommonPathCapabilities.FS_SYMLINKS:
-      // delegate to the existing supportsSymlinks() call.
-      return supportsSymlinks();
-    default:
-      // the feature is not implemented.
-      return false;
+      case CommonPathCapabilities.FS_SYMLINKS:
+        // delegate to the existing supportsSymlinks() call.
+        return supportsSymlinks();
+      default:
+        // the feature is not implemented.
+        return false;
     }
   }
 

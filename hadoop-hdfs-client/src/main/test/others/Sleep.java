@@ -6,13 +6,13 @@ package others;
  */
 public class Sleep {
 
-    /**
-     * main方法
-     */
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("进程启动.");
-        Thread.sleep(2 * 3600);
-        System.out.println("进程终止.");
-    }
+  /**
+   * main方法
+   */
+  public static void main(String[] args) throws InterruptedException {
+    System.out.println("进程启动.");
+    Thread.sleep(2 * 3600);
+    System.out.println("进程终止.");
+  }
 
 }

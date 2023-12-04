@@ -1,10 +1,11 @@
 package org.apache.hadoop.hdfs.protocol;
 
 
-import java.io.IOException;
-import java.util.List;
 import org.apache.hadoop.conf.ReconfigurationTaskStatus;
 import org.apache.hadoop.io.retry.Idempotent;
+
+import java.io.IOException;
+import java.util.List;
 
 /**********************************************************************
  * ReconfigurationProtocol is used by HDFS admin to reload configuration

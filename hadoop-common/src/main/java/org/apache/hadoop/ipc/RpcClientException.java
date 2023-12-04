@@ -8,7 +8,7 @@ public class RpcClientException extends RpcException {
 
   /**
    * Constructs exception with the specified detail message.
-   * 
+   *
    * @param messages detailed message.
    */
   RpcClientException(final String message) {
@@ -17,7 +17,7 @@ public class RpcClientException extends RpcException {
 
   /**
    * Constructs exception with the specified detail message and cause.
-   * 
+   *
    * @param message message.
    * @param cause that cause this exception
    * @param cause the cause (can be retried by the {@link #getCause()} method).

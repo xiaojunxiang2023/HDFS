@@ -14,37 +14,37 @@ import java.lang.reflect.Constructor;
 @InterfaceStability.Evolving
 public abstract class RecordStore<R extends BaseRecord> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RecordStore.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RecordStore.class);
 
 
-    private final Class<R> recordClass;
-    private final StateStoreDriver driver;
+  private final Class<R> recordClass;
+  private final StateStoreDriver driver;
 
 
-    protected RecordStore(Class<R> clazz, StateStoreDriver stateStoreDriver) {
-        this.recordClass = clazz;
-        this.driver = stateStoreDriver;
+  protected RecordStore(Class<R> clazz, StateStoreDriver stateStoreDriver) {
+    this.recordClass = clazz;
+    this.driver = stateStoreDriver;
+  }
+
+  public Class<R> getRecordClass() {
+    return this.recordClass;
+  }
+
+  protected StateStoreDriver getDriver() {
+    return this.driver;
+  }
+
+  // 根据 .class 类型，来去反射创建对应的 StateStore 实现类
+  public static <T extends RecordStore<?>> T newInstance(
+      final Class<T> clazz, final StateStoreDriver driver) {
+
+    try {
+      Constructor<T> constructor = clazz.getConstructor(StateStoreDriver.class);
+      T recordStore = constructor.newInstance(driver);
+      return recordStore;
+    } catch (Exception e) {
+      LOG.error("Cannot create new instance for " + clazz, e);
+      return null;
     }
-
-    public Class<R> getRecordClass() {
-        return this.recordClass;
-    }
-
-    protected StateStoreDriver getDriver() {
-        return this.driver;
-    }
-
-    // 根据 .class 类型，来去反射创建对应的 StateStore 实现类
-    public static <T extends RecordStore<?>> T newInstance(
-            final Class<T> clazz, final StateStoreDriver driver) {
-
-        try {
-            Constructor<T> constructor = clazz.getConstructor(StateStoreDriver.class);
-            T recordStore = constructor.newInstance(driver);
-            return recordStore;
-        } catch (Exception e) {
-            LOG.error("Cannot create new instance for " + clazz, e);
-            return null;
-        }
-    }
+  }
 }

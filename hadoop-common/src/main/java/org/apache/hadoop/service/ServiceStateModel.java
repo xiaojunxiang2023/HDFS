@@ -15,13 +15,13 @@ public class ServiceStateModel {
    * [current] [proposed1, proposed2, ...]
    */
   private static final boolean[][] statemap =
-    {
-      //                uninited inited started stopped
-      /* uninited  */    {false, true,  false,  true},
-      /* inited    */    {false, true,  true,   true},
-      /* started   */    {false, false, true,   true},
-      /* stopped   */    {false, false, false,  true},
-    };
+      {
+          //                uninited inited started stopped
+          /* uninited  */    {false, true, false, true},
+          /* inited    */    {false, true, true, true},
+          /* started   */    {false, false, true, true},
+          /* stopped   */    {false, false, false, true},
+      };
 
   /**
    * The state of the service
@@ -75,10 +75,10 @@ public class ServiceStateModel {
    */
   public void ensureCurrentState(Service.STATE expectedState) {
     if (state != expectedState) {
-      throw new ServiceStateException(name+ ": for this operation, the " +
-                                      "current service state must be "
-                                      + expectedState
-                                      + " instead of " + state);
+      throw new ServiceStateException(name + ": for this operation, the " +
+          "current service state must be "
+          + expectedState
+          + " instead of " + state);
     }
   }
 
@@ -109,7 +109,7 @@ public class ServiceStateModel {
                                           Service.STATE proposed) {
     if (!isValidStateTransition(state, proposed)) {
       throw new ServiceStateException(name + " cannot enter state "
-                                      + proposed + " from state " + state);
+          + proposed + " from state " + state);
     }
   }
 
@@ -138,7 +138,7 @@ public class ServiceStateModel {
   @Override
   public String toString() {
     return (name.isEmpty() ? "" : ((name) + ": "))
-            + state.toString();
+        + state.toString();
   }
 
 }

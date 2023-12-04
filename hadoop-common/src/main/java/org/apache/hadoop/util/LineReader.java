@@ -1,13 +1,14 @@
 package org.apache.hadoop.util;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
 import org.apache.hadoop.io.Text;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
 
@@ -96,7 +97,7 @@ public class LineReader implements Closeable, IOStatisticsSource {
    * @param recordDelimiterBytes The delimiter
    */
   public LineReader(InputStream in, int bufferSize,
-      byte[] recordDelimiterBytes) {
+                    byte[] recordDelimiterBytes) {
     this.in = in;
     this.bufferSize = bufferSize;
     this.buffer = new byte[this.bufferSize];
@@ -114,7 +115,7 @@ public class LineReader implements Closeable, IOStatisticsSource {
    * @throws IOException
    */
   public LineReader(InputStream in, Configuration conf,
-      byte[] recordDelimiterBytes) throws IOException {
+                    byte[] recordDelimiterBytes) throws IOException {
     this.in = in;
     this.bufferSize = conf.getInt(IO_FILE_BUFFER_SIZE_KEY, DEFAULT_BUFFER_SIZE);
     this.buffer = new byte[this.bufferSize];
@@ -173,7 +174,7 @@ public class LineReader implements Closeable, IOStatisticsSource {
    * Read a line terminated by one of CR, LF, or CRLF.
    */
   private int readDefaultLine(Text str, int maxLineLength, int maxBytesToConsume)
-  throws IOException {
+      throws IOException {
     /* We're reading data from in, but the head of the stream may be
      * already buffered in buffer, so we have several cases:
      * 1. No newline characters are in the buffer, so we need to copy
@@ -237,7 +238,7 @@ public class LineReader implements Closeable, IOStatisticsSource {
     if (bytesConsumed > Integer.MAX_VALUE) {
       throw new IOException("Too many bytes before newline: " + bytesConsumed);
     }
-    return (int)bytesConsumed;
+    return (int) bytesConsumed;
   }
 
   /**
@@ -245,47 +246,47 @@ public class LineReader implements Closeable, IOStatisticsSource {
    */
   private int readCustomLine(Text str, int maxLineLength, int maxBytesToConsume)
       throws IOException {
-   /* We're reading data from inputStream, but the head of the stream may be
-    *  already captured in the previous buffer, so we have several cases:
-    * 
-    * 1. The buffer tail does not contain any character sequence which
-    *    matches with the head of delimiter. We count it as a 
-    *    ambiguous byte count = 0
-    *    
-    * 2. The buffer tail contains a X number of characters,
-    *    that forms a sequence, which matches with the
-    *    head of delimiter. We count ambiguous byte count = X
-    *    
-    *    // ***  eg: A segment of input file is as follows
-    *    
-    *    " record 1792: I found this bug very interesting and
-    *     I have completely read about it. record 1793: This bug
-    *     can be solved easily record 1794: This ." 
-    *    
-    *    delimiter = "record";
-    *        
-    *    supposing:- String at the end of buffer =
-    *    "I found this bug very interesting and I have completely re"
-    *    There for next buffer = "ad about it. record 179       ...."           
-    *     
-    *     The matching characters in the input
-    *     buffer tail and delimiter head = "re" 
-    *     Therefore, ambiguous byte count = 2 ****   //
-    *     
-    *     2.1 If the following bytes are the remaining characters of
-    *         the delimiter, then we have to capture only up to the starting 
-    *         position of delimiter. That means, we need not include the 
-    *         ambiguous characters in str.
-    *     
-    *     2.2 If the following bytes are not the remaining characters of
-    *         the delimiter ( as mentioned in the example ), 
-    *         then we have to include the ambiguous characters in str. 
-    */
+    /* We're reading data from inputStream, but the head of the stream may be
+     *  already captured in the previous buffer, so we have several cases:
+     *
+     * 1. The buffer tail does not contain any character sequence which
+     *    matches with the head of delimiter. We count it as a
+     *    ambiguous byte count = 0
+     *
+     * 2. The buffer tail contains a X number of characters,
+     *    that forms a sequence, which matches with the
+     *    head of delimiter. We count ambiguous byte count = X
+     *
+     *    // ***  eg: A segment of input file is as follows
+     *
+     *    " record 1792: I found this bug very interesting and
+     *     I have completely read about it. record 1793: This bug
+     *     can be solved easily record 1794: This ."
+     *
+     *    delimiter = "record";
+     *
+     *    supposing:- String at the end of buffer =
+     *    "I found this bug very interesting and I have completely re"
+     *    There for next buffer = "ad about it. record 179       ...."
+     *
+     *     The matching characters in the input
+     *     buffer tail and delimiter head = "re"
+     *     Therefore, ambiguous byte count = 2 ****   //
+     *
+     *     2.1 If the following bytes are the remaining characters of
+     *         the delimiter, then we have to capture only up to the starting
+     *         position of delimiter. That means, we need not include the
+     *         ambiguous characters in str.
+     *
+     *     2.2 If the following bytes are not the remaining characters of
+     *         the delimiter ( as mentioned in the example ),
+     *         then we have to include the ambiguous characters in str.
+     */
     str.clear();
     int txtLength = 0; // tracks str.getLength(), as an optimization
     long bytesConsumed = 0;
     int delPosn = 0;
-    int ambiguousByteCount=0; // To capture the ambiguous characters count
+    int ambiguousByteCount = 0; // To capture the ambiguous characters count
     do {
       int startPosn = bufferPosn; // Start from previous end position
       if (bufferPosn >= bufferLength) {
@@ -308,7 +309,7 @@ public class LineReader implements Closeable, IOStatisticsSource {
           }
         } else if (delPosn != 0) {
           bufferPosn -= delPosn;
-          if(bufferPosn < -1) {
+          if (bufferPosn < -1) {
             bufferPosn = -1;
           }
           delPosn = 0;
@@ -340,12 +341,12 @@ public class LineReader implements Closeable, IOStatisticsSource {
           bytesConsumed -= ambiguousByteCount; //to be consumed in next
         }
       }
-    } while (delPosn < recordDelimiterBytes.length 
+    } while (delPosn < recordDelimiterBytes.length
         && bytesConsumed < maxBytesToConsume);
     if (bytesConsumed > Integer.MAX_VALUE) {
       throw new IOException("Too many bytes before delimiter: " + bytesConsumed);
     }
-    return (int) bytesConsumed; 
+    return (int) bytesConsumed;
   }
 
   /**

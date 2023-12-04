@@ -8,7 +8,7 @@ public class CacheDirectiveEntry {
   private final CacheDirectiveStats stats;
 
   public CacheDirectiveEntry(CacheDirectiveInfo info,
-      CacheDirectiveStats stats) {
+                             CacheDirectiveStats stats) {
     this.info = info;
     this.stats = stats;
   }

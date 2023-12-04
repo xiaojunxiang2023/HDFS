@@ -15,7 +15,7 @@ public class ExcludeDatanodesParam extends StringParam {
    * @param str a string representation of the parameter value.
    */
   public ExcludeDatanodesParam(final String str) {
-    super(DOMAIN, str == null || str.equals(DEFAULT)? null: DOMAIN.parse(str));
+    super(DOMAIN, str == null || str.equals(DEFAULT) ? null : DOMAIN.parse(str));
   }
 
   @Override

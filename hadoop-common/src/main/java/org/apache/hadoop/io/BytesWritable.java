@@ -1,10 +1,10 @@
 package org.apache.hadoop.io;
 
-import java.io.IOException;
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.IOException;
 
-/** 
+/**
  * A byte sequence that is usable as a key or value.
  * It is resizable and distinguishes between the size of the sequence and
  * the current capacity. The hash function is the front of the md5 of the 
@@ -17,12 +17,14 @@ public class BytesWritable extends BinaryComparable
 
   private int size;
   private byte[] bytes;
-  
+
   /**
    * Create a zero-size sequence.
    */
-  public BytesWritable() {this(EMPTY_BYTES);}
-  
+  public BytesWritable() {
+    this(EMPTY_BYTES);
+  }
+
   /**
    * Create a BytesWritable using the byte array as the initial value.
    * @param bytes This array becomes the backing storage for the object.
@@ -42,7 +44,7 @@ public class BytesWritable extends BinaryComparable
     this.bytes = bytes;
     this.size = length;
   }
-  
+
   /**
    * Get a copy of the bytes that is exactly the length of the data.
    * See {@link #getBytes()} for faster access to the underlying array.
@@ -52,7 +54,7 @@ public class BytesWritable extends BinaryComparable
     System.arraycopy(bytes, 0, result, 0, size);
     return result;
   }
-  
+
   /**
    * Get the data backing the BytesWritable. Please use {@link #copyBytes()}
    * if you need the returned array to be precisely the length of the data.
@@ -88,7 +90,7 @@ public class BytesWritable extends BinaryComparable
   public int getSize() {
     return getLength();
   }
-  
+
   /**
    * Change the size of the buffer. The values in the old range are preserved
    * and any new values are undefined. The capacity is changed if it is 
@@ -103,7 +105,7 @@ public class BytesWritable extends BinaryComparable
     }
     this.size = size;
   }
-  
+
   /**
    * Get the capacity, which is the maximum size that could handled without
    * resizing the backing storage.
@@ -112,7 +114,7 @@ public class BytesWritable extends BinaryComparable
   public int getCapacity() {
     return bytes.length;
   }
-  
+
   /**
    * Change the capacity of the backing storage.
    * The data is preserved.
@@ -158,14 +160,14 @@ public class BytesWritable extends BinaryComparable
     setSize(in.readInt());
     in.readFully(bytes, 0, size);
   }
-  
+
   // inherit javadoc
   @Override
   public void write(DataOutput out) throws IOException {
     out.writeInt(size);
     out.write(bytes, 0, size);
   }
-  
+
   @Override
   public int hashCode() {
     return super.hashCode();
@@ -185,8 +187,8 @@ public class BytesWritable extends BinaryComparable
    * Generate the stream of bytes as hex pairs separated by ' '.
    */
   @Override
-  public String toString() { 
-    StringBuilder sb = new StringBuilder(3*size);
+  public String toString() {
+    StringBuilder sb = new StringBuilder(3 * size);
     for (int idx = 0; idx < size; idx++) {
       // if not the first, put a blank separator in
       if (idx != 0) {
@@ -202,25 +204,25 @@ public class BytesWritable extends BinaryComparable
     return sb.toString();
   }
 
-  /** A Comparator optimized for BytesWritable. */ 
+  /** A Comparator optimized for BytesWritable. */
   public static class Comparator extends WritableComparator {
     public Comparator() {
       super(BytesWritable.class);
     }
-    
+
     /**
      * Compare the buffers in serialized form.
      */
     @Override
     public int compare(byte[] b1, int s1, int l1,
                        byte[] b2, int s2, int l2) {
-      return compareBytes(b1, s1+LENGTH_BYTES, l1-LENGTH_BYTES, 
-                          b2, s2+LENGTH_BYTES, l2-LENGTH_BYTES);
+      return compareBytes(b1, s1 + LENGTH_BYTES, l1 - LENGTH_BYTES,
+          b2, s2 + LENGTH_BYTES, l2 - LENGTH_BYTES);
     }
   }
-  
+
   static {                                        // register this comparator
     WritableComparator.define(BytesWritable.class, new Comparator());
   }
-  
+
 }

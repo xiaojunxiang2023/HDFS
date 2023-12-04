@@ -28,7 +28,7 @@ public class DatanodeStorage {
 
     FAILED
   }
-  
+
   private final String storageID;
   private final State state;
   private final StorageType storageType;
@@ -87,11 +87,11 @@ public class DatanodeStorage {
 
   @Override
   public String toString() {
-    return "DatanodeStorage["+ storageID + "," + storageType + "," + state +"]";
+    return "DatanodeStorage[" + storageID + "," + storageType + "," + state + "]";
   }
 
   @Override
-  public boolean equals(Object other){
+  public boolean equals(Object other) {
     if (other == this) {
       return true;
     }

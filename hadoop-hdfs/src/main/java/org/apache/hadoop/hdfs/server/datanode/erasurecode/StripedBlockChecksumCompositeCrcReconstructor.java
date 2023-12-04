@@ -1,8 +1,9 @@
 package org.apache.hadoop.hdfs.server.datanode.erasurecode;
 
-import java.io.IOException;
 import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.util.CrcComposer;
+
+import java.io.IOException;
 
 /**
  * Computes striped composite CRCs over reconstructed chunk CRCs.
@@ -42,7 +43,7 @@ public class StripedBlockChecksumCompositeCrcReconstructor
     if (digester == null) {
       throw new IOException(String.format(
           "Called updatedDigester with checksumBytes.length=%d, "
-          + "dataBytesPerChecksum=%d but digester is null",
+              + "dataBytesPerChecksum=%d but digester is null",
           checksumBytes.length, dataBytesPerChecksum));
     }
     digester.update(

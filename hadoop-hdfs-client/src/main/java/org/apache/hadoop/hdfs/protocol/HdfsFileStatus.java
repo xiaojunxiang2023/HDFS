@@ -1,12 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-import java.io.ObjectInputValidation;
-import java.io.Serializable;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
 import org.apache.hadoop.fs.FileEncryptionInfo;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileStatus.AttrFlags;
@@ -14,6 +7,14 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.io.Writable;
+
+import java.io.IOException;
+import java.io.ObjectInputValidation;
+import java.io.Serializable;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * HDFS metadata for an entity in the filesystem.
@@ -38,25 +39,25 @@ public interface HdfsFileStatus
   class Builder {
     // Changing default values will affect cases where values are not
     // specified. Be careful!
-    private long length                    = 0L;
-    private boolean isdir                  = false;
-    private int replication                = 0;
-    private long blocksize                 = 0L;
-    private long mtime                     = 0L;
-    private long atime                     = 0L;
-    private FsPermission permission        = null;
-    private EnumSet<Flags> flags           = EnumSet.noneOf(Flags.class);
-    private String owner                   = null;
-    private String group                   = null;
-    private byte[] symlink                 = null;
-    private byte[] path                    = EMPTY_NAME;
-    private long fileId                    = -1L;
-    private int childrenNum                = 0;
-    private FileEncryptionInfo feInfo      = null;
-    private byte storagePolicy             =
+    private long length = 0L;
+    private boolean isdir = false;
+    private int replication = 0;
+    private long blocksize = 0L;
+    private long mtime = 0L;
+    private long atime = 0L;
+    private FsPermission permission = null;
+    private EnumSet<Flags> flags = EnumSet.noneOf(Flags.class);
+    private String owner = null;
+    private String group = null;
+    private byte[] symlink = null;
+    private byte[] path = EMPTY_NAME;
+    private long fileId = -1L;
+    private int childrenNum = 0;
+    private FileEncryptionInfo feInfo = null;
+    private byte storagePolicy =
         HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED;
-    private ErasureCodingPolicy ecPolicy   = null;
-    private LocatedBlocks locations        = null;
+    private ErasureCodingPolicy ecPolicy = null;
+    private LocatedBlocks locations = null;
 
     /**
      * Set the length of the entity (default = 0).
@@ -373,94 +374,117 @@ public interface HdfsFileStatus
    * See {@link FileStatus#getPath()}.
    */
   Path getPath();
+
   /**
    * See {@link FileStatus#setPath(Path)}.
    */
   void setPath(Path p);
+
   /**
    * See {@link FileStatus#getLen()}.
    */
   long getLen();
+
   /**
    * See {@link FileStatus#isFile()}.
    */
   boolean isFile();
+
   /**
    * See {@link FileStatus#isDirectory()}.
    */
   boolean isDirectory();
+
   /**
    * See {@link FileStatus#isDir()}.
    */
   boolean isDir();
+
   /**
    * See {@link FileStatus#isSymlink()}.
    */
   boolean isSymlink();
+
   /**
    * See {@link FileStatus#getBlockSize()}.
    */
   long getBlockSize();
+
   /**
    * See {@link FileStatus#getReplication()}.
    */
   short getReplication();
+
   /**
    * See {@link FileStatus#getModificationTime()}.
    */
   long getModificationTime();
+
   /**
    * See {@link FileStatus#getAccessTime()}.
    */
   long getAccessTime();
+
   /**
    * See {@link FileStatus#getPermission()}.
    */
   FsPermission getPermission();
+
   /**
    * See {@link FileStatus#setPermission(FsPermission)}.
    */
   void setPermission(FsPermission permission);
+
   /**
    * See {@link FileStatus#getOwner()}.
    */
   String getOwner();
+
   /**
    * See {@link FileStatus#setOwner(String)}.
    */
   void setOwner(String owner);
+
   /**
    * See {@link FileStatus#getGroup()}.
    */
   String getGroup();
+
   /**
    * See {@link FileStatus#setGroup(String)}.
    */
   void setGroup(String group);
+
   /**
    * See {@link FileStatus#hasAcl()}.
    */
   boolean hasAcl();
+
   /**
    * See {@link FileStatus#isEncrypted()}.
    */
   boolean isEncrypted();
+
   /**
    * See {@link FileStatus#isErasureCoded()}.
    */
   boolean isErasureCoded();
+
   /**
    * See {@link FileStatus#isSnapshotEnabled()}.
    */
   boolean isSnapshotEnabled();
+
   /**
    * See {@link FileStatus#getSymlink()}.
    */
   Path getSymlink() throws IOException;
+
   /**
    * See {@link FileStatus#setSymlink(Path sym)}.
    */
   void setSymlink(Path sym);
+
   /**
    * See {@link FileStatus#compareTo(FileStatus)}.
    */

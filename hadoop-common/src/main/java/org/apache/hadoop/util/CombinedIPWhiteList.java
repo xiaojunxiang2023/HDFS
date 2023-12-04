@@ -12,18 +12,18 @@ public class CombinedIPWhiteList implements IPList {
   private final IPList[] networkLists;
 
   public CombinedIPWhiteList(String fixedWhiteListFile,
-      String variableWhiteListFile, long cacheExpiryInSeconds) {
+                             String variableWhiteListFile, long cacheExpiryInSeconds) {
 
     IPList fixedNetworkList = new FileBasedIPList(fixedWhiteListFile);
-    if (variableWhiteListFile != null){
+    if (variableWhiteListFile != null) {
       IPList variableNetworkList = new CacheableIPList(
-          new FileBasedIPList(variableWhiteListFile),cacheExpiryInSeconds);
-      networkLists = new IPList[] {fixedNetworkList, variableNetworkList};
-    }
-    else {
-      networkLists = new IPList[] {fixedNetworkList};
+          new FileBasedIPList(variableWhiteListFile), cacheExpiryInSeconds);
+      networkLists = new IPList[]{fixedNetworkList, variableNetworkList};
+    } else {
+      networkLists = new IPList[]{fixedNetworkList};
     }
   }
+
   @Override
   public boolean isIn(String ipAddress) {
     if (ipAddress == null) {
@@ -34,7 +34,7 @@ public class CombinedIPWhiteList implements IPList {
       return true;
     }
 
-    for (IPList networkList:networkLists) {
+    for (IPList networkList : networkLists) {
       if (networkList.isIn(ipAddress)) {
         return true;
       }

@@ -1,20 +1,13 @@
 package org.apache.hadoop.util;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.net.util.SubnetUtils;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * Container class which holds a list of ip/host addresses and 
@@ -25,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class MachineList {
-  
+
   public static final Logger LOG = LoggerFactory.getLogger(MachineList.class);
   public static final String WILDCARD_VALUE = "*";
 
@@ -38,7 +31,7 @@ public class MachineList {
 
     static final InetAddressFactory S_INSTANCE = new InetAddressFactory();
 
-    public InetAddress getByName (String host) throws UnknownHostException {
+    public InetAddress getByName(String host) throws UnknownHostException {
       return InetAddress.getByName(host);
     }
   }
@@ -50,7 +43,7 @@ public class MachineList {
   private final InetAddressFactory addressFactory;
 
   /**
-   * 
+   *
    * @param hostEntries comma separated ip/cidr/host addresses
    */
   public MachineList(String hostEntries) {
@@ -71,19 +64,19 @@ public class MachineList {
 
   /**
    * Accepts a collection of ip/cidr/host addresses
-   * 
+   *
    * @param hostEntries
    * @param addressFactory addressFactory to convert host to InetAddress
    */
   public MachineList(Collection<String> hostEntries,
-      InetAddressFactory addressFactory) {
+                     InetAddressFactory addressFactory) {
     this.addressFactory = addressFactory;
     if (hostEntries != null) {
       entries = new ArrayList<>(hostEntries);
       if ((hostEntries.size() == 1) && (hostEntries.contains(WILDCARD_VALUE))) {
         all = true;
         inetAddresses = null;
-        cidrAddresses = null; 
+        cidrAddresses = null;
       } else {
         all = false;
         Set<InetAddress> addrs = new HashSet<>();
@@ -117,6 +110,7 @@ public class MachineList {
       entries = Collections.emptyList();
     }
   }
+
   /**
    * Accepts an ip address and return true if ipAddress is in the list.
    * {@link #includes(InetAddress)} should be preferred
@@ -126,11 +120,11 @@ public class MachineList {
    * @return true if ipAddress is part of the list
    */
   public boolean includes(String ipAddress) {
-    
+
     if (all) {
       return true;
     }
-    
+
     if (ipAddress == null) {
       throw new IllegalArgumentException("ipAddress is null.");
     }
@@ -160,14 +154,15 @@ public class MachineList {
     // iterate through the ip ranges for inclusion
     if (cidrAddresses != null) {
       String ipAddress = address.getHostAddress();
-      for(SubnetUtils.SubnetInfo cidrAddress : cidrAddresses) {
-        if(cidrAddress.isInRange(ipAddress)) {
+      for (SubnetUtils.SubnetInfo cidrAddress : cidrAddresses) {
+        if (cidrAddress.isInRange(ipAddress)) {
           return true;
         }
       }
     }
     return false;
   }
+
   /**
    * returns the contents of the MachineList as a Collection&lt;String&gt; .
    * This can be used for testing .

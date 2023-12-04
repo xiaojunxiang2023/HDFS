@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Subclass of {@link BlockInfo}, used for a block with replication scheme.
@@ -25,13 +25,13 @@ public class BlockInfoContiguous extends BlockInfo {
   private int ensureCapacity(int num) {
     assert this.triplets != null : "BlockInfo is not initialized";
     int last = numNodes();
-    if (triplets.length >= (last+num)*3) {
+    if (triplets.length >= (last + num) * 3) {
       return last;
     }
     /* Not enough space left. Create a new array. Should normally
      * happen only when replication is manually increased by the user. */
     Object[] old = triplets;
-    triplets = new Object[(last+num)*3];
+    triplets = new Object[(last + num) * 3];
     System.arraycopy(old, 0, triplets, 0, last * 3);
     return last;
   }
@@ -58,7 +58,7 @@ public class BlockInfoContiguous extends BlockInfo {
     assert getPrevious(dnIndex) == null && getNext(dnIndex) == null :
         "Block is still in the list and must be removed first.";
     // find the last not null node
-    int lastNode = numNodes()-1;
+    int lastNode = numNodes() - 1;
     // replace current node triplet by the lastNode one
     setStorageInfo(dnIndex, getStorageInfo(lastNode));
     setNext(dnIndex, getNext(lastNode));
@@ -88,7 +88,7 @@ public class BlockInfoContiguous extends BlockInfo {
     assert this.triplets != null : "BlockInfo is not initialized";
     assert triplets.length % 3 == 0 : "Malformed BlockInfo";
 
-    for (int idx = getCapacity()-1; idx >= 0; idx--) {
+    for (int idx = getCapacity() - 1; idx >= 0; idx--) {
       if (getDatanode(idx) != null) {
         return idx + 1;
       }

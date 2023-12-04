@@ -11,7 +11,7 @@ public class RollingUpgradeInfo extends RollingUpgradeStatus {
   private boolean createdRollbackImages;
 
   public RollingUpgradeInfo(String blockPoolId, boolean createdRollbackImages,
-      long startTime, long finalizeTime) {
+                            long startTime, long finalizeTime) {
     super(blockPoolId, finalizeTime != 0);
     this.createdRollbackImages = createdRollbackImages;
     this.startTime = startTime;
@@ -57,7 +57,7 @@ public class RollingUpgradeInfo extends RollingUpgradeStatus {
   @Override
   public int hashCode() {
     //only use lower 32 bits
-    return super.hashCode() ^ (int)startTime ^ (int)finalizeTime;
+    return super.hashCode() ^ (int) startTime ^ (int) finalizeTime;
   }
 
   @Override
@@ -67,7 +67,7 @@ public class RollingUpgradeInfo extends RollingUpgradeStatus {
     } else if (obj == null || !(obj instanceof RollingUpgradeInfo)) {
       return false;
     }
-    final RollingUpgradeInfo that = (RollingUpgradeInfo)obj;
+    final RollingUpgradeInfo that = (RollingUpgradeInfo) obj;
     return super.equals(that)
         && this.startTime == that.startTime
         && this.finalizeTime == that.finalizeTime;
@@ -76,9 +76,9 @@ public class RollingUpgradeInfo extends RollingUpgradeStatus {
   @Override
   public String toString() {
     return super.toString()
-        +  "\n     Start Time: "
+        + "\n     Start Time: "
         + (startTime == 0 ? "<NOT STARTED>" : timestamp2String(startTime))
-        +  "\n  Finalize Time: "
+        + "\n  Finalize Time: "
         + (finalizeTime == 0 ? "<NOT FINALIZED>" :
         timestamp2String(finalizeTime));
   }

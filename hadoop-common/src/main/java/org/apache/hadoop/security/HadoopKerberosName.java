@@ -1,14 +1,15 @@
 package org.apache.hadoop.security;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTH_TO_LOCAL;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTH_TO_LOCAL_MECHANISM;
-
-import java.io.IOException;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.auth.util.KerberosName;
 import org.apache.hadoop.auth.util.KerberosUtil;
+import org.apache.hadoop.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTH_TO_LOCAL;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTH_TO_LOCAL_MECHANISM;
 
 /**
  * This class implements parsing and handling of Kerberos principal names. In 
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
 // MapReduce也可见
 public class HadoopKerberosName extends KerberosName {
   private static final Logger LOG =
-          LoggerFactory.getLogger(HadoopKerberosName.class);
+      LoggerFactory.getLogger(HadoopKerberosName.class);
 
   /**
    * Create a name from the full Kerberos principal name.
@@ -28,13 +29,14 @@ public class HadoopKerberosName extends KerberosName {
   public HadoopKerberosName(String name) {
     super(name);
   }
+
   /**
    * Set the static configuration to get and evaluate the rules.
    * <p>
    * IMPORTANT: This method does a NOP if the rules have been set already.
    * If there is a need to reset the rules, the {@link KerberosName#setRules(String)}
    * method should be invoked directly.
-   * 
+   *
    * @param conf the new configuration
    * @throws IOException
    */
@@ -53,18 +55,18 @@ public class HadoopKerberosName extends KerberosName {
       default:
         // just extract the simple user name
         defaultRule = "RULE:[1:$1] RULE:[2:$1]";
-        break; 
+        break;
     }
     String ruleString = conf.get(HADOOP_SECURITY_AUTH_TO_LOCAL, defaultRule);
     setRules(ruleString);
 
-    String ruleMechanism = conf.get(HADOOP_SECURITY_AUTH_TO_LOCAL_MECHANISM,  DEFAULT_MECHANISM);
+    String ruleMechanism = conf.get(HADOOP_SECURITY_AUTH_TO_LOCAL_MECHANISM, DEFAULT_MECHANISM);
     setRuleMechanism(ruleMechanism);
   }
 
   public static void main(String[] args) throws Exception {
     setConfiguration(new Configuration());
-    for(String arg: args) {
+    for (String arg : args) {
       HadoopKerberosName name = new HadoopKerberosName(arg);
       System.out.println("Name: " + name + " to " + name.getShortName());
     }

@@ -1,40 +1,34 @@
 package org.apache.hadoop.security.token.delegation.web;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.filter.AuthenticationToken;
+import org.apache.hadoop.filter.handler.AuthenticationHandler;
+import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.filter.handler.AuthenticationHandler;
-import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.filter.handler.KerberosAuthenticationHandler;
 import org.apache.hadoop.security.authorize.AuthorizationException;
 import org.apache.hadoop.security.authorize.ProxyUsers;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.HttpExceptionUtils;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.Writer;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * An {@link AuthenticationHandler} that implements Kerberos SPNEGO mechanism
@@ -147,14 +141,14 @@ public abstract class DelegationTokenAuthenticationHandler
     JsonFactory tmpJsonFactory = new JsonFactory();
 
     for (Map.Entry entry : config.entrySet()) {
-      String key = (String)entry.getKey();
+      String key = (String) entry.getKey();
       if (key.startsWith(JSON_MAPPER_PREFIX)) {
         JsonGenerator.Feature feature =
             JsonGenerator.Feature.valueOf(key.substring(JSON_MAPPER_PREFIX
                 .length()));
         if (feature != null) {
           hasFeature = true;
-          boolean enabled = Boolean.parseBoolean((String)entry.getValue());
+          boolean enabled = Boolean.parseBoolean((String) entry.getValue());
           tmpJsonFactory.configure(feature, enabled);
         }
       }
@@ -199,7 +193,7 @@ public abstract class DelegationTokenAuthenticationHandler
   @Override
   @SuppressWarnings("unchecked")
   public boolean managementOperation(AuthenticationToken token,
-      HttpServletRequest request, HttpServletResponse response)
+                                     HttpServletRequest request, HttpServletResponse response)
       throws IOException, AuthenticationException {
     boolean requestContinues = true;
     LOG.trace("Processing operation for req=({}), token: {}", request, token);
@@ -362,7 +356,7 @@ public abstract class DelegationTokenAuthenticationHandler
   @SuppressWarnings("unchecked")
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request,
-      HttpServletResponse response)
+                                          HttpServletResponse response)
       throws IOException, AuthenticationException {
     AuthenticationToken token;
     String delegationParam = getDelegationToken(request);

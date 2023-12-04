@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * This class is for maintaining the various RetryCache-related statistics
  * and publishing them through the metrics interfaces.
  */
-@Metrics(about="Aggregate RetryCache metrics", context="rpc")
+@Metrics(about = "Aggregate RetryCache metrics", context = "rpc")
 public class RetryCacheMetrics {
 
   static final Logger LOG = LoggerFactory.getLogger(RetryCacheMetrics.class);
@@ -21,23 +21,28 @@ public class RetryCacheMetrics {
   final String name;
 
   RetryCacheMetrics(RetryCache retryCache) {
-    name = "RetryCache."+ retryCache.getCacheName();
+    name = "RetryCache." + retryCache.getCacheName();
     registry = new MetricsRegistry(name);
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Initialized "+ registry);
+      LOG.debug("Initialized " + registry);
     }
   }
 
-  public String getName() { return name; }
+  public String getName() {
+    return name;
+  }
 
   public static RetryCacheMetrics create(RetryCache cache) {
     RetryCacheMetrics m = new RetryCacheMetrics(cache);
     return DefaultMetricsSystem.instance().register(m.name, null, m);
   }
 
-  @Metric("Number of RetryCache hit") MutableCounterLong cacheHit;
-  @Metric("Number of RetryCache cleared") MutableCounterLong cacheCleared;
-  @Metric("Number of RetryCache updated") MutableCounterLong cacheUpdated;
+  @Metric("Number of RetryCache hit")
+  MutableCounterLong cacheHit;
+  @Metric("Number of RetryCache cleared")
+  MutableCounterLong cacheCleared;
+  @Metric("Number of RetryCache updated")
+  MutableCounterLong cacheUpdated;
 
   /**
    * One cache hit event

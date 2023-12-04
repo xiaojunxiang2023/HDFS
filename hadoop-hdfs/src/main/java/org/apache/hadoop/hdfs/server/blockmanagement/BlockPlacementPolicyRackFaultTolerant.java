@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
+
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.net.Node;
@@ -18,7 +19,7 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
     int clusterSize = clusterMap.getNumOfLeaves();
     int totalNumOfReplicas = numOfChosen + numOfReplicas;
     if (totalNumOfReplicas > clusterSize) {
-      numOfReplicas -= (totalNumOfReplicas-clusterSize);
+      numOfReplicas -= (totalNumOfReplicas - clusterSize);
       totalNumOfReplicas = clusterSize;
     }
     // No calculation needed when there is only one rack or picking one node.
@@ -26,16 +27,16 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
     // HDFS-14527 return default when numOfRacks = 0 to avoid
     // ArithmeticException when calc maxNodesPerRack at following logic.
     if (numOfRacks <= 1 || totalNumOfReplicas <= 1) {
-      return new int[] {numOfReplicas, totalNumOfReplicas};
+      return new int[]{numOfReplicas, totalNumOfReplicas};
     }
     // If more racks than replicas, put one replica per rack.
     if (totalNumOfReplicas < numOfRacks) {
-      return new int[] {numOfReplicas, 1};
+      return new int[]{numOfReplicas, 1};
     }
     // If more replicas than racks, evenly spread the replicas.
     // This calculation rounds up.
     int maxNodesPerRack = (totalNumOfReplicas - 1) / numOfRacks + 1;
-    return new int[] {numOfReplicas, maxNodesPerRack};
+    return new int[]{numOfReplicas, maxNodesPerRack};
   }
 
   /**
@@ -60,15 +61,15 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
    */
   @Override
   protected Node chooseTargetInOrder(int numOfReplicas,
-                                 Node writer,
-                                 final Set<Node> excludedNodes,
-                                 final long blocksize,
-                                 final int maxNodesPerRack,
-                                 final List<DatanodeStorageInfo> results,
-                                 final boolean avoidStaleNodes,
-                                 final boolean newBlock,
-                                 EnumMap<StorageType, Integer> storageTypes)
-                                 throws NotEnoughReplicasException {
+                                     Node writer,
+                                     final Set<Node> excludedNodes,
+                                     final long blocksize,
+                                     final int maxNodesPerRack,
+                                     final List<DatanodeStorageInfo> results,
+                                     final boolean avoidStaleNodes,
+                                     final boolean newBlock,
+                                     EnumMap<StorageType, Integer> storageTypes)
+      throws NotEnoughReplicasException {
     int totalReplicaExpected = results.size() + numOfReplicas;
     int numOfRacks = clusterMap.getNumOfRacks();
     if (totalReplicaExpected < numOfRacks ||
@@ -78,7 +79,7 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
       return writer;
     }
 
-    assert totalReplicaExpected > (maxNodesPerRack -1) * numOfRacks;
+    assert totalReplicaExpected > (maxNodesPerRack - 1) * numOfRacks;
 
     // Calculate numOfReplicas for filling each rack exactly (maxNodesPerRack-1)
     // replicas.
@@ -94,12 +95,12 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
     }
     int excess = 0; // Sum of the above (maxNodesPerRack-1) part of nodes in results
     for (int count : rackCounts.values()) {
-      if (count > maxNodesPerRack -1) {
-        excess += count - (maxNodesPerRack -1);
+      if (count > maxNodesPerRack - 1) {
+        excess += count - (maxNodesPerRack - 1);
       }
     }
     numOfReplicas = Math.min(totalReplicaExpected - results.size(),
-        (maxNodesPerRack -1) * numOfRacks - (results.size() - excess));
+        (maxNodesPerRack - 1) * numOfRacks - (results.size() - excess));
 
     try {
       // Try to spread the replicas as evenly as possible across racks.
@@ -141,10 +142,10 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
    * Choose as evenly as possible from the racks which have available datanodes.
    */
   private void chooseEvenlyFromRemainingRacks(Node writer,
-      Set<Node> excludedNodes, long blocksize, int maxNodesPerRack,
-      List<DatanodeStorageInfo> results, boolean avoidStaleNodes,
-      EnumMap<StorageType, Integer> storageTypes, int totalReplicaExpected,
-      NotEnoughReplicasException e) throws NotEnoughReplicasException {
+                                              Set<Node> excludedNodes, long blocksize, int maxNodesPerRack,
+                                              List<DatanodeStorageInfo> results, boolean avoidStaleNodes,
+                                              EnumMap<StorageType, Integer> storageTypes, int totalReplicaExpected,
+                                              NotEnoughReplicasException e) throws NotEnoughReplicasException {
     int numResultsOflastChoose = 0;
     NotEnoughReplicasException lastException = e;
     int bestEffortMaxNodesPerRack = maxNodesPerRack;
@@ -186,14 +187,14 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
    * @return local node of writer.
    */
   private Node chooseOnce(int numOfReplicas,
-                            Node writer,
-                            final Set<Node> excludedNodes,
-                            final long blocksize,
-                            final int maxNodesPerRack,
-                            final List<DatanodeStorageInfo> results,
-                            final boolean avoidStaleNodes,
-                            EnumMap<StorageType, Integer> storageTypes)
-                            throws NotEnoughReplicasException {
+                          Node writer,
+                          final Set<Node> excludedNodes,
+                          final long blocksize,
+                          final int maxNodesPerRack,
+                          final List<DatanodeStorageInfo> results,
+                          final boolean avoidStaleNodes,
+                          EnumMap<StorageType, Integer> storageTypes)
+      throws NotEnoughReplicasException {
     if (numOfReplicas == 0) {
       return writer;
     }
@@ -210,7 +211,7 @@ public class BlockPlacementPolicyRackFaultTolerant extends BlockPlacementPolicyD
 
   @Override
   public BlockPlacementStatus verifyBlockPlacement(DatanodeInfo[] locs,
-      int numberOfReplicas) {
+                                                   int numberOfReplicas) {
     if (locs == null)
       locs = DatanodeDescriptor.EMPTY_ARRAY;
     if (!clusterMap.hasClusterEverBeenMultiRack()) {

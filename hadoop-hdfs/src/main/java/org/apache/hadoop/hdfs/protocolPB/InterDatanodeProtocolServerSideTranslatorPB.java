@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.InitReplicaRecoveryRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.InitReplicaRecoveryResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.UpdateReplicaUnderRecoveryRequestProto;
@@ -8,9 +7,10 @@ import org.apache.hadoop.hdfs.protocol.proto.InterDatanodeProtocolProtos.UpdateR
 import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringBlock;
 import org.apache.hadoop.hdfs.server.protocol.InterDatanodeProtocol;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
-
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
 
 /**
  * Implementation for protobuf service that forwards requests
@@ -36,7 +36,7 @@ public class InterDatanodeProtocolServerSideTranslatorPB implements
     } catch (IOException e) {
       throw new ServiceException(e);
     }
-    
+
     if (r == null) {
       return InitReplicaRecoveryResponseProto.newBuilder()
           .setReplicaFound(false)

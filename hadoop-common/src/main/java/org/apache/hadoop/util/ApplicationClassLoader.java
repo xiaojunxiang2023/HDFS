@@ -1,5 +1,12 @@
 package org.apache.hadoop.util;
 
+import org.apache.hadoop.classification.InterfaceAudience.Public;
+import org.apache.hadoop.classification.InterfaceStability.Unstable;
+import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,13 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import org.apache.hadoop.classification.InterfaceAudience.Public;
-import org.apache.hadoop.classification.InterfaceStability.Unstable;
-import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.fs.Path;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link URLClassLoader} for application isolation. Classes from the
@@ -67,7 +67,7 @@ public class ApplicationClassLoader extends URLClassLoader {
   private final List<String> systemClasses;
 
   public ApplicationClassLoader(URL[] urls, ClassLoader parent,
-      List<String> systemClasses) {
+                                List<String> systemClasses) {
     super(urls, parent);
     this.parent = parent;
     if (parent == null) {
@@ -82,7 +82,7 @@ public class ApplicationClassLoader extends URLClassLoader {
   }
 
   public ApplicationClassLoader(String classpath, ClassLoader parent,
-      List<String> systemClasses) throws MalformedURLException {
+                                List<String> systemClasses) throws MalformedURLException {
     this(constructUrlsFromClasspath(classpath), parent, systemClasses);
   }
 
@@ -93,7 +93,7 @@ public class ApplicationClassLoader extends URLClassLoader {
       if (element.endsWith("/*")) {
         List<Path> jars = FileUtil.getJarsInDirectory(element);
         if (!jars.isEmpty()) {
-          for (Path jar: jars) {
+          for (Path jar : jars) {
             urls.add(jar.toUri().toURL());
           }
         }
@@ -110,27 +110,27 @@ public class ApplicationClassLoader extends URLClassLoader {
   @Override
   public URL getResource(String name) {
     URL url = null;
-    
+
     if (!isSystemClass(name, systemClasses)) {
-      url= findResource(name);
+      url = findResource(name);
       if (url == null && name.startsWith("/")) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("Remove leading / off " + name);
         }
-        url= findResource(name.substring(1));
+        url = findResource(name.substring(1));
       }
     }
 
     if (url == null) {
-      url= parent.getResource(name);
+      url = parent.getResource(name);
     }
 
     if (url != null) {
       if (LOG.isDebugEnabled()) {
-        LOG.debug("getResource("+name+")=" + url);
+        LOG.debug("getResource(" + name + ")=" + url);
       }
     }
-    
+
     return url;
   }
 
@@ -142,7 +142,7 @@ public class ApplicationClassLoader extends URLClassLoader {
   @Override
   protected synchronized Class<?> loadClass(String name, boolean resolve)
       throws ClassNotFoundException {
-    
+
     if (LOG.isDebugEnabled()) {
       LOG.debug("Loading class: " + name);
     }
@@ -200,7 +200,7 @@ public class ApplicationClassLoader extends URLClassLoader {
     if (systemClasses != null) {
       String canonicalName = name.replace('/', '.');
       while (canonicalName.startsWith(".")) {
-        canonicalName=canonicalName.substring(1);
+        canonicalName = canonicalName.substring(1);
       }
       for (String c : systemClasses) {
         boolean shouldInclude = true;
@@ -209,10 +209,10 @@ public class ApplicationClassLoader extends URLClassLoader {
           shouldInclude = false;
         }
         if (canonicalName.startsWith(c)) {
-          if (   c.endsWith(".")                                   // package
+          if (c.endsWith(".")                                   // package
               || canonicalName.length() == c.length()              // class
-              ||    canonicalName.length() > c.length()            // nested
-                 && canonicalName.charAt(c.length()) == '$' ) {
+              || canonicalName.length() > c.length()            // nested
+              && canonicalName.charAt(c.length()) == '$') {
             if (shouldInclude) {
               result = true;
             } else {

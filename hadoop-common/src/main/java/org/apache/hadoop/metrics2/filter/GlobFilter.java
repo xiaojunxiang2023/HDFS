@@ -1,8 +1,8 @@
 package org.apache.hadoop.metrics2.filter;
 
+import com.google.re2j.Pattern;
 import org.apache.hadoop.fs.GlobPattern;
 
-import com.google.re2j.Pattern;
 /**
  * A glob pattern filter for metrics.
  *

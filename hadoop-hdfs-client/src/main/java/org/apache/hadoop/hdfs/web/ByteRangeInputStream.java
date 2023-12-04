@@ -1,5 +1,12 @@
 package org.apache.hadoop.hdfs.web;
 
+import org.apache.commons.io.input.BoundedInputStream;
+import org.apache.hadoop.fs.FSExceptionMessages;
+import org.apache.hadoop.fs.FSInputStream;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.net.HttpHeaders;
+
+import javax.annotation.Nonnull;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,15 +15,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import org.apache.commons.io.input.BoundedInputStream;
-import org.apache.hadoop.fs.FSExceptionMessages;
-import org.apache.hadoop.fs.FSInputStream;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.net.HttpHeaders;
-
-import javax.annotation.Nonnull;
 
 /**
  * To support HTTP byte streams, a new connection to an HTTP server needs to be
@@ -48,7 +46,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
 
     /** Connect to server with a data offset. */
     protected abstract HttpURLConnection connect(final long offset,
-        final boolean resolved) throws IOException;
+                                                 final boolean resolved) throws IOException;
   }
 
   static class InputStreamAndFileLength {
@@ -64,6 +62,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
   enum StreamStatus {
     NORMAL, SEEK, CLOSED
   }
+
   protected InputStream in;
   protected final URLOpener originalURL;
   protected final URLOpener resolvedURL;
@@ -91,19 +90,19 @@ public abstract class ByteRangeInputStream extends FSInputStream {
   @VisibleForTesting
   protected InputStream getInputStream() throws IOException {
     switch (status) {
-    case NORMAL:
-      break;
-    case SEEK:
-      if (in != null) {
-        in.close();
-      }
-      InputStreamAndFileLength fin = openInputStream(startPos);
-      in = fin.in;
-      fileLength = fin.length;
-      status = StreamStatus.NORMAL;
-      break;
-    case CLOSED:
-      throw new IOException("Stream closed");
+      case NORMAL:
+        break;
+      case SEEK:
+        if (in != null) {
+          in.close();
+        }
+        InputStreamAndFileLength fin = openInputStream(startPos);
+        in = fin.in;
+        fileLength = fin.length;
+        status = StreamStatus.NORMAL;
+        break;
+      case CLOSED:
+        throw new IOException("Stream closed");
     }
     return in;
   }
@@ -117,7 +116,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
     // Use the original url if no resolved url exists, eg. if
     // it's the first time a request is made.
     final boolean resolved = resolvedURL.getURL() != null;
-    final URLOpener opener = resolved? resolvedURL: originalURL;
+    final URLOpener opener = resolved ? resolvedURL : originalURL;
 
     final HttpURLConnection connection = opener.connect(startOffset, resolved);
     resolvedURL.setURL(getResolvedUrl(connection));
@@ -154,12 +153,12 @@ public abstract class ByteRangeInputStream extends FSInputStream {
 
   /** Does the HTTP header map contain the given key, value pair? */
   private static boolean contains(final Map<String, List<String>> headers,
-      final String key, final String value) {
+                                  final String key, final String value) {
     final List<String> values = headers.get(key);
     if (values != null) {
-      for(String v : values) {
-        for(final StringTokenizer t = new StringTokenizer(v, ",");
-            t.hasMoreTokens(); ) {
+      for (String v : values) {
+        for (final StringTokenizer t = new StringTokenizer(v, ",");
+             t.hasMoreTokens(); ) {
           if (value.equalsIgnoreCase(t.nextToken())) {
             return true;
           }
@@ -272,12 +271,12 @@ public abstract class ByteRangeInputStream extends FSInputStream {
   }
 
   @Override
-  public synchronized int available() throws IOException{
+  public synchronized int available() throws IOException {
     getInputStream();
-    if(fileLength != null){
+    if (fileLength != null) {
       long remaining = fileLength - currentPos;
       return remaining <= Integer.MAX_VALUE ? (int) remaining : Integer.MAX_VALUE;
-    }else {
+    } else {
       return Integer.MAX_VALUE;
     }
   }

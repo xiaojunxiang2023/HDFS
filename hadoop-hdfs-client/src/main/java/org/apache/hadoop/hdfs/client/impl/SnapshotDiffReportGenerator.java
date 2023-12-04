@@ -1,14 +1,14 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import java.util.*;
-
-import org.apache.hadoop.thirdparty.com.google.common.primitives.SignedBytes;
-
-import org.apache.hadoop.util.ChunkedArrayList;
-import org.apache.hadoop.hdfs.protocol.SnapshotDiffReportListing.DiffReportListingEntry;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport.DiffReportEntry;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport.DiffType;
+import org.apache.hadoop.hdfs.protocol.SnapshotDiffReportListing.DiffReportListingEntry;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.SignedBytes;
+import org.apache.hadoop.util.ChunkedArrayList;
+
+import java.util.*;
+
 /**
  * This class represents to end users the difference between two snapshots of
  * the same directory, or the difference between a snapshot of the directory and
@@ -23,7 +23,7 @@ public class SnapshotDiffReportGenerator {
       new Comparator<DiffReportListingEntry>() {
         @Override
         public int compare(DiffReportListingEntry left,
-            DiffReportListingEntry right) {
+                           DiffReportListingEntry right) {
           final Comparator<byte[]> cmp =
               SignedBytes.lexicographicalComparator();
           //source path can never be null
@@ -79,7 +79,7 @@ public class SnapshotDiffReportGenerator {
     private final List<DiffReportListingEntry> deletedList;
 
     ChildrenDiff(List<DiffReportListingEntry> createdList,
-        List<DiffReportListingEntry> deletedList) {
+                 List<DiffReportListingEntry> deletedList) {
       this.createdList = createdList != null ? createdList :
           Collections.emptyList();
       this.deletedList = deletedList != null ? deletedList :
@@ -134,9 +134,9 @@ public class SnapshotDiffReportGenerator {
   private List<DiffReportListingEntry> dlist = null;
 
   public SnapshotDiffReportGenerator(String snapshotRoot, String fromSnapshot,
-      String toSnapshot, boolean isFromEarlier,
-      List<DiffReportListingEntry> mlist, List<DiffReportListingEntry> clist,
-      List<DiffReportListingEntry> dlist) {
+                                     String toSnapshot, boolean isFromEarlier,
+                                     List<DiffReportListingEntry> mlist, List<DiffReportListingEntry> clist,
+                                     List<DiffReportListingEntry> dlist) {
     this.snapshotRoot = snapshotRoot;
     this.fromSnapshot = fromSnapshot;
     this.toSnapshot = toSnapshot;

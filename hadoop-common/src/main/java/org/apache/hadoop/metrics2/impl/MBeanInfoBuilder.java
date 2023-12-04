@@ -1,15 +1,14 @@
 package org.apache.hadoop.metrics2.impl;
 
-import java.util.List;
-import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanInfo;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
 import org.apache.hadoop.metrics2.AbstractMetric;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsTag;
 import org.apache.hadoop.metrics2.MetricsVisitor;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
+import java.util.List;
 
 /**
  * Helper class to build MBeanInfo from metrics records
@@ -35,7 +34,7 @@ class MBeanInfoBuilder implements MetricsVisitor {
 
   MBeanAttributeInfo newAttrInfo(String name, String desc, String type) {
     return new MBeanAttributeInfo(getAttrName(name), type, desc,
-                                  true, false, false); // read-only, non-is
+        true, false, false); // read-only, non-is
   }
 
   MBeanAttributeInfo newAttrInfo(MetricsInfo info, String type) {
@@ -73,15 +72,15 @@ class MBeanInfoBuilder implements MetricsVisitor {
   }
 
   String getAttrName(String name) {
-    return curRecNo > 0 ? name +"."+ curRecNo : name;
+    return curRecNo > 0 ? name + "." + curRecNo : name;
   }
 
   MBeanInfo get() {
     curRecNo = 0;
     for (MetricsRecordImpl rec : recs) {
       for (MetricsTag t : rec.tags()) {
-        attrs.add(newAttrInfo("tag."+ t.name(), t.description(),
-                  "java.lang.String"));
+        attrs.add(newAttrInfo("tag." + t.name(), t.description(),
+            "java.lang.String"));
       }
       for (AbstractMetric m : rec.metrics()) {
         m.visit(this);
@@ -91,6 +90,6 @@ class MBeanInfoBuilder implements MetricsVisitor {
     MetricsSystemImpl.LOG.debug("{}", attrs);
     MBeanAttributeInfo[] attrsArray = new MBeanAttributeInfo[attrs.size()];
     return new MBeanInfo(name, description, attrs.toArray(attrsArray),
-                         null, null, null); // no ops/ctors/notifications
+        null, null, null); // no ops/ctors/notifications
   }
 }

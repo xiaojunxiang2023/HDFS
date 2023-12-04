@@ -1,19 +1,19 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.retry.Idempotent;
-import org.apache.hadoop.security.KerberosInfo;
+
+import java.io.IOException;
 
 /**
  * Protocol use 
  *
  */
 @KerberosInfo(
-    serverPrincipal=CommonConfigurationKeys.HADOOP_SECURITY_SERVICE_USER_NAME_KEY)
+    serverPrincipal = CommonConfigurationKeys.HADOOP_SECURITY_SERVICE_USER_NAME_KEY)
 // MapReduce也可见
 public interface RefreshUserMappingsProtocol {
-  
+
   /**
    * Version 1: Initial version.
    */
@@ -25,7 +25,7 @@ public interface RefreshUserMappingsProtocol {
    */
   @Idempotent
   public void refreshUserToGroupsMappings() throws IOException;
-  
+
   /**
    * Refresh superuser proxy group list
    * @throws IOException

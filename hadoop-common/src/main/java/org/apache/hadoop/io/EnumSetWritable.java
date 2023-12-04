@@ -1,31 +1,38 @@
 package org.apache.hadoop.io;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.AbstractCollection;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.AbstractCollection;
+import java.util.EnumSet;
+import java.util.Iterator;
+
 /** A Writable wrapper for EnumSet. */
 public class EnumSetWritable<E extends Enum<E>> extends AbstractCollection<E>
-  implements Writable, Configurable  {
+    implements Writable, Configurable {
 
   private EnumSet<E> value;
 
   private transient Class<E> elementType;
 
   private transient Configuration conf;
-  
+
   EnumSetWritable() {
   }
 
   @Override
-  public Iterator<E> iterator() { return value.iterator(); }
+  public Iterator<E> iterator() {
+    return value.iterator();
+  }
+
   @Override
-  public int size() { return value.size(); }
+  public int size() {
+    return value.size();
+  }
+
   @Override
   public boolean add(E e) {
     if (value == null) {
@@ -40,7 +47,7 @@ public class EnumSetWritable<E extends Enum<E>> extends AbstractCollection<E>
    * its size is zero, the <tt>elementType</tt> argument must not be null. If
    * the argument <tt>value</tt>'s size is bigger than zero, the argument
    * <tt>elementType</tt> is not be used.
-   * 
+   *
    * @param value
    * @param elementType
    */
@@ -51,7 +58,7 @@ public class EnumSetWritable<E extends Enum<E>> extends AbstractCollection<E>
   /**
    * Construct a new EnumSetWritable. Argument <tt>value</tt> should not be null
    * or empty.
-   * 
+   *
    * @param value
    */
   public EnumSetWritable(EnumSet<E> value) {
@@ -64,7 +71,7 @@ public class EnumSetWritable<E extends Enum<E>> extends AbstractCollection<E>
    * is null or its size is zero, the <tt>elementType</tt> argument must not be
    * null. If the argument <tt>value</tt>'s size is bigger than zero, the
    * argument <tt>elementType</tt> is not be used.
-   * 
+   *
    * @param value
    * @param elementType
    */
@@ -153,7 +160,7 @@ public class EnumSetWritable<E extends Enum<E>> extends AbstractCollection<E>
   /**
    * Returns the class of all the elements of the underlying EnumSetWriable. It
    * may return null.
-   * 
+   *
    * @return the element class
    */
   public Class<E> getElementType() {

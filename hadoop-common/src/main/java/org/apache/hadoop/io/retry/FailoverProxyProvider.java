@@ -40,7 +40,7 @@ public interface FailoverProxyProvider<T> extends Closeable {
   /**
    * Get the proxy object which should be used until the next failover event
    * occurs.
-   * 
+   *
    * @return the proxy object to invoke methods upon
    */
   public ProxyInfo<T> getProxy();
@@ -48,7 +48,7 @@ public interface FailoverProxyProvider<T> extends Closeable {
   /**
    * Called whenever the associated {@link RetryPolicy} determines that an error
    * warrants failing over.
-   * 
+   *
    * @param currentProxy
    *          the proxy object which was being used before this failover event
    */
@@ -60,7 +60,7 @@ public interface FailoverProxyProvider<T> extends Closeable {
    * {@link Idempotent} or {@link AtMostOnce}, then this fact will be passed to
    * the {@link RetryPolicy#shouldRetry(Exception, int, int, boolean)} method on
    * error, for use in determining whether or not failover should be attempted.
-   * 
+   *
    * @return the interface implemented by the proxy objects returned by
    *         {@link FailoverProxyProvider#getProxy()}
    */

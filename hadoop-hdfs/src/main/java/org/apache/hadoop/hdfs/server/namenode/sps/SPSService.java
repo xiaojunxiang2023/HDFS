@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
+
+import java.util.List;
 
 /**
  * An interface for SPSService, which exposes life cycle and processing APIs.
@@ -69,7 +70,7 @@ public interface SPSService {
    *          - whether the scanning of directory fully done with itemInfoList
    */
   void addAllFilesToProcess(long startPathId, List<ItemInfo> itemInfoList,
-      boolean scanCompleted);
+                            boolean scanCompleted);
 
   /**
    * @return current processing queue size.
@@ -101,5 +102,5 @@ public interface SPSService {
    *          - block that is attempted to move
    */
   void notifyStorageMovementAttemptFinishedBlk(DatanodeInfo dnInfo,
-      StorageType storageType, Block block);
+                                               StorageType storageType, Block block);
 }

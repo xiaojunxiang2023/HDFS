@@ -1,8 +1,5 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsInfo;
@@ -10,6 +7,10 @@ import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 public class MutableMetricsFactory {
   private static final Logger LOG =
       LoggerFactory.getLogger(MutableMetricsFactory.class);
@@ -17,7 +18,7 @@ public class MutableMetricsFactory {
   MutableMetric newForField(Field field, Metric annotation,
                             MetricsRegistry registry) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("field "+ field +" with annotation "+ annotation);
+      LOG.debug("field " + field + " with annotation " + annotation);
     }
     MetricsInfo info = getInfo(annotation, field);
     MutableMetric metric = newForField(field, annotation);
@@ -43,7 +44,7 @@ public class MutableMetricsFactory {
     }
     if (cls == MutableRate.class) {
       return registry.newRate(info.name(), info.description(),
-                              annotation.always());
+          annotation.always());
     }
     if (cls == MutableRates.class) {
       return new MutableRates(registry);
@@ -53,8 +54,8 @@ public class MutableMetricsFactory {
     }
     if (cls == MutableStat.class) {
       return registry.newStat(info.name(), info.description(),
-                              annotation.sampleName(), annotation.valueName(),
-                              annotation.always());
+          annotation.sampleName(), annotation.valueName(),
+          annotation.always());
     }
     if (cls == MutableRollingAverages.class) {
       return registry.newMutableRollingAverages(info.name(),
@@ -64,14 +65,14 @@ public class MutableMetricsFactory {
       return registry.newQuantiles(info.name(), annotation.about(),
           annotation.sampleName(), annotation.valueName(), annotation.interval());
     }
-    throw new MetricsException("Unsupported metric field "+ field.getName() +
-                               " of type "+ field.getType().getName());
+    throw new MetricsException("Unsupported metric field " + field.getName() +
+        " of type " + field.getType().getName());
   }
 
   MutableMetric newForMethod(Object source, Method method, Metric annotation,
                              MetricsRegistry registry) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("method "+ method +" with annotation "+ annotation);
+      LOG.debug("method " + method + " with annotation " + annotation);
     }
     MetricsInfo info = getInfo(annotation, method);
     MutableMetric metric = newForMethod(source, method, annotation);

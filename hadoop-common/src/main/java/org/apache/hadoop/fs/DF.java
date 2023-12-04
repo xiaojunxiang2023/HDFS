@@ -1,5 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Shell;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,10 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.Shell;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 public class DF extends Shell {
 
@@ -18,7 +18,7 @@ public class DF extends Shell {
   private final File dirFile;
   private String filesystem;
   private String mount;
-  
+
   private final ArrayList<String> output;
 
   public DF(File path, Configuration conf) throws IOException {
@@ -94,28 +94,28 @@ public class DF extends Shell {
 
     return mount;
   }
-  
+
   @Override
   public String toString() {
     return
-      "df -k " + mount +"\n" +
-      filesystem + "\t" +
-      getCapacity() / 1024 + "\t" +
-      getUsed() / 1024 + "\t" +
-      getAvailable() / 1024 + "\t" +
-      getPercentUsed() + "%\t" +
-      mount;
+        "df -k " + mount + "\n" +
+            filesystem + "\t" +
+            getCapacity() / 1024 + "\t" +
+            getUsed() / 1024 + "\t" +
+            getAvailable() / 1024 + "\t" +
+            getPercentUsed() + "%\t" +
+            mount;
   }
 
   @Override
   protected String[] getExecString() {
     // ignoring the error since the exit code it enough
-    if (Shell.WINDOWS){
+    if (Shell.WINDOWS) {
       throw new AssertionError(
           "DF.getExecString() should never be called on Windows");
     } else {
-      return new String[] {"bash","-c","exec 'df' '-k' '-P' '" + dirPath 
-                      + "' 2>/dev/null"};
+      return new String[]{"bash", "-c", "exec 'df' '-k' '-P' '" + dirPath
+          + "' 2>/dev/null"};
     }
   }
 
@@ -128,7 +128,7 @@ public class DF extends Shell {
       line = lines.readLine();
     }
   }
-  
+
   @VisibleForTesting
   protected void parseOutput() throws IOException {
     if (output.size() < 2) {
@@ -138,11 +138,11 @@ public class DF extends Shell {
       }
       throw new IOException(sb.toString());
     }
-    
+
     String line = output.get(1);
     StringTokenizer tokens =
-      new StringTokenizer(line, " \t\n\r\f%");
-    
+        new StringTokenizer(line, " \t\n\r\f%");
+
     try {
       this.filesystem = tokens.nextToken();
     } catch (NoSuchElementException e) {

@@ -17,12 +17,10 @@
 
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.util.StringUtils;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -52,7 +50,7 @@ import java.security.CodeSource;
  *
  * All error messages are printed to {@link System#out}; errors
  * to {@link System#err}.
- * 
+ *
  */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public final class FindClass extends Configured implements Tool {
@@ -111,7 +109,7 @@ public final class FindClass extends Configured implements Tool {
    * Output stream. Defaults to {@link System#out}
    */
   private static PrintStream stdout = System.out;
-  
+
   /**
    * Error stream. Defaults to {@link System#err}
    */
@@ -287,7 +285,7 @@ public final class FindClass extends Configured implements Tool {
       } catch (Exception e) {
         //catch those classes whose toString() method is brittle, but don't fail the probe
         printStack(e,
-                   "Created class instance but the toString() operator failed");
+            "Created class instance but the toString() operator failed");
       }
       return SUCCESS;
     } catch (ClassNotFoundException e) {
@@ -342,22 +340,22 @@ public final class FindClass extends Configured implements Tool {
    */
   private int usage(String[] args) {
     err(
-      "Usage : [load | create] <classname>");
+        "Usage : [load | create] <classname>");
     err(
-      "        [locate | print] <resourcename>]");
+        "        [locate | print] <resourcename>]");
     err("The return codes are:");
     explainResult(SUCCESS,
-                  "The operation was successful");
+        "The operation was successful");
     explainResult(E_GENERIC,
-                  "Something went wrong");
+        "Something went wrong");
     explainResult(E_USAGE,
-                  "This usage message was printed");
+        "This usage message was printed");
     explainResult(E_NOT_FOUND,
-                  "The class or resource was not found");
+        "The class or resource was not found");
     explainResult(E_LOAD_FAILED,
-                  "The class was found but could not be loaded");
+        "The class was found but could not be loaded");
     explainResult(E_CREATE_FAILED,
-                  "The class was loaded, but an instance of it could not be created");
+        "The class was loaded, but an instance of it could not be created");
     return E_USAGE;
   }
 
@@ -367,7 +365,7 @@ public final class FindClass extends Configured implements Tool {
    * @param text error text
    */
   private void explainResult(int errorcode, String text) {
-    err(" %2d -- %s ", errorcode , text);
+    err(" %2d -- %s ", errorcode, text);
   }
 
   /**

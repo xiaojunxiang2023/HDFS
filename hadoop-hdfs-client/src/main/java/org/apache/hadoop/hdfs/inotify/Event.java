@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs.inotify;
+
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -426,29 +427,29 @@ public abstract class Event {
       content.append("MetadataUpdateEvent [path=").append(path)
           .append(", metadataType=").append(metadataType);
       switch (metadataType) {
-      case TIMES:
-        content.append(", mtime=").append(mtime)
-            .append(", atime=").append(atime);
-        break;
-      case REPLICATION:
-        content.append(", replication=").append(replication);
-        break;
-      case OWNER:
-        content.append(", ownerName=").append(ownerName)
-            .append(", groupName=").append(groupName);
-        break;
-      case PERMS:
-        content.append(", perms=").append(perms);
-        break;
-      case ACLS:
-        content.append(", acls=").append(acls);
-        break;
-      case XATTRS:
-        content.append(", xAttrs=").append(xAttrs)
-            .append(", xAttrsRemoved=").append(xAttrsRemoved);
-        break;
-      default:
-        break;
+        case TIMES:
+          content.append(", mtime=").append(mtime)
+              .append(", atime=").append(atime);
+          break;
+        case REPLICATION:
+          content.append(", replication=").append(replication);
+          break;
+        case OWNER:
+          content.append(", ownerName=").append(ownerName)
+              .append(", groupName=").append(groupName);
+          break;
+        case PERMS:
+          content.append(", perms=").append(perms);
+          break;
+        case ACLS:
+          content.append(", acls=").append(acls);
+          break;
+        case XATTRS:
+          content.append(", xAttrs=").append(xAttrs)
+              .append(", xAttrsRemoved=").append(xAttrsRemoved);
+          break;
+        default:
+          break;
       }
       content.append(']');
       return content.toString();

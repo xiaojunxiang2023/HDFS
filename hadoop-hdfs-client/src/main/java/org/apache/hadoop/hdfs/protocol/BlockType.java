@@ -20,9 +20,9 @@ public enum BlockType {
   STRIPED;
 
   // BLOCK_ID_MASK is the union of all masks.
-  static final long BLOCK_ID_MASK          = 1L << 63;
+  static final long BLOCK_ID_MASK = 1L << 63;
   // BLOCK_ID_MASK_STRIPED is the mask for striped blocks.
-  static final long BLOCK_ID_MASK_STRIPED  = 1L << 63;
+  static final long BLOCK_ID_MASK_STRIPED = 1L << 63;
 
   /**
    * Parse a BlockId to find the BlockType
@@ -32,7 +32,7 @@ public enum BlockType {
    */
   public static BlockType fromBlockId(long blockId) {
     long blockType = blockId & BLOCK_ID_MASK;
-    if(blockType == BLOCK_ID_MASK_STRIPED) {
+    if (blockType == BLOCK_ID_MASK_STRIPED) {
       return STRIPED;
     }
     return CONTIGUOUS;

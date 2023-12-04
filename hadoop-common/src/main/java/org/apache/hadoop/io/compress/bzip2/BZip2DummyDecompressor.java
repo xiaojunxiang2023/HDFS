@@ -18,9 +18,9 @@
 
 package org.apache.hadoop.io.compress.bzip2;
 
-import java.io.IOException;
-
 import org.apache.hadoop.io.compress.Decompressor;
+
+import java.io.IOException;
 
 /**
  * This is a dummy decompressor for BZip2.

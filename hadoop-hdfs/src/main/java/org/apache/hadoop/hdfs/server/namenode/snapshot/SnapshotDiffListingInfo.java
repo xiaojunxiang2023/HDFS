@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.snapshot;
 
-import java.util.List;
-import java.util.ListIterator;
-
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReportListing;
 import org.apache.hadoop.hdfs.protocol.SnapshotDiffReportListing.DiffReportListingEntry;
@@ -11,9 +8,11 @@ import org.apache.hadoop.hdfs.server.namenode.INodeDirectory;
 import org.apache.hadoop.hdfs.server.namenode.INodeFile;
 import org.apache.hadoop.hdfs.server.namenode.INodeReference;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeature.ChildrenDiff;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ChunkedArrayList;
+
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A class describing the difference between snapshots of a snapshottable
@@ -53,8 +52,8 @@ class SnapshotDiffListingInfo {
       new ChunkedArrayList<>();
 
   SnapshotDiffListingInfo(INodeDirectory snapshotRootDir,
-      INodeDirectory snapshotDiffScopeDir, Snapshot start, Snapshot end,
-      int snapshotDiffReportLimit) {
+                          INodeDirectory snapshotDiffScopeDir, Snapshot start, Snapshot end,
+                          int snapshotDiffReportLimit) {
     Preconditions.checkArgument(
         snapshotRootDir.isSnapshottable() && snapshotDiffScopeDir
             .isDescendantOfSnapshotRoot(snapshotRootDir));
@@ -78,10 +77,10 @@ class SnapshotDiffListingInfo {
       }
     }
 
-    final List<INode> clist =  diff.getCreatedUnmodifiable();
+    final List<INode> clist = diff.getCreatedUnmodifiable();
     if (lastIndex == -1 || lastIndex < clist.size()) {
       ListIterator<INode> iterator = lastIndex != -1 ?
-          clist.listIterator(lastIndex): clist.listIterator();
+          clist.listIterator(lastIndex) : clist.listIterator();
       while (iterator.hasNext()) {
         if (getTotalEntries() < maxEntries) {
           INode created = iterator.next();
@@ -98,10 +97,10 @@ class SnapshotDiffListingInfo {
     }
 
     if (lastIndex == -1 || lastIndex >= clist.size()) {
-      final List<INode> dlist =  diff.getDeletedUnmodifiable();
+      final List<INode> dlist = diff.getDeletedUnmodifiable();
       int size = clist.size();
       ListIterator<INode> iterator = lastIndex != -1 ?
-          dlist.listIterator(lastIndex - size): dlist.listIterator();
+          dlist.listIterator(lastIndex - size) : dlist.listIterator();
       while (iterator.hasNext()) {
         if (getTotalEntries() < maxEntries) {
           final INode d = iterator.next();
@@ -144,11 +143,11 @@ class SnapshotDiffListingInfo {
   }
 
   Snapshot getEarlier() {
-    return isFromEarlier()? from: to;
+    return isFromEarlier() ? from : to;
   }
 
   Snapshot getLater() {
-    return isFromEarlier()? to: from;
+    return isFromEarlier() ? to : from;
   }
 
 
@@ -163,13 +162,14 @@ class SnapshotDiffListingInfo {
   boolean addFileDiff(INodeFile file, byte[][] relativePath) {
     if (getTotalEntries() < maxEntries) {
       modifiedList.add(new DiffReportListingEntry(file.getId(),
-          file.getId(), relativePath,false, null));
+          file.getId(), relativePath, false, null));
     } else {
       setLastPath(relativePath);
       return false;
     }
     return true;
   }
+
   /** @return True if {@link #from} is earlier than {@link #to} */
   boolean isFromEarlier() {
     return Snapshot.ID_COMPARATOR.compare(from, to) < 0;

@@ -1,65 +1,60 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.net.Node;
-
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 // 副本放置策略
 public abstract class BlockPlacementPolicy {
   public static final Logger LOG = LoggerFactory.getLogger(
       BlockPlacementPolicy.class);
-  
+
   public static class NotEnoughReplicasException extends Exception {
     private static final long serialVersionUID = 1L;
+
     NotEnoughReplicasException(String msg) {
       super(msg);
     }
   }
-    
+
   // chooseTarget
   public abstract DatanodeStorageInfo[] chooseTarget(String srcPath,
-                                             int numOfReplicas,
-                                             Node writer,
-                                             List<DatanodeStorageInfo> chosen,
-                                             boolean returnChosenNodes,
-                                             Set<Node> excludedNodes,
-                                             long blocksize,
-                                             BlockStoragePolicy storagePolicy,
-                                             EnumSet<AddBlockFlag> flags);
+                                                     int numOfReplicas,
+                                                     Node writer,
+                                                     List<DatanodeStorageInfo> chosen,
+                                                     boolean returnChosenNodes,
+                                                     Set<Node> excludedNodes,
+                                                     long blocksize,
+                                                     BlockStoragePolicy storagePolicy,
+                                                     EnumSet<AddBlockFlag> flags);
+
   // chooseTarget favoredNodes
   DatanodeStorageInfo[] chooseTarget(String src,
-      int numOfReplicas, Node writer,
-      Set<Node> excludedNodes,
-      long blocksize,
-      List<DatanodeDescriptor> favoredNodes,
-      BlockStoragePolicy storagePolicy,
-      EnumSet<AddBlockFlag> flags) {
+                                     int numOfReplicas, Node writer,
+                                     Set<Node> excludedNodes,
+                                     long blocksize,
+                                     List<DatanodeDescriptor> favoredNodes,
+                                     BlockStoragePolicy storagePolicy,
+                                     EnumSet<AddBlockFlag> flags) {
     return chooseTarget(src, numOfReplicas, writer,
-            new ArrayList<>(numOfReplicas), false,
+        new ArrayList<>(numOfReplicas), false,
         excludedNodes, blocksize, storagePolicy, flags);
   }
 
   // chooseTarget storageTypes
   public DatanodeStorageInfo[] chooseTarget(String srcPath, int numOfReplicas,
-      Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes,
-      Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy,
-      EnumSet<AddBlockFlag> flags, EnumMap<StorageType, Integer> storageTypes) {
+                                            Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes,
+                                            Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy,
+                                            EnumSet<AddBlockFlag> flags, EnumMap<StorageType, Integer> storageTypes) {
     return chooseTarget(srcPath, numOfReplicas, writer, chosen,
         returnChosenNodes, excludedNodes, blocksize, storagePolicy, flags);
   }
@@ -76,13 +71,13 @@ public abstract class BlockPlacementPolicy {
       List<StorageType> excessTypes, DatanodeDescriptor addedNode,
       DatanodeDescriptor delNodeHint);
 
-  protected abstract void initialize(Configuration conf,  FSClusterStats stats,
-                                     NetworkTopology clusterMap, 
+  protected abstract void initialize(Configuration conf, FSClusterStats stats,
+                                     NetworkTopology clusterMap,
                                      Host2NodesMap host2datanodeMap);
 
   // Balance时，isMovable
   public abstract boolean isMovable(Collection<DatanodeInfo> candidates,
-      DatanodeInfo source, DatanodeInfo target);
+                                    DatanodeInfo source, DatanodeInfo target);
 
   // moreThanOne 是具有该数据块副本的节点，且不止一个副本（rack范围内）
   public void adjustSetsWithChosenReplica(
@@ -90,7 +85,7 @@ public abstract class BlockPlacementPolicy {
       final List<DatanodeStorageInfo> moreThanOne,
       final List<DatanodeStorageInfo> exactlyOne,
       final DatanodeStorageInfo cur) {
-    
+
     final String rack = getRack(cur.getDatanodeDescriptor());
     final List<DatanodeStorageInfo> storages = rackMap.get(rack);
     storages.remove(cur);
@@ -112,16 +107,16 @@ public abstract class BlockPlacementPolicy {
   protected <T> DatanodeInfo getDatanodeInfo(T datanode) {
     Preconditions.checkArgument(
         datanode instanceof DatanodeInfo ||
-        datanode instanceof DatanodeStorageInfo,
+            datanode instanceof DatanodeStorageInfo,
         "class " + datanode.getClass().getName() + " not allowed");
     if (datanode instanceof DatanodeInfo) {
-      return ((DatanodeInfo)datanode);
+      return ((DatanodeInfo) datanode);
     } else {
-      return ((DatanodeStorageInfo)datanode).getDatanodeDescriptor();
+      return ((DatanodeStorageInfo) datanode).getDatanodeDescriptor();
     }
   }
 
-  
+
   protected String getRack(final DatanodeInfo datanode) {
     return datanode.getNetworkLocation();
   }
@@ -133,7 +128,7 @@ public abstract class BlockPlacementPolicy {
       final Map<String, List<T>> rackMap,
       final List<T> moreThanOne,
       final List<T> exactlyOne) {
-    for(T s: availableSet) {
+    for (T s : availableSet) {
       final String rackName = getRack(getDatanodeInfo(s));
       List<T> storageList = rackMap.get(rackName);
       if (storageList == null) {
@@ -154,7 +149,8 @@ public abstract class BlockPlacementPolicy {
     }
   }
 
-  
+
   public abstract void setExcludeSlowNodesEnabled(boolean enable);
+
   public abstract boolean getExcludeSlowNodesEnabled();
 }

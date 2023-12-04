@@ -20,21 +20,16 @@
 
 package org.apache.hadoop.util.concurrent;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
+
+import java.util.concurrent.*;
 
 /** Factory methods for ExecutorService, ScheduledExecutorService instances.
  * These executor service instances provide additional functionality (e.g
  * logging uncaught exceptions). */
 public final class HadoopExecutors {
   public static ExecutorService newCachedThreadPool(ThreadFactory
-      threadFactory) {
+                                                        threadFactory) {
     return new HadoopThreadPoolExecutor(0, Integer.MAX_VALUE,
         60L, TimeUnit.SECONDS,
         new SynchronousQueue<Runnable>(),
@@ -42,7 +37,7 @@ public final class HadoopExecutors {
   }
 
   public static ExecutorService newFixedThreadPool(int nThreads,
-      ThreadFactory threadFactory) {
+                                                   ThreadFactory threadFactory) {
     return new HadoopThreadPoolExecutor(nThreads, nThreads,
         0L, TimeUnit.MILLISECONDS,
         new LinkedBlockingQueue<Runnable>(),
@@ -64,7 +59,7 @@ public final class HadoopExecutors {
   //Executors.newSingleThreadExecutor has special semantics - for the
   // moment we'll delegate to it rather than implement the semantics here.
   public static ExecutorService newSingleThreadExecutor(ThreadFactory
-      threadFactory) {
+                                                            threadFactory) {
     return Executors.newSingleThreadExecutor(threadFactory);
   }
 
@@ -106,7 +101,7 @@ public final class HadoopExecutors {
    * @param unit the time unit of the timeout argument
    */
   public static void shutdown(ExecutorService executorService, Logger logger,
-      long timeout, TimeUnit unit) {
+                              long timeout, TimeUnit unit) {
 
     if (executorService == null) {
       return;
@@ -142,5 +137,6 @@ public final class HadoopExecutors {
   }
 
   //disable instantiation
-  private HadoopExecutors() { }
+  private HadoopExecutors() {
+  }
 }

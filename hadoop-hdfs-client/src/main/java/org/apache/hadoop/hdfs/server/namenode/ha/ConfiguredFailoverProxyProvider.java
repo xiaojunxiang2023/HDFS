@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ipc.RPC;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ipc.RPC;
 
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_RPC_ADDRESS_KEY;
 
@@ -24,12 +24,12 @@ public class ConfiguredFailoverProxyProvider<T> extends
   private int currentProxyIndex = 0;
 
   public ConfiguredFailoverProxyProvider(Configuration conf, URI uri,
-      Class<T> xface, HAProxyFactory<T> factory) {
+                                         Class<T> xface, HAProxyFactory<T> factory) {
     this(conf, uri, xface, factory, DFS_NAMENODE_RPC_ADDRESS_KEY);
   }
 
   public ConfiguredFailoverProxyProvider(Configuration conf, URI uri,
-      Class<T> xface, HAProxyFactory<T> factory, String addressKey) {
+                                         Class<T> xface, HAProxyFactory<T> factory, String addressKey) {
     super(conf, uri, xface, factory);
     this.proxies = getProxyAddresses(uri, addressKey);
   }
@@ -44,7 +44,7 @@ public class ConfiguredFailoverProxyProvider<T> extends
   }
 
   @Override
-  public  void performFailover(T currentProxy) {
+  public void performFailover(T currentProxy) {
     incrementProxyIndex();
   }
 
@@ -61,7 +61,7 @@ public class ConfiguredFailoverProxyProvider<T> extends
     for (ProxyInfo<T> proxy : proxies) {
       if (proxy.proxy != null) {
         if (proxy.proxy instanceof Closeable) {
-          ((Closeable)proxy.proxy).close();
+          ((Closeable) proxy.proxy).close();
         } else {
           RPC.stopProxy(proxy.proxy);
         }

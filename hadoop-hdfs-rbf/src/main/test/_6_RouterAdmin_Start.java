@@ -7,10 +7,10 @@ import org.junit.Test;
  * @Description:
  */
 public class _6_RouterAdmin_Start {
-    @Test
-    public void startRouterAdmin() throws Exception {
-        String[] args = new String[]{"-safemode"};
-        RouterAdmin.main(args);
-        Thread.sleep(System.currentTimeMillis());
-    }
+  @Test
+  public void startRouterAdmin() throws Exception {
+    String[] args = new String[]{"-safemode"};
+    RouterAdmin.main(args);
+    Thread.sleep(System.currentTimeMillis());
+  }
 }

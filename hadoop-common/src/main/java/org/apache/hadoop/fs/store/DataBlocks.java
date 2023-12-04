@@ -1,23 +1,5 @@
 package org.apache.hadoop.fs.store;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -25,13 +7,19 @@ import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FSExceptionMessages;
 import org.apache.hadoop.fs.LocalDirAllocator;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.DirectBufferPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.hadoop.fs.CommonConfigurationKeys.HADOOP_TMP_DIR;
-import static org.apache.hadoop.fs.store.DataBlocks.DataBlock.DestState.Closed;
-import static org.apache.hadoop.fs.store.DataBlocks.DataBlock.DestState.Upload;
-import static org.apache.hadoop.fs.store.DataBlocks.DataBlock.DestState.Writing;
+import static org.apache.hadoop.fs.store.DataBlocks.DataBlock.DestState.*;
 import static org.apache.hadoop.io.IOUtils.cleanupWithLogger;
 
 /**
@@ -110,19 +98,19 @@ public final class DataBlocks {
    * @throws IllegalArgumentException if the name is unknown.
    */
   public static BlockFactory createFactory(String keyToBufferDir,
-      Configuration configuration,
-      String name) {
+                                           Configuration configuration,
+                                           String name) {
     LOG.debug("Creating DataFactory of type : {}", name);
     switch (name) {
-    case DATA_BLOCKS_BUFFER_ARRAY:
-      return new ArrayBlockFactory(keyToBufferDir, configuration);
-    case DATA_BLOCKS_BUFFER_DISK:
-      return new DiskBlockFactory(keyToBufferDir, configuration);
-    case DATA_BLOCKS_BYTEBUFFER:
-      return new ByteBufferBlockFactory(keyToBufferDir, configuration);
-    default:
-      throw new IllegalArgumentException("Unsupported block buffer" +
-          " \"" + name + '"');
+      case DATA_BLOCKS_BUFFER_ARRAY:
+        return new ArrayBlockFactory(keyToBufferDir, configuration);
+      case DATA_BLOCKS_BUFFER_DISK:
+        return new DiskBlockFactory(keyToBufferDir, configuration);
+      case DATA_BLOCKS_BYTEBUFFER:
+        return new ByteBufferBlockFactory(keyToBufferDir, configuration);
+      default:
+        throw new IllegalArgumentException("Unsupported block buffer" +
+            " \"" + name + '"');
     }
   }
 
@@ -271,7 +259,7 @@ public final class DataBlocks {
      * @return a new block.
      */
     public abstract DataBlock create(long index, int limit,
-        BlockUploadStatistics statistics)
+                                     BlockUploadStatistics statistics)
         throws IOException;
 
     /**
@@ -316,7 +304,7 @@ public final class DataBlocks {
     private final BlockUploadStatistics statistics;
 
     protected DataBlock(long index,
-        BlockUploadStatistics statistics) {
+                        BlockUploadStatistics statistics) {
       this.index = index;
       this.statistics = statistics;
     }
@@ -329,7 +317,7 @@ public final class DataBlocks {
      * @throws IllegalStateException if the current state is not as expected
      */
     protected synchronized final void enterState(DestState current,
-        DestState next)
+                                                 DestState next)
         throws IllegalStateException {
       verifyState(current);
       LOG.debug("{}: entering state {}", this, next);
@@ -509,7 +497,7 @@ public final class DataBlocks {
 
     @Override
     public DataBlock create(long index, int limit,
-        BlockUploadStatistics statistics)
+                            BlockUploadStatistics statistics)
         throws IOException {
       return new ByteArrayBlock(0, limit, statistics);
     }
@@ -552,8 +540,8 @@ public final class DataBlocks {
     private Integer dataSize;
 
     ByteArrayBlock(long index,
-        int limit,
-        BlockUploadStatistics statistics) {
+                   int limit,
+                   BlockUploadStatistics statistics) {
       super(index, statistics);
       this.limit = limit;
       this.buffer = new DataBlockByteArrayOutputStream(limit);
@@ -630,8 +618,9 @@ public final class DataBlocks {
       super(keyToBufferDir, conf);
     }
 
-    @Override public ByteBufferBlock create(long index, int limit,
-        BlockUploadStatistics statistics)
+    @Override
+    public ByteBufferBlock create(long index, int limit,
+                                  BlockUploadStatistics statistics)
         throws IOException {
       return new ByteBufferBlock(index, limit, statistics);
     }
@@ -682,8 +671,8 @@ public final class DataBlocks {
        * @param statistics statistics to update.
        */
       ByteBufferBlock(long index,
-          int bufferSize,
-          BlockUploadStatistics statistics) {
+                      int bufferSize,
+                      BlockUploadStatistics statistics) {
         super(index, statistics);
         this.bufferSize = bufferSize;
         this.blockBuffer = requestBuffer(bufferSize);
@@ -695,7 +684,8 @@ public final class DataBlocks {
        *
        * @return the amount of data available to upload.
        */
-      @Override public int dataSize() {
+      @Override
+      public int dataSize() {
         return dataSize != null ? dataSize : bufferCapacityUsed();
       }
 
@@ -766,7 +756,7 @@ public final class DataBlocks {
         private ByteBuffer byteBuffer;
 
         ByteBufferInputStream(int size,
-            ByteBuffer byteBuffer) {
+                              ByteBuffer byteBuffer) {
           LOG.debug("Creating ByteBufferInputStream of size {}", size);
           this.size = size;
           this.byteBuffer = byteBuffer;
@@ -936,8 +926,8 @@ public final class DataBlocks {
      */
     @Override
     public DataBlock create(long index,
-        int limit,
-        BlockUploadStatistics statistics)
+                            int limit,
+                            BlockUploadStatistics statistics)
         throws IOException {
       File destFile = createTmpFileForWrite(String.format("datablock-%04d-",
           index),
@@ -958,7 +948,7 @@ public final class DataBlocks {
      * @throws IOException IO problems
      */
     File createTmpFileForWrite(String pathStr, long size,
-        Configuration conf) throws IOException {
+                               Configuration conf) throws IOException {
       Path path = directoryAllocator.getLocalPathForWrite(pathStr,
           size, conf);
       File dir = new File(path.getParent().toUri().getPath());
@@ -981,9 +971,9 @@ public final class DataBlocks {
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
     DiskBlock(File bufferFile,
-        int limit,
-        long index,
-        BlockUploadStatistics statistics)
+              int limit,
+              long index,
+              BlockUploadStatistics statistics)
         throws FileNotFoundException {
       super(index, statistics);
       this.limit = limit;
@@ -992,7 +982,8 @@ public final class DataBlocks {
       out = new BufferedOutputStream(new FileOutputStream(bufferFile));
     }
 
-    @Override public int dataSize() {
+    @Override
+    public int dataSize() {
       return bytesWritten;
     }
 
@@ -1001,7 +992,8 @@ public final class DataBlocks {
       return dataSize() + bytes <= limit;
     }
 
-    @Override public int remainingCapacity() {
+    @Override
+    public int remainingCapacity() {
       return limit - bytesWritten;
     }
 
@@ -1038,27 +1030,27 @@ public final class DataBlocks {
       final DestState state = getState();
       LOG.debug("Closing {}", this);
       switch (state) {
-      case Writing:
-        if (bufferFile.exists()) {
-          // file was not uploaded
-          LOG.debug("Block[{}]: Deleting buffer file as upload did not start",
-              getIndex());
+        case Writing:
+          if (bufferFile.exists()) {
+            // file was not uploaded
+            LOG.debug("Block[{}]: Deleting buffer file as upload did not start",
+                getIndex());
+            closeBlock();
+          }
+          break;
+
+        case Upload:
+          LOG.debug("Block[{}]: Buffer file {} exists —close upload stream",
+              getIndex(), bufferFile);
+          break;
+
+        case Closed:
           closeBlock();
-        }
-        break;
+          break;
 
-      case Upload:
-        LOG.debug("Block[{}]: Buffer file {} exists —close upload stream",
-            getIndex(), bufferFile);
-        break;
-
-      case Closed:
-        closeBlock();
-        break;
-
-      default:
-        // this state can never be reached, but checkstyle complains, so
-        // it is here.
+        default:
+          // this state can never be reached, but checkstyle complains, so
+          // it is here.
       }
     }
 
@@ -1067,7 +1059,8 @@ public final class DataBlocks {
      *
      * @throws IOException IOE raised on FileOutputStream
      */
-    @Override public void flush() throws IOException {
+    @Override
+    public void flush() throws IOException {
       super.flush();
       out.flush();
     }

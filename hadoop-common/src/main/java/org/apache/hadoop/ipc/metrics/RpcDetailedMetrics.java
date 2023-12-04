@@ -1,4 +1,5 @@
 package org.apache.hadoop.ipc.metrics;
+
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
@@ -11,24 +12,28 @@ import org.slf4j.LoggerFactory;
  * This class is for maintaining RPC method related statistics
  * and publishing them through the metrics interfaces.
  */
-@Metrics(about="Per method RPC metrics", context="rpcdetailed")
+@Metrics(about = "Per method RPC metrics", context = "rpcdetailed")
 public class RpcDetailedMetrics {
 
-  @Metric MutableRatesWithAggregation rates;
-  @Metric MutableRatesWithAggregation deferredRpcRates;
+  @Metric
+  MutableRatesWithAggregation rates;
+  @Metric
+  MutableRatesWithAggregation deferredRpcRates;
 
   static final Logger LOG = LoggerFactory.getLogger(RpcDetailedMetrics.class);
   final MetricsRegistry registry;
   final String name;
 
   RpcDetailedMetrics(int port) {
-    name = "RpcDetailedActivityForPort"+ port;
+    name = "RpcDetailedActivityForPort" + port;
     registry = new MetricsRegistry("rpcdetailed")
         .tag("port", "RPC port", String.valueOf(port));
     LOG.debug(registry.info().toString());
   }
 
-  public String name() { return name; }
+  public String name() {
+    return name;
+  }
 
   public static RpcDetailedMetrics create(int port) {
     RpcDetailedMetrics m = new RpcDetailedMetrics(port);

@@ -15,7 +15,7 @@ public class StorageReport {
   public static final StorageReport[] EMPTY_ARRAY = {};
 
   public StorageReport(DatanodeStorage storage, boolean failed, long capacity,
-      long dfsUsed, long remaining, long bpUsed, long nonDfsUsed) {
+                       long dfsUsed, long remaining, long bpUsed, long nonDfsUsed) {
     this.storage = storage;
     this.failed = failed;
     this.capacity = capacity;

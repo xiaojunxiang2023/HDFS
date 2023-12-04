@@ -1,60 +1,36 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.fs.XAttrSetFlag;
-import org.apache.hadoop.hdfs.AddBlockFlag;
-import org.apache.hadoop.fs.CreateFlag;
-import org.apache.hadoop.fs.FileAlreadyExistsException;
-import org.apache.hadoop.fs.FileEncryptionInfo;
-import org.apache.hadoop.fs.XAttr;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.PermissionStatus;
+import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
-import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.FSLimitException;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoContiguous;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoStriped;
-
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
-import org.apache.hadoop.hdfs.protocol.BlockType;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockUnderConstructionFeature;
-import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeStorageInfo;
+import org.apache.hadoop.hdfs.server.blockmanagement.*;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
 import org.apache.hadoop.net.Node;
 import org.apache.hadoop.net.NodeBase;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ChunkedArrayList;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot.CURRENT_STATE_ID;
 import static org.apache.hadoop.util.Time.now;
 
 class FSDirWriteFileOp {
-  private FSDirWriteFileOp() {}
+  private FSDirWriteFileOp() {
+  }
+
   static boolean unprotectedRemoveBlock(
       FSDirectory fsd, String path, INodesInPath iip, INodeFile fileNode,
       Block block) throws IOException {
@@ -70,10 +46,10 @@ class FSDirWriteFileOp {
     }
     fsd.getBlockManager().removeBlockFromMap(uc);
 
-    if(NameNode.stateChangeLog.isDebugEnabled()) {
+    if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("DIR* FSDirectory.removeBlock: "
-          +path+" with "+block
-          +" block is removed from the file system");
+          + path + " with " + block
+          + " block is removed from the file system");
     }
 
     // update space consumed
@@ -90,10 +66,10 @@ class FSDirWriteFileOp {
     assert fsd.getFSNamesystem().hasWriteLock();
     Preconditions.checkArgument(file.isUnderConstruction());
     fsd.getEditLog().logUpdateBlocks(path, file, logRetryCache);
-    if(NameNode.stateChangeLog.isDebugEnabled()) {
+    if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("persistBlocks: " + path
-              + " with " + file.getBlocks().length + " blocks is persisted to" +
-              " the file system");
+          + " with " + file.getBlocks().length + " blocks is persisted to" +
+          " the file system");
     }
   }
 
@@ -152,7 +128,7 @@ class FSDirWriteFileOp {
 
     INodesInPath iip = fsn.dir.resolvePath(pc, src, fileId);
     FileState fileState = analyzeFileState(fsn, iip, fileId, clientName,
-                                           previous, onRetryBlock);
+        previous, onRetryBlock);
     if (onRetryBlock[0] != null && onRetryBlock[0].getLocations().length > 0) {
       // This is a retry. No need to generate new locations.
       // Use the last block if it has locations.
@@ -184,11 +160,11 @@ class FSDirWriteFileOp {
     }
     storagePolicyID = pendingFile.getStoragePolicyID();
     return new ValidateAddBlockResult(blockSize, numTargets, storagePolicyID,
-                                      clientMachine, blockType, ecPolicy);
+        clientMachine, blockType, ecPolicy);
   }
 
   static LocatedBlock makeLocatedBlock(FSNamesystem fsn, BlockInfo blk,
-      DatanodeStorageInfo[] locs, long offset) throws IOException {
+                                       DatanodeStorageInfo[] locs, long offset) throws IOException {
     LocatedBlock lBlk = BlockManager.newLocatedBlock(
         fsn.getExtendedBlock(new Block(blk)), blk, locs, offset);
     fsn.getBlockManager().setBlockToken(lBlk,
@@ -204,15 +180,15 @@ class FSDirWriteFileOp {
    * the new targets, add it to the INode and to the BlocksMap.
    */
   static LocatedBlock storeAllocatedBlock(FSNamesystem fsn, String src,
-      long fileId, String clientName, ExtendedBlock previous,
-      DatanodeStorageInfo[] targets) throws IOException {
+                                          long fileId, String clientName, ExtendedBlock previous,
+                                          DatanodeStorageInfo[] targets) throws IOException {
     long offset;
     // Run the full analysis again, since things could have changed
     // while chooseTarget() was executing.
     LocatedBlock[] onRetryBlock = new LocatedBlock[1];
     INodesInPath iip = fsn.dir.resolvePath(null, src, fileId);
     FileState fileState = analyzeFileState(fsn, iip, fileId, clientName,
-                                           previous, onRetryBlock);
+        previous, onRetryBlock);
     final INodeFile pendingFile = fileState.inode;
     src = fileState.path;
 
@@ -232,7 +208,7 @@ class FSDirWriteFileOp {
 
     // commit the last block and complete it if it has minimum replicas
     fsn.commitOrCompleteLastBlock(pendingFile, fileState.iip,
-                                  ExtendedBlock.getLocalBlock(previous));
+        ExtendedBlock.getLocalBlock(previous));
 
     // allocate new block, record block locations in INode.
     final BlockType blockType = pendingFile.getBlockType();
@@ -255,7 +231,7 @@ class FSDirWriteFileOp {
     Node clientNode = null;
 
     boolean ignoreClientLocality = (flags != null
-            && flags.contains(AddBlockFlag.IGNORE_CLIENT_LOCALITY));
+        && flags.contains(AddBlockFlag.IGNORE_CLIENT_LOCALITY));
 
     // If client locality is ignored, clientNode remains 'null' to indicate
     if (!ignoreClientLocality) {
@@ -275,9 +251,9 @@ class FSDirWriteFileOp {
 
     // choose targets for the new block to be allocated.
     return bm.chooseTarget4NewBlock(src, r.numTargets, clientNode,
-                                    excludedNodesSet, r.blockSize,
-                                    favoredNodesList, r.storagePolicyID,
-                                    r.blockType, r.ecPolicy, flags);
+        excludedNodesSet, r.blockSize,
+        favoredNodesList, r.storagePolicyID,
+        r.blockType, r.ecPolicy, flags);
   }
 
   /**
@@ -299,8 +275,8 @@ class FSDirWriteFileOp {
   }
 
   static INodesInPath resolvePathForStartFile(FSDirectory dir,
-      FSPermissionChecker pc, String src, EnumSet<CreateFlag> flag,
-      boolean createParent) throws IOException {
+                                              FSPermissionChecker pc, String src, EnumSet<CreateFlag> flag,
+                                              boolean createParent) throws IOException {
     INodesInPath iip = dir.resolvePath(pc, src, DirOp.CREATE);
     if (dir.isPermissionEnabled()) {
       dir.checkAncestorAccess(pc, iip, FsAction.WRITE);
@@ -359,7 +335,7 @@ class FSDirWriteFileOp {
         List<INode> toRemoveINodes = new ChunkedArrayList<>();
         List<Long> toRemoveUCFiles = new ChunkedArrayList<>();
         long ret = FSDirDeleteOp.delete(fsd, iip, toRemoveBlocks,
-                                        toRemoveINodes, toRemoveUCFiles, now());
+            toRemoveINodes, toRemoveUCFiles, now());
         if (ret >= 0) {
           iip = INodesInPath.replace(iip, iip.length() - 1, null);
           FSDirDeleteOp.incrDeletedFileCount(ret);
@@ -368,7 +344,7 @@ class FSDirWriteFileOp {
       } else {
         // If lease soft limit time is expired, recover the lease
         fsn.recoverLeaseInternal(FSNamesystem.RecoverLeaseOp.CREATE_FILE, iip,
-                                 src, holder, clientMachine, false);
+            src, holder, clientMachine, false);
         throw new FileAlreadyExistsException(src + " for client " +
             clientMachine + " already exists");
       }
@@ -384,7 +360,7 @@ class FSDirWriteFileOp {
       newNode = iip != null ? iip.getLastINode().asFile() : null;
     }
     if (newNode == null) {
-      throw new IOException("Unable to add " + src +  " to namespace");
+      throw new IOException("Unable to add " + src + " to namespace");
     }
     fsn.leaseManager.addLease(
         newNode.getFileUnderConstructionFeature().getClientName(),
@@ -418,7 +394,7 @@ class FSDirWriteFileOp {
       ErasureCodingPolicy ecPolicy = null;
       if (isStriped) {
         ecPolicy = fsd.getFSNamesystem().getErasureCodingPolicyManager()
-          .getByID(ecPolicyID);
+            .getByID(ecPolicyID);
         if (ecPolicy == null) {
           throw new IOException(String.format(
               "Cannot find erasure coding policy for new file %s/%s, " +
@@ -468,8 +444,8 @@ class FSDirWriteFileOp {
    * Add a block to the file. Returns a reference to the added block.
    */
   private static BlockInfo addBlock(FSDirectory fsd, String path,
-      INodesInPath inodesInPath, Block block, DatanodeStorageInfo[] targets,
-      BlockType blockType) throws IOException {
+                                    INodesInPath inodesInPath, Block block, DatanodeStorageInfo[] targets,
+                                    BlockType blockType) throws IOException {
     fsd.writeLock();
     try {
       final INodeFile fileINode = inodesInPath.getLastINode().asFile();
@@ -504,7 +480,7 @@ class FSDirWriteFileOp {
       fsd.getBlockManager().addBlockCollection(blockInfo, fileINode);
       fileINode.addBlock(blockInfo);
 
-      if(NameNode.stateChangeLog.isDebugEnabled()) {
+      if (NameNode.stateChangeLog.isDebugEnabled()) {
         NameNode.stateChangeLog.debug("DIR* FSDirectory.addBlock: "
             + path + " with " + block
             + " block is added to the in-memory "
@@ -569,7 +545,7 @@ class FSDirWriteFileOp {
       return null;
     }
 
-    if(NameNode.stateChangeLog.isDebugEnabled()) {
+    if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("DIR* addFile: " +
           DFSUtil.bytes2String(localName) + " is added");
     }
@@ -626,17 +602,17 @@ class FSDirWriteFileOp {
           lastBlockInFile.isComplete()) {
         // Case 1
         if (NameNode.stateChangeLog.isDebugEnabled()) {
-           NameNode.stateChangeLog.debug(
-               "BLOCK* NameSystem.allocateBlock: handling block allocation" +
-               " writing to a file with a complete previous block: src=" +
-               src + " lastBlock=" + lastBlockInFile);
+          NameNode.stateChangeLog.debug(
+              "BLOCK* NameSystem.allocateBlock: handling block allocation" +
+                  " writing to a file with a complete previous block: src=" +
+                  src + " lastBlock=" + lastBlockInFile);
         }
       } else if (Block.matchingIdAndGenStamp(penultimateBlock, previousBlock)) {
         if (lastBlockInFile.getNumBytes() != 0) {
           throw new IOException(
               "Request looked like a retry to allocate block " +
-              lastBlockInFile + " but it already contains " +
-              lastBlockInFile.getNumBytes() + " bytes");
+                  lastBlockInFile + " but it already contains " +
+                  lastBlockInFile.getNumBytes() + " bytes");
         }
 
         // Case 2
@@ -661,12 +637,12 @@ class FSDirWriteFileOp {
   }
 
   static boolean completeFile(FSNamesystem fsn, FSPermissionChecker pc,
-      final String srcArg, String holder, ExtendedBlock last, long fileId)
+                              final String srcArg, String holder, ExtendedBlock last, long fileId)
       throws IOException {
     String src = srcArg;
     if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("DIR* NameSystem.completeFile: " +
-                                        src + " for " + holder);
+          src + " for " + holder);
     }
     checkBlock(fsn, last);
     INodesInPath iip = fsn.dir.resolvePath(pc, src, fileId);
@@ -743,8 +719,8 @@ class FSDirWriteFileOp {
     fsn.getEditLog().logAddBlock(path, file);
     if (NameNode.stateChangeLog.isDebugEnabled()) {
       NameNode.stateChangeLog.debug("persistNewBlock: "
-              + path + " with new block " + file.getLastBlock().toString()
-              + ", current total block count is " + file.getBlocks().length);
+          + path + " with new block " + file.getLastBlock().toString()
+          + ", current total block count is " + file.getBlocks().length);
     }
   }
 
@@ -760,8 +736,8 @@ class FSDirWriteFileOp {
    * @throws QuotaExceededException If addition of block exceeds space quota
    */
   static void saveAllocatedBlock(FSNamesystem fsn, String src,
-      INodesInPath inodesInPath, Block newBlock, DatanodeStorageInfo[] targets,
-      BlockType blockType) throws IOException {
+                                 INodesInPath inodesInPath, Block newBlock, DatanodeStorageInfo[] targets,
+                                 BlockType blockType) throws IOException {
     assert fsn.hasWriteLock();
     BlockInfo b = addBlock(fsn.dir, src, inodesInPath, newBlock, targets,
         blockType);
@@ -786,7 +762,7 @@ class FSDirWriteFileOp {
   }
 
   private static void setNewINodeStoragePolicy(BlockManager bm,
-      INodesInPath iip, boolean isLazyPersist) throws IOException {
+                                               INodesInPath iip, boolean isLazyPersist) throws IOException {
     INodeFile inode = iip.getLastINode().asFile();
     if (isLazyPersist) {
       BlockStoragePolicy lpPolicy =
@@ -797,10 +773,10 @@ class FSDirWriteFileOp {
       if (lpPolicy == null) {
         throw new HadoopIllegalArgumentException(
             "The LAZY_PERSIST storage policy has been disabled " +
-            "by the administrator.");
+                "by the administrator.");
       }
       inode.setStoragePolicyID(lpPolicy.getId(),
-                                 iip.getLatestSnapshotId());
+          iip.getLatestSnapshotId());
     } else {
       BlockStoragePolicy effectivePolicy =
           bm.getStoragePolicy(inode.getStoragePolicyID());
@@ -809,7 +785,7 @@ class FSDirWriteFileOp {
           effectivePolicy.isCopyOnCreateFile()) {
         // Copy effective policy from ancestor directory to current file.
         inode.setStoragePolicyID(effectivePolicy.getId(),
-                                 iip.getLatestSnapshotId());
+            iip.getLatestSnapshotId());
       }
     }
   }

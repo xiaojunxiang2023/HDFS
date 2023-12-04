@@ -1,20 +1,20 @@
 package org.apache.hadoop.hdfs;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.LinkedListMultimap;
 import org.apache.hadoop.hdfs.net.Peer;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.util.IOUtilsClient;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.LinkedListMultimap;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * A cache of input stream sockets to Data Node.
@@ -38,7 +38,7 @@ public class PeerCache {
       if (!(o instanceof Key)) {
         return false;
       }
-      Key other = (Key)o;
+      Key other = (Key) o;
       return dnID.equals(other.dnID) && isDomain == other.isDomain;
     }
 
@@ -77,11 +77,11 @@ public class PeerCache {
     this.capacity = c;
     this.expiryPeriod = e;
 
-    if (capacity == 0 ) {
+    if (capacity == 0) {
       LOG.debug("SocketCache disabled.");
     } else if (expiryPeriod == 0) {
       throw new IllegalStateException("Cannot initialize expiryPeriod to " +
-         expiryPeriod + " when cache is enabled.");
+          expiryPeriod + " when cache is enabled.");
     }
   }
 
@@ -100,7 +100,7 @@ public class PeerCache {
       public void run() {
         try {
           PeerCache.this.run();
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
           //noop
         } finally {
           PeerCache.this.clear();
@@ -120,7 +120,7 @@ public class PeerCache {
    * @param dnId         The DataNode to get a Peer for.
    * @param isDomain     Whether to retrieve a DomainPeer or not.
    *
-   * @return             An open Peer connected to the DN, or null if none
+   * @return An open Peer connected to the DN, or null if none
    *                     was found.
    */
   public Peer get(DatanodeID dnId, boolean isDomain) {
@@ -148,7 +148,7 @@ public class PeerCache {
           peer.close();
         } catch (IOException e) {
           LOG.warn("got IOException closing stale peer " + peer +
-                ", which is " + ageMs + " ms old");
+              ", which is " + ageMs + " ms old");
         }
       } else if (!peer.isClosed()) {
         return peer;
@@ -214,7 +214,7 @@ public class PeerCache {
     Iterator<Entry<Key, Value>> iter = multimap.entries().iterator();
     if (!iter.hasNext()) {
       throw new IllegalStateException("Cannot evict from empty cache! " +
-        "capacity: " + capacity);
+          "capacity: " + capacity);
     }
     Entry<Key, Value> entry = iter.next();
     IOUtilsClient.cleanupWithLogger(LOG, entry.getValue().getPeer());
@@ -226,9 +226,9 @@ public class PeerCache {
    * expiryPeriod minutes.
    */
   private void run() throws InterruptedException {
-    for(long lastExpiryTime = Time.monotonicNow();
-        !Thread.interrupted();
-        Thread.sleep(expiryPeriod)) {
+    for (long lastExpiryTime = Time.monotonicNow();
+         !Thread.interrupted();
+         Thread.sleep(expiryPeriod)) {
       final long elapsed = Time.monotonicNow() - lastExpiryTime;
       if (elapsed >= expiryPeriod) {
         evictExpired(expiryPeriod);

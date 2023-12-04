@@ -46,7 +46,7 @@ public class Quantile implements Comparable<Quantile> {
         .compare(error, other.error)
         .result();
   }
-  
+
   @Override
   public String toString() {
     return String.format("%.2f %%ile +/- %.2f%%",

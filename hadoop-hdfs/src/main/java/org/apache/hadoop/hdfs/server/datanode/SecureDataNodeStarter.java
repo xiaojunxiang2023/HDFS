@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.hadoop.conf.Configuration;
@@ -12,11 +11,12 @@ import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataTransferSaslUtil;
 import org.apache.hadoop.http.HttpConfig;
 import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.channels.ServerSocketChannel;
-import java.net.BindException;
 
 /**
  * Utility class to start a datanode in a secure cluster, first obtaining 
@@ -36,7 +36,7 @@ public class SecureDataNodeStarter implements Daemon {
 
     public SecureResources(ServerSocket streamingSocket, ServerSocketChannel
         httpServerSocket, boolean saslEnabled, boolean rpcPortPrivileged,
-        boolean httpPortPrivileged) {
+                           boolean httpPortPrivileged) {
       this.streamingSocket = streamingSocket;
       this.httpServerSocket = httpServerSocket;
       this.isSaslEnabled = saslEnabled;
@@ -44,7 +44,9 @@ public class SecureDataNodeStarter implements Daemon {
       this.isHttpPortPrivileged = httpPortPrivileged;
     }
 
-    public ServerSocket getStreamingSocket() { return streamingSocket; }
+    public ServerSocket getStreamingSocket() {
+      return streamingSocket;
+    }
 
     public ServerSocketChannel getHttpServerChannel() {
       return httpServerSocket;
@@ -62,8 +64,8 @@ public class SecureDataNodeStarter implements Daemon {
       return isHttpPortPrivileged;
     }
   }
-  
-  private String [] args;
+
+  private String[] args;
   private SecureResources resources;
 
   @Override
@@ -72,7 +74,7 @@ public class SecureDataNodeStarter implements Daemon {
     // Create a new HdfsConfiguration object to ensure that the configuration in
     // hdfs-site.xml.noha is picked up.
     Configuration conf = new HdfsConfiguration();
-    
+
     // Stash command-line arguments for regular datanode
     args = context.getArguments();
     resources = getSecureResources(conf);
@@ -84,8 +86,12 @@ public class SecureDataNodeStarter implements Daemon {
     DataNode.secureMain(args, resources);
   }
 
-  @Override public void destroy() {}
-  @Override public void stop() throws Exception { /* Nothing to do */ }
+  @Override
+  public void destroy() {
+  }
+
+  @Override
+  public void stop() throws Exception { /* Nothing to do */ }
 
   /**
    * Acquire privileged resources (i.e., the privileged ports) for the data
@@ -103,7 +109,7 @@ public class SecureDataNodeStarter implements Daemon {
 
     System.err.println("isSaslEnabled:" + isSaslEnabled);
     // Obtain secure port for data streaming to datanode
-    InetSocketAddress streamingAddr  = DataNode.getStreamingAddr(conf);
+    InetSocketAddress streamingAddr = DataNode.getStreamingAddr(conf);
     int socketWriteTimeout = conf.getInt(
         DFSConfigKeys.DFS_DATANODE_SOCKET_WRITE_TIMEOUT_KEY,
         HdfsConstants.WRITE_TIMEOUT);
@@ -111,7 +117,7 @@ public class SecureDataNodeStarter implements Daemon {
         CommonConfigurationKeysPublic.IPC_SERVER_LISTEN_QUEUE_SIZE_KEY,
         CommonConfigurationKeysPublic.IPC_SERVER_LISTEN_QUEUE_SIZE_DEFAULT);
 
-    ServerSocket ss = (socketWriteTimeout > 0) ? 
+    ServerSocket ss = (socketWriteTimeout > 0) ?
         ServerSocketChannel.open().socket() : new ServerSocket();
     try {
       ss.bind(streamingAddr, backlogLength);
@@ -146,15 +152,15 @@ public class SecureDataNodeStarter implements Daemon {
         throw newBe;
       }
       InetSocketAddress localAddr = (InetSocketAddress) httpChannel.socket()
-        .getLocalSocketAddress();
+          .getLocalSocketAddress();
 
       if (localAddr.getPort() != infoSocAddr.getPort()) {
         throw new RuntimeException("Unable to bind on specified info port in " +
             "secure context. Needed " + infoSocAddr.getPort() + ", got " +
-             ss.getLocalPort());
+            ss.getLocalPort());
       }
       System.err.println("Successfully obtained privileged resources (streaming port = "
-          + ss + " ) (http listener port = " + localAddr.getPort() +")");
+          + ss + " ) (http listener port = " + localAddr.getPort() + ")");
 
       isHttpPrivileged = SecurityUtil.isPrivilegedPort(localAddr.getPort());
       System.err.println("Opened info server at " + infoSocAddr);
@@ -167,7 +173,7 @@ public class SecureDataNodeStarter implements Daemon {
   }
 
   private static BindException appendMessageToBindException(BindException e,
-      String msg) {
+                                                            String msg) {
     BindException newBe = new BindException(e.getMessage() + " " + msg);
     newBe.initCause(e.getCause());
     newBe.setStackTrace(e.getStackTrace());

@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.util.Arrays;
-
 import org.apache.hadoop.hdfs.protocol.Block;
+
+import java.util.Arrays;
 
 /**
  * This class represents, the blocks for which storage movements has done by

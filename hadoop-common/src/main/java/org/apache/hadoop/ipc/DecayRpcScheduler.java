@@ -1,28 +1,7 @@
 package org.apache.hadoop.ipc;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicLongArray;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.management.ObjectName;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.AtomicDoubleArray;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -36,10 +15,21 @@ import org.apache.hadoop.metrics2.lib.Interns;
 import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.metrics2.util.Metrics2Util.NameValuePair;
 import org.apache.hadoop.metrics2.util.Metrics2Util.TopN;
-
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.AtomicDoubleArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.management.ObjectName;
+import java.lang.ref.WeakReference;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.apache.hadoop.ipc.ProcessingDetails.Timing;
 
@@ -60,7 +50,7 @@ public class DecayRpcScheduler implements RpcScheduler,
       5000;
   @Deprecated
   public static final String IPC_FCQ_DECAYSCHEDULER_PERIOD_KEY =
-    "faircallqueue.decay-scheduler.period-ms";
+      "faircallqueue.decay-scheduler.period-ms";
 
   /**
    * Decay factor controls how much each cost is suppressed by on each sweep.
@@ -74,9 +64,9 @@ public class DecayRpcScheduler implements RpcScheduler,
       0.5;
   @Deprecated
   public static final String IPC_FCQ_DECAYSCHEDULER_FACTOR_KEY =
-    "faircallqueue.decay-scheduler.decay-factor";
+      "faircallqueue.decay-scheduler.decay-factor";
 
- /**
+  /**
    * Thresholds are specified as integer percentages, and specify which usage
    * range each queue will be allocated to. For instance, specifying the list
    *  10, 40, 80
@@ -147,7 +137,7 @@ public class DecayRpcScheduler implements RpcScheduler,
   // Pre-computed scheduling decisions during the decay sweep are
   // atomically swapped in as a read-only map
   private final AtomicReference<Map<Object, Integer>> scheduleCacheRef =
-    new AtomicReference<Map<Object, Integer>>();
+      new AtomicReference<Map<Object, Integer>>();
 
   // Tune the behavior of the scheduler
   private final long decayPeriodMillis; // How long between each tick
@@ -165,6 +155,7 @@ public class DecayRpcScheduler implements RpcScheduler,
   private final CostProvider costProvider;
 
   private final Map<String, Integer> staticPriorities = new HashMap<>();
+
   /**
    * This TimerTask will call decayCurrentCosts until
    * the scheduler has been garbage collected.
@@ -200,7 +191,7 @@ public class DecayRpcScheduler implements RpcScheduler,
    * @param conf configuration to use.
    */
   public DecayRpcScheduler(int numLevels, String ns, Configuration conf) {
-    if(numLevels < 1) {
+    if (numLevels < 1) {
       throw new IllegalArgumentException("Number of Priority Levels must be " +
           "at least 1");
     }
@@ -263,14 +254,14 @@ public class DecayRpcScheduler implements RpcScheduler,
 
   // Load configs
   private IdentityProvider parseIdentityProvider(String ns,
-      Configuration conf) {
+                                                 Configuration conf) {
     List<IdentityProvider> providers = conf.getInstances(
-      ns + "." + CommonConfigurationKeys.IPC_IDENTITY_PROVIDER_KEY,
-      IdentityProvider.class);
+        ns + "." + CommonConfigurationKeys.IPC_IDENTITY_PROVIDER_KEY,
+        IdentityProvider.class);
 
     if (providers.size() < 1) {
       LOG.info("IdentityProvider not specified, " +
-        "defaulting to UserIdentityProvider");
+          "defaulting to UserIdentityProvider");
       return new UserIdentityProvider();
     }
 
@@ -282,7 +273,7 @@ public class DecayRpcScheduler implements RpcScheduler,
         IPC_FCQ_DECAYSCHEDULER_FACTOR_KEY, 0.0);
     if (factor == 0.0) {
       factor = conf.getDouble(ns + "." +
-          IPC_SCHEDULER_DECAYSCHEDULER_FACTOR_KEY,
+              IPC_SCHEDULER_DECAYSCHEDULER_FACTOR_KEY,
           IPC_SCHEDULER_DECAYSCHEDULER_FACTOR_DEFAULT);
     } else if ((factor > 0.0) && (factor < 1)) {
       LOG.warn(IPC_FCQ_DECAYSCHEDULER_FACTOR_KEY +
@@ -291,7 +282,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     }
     if (factor <= 0 || factor >= 1) {
       throw new IllegalArgumentException("Decay Factor " +
-        "must be between 0 and 1");
+          "must be between 0 and 1");
     }
 
     return factor;
@@ -299,11 +290,11 @@ public class DecayRpcScheduler implements RpcScheduler,
 
   private static long parseDecayPeriodMillis(String ns, Configuration conf) {
     long period = conf.getLong(ns + "." +
-        IPC_FCQ_DECAYSCHEDULER_PERIOD_KEY,
+            IPC_FCQ_DECAYSCHEDULER_PERIOD_KEY,
         0);
     if (period == 0) {
       period = conf.getLong(ns + "." +
-          IPC_SCHEDULER_DECAYSCHEDULER_PERIOD_KEY,
+              IPC_SCHEDULER_DECAYSCHEDULER_PERIOD_KEY,
           IPC_SCHEDULER_DECAYSCHEDULER_PERIOD_DEFAULT);
     } else if (period > 0) {
       LOG.warn((IPC_FCQ_DECAYSCHEDULER_PERIOD_KEY +
@@ -318,7 +309,7 @@ public class DecayRpcScheduler implements RpcScheduler,
   }
 
   private static double[] parseThresholds(String ns, Configuration conf,
-      int numLevels) {
+                                          int numLevels) {
     int[] percentages = conf.getInts(ns + "." +
         IPC_FCQ_DECAYSCHEDULER_THRESHOLDS_KEY);
 
@@ -333,9 +324,9 @@ public class DecayRpcScheduler implements RpcScheduler,
           IPC_DECAYSCHEDULER_THRESHOLDS_KEY);
     }
 
-    if (percentages.length != numLevels-1) {
+    if (percentages.length != numLevels - 1) {
       throw new IllegalArgumentException("Number of thresholds should be " +
-        (numLevels-1) + ". Was: " + percentages.length);
+          (numLevels - 1) + ". Was: " + percentages.length);
     }
 
     // Convert integer percentages to decimals
@@ -360,13 +351,13 @@ public class DecayRpcScheduler implements RpcScheduler,
     double div = Math.pow(2, numLevels - 1);
 
     for (int i = 0; i < ret.length; i++) {
-      ret[i] = Math.pow(2, i)/div;
+      ret[i] = Math.pow(2, i) / div;
     }
     return ret;
   }
 
   private static long[] parseBackOffResponseTimeThreshold(String ns,
-      Configuration conf, int numLevels) {
+                                                          Configuration conf, int numLevels) {
     long[] responseTimeThresholds = conf.getTimeDurations(ns + "." +
             IPC_DECAYSCHEDULER_BACKOFF_RESPONSETIME_THRESHOLDS_KEY,
         TimeUnit.MILLISECONDS);
@@ -378,10 +369,10 @@ public class DecayRpcScheduler implements RpcScheduler,
     if (responseTimeThresholds.length != numLevels) {
       throw new IllegalArgumentException(
           "responseTimeThresholds must match with the number of priority " +
-          "levels");
+              "levels");
     }
     // invalid thresholds
-    for (long responseTimeThreshold: responseTimeThresholds) {
+    for (long responseTimeThreshold : responseTimeThresholds) {
       if (responseTimeThreshold <= 0) {
         throw new IllegalArgumentException(
             "responseTimeThreshold millis must be >= 0");
@@ -394,15 +385,15 @@ public class DecayRpcScheduler implements RpcScheduler,
   private static long[] getDefaultBackOffResponseTimeThresholds(int numLevels) {
     long[] ret = new long[numLevels];
     for (int i = 0; i < ret.length; i++) {
-      ret[i] = 10000*(i+1);
+      ret[i] = 10000 * (i + 1);
     }
     return ret;
   }
 
   private static Boolean parseBackOffByResponseTimeEnabled(String ns,
-      Configuration conf) {
+                                                           Configuration conf) {
     return conf.getBoolean(ns + "." +
-        IPC_DECAYSCHEDULER_BACKOFF_RESPONSETIME_ENABLE_KEY,
+            IPC_DECAYSCHEDULER_BACKOFF_RESPONSETIME_ENABLE_KEY,
         IPC_DECAYSCHEDULER_BACKOFF_RESPONSETIME_ENABLE_DEFAULT);
   }
 
@@ -537,7 +528,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     }
 
     // Start with low priority levels, since they will be most common
-    for(int i = (numLevels - 1); i > 0; i--) {
+    for (int i = (numLevels - 1); i > 0; i--) {
       if (proportion >= this.thresholds[i - 1]) {
         return i; // We've found our level number
       }
@@ -655,7 +646,7 @@ public class DecayRpcScheduler implements RpcScheduler,
 
   @Override
   public void addResponseTime(String callName, Schedulable schedulable,
-      ProcessingDetails details) {
+                              ProcessingDetails details) {
     String user = identityProvider.makeIdentity(schedulable);
     long processingCost = costProvider.getCost(details);
     addCost(user, processingCost);
@@ -672,10 +663,10 @@ public class DecayRpcScheduler implements RpcScheduler,
 
     responseTimeCountInCurrWindow.getAndIncrement(priorityLevel);
     responseTimeTotalInCurrWindow.getAndAdd(priorityLevel,
-        queueTime+processingTime);
+        queueTime + processingTime);
     if (LOG.isDebugEnabled()) {
       LOG.debug("addResponseTime for call: {}  priority: {} queueTime: {} " +
-          "processingTime: {} ", callName, priorityLevel, queueTime,
+              "processingTime: {} ", callName, priorityLevel, queueTime,
           processingTime);
     }
   }
@@ -756,7 +747,7 @@ public class DecayRpcScheduler implements RpcScheduler,
       MetricsSource {
     // One singleton per namespace
     private static final HashMap<String, MetricsProxy> INSTANCES =
-      new HashMap<String, MetricsProxy>();
+        new HashMap<String, MetricsProxy>();
 
     // Weakref for delegate, so we don't retain it forever if it can be GC'd
     private WeakReference<DecayRpcScheduler> delegate;
@@ -765,7 +756,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     private ObjectName decayRpcSchedulerInfoBeanName;
 
     private MetricsProxy(String namespace, int numLevels,
-        DecayRpcScheduler drs) {
+                         DecayRpcScheduler drs) {
       averageResponseTimeDefault = new double[numLevels];
       callCountInLastWindowDefault = new long[numLevels];
       setDelegate(drs);
@@ -775,13 +766,13 @@ public class DecayRpcScheduler implements RpcScheduler,
     }
 
     public static synchronized MetricsProxy getInstance(String namespace,
-        int numLevels, DecayRpcScheduler drs) {
+                                                        int numLevels, DecayRpcScheduler drs) {
       MetricsProxy mp = INSTANCES.get(namespace);
       if (mp == null) {
         // We must create one
         mp = new MetricsProxy(namespace, numLevels, drs);
         INSTANCES.put(namespace, mp);
-      } else  if (drs != mp.delegate.get()){
+      } else if (drs != mp.delegate.get()) {
         // in case of delegate is reclaimed, we should set it again
         mp.setDelegate(drs);
       }
@@ -946,7 +937,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     for (int i = 0; i < responseTimeCountInLastWindow.length(); i++) {
       rb.addGauge(Interns.info("Priority." + i + ".CompletedCallVolume",
           "Completed Call volume " +
-          "of priority "+ i), responseTimeCountInLastWindow.get(i));
+              "of priority " + i), responseTimeCountInLastWindow.get(i));
     }
   }
 
@@ -954,7 +945,7 @@ public class DecayRpcScheduler implements RpcScheduler,
   private void addAvgResponseTimePerPriority(MetricsRecordBuilder rb) {
     for (int i = 0; i < responseTimeAvgInLastWindow.length(); i++) {
       rb.addGauge(Interns.info("Priority." + i + ".AvgResponseTime", "Average" +
-          " response time of priority " + i),
+              " response time of priority " + i),
           responseTimeAvgInLastWindow.get(i));
     }
   }
@@ -965,7 +956,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     Map<Object, Integer> decisions = scheduleCacheRef.get();
     final int actualCallerCount = topNCallers.size();
     for (int i = 0; i < actualCallerCount; i++) {
-      NameValuePair entry =  topNCallers.poll();
+      NameValuePair entry = topNCallers.poll();
       String topCaller = "Caller(" + entry.getName() + ")";
       String topCallerVolume = topCaller + ".Volume";
       String topCallerPriority = topCaller + ".Priority";
@@ -1033,7 +1024,7 @@ public class DecayRpcScheduler implements RpcScheduler,
 
   @VisibleForTesting
   public DecayRpcSchedulerDetailedMetrics
-      getDecayRpcSchedulerDetailedMetrics() {
+  getDecayRpcSchedulerDetailedMetrics() {
     return decayRpcSchedulerDetailedMetrics;
   }
 

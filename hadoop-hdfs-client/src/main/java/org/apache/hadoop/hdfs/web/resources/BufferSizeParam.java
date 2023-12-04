@@ -35,9 +35,9 @@ public class BufferSizeParam extends IntegerParam {
 
   /** @return the value or, if it is null, return the default from conf. */
   public int getValue(final Configuration conf) {
-    return getValue() != null? getValue()
+    return getValue() != null ? getValue()
         : conf.getInt(
-            CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY,
-            CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT);
+        CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY,
+        CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT);
   }
 }

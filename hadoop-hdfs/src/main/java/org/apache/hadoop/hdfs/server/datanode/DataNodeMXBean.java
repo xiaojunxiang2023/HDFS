@@ -3,16 +3,16 @@ package org.apache.hadoop.hdfs.server.datanode;
 import java.util.Map;
 
 /**
- * 
+ *
  * This is the JMX management interface for data node information.
  * End users shouldn't be implementing these interfaces, and instead
  * access this information through the JMX APIs.
  */
 public interface DataNodeMXBean {
-  
+
   /**
    * Gets the version of Hadoop.
-   * 
+   *
    * @return the version of Hadoop
    */
   public String getVersion();
@@ -26,14 +26,14 @@ public interface DataNodeMXBean {
 
   /**
    * Gets the rpc port.
-   * 
+   *
    * @return the rpc port
    */
   public String getRpcPort();
-  
+
   /**
    * Gets the http port.
-   * 
+   *
    * @return the http port
    */
   public String getHttpPort();
@@ -47,7 +47,7 @@ public interface DataNodeMXBean {
 
   /**
    * Gets the namenode IP addresses.
-   * 
+   *
    * @return the namenode IP addresses that the datanode is talking to
    */
   public String getNamenodeAddresses();
@@ -69,14 +69,14 @@ public interface DataNodeMXBean {
   /**
    * Gets the information of each volume on the Datanode. Please
    * see the implementation for the format of returned information.
-   * 
+   *
    * @return the volume info
    */
   public String getVolumeInfo();
-  
+
   /**
    * Gets the cluster id.
-   * 
+   *
    * @return the cluster id
    */
   public String getClusterId();
@@ -106,7 +106,7 @@ public interface DataNodeMXBean {
    * Gets the diskBalancer Status.
    * Please see implementation for the format of the returned information.
    *
-   * @return  DiskBalancer Status
+   * @return DiskBalancer Status
    */
   String getDiskBalancerStatus();
 

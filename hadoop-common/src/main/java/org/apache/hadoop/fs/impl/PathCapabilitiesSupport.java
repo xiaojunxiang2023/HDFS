@@ -1,10 +1,12 @@
 package org.apache.hadoop.fs.impl;
 
-import java.util.Locale;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathCapabilities;
 
+import java.util.Locale;
+
 import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
+
 public class PathCapabilitiesSupport {
 
   /**

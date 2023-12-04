@@ -1,4 +1,5 @@
 package org.apache.hadoop.fs;
+
 public interface PathFilter {
   /**
    * Tests whether or not the specified abstract pathname should be

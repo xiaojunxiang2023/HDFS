@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer.sasl;
 
-import static org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataTransferSaslUtil.SASL_TRANSFER_MAGIC_NUMBER;
-
 import java.io.IOException;
+
+import static org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataTransferSaslUtil.SASL_TRANSFER_MAGIC_NUMBER;
 
 /**
  * Indicates that SASL protocol negotiation expected to read a pre-defined magic
@@ -18,16 +18,16 @@ public class InvalidMagicNumberException extends IOException {
    *
    * @param magicNumber expected value
    */
-  public InvalidMagicNumberException(final int magicNumber, 
-      final boolean handshake4Encryption) {
+  public InvalidMagicNumberException(final int magicNumber,
+                                     final boolean handshake4Encryption) {
     super(String.format("Received %x instead of %x from client.",
         magicNumber, SASL_TRANSFER_MAGIC_NUMBER));
     this.handshake4Encryption = handshake4Encryption;
   }
-  
+
   /**
    * Return true if it's handshake for encryption
-   * 
+   *
    * @return boolean true if it's handshake for encryption
    */
   public boolean isHandshake4Encryption() {

@@ -1,24 +1,24 @@
 package org.apache.hadoop.ha.fence;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
+import org.apache.hadoop.ha.status.HAServiceTarget;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.ha.status.HAServiceTarget;
-import org.apache.hadoop.ha.micro.BadFencingConfigurationException;
-import org.apache.hadoop.util.ReflectionUtils;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class parses the configured list of fencing methods, and
  * is responsible for trying each one in turn while logging informative
  * output.<p>
- * 
+ *
  * The fencing methods are configured as a carriage-return separated list.
  * Each line in the list is of the form:<p>
  * <code>com.example.foo.MyMethod(arg string)</code>
@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 public class NodeFencer {
   private static final String CLASS_RE = "([a-zA-Z0-9\\.\\$]+)";
   private static final Pattern CLASS_WITH_ARGUMENT =
-    Pattern.compile(CLASS_RE + "\\((.+?)\\)");
+      Pattern.compile(CLASS_RE + "\\((.+?)\\)");
   private static final Pattern CLASS_WITHOUT_ARGUMENT =
-    Pattern.compile(CLASS_RE);
+      Pattern.compile(CLASS_RE);
   private static final Pattern HASH_COMMENT_RE =
-    Pattern.compile("#.*$");
+      Pattern.compile("#.*$");
 
   private static final Logger LOG = LoggerFactory.getLogger(NodeFencer.class);
 
@@ -46,15 +46,15 @@ public class NodeFencer {
    * Standard fencing methods included with Hadoop.
    */
   private static final Map<String, Class<? extends FenceMethod>> STANDARD_METHODS =
-    ImmutableMap.of("shell", ShellCommandFencer.class);
-  
+      ImmutableMap.of("shell", ShellCommandFencer.class);
+
   private final List<FenceMethodWithArg> methods;
-  
+
   NodeFencer(Configuration conf, String spec)
       throws BadFencingConfigurationException {
     this.methods = parseMethods(conf, spec);
   }
-  
+
   public static NodeFencer create(Configuration conf, String confKey)
       throws BadFencingConfigurationException {
     String confStr = conf.get(confKey);
@@ -72,8 +72,8 @@ public class NodeFencer {
     LOG.info("====== Beginning Service Fencing Process... ======");
     int i = 0;
     for (FenceMethodWithArg method : methods) {
-      LOG.info("Trying method " + (++i) + "/" + methods.size() +": " + method);
-      
+      LOG.info("Trying method " + (++i) + "/" + methods.size() + ": " + method);
+
       try {
         // only true when target node is given, AND fencing on it failed
         boolean toSvcFencingFailed = false;
@@ -101,16 +101,16 @@ public class NodeFencer {
       }
       LOG.warn("Fencing method " + method + " was unsuccessful.");
     }
-    
+
     LOG.error("Unable to fence service by any configured method.");
     return false;
   }
 
   private static List<FenceMethodWithArg> parseMethods(Configuration conf,
-      String spec)
+                                                       String spec)
       throws BadFencingConfigurationException {
     String[] lines = spec.split("\\s*\n\\s*");
-    
+
     List<FenceMethodWithArg> methods = Lists.newArrayList();
     for (String line : lines) {
       line = HASH_COMMENT_RE.matcher(line).replaceAll("");
@@ -119,7 +119,7 @@ public class NodeFencer {
         methods.add(parseMethod(conf, line));
       }
     }
-    
+
     return methods;
   }
 
@@ -156,28 +156,28 @@ public class NodeFencer {
           "Could not find configured fencing method " + clazzName,
           e);
     }
-    
+
     // Check that it implements the right interface
     if (!FenceMethod.class.isAssignableFrom(clazz)) {
       throw new BadFencingConfigurationException("Class " + clazzName +
           " does not implement FenceMethod");
     }
-    
-    FenceMethod method = (FenceMethod)ReflectionUtils.newInstance(
+
+    FenceMethod method = (FenceMethod) ReflectionUtils.newInstance(
         clazz, conf);
     method.checkArgs(arg);
     return new FenceMethodWithArg(method, arg);
   }
-  
+
   private static class FenceMethodWithArg {
     private final FenceMethod method;
     private final String arg;
-    
+
     private FenceMethodWithArg(FenceMethod method, String arg) {
       this.method = method;
       this.arg = arg;
     }
-    
+
     @Override
     public String toString() {
       return method.getClass().getCanonicalName() + "(" + arg + ")";

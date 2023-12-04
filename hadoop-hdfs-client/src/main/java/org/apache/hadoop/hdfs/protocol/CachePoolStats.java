@@ -52,7 +52,7 @@ public class CachePoolStats {
   private final long filesCached;
 
   private CachePoolStats(long bytesNeeded, long bytesCached,
-      long bytesOverlimit, long filesNeeded, long filesCached) {
+                         long bytesOverlimit, long filesNeeded, long filesCached) {
     this.bytesNeeded = bytesNeeded;
     this.bytesCached = bytesCached;
     this.bytesOverlimit = bytesOverlimit;

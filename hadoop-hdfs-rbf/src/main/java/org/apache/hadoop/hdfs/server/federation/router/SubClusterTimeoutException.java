@@ -5,9 +5,9 @@ import java.io.IOException;
 
 public class SubClusterTimeoutException extends IOException {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public SubClusterTimeoutException(String msg) {
-        super(msg);
-    }
+  public SubClusterTimeoutException(String msg) {
+    super(msg);
+  }
 }

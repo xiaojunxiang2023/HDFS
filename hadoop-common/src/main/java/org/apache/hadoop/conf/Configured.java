@@ -9,7 +9,7 @@ public class Configured implements Configurable {
   public Configured() {
     this(null);
   }
-  
+
   /** Construct a Configured. */
   public Configured(Configuration conf) {
     setConf(conf);

@@ -1,15 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeys.IPC_MAXIMUM_DATA_LENGTH_DEFAULT;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs.BlockReportReplica;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.Replica;
@@ -19,8 +9,16 @@ import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.thirdparty.protobuf.CodedInputStream;
 import org.apache.hadoop.thirdparty.protobuf.CodedOutputStream;
 import org.apache.hadoop.thirdparty.protobuf.WireFormat;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.*;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeys.IPC_MAXIMUM_DATA_LENGTH_DEFAULT;
+
 public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
-  private final static int CHUNK_SIZE = 64*1024; // 64K
+  private final static int CHUNK_SIZE = 64 * 1024; // 64K
   private static long[] EMPTY_LONGS = new long[]{0, 0};
 
   public static BlockListAsLongs EMPTY = new BlockListAsLongs() {
@@ -28,14 +26,17 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     public int getNumberOfBlocks() {
       return 0;
     }
+
     @Override
     public ByteString getBlocksBuffer() {
       return ByteString.EMPTY;
     }
+
     @Override
     public long[] getBlockListAsLongs() {
       return EMPTY_LONGS;
     }
+
     @Override
     public Iterator<BlockReportReplica> iterator() {
       return Collections.emptyIterator();
@@ -50,7 +51,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @return BlockListAsLongs
    */
   public static BlockListAsLongs decodeBuffer(final int numBlocks,
-      final ByteString blocksBuf, final int maxDataLength) {
+                                              final ByteString blocksBuf, final int maxDataLength) {
     return new BufferDecoder(numBlocks, blocksBuf, maxDataLength);
   }
 
@@ -62,7 +63,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    */
   @VisibleForTesting
   public static BlockListAsLongs decodeBuffers(final int numBlocks,
-      final List<ByteString> blocksBufs) {
+                                               final List<ByteString> blocksBufs) {
     return decodeBuffers(numBlocks, blocksBufs,
         IPC_MAXIMUM_DATA_LENGTH_DEFAULT);
   }
@@ -75,7 +76,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @return BlockListAsLongs
    */
   public static BlockListAsLongs decodeBuffers(final int numBlocks,
-      final List<ByteString> blocksBufs, final int maxDataLength) {
+                                               final List<ByteString> blocksBufs, final int maxDataLength) {
     // this doesn't actually copy the data
     return decodeBuffer(numBlocks, ByteString.copyFrom(blocksBufs),
         maxDataLength);
@@ -101,7 +102,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @return BlockListAsLongs
    */
   public static BlockListAsLongs decodeLongs(List<Long> blocksList,
-      int maxDataLength) {
+                                             int maxDataLength) {
     return blocksList.isEmpty() ? EMPTY :
         new LongsDecoder(blocksList, maxDataLength);
   }
@@ -133,11 +134,11 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     while (!cis.isAtEnd()) {
       int tag = cis.readTag();
       int field = WireFormat.getTagFieldNumber(tag);
-      switch(field) {
+      switch (field) {
         case 0:
           break;
         case 1:
-          numBlocks = (int)cis.readInt32();
+          numBlocks = (int) cis.readInt32();
           break;
         case 2:
           blocksBuf = cis.readBytes();
@@ -180,7 +181,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * the overhead of protobuf repeating fields.  Primitive repeating fields
    * require re-allocs of an ArrayList&lt;Long&gt; and the associated (un)boxing
    * overhead which puts pressure on GC.
-   * 
+   *
    * The structure of the buffer is as follows:
    * - each replica is represented by 4 longs:
    *   blockId, block length, genstamp, replica state
@@ -202,9 +203,9 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
       buffers = Collections.singletonList(blocksBuf);
     } else {
       buffers = new ArrayList<ByteString>();
-      for (int pos=0; pos < size; pos += CHUNK_SIZE) {
+      for (int pos = 0; pos < size; pos += CHUNK_SIZE) {
         // this doesn't actually copy the data
-        buffers.add(blocksBuf.substring(pos, Math.min(pos+CHUNK_SIZE, size)));
+        buffers.add(blocksBuf.substring(pos, Math.min(pos + CHUNK_SIZE, size)));
       }
     }
     return buffers;
@@ -214,7 +215,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * Convert block report to old-style list of longs.  Only used to
    * re-encode the block report when the DN detects an older NN. This is
    * inefficient, but in practice a DN is unlikely to be upgraded first
-   * 
+   *
    * The structure of the array is as follows:
    * 0: the length of the finalized replica list;
    * 1: the length of the under-construction replica list;
@@ -244,7 +245,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     private final int maxDataLength;
 
     Builder(int maxDataLength) {
-      out = ByteString.newOutput(64*1024);
+      out = ByteString.newOutput(64 * 1024);
       cos = CodedOutputStream.newInstance(out);
       this.maxDataLength = maxDataLength;
     }
@@ -272,7 +273,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     public int getNumberOfBlocks() {
       return numBlocks;
     }
-    
+
     public BlockListAsLongs build() {
       try {
         cos.flush();
@@ -299,12 +300,12 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     private final int maxDataLength;
 
     BufferDecoder(final int numBlocks, final ByteString buf,
-        final int maxDataLength) {
+                  final int maxDataLength) {
       this(numBlocks, -1, buf, maxDataLength);
     }
 
     BufferDecoder(final int numBlocks, final int numFinalized,
-        final ByteString buf, final int maxDataLength) {
+                  final ByteString buf, final int maxDataLength) {
       this.numBlocks = numBlocks;
       this.numFinalized = numFinalized;
       this.buffer = buf;
@@ -336,13 +337,13 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
         numFinalized = n;
       }
       int numUc = numBlocks - numFinalized;
-      int size = 2 + 3*(numFinalized+1) + 4*(numUc);
+      int size = 2 + 3 * (numFinalized + 1) + 4 * (numUc);
       long[] longs = new long[size];
       longs[0] = numFinalized;
       longs[1] = numUc;
 
       int idx = 2;
-      int ucIdx = idx + 3*numFinalized;
+      int ucIdx = idx + 3 * numFinalized;
       // delimiter block
       longs[ucIdx++] = -1;
       longs[ucIdx++] = -1;
@@ -396,7 +397,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
             block.setNumBytes(cis.readRawVarint64() & NUM_BYTES_MASK);
             block.setGenerationStamp(cis.readRawVarint64());
             long state = cis.readRawVarint64() & REPLICA_STATE_MASK;
-            block.setState(ReplicaState.getState((int)state));
+            block.setState(ReplicaState.getState((int) state));
           } catch (IOException e) {
             throw new IllegalStateException(e);
           }
@@ -442,11 +443,11 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
 
     @Override
     public long[] getBlockListAsLongs() {
-      long[] longs = new long[2+values.size()];
+      long[] longs = new long[2 + values.size()];
       longs[0] = finalizedBlocks;
       longs[1] = numBlocks - finalizedBlocks;
-      for(int i=0; i<values.size(); i++) {
-        longs[2+i] = values.get(i);
+      for (int i = 0; i < values.size(); i++) {
+        longs[2 + i] = values.get(i);
       }
       return longs;
     }
@@ -469,9 +470,9 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
             // verify the presence of the delimiter block
             readBlock();
             Preconditions.checkArgument(block.getBlockId() == -1 &&
-                                        block.getNumBytes() == -1 &&
-                                        block.getGenerationStamp() == -1,
-                                        "Invalid delimiter block");
+                    block.getNumBytes() == -1 &&
+                    block.getGenerationStamp() == -1,
+                "Invalid delimiter block");
           }
 
           readBlock();
@@ -496,45 +497,56 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
       };
     }
   }
+
   public static class BlockReportReplica extends Block implements Replica {
     private ReplicaState state;
+
     private BlockReportReplica() {
     }
+
     public BlockReportReplica(Block block) {
       super(block);
       if (block instanceof BlockReportReplica) {
-        this.state = ((BlockReportReplica)block).getState();
+        this.state = ((BlockReportReplica) block).getState();
       } else {
         this.state = ReplicaState.FINALIZED;
       }
     }
+
     public void setState(ReplicaState state) {
       this.state = state;
     }
+
     @Override
     public ReplicaState getState() {
       return state;
     }
+
     @Override
     public long getBytesOnDisk() {
       return getNumBytes();
     }
+
     @Override
     public long getVisibleLength() {
       throw new UnsupportedOperationException();
     }
+
     @Override
     public String getStorageUuid() {
       throw new UnsupportedOperationException();
     }
+
     @Override
     public boolean isOnTransientStorage() {
       throw new UnsupportedOperationException();
     }
+
     @Override
     public boolean equals(Object o) {
       return super.equals(o);
     }
+
     @Override
     public int hashCode() {
       return super.hashCode();

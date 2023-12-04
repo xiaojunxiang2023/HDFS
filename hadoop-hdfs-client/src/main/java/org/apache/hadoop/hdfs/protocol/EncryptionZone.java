@@ -19,7 +19,7 @@ public class EncryptionZone {
   private final String keyName;
 
   public EncryptionZone(long id, String path, CipherSuite suite,
-      CryptoProtocolVersion version, String keyName) {
+                        CryptoProtocolVersion version, String keyName) {
     this.id = id;
     this.path = path;
     this.suite = suite;
@@ -39,7 +39,9 @@ public class EncryptionZone {
     return suite;
   }
 
-  public CryptoProtocolVersion getVersion() { return version; }
+  public CryptoProtocolVersion getVersion() {
+    return version;
+  }
 
   public String getKeyName() {
     return keyName;
@@ -53,7 +55,7 @@ public class EncryptionZone {
         .append(suite)
         .append(version)
         .append(keyName).
-      toHashCode();
+            toHashCode();
   }
 
   @Override
@@ -70,12 +72,12 @@ public class EncryptionZone {
 
     EncryptionZone rhs = (EncryptionZone) obj;
     return new EqualsBuilder().
-      append(id, rhs.id).
-      append(path, rhs.path).
-      append(suite, rhs.suite).
-      append(version, rhs.version).
-      append(keyName, rhs.keyName).
-      isEquals();
+        append(id, rhs.id).
+        append(path, rhs.path).
+        append(suite, rhs.suite).
+        append(version, rhs.version).
+        append(keyName, rhs.keyName).
+        isEquals();
   }
 
   @Override

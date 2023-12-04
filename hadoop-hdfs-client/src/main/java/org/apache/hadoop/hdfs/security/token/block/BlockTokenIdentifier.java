@@ -1,15 +1,5 @@
 package org.apache.hadoop.hdfs.security.token.block;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.EOFException;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Optional;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.AccessModeProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockTokenSecretProto;
@@ -20,6 +10,13 @@ import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Optional;
+
 public class BlockTokenIdentifier extends TokenIdentifier {
   static final Text KIND_NAME = new Text("HDFS_BLOCK_TOKEN");
 
@@ -38,7 +35,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
   private boolean useProto;
   private byte[] handshakeMsg;
 
-  private byte [] cache;
+  private byte[] cache;
 
   public BlockTokenIdentifier() {
     this(null, null, 0, EnumSet.noneOf(AccessMode.class), null, null,
@@ -46,17 +43,17 @@ public class BlockTokenIdentifier extends TokenIdentifier {
   }
 
   public BlockTokenIdentifier(String userId, String bpid, long blockId,
-      EnumSet<AccessMode> modes, StorageType[] storageTypes,
-      String[] storageIds, boolean useProto) {
+                              EnumSet<AccessMode> modes, StorageType[] storageTypes,
+                              String[] storageIds, boolean useProto) {
     this.cache = null;
     this.userId = userId;
     this.blockPoolId = bpid;
     this.blockId = blockId;
     this.modes = modes == null ? EnumSet.noneOf(AccessMode.class) : modes;
     this.storageTypes = Optional.ofNullable(storageTypes)
-                                .orElse(StorageType.EMPTY_ARRAY);
+        .orElse(StorageType.EMPTY_ARRAY);
     this.storageIds = Optional.ofNullable(storageIds)
-                              .orElse(new String[0]);
+        .orElse(new String[0]);
     this.useProto = useProto;
     this.handshakeMsg = new byte[0];
   }
@@ -109,11 +106,11 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     return modes;
   }
 
-  public StorageType[] getStorageTypes(){
+  public StorageType[] getStorageTypes() {
     return storageTypes;
   }
 
-  public String[] getStorageIds(){
+  public String[] getStorageIds() {
     return storageIds;
   }
 
@@ -191,7 +188,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
   public void readFields(DataInput in) throws IOException {
     this.cache = null;
 
-    final DataInputStream dis = (DataInputStream)in;
+    final DataInputStream dis = (DataInputStream) in;
     if (!dis.markSupported()) {
       throw new IOException("Could not peek first byte.");
     }
@@ -260,7 +257,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
   @VisibleForTesting
   void readFieldsProtobuf(DataInput in) throws IOException {
     BlockTokenSecretProto blockTokenSecretProto =
-        BlockTokenSecretProto.parseFrom((DataInputStream)in);
+        BlockTokenSecretProto.parseFrom((DataInputStream) in);
     expiryDate = blockTokenSecretProto.getExpiryDate();
     keyId = blockTokenSecretProto.getKeyId();
     if (blockTokenSecretProto.hasUserId()) {
@@ -286,7 +283,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
         .toArray(String[]::new);
     useProto = true;
 
-    if(blockTokenSecretProto.hasHandshakeSecret()) {
+    if (blockTokenSecretProto.hasHandshakeSecret()) {
       handshakeMsg = blockTokenSecretProto
           .getHandshakeSecret().toByteArray();
     } else {
@@ -340,10 +337,11 @@ public class BlockTokenIdentifier extends TokenIdentifier {
 
   @Override
   public byte[] getBytes() {
-    if(cache == null) cache = super.getBytes();
+    if (cache == null) cache = super.getBytes();
 
     return cache;
   }
+
   public static class Renewer extends Token.TrivialRenewer {
     @Override
     protected Text getKind() {

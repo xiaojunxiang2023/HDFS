@@ -62,7 +62,7 @@ public interface StreamCapabilities {
    * This matches the Path Capability
    * {@link CommonPathCapabilities#ABORTABLE_STREAM}.
    */
-  String ABORTABLE_STREAM =  CommonPathCapabilities.ABORTABLE_STREAM;
+  String ABORTABLE_STREAM = CommonPathCapabilities.ABORTABLE_STREAM;
 
   /**
    * Capabilities that a stream can support and be queried for.

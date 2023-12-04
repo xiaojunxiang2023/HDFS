@@ -1,15 +1,14 @@
 package org.apache.hadoop.security.token.delegation;
 
+import org.apache.avro.reflect.Nullable;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableUtils;
+
+import javax.crypto.SecretKey;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
-
-import javax.crypto.SecretKey;
-
-import org.apache.avro.reflect.Nullable;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableUtils;
 
 /**
  * Key used for generating and verifying delegation tokens
@@ -24,13 +23,13 @@ public class DelegationKey implements Writable {
 
   /** Default constructore required for Writable */
   public DelegationKey() {
-    this(0, 0L, (SecretKey)null);
+    this(0, 0L, (SecretKey) null);
   }
 
   public DelegationKey(int keyId, long expiryDate, SecretKey key) {
     this(keyId, expiryDate, key != null ? key.getEncoded() : null);
   }
-  
+
   public DelegationKey(int keyId, long expiryDate, byte[] encodedKey) {
     this.keyId = keyId;
     this.expiryDate = expiryDate;
@@ -59,7 +58,7 @@ public class DelegationKey implements Writable {
       return key;
     }
   }
-  
+
   public byte[] getEncodedKey() {
     return keyBytes;
   }
@@ -116,8 +115,8 @@ public class DelegationKey implements Writable {
     } else {
       DelegationKey r = (DelegationKey) right;
       return keyId == r.keyId &&
-             expiryDate == r.expiryDate &&
-             Arrays.equals(keyBytes, r.keyBytes);
+          expiryDate == r.expiryDate &&
+          Arrays.equals(keyBytes, r.keyBytes);
     }
   }
 

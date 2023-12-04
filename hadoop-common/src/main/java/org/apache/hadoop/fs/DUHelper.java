@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs;
 
-import java.io.File;
 import org.apache.hadoop.util.Shell;
+
+import java.io.File;
 
 public class DUHelper {
 
-  private int fileCount=0;
+  private int fileCount = 0;
   private double usage = 0;
   private long folderSize = -1;
 
@@ -50,12 +51,12 @@ public class DUHelper {
         foldersize += file.length();
       }
     }
-    return foldersize;    
+    return foldersize;
   }
 
   public static void main(String[] args) {
     if (Shell.WINDOWS)
-      System.out.println("Windows: "+ DUHelper.getFolderUsage(args[0]));
+      System.out.println("Windows: " + DUHelper.getFolderUsage(args[0]));
     else
       System.out.println("Other: " + DUHelper.getFolderUsage(args[0]));
   }

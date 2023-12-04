@@ -1,10 +1,11 @@
 package org.apache.hadoop.io.compress;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * A compression output stream.
@@ -50,12 +51,12 @@ public abstract class CompressionOutputStream extends OutputStream
       }
     }
   }
-  
+
   @Override
   public void flush() throws IOException {
     out.flush();
   }
-  
+
   /**
    * Write compressed bytes to the stream.
    * Made abstract to prevent leakage to underlying stream.
@@ -68,7 +69,7 @@ public abstract class CompressionOutputStream extends OutputStream
    * without closing the underlying stream.
    */
   public abstract void finish() throws IOException;
-  
+
   /**
    * Reset the compression to the initial state. 
    * Does not reset the underlying stream.

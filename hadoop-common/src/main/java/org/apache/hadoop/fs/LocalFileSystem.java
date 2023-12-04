@@ -1,10 +1,11 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.conf.Configuration;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Random;
-import org.apache.hadoop.conf.Configuration;
 
 /****************************************************************
  * Implement the FileSystem API for the checksumed local filesystem.
@@ -13,11 +14,11 @@ import org.apache.hadoop.conf.Configuration;
 public class LocalFileSystem extends ChecksumFileSystem {
   static final URI NAME = URI.create("file:///");
   static private Random rand = new Random();
-  
+
   public LocalFileSystem() {
     this(new RawLocalFileSystem());
   }
-  
+
   @Override
   public void initialize(URI name, Configuration conf) throws IOException {
     if (fs.getConf() == null) {
@@ -43,25 +44,25 @@ public class LocalFileSystem extends ChecksumFileSystem {
   public FileSystem getRaw() {
     return getRawFileSystem();
   }
-    
+
   public LocalFileSystem(FileSystem rawLocalFileSystem) {
     super(rawLocalFileSystem);
   }
-    
+
   /** Convert a path to a File. */
   public File pathToFile(Path path) {
-    return ((RawLocalFileSystem)fs).pathToFile(path);
+    return ((RawLocalFileSystem) fs).pathToFile(path);
   }
 
   @Override
   public void copyFromLocalFile(boolean delSrc, Path src, Path dst)
-    throws IOException {
+      throws IOException {
     FileUtil.copy(this, src, this, dst, delSrc, getConf());
   }
 
   @Override
   public void copyToLocalFile(boolean delSrc, Path src, Path dst)
-    throws IOException {
+      throws IOException {
     FileUtil.copy(this, src, this, dst, delSrc, getConf());
   }
 
@@ -75,8 +76,8 @@ public class LocalFileSystem extends ChecksumFileSystem {
                                        FSDataInputStream sums, long sumsPos) {
     try {
       // canonicalize f
-      File f = ((RawLocalFileSystem)fs).pathToFile(p).getCanonicalFile();
-      
+      File f = ((RawLocalFileSystem) fs).pathToFile(p).getCanonicalFile();
+
       // find highest writable parent dir of f on the same device
       String device = new DF(f, getConf()).getMount();
       File parent = f.getParentFile();
@@ -87,11 +88,11 @@ public class LocalFileSystem extends ChecksumFileSystem {
         parent = parent.getParentFile();
       }
 
-      if (dir==null) {
+      if (dir == null) {
         throw new IOException(
-                              "not able to find the highest writable parent dir");
+            "not able to find the highest writable parent dir");
       }
-        
+
       // move the file there
       File badDir = new File(dir, "bad_files");
       if (!badDir.mkdirs()) {
@@ -100,7 +101,7 @@ public class LocalFileSystem extends ChecksumFileSystem {
         }
       }
       String suffix = "." + rand.nextInt();
-      File badFile = new File(badDir, f.getName()+suffix);
+      File badFile = new File(badDir, f.getName() + suffix);
       LOG.warn("Moving bad file " + f + " to " + badFile);
       in.close();                               // close it first
       boolean b = f.renameTo(badFile);                      // rename it
@@ -108,13 +109,13 @@ public class LocalFileSystem extends ChecksumFileSystem {
         LOG.warn("Ignoring failure of renameTo");
       }
       // move checksum file too
-      File checkFile = ((RawLocalFileSystem)fs).pathToFile(getChecksumFile(p));
+      File checkFile = ((RawLocalFileSystem) fs).pathToFile(getChecksumFile(p));
       // close the stream before rename to release the file handle
       sums.close();
-      b = checkFile.renameTo(new File(badDir, checkFile.getName()+suffix));
+      b = checkFile.renameTo(new File(badDir, checkFile.getName() + suffix));
       if (!b) {
-          LOG.warn("Ignoring failure of renameTo");
-        }
+        LOG.warn("Ignoring failure of renameTo");
+      }
     } catch (IOException e) {
       LOG.warn("Error moving bad file " + p, e);
     }

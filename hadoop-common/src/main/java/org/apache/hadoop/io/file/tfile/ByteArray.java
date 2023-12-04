@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,6 +16,7 @@
  */
 
 package org.apache.hadoop.io.file.tfile;
+
 import org.apache.hadoop.io.BytesWritable;
 
 /**
@@ -29,7 +30,7 @@ public final class ByteArray implements RawComparable {
 
   /**
    * Constructing a ByteArray from a {@link BytesWritable}.
-   * 
+   *
    * @param other
    */
   public ByteArray(BytesWritable other) {
@@ -38,7 +39,7 @@ public final class ByteArray implements RawComparable {
 
   /**
    * Wrap a whole byte array as a RawComparable.
-   * 
+   *
    * @param buffer
    *          the byte array buffer.
    */
@@ -48,7 +49,7 @@ public final class ByteArray implements RawComparable {
 
   /**
    * Wrap a partial byte array as a RawComparable.
-   * 
+   *
    * @param buffer
    *          the byte array buffer.
    * @param offset

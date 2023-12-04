@@ -1,10 +1,5 @@
 package org.apache.hadoop.io;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
-import java.util.ArrayList;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.serializer.Deserializer;
@@ -12,6 +7,11 @@ import org.apache.hadoop.io.serializer.Serialization;
 import org.apache.hadoop.io.serializer.SerializationFactory;
 import org.apache.hadoop.io.serializer.Serializer;
 import org.apache.hadoop.util.GenericsUtil;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.ArrayList;
 
 /**
  * DefaultStringifier is the default implementation of the {@link Stringifier}
@@ -21,7 +21,7 @@ import org.apache.hadoop.util.GenericsUtil;
  * <br>
  * DefaultStringifier offers convenience methods to store/load objects to/from
  * the configuration.
- * 
+ *
  * @param <T> the class of the objects to stringify
  */
 public class DefaultStringifier<T> implements Stringifier<T> {
@@ -82,7 +82,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
 
   /**
    * Stores the item in the configuration with the given keyName.
-   * 
+   *
    * @param <K>  the class of the item
    * @param conf the configuration to store
    * @param item the object to be stored
@@ -91,7 +91,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
    * {@link Serialization} classes. 
    */
   public static <K> void store(Configuration conf, K item, String keyName)
-  throws IOException {
+      throws IOException {
 
     DefaultStringifier<K> stringifier = new DefaultStringifier<K>(conf,
         GenericsUtil.getClass(item));
@@ -101,7 +101,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
 
   /**
    * Restores the object from the configuration.
-   * 
+   *
    * @param <K> the class of the item
    * @param conf the configuration to use
    * @param keyName the name of the key to use
@@ -111,7 +111,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
    * {@link Serialization} classes.
    */
   public static <K> K load(Configuration conf, String keyName,
-      Class<K> itemClass) throws IOException {
+                           Class<K> itemClass) throws IOException {
     DefaultStringifier<K> stringifier = new DefaultStringifier<K>(conf,
         itemClass);
     try {
@@ -124,7 +124,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
 
   /**
    * Stores the array of items in the configuration with the given keyName.
-   * 
+   *
    * @param <K> the class of the item
    * @param conf the configuration to use 
    * @param items the objects to be stored
@@ -134,9 +134,9 @@ public class DefaultStringifier<T> implements Stringifier<T> {
    * {@link Serialization} classes.         
    */
   public static <K> void storeArray(Configuration conf, K[] items,
-      String keyName) throws IOException {
+                                    String keyName) throws IOException {
 
-    DefaultStringifier<K> stringifier = new DefaultStringifier<K>(conf, 
+    DefaultStringifier<K> stringifier = new DefaultStringifier<K>(conf,
         GenericsUtil.getClass(items[0]));
     try {
       StringBuilder builder = new StringBuilder();
@@ -144,15 +144,14 @@ public class DefaultStringifier<T> implements Stringifier<T> {
         builder.append(stringifier.toString(item)).append(SEPARATOR);
       }
       conf.set(keyName, builder.toString());
-    }
-    finally {
+    } finally {
       stringifier.close();
     }
   }
 
   /**
    * Restores the array of objects from the configuration.
-   * 
+   *
    * @param <K> the class of the item
    * @param conf the configuration to use
    * @param keyName the name of the key to use
@@ -162,7 +161,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
    * {@link Serialization} classes.
    */
   public static <K> K[] loadArray(Configuration conf, String keyName,
-      Class<K> itemClass) throws IOException {
+                                  Class<K> itemClass) throws IOException {
     DefaultStringifier<K> stringifier = new DefaultStringifier<K>(conf,
         itemClass);
     try {
@@ -176,8 +175,7 @@ public class DefaultStringifier<T> implements Stringifier<T> {
       }
 
       return GenericsUtil.toArray(itemClass, list);
-    }
-    finally {
+    } finally {
       stringifier.close();
     }
   }

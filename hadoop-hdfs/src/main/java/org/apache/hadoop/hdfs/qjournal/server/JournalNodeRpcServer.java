@@ -1,8 +1,5 @@
 package org.apache.hadoop.hdfs.qjournal.server;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.protobuf.BlockingService;
-import org.slf4j.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
@@ -13,13 +10,7 @@ import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocol;
 import org.apache.hadoop.hdfs.qjournal.protocol.InterQJournalProtocolProtos.InterQJournalProtocolService;
 import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocol;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetEditLogManifestResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournaledEditsResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.GetJournalStateResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.NewEpochResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.PrepareRecoveryResponseProto;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.QJournalProtocolService;
-import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.SegmentStateProto;
+import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.qjournal.protocol.RequestInfo;
 import org.apache.hadoop.hdfs.qjournal.protocolPB.InterQJournalProtocolPB;
 import org.apache.hadoop.hdfs.qjournal.protocolPB.InterQJournalProtocolServerSideTranslatorPB;
@@ -32,12 +23,16 @@ import org.apache.hadoop.ipc.ProtobufRpcEngine2;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.RPC.Server;
 import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.protobuf.BlockingService;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_RPC_BIND_HOST_KEY;
+
 @VisibleForTesting
 public class JournalNodeRpcServer implements QJournalProtocol,
     InterQJournalProtocol {
@@ -48,14 +43,14 @@ public class JournalNodeRpcServer implements QJournalProtocol,
 
   JournalNodeRpcServer(Configuration conf, JournalNode jn) throws IOException {
     this.jn = jn;
-    
+
     Configuration confCopy = new Configuration(conf);
-    
+
     // Ensure that nagling doesn't kick in, which could cause latency issues.
     confCopy.setBoolean(
         CommonConfigurationKeysPublic.IPC_SERVER_TCPNODELAY_KEY,
         true);
-    
+
     InetSocketAddress addr = getAddress(confCopy);
     String bindHost = conf.getTrimmed(DFS_JOURNALNODE_RPC_BIND_HOST_KEY, null);
     if (bindHost == null) {
@@ -69,7 +64,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
         new QJournalProtocolServerSideTranslatorPB(this);
     BlockingService service = QJournalProtocolService
         .newReflectiveBlockingService(translator);
-    
+
     this.server = new RPC.Builder(confCopy)
         .setProtocol(QJournalProtocolPB.class)
         .setInstance(service)
@@ -94,8 +89,8 @@ public class JournalNodeRpcServer implements QJournalProtocol,
 
     // set service-level authorization security policy
     if (confCopy.getBoolean(
-      CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, false)) {
-          server.refreshServiceAcl(confCopy, new HDFSPolicyProvider());
+        CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, false)) {
+      server.refreshServiceAcl(confCopy, new HDFSPolicyProvider());
     }
     this.server.setTracer(jn.tracer);
   }
@@ -107,15 +102,15 @@ public class JournalNodeRpcServer implements QJournalProtocol,
   public InetSocketAddress getAddress() {
     return server.getListenerAddress();
   }
-  
+
   void join() throws InterruptedException {
     this.server.join();
   }
-  
+
   void stop() {
     this.server.stop();
   }
-  
+
   static InetSocketAddress getAddress(Configuration conf) {
     String addr = conf.get(
         DFSConfigKeys.DFS_JOURNALNODE_RPC_ADDRESS_KEY,
@@ -134,7 +129,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
   @Override
   public GetJournalStateResponseProto getJournalState(String journalId,
                                                       String nameServiceId)
-        throws IOException {
+      throws IOException {
     long epoch = jn.getOrCreateJournal(journalId,
         nameServiceId).getLastPromisedEpoch();
     return GetJournalStateResponseProto.newBuilder()
@@ -148,7 +143,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
   public NewEpochResponseProto newEpoch(String journalId,
                                         String nameServiceId,
                                         NamespaceInfo nsInfo,
-      long epoch) throws IOException {
+                                        long epoch) throws IOException {
     return jn.getOrCreateJournal(journalId,
         nameServiceId).newEpoch(nsInfo, epoch);
   }
@@ -164,37 +159,37 @@ public class JournalNodeRpcServer implements QJournalProtocol,
 
   @Override
   public void journal(RequestInfo reqInfo,
-      long segmentTxId, long firstTxnId,
-      int numTxns, byte[] records) throws IOException {
+                      long segmentTxId, long firstTxnId,
+                      int numTxns, byte[] records) throws IOException {
     jn.getOrCreateJournal(reqInfo.getJournalId(), reqInfo.getNameServiceId())
-       .journal(reqInfo, segmentTxId, firstTxnId, numTxns, records);
+        .journal(reqInfo, segmentTxId, firstTxnId, numTxns, records);
   }
-  
+
   @Override
   public void heartbeat(RequestInfo reqInfo) throws IOException {
     jn.getOrCreateJournal(reqInfo.getJournalId(), reqInfo.getNameServiceId())
-      .heartbeat(reqInfo);
+        .heartbeat(reqInfo);
   }
 
   @Override
   public void startLogSegment(RequestInfo reqInfo, long txid, int layoutVersion)
       throws IOException {
     jn.getOrCreateJournal(reqInfo.getJournalId(), reqInfo.getNameServiceId())
-      .startLogSegment(reqInfo, txid, layoutVersion);
+        .startLogSegment(reqInfo, txid, layoutVersion);
   }
 
   @Override
   public void finalizeLogSegment(RequestInfo reqInfo, long startTxId,
-      long endTxId) throws IOException {
+                                 long endTxId) throws IOException {
     jn.getOrCreateJournal(reqInfo.getJournalId(), reqInfo.getNameServiceId())
-      .finalizeLogSegment(reqInfo, startTxId, endTxId);
+        .finalizeLogSegment(reqInfo, startTxId, endTxId);
   }
 
   @Override
   public void purgeLogsOlderThan(RequestInfo reqInfo, long minTxIdToKeep)
       throws IOException {
     jn.getOrCreateJournal(reqInfo.getJournalId(), reqInfo.getNameServiceId())
-      .purgeLogsOlderThan(reqInfo, minTxIdToKeep);
+        .purgeLogsOlderThan(reqInfo, minTxIdToKeep);
   }
 
   @SuppressWarnings("deprecation")
@@ -203,10 +198,10 @@ public class JournalNodeRpcServer implements QJournalProtocol,
       String jid, String nameServiceId,
       long sinceTxId, boolean inProgressOk)
       throws IOException {
-    
+
     RemoteEditLogManifest manifest = jn.getOrCreateJournal(jid, nameServiceId)
         .getEditLogManifest(sinceTxId, inProgressOk);
-    
+
     return GetEditLogManifestResponseProto.newBuilder()
         .setManifest(PBHelper.convert(manifest))
         .setHttpPort(jn.getBoundHttpAddress().getPort())
@@ -216,14 +211,14 @@ public class JournalNodeRpcServer implements QJournalProtocol,
 
   @Override
   public GetJournaledEditsResponseProto getJournaledEdits(String jid,
-      String nameServiceId, long sinceTxId, int maxTxns) throws IOException {
+                                                          String nameServiceId, long sinceTxId, int maxTxns) throws IOException {
     return jn.getOrCreateJournal(jid, nameServiceId)
         .getJournaledEdits(sinceTxId, maxTxns);
   }
 
   @Override
   public PrepareRecoveryResponseProto prepareRecovery(RequestInfo reqInfo,
-      long segmentTxId) throws IOException {
+                                                      long segmentTxId) throws IOException {
     return jn.getOrCreateJournal(reqInfo.getJournalId(),
         reqInfo.getNameServiceId())
         .prepareRecovery(reqInfo, segmentTxId);
@@ -231,7 +226,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
 
   @Override
   public void acceptRecovery(RequestInfo reqInfo, SegmentStateProto log,
-      URL fromUrl) throws IOException {
+                             URL fromUrl) throws IOException {
     jn.getOrCreateJournal(reqInfo.getJournalId(), reqInfo.getNameServiceId())
         .acceptRecovery(reqInfo, log, fromUrl);
   }
@@ -255,7 +250,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
   @Override
   public Boolean canRollBack(String journalId,
                              String nameServiceId, StorageInfo storage,
-      StorageInfo prevStorage, int targetLayoutVersion)
+                             StorageInfo prevStorage, int targetLayoutVersion)
       throws IOException {
     return jn.canRollBack(journalId, storage, prevStorage, targetLayoutVersion,
         nameServiceId);

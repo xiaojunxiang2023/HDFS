@@ -1,22 +1,14 @@
 package org.apache.hadoop.hdfs.server.namenode.top.window;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.hdfs.server.namenode.top.TopConf;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.server.namenode.top.TopConf;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class to manage the set of {@link RollingWindow}s. This class is the
@@ -110,7 +102,7 @@ public class RollingWindowManager {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof Op) && totalCount == ((Op)o).totalCount;
+      return (o instanceof Op) && totalCount == ((Op) o).totalCount;
     }
 
     @Override
@@ -151,7 +143,7 @@ public class RollingWindowManager {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof User) && user.equals(((User)o).user);
+      return (o instanceof User) && user.equals(((User) o).user);
     }
 
     @Override
@@ -200,7 +192,7 @@ public class RollingWindowManager {
       new ConcurrentHashMap<>();
 
   public RollingWindowManager(Configuration conf, int reportingPeriodMs) {
-    
+
     windowLenMs = reportingPeriodMs;
     bucketsPerWindow =
         conf.getInt(DFSConfigKeys.NNTOP_BUCKETS_PER_WINDOW_KEY,
@@ -229,7 +221,7 @@ public class RollingWindowManager {
    * @param delta the amount of change in the metric, e.g., +1
    */
   public void recordMetric(long time, String command,
-      String user, long delta) {
+                           String user, long delta) {
     RollingWindow window = getRollingWindow(command, user);
     window.incAt(time, delta);
   }
@@ -271,13 +263,13 @@ public class RollingWindowManager {
 
   /**
    * Calculates the top N users over a time interval.
-   * 
+   *
    * @param time the current time
    * @param metricName Name of metric
    * @return
    */
   private UserCounts getTopUsersForMetric(long time, String metricName,
-      RollingWindowMap rollingWindows) {
+                                          RollingWindowMap rollingWindows) {
     UserCounts topN = new UserCounts(topUsersCnt);
     Iterator<Map.Entry<String, RollingWindow>> iterator =
         rollingWindows.entrySet().iterator();

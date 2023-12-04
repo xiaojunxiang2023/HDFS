@@ -1,9 +1,8 @@
 package org.apache.hadoop.hdfs.server.diskbalancer.planner;
 
+import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerDataNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.hdfs.server.diskbalancer.datamodel
-    .DiskBalancerDataNode;
 
 /**
  * Returns a planner based on the user defined tags.
@@ -22,7 +21,7 @@ public final class PlannerFactory {
    * @return Planner
    */
   public static Planner getPlanner(String plannerName,
-      DiskBalancerDataNode node, double threshold) {
+                                   DiskBalancerDataNode node, double threshold) {
     if (plannerName.equals(GREEDY_PLANNER)) {
       if (LOG.isDebugEnabled()) {
         String message = String

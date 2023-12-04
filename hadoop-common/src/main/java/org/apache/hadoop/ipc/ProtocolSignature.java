@@ -1,5 +1,10 @@
 package org.apache.hadoop.ipc;
 
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableFactories;
+import org.apache.hadoop.io.WritableFactory;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -7,34 +12,30 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableFactories;
-import org.apache.hadoop.io.WritableFactory;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 public class ProtocolSignature implements Writable {
   static {               // register a ctor
     WritableFactories.setFactory
-      (ProtocolSignature.class,
-       new WritableFactory() {
-         @Override
-        public Writable newInstance() { return new ProtocolSignature(); }
-       });
+        (ProtocolSignature.class,
+            new WritableFactory() {
+              @Override
+              public Writable newInstance() {
+                return new ProtocolSignature();
+              }
+            });
   }
 
   private long version;
   private int[] methods = null; // an array of method hash codes
-  
+
   /**
    * default constructor
    */
   public ProtocolSignature() {
   }
-  
+
   /**
    * Constructor
-   * 
+   *
    * @param version server version
    * @param methodHashcodes hash codes of the methods supported by server
    */
@@ -42,11 +43,11 @@ public class ProtocolSignature implements Writable {
     this.version = version;
     this.methods = methodHashcodes;
   }
-  
+
   public long getVersion() {
     return version;
   }
-  
+
   public int[] getMethods() {
     return methods;
   }
@@ -58,7 +59,7 @@ public class ProtocolSignature implements Writable {
     if (hasMethods) {
       int numMethods = in.readInt();
       methods = new int[numMethods];
-      for (int i=0; i<numMethods; i++) {
+      for (int i = 0; i < numMethods; i++) {
         methods[i] = in.readInt();
       }
     }
@@ -81,22 +82,22 @@ public class ProtocolSignature implements Writable {
   /**
    * Calculate a method's hash code considering its method
    * name, returning type, and its parameter types
-   * 
+   *
    * @param method a method
    * @return its hash code
    */
   static int getFingerprint(Method method) {
     int hashcode = method.getName().hashCode();
-    hashcode =  hashcode + 31*method.getReturnType().getName().hashCode();
+    hashcode = hashcode + 31 * method.getReturnType().getName().hashCode();
     for (Class<?> type : method.getParameterTypes()) {
-      hashcode = 31*hashcode ^ type.getName().hashCode();
+      hashcode = 31 * hashcode ^ type.getName().hashCode();
     }
     return hashcode;
   }
 
   /**
    * Convert an array of Method into an array of hash codes
-   * 
+   *
    * @param methods
    * @return array of hash codes
    */
@@ -105,7 +106,7 @@ public class ProtocolSignature implements Writable {
       return null;
     }
     int[] hashCodes = new int[methods.length];
-    for (int i = 0; i<methods.length; i++) {
+    for (int i = 0; i < methods.length; i++) {
       hashCodes[i] = getFingerprint(methods[i]);
     }
     return hashCodes;
@@ -115,58 +116,59 @@ public class ProtocolSignature implements Writable {
    * Get the hash code of an array of methods
    * Methods are sorted before hashcode is calculated.
    * So the returned value is irrelevant of the method order in the array.
-   * 
+   *
    * @param methods an array of methods
    * @return the hash code
    */
   static int getFingerprint(Method[] methods) {
     return getFingerprint(getFingerprints(methods));
   }
-  
+
   /**
    * Get the hash code of an array of hashcodes
    * Hashcodes are sorted before hashcode is calculated.
    * So the returned value is irrelevant of the hashcode order in the array.
-   * 
+   *
    * @param methods an array of methods
    * @return the hash code
    */
   static int getFingerprint(int[] hashcodes) {
     Arrays.sort(hashcodes);
     return Arrays.hashCode(hashcodes);
-    
+
   }
+
   private static class ProtocolSigFingerprint {
     private ProtocolSignature signature;
     private int fingerprint;
-    
+
     ProtocolSigFingerprint(ProtocolSignature sig, int fingerprint) {
       this.signature = sig;
       this.fingerprint = fingerprint;
     }
   }
-  
+
   /**
    * A cache that maps a protocol's name to its signature & finger print
    */
-  private final static HashMap<String, ProtocolSigFingerprint> 
-     PROTOCOL_FINGERPRINT_CACHE = 
-       new HashMap<String, ProtocolSigFingerprint>();
-  
+  private final static HashMap<String, ProtocolSigFingerprint>
+      PROTOCOL_FINGERPRINT_CACHE =
+      new HashMap<String, ProtocolSigFingerprint>();
+
   @VisibleForTesting
   public static void resetCache() {
     PROTOCOL_FINGERPRINT_CACHE.clear();
   }
-  
+
   /**
    * Return a protocol's signature and finger print from cache
-   * 
+   *
    * @param protocol a protocol class
    * @param serverVersion protocol version
    * @return its signature and finger print
    */
   private static ProtocolSigFingerprint getSigFingerprint(
-      Class <?> protocol, long serverVersion) {
+      Class<?> protocol, long serverVersion) {
     String protocolName = RPC.getProtocolName(protocol);
     synchronized (PROTOCOL_FINGERPRINT_CACHE) {
       ProtocolSigFingerprint sig = PROTOCOL_FINGERPRINT_CACHE.get(protocolName);
@@ -177,13 +179,13 @@ public class ProtocolSignature implements Writable {
             getFingerprint(serverMethodHashcodes));
         PROTOCOL_FINGERPRINT_CACHE.put(protocolName, sig);
       }
-      return sig;    
+      return sig;
     }
   }
-  
+
   /**
    * Get a server protocol's signature
-   * 
+   *
    * @param clientMethodsHashCode client protocol methods hashcode
    * @param serverVersion server protocol version
    * @param protocol protocol
@@ -195,21 +197,21 @@ public class ProtocolSignature implements Writable {
       Class<? extends VersionedProtocol> protocol) {
     // try to get the finger print & signature from the cache
     ProtocolSigFingerprint sig = getSigFingerprint(protocol, serverVersion);
-    
+
     // check if the client side protocol matches the one on the server side
     if (clientMethodsHashCode == sig.fingerprint) {
       return new ProtocolSignature(serverVersion, null);  // null indicates a match
-    } 
-    
+    }
+
     return sig.signature;
   }
-  
+
   public static ProtocolSignature getProtocolSignature(String protocolName,
-      long version) throws ClassNotFoundException {
+                                                       long version) throws ClassNotFoundException {
     Class<?> protocol = Class.forName(protocolName);
     return getSigFingerprint(protocol, version).signature;
   }
-  
+
   /**
    * Get a server protocol's signature
    *
@@ -222,11 +224,11 @@ public class ProtocolSignature implements Writable {
    */
   @SuppressWarnings("unchecked")
   public static ProtocolSignature getProtocolSignature(VersionedProtocol server,
-      String protocol,
-      long clientVersion, int clientMethodsHash) throws IOException {
+                                                       String protocol,
+                                                       long clientVersion, int clientMethodsHash) throws IOException {
     Class<? extends VersionedProtocol> inter;
     try {
-      inter = (Class<? extends VersionedProtocol>)Class.forName(protocol);
+      inter = (Class<? extends VersionedProtocol>) Class.forName(protocol);
     } catch (Exception e) {
       throw new IOException(e);
     }

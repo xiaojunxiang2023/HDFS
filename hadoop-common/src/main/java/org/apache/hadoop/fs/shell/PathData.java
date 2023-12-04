@@ -1,5 +1,8 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,16 +10,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocalFileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathIOException;
-import org.apache.hadoop.fs.PathIsDirectoryException;
-import org.apache.hadoop.fs.PathIsNotDirectoryException;
-import org.apache.hadoop.fs.PathNotFoundException;
-import org.apache.hadoop.fs.RemoteIterator;
 
 import static org.apache.hadoop.util.functional.RemoteIterators.mappingRemoteIterator;
 
@@ -60,7 +53,7 @@ public class PathData implements Comparable<PathData> {
   public PathData(String pathString, Configuration conf) throws IOException {
     this(FileSystem.get(stringToUri(pathString), conf), pathString);
   }
-  
+
   /**
    * Creates an object to wrap the given parameters as fields.  The string
    * used to create the path will be recorded since the Path object does not
@@ -92,8 +85,7 @@ public class PathData implements Comparable<PathData> {
    * @throws IOException if anything goes wrong
    */
   private static boolean checkIfSchemeInferredFromPath(String pathString)
-  throws IOException
-  {
+      throws IOException {
     if (windowsNonUriAbsolutePath1.matcher(pathString).find()) {
       // Forward slashes disallowed in a backslash-separated path.
       if (pathString.indexOf('/') != -1) {
@@ -126,7 +118,7 @@ public class PathData implements Comparable<PathData> {
    * @param stat the FileStatus (may be null if the path doesn't exist)
    */
   private PathData(FileSystem fs, String pathString, FileStatus stat)
-  throws IOException {
+      throws IOException {
     this.fs = fs;
     this.uri = stringToUri(pathString);
     this.path = fs.makeQualified(new Path(uri));
@@ -138,15 +130,15 @@ public class PathData implements Comparable<PathData> {
   }
 
   // need a static method for the ctor above
+
   /**
    * Get the FileStatus info
    * @param ignoreFNF if true, stat will be null if the path doesn't exist
    * @return FileStatus for the given path
    * @throws IOException if anything goes wrong
    */
-  private static
-  FileStatus lookupStat(FileSystem fs, String pathString, boolean ignoreFNF)
-  throws IOException {
+  private static FileStatus lookupStat(FileSystem fs, String pathString, boolean ignoreFNF)
+      throws IOException {
     FileStatus status = null;
     try {
       status = fs.getFileStatus(new Path(pathString));
@@ -156,7 +148,7 @@ public class PathData implements Comparable<PathData> {
     // TODO: should consider wrapping other exceptions into Path*Exceptions
     return status;
   }
-  
+
   private void setStat(FileStatus stat) {
     this.stat = stat;
     exists = (stat != null);
@@ -181,7 +173,9 @@ public class PathData implements Comparable<PathData> {
 
   protected enum FileTypeRequirement {
     SHOULD_NOT_BE_DIRECTORY, SHOULD_BE_DIRECTORY
-  };
+  }
+
+  ;
 
   /**
    * Ensure that the file exists and if it is or is not a directory
@@ -189,21 +183,21 @@ public class PathData implements Comparable<PathData> {
    * @throws PathIOException if file doesn't exist or the type does not match
    * what was specified in typeRequirement.
    */
-  private void checkIfExists(FileTypeRequirement typeRequirement) 
-  throws PathIOException {
+  private void checkIfExists(FileTypeRequirement typeRequirement)
+      throws PathIOException {
     if (!exists) {
-      throw new PathNotFoundException(toString());      
+      throw new PathNotFoundException(toString());
     }
 
     if ((typeRequirement == FileTypeRequirement.SHOULD_BE_DIRECTORY)
-       && !stat.isDirectory()) {
+        && !stat.isDirectory()) {
       throw new PathIsNotDirectoryException(toString());
     } else if ((typeRequirement == FileTypeRequirement.SHOULD_NOT_BE_DIRECTORY)
-              && stat.isDirectory()) {
+        && stat.isDirectory()) {
       throw new PathIsDirectoryException(toString());
     }
   }
-  
+
   /**
    * Returns a new PathData with the given extension.
    * @param extension for the suffix
@@ -211,7 +205,7 @@ public class PathData implements Comparable<PathData> {
    * @throws IOException shouldn't happen
    */
   public PathData suffix(String extension) throws IOException {
-    return new PathData(fs, this+extension);
+    return new PathData(fs, this + extension);
   }
 
   /**
@@ -231,12 +225,12 @@ public class PathData implements Comparable<PathData> {
    */
   public boolean representsDirectory() {
     String uriPath = uri.getPath();
-    String name = uriPath.substring(uriPath.lastIndexOf("/")+1);
+    String name = uriPath.substring(uriPath.lastIndexOf("/") + 1);
     // Path will munch off the chars that indicate a dir, so there's no way
     // to perform this test except by examining the raw basename we maintain
     return (name.isEmpty() || name.equals(".") || name.equals(""));
   }
-  
+
   /**
    * Returns a list of PathData objects of the items contained in the given
    * directory.
@@ -247,7 +241,7 @@ public class PathData implements Comparable<PathData> {
     checkIfExists(FileTypeRequirement.SHOULD_BE_DIRECTORY);
     FileStatus[] stats = fs.listStatus(path);
     PathData[] items = new PathData[stats.length];
-    for (int i=0; i < stats.length; i++) {
+    for (int i = 0; i < stats.length; i++) {
       // preserve relative paths
       String child = getStringForChildPath(stats[i].getPath());
       items[i] = new PathData(fs, child, stats[i]);
@@ -298,9 +292,11 @@ public class PathData implements Comparable<PathData> {
         ? "" : Path.SEPARATOR;
     return uriToString(uri, inferredSchemeFromPath) + separator + basename;
   }
-  
-  protected enum PathType { HAS_SCHEME, SCHEMELESS_ABSOLUTE, RELATIVE };
-  
+
+  protected enum PathType {HAS_SCHEME, SCHEMELESS_ABSOLUTE, RELATIVE}
+
+  ;
+
   /**
    * Expand the given path as a glob pattern.  Non-existent paths do not
    * throw an exception because creation commands like touch and mkdir need
@@ -314,17 +310,17 @@ public class PathData implements Comparable<PathData> {
    * @throws IOException anything else goes wrong...
    */
   public static PathData[] expandAsGlob(String pattern, Configuration conf)
-  throws IOException {
+      throws IOException {
     Path globPath = new Path(pattern);
-    FileSystem fs = globPath.getFileSystem(conf);    
+    FileSystem fs = globPath.getFileSystem(conf);
     FileStatus[] stats = fs.globStatus(globPath);
     PathData[] items = null;
-    
+
     if (stats == null) {
       // remove any quoting in the glob pattern
       pattern = pattern.replaceAll("\\\\(.)", "$1");
       // not a glob & file not found, so add the path with a null stat
-      items = new PathData[]{ new PathData(fs, pattern, null) };
+      items = new PathData[]{new PathData(fs, pattern, null)};
     } else {
       // figure out what type of glob path was given, will convert globbed
       // paths to match the type to preserve relativity
@@ -333,7 +329,7 @@ public class PathData implements Comparable<PathData> {
       if (globUri.getScheme() != null) {
         globType = PathType.HAS_SCHEME;
       } else if (!globUri.getPath().isEmpty() &&
-                 new Path(globUri.getPath()).isAbsolute()) {
+          new Path(globUri.getPath()).isAbsolute()) {
         globType = PathType.SCHEMELESS_ABSOLUTE;
       } else {
         globType = PathType.RELATIVE;
@@ -341,7 +337,7 @@ public class PathData implements Comparable<PathData> {
 
       // convert stats to PathData
       items = new PathData[stats.length];
-      int i=0;
+      int i = 0;
       for (FileStatus stat : stats) {
         URI matchUri = stat.getPath().toUri();
         String globMatch = null;
@@ -378,7 +374,7 @@ public class PathData implements Comparable<PathData> {
     }
     return uri;
   }
-  
+
   private static String relativize(URI cwdUri, URI srcUri, boolean isDir) {
     String uriPath = srcUri.getPath();
     String cwdPath = cwdUri.getPath();
@@ -388,11 +384,11 @@ public class PathData implements Comparable<PathData> {
 
     // find common ancestor
     int lastSep = findLongestDirPrefix(cwdPath, uriPath, isDir);
-    
-    StringBuilder relPath = new StringBuilder();    
+
+    StringBuilder relPath = new StringBuilder();
     // take the remaining path fragment after the ancestor
     if (lastSep < uriPath.length()) {
-      relPath.append(uriPath.substring(lastSep+1));
+      relPath.append(uriPath.substring(lastSep + 1));
     }
 
     // if cwd has a path fragment after the ancestor, convert them to ".."
@@ -400,7 +396,7 @@ public class PathData implements Comparable<PathData> {
       while (lastSep != -1) {
         if (relPath.length() != 0) relPath.insert(0, Path.SEPARATOR);
         relPath.insert(0, "");
-        lastSep = cwdPath.indexOf(Path.SEPARATOR, lastSep+1);
+        lastSep = cwdPath.indexOf(Path.SEPARATOR, lastSep + 1);
       }
     }
     return relPath.toString();
@@ -418,13 +414,13 @@ public class PathData implements Comparable<PathData> {
     // find longest directory prefix 
     int len = Math.min(cwd.length(), path.length());
     int lastSep = -1;
-    for (int i=0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       if (cwd.charAt(i) != path.charAt(i)) break;
       if (cwd.charAt(i) == Path.SEPARATOR_CHAR) lastSep = i;
     }
     return lastSep;
   }
-  
+
   /**
    * Returns the printable version of the path that is either the path
    * as given on the commandline, or the full path
@@ -434,7 +430,7 @@ public class PathData implements Comparable<PathData> {
   public String toString() {
     return uriToString(uri, inferredSchemeFromPath);
   }
- 
+
   private static String uriToString(URI uri, boolean inferredSchemeFromPath) {
     String scheme = uri.getScheme();
     // No interpretation of symbols. Just decode % escaped chars.
@@ -457,7 +453,7 @@ public class PathData implements Comparable<PathData> {
       return buffer.toString();
     }
   }
-  
+
   /**
    * Get the path to a local file
    * @return File representing the local path
@@ -465,9 +461,9 @@ public class PathData implements Comparable<PathData> {
    */
   public File toFile() {
     if (!(fs instanceof LocalFileSystem)) {
-       throw new IllegalArgumentException("Not a local path: " + path);
+      throw new IllegalArgumentException("Not a local path: " + path);
     }
-    return ((LocalFileSystem)fs).pathToFile(path);
+    return ((LocalFileSystem) fs).pathToFile(path);
   }
 
   /** Normalize the given Windows path string. This does the following:
@@ -479,8 +475,7 @@ public class PathData implements Comparable<PathData> {
    *            if it is not a Windows absolute path.
    */
   private static String normalizeWindowsPath(String pathString)
-  throws IOException
-  {
+      throws IOException {
     if (!Path.WINDOWS) {
       return pathString;
     }
@@ -524,7 +519,7 @@ public class PathData implements Comparable<PathData> {
     // internally, the internal parser may fail or break the string at wrong
     // places. Use of multi-argument ctors will quote those chars for us,
     // but we need to do our own parsing and assembly.
-    
+
     // parse uri components
     String scheme = null;
     String authority = null;
@@ -535,7 +530,7 @@ public class PathData implements Comparable<PathData> {
     // parse uri scheme, if any
     int colon = pathString.indexOf(':');
     int slash = pathString.indexOf('/');
-    if (colon > 0 && (slash == colon +1)) {
+    if (colon > 0 && (slash == colon + 1)) {
       // has a non zero-length scheme
       scheme = pathString.substring(0, colon);
       start = colon + 1;
@@ -543,7 +538,7 @@ public class PathData implements Comparable<PathData> {
 
     // parse uri authority, if any
     if (pathString.startsWith("//", start) &&
-        (pathString.length()-start > 2)) {
+        (pathString.length() - start > 2)) {
       start += 2;
       int nextSlash = pathString.indexOf('/', start);
       int authEnd = nextSlash > 0 ? nextSlash : pathString.length();
@@ -566,14 +561,14 @@ public class PathData implements Comparable<PathData> {
   public int compareTo(PathData o) {
     return path.compareTo(o.path);
   }
-  
+
   @Override
   public boolean equals(Object o) {
     return (o != null) &&
-           (o instanceof PathData) &&
-           path.equals(((PathData)o).path);
+        (o instanceof PathData) &&
+        path.equals(((PathData) o).path);
   }
-  
+
   @Override
   public int hashCode() {
     return path.hashCode();

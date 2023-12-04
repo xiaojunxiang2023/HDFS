@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.server.namenode;
+
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.hdfs.util.LongBitFormat;
-import org.apache.hadoop.util.LightWeightGSet.LinkedElement;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.LightWeightGSet.LinkedElement;
 
 /**
  * {@link INode} with additional fields including id, name, permission,
@@ -27,19 +27,19 @@ public abstract class INodeWithAdditionalFields extends INode
     }
 
     static String getUser(long permission) {
-      final int n = (int)USER.BITS.retrieve(permission);
+      final int n = (int) USER.BITS.retrieve(permission);
       String s = SerialNumberManager.USER.getString(n);
       assert s != null;
       return s;
     }
 
     static String getGroup(long permission) {
-      final int n = (int)GROUP.BITS.retrieve(permission);
+      final int n = (int) GROUP.BITS.retrieve(permission);
       return SerialNumberManager.GROUP.getString(n);
     }
-    
+
     static short getMode(long permission) {
-      return (short)MODE.BITS.retrieve(permission);
+      return (short) MODE.BITS.retrieve(permission);
     }
 
     /** Encode the {@link PermissionStatus} to a long. */
@@ -60,9 +60,9 @@ public abstract class INodeWithAdditionalFields extends INode
     }
 
     static PermissionStatus toPermissionStatus(long id,
-        SerialNumberManager.StringTable stringTable) {
-      int uid = (int)USER.BITS.retrieve(id);
-      int gid = (int)GROUP.BITS.retrieve(id);
+                                               SerialNumberManager.StringTable stringTable) {
+      int uid = (int) USER.BITS.retrieve(id);
+      int gid = (int) GROUP.BITS.retrieve(id);
       return new PermissionStatus(
           SerialNumberManager.USER.getString(uid, stringTable),
           SerialNumberManager.GROUP.getString(gid, stringTable),
@@ -85,7 +85,7 @@ public abstract class INodeWithAdditionalFields extends INode
    *  side should change accordingly.
    */
   private byte[] name = null;
-  /** 
+  /**
    * Permission encoded using {@link PermissionStatusFormat}.
    * Codes other than {@link #clonePermissionStatus(INodeWithAdditionalFields)}
    * and {@link #updatePermissionStatus(PermissionStatusFormat, long)}
@@ -104,7 +104,7 @@ public abstract class INodeWithAdditionalFields extends INode
   protected Feature[] features = EMPTY_FEATURE;
 
   private INodeWithAdditionalFields(INode parent, long id, byte[] name,
-      long permission, long modificationTime, long accessTime) {
+                                    long permission, long modificationTime, long accessTime) {
     super(parent);
     this.id = id;
     this.name = name;
@@ -114,15 +114,15 @@ public abstract class INodeWithAdditionalFields extends INode
   }
 
   INodeWithAdditionalFields(long id, byte[] name, PermissionStatus permissions,
-      long modificationTime, long accessTime) {
+                            long modificationTime, long accessTime) {
     this(null, id, name, PermissionStatusFormat.toLong(permissions),
         modificationTime, accessTime);
   }
-  
+
   /** @param other Other node to be copied */
   INodeWithAdditionalFields(INodeWithAdditionalFields other) {
     this(other.getParentReference() != null ? other.getParentReference()
-        : other.getParent(), other.getId(), other.getLocalNameBytes(),
+            : other.getParent(), other.getId(), other.getLocalNameBytes(),
         other.permission, other.modificationTime, other.accessTime);
   }
 
@@ -130,7 +130,7 @@ public abstract class INodeWithAdditionalFields extends INode
   public void setNext(LinkedElement next) {
     this.next = next;
   }
-  
+
   @Override
   public LinkedElement getNext() {
     return next;
@@ -146,7 +146,7 @@ public abstract class INodeWithAdditionalFields extends INode
   public final byte[] getLocalNameBytes() {
     return name;
   }
-  
+
   @Override
   public final void setLocalName(byte[] name) {
     this.name = name;
@@ -208,6 +208,7 @@ public abstract class INodeWithAdditionalFields extends INode
   public final short getFsPermissionShort() {
     return PermissionStatusFormat.getMode(permission);
   }
+
   @Override
   void setPermission(FsPermission permission) {
     final short mode = permission.toShort();
@@ -325,7 +326,7 @@ public abstract class INodeWithAdditionalFields extends INode
   protected <T extends Feature> T getFeature(Class<? extends Feature> clazz) {
     Preconditions.checkArgument(clazz != null);
     final int size = features.length;
-    for (int i=0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       Feature f = features[i];
       if (clazz.isAssignableFrom(f.getClass())) {
         @SuppressWarnings("unchecked")
@@ -350,7 +351,7 @@ public abstract class INodeWithAdditionalFields extends INode
 
     addFeature(AclStorage.addAclFeature(f));
   }
-  
+
   @Override
   XAttrFeature getXAttrFeature(int snapshotId) {
     if (snapshotId != Snapshot.CURRENT_STATE_ID) {
@@ -359,19 +360,19 @@ public abstract class INodeWithAdditionalFields extends INode
 
     return getFeature(XAttrFeature.class);
   }
-  
+
   @Override
   public void removeXAttrFeature() {
     XAttrFeature f = getXAttrFeature();
     Preconditions.checkNotNull(f);
     removeFeature(f);
   }
-  
+
   @Override
   public void addXAttrFeature(XAttrFeature f) {
     XAttrFeature f1 = getXAttrFeature();
     Preconditions.checkState(f1 == null, "Duplicated XAttrFeature");
-    
+
     addFeature(f);
   }
 

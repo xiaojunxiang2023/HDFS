@@ -1,9 +1,9 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import java.beans.ConstructorProperties;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+
+import java.beans.ConstructorProperties;
 
 /**
  * Statistics per StorageType.
@@ -20,7 +20,7 @@ public class StorageTypeStats {
 
   @VisibleForTesting
   void setDataNodesInServiceXceiverCount(int avgXceiverPerDatanode,
-      int numNodesInService) {
+                                         int numNodesInService) {
     this.nodesInService = numNodesInService;
     this.nodesInServiceXceiverCount = numNodesInService * avgXceiverPerDatanode;
   }
@@ -44,7 +44,7 @@ public class StorageTypeStats {
     // for PROVIDED storage, avoid counting the same storage
     // across multiple datanodes
     if (storageType == StorageType.PROVIDED && nodesInService > 0) {
-      return capacityTotal/nodesInService;
+      return capacityTotal / nodesInService;
     }
     return capacityTotal;
   }
@@ -53,7 +53,7 @@ public class StorageTypeStats {
     // for PROVIDED storage, avoid counting the same storage
     // across multiple datanodes
     if (storageType == StorageType.PROVIDED && nodesInService > 0) {
-      return capacityUsed/nodesInService;
+      return capacityUsed / nodesInService;
     }
     return capacityUsed;
   }
@@ -62,7 +62,7 @@ public class StorageTypeStats {
     // for PROVIDED storage, avoid counting the same storage
     // across multiple datanodes
     if (storageType == StorageType.PROVIDED && nodesInService > 0) {
-      return capacityNonDfsUsed/nodesInService;
+      return capacityNonDfsUsed / nodesInService;
     }
     return capacityNonDfsUsed;
   }
@@ -71,7 +71,7 @@ public class StorageTypeStats {
     // for PROVIDED storage, avoid counting the same storage
     // across multiple datanodes
     if (storageType == StorageType.PROVIDED && nodesInService > 0) {
-      return capacityRemaining/nodesInService;
+      return capacityRemaining / nodesInService;
     }
     return capacityRemaining;
   }
@@ -80,7 +80,7 @@ public class StorageTypeStats {
     // for PROVIDED storage, avoid counting the same storage
     // across multiple datanodes
     if (storageType == StorageType.PROVIDED && nodesInService > 0) {
-      return blockPoolUsed/nodesInService;
+      return blockPoolUsed / nodesInService;
     }
     return blockPoolUsed;
   }
@@ -107,7 +107,7 @@ public class StorageTypeStats {
   }
 
   void addStorage(final DatanodeStorageInfo info,
-      final DatanodeDescriptor node) {
+                  final DatanodeDescriptor node) {
     assert storageType == info.getStorageType();
     capacityUsed += info.getDfsUsed();
     capacityNonDfsUsed += info.getNonDfsUsed();
@@ -128,7 +128,7 @@ public class StorageTypeStats {
   }
 
   void subtractStorage(final DatanodeStorageInfo info,
-      final DatanodeDescriptor node) {
+                       final DatanodeDescriptor node) {
     assert storageType == info.getStorageType();
     capacityUsed -= info.getDfsUsed();
     capacityNonDfsUsed -= info.getNonDfsUsed();

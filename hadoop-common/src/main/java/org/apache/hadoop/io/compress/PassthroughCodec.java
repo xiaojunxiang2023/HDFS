@@ -1,13 +1,13 @@
 package org.apache.hadoop.io.compress;
 
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configurable;
-import org.apache.hadoop.conf.Configuration;
 
 /**
  * This is a special codec which does not transform the output.
@@ -92,7 +92,7 @@ public class PassthroughCodec
 
   @Override
   public CompressionOutputStream createOutputStream(final OutputStream out,
-      final Compressor compressor) throws IOException {
+                                                    final Compressor compressor) throws IOException {
     throw new UnsupportedOperationException();
   }
 
@@ -114,7 +114,7 @@ public class PassthroughCodec
 
   @Override
   public CompressionInputStream createInputStream(final InputStream in,
-      final Decompressor decompressor) throws IOException {
+                                                  final Decompressor decompressor) throws IOException {
     return new PassthroughDecompressorStream(in);
   }
 

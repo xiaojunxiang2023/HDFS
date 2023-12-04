@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.alias;
+
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public final class JavaKeyStoreProvider extends KeyStoreProvider {
   public static class Factory extends CredentialProviderFactory {
     @Override
     public CredentialProvider createProvider(URI providerName,
-        Configuration conf) throws IOException {
+                                             Configuration conf) throws IOException {
       if (SCHEME_NAME.equals(providerName.getScheme())) {
         return new JavaKeyStoreProvider(providerName, conf);
       }

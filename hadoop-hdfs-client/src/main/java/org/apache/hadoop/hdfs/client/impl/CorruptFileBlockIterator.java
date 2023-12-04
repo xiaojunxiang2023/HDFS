@@ -1,11 +1,12 @@
 package org.apache.hadoop.hdfs.client.impl;
 
-import java.io.IOException;
-import java.util.NoSuchElementException;
-import org.apache.hadoop.hdfs.DFSClient;
-import org.apache.hadoop.hdfs.protocol.CorruptFileBlocks;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
+import org.apache.hadoop.hdfs.DFSClient;
+import org.apache.hadoop.hdfs.protocol.CorruptFileBlocks;
+
+import java.io.IOException;
+import java.util.NoSuchElementException;
 
 /**
  * Provides an iterator interface for listCorruptFileBlocks.

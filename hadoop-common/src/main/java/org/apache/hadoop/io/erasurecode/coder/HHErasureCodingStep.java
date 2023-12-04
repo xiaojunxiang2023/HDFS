@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.coder;
+
 import org.apache.hadoop.io.erasurecode.ECBlock;
 
 /**
@@ -8,7 +9,7 @@ import org.apache.hadoop.io.erasurecode.ECBlock;
  * It implements {@link ErasureCodingStep}.
  */
 public abstract class HHErasureCodingStep
-        implements ErasureCodingStep {
+    implements ErasureCodingStep {
 
   private ECBlock[] inputBlocks;
   private ECBlock[] outputBlocks;
@@ -22,7 +23,7 @@ public abstract class HHErasureCodingStep
    * @param outputBlocks
    */
   public HHErasureCodingStep(ECBlock[] inputBlocks,
-                                     ECBlock[] outputBlocks) {
+                             ECBlock[] outputBlocks) {
     this.inputBlocks = inputBlocks;
     this.outputBlocks = outputBlocks;
   }

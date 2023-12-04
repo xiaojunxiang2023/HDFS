@@ -15,7 +15,7 @@ public class FSExceptionMessages {
    * Negative offset seek forbidden : {@value}
    */
   public static final String NEGATIVE_SEEK =
-    "Cannot seek to a negative offset";
+      "Cannot seek to a negative offset";
 
   /**
    * Seeks : {@value}

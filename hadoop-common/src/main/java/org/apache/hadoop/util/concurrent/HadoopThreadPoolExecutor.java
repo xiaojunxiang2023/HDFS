@@ -23,11 +23,7 @@ package org.apache.hadoop.util.concurrent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 /** An extension of ThreadPoolExecutor that provides additional functionality.
@@ -38,40 +34,40 @@ public final class HadoopThreadPoolExecutor extends ThreadPoolExecutor {
       .getLogger(HadoopThreadPoolExecutor.class);
 
   public HadoopThreadPoolExecutor(int corePoolSize,
-      int maximumPoolSize,
-      long keepAliveTime,
-      TimeUnit unit,
-      BlockingQueue<Runnable> workQueue) {
+                                  int maximumPoolSize,
+                                  long keepAliveTime,
+                                  TimeUnit unit,
+                                  BlockingQueue<Runnable> workQueue) {
     super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
   }
 
   public HadoopThreadPoolExecutor(int corePoolSize,
-      int maximumPoolSize,
-      long keepAliveTime,
-      TimeUnit unit,
-      BlockingQueue<Runnable> workQueue,
-      ThreadFactory threadFactory) {
+                                  int maximumPoolSize,
+                                  long keepAliveTime,
+                                  TimeUnit unit,
+                                  BlockingQueue<Runnable> workQueue,
+                                  ThreadFactory threadFactory) {
     super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
         threadFactory);
   }
 
   public HadoopThreadPoolExecutor(int corePoolSize,
-      int maximumPoolSize,
-      long keepAliveTime,
-      TimeUnit unit,
-      BlockingQueue<Runnable> workQueue,
-      RejectedExecutionHandler handler) {
+                                  int maximumPoolSize,
+                                  long keepAliveTime,
+                                  TimeUnit unit,
+                                  BlockingQueue<Runnable> workQueue,
+                                  RejectedExecutionHandler handler) {
     super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
         handler);
   }
 
   public HadoopThreadPoolExecutor(int corePoolSize,
-      int maximumPoolSize,
-      long keepAliveTime,
-      TimeUnit unit,
-      BlockingQueue<Runnable> workQueue,
-      ThreadFactory threadFactory,
-      RejectedExecutionHandler handler) {
+                                  int maximumPoolSize,
+                                  long keepAliveTime,
+                                  TimeUnit unit,
+                                  BlockingQueue<Runnable> workQueue,
+                                  ThreadFactory threadFactory,
+                                  RejectedExecutionHandler handler) {
     super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
         threadFactory, handler);
   }

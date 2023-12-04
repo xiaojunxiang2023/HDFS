@@ -1,7 +1,8 @@
 package org.apache.hadoop.ipc;
 
-import java.util.Locale;
 import org.apache.hadoop.conf.Configuration;
+
+import java.util.Locale;
 
 import static org.apache.hadoop.ipc.ProcessingDetails.Timing;
 
@@ -50,20 +51,20 @@ public class WeightedTimeCostProvider implements CostProvider {
     for (Timing timing : ProcessingDetails.Timing.values()) {
       final int defaultValue;
       switch (timing) {
-      case LOCKFREE:
-      case RESPONSE:
-      case HANDLER:
-        defaultValue = DEFAULT_LOCKFREE_WEIGHT;
-        break;
-      case LOCKSHARED:
-        defaultValue = DEFAULT_LOCKSHARED_WEIGHT;
-        break;
-      case LOCKEXCLUSIVE:
-        defaultValue = DEFAULT_LOCKEXCLUSIVE_WEIGHT;
-        break;
-      default:
-        // by default don't bill for queueing or lock wait time
-        defaultValue = 0;
+        case LOCKFREE:
+        case RESPONSE:
+        case HANDLER:
+          defaultValue = DEFAULT_LOCKFREE_WEIGHT;
+          break;
+        case LOCKSHARED:
+          defaultValue = DEFAULT_LOCKSHARED_WEIGHT;
+          break;
+        case LOCKEXCLUSIVE:
+          defaultValue = DEFAULT_LOCKEXCLUSIVE_WEIGHT;
+          break;
+        default:
+          // by default don't bill for queueing or lock wait time
+          defaultValue = 0;
       }
       String key = namespace + WEIGHT_CONFIG_PREFIX
           + timing.name().toLowerCase(Locale.ENGLISH);

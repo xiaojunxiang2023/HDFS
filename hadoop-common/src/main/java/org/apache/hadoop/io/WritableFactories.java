@@ -1,6 +1,9 @@
 package org.apache.hadoop.io;
-import org.apache.hadoop.conf.*;
+
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ReflectionUtils;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,9 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * ObjectWritable} to be able to construct instances of non-public classes. */
 public class WritableFactories {
   private static final Map<Class, WritableFactory> CLASS_TO_FACTORY =
-    new ConcurrentHashMap<Class, WritableFactory>();
+      new ConcurrentHashMap<Class, WritableFactory>();
 
-  private WritableFactories() {}                  // singleton
+  private WritableFactories() {
+  }                  // singleton
 
   /** Define a factory for a class. */
   public static void setFactory(Class c, WritableFactory factory) {
@@ -35,7 +39,7 @@ public class WritableFactories {
       return ReflectionUtils.newInstance(c, conf);
     }
   }
-  
+
   /** Create a new instance of a class with a defined factory. */
   public static Writable newInstance(Class<? extends Writable> c) {
     return newInstance(c, null);

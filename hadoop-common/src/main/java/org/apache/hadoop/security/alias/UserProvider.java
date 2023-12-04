@@ -1,14 +1,15 @@
 package org.apache.hadoop.security.alias;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.security.Credentials;
+import org.apache.hadoop.security.UserGroupInformation;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.security.Credentials;
-import org.apache.hadoop.security.UserGroupInformation;
 
 /**
  * A CredentialProvider for UGIs. It uses the credentials object associated
@@ -41,14 +42,14 @@ public class UserProvider extends CredentialProvider {
   }
 
   @Override
-  public synchronized CredentialEntry createCredentialEntry(String name, char[] credential) 
+  public synchronized CredentialEntry createCredentialEntry(String name, char[] credential)
       throws IOException {
     Text nameT = new Text(name);
     if (credentials.getSecretKey(nameT) != null) {
-      throw new IOException("Credential " + name + 
+      throw new IOException("Credential " + name +
           " already exists in " + this);
     }
-    credentials.addSecretKey(new Text(name), 
+    credentials.addSecretKey(new Text(name),
         new String(credential).getBytes("UTF-8"));
     return new CredentialEntry(name, credential);
   }
@@ -58,9 +59,8 @@ public class UserProvider extends CredentialProvider {
     byte[] cred = credentials.getSecretKey(new Text(name));
     if (cred != null) {
       credentials.removeSecretKey(new Text(name));
-    }
-    else {
-      throw new IOException("Credential " + name + 
+    } else {
+      throw new IOException("Credential " + name +
           " does not exist in " + this);
     }
   }
@@ -79,7 +79,7 @@ public class UserProvider extends CredentialProvider {
 
     @Override
     public CredentialProvider createProvider(URI providerName,
-                                      Configuration conf) throws IOException {
+                                             Configuration conf) throws IOException {
       if (SCHEME_NAME.equals(providerName.getScheme())) {
         return new UserProvider();
       }

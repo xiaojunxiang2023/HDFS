@@ -1,11 +1,11 @@
 package org.apache.hadoop.hdfs.web;
 
-import java.io.IOException;
-
 import org.apache.hadoop.auth.client.ticator.Authenticator;
 import org.apache.hadoop.auth.client.ticator.KerberosAuthenticator;
 import org.apache.hadoop.auth.client.ticator.PseudoAuthenticator;
 import org.apache.hadoop.security.UserGroupInformation;
+
+import java.io.IOException;
 
 /**
  * Use UserGroupInformation as a fallback authenticator

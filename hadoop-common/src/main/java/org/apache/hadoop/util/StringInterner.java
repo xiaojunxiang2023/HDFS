@@ -9,7 +9,7 @@ import org.apache.hadoop.thirdparty.com.google.common.collect.Interners;
  * (no problems with PermGen overflowing, etc.) starting from JDK 7.
  */
 public class StringInterner {
-  
+
   /**
    * Retains a strong reference to each string instance it has interned.
    */
@@ -21,7 +21,7 @@ public class StringInterner {
    * for any of a collection of string instances that are equal to each other.
    * Retains strong reference to the instance, 
    * thus preventing it from being garbage-collected. 
-   * 
+   *
    * @param sample string instance to be interned
    * @return strong reference to interned string instance
    */
@@ -31,13 +31,13 @@ public class StringInterner {
     }
     return STRONG_INTERNER.intern(sample);
   }
-  
+
   /**
    * Interns and returns a reference to the representative instance 
    * for any of a collection of string instances that are equal to each other.
    * Retains weak reference to the instance, 
    * and so does not prevent it from being garbage-collected.
-   * 
+   *
    * @param sample string instance to be interned
    * @return weak reference to interned string instance
    */

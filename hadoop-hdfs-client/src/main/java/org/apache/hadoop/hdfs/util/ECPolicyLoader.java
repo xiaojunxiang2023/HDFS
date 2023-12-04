@@ -14,15 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.util;
+ */
+package org.apache.hadoop.hdfs.util;
 
-import org.apache.hadoop.io.erasurecode.ECSchema;
 import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+import org.apache.hadoop.io.erasurecode.ECSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,14 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
  * A EC policy loading tool that loads user defined EC policies from XML file.

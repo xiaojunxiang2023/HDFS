@@ -3,7 +3,7 @@ package org.apache.hadoop.hdfs.web.resources;
 /** Integer parameter. */
 abstract class IntegerParam extends Param<Integer, IntegerParam.Domain> {
   IntegerParam(final Domain domain, final Integer value,
-      final Integer min, final Integer max) {
+               final Integer min, final Integer max) {
     super(domain, value);
     checkRange(min, max);
   }
@@ -54,10 +54,10 @@ abstract class IntegerParam extends Param<Integer, IntegerParam.Domain> {
 
     @Override
     Integer parse(final String str) {
-      try{
+      try {
         return NULL.equals(str) || str == null ? null : Integer.parseInt(str,
-          radix);
-      } catch(NumberFormatException e) {
+            radix);
+      } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Failed to parse \"" + str
             + "\" as a radix-" + radix + " integer.", e);
       }
@@ -65,7 +65,7 @@ abstract class IntegerParam extends Param<Integer, IntegerParam.Domain> {
 
     /** Convert an Integer to a String. */
     String toString(final Integer n) {
-      return n == null? NULL: Integer.toString(n, radix);
+      return n == null ? NULL : Integer.toString(n, radix);
     }
   }
 }

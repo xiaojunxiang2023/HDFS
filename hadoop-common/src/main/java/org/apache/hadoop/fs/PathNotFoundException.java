@@ -5,6 +5,7 @@ package org.apache.hadoop.fs;
  */
 public class PathNotFoundException extends PathIOException {
   static final long serialVersionUID = 0L;
+
   /** @param path for the exception */
   public PathNotFoundException(String path) {
     super(path, "No such file or directory");
@@ -19,8 +20,8 @@ public class PathNotFoundException extends PathIOException {
   }
 
   public PathNotFoundException(String path,
-      String error,
-      Throwable cause) {
+                               String error,
+                               Throwable cause) {
     super(path, error, cause);
   }
 }

@@ -151,12 +151,12 @@ public class Log4Json extends Layout {
       throws IOException {
     ThrowableInformation ti = event.getThrowableInformation();
     toJson(writer,
-           event.getLoggerName(),
-           event.getTimeStamp(),
-           event.getLevel().toString(),
-           event.getThreadName(),
-           event.getRenderedMessage(),
-           ti);
+        event.getLoggerName(),
+        event.getTimeStamp(),
+        event.getLevel().toString(),
+        event.getThreadName(),
+        event.getRenderedMessage(),
+        ti);
     return writer;
   }
 

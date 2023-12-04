@@ -50,8 +50,7 @@ class SinkQueue<T> {
     try {
       consumer.consume(e);  // can take forever
       _dequeue();
-    }
-    finally {
+    } finally {
       clearConsumerLock();
     }
   }
@@ -69,15 +68,14 @@ class SinkQueue<T> {
         consumer.consume(front()); // can take forever
         _dequeue();
       }
-    }
-    finally {
+    } finally {
       clearConsumerLock();
     }
   }
 
   /**
    * Dequeue one element from head of the queue, will block if queue is empty
-   * @return  the first element
+   * @return the first element
    * @throws InterruptedException
    */
   synchronized T dequeue() throws InterruptedException {
@@ -101,8 +99,8 @@ class SinkQueue<T> {
 
   private synchronized void checkConsumer() {
     if (currentConsumer != null) {
-      throw new ConcurrentModificationException("The "+
-          currentConsumer.getName() +" thread is consuming the queue.");
+      throw new ConcurrentModificationException("The " +
+          currentConsumer.getName() + " thread is consuming the queue.");
     }
   }
 

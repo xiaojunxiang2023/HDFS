@@ -1,7 +1,7 @@
 package org.apache.hadoop.http;
 
-import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Log4j Appender adapter for HttpRequestLog

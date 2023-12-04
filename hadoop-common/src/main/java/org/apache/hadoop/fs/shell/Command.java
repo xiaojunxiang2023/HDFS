@@ -1,5 +1,14 @@
 package org.apache.hadoop.fs.shell;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.PathNotFoundException;
+import org.apache.hadoop.fs.RemoteIterator;
+import org.apache.hadoop.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -9,14 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathNotFoundException;
-import org.apache.hadoop.fs.RemoteIterator;
-import org.apache.hadoop.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apache.hadoop.util.functional.RemoteIterators.cleanupRemoteIterator;
 
@@ -31,7 +32,7 @@ abstract public class Command extends Configured {
   public static final String COMMAND_USAGE_FIELD = "USAGE";
   /** field name indicating the command's long description */
   public static final String COMMAND_DESCRIPTION_FIELD = "DESCRIPTION";
-    
+
   protected String[] args;
   protected String name;
   protected int exitCode = 0;
@@ -54,19 +55,19 @@ abstract public class Command extends Configured {
     out = System.out;
     err = System.err;
   }
-  
+
   /** Constructor */
   protected Command(Configuration conf) {
     super(conf);
   }
-  
+
   /** @return the command's name excluding the leading character - */
   abstract public String getCommandName();
-  
+
   protected void setRecursive(boolean flag) {
     recursive = flag;
   }
-  
+
   protected boolean isRecursive() {
     return recursive;
   }
@@ -74,10 +75,10 @@ abstract public class Command extends Configured {
   protected int getDepth() {
     return depth;
   }
-  
-  /** 
+
+  /**
    * Execute the command on the input path
-   * 
+   *
    * @param path the input path
    * @throws IOException if any error occurs
    */
@@ -93,9 +94,9 @@ abstract public class Command extends Configured {
     run(pathData.path);
   }
 
-  /** 
+  /**
    * For each source path, execute the command
-   * 
+   *
    * @return 0 if it runs successfully; -1 if it fails
    */
   public int runAll() {
@@ -118,6 +119,7 @@ abstract public class Command extends Configured {
   public void setCommandFactory(CommandFactory factory) {
     this.commandFactory = factory;
   }
+
   /** retrieves the command factory */
   protected CommandFactory getCommandFactory() {
     return this.commandFactory;
@@ -141,17 +143,17 @@ abstract public class Command extends Configured {
    * </pre>
    * Most commands will chose to implement just
    * {@link #processOptions(LinkedList)} and {@link #processPath(PathData)}
-   * 
+   *
    * @param argv the list of command line arguments
    * @return the exit code for the command
    * @throws IllegalArgumentException if called with invalid arguments
    */
-  public int run(String...argv) {
+  public int run(String... argv) {
     LinkedList<String> args = new LinkedList<String>(Arrays.asList(argv));
     try {
       if (isDeprecated()) {
         displayWarning(
-            "DEPRECATED: Please use '"+ getReplacementCommand() + "' instead.");
+            "DEPRECATED: Please use '" + getReplacementCommand() + "' instead.");
       }
       processOptions(args);
       processRawArguments(args);
@@ -161,7 +163,7 @@ abstract public class Command extends Configured {
     } catch (IOException e) {
       displayError(e);
     }
-    
+
     return (numErrors == 0) ? exitCode : exitCodeForError();
   }
 
@@ -171,8 +173,10 @@ abstract public class Command extends Configured {
    * codes returned by various commands.
    * @return a non-zero exit code
    */
-  protected int exitCodeForError() { return 1; }
-  
+  protected int exitCodeForError() {
+    return 1;
+  }
+
   /**
    * Must be implemented by commands to process the command line flags and
    * check the bounds of the remaining arguments.  If an
@@ -181,18 +185,19 @@ abstract public class Command extends Configured {
    * @param args the command line arguments
    * @throws IOException
    */
-  protected void processOptions(LinkedList<String> args) throws IOException {}
+  protected void processOptions(LinkedList<String> args) throws IOException {
+  }
 
   /**
    * Allows commands that don't use paths to handle the raw arguments.
    * Default behavior is to expand the arguments via
    * {@link #expandArguments(LinkedList)} and pass the resulting list to
-   * {@link #processArguments(LinkedList)} 
+   * {@link #processArguments(LinkedList)}
    * @param args the list of argument strings
    * @throws IOException
    */
   protected void processRawArguments(LinkedList<String> args)
-  throws IOException {
+      throws IOException {
     processArguments(expandArguments(args));
   }
 
@@ -206,7 +211,7 @@ abstract public class Command extends Configured {
    * @throws IOException if anything goes wrong...
    */
   protected LinkedList<PathData> expandArguments(LinkedList<String> args)
-  throws IOException {
+      throws IOException {
     LinkedList<PathData> expandedArgs = new LinkedList<PathData>();
     for (String arg : args) {
       try {
@@ -244,7 +249,7 @@ abstract public class Command extends Configured {
    *  @throws IOException if anything goes wrong... 
    */
   protected void processArguments(LinkedList<PathData> args)
-  throws IOException {
+      throws IOException {
     for (PathData arg : args) {
       try {
         processArgument(arg);
@@ -283,7 +288,7 @@ abstract public class Command extends Configured {
     depth = 0;
     processPaths(null, item);
   }
-  
+
   /**
    *  Provides a hook for handling paths that don't exist.  By default it
    *  will throw an exception.  Primarily overriden by commands that create
@@ -304,8 +309,8 @@ abstract public class Command extends Configured {
    *  @param items a list of {@link PathData} objects to process
    *  @throws IOException if anything goes wrong...
    */
-  protected void processPaths(PathData parent, PathData ... items)
-  throws IOException {
+  protected void processPaths(PathData parent, PathData... items)
+      throws IOException {
     for (PathData item : items) {
       try {
         processPathInternal(item);
@@ -324,7 +329,7 @@ abstract public class Command extends Configured {
    * @throws IOException if anything goes wrong...
    */
   protected void processPaths(PathData parent,
-      RemoteIterator<PathData> itemsIterator) throws IOException {
+                              RemoteIterator<PathData> itemsIterator) throws IOException {
     int groupSize = getListingGroupSize();
     if (groupSize == 0) {
       // No grouping of contents required.
@@ -391,9 +396,9 @@ abstract public class Command extends Configured {
    * @param item a {@link PathData} object
    * @throws RuntimeException if invoked but not implemented
    * @throws IOException if anything else goes wrong in the user-implementation
-   */  
+   */
   protected void processPath(PathData item) throws IOException {
-    throw new RuntimeException("processPath() is not implemented");    
+    throw new RuntimeException("processPath() is not implemented");
   }
 
   /**
@@ -402,7 +407,7 @@ abstract public class Command extends Configured {
    * @param item a {@link PathData} object
    * @throws IOException if anything goes wrong...
    */
-  protected void postProcessPath(PathData item) throws IOException {    
+  protected void postProcessPath(PathData item) throws IOException {
   }
 
   /**
@@ -452,7 +457,7 @@ abstract public class Command extends Configured {
     }
     displayError(errorMessage);
   }
-  
+
   /**
    * Display an error string prefaced with the command name.  Also increments
    * the error count for the command which will result in a non-zero exit
@@ -463,7 +468,7 @@ abstract public class Command extends Configured {
     numErrors++;
     displayWarning(message);
   }
-  
+
   /**
    * Display an warning string prefaced with the command name.
    * @param message warning message to display
@@ -471,7 +476,7 @@ abstract public class Command extends Configured {
   public void displayWarning(String message) {
     err.println(getName() + ": " + message);
   }
-  
+
   /**
    * The name of the command.  Will first try to use the assigned name
    * else fallback to the command's preferred name
@@ -479,8 +484,8 @@ abstract public class Command extends Configured {
    */
   public String getName() {
     return (name == null)
-      ? getCommandField(COMMAND_NAME_FIELD)
-      : name.startsWith("-") ? name.substring(1) : name;
+        ? getCommandField(COMMAND_NAME_FIELD)
+        : name.startsWith("-") ? name.substring(1) : name;
   }
 
   /**
@@ -490,7 +495,7 @@ abstract public class Command extends Configured {
   public void setName(String name) {
     this.name = name;
   }
-  
+
   /**
    * The short usage suitable for the synopsis
    * @return "name options"
@@ -498,7 +503,7 @@ abstract public class Command extends Configured {
   public String getUsage() {
     String cmd = "-" + getName();
     String usage = isDeprecated() ? "" : getCommandField(COMMAND_USAGE_FIELD);
-    return usage.isEmpty() ? cmd : cmd + " " + usage; 
+    return usage.isEmpty() ? cmd : cmd + " " + usage;
   }
 
   /**
@@ -507,8 +512,8 @@ abstract public class Command extends Configured {
    */
   public String getDescription() {
     return isDeprecated()
-      ? "(DEPRECATED) Same as '" + getReplacementCommand() + "'"
-      : getCommandField(COMMAND_DESCRIPTION_FIELD);
+        ? "(DEPRECATED) Same as '" + getReplacementCommand() + "'"
+        : getCommandField(COMMAND_DESCRIPTION_FIELD);
   }
 
   /**
@@ -518,7 +523,7 @@ abstract public class Command extends Configured {
   public final boolean isDeprecated() {
     return (getReplacementCommand() != null);
   }
-  
+
   /**
    * The replacement for a deprecated command
    * @return null if not deprecated, else alternative command
@@ -540,11 +545,12 @@ abstract public class Command extends Configured {
       value = f.get(this).toString();
     } catch (Exception e) {
       throw new RuntimeException(
-          "failed to get " + this.getClass().getSimpleName()+"."+field, e);
+          "failed to get " + this.getClass().getSimpleName() + "." + field, e);
     }
     return value;
   }
-  
+
   @SuppressWarnings("serial")
-  static class CommandInterruptException extends RuntimeException {}
+  static class CommandInterruptException extends RuntimeException {
+  }
 }

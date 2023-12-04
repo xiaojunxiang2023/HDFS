@@ -14,32 +14,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.blockmanagement;
+ */
+package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
-import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.SlowPeerReports;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
+import org.apache.hadoop.thirdparty.com.google.common.primitives.Ints;
 import org.apache.hadoop.util.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -256,12 +248,12 @@ public class SlowPeerTracker {
     final PriorityQueue<ReportForJson> topNReports =
         new PriorityQueue<>(allReports.size(),
             new Comparator<ReportForJson>() {
-          @Override
-          public int compare(ReportForJson o1, ReportForJson o2) {
-            return Ints.compare(o1.reportingNodes.size(),
-                o2.reportingNodes.size());
-          }
-        });
+              @Override
+              public int compare(ReportForJson o1, ReportForJson o2) {
+                return Ints.compare(o1.reportingNodes.size(),
+                    o2.reportingNodes.size());
+              }
+            });
 
     final long now = timer.monotonicNow();
 
@@ -273,7 +265,7 @@ public class SlowPeerTracker {
         if (topNReports.size() < numNodes) {
           topNReports.add(new ReportForJson(entry.getKey(), validReports));
         } else if (topNReports.peek().getReportingNodes().size() <
-            validReports.size()){
+            validReports.size()) {
           // Remove the lowest element
           topNReports.poll();
           topNReports.add(new ReportForJson(entry.getKey(), validReports));

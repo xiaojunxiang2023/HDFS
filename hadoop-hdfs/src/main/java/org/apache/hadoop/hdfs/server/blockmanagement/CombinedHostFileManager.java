@@ -1,30 +1,25 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
+import org.apache.hadoop.hdfs.protocol.DatanodeID;
+import org.apache.hadoop.hdfs.protocol.DatanodeInfo.AdminStates;
+import org.apache.hadoop.hdfs.util.CombinedHostsFileReader;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Multimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.UnmodifiableIterator;
-
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.protocol.DatanodeID;
-import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo.AdminStates;
 
 import java.io.IOException;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-
-
-
-import org.apache.hadoop.hdfs.util.CombinedHostsFileReader;
+import java.util.stream.Collectors;
 
 /**
  * This class manages datanode configuration using a json file.
@@ -52,8 +47,9 @@ public class CombinedHostFileManager extends HostConfigManager {
     // any node is allowed to register with nn. This is equivalent to having
     // an empty "include" file.
     private boolean emptyInServiceNodeLists = true;
+
     synchronized void add(InetAddress addr,
-        DatanodeAdminProperties properties) {
+                          DatanodeAdminProperties properties) {
       allDNs.put(addr, properties);
       if (properties.getAdminState().equals(
           AdminStates.NORMAL)) {
@@ -92,7 +88,7 @@ public class CombinedHostFileManager extends HostConfigManager {
       return new Iterable<InetSocketAddress>() {
         @Override
         public Iterator<InetSocketAddress> iterator() {
-            return new HostIterator(allDNs.entries());
+          return new HostIterator(allDNs.entries());
         }
       };
     }
@@ -123,10 +119,12 @@ public class CombinedHostFileManager extends HostConfigManager {
     static class HostIterator extends UnmodifiableIterator<InetSocketAddress> {
       private final Iterator<Map.Entry<InetAddress,
           DatanodeAdminProperties>> it;
+
       public HostIterator(Collection<java.util.Map.Entry<InetAddress,
           DatanodeAdminProperties>> nodes) {
         this.it = nodes.iterator();
       }
+
       @Override
       public boolean hasNext() {
         return it.hasNext();
@@ -164,11 +162,12 @@ public class CombinedHostFileManager extends HostConfigManager {
   public void refresh() throws IOException {
     refresh(conf.get(DFSConfigKeys.DFS_HOSTS, ""));
   }
+
   private void refresh(final String hostsFile) throws IOException {
     HostProperties hostProps = new HostProperties();
     DatanodeAdminProperties[] all =
         CombinedHostsFileReader.readFile(hostsFile);
-    for(DatanodeAdminProperties properties : all) {
+    for (DatanodeAdminProperties properties : all) {
       InetSocketAddress addr = parseEntry(hostsFile,
           properties.getHostName(), properties.getPort());
       if (addr != null) {
@@ -180,7 +179,7 @@ public class CombinedHostFileManager extends HostConfigManager {
 
   @VisibleForTesting
   static InetSocketAddress parseEntry(final String fn, final String hostName,
-      final int port) {
+                                      final int port) {
     InetSocketAddress addr = new InetSocketAddress(hostName, port);
     if (addr.isUnresolved()) {
       LOG.warn("Failed to resolve {} in {}. ", hostName, fn);

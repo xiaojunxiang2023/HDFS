@@ -1,16 +1,15 @@
 package org.apache.hadoop.hdfs.util;
 
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.Time;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
-import org.apache.hadoop.util.Time;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manage byte array creation and release.
@@ -19,10 +18,10 @@ public abstract class ByteArrayManager {
   static final Logger LOG = LoggerFactory.getLogger(ByteArrayManager.class);
   private static final ThreadLocal<StringBuilder> DEBUG_MESSAGE =
       new ThreadLocal<StringBuilder>() {
-    protected StringBuilder initialValue() {
-      return new StringBuilder();
-    }
-  };
+        protected StringBuilder initialValue() {
+          return new StringBuilder();
+        }
+      };
 
   private static void logDebugMessage() {
     final StringBuilder b = DEBUG_MESSAGE.get();
@@ -54,8 +53,8 @@ public abstract class ByteArrayManager {
       final long overflow = ((long) highestOne) << 1;
       throw new ArithmeticException(
           "Overflow: for n = " + n + ", the least power of two (the least"
-          + " integer x with x >= n and x a power of two) = "
-          + overflow + " > Integer.MAX_VALUE = " + Integer.MAX_VALUE);
+              + " integer x with x >= n and x a power of two) = "
+              + overflow + " > Integer.MAX_VALUE = " + Integer.MAX_VALUE);
     }
     return roundUp;
   }
@@ -144,7 +143,7 @@ public abstract class ByteArrayManager {
       if (LOG.isDebugEnabled()) {
         DEBUG_MESSAGE.get().append(", ").append(this);
       }
-      for(; numAllocated >= maxAllocated;) {
+      for (; numAllocated >= maxAllocated; ) {
         if (LOG.isDebugEnabled()) {
           DEBUG_MESSAGE.get().append(": wait ...");
           logDebugMessage();
@@ -162,7 +161,7 @@ public abstract class ByteArrayManager {
       if (LOG.isDebugEnabled()) {
         DEBUG_MESSAGE.get().append(", recycled? ").append(array != null);
       }
-      return array != null? array : new byte[byteArrayLength];
+      return array != null ? array : new byte[byteArrayLength];
     }
 
     /**
@@ -214,7 +213,7 @@ public abstract class ByteArrayManager {
 
     /** @return the manager for the given array length. */
     synchronized FixedLengthManager get(final Integer arrayLength,
-        final boolean createIfNotExist) {
+                                        final boolean createIfNotExist) {
       FixedLengthManager manager = map.get(arrayLength);
       if (manager == null && createIfNotExist) {
         manager = new FixedLengthManager(arrayLength, countLimit);
@@ -275,7 +274,7 @@ public abstract class ByteArrayManager {
   public abstract int release(byte[] array);
 
   public static ByteArrayManager newInstance(Conf conf) {
-    return conf == null? new NewByteArrayWithoutLimit(): new Impl(conf);
+    return conf == null ? new NewByteArrayWithoutLimit() : new Impl(conf);
   }
 
   /**
@@ -338,8 +337,8 @@ public abstract class ByteArrayManager {
       if (arrayLength == 0) {
         array = EMPTY_BYTE_ARRAY;
       } else {
-        final int powerOfTwo = arrayLength <= MIN_ARRAY_LENGTH?
-            MIN_ARRAY_LENGTH: leastPowerOfTwo(arrayLength);
+        final int powerOfTwo = arrayLength <= MIN_ARRAY_LENGTH ?
+            MIN_ARRAY_LENGTH : leastPowerOfTwo(arrayLength);
         final long count = counters.get(powerOfTwo, true).increment();
         final boolean aboveThreshold = count > conf.countThreshold;
         // create a new manager only if the count is above threshold.
@@ -348,9 +347,9 @@ public abstract class ByteArrayManager {
 
         if (LOG.isDebugEnabled()) {
           DEBUG_MESSAGE.get().append(": count=").append(count)
-              .append(aboveThreshold? ", aboveThreshold": ", belowThreshold");
+              .append(aboveThreshold ? ", aboveThreshold" : ", belowThreshold");
         }
-        array = manager != null? manager.allocate(): new byte[powerOfTwo];
+        array = manager != null ? manager.allocate() : new byte[powerOfTwo];
       }
 
       if (LOG.isDebugEnabled()) {
@@ -382,7 +381,7 @@ public abstract class ByteArrayManager {
         freeQueueSize = -1;
       } else {
         final FixedLengthManager manager = managers.get(array.length, false);
-        freeQueueSize = manager == null? -1: manager.recycle(array);
+        freeQueueSize = manager == null ? -1 : manager.recycle(array);
       }
 
       if (LOG.isDebugEnabled()) {

@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -12,20 +10,23 @@ import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
 
+import java.net.URI;
+import java.nio.ByteBuffer;
+
 /**
  * This class is used for provided replicas that are finalized.
  */
 public class FinalizedProvidedReplica extends ProvidedReplica {
 
   public FinalizedProvidedReplica(long blockId, URI fileURI, long fileOffset,
-      long blockLen, long genStamp, PathHandle pathHandle, FsVolumeSpi volume,
-      Configuration conf, FileSystem remoteFS) {
+                                  long blockLen, long genStamp, PathHandle pathHandle, FsVolumeSpi volume,
+                                  Configuration conf, FileSystem remoteFS) {
     super(blockId, fileURI, fileOffset, blockLen, genStamp, pathHandle, volume,
         conf, remoteFS);
   }
 
   public FinalizedProvidedReplica(FileRegion fileRegion, FsVolumeSpi volume,
-      Configuration conf, FileSystem remoteFS) {
+                                  Configuration conf, FileSystem remoteFS) {
     super(fileRegion.getBlock().getBlockId(),
         fileRegion.getProvidedStorageLocation().getPath().toUri(),
         fileRegion.getProvidedStorageLocation().getOffset(),
@@ -37,9 +38,9 @@ public class FinalizedProvidedReplica extends ProvidedReplica {
   }
 
   public FinalizedProvidedReplica(long blockId, Path pathPrefix,
-      String pathSuffix, long fileOffset, long blockLen, long genStamp,
-      PathHandle pathHandle, FsVolumeSpi volume, Configuration conf,
-      FileSystem remoteFS) {
+                                  String pathSuffix, long fileOffset, long blockLen, long genStamp,
+                                  PathHandle pathHandle, FsVolumeSpi volume, Configuration conf,
+                                  FileSystem remoteFS) {
     super(blockId, pathPrefix, pathSuffix, fileOffset, blockLen,
         genStamp, pathHandle, volume, conf, remoteFS);
   }

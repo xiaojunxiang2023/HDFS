@@ -1,10 +1,10 @@
 package org.apache.hadoop.fs.permission;
 
-import java.util.List;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Objects;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+
+import java.util.List;
 
 /**
  * An AclStatus contains the ACL information of a specific file. AclStatus
@@ -37,7 +37,7 @@ public class AclStatus {
 
   /**
    * Returns the sticky bit.
-   * 
+   *
    * @return boolean sticky bit
    */
   public boolean isStickyBit() {
@@ -69,7 +69,7 @@ public class AclStatus {
     if (getClass() != o.getClass()) {
       return false;
     }
-    AclStatus other = (AclStatus)o;
+    AclStatus other = (AclStatus) o;
     return Objects.equal(owner, other.owner)
         && Objects.equal(group, other.group)
         && stickyBit == other.stickyBit
@@ -84,13 +84,13 @@ public class AclStatus {
   @Override
   public String toString() {
     return new StringBuilder()
-      .append("owner: ").append(owner)
-      .append(", group: ").append(group)
-      .append(", acl: {")
-      .append("entries: ").append(entries)
-      .append(", stickyBit: ").append(stickyBit)
-      .append('}')
-      .toString();
+        .append("owner: ").append(owner)
+        .append(", group: ").append(group)
+        .append(", acl: {")
+        .append("entries: ").append(entries)
+        .append(", stickyBit: ").append(stickyBit)
+        .append('}')
+        .toString();
   }
 
   /**
@@ -191,7 +191,7 @@ public class AclStatus {
    * @param permission permission of the path
    */
   private AclStatus(String owner, String group, boolean stickyBit,
-      Iterable<AclEntry> entries, FsPermission permission) {
+                    Iterable<AclEntry> entries, FsPermission permission) {
     this.owner = owner;
     this.group = group;
     this.stickyBit = stickyBit;
@@ -236,7 +236,7 @@ public class AclStatus {
         return entryPerm.and(permArg.getGroupAction());
       } else {
         Preconditions.checkArgument(this.entries.contains(entry)
-            && this.entries.size() >= 3,
+                && this.entries.size() >= 3,
             "Passed default ACL entry not found in the list of ACLs");
         // default mask entry for effective permission calculation will be the
         // penultimate entry. This can be mask entry in case of extended ACLs.

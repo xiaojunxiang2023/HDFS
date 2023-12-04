@@ -1,22 +1,23 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
-import static org.apache.hadoop.util.Time.monotonicNow;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.server.namenode.NameNode;
+import org.apache.hadoop.hdfs.server.namenode.Namesystem;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.apache.hadoop.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
-import org.apache.hadoop.hdfs.server.namenode.Namesystem;
-import org.apache.hadoop.util.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkArgument;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * Manages decommissioning and maintenance state for DataNodes. A background
@@ -67,7 +68,7 @@ public class DatanodeAdminManager {
   private DatanodeAdminMonitorInterface monitor = null;
 
   DatanodeAdminManager(final Namesystem namesystem,
-      final BlockManager blockManager, final HeartbeatManager hbManager) {
+                       final BlockManager blockManager, final HeartbeatManager hbManager) {
     this.namesystem = namesystem;
     this.blockManager = blockManager;
     this.hbManager = hbManager;
@@ -105,7 +106,7 @@ public class DatanodeAdminManager {
 
     checkArgument(blocksPerInterval > 0,
         "Must set a positive value for "
-        + DFSConfigKeys.DFS_NAMENODE_DECOMMISSION_BLOCKS_PER_INTERVAL_KEY);
+            + DFSConfigKeys.DFS_NAMENODE_DECOMMISSION_BLOCKS_PER_INTERVAL_KEY);
 
     final int maxConcurrentTrackedNodes = conf.getInt(
         DFSConfigKeys.DFS_NAMENODE_DECOMMISSION_MAX_CONCURRENT_TRACKED_NODES,
@@ -121,13 +122,13 @@ public class DatanodeAdminManager {
           DFSConfigKeys.DFS_NAMENODE_DECOMMISSION_MONITOR_CLASS,
           DatanodeAdminDefaultMonitor.class);
       monitor =
-          (DatanodeAdminMonitorInterface)ReflectionUtils.newInstance(cls, conf);
+          (DatanodeAdminMonitorInterface) ReflectionUtils.newInstance(cls, conf);
       monitor.setBlockManager(blockManager);
       monitor.setNameSystem(namesystem);
       monitor.setDatanodeAdminManager(this);
     } catch (Exception e) {
       throw new RuntimeException("Unable to create the Decommission monitor " +
-          "from "+cls, e);
+          "from " + cls, e);
     }
     executor.scheduleWithFixedDelay(monitor, intervalSecs, intervalSecs,
         TimeUnit.SECONDS);
@@ -145,7 +146,8 @@ public class DatanodeAdminManager {
     executor.shutdownNow();
     try {
       executor.awaitTermination(3000, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException e) {}
+    } catch (InterruptedException e) {
+    }
   }
 
   /**
@@ -200,7 +202,7 @@ public class DatanodeAdminManager {
    */
   @VisibleForTesting
   public void startMaintenance(DatanodeDescriptor node,
-      long maintenanceExpireTimeInMS) {
+                               long maintenanceExpireTimeInMS) {
     // Even if the node is already in maintenance, we still need to adjust
     // the expiration time.
     node.setMaintenanceExpireTimeInMS(maintenanceExpireTimeInMS);
@@ -290,9 +292,9 @@ public class DatanodeAdminManager {
    * @return true if sufficient, else false.
    */
   protected boolean isSufficient(BlockInfo block, BlockCollection bc,
-                               NumberReplicas numberReplicas,
-                               boolean isDecommission,
-                               boolean isMaintenance) {
+                                 NumberReplicas numberReplicas,
+                                 boolean isDecommission,
+                                 boolean isMaintenance) {
     if (blockManager.hasEnoughEffectiveReplicas(block, numberReplicas, 0)) {
       // Block has enough replica, skip
       LOG.trace("Block {} does not need replication.", block);
@@ -311,12 +313,12 @@ public class DatanodeAdminManager {
         // Can decom a UC block as long as there will still be minReplicas
         if (blockManager.hasMinStorage(block, numLive)) {
           LOG.trace("UC block {} sufficiently-replicated since numLive ({}) "
-              + ">= minR ({})", block, numLive,
+                  + ">= minR ({})", block, numLive,
               blockManager.getMinStorageNum(block));
           return true;
         } else {
           LOG.trace("UC block {} insufficiently-replicated since numLive "
-              + "({}) < minR ({})", block, numLive,
+                  + "({}) < minR ({})", block, numLive,
               blockManager.getMinStorageNum(block));
         }
       } else {
@@ -327,16 +329,16 @@ public class DatanodeAdminManager {
       }
     }
     if (isMaintenance
-      && numLive >= blockManager.getMinReplicationToBeInMaintenance()) {
+        && numLive >= blockManager.getMinReplicationToBeInMaintenance()) {
       return true;
     }
     return false;
   }
 
   protected void logBlockReplicationInfo(BlockInfo block,
-      BlockCollection bc,
-      DatanodeDescriptor srcNode, NumberReplicas num,
-      Iterable<DatanodeStorageInfo> storages) {
+                                         BlockCollection bc,
+                                         DatanodeDescriptor srcNode, NumberReplicas num,
+                                         Iterable<DatanodeStorageInfo> storages) {
     if (!NameNode.blockStateChangeLog.isInfoEnabled()) {
       return;
     }
@@ -350,22 +352,22 @@ public class DatanodeAdminManager {
     }
     NameNode.blockStateChangeLog.info(
         "Block: " + block + ", Expected Replicas: "
-        + curExpectedRedundancy + ", live replicas: " + curReplicas
-        + ", corrupt replicas: " + num.corruptReplicas()
-        + ", decommissioned replicas: " + num.decommissioned()
-        + ", decommissioning replicas: " + num.decommissioning()
-        + ", maintenance replicas: " + num.maintenanceReplicas()
-        + ", live entering maintenance replicas: "
-        + num.liveEnteringMaintenanceReplicas()
-        + ", replicas on stale nodes: " + num.replicasOnStaleNodes()
-        + ", readonly replicas: " + num.readOnlyReplicas()
-        + ", excess replicas: " + num.excessReplicas()
-        + ", Is Open File: " + bc.isUnderConstruction()
-        + ", Datanodes having this block: " + nodeList + ", Current Datanode: "
-        + srcNode + ", Is current datanode decommissioning: "
-        + srcNode.isDecommissionInProgress() +
-        ", Is current datanode entering maintenance: "
-        + srcNode.isEnteringMaintenance());
+            + curExpectedRedundancy + ", live replicas: " + curReplicas
+            + ", corrupt replicas: " + num.corruptReplicas()
+            + ", decommissioned replicas: " + num.decommissioned()
+            + ", decommissioning replicas: " + num.decommissioning()
+            + ", maintenance replicas: " + num.maintenanceReplicas()
+            + ", live entering maintenance replicas: "
+            + num.liveEnteringMaintenanceReplicas()
+            + ", replicas on stale nodes: " + num.replicasOnStaleNodes()
+            + ", readonly replicas: " + num.readOnlyReplicas()
+            + ", excess replicas: " + num.excessReplicas()
+            + ", Is Open File: " + bc.isUnderConstruction()
+            + ", Datanodes having this block: " + nodeList + ", Current Datanode: "
+            + srcNode + ", Is current datanode decommissioning: "
+            + srcNode.isDecommissionInProgress() +
+            ", Is current datanode entering maintenance: "
+            + srcNode.isEnteringMaintenance());
   }
 
   @VisibleForTesting

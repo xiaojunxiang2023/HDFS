@@ -1,16 +1,16 @@
 package org.apache.hadoop.auth.util;
 
 
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 // 用来解析 Principal名
@@ -49,14 +49,14 @@ public class KerberosName {
    * parameter with $n.
    */
   private static Pattern parameterPattern =
-    Pattern.compile("([^$]*)(\\$(\\d*))?");
+      Pattern.compile("([^$]*)(\\$(\\d*))?");
 
   /**
    * A pattern for parsing a auth_to_local rule.
    */
   private static final Pattern ruleParser =
-    Pattern.compile("\\s*((DEFAULT)|(RULE:\\[(\\d*):([^\\]]*)](\\(([^)]*)\\))?"+
-                    "(s/([^/]*)/([^/]*)/(g)?)?))/?(L)?");
+      Pattern.compile("\\s*((DEFAULT)|(RULE:\\[(\\d*):([^\\]]*)](\\(([^)]*)\\))?" +
+          "(s/([^/]*)/([^/]*)/(g)?)?))/?(L)?");
 
   /**
    * A pattern that recognizes simple/non-simple names.
@@ -196,7 +196,7 @@ public class KerberosName {
       this.format = format;
       this.match = match == null ? null : Pattern.compile(match);
       this.fromPattern =
-        fromPattern == null ? null : Pattern.compile(fromPattern);
+          fromPattern == null ? null : Pattern.compile(fromPattern);
       this.toPattern = toPattern;
       this.repeat = repeat;
       this.toLowerCase = toLowerCase;
@@ -257,13 +257,13 @@ public class KerberosName {
             int num = Integer.parseInt(paramNum);
             if (num < 0 || num >= params.length) {
               throw new BadFormatString("index " + num + " from " + format +
-                                        " is outside of the valid range 0 to " +
-                                        (params.length - 1));
+                  " is outside of the valid range 0 to " +
+                  (params.length - 1));
             }
             result.append(params[num]);
           } catch (NumberFormatException nfe) {
             throw new BadFormatString("bad format in username mapping in " +
-                                      paramNum, nfe);
+                paramNum, nfe);
           }
 
         }
@@ -312,15 +312,15 @@ public class KerberosName {
           if (fromPattern == null) {
             result = base;
           } else {
-            result = replaceSubstitution(base, fromPattern, toPattern,  repeat);
+            result = replaceSubstitution(base, fromPattern, toPattern, repeat);
           }
         }
       }
       if (result != null
-              && nonSimplePattern.matcher(result).find()
-              && ruleMechanism.equalsIgnoreCase(MECHANISM_HADOOP)) {
+          && nonSimplePattern.matcher(result).find()
+          && ruleMechanism.equalsIgnoreCase(MECHANISM_HADOOP)) {
         throw new NoMatchingRule("Non-simple name " + result +
-                                 " after auth_to_local rule " + this);
+            " after auth_to_local rule " + this);
       }
       if (toLowerCase && result != null) {
         result = result.toLowerCase(Locale.ENGLISH);
@@ -341,12 +341,12 @@ public class KerberosName {
         result.add(new Rule());
       } else {
         result.add(new Rule(Integer.parseInt(matcher.group(4)),
-                            matcher.group(5),
-                            matcher.group(7),
-                            matcher.group(9),
-                            matcher.group(10),
-                            "g".equals(matcher.group(11)),
-                            "L".equals(matcher.group(12))));
+            matcher.group(5),
+            matcher.group(7),
+            matcher.group(9),
+            matcher.group(10),
+            "g".equals(matcher.group(11)),
+            "L".equals(matcher.group(12))));
       }
       remaining = remaining.substring(matcher.end());
     }
@@ -358,6 +358,7 @@ public class KerberosName {
     BadFormatString(String msg) {
       super(msg);
     }
+
     BadFormatString(String msg, Throwable err) {
       super(msg, err);
     }
@@ -390,10 +391,10 @@ public class KerberosName {
     String ruleMechanism = this.ruleMechanism;
     if (ruleMechanism == null && rules != null) {
       LOG.warn("auth_to_local rule mechanism not set."
-      + "Using default of " + DEFAULT_MECHANISM);
+          + "Using default of " + DEFAULT_MECHANISM);
       ruleMechanism = DEFAULT_MECHANISM;
     }
-    for(Rule r: rules) {
+    for (Rule r : rules) {
       String result = r.apply(params, ruleMechanism);
       if (result != null) {
         return result;
@@ -456,8 +457,8 @@ public class KerberosName {
    */
   public static void setRuleMechanism(String ruleMech) {
     if (ruleMech != null
-            && (!ruleMech.equalsIgnoreCase(MECHANISM_HADOOP)
-            && !ruleMech.equalsIgnoreCase(MECHANISM_MIT))) {
+        && (!ruleMech.equalsIgnoreCase(MECHANISM_HADOOP)
+        && !ruleMech.equalsIgnoreCase(MECHANISM_MIT))) {
       throw new IllegalArgumentException("Invalid rule mechanism: " + ruleMech);
     }
     ruleMechanism = ruleMech;
@@ -473,7 +474,7 @@ public class KerberosName {
 
   static void printRules() throws IOException {
     int i = 0;
-    for(Rule r: rules) {
+    for (Rule r : rules) {
       System.out.println(++i + " " + r);
     }
   }

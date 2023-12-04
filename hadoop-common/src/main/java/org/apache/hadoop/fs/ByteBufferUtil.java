@@ -1,11 +1,12 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.io.ByteBufferPool;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import org.apache.hadoop.io.ByteBufferPool;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 public final class ByteBufferUtil {
 
   /**
@@ -18,7 +19,7 @@ public final class ByteBufferUtil {
     if (!(stream instanceof FSDataInputStream)) {
       return true;
     }
-    return ((FSDataInputStream)stream).getWrappedStream() 
+    return ((FSDataInputStream) stream).getWrappedStream()
         instanceof ByteBufferReadable;
   }
 
@@ -27,7 +28,7 @@ public final class ByteBufferUtil {
    */
   public static ByteBuffer fallbackRead(
       InputStream stream, ByteBufferPool bufferPool, int maxLength)
-          throws IOException {
+      throws IOException {
     if (bufferPool == null) {
       throw new UnsupportedOperationException("zero-copy reads " +
           "were not available, and you did not provide a fallback " +
@@ -49,7 +50,7 @@ public final class ByteBufferUtil {
       if (useDirect) {
         buffer.clear();
         buffer.limit(maxLength);
-        ByteBufferReadable readable = (ByteBufferReadable)stream;
+        ByteBufferReadable readable = (ByteBufferReadable) stream;
         int totalRead = 0;
         while (true) {
           if (totalRead >= maxLength) {

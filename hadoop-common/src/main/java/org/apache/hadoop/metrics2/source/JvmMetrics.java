@@ -1,31 +1,24 @@
 package org.apache.hadoop.metrics2.source;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
-import java.lang.management.GarbageCollectorMXBean;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.log.metrics.EventCounter;
-import org.apache.hadoop.metrics2.MetricsCollector;
-import org.apache.hadoop.metrics2.MetricsInfo;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
-import org.apache.hadoop.metrics2.MetricsSource;
-import org.apache.hadoop.metrics2.MetricsSystem;
+import org.apache.hadoop.metrics2.*;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.Interns;
-import static org.apache.hadoop.metrics2.source.JvmMetricsInfo.*;
-import static org.apache.hadoop.metrics2.impl.MsInfo.*;
-
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.GcTimeMonitor;
 import org.apache.hadoop.util.JvmPauseMonitor;
+
+import java.lang.management.*;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.apache.hadoop.metrics2.impl.MsInfo.ProcessName;
+import static org.apache.hadoop.metrics2.impl.MsInfo.SessionId;
+import static org.apache.hadoop.metrics2.source.JvmMetricsInfo.JvmMetrics;
+import static org.apache.hadoop.metrics2.source.JvmMetricsInfo.*;
 
 /**
  * JVM and logging related metrics.
@@ -51,7 +44,7 @@ public class JvmMetrics implements MetricsSource {
   }
 
   @VisibleForTesting
-  public synchronized void registerIfNeeded(){
+  public synchronized void registerIfNeeded() {
     // during tests impl might exist, but is not registered
     MetricsSystem ms = DefaultMetricsSystem.instance();
     if (ms.getSource("JvmMetrics") == null) {
@@ -59,7 +52,7 @@ public class JvmMetrics implements MetricsSource {
     }
   }
 
-  static final float M = 1024*1024;
+  static final float M = 1024 * 1024;
   static public final float MEMORY_MAX_UNLIMITED_MB = -1;
 
   final MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
@@ -100,7 +93,7 @@ public class JvmMetrics implements MetricsSource {
         CommonConfigurationKeys.HADOOP_METRICS_JVM_USE_THREAD_MXBEAN,
         CommonConfigurationKeys.HADOOP_METRICS_JVM_USE_THREAD_MXBEAN_DEFAULT);
     return ms.register(JvmMetrics.name(), JvmMetrics.description(),
-                       new JvmMetrics(processName, sessionId, useThreadMXBean));
+        new JvmMetrics(processName, sessionId, useThreadMXBean));
   }
 
   public static void reattach(MetricsSystem ms, JvmMetrics jvmMetrics) {
@@ -141,20 +134,20 @@ public class JvmMetrics implements MetricsSource {
     MemoryUsage memHeap = memoryMXBean.getHeapMemoryUsage();
     Runtime runtime = Runtime.getRuntime();
     rb.addGauge(MemNonHeapUsedM, memNonHeap.getUsed() / M)
-      .addGauge(MemNonHeapCommittedM, memNonHeap.getCommitted() / M)
-      .addGauge(MemNonHeapMaxM, calculateMaxMemoryUsage(memNonHeap))
-      .addGauge(MemHeapUsedM, memHeap.getUsed() / M)
-      .addGauge(MemHeapCommittedM, memHeap.getCommitted() / M)
-      .addGauge(MemHeapMaxM, calculateMaxMemoryUsage(memHeap))
-      .addGauge(MemMaxM, runtime.maxMemory() / M);
+        .addGauge(MemNonHeapCommittedM, memNonHeap.getCommitted() / M)
+        .addGauge(MemNonHeapMaxM, calculateMaxMemoryUsage(memNonHeap))
+        .addGauge(MemHeapUsedM, memHeap.getUsed() / M)
+        .addGauge(MemHeapCommittedM, memHeap.getCommitted() / M)
+        .addGauge(MemHeapMaxM, calculateMaxMemoryUsage(memHeap))
+        .addGauge(MemMaxM, runtime.maxMemory() / M);
   }
 
   private float calculateMaxMemoryUsage(MemoryUsage memHeap) {
-    long max =  memHeap.getMax() ;
+    long max = memHeap.getMax();
 
-     if (max == -1) {
-       return MEMORY_MAX_UNLIMITED_MB;
-     }
+    if (max == -1) {
+      return MEMORY_MAX_UNLIMITED_MB;
+    }
 
     return max / M;
   }
@@ -171,8 +164,8 @@ public class JvmMetrics implements MetricsSource {
       timeMillis += t;
     }
     rb.addCounter(GcCount, count)
-      .addCounter(GcTimeMillis, timeMillis);
-    
+        .addCounter(GcTimeMillis, timeMillis);
+
     if (pauseMonitor != null) {
       rb.addCounter(GcNumWarnThresholdExceeded,
           pauseMonitor.getNumGcWarnThresholdExceeded());
@@ -214,20 +207,32 @@ public class JvmMetrics implements MetricsSource {
     for (ThreadInfo threadInfo : threadMXBean.getThreadInfo(threadIds, 0)) {
       if (threadInfo == null) continue; // race protection
       switch (threadInfo.getThreadState()) {
-        case NEW:           threadsNew++;           break;
-        case RUNNABLE:      threadsRunnable++;      break;
-        case BLOCKED:       threadsBlocked++;       break;
-        case WAITING:       threadsWaiting++;       break;
-        case TIMED_WAITING: threadsTimedWaiting++;  break;
-        case TERMINATED:    threadsTerminated++;    break;
+        case NEW:
+          threadsNew++;
+          break;
+        case RUNNABLE:
+          threadsRunnable++;
+          break;
+        case BLOCKED:
+          threadsBlocked++;
+          break;
+        case WAITING:
+          threadsWaiting++;
+          break;
+        case TIMED_WAITING:
+          threadsTimedWaiting++;
+          break;
+        case TERMINATED:
+          threadsTerminated++;
+          break;
       }
     }
     rb.addGauge(ThreadsNew, threadsNew)
-      .addGauge(ThreadsRunnable, threadsRunnable)
-      .addGauge(ThreadsBlocked, threadsBlocked)
-      .addGauge(ThreadsWaiting, threadsWaiting)
-      .addGauge(ThreadsTimedWaiting, threadsTimedWaiting)
-      .addGauge(ThreadsTerminated, threadsTerminated);
+        .addGauge(ThreadsRunnable, threadsRunnable)
+        .addGauge(ThreadsBlocked, threadsBlocked)
+        .addGauge(ThreadsWaiting, threadsWaiting)
+        .addGauge(ThreadsTimedWaiting, threadsTimedWaiting)
+        .addGauge(ThreadsTerminated, threadsTerminated);
   }
 
   private void getThreadUsageFromGroup(MetricsRecordBuilder rb) {
@@ -246,13 +251,25 @@ public class JvmMetrics implements MetricsSource {
         continue;
       }
       switch (thread.getState()) {
-      case NEW:           threadsNew++;           break;
-      case RUNNABLE:      threadsRunnable++;      break;
-      case BLOCKED:       threadsBlocked++;       break;
-      case WAITING:       threadsWaiting++;       break;
-      case TIMED_WAITING: threadsTimedWaiting++;  break;
-      case TERMINATED:    threadsTerminated++;    break;
-      default:
+        case NEW:
+          threadsNew++;
+          break;
+        case RUNNABLE:
+          threadsRunnable++;
+          break;
+        case BLOCKED:
+          threadsBlocked++;
+          break;
+        case WAITING:
+          threadsWaiting++;
+          break;
+        case TIMED_WAITING:
+          threadsTimedWaiting++;
+          break;
+        case TERMINATED:
+          threadsTerminated++;
+          break;
+        default:
       }
     }
     rb.addGauge(ThreadsNew, threadsNew)
@@ -265,8 +282,8 @@ public class JvmMetrics implements MetricsSource {
 
   private void getEventCounters(MetricsRecordBuilder rb) {
     rb.addCounter(LogFatal, EventCounter.getFatal())
-      .addCounter(LogError, EventCounter.getError())
-      .addCounter(LogWarn, EventCounter.getWarn())
-      .addCounter(LogInfo, EventCounter.getInfo());
+        .addCounter(LogError, EventCounter.getError())
+        .addCounter(LogWarn, EventCounter.getWarn())
+        .addCounter(LogInfo, EventCounter.getInfo());
   }
 }

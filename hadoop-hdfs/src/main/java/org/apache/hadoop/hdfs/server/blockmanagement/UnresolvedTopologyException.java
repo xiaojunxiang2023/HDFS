@@ -9,7 +9,7 @@ import java.io.IOException;
 public class UnresolvedTopologyException extends IOException {
   /** for java.io.Serializable */
   private static final long serialVersionUID = 1L;
-  
+
   public UnresolvedTopologyException(String text) {
     super(text);
   }

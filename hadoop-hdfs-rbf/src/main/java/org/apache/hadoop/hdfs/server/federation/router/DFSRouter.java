@@ -14,35 +14,35 @@ import static org.apache.hadoop.util.ExitUtil.terminate;
 // 没啥逻辑，其实是靠调用 Router类
 public final class DFSRouter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DFSRouter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DFSRouter.class);
 
 
-    private static final String USAGE = "Usage: hdfs dfsrouter";
+  private static final String USAGE = "Usage: hdfs dfsrouter";
 
-    public static final int SHUTDOWN_HOOK_PRIORITY = 30;
+  public static final int SHUTDOWN_HOOK_PRIORITY = 30;
 
 
-    private DFSRouter() {
+  private DFSRouter() {
+  }
+
+  public static void main(String[] argv) {
+    if (DFSUtil.parseHelpArgument(argv, USAGE, System.out, true)) {
+      System.exit(0);
     }
 
-    public static void main(String[] argv) {
-        if (DFSUtil.parseHelpArgument(argv, USAGE, System.out, true)) {
-            System.exit(0);
-        }
+    try {
+      StringUtils.startupShutdownMessage(Router.class, argv, LOG);
+      Router router = new Router();
 
-        try {
-            StringUtils.startupShutdownMessage(Router.class, argv, LOG);
-            Router router = new Router();
+      ShutdownHookManager.get().addShutdownHook(new CompositeServiceShutdownHook(router), SHUTDOWN_HOOK_PRIORITY);
 
-            ShutdownHookManager.get().addShutdownHook(new CompositeServiceShutdownHook(router), SHUTDOWN_HOOK_PRIORITY);
-
-            Configuration conf = new HdfsConfiguration();
-            router.init(conf);
-            router.start();
-        } catch (Throwable e) {
-            LOG.error("Failed to start router", e);
-            terminate(1, e);
-        }
+      Configuration conf = new HdfsConfiguration();
+      router.init(conf);
+      router.start();
+    } catch (Throwable e) {
+      LOG.error("Failed to start router", e);
+      terminate(1, e);
     }
-    
+  }
+
 }

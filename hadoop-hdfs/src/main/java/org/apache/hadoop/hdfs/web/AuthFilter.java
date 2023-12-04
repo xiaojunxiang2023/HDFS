@@ -17,20 +17,20 @@ import java.io.IOException;
  */
 public class AuthFilter extends ProxyUserAuthenticationFilter {
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-                         FilterChain filterChain) throws IOException, ServletException {
-        final HttpServletRequest httpRequest = ProxyUserAuthenticationFilter.
-                toLowerCase((HttpServletRequest) request);
-        final String tokenString = httpRequest.getParameter(DelegationParam.NAME);
-        if (tokenString != null && httpRequest.getServletPath().startsWith(
-                WebHdfsFileSystem.PATH_PREFIX)) {
-            //Token is present in the url, therefore token will be used for
-            //authentication, bypass kerberos authentication.
-            filterChain.doFilter(httpRequest, response);
-            return;
-        }
-        super.doFilter(request, response, filterChain);
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response,
+                       FilterChain filterChain) throws IOException, ServletException {
+    final HttpServletRequest httpRequest = ProxyUserAuthenticationFilter.
+        toLowerCase((HttpServletRequest) request);
+    final String tokenString = httpRequest.getParameter(DelegationParam.NAME);
+    if (tokenString != null && httpRequest.getServletPath().startsWith(
+        WebHdfsFileSystem.PATH_PREFIX)) {
+      //Token is present in the url, therefore token will be used for
+      //authentication, bypass kerberos authentication.
+      filterChain.doFilter(httpRequest, response);
+      return;
     }
+    super.doFilter(request, response, filterChain);
+  }
 
 }

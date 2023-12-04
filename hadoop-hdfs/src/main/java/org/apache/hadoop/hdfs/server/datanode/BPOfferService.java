@@ -1,9 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
 import org.apache.hadoop.hdfs.protocol.Block;
@@ -14,7 +10,10 @@ import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
 import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.hdfs.server.protocol.BlockECReconstructionCommand.BlockECReconstructionInfo;
 import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
-
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 class BPOfferService {
   static final Logger LOG = DataNode.LOG;
-  
+
   /**
    * Information about the namespace that this service
    * is registering with. This is assigned after
@@ -62,13 +61,13 @@ class BPOfferService {
    * of the {@link #bpServices} list.
    */
   private BPServiceActor bpServiceToActive = null;
-  
+
   /**
    * The list of all actors for namenodes in this nameservice, regardless
    * of their active or standby states.
    */
   private final List<BPServiceActor> bpServices =
-    new CopyOnWriteArrayList<BPServiceActor>();
+      new CopyOnWriteArrayList<BPServiceActor>();
 
   /**
    * Each time we receive a heartbeat from a NN claiming to be ACTIVE,
@@ -82,7 +81,7 @@ class BPOfferService {
 
   private final ReentrantReadWriteLock mReadWriteLock =
       new ReentrantReadWriteLock();
-  private final Lock mReadLock  = mReadWriteLock.readLock();
+  private final Lock mReadLock = mReadWriteLock.readLock();
   private final Lock mWriteLock = mReadWriteLock.writeLock();
 
   // utility methods to acquire and release read lock and write lock
@@ -121,14 +120,14 @@ class BPOfferService {
   }
 
   void refreshNNList(String serviceId, List<String> nnIds,
-      ArrayList<InetSocketAddress> addrs,
-      ArrayList<InetSocketAddress> lifelineAddrs) throws IOException {
+                     ArrayList<InetSocketAddress> addrs,
+                     ArrayList<InetSocketAddress> lifelineAddrs) throws IOException {
     Set<InetSocketAddress> oldAddrs = Sets.newHashSet();
     for (BPServiceActor actor : bpServices) {
       oldAddrs.add(actor.getNNSocketAddress());
     }
     Set<InetSocketAddress> newAddrs = Sets.newHashSet(addrs);
-    
+
     // Process added NNs
     Set<InetSocketAddress> addedNNs = Sets.difference(newAddrs, oldAddrs);
     for (InetSocketAddress addedNN : addedNNs) {
@@ -158,7 +157,7 @@ class BPOfferService {
   boolean isInitialized() {
     return bpRegistration != null;
   }
-  
+
   /**
    * @return true if there is at least one actor thread running which is
    * talking to a NameNode.
@@ -266,7 +265,7 @@ class BPOfferService {
       readUnlock();
     }
   }
-  
+
   void reportBadBlocks(ExtendedBlock block,
                        String storageUuid, StorageType storageType) {
     checkBlock(block);
@@ -276,14 +275,14 @@ class BPOfferService {
       actor.bpThreadEnqueue(rbbAction);
     }
   }
-  
+
   /*
    * Informing the name node could take a long long time! Should we wait
    * till namenode is informed before responding with success to the
    * client? For now we don't.
    */
   void notifyNamenodeReceivedBlock(ExtendedBlock block, String delHint,
-      String storageUuid, boolean isOnTransientStorage) {
+                                   String storageUuid, boolean isOnTransientStorage) {
     notifyNamenodeBlock(block, BlockStatus.RECEIVED_BLOCK, delHint,
         storageUuid, isOnTransientStorage);
   }
@@ -299,7 +298,7 @@ class BPOfferService {
   }
 
   private void notifyNamenodeBlock(ExtendedBlock block, BlockStatus status,
-      String delHint, String storageUuid, boolean isOnTransientStorage) {
+                                   String delHint, String storageUuid, boolean isOnTransientStorage) {
     checkBlock(block);
     final ReceivedDeletedBlockInfo info = new ReceivedDeletedBlockInfo(
         block.getLocalBlock(), status, delHint);
@@ -326,14 +325,14 @@ class BPOfferService {
       actor.start();
     }
   }
-  
+
   //This must be called only by blockPoolManager.
   void stop() {
     for (BPServiceActor actor : bpServices) {
       actor.stop();
     }
   }
-  
+
   //This must be called only by blockPoolManager
   void join() {
     for (BPServiceActor actor : bpServices) {
@@ -353,10 +352,10 @@ class BPOfferService {
    * where a StandbyNode from a different cluster is specified)
    */
   void verifyAndSetNamespaceInfo(BPServiceActor actor, NamespaceInfo nsInfo)
-    throws IOException {
+      throws IOException {
     writeLock();
 
-    if(nsInfo.getState() == HAServiceState.ACTIVE
+    if (nsInfo.getState() == HAServiceState.ACTIVE
         && bpServiceToActive == null) {
       LOG.info("Acknowledging ACTIVE Namenode during handshake" + actor);
       bpServiceToActive = actor;
@@ -393,7 +392,7 @@ class BPOfferService {
    * is consistent with other NNs serving the block-pool.
    */
   void registrationSucceeded(BPServiceActor bpServiceActor,
-      DatanodeRegistration reg) throws IOException {
+                             DatanodeRegistration reg) throws IOException {
     writeLock();
     try {
       if (bpRegistration != null) {
@@ -424,7 +423,7 @@ class BPOfferService {
       String idHelpText) throws IOException {
     if (!ourID.equals(theirID)) {
       throw new IOException(idHelpText + " mismatch: " +
-          "previously connected to " + idHelpText + " " + ourID + 
+          "previously connected to " + idHelpText + " " + ourID +
           " but now connected to " + idHelpText + " " + theirID);
     }
   }
@@ -466,7 +465,7 @@ class BPOfferService {
    */
   void trySendErrorReport(int errCode, String errMsg) {
     for (BPServiceActor actor : bpServices) {
-      ErrorReportAction errorReportAction = new ErrorReportAction 
+      ErrorReportAction errorReportAction = new ErrorReportAction
           (errCode, errMsg);
       actor.bpThreadEnqueue(errorReportAction);
     }
@@ -517,7 +516,7 @@ class BPOfferService {
   List<BPServiceActor> getBPServiceActors() {
     return Lists.newArrayList(bpServices);
   }
-  
+
   /**
    * Signal the current rolling upgrade status as indicated by the NN.
    * @param rollingUpgradeStatus rolling upgrade status
@@ -540,7 +539,7 @@ class BPOfferService {
   /**
    * Update the BPOS's view of which NN is active, based on a heartbeat
    * response from one of the actors.
-   * 
+   *
    * @param actor the actor which received the heartbeat
    * @param nnHaState the HA-related heartbeat contents
    */
@@ -603,7 +602,7 @@ class BPOfferService {
     }
     return false;
   }
-  
+
   @VisibleForTesting
   int countNameNodes() {
     return bpServices.size();
@@ -640,7 +639,7 @@ class BPOfferService {
   }
 
   boolean processCommandFromActor(DatanodeCommand cmd,
-      BPServiceActor actor) throws IOException {
+                                  BPServiceActor actor) throws IOException {
     assert bpServices.contains(actor);
     if (cmd == null) {
       return true;
@@ -688,131 +687,131 @@ class BPOfferService {
   /**
    * This method should handle all commands from Active namenode except
    * DNA_REGISTER which should be handled earlier itself.
-   * 
+   *
    * @param cmd
    * @return true if further processing may be required or false otherwise. 
    * @throws IOException
    */
   private boolean processCommandFromActive(DatanodeCommand cmd,
-      BPServiceActor actor) throws IOException {
-    final BlockCommand bcmd = 
-      cmd instanceof BlockCommand? (BlockCommand)cmd: null;
-    final BlockIdCommand blockIdCmd = 
-      cmd instanceof BlockIdCommand ? (BlockIdCommand)cmd: null;
+                                           BPServiceActor actor) throws IOException {
+    final BlockCommand bcmd =
+        cmd instanceof BlockCommand ? (BlockCommand) cmd : null;
+    final BlockIdCommand blockIdCmd =
+        cmd instanceof BlockIdCommand ? (BlockIdCommand) cmd : null;
 
-    switch(cmd.getAction()) {
-    case DatanodeProtocol.DNA_TRANSFER:
-      // Send a copy of a block to another datanode
-      dn.transferBlocks(bcmd.getBlockPoolId(), bcmd.getBlocks(),
-          bcmd.getTargets(), bcmd.getTargetStorageTypes(),
-          bcmd.getTargetStorageIDs());
-      break;
-    case DatanodeProtocol.DNA_INVALIDATE:
-      //
-      // Some local block(s) are obsolete and can be 
-      // safely garbage-collected.
-      //
-      Block toDelete[] = bcmd.getBlocks();
-      try {
-        // using global fsdataset
-        dn.getFSDataset().invalidate(bcmd.getBlockPoolId(), toDelete);
-      } catch(IOException e) {
-        // Exceptions caught here are not expected to be disk-related.
-        throw e;
-      }
-      dn.metrics.incrBlocksRemoved(toDelete.length);
-      break;
-    case DatanodeProtocol.DNA_CACHE:
-      LOG.info("DatanodeCommand action: DNA_CACHE for " +
-        blockIdCmd.getBlockPoolId() + " of [" +
-          blockIdArrayToString(blockIdCmd.getBlockIds()) + "]");
-      dn.getFSDataset().cache(blockIdCmd.getBlockPoolId(), blockIdCmd.getBlockIds());
-      break;
-    case DatanodeProtocol.DNA_UNCACHE:
-      LOG.info("DatanodeCommand action: DNA_UNCACHE for " +
-        blockIdCmd.getBlockPoolId() + " of [" +
-          blockIdArrayToString(blockIdCmd.getBlockIds()) + "]");
-      dn.getFSDataset().uncache(blockIdCmd.getBlockPoolId(), blockIdCmd.getBlockIds());
-      break;
-    case DatanodeProtocol.DNA_SHUTDOWN:
-      // TODO: DNA_SHUTDOWN appears to be unused - the NN never sends this command
-      // See HDFS-2987.
-      throw new UnsupportedOperationException("Received unimplemented DNA_SHUTDOWN");
-    case DatanodeProtocol.DNA_FINALIZE:
-      String bp = ((FinalizeCommand) cmd).getBlockPoolId();
-      LOG.info("Got finalize command for block pool " + bp);
-      assert getBlockPoolId().equals(bp) :
-        "BP " + getBlockPoolId() + " received DNA_FINALIZE " +
-        "for other block pool " + bp;
+    switch (cmd.getAction()) {
+      case DatanodeProtocol.DNA_TRANSFER:
+        // Send a copy of a block to another datanode
+        dn.transferBlocks(bcmd.getBlockPoolId(), bcmd.getBlocks(),
+            bcmd.getTargets(), bcmd.getTargetStorageTypes(),
+            bcmd.getTargetStorageIDs());
+        break;
+      case DatanodeProtocol.DNA_INVALIDATE:
+        //
+        // Some local block(s) are obsolete and can be 
+        // safely garbage-collected.
+        //
+        Block toDelete[] = bcmd.getBlocks();
+        try {
+          // using global fsdataset
+          dn.getFSDataset().invalidate(bcmd.getBlockPoolId(), toDelete);
+        } catch (IOException e) {
+          // Exceptions caught here are not expected to be disk-related.
+          throw e;
+        }
+        dn.metrics.incrBlocksRemoved(toDelete.length);
+        break;
+      case DatanodeProtocol.DNA_CACHE:
+        LOG.info("DatanodeCommand action: DNA_CACHE for " +
+            blockIdCmd.getBlockPoolId() + " of [" +
+            blockIdArrayToString(blockIdCmd.getBlockIds()) + "]");
+        dn.getFSDataset().cache(blockIdCmd.getBlockPoolId(), blockIdCmd.getBlockIds());
+        break;
+      case DatanodeProtocol.DNA_UNCACHE:
+        LOG.info("DatanodeCommand action: DNA_UNCACHE for " +
+            blockIdCmd.getBlockPoolId() + " of [" +
+            blockIdArrayToString(blockIdCmd.getBlockIds()) + "]");
+        dn.getFSDataset().uncache(blockIdCmd.getBlockPoolId(), blockIdCmd.getBlockIds());
+        break;
+      case DatanodeProtocol.DNA_SHUTDOWN:
+        // TODO: DNA_SHUTDOWN appears to be unused - the NN never sends this command
+        // See HDFS-2987.
+        throw new UnsupportedOperationException("Received unimplemented DNA_SHUTDOWN");
+      case DatanodeProtocol.DNA_FINALIZE:
+        String bp = ((FinalizeCommand) cmd).getBlockPoolId();
+        LOG.info("Got finalize command for block pool " + bp);
+        assert getBlockPoolId().equals(bp) :
+            "BP " + getBlockPoolId() + " received DNA_FINALIZE " +
+                "for other block pool " + bp;
 
-      dn.finalizeUpgradeForPool(bp);
-      break;
-    case DatanodeProtocol.DNA_RECOVERBLOCK:
-      String who = "NameNode at " + actor.getNNSocketAddress();
-      dn.getBlockRecoveryWorker().recoverBlocks(who,
-          ((BlockRecoveryCommand)cmd).getRecoveringBlocks());
-      break;
-    case DatanodeProtocol.DNA_ACCESSKEYUPDATE:
-      LOG.info("DatanodeCommand action: DNA_ACCESSKEYUPDATE");
-      if (dn.isBlockTokenEnabled) {
-        dn.blockPoolTokenSecretManager.addKeys(
-            getBlockPoolId(), 
-            ((KeyUpdateCommand) cmd).getExportedKeys());
-      }
-      break;
-    case DatanodeProtocol.DNA_BALANCERBANDWIDTHUPDATE:
-      LOG.info("DatanodeCommand action: DNA_BALANCERBANDWIDTHUPDATE");
-      long bandwidth =
-                 ((BalancerBandwidthCommand) cmd).getBalancerBandwidthValue();
-      if (bandwidth > 0) {
-        DataXceiverServer dxcs =
-                     (DataXceiverServer) dn.dataXceiverServer.getRunnable();
-        LOG.info("Updating balance throttler bandwidth from "
-            + dxcs.balanceThrottler.getBandwidth() + " bytes/s "
-            + "to: " + bandwidth + " bytes/s.");
-        dxcs.balanceThrottler.setBandwidth(bandwidth);
-      }
-      break;
-    case DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION:
-      LOG.info("DatanodeCommand action: DNA_ERASURE_CODING_RECOVERY");
-      Collection<BlockECReconstructionInfo> ecTasks =
-          ((BlockECReconstructionCommand) cmd).getECTasks();
-      dn.getErasureCodingWorker().processErasureCodingTasks(ecTasks);
-      break;
-    default:
-      LOG.warn("Unknown DatanodeCommand action: " + cmd.getAction());
+        dn.finalizeUpgradeForPool(bp);
+        break;
+      case DatanodeProtocol.DNA_RECOVERBLOCK:
+        String who = "NameNode at " + actor.getNNSocketAddress();
+        dn.getBlockRecoveryWorker().recoverBlocks(who,
+            ((BlockRecoveryCommand) cmd).getRecoveringBlocks());
+        break;
+      case DatanodeProtocol.DNA_ACCESSKEYUPDATE:
+        LOG.info("DatanodeCommand action: DNA_ACCESSKEYUPDATE");
+        if (dn.isBlockTokenEnabled) {
+          dn.blockPoolTokenSecretManager.addKeys(
+              getBlockPoolId(),
+              ((KeyUpdateCommand) cmd).getExportedKeys());
+        }
+        break;
+      case DatanodeProtocol.DNA_BALANCERBANDWIDTHUPDATE:
+        LOG.info("DatanodeCommand action: DNA_BALANCERBANDWIDTHUPDATE");
+        long bandwidth =
+            ((BalancerBandwidthCommand) cmd).getBalancerBandwidthValue();
+        if (bandwidth > 0) {
+          DataXceiverServer dxcs =
+              (DataXceiverServer) dn.dataXceiverServer.getRunnable();
+          LOG.info("Updating balance throttler bandwidth from "
+              + dxcs.balanceThrottler.getBandwidth() + " bytes/s "
+              + "to: " + bandwidth + " bytes/s.");
+          dxcs.balanceThrottler.setBandwidth(bandwidth);
+        }
+        break;
+      case DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION:
+        LOG.info("DatanodeCommand action: DNA_ERASURE_CODING_RECOVERY");
+        Collection<BlockECReconstructionInfo> ecTasks =
+            ((BlockECReconstructionCommand) cmd).getECTasks();
+        dn.getErasureCodingWorker().processErasureCodingTasks(ecTasks);
+        break;
+      default:
+        LOG.warn("Unknown DatanodeCommand action: " + cmd.getAction());
     }
     return true;
   }
- 
+
   /**
    * This method should handle commands from Standby namenode except
    * DNA_REGISTER which should be handled earlier itself.
    */
   private boolean processCommandFromStandby(DatanodeCommand cmd,
-      BPServiceActor actor) throws IOException {
-    switch(cmd.getAction()) {
-    case DatanodeProtocol.DNA_ACCESSKEYUPDATE:
-      LOG.info("DatanodeCommand action from standby: DNA_ACCESSKEYUPDATE");
-      if (dn.isBlockTokenEnabled) {
-        dn.blockPoolTokenSecretManager.addKeys(
-            getBlockPoolId(), 
-            ((KeyUpdateCommand) cmd).getExportedKeys());
-      }
-      break;
-    case DatanodeProtocol.DNA_TRANSFER:
-    case DatanodeProtocol.DNA_INVALIDATE:
-    case DatanodeProtocol.DNA_SHUTDOWN:
-    case DatanodeProtocol.DNA_FINALIZE:
-    case DatanodeProtocol.DNA_RECOVERBLOCK:
-    case DatanodeProtocol.DNA_BALANCERBANDWIDTHUPDATE:
-    case DatanodeProtocol.DNA_CACHE:
-    case DatanodeProtocol.DNA_UNCACHE:
-    case DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION:
-      LOG.warn("Got a command from standby NN - ignoring command:" + cmd.getAction());
-      break;
-    default:
-      LOG.warn("Unknown DatanodeCommand action: " + cmd.getAction());
+                                            BPServiceActor actor) throws IOException {
+    switch (cmd.getAction()) {
+      case DatanodeProtocol.DNA_ACCESSKEYUPDATE:
+        LOG.info("DatanodeCommand action from standby: DNA_ACCESSKEYUPDATE");
+        if (dn.isBlockTokenEnabled) {
+          dn.blockPoolTokenSecretManager.addKeys(
+              getBlockPoolId(),
+              ((KeyUpdateCommand) cmd).getExportedKeys());
+        }
+        break;
+      case DatanodeProtocol.DNA_TRANSFER:
+      case DatanodeProtocol.DNA_INVALIDATE:
+      case DatanodeProtocol.DNA_SHUTDOWN:
+      case DatanodeProtocol.DNA_FINALIZE:
+      case DatanodeProtocol.DNA_RECOVERBLOCK:
+      case DatanodeProtocol.DNA_BALANCERBANDWIDTHUPDATE:
+      case DatanodeProtocol.DNA_CACHE:
+      case DatanodeProtocol.DNA_UNCACHE:
+      case DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION:
+        LOG.warn("Got a command from standby NN - ignoring command:" + cmd.getAction());
+        break;
+      default:
+        LOG.warn("Unknown DatanodeCommand action: " + cmd.getAction());
     }
     return true;
   }

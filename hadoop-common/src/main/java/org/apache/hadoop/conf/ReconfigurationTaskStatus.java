@@ -1,4 +1,5 @@
 package org.apache.hadoop.conf;
+
 import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ public class ReconfigurationTaskStatus {
   final Map<ReconfigurationUtil.PropertyChange, Optional<String>> status;
 
   public ReconfigurationTaskStatus(long startTime, long endTime,
-      Map<ReconfigurationUtil.PropertyChange, Optional<String>> status) {
+                                   Map<ReconfigurationUtil.PropertyChange, Optional<String>> status) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.status = status;

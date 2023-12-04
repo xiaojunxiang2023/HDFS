@@ -1,11 +1,11 @@
 package org.apache.hadoop.fs.shell.find;
 
-import java.io.IOException;
-import java.util.Deque;
-
 import org.apache.hadoop.fs.GlobPattern;
 import org.apache.hadoop.fs.shell.PathData;
 import org.apache.hadoop.util.StringUtils;
+
+import java.io.IOException;
+import java.util.Deque;
 
 /**
  * Implements the -name expression for the
@@ -19,11 +19,11 @@ final class Name extends BaseExpression {
     factory.addClass(Iname.class, "-iname");
   }
 
-  private static final String[] USAGE = { "-name pattern", "-iname pattern" };
+  private static final String[] USAGE = {"-name pattern", "-iname pattern"};
   private static final String[] HELP = {
       "Evaluates as true if the basename of the file matches the",
       "pattern using standard file system globbing.",
-      "If -iname is used then the match is case insensitive." };
+      "If -iname is used then the match is case insensitive."};
   private GlobPattern globPattern;
   private boolean caseSensitive = true;
 

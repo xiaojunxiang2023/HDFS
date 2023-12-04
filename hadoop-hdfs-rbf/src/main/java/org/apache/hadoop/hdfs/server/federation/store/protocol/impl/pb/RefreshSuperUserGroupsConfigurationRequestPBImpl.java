@@ -14,36 +14,36 @@ import java.io.IOException;
  * RefreshSuperUserGroupsConfigurationRequest.
  */
 public class RefreshSuperUserGroupsConfigurationRequestPBImpl
-        extends RefreshSuperUserGroupsConfigurationRequest
-        implements PBRecord {
+    extends RefreshSuperUserGroupsConfigurationRequest
+    implements PBRecord {
 
-    private FederationProtocolPBTranslator<
-            RefreshSuperUserGroupsConfigurationRequestProto, Builder,
-            RefreshSuperUserGroupsConfigurationRequestProtoOrBuilder> translator =
-            new FederationProtocolPBTranslator<>(
-                    RefreshSuperUserGroupsConfigurationRequestProto.class);
+  private FederationProtocolPBTranslator<
+      RefreshSuperUserGroupsConfigurationRequestProto, Builder,
+      RefreshSuperUserGroupsConfigurationRequestProtoOrBuilder> translator =
+      new FederationProtocolPBTranslator<>(
+          RefreshSuperUserGroupsConfigurationRequestProto.class);
 
-    public RefreshSuperUserGroupsConfigurationRequestPBImpl() {
-    }
+  public RefreshSuperUserGroupsConfigurationRequestPBImpl() {
+  }
 
-    public RefreshSuperUserGroupsConfigurationRequestPBImpl(
-            RefreshSuperUserGroupsConfigurationRequestProto proto) {
-        this.translator.setProto(proto);
-    }
+  public RefreshSuperUserGroupsConfigurationRequestPBImpl(
+      RefreshSuperUserGroupsConfigurationRequestProto proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public RefreshSuperUserGroupsConfigurationRequestProto getProto() {
-        this.translator.getBuilder();
-        return this.translator.build();
-    }
+  @Override
+  public RefreshSuperUserGroupsConfigurationRequestProto getProto() {
+    this.translator.getBuilder();
+    return this.translator.build();
+  }
 
-    @Override
-    public void setProto(Message proto) {
-        this.translator.setProto(proto);
-    }
+  @Override
+  public void setProto(Message proto) {
+    this.translator.setProto(proto);
+  }
 
-    @Override
-    public void readInstance(String base64String) throws IOException {
-        this.translator.readInstance(base64String);
-    }
+  @Override
+  public void readInstance(String base64String) throws IOException {
+    this.translator.readInstance(base64String);
+  }
 }

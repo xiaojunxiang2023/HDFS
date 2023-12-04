@@ -1,15 +1,14 @@
 package org.apache.hadoop.io.retry;
 
+import org.apache.hadoop.ipc.Client;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.ipc.Client;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.Time;
 import org.apache.hadoop.util.concurrent.AsyncGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InterruptedIOException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Queue;
@@ -31,8 +30,8 @@ public class AsyncCallHandler {
 
   /** @return the async return value from {@link AsyncCallHandler}. */
   @SuppressWarnings("unchecked")
-  public static <R, T extends  Throwable> AsyncGet<R, T> getAsyncReturn() {
-    final AsyncGet<R, T> asyncGet = (AsyncGet<R, T>)ASYNC_RETURN.get();
+  public static <R, T extends Throwable> AsyncGet<R, T> getAsyncReturn() {
+    final AsyncGet<R, T> asyncGet = (AsyncGet<R, T>) ASYNC_RETURN.get();
     if (asyncGet != null) {
       ASYNC_RETURN.set(null);
       return asyncGet;
@@ -99,7 +98,7 @@ public class AsyncCallHandler {
       final long startTime = Time.monotonicNow();
       long minWaitTime = Processor.MAX_WAIT_PERIOD;
 
-      for (final Iterator<AsyncCall> i = queue.iterator(); i.hasNext();) {
+      for (final Iterator<AsyncCall> i = queue.iterator(); i.hasNext(); ) {
         final AsyncCall c = i.next();
         if (c.isDone()) {
           i.remove(); // the call is done, remove it from the queue.
@@ -116,7 +115,7 @@ public class AsyncCallHandler {
 
     /** Process the async calls in the queue. */
     private class Processor {
-      static final long GRACE_PERIOD = 3*1000L;
+      static final long GRACE_PERIOD = 3 * 1000L;
       static final long MAX_WAIT_PERIOD = 100L;
 
       private final AtomicReference<Thread> running = new AtomicReference<>();
@@ -131,7 +130,7 @@ public class AsyncCallHandler {
           final Daemon daemon = new Daemon() {
             @Override
             public void run() {
-              for (; isRunning(this);) {
+              for (; isRunning(this); ) {
                 final long waitTime = checkCalls();
                 tryStop(this);
 

@@ -2,14 +2,7 @@ package org.apache.hadoop.fs.http;
 
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonPathCapabilities;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PositionedReadable;
-import org.apache.hadoop.fs.Seekable;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.util.Progressable;
 
@@ -105,10 +98,10 @@ abstract class AbstractHttpFileSystem extends FileSystem {
   public boolean hasPathCapability(final Path path, final String capability)
       throws IOException {
     switch (validatePathCapabilityArgs(path, capability)) {
-    case CommonPathCapabilities.FS_READ_ONLY_CONNECTOR:
-      return true;
-    default:
-      return super.hasPathCapability(path, capability);
+      case CommonPathCapabilities.FS_READ_ONLY_CONNECTOR:
+        return true;
+      default:
+        return super.hasPathCapability(path, capability);
     }
   }
 

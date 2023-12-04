@@ -1,14 +1,15 @@
 package org.apache.hadoop.hdfs.server.protocol;
+
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
 
 /**
  * Information sent by a subordinate name-node to the active name-node
  * during the registration process. 
  */
 public class NamenodeRegistration extends StorageInfo
-implements NodeRegistration {
+    implements NodeRegistration {
   final String rpcAddress;          // RPC address of the node
   final String httpAddress;         // HTTP address of the node
   final NamenodeRole role;          // node role
@@ -27,11 +28,11 @@ implements NodeRegistration {
   public String getAddress() {
     return rpcAddress;
   }
-  
+
   public String getHttpAddress() {
     return httpAddress;
   }
-  
+
   @Override // NodeRegistration
   public String getRegistrationID() {
     return Storage.getRegistrationID(this);
@@ -45,9 +46,9 @@ implements NodeRegistration {
   @Override // NodeRegistration
   public String toString() {
     return getClass().getSimpleName()
-    + "(" + rpcAddress
-    + ", role=" + getRole()
-    + ")";
+        + "(" + rpcAddress
+        + ", role=" + getRole()
+        + ")";
   }
 
   /**

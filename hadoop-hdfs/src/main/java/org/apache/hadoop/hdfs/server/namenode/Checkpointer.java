@@ -1,8 +1,16 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_BACKUP_HTTP_ADDRESS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_BACKUP_HTTP_ADDRESS_KEY;
-import static org.apache.hadoop.util.Time.monotonicNow;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hdfs.DFSUtil;
+import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
+import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
+import org.apache.hadoop.hdfs.server.protocol.*;
+import org.apache.hadoop.io.MD5Hash;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.thirdparty.com.google.common.math.LongMath;
+import org.apache.hadoop.util.Daemon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,22 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import org.apache.hadoop.thirdparty.com.google.common.math.LongMath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
-import org.apache.hadoop.hdfs.server.namenode.NNStorage.NameNodeFile;
-import org.apache.hadoop.hdfs.server.protocol.CheckpointCommand;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeCommand;
-import org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol;
-import org.apache.hadoop.hdfs.server.protocol.RemoteEditLog;
-import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
-import org.apache.hadoop.io.MD5Hash;
-import org.apache.hadoop.util.Daemon;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_BACKUP_HTTP_ADDRESS_DEFAULT;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_BACKUP_HTTP_ADDRESS_KEY;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * The Checkpointer is responsible for supporting periodic checkpoints 
@@ -52,22 +47,22 @@ class Checkpointer extends Daemon {
   private final Configuration conf;
 
   private BackupImage getFSImage() {
-    return (BackupImage)backupNode.getFSImage();
+    return (BackupImage) backupNode.getFSImage();
   }
 
-  private NamenodeProtocol getRemoteNamenodeProxy(){
+  private NamenodeProtocol getRemoteNamenodeProxy() {
     return backupNode.namenode;
   }
 
   /**
    * Create a connection to the primary namenode.
    */
-  Checkpointer(Configuration conf, BackupNode bnNode)  throws IOException {
+  Checkpointer(Configuration conf, BackupNode bnNode) throws IOException {
     this.conf = conf;
     this.backupNode = bnNode;
     try {
       initialize(conf);
-    } catch(IOException e) {
+    } catch (IOException e) {
       LOG.warn("Checkpointer got exception", e);
       shutdown();
       throw e;
@@ -85,16 +80,16 @@ class Checkpointer extends Daemon {
     checkpointConf = new CheckpointConf(conf);
 
     // Pull out exact http address for posting url to avoid ip aliasing issues
-    String fullInfoAddr = conf.get(DFS_NAMENODE_BACKUP_HTTP_ADDRESS_KEY, 
-                                   DFS_NAMENODE_BACKUP_HTTP_ADDRESS_DEFAULT);
+    String fullInfoAddr = conf.get(DFS_NAMENODE_BACKUP_HTTP_ADDRESS_KEY,
+        DFS_NAMENODE_BACKUP_HTTP_ADDRESS_DEFAULT);
     infoBindAddress = fullInfoAddr.substring(0, fullInfoAddr.indexOf(":"));
 
     LOG.info("Checkpoint Period : " +
-             checkpointConf.getPeriod() + " secs " +
-             "(" + checkpointConf.getPeriod()/60 + " min)");
+        checkpointConf.getPeriod() + " secs " +
+        "(" + checkpointConf.getPeriod() / 60 + " min)");
     LOG.info("Transactions count is  : " +
-             checkpointConf.getTxnCount() +
-             ", to trigger checkpoint");
+        checkpointConf.getTxnCount() +
+        ", to trigger checkpoint");
   }
 
   /**
@@ -116,37 +111,37 @@ class Checkpointer extends Daemon {
     long checkpointPeriodMSec = checkpointConf.getPeriod() * 1000;
 
     long lastCheckpointTime = 0;
-    long lastEditLogCheckTime =0;
+    long lastEditLogCheckTime = 0;
     if (!backupNode.shouldCheckpointAtStartup()) {
       lastCheckpointTime = monotonicNow();
     }
-    while(shouldRun) {
+    while (shouldRun) {
       try {
         long now = monotonicNow();
         boolean shouldCheckpoint = false;
-        if(now >= lastCheckpointTime + checkpointPeriodMSec) {
+        if (now >= lastCheckpointTime + checkpointPeriodMSec) {
           shouldCheckpoint = true;
-        } else if(now >= lastEditLogCheckTime + periodMSec) {
+        } else if (now >= lastEditLogCheckTime + periodMSec) {
           long txns = countUncheckpointedTxns();
           lastEditLogCheckTime = now;
-          if(txns >= checkpointConf.getTxnCount())
+          if (txns >= checkpointConf.getTxnCount())
             shouldCheckpoint = true;
         }
-        if(shouldCheckpoint) {
+        if (shouldCheckpoint) {
           doCheckpoint();
           lastCheckpointTime = now;
           lastEditLogCheckTime = now;
         }
-      } catch(IOException e) {
+      } catch (IOException e) {
         LOG.error("Exception in doCheckpoint: ", e);
-      } catch(Throwable e) {
+      } catch (Throwable e) {
         LOG.error("Throwable Exception in doCheckpoint: ", e);
         shutdown();
         break;
       }
       try {
         Thread.sleep(LongMath.gcd(periodMSec, checkpointPeriodMSec));
-      } catch(InterruptedException ie) {
+      } catch (InterruptedException ie) {
         // do nothing
       }
     }
@@ -155,7 +150,7 @@ class Checkpointer extends Daemon {
   private long countUncheckpointedTxns() throws IOException {
     long curTxId = getRemoteNamenodeProxy().getTransactionID();
     long uncheckpointedTxns = curTxId -
-      getFSImage().getStorage().getMostRecentCheckpointTxId();
+        getFSImage().getStorage().getMostRecentCheckpointTxId();
     assert uncheckpointedTxns >= 0;
     return uncheckpointedTxns;
   }
@@ -169,24 +164,24 @@ class Checkpointer extends Daemon {
 
     long startTime = monotonicNow();
     bnImage.freezeNamespaceAtNextRoll();
-    
-    NamenodeCommand cmd = 
-      getRemoteNamenodeProxy().startCheckpoint(backupNode.getRegistration());
+
+    NamenodeCommand cmd =
+        getRemoteNamenodeProxy().startCheckpoint(backupNode.getRegistration());
     CheckpointCommand cpCmd = null;
-    switch(cmd.getAction()) {
+    switch (cmd.getAction()) {
       case NamenodeProtocol.ACT_SHUTDOWN:
         shutdown();
         throw new IOException("Name-node " + backupNode.nnRpcAddress
-                                           + " requested shutdown.");
+            + " requested shutdown.");
       case NamenodeProtocol.ACT_CHECKPOINT:
-        cpCmd = (CheckpointCommand)cmd;
+        cpCmd = (CheckpointCommand) cmd;
         break;
       default:
-        throw new IOException("Unsupported NamenodeCommand: "+cmd.getAction());
+        throw new IOException("Unsupported NamenodeCommand: " + cmd.getAction());
     }
 
     bnImage.waitUntilNamespaceFrozen();
-    
+
     CheckpointSignature sig = cpCmd.getSignature();
 
     // Make sure we're talking to the same NN!
@@ -195,7 +190,7 @@ class Checkpointer extends Daemon {
     long lastApplied = bnImage.getLastAppliedTxId();
     LOG.debug("Doing checkpoint. Last applied: " + lastApplied);
     RemoteEditLogManifest manifest =
-      getRemoteNamenodeProxy().getEditLogManifest(bnImage.getLastAppliedTxId() + 1);
+        getRemoteNamenodeProxy().getEditLogManifest(bnImage.getLastAppliedTxId() + 1);
 
     boolean needReloadImage = false;
     if (!manifest.getLogs().isEmpty()) {
@@ -217,14 +212,14 @@ class Checkpointer extends Daemon {
       if (firstRemoteLog.getStartTxId() > lastApplied + 1) {
         throw new IOException("No logs to roll forward from " + lastApplied);
       }
-  
+
       // get edits files
       for (RemoteEditLog log : manifest.getLogs()) {
         TransferFsImage.downloadEditsToStorage(
             backupNode.nnHttpAddress, log, bnStorage);
       }
 
-      if(needReloadImage) {
+      if (needReloadImage) {
         LOG.info("Loading image with txid " + sig.mostRecentCheckpointTxId);
         File file = bnStorage.findImageFile(NameNodeFile.IMAGE,
             sig.mostRecentCheckpointTxId);
@@ -232,13 +227,13 @@ class Checkpointer extends Daemon {
       }
       rollForwardByApplyingLogs(manifest, bnImage, backupNode.getNamesystem());
     }
-    
+
     long txid = bnImage.getLastAppliedTxId();
-    
+
     backupNode.namesystem.writeLock();
     try {
       backupNode.namesystem.setImageLoaded();
-      if(backupNode.namesystem.getBlocksTotal() > 0) {
+      if (backupNode.namesystem.getBlocksTotal() > 0) {
         long completeBlocksTotal =
             backupNode.namesystem.getCompleteBlocksTotal();
         backupNode.namesystem.getBlockManager().setBlockTotal(
@@ -252,7 +247,7 @@ class Checkpointer extends Daemon {
       backupNode.namesystem.writeUnlock("doCheckpoint");
     }
 
-    if(cpCmd.needToReturnImage()) {
+    if (cpCmd.needToReturnImage()) {
       TransferFsImage.uploadImageFromStorage(backupNode.nnHttpAddress, conf,
           bnStorage, NameNodeFile.IMAGE, txid);
     }
@@ -263,10 +258,10 @@ class Checkpointer extends Daemon {
       bnImage.convergeJournalSpool();
     }
     backupNode.setRegistration(); // keep registration up to date
-    
+
     long imageSize = bnImage.getStorage().getFsImageName(txid).length();
     LOG.info("Checkpoint completed in "
-        + (monotonicNow() - startTime)/1000 + " seconds."
+        + (monotonicNow() - startTime) / 1000 + " seconds."
         + " New Image Size: " + imageSize);
   }
 
@@ -286,14 +281,14 @@ class Checkpointer extends Daemon {
       FSImage dstImage,
       FSNamesystem dstNamesystem) throws IOException {
     NNStorage dstStorage = dstImage.getStorage();
-  
-    List<EditLogInputStream> editsStreams = Lists.newArrayList();    
+
+    List<EditLogInputStream> editsStreams = Lists.newArrayList();
     for (RemoteEditLog log : manifest.getLogs()) {
       if (log.getEndTxId() > dstImage.getLastAppliedTxId()) {
         File f = dstStorage.findFinalizedEditsFile(
             log.getStartTxId(), log.getEndTxId());
-        editsStreams.add(new EditLogFileInputStream(f, log.getStartTxId(), 
-                                                    log.getEndTxId(), true));
+        editsStreams.add(new EditLogFileInputStream(f, log.getStartTxId(),
+            log.getEndTxId(), true));
       }
     }
     LOG.info("Checkpointer about to load edits from " +

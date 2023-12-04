@@ -1,19 +1,19 @@
 package org.apache.hadoop.io;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.io.nativeio.NativeIO;
-
-import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_WILLNEED;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_WILLNEED;
 
 /**
  * Manages a pool of threads which can issue readahead requests on file descriptors.
@@ -24,7 +24,7 @@ public class ReadaheadPool {
   private static final int MAX_POOL_SIZE = 16;
   private static final int CAPACITY = 1024;
   private final ThreadPoolExecutor pool;
-  
+
   private static ReadaheadPool instance;
 
   /**
@@ -54,14 +54,14 @@ public class ReadaheadPool {
         new ArrayBlockingQueue<Runnable>(CAPACITY));
     pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     pool.setThreadFactory(new ThreadFactoryBuilder()
-      .setDaemon(true)
-      .setNameFormat("Readahead Thread #%d")
-      .build());
+        .setDaemon(true)
+        .setNameFormat("Readahead Thread #%d")
+        .build());
   }
 
   /**
    * Issue a request to readahead on the given file descriptor.
-   * 
+   *
    * @param identifier a textual identifier that will be used in error
    * messages (e.g. the file name)
    * @param fd the file descriptor to read ahead
@@ -84,7 +84,7 @@ public class ReadaheadPool {
       long readaheadLength,
       long maxOffsetToRead,
       ReadaheadRequest lastReadahead) {
-    
+
     Preconditions.checkArgument(curPos <= maxOffsetToRead,
         "Readahead position %s higher than maxOffsetToRead %s",
         curPos, maxOffsetToRead);
@@ -92,9 +92,9 @@ public class ReadaheadPool {
     if (readaheadLength <= 0) {
       return null;
     }
-    
+
     long lastOffset = Long.MIN_VALUE;
-    
+
     if (lastReadahead != null) {
       lastOffset = lastReadahead.getOffset();
     }
@@ -102,7 +102,7 @@ public class ReadaheadPool {
     // trigger each readahead when we have reached the halfway mark
     // in the previous readahead. This gives the system time
     // to satisfy the readahead before we start reading the data.
-    long nextOffset = lastOffset + readaheadLength / 2; 
+    long nextOffset = lastOffset + readaheadLength / 2;
     if (curPos >= nextOffset) {
       // cancel any currently pending readahead, to avoid
       // piling things up in the queue. Each reader should have at most
@@ -111,7 +111,7 @@ public class ReadaheadPool {
         lastReadahead.cancel();
         lastReadahead = null;
       }
-      
+
       long length = Math.min(readaheadLength,
           maxOffsetToRead - curPos);
 
@@ -119,13 +119,13 @@ public class ReadaheadPool {
         // we've reached the end of the stream
         return null;
       }
-      
+
       return submitReadahead(identifier, fd, curPos, length);
     } else {
       return lastReadahead;
     }
   }
-      
+
   /**
    * Submit a request to readahead on the given file descriptor.
    * @param identifier a textual identifier used in error messages, etc.
@@ -144,7 +144,7 @@ public class ReadaheadPool {
     }
     return req;
   }
-  
+
   /**
    * An outstanding readahead request that has been submitted to
    * the pool. This request may be pending or may have been
@@ -155,12 +155,12 @@ public class ReadaheadPool {
      * Cancels the request for readahead. This should be used
      * if the reader no longer needs the requested data, <em>before</em>
      * closing the related file descriptor.
-     * 
+     *
      * It is safe to use even if the readahead request has already
      * been fulfilled.
      */
     public void cancel();
-    
+
     /**
      * @return the requested offset
      */
@@ -171,20 +171,20 @@ public class ReadaheadPool {
      */
     public long getLength();
   }
-  
+
   private static class ReadaheadRequestImpl implements Runnable, ReadaheadRequest {
     private final String identifier;
     private final FileDescriptor fd;
     private final long off, len;
     private volatile boolean canceled = false;
-    
+
     private ReadaheadRequestImpl(String identifier, FileDescriptor fd, long off, long len) {
       this.identifier = identifier;
       this.fd = fd;
       this.off = off;
       this.len = len;
     }
-    
+
     @Override
     public void run() {
       if (canceled) return;

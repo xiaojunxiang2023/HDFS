@@ -1,16 +1,16 @@
 package org.apache.hadoop.io;
 
-import java.io.IOException;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.UTFDataFormatException;
-
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.io.UTFDataFormatException;
+
 /** A WritableComparable for strings that uses the UTF8 encoding.
- * 
+ *
  * <p>Also includes utilities for efficiently reading and writing UTF-8.
  *
  * Note that this decodes UTF-8 but actually encodes CESU-8, a variant of
@@ -21,16 +21,16 @@ import org.slf4j.LoggerFactory;
 @Deprecated
 // MapReduce也可见
 public class UTF8 implements WritableComparable<UTF8> {
-  private static final Logger LOG= LoggerFactory.getLogger(UTF8.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UTF8.class);
   private static final DataInputBuffer IBUF = new DataInputBuffer();
 
   private static final ThreadLocal<DataOutputBuffer> OBUF_FACTORY =
-    new ThreadLocal<DataOutputBuffer>(){
-    @Override
-    protected DataOutputBuffer initialValue() {
-      return new DataOutputBuffer();
-    }
-  };
+      new ThreadLocal<DataOutputBuffer>() {
+        @Override
+        protected DataOutputBuffer initialValue() {
+          return new DataOutputBuffer();
+        }
+      };
 
   private static final byte[] EMPTY_BYTES = new byte[0];
 
@@ -63,10 +63,10 @@ public class UTF8 implements WritableComparable<UTF8> {
 
   /** Set to contain the contents of a string. */
   public void set(String string) {
-    if (string.length() > 0xffff/3) {             // maybe too long
+    if (string.length() > 0xffff / 3) {             // maybe too long
       LOG.warn("truncating long string: " + string.length()
-               + " chars, starting with " + string.substring(0, 20));
-      string = string.substring(0, 0xffff/3);
+          + " chars, starting with " + string.substring(0, 20));
+      string = string.substring(0, 0xffff / 3);
     }
 
     length = utf8Length(string);                  // compute length
@@ -118,7 +118,7 @@ public class UTF8 implements WritableComparable<UTF8> {
   @Override
   public int compareTo(UTF8 o) {
     return WritableComparator.compareBytes(bytes, 0, length,
-                                           o.bytes, 0, o.length);
+        o.bytes, 0, o.length);
   }
 
   /** Convert to a String. */
@@ -135,7 +135,7 @@ public class UTF8 implements WritableComparable<UTF8> {
     }
     return buffer.toString();
   }
-  
+
   /**
    * Convert to a string, checking for valid UTF8.
    * @return the converted string
@@ -156,12 +156,12 @@ public class UTF8 implements WritableComparable<UTF8> {
   public boolean equals(Object o) {
     if (!(o instanceof UTF8))
       return false;
-    UTF8 that = (UTF8)o;
+    UTF8 that = (UTF8) o;
     if (this.length != that.length)
       return false;
     else
       return WritableComparator.compareBytes(bytes, 0, length,
-                                             that.bytes, 0, that.length) == 0;
+          that.bytes, 0, that.length) == 0;
   }
 
   @Override
@@ -180,7 +180,7 @@ public class UTF8 implements WritableComparable<UTF8> {
                        byte[] b2, int s2, int l2) {
       int n1 = readUnsignedShort(b1, s1);
       int n2 = readUnsignedShort(b2, s2);
-      return compareBytes(b1, s1+2, n1, b2, s2+2, n2);
+      return compareBytes(b1, s1 + 2, n1, b2, s2 + 2, n2);
     }
   }
 
@@ -233,7 +233,7 @@ public class UTF8 implements WritableComparable<UTF8> {
   }
 
   private static void readChars(DataInput in, StringBuilder buffer, int nBytes)
-    throws UTFDataFormatException, IOException {
+      throws UTFDataFormatException, IOException {
     DataOutputBuffer obuf = OBUF_FACTORY.get();
     obuf.reset();
     obuf.write(in, nBytes);
@@ -243,14 +243,14 @@ public class UTF8 implements WritableComparable<UTF8> {
       byte b = bytes[i++];
       if ((b & 0x80) == 0) {
         // 0b0xxxxxxx: 1-byte sequence
-        buffer.append((char)(b & 0x7F));
+        buffer.append((char) (b & 0x7F));
       } else if ((b & 0xE0) == 0xC0) {
         if (i >= nBytes) {
           throw new UTFDataFormatException("Truncated UTF8 at " +
               StringUtils.byteToHexString(bytes, i - 1, 1));
         }
         // 0b110xxxxx: 2-byte sequence
-        buffer.append((char)(((b & 0x1F) << 6)
+        buffer.append((char) (((b & 0x1F) << 6)
             | (bytes[i++] & 0x3F)));
       } else if ((b & 0xF0) == 0xE0) {
         // 0b1110xxxx: 3-byte sequence
@@ -258,9 +258,9 @@ public class UTF8 implements WritableComparable<UTF8> {
           throw new UTFDataFormatException("Truncated UTF8 at " +
               StringUtils.byteToHexString(bytes, i - 1, 2));
         }
-        buffer.append((char)(((b & 0x0F) << 12)
+        buffer.append((char) (((b & 0x0F) << 12)
             | ((bytes[i++] & 0x3F) << 6)
-            |  (bytes[i++] & 0x3F)));
+            | (bytes[i++] & 0x3F)));
       } else if ((b & 0xF8) == 0xF0) {
         if (i + 2 >= nBytes) {
           throw new UTFDataFormatException("Truncated UTF8 at " +
@@ -269,11 +269,11 @@ public class UTF8 implements WritableComparable<UTF8> {
         // 0b11110xxx: 4-byte sequence
         int codepoint =
             ((b & 0x07) << 18)
-          | ((bytes[i++] & 0x3F) <<  12)
-          | ((bytes[i++] & 0x3F) <<  6)
-          | ((bytes[i++] & 0x3F));
+                | ((bytes[i++] & 0x3F) << 12)
+                | ((bytes[i++] & 0x3F) << 6)
+                | ((bytes[i++] & 0x3F));
         buffer.append(highSurrogate(codepoint))
-              .append(lowSurrogate(codepoint));
+            .append(lowSurrogate(codepoint));
       } else {
         // The UTF8 standard describes 5-byte and 6-byte sequences, but
         // these are no longer allowed as of 2003 (see RFC 3629)
@@ -301,16 +301,16 @@ public class UTF8 implements WritableComparable<UTF8> {
    * @see DataOutput#writeUTF(String)
    */
   public static int writeString(DataOutput out, String s) throws IOException {
-    if (s.length() > 0xffff/3) {         // maybe too long
+    if (s.length() > 0xffff / 3) {         // maybe too long
       LOG.warn("truncating long string: " + s.length()
-               + " chars, starting with " + s.substring(0, 20));
-      s = s.substring(0, 0xffff/3);
+          + " chars, starting with " + s.substring(0, 20));
+      s = s.substring(0, 0xffff / 3);
     }
 
     int len = utf8Length(s);
     if (len > 0xffff)                             // double-check length
       throw new IOException("string too long!");
-      
+
     out.writeShort(len);
     writeChars(out, s, 0, s.length());
     return len;
@@ -335,19 +335,19 @@ public class UTF8 implements WritableComparable<UTF8> {
 
   private static void writeChars(DataOutput out,
                                  String s, int start, int length)
-    throws IOException {
+      throws IOException {
     final int end = start + length;
     for (int i = start; i < end; i++) {
       int code = s.charAt(i);
       if (code <= 0x7F) {
-        out.writeByte((byte)code);
+        out.writeByte((byte) code);
       } else if (code <= 0x07FF) {
-        out.writeByte((byte)(0xC0 | ((code >> 6) & 0x1F)));
-        out.writeByte((byte)(0x80 |   code       & 0x3F));
+        out.writeByte((byte) (0xC0 | ((code >> 6) & 0x1F)));
+        out.writeByte((byte) (0x80 | code & 0x3F));
       } else {
-        out.writeByte((byte)(0xE0 | ((code >> 12) & 0X0F)));
-        out.writeByte((byte)(0x80 | ((code >>  6) & 0x3F)));
-        out.writeByte((byte)(0x80 |  (code        & 0x3F)));
+        out.writeByte((byte) (0xE0 | ((code >> 12) & 0X0F)));
+        out.writeByte((byte) (0x80 | ((code >> 6) & 0x3F)));
+        out.writeByte((byte) (0x80 | (code & 0x3F)));
       }
     }
   }

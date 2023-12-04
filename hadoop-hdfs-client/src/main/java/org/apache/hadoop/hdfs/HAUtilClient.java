@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
@@ -16,6 +17,7 @@ import java.util.Collection;
 
 import static org.apache.hadoop.hdfs.protocol.HdfsConstants.HA_DT_SERVICE_PREFIX;
 import static org.apache.hadoop.security.SecurityUtil.buildTokenService;
+
 public class HAUtilClient {
   private static final Logger LOG = LoggerFactory.getLogger(HAUtilClient.class);
 
@@ -56,7 +58,7 @@ public class HAUtilClient {
    * @return the service name
    */
   public static Text buildTokenServiceForLogicalUri(final URI uri,
-      final String scheme) {
+                                                    final String scheme) {
     return new Text(buildTokenServicePrefixForLogicalUri(scheme)
         + uri.getHost());
   }

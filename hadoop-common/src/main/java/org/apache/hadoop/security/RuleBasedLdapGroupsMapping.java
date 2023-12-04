@@ -1,6 +1,5 @@
 package org.apache.hadoop.security;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
@@ -43,27 +42,27 @@ public class RuleBasedLdapGroupsMapping extends LdapGroupsMapping {
     }
   }
 
-    /**
-     * Returns list of groups for a user.
-     * This calls {@link LdapGroupsMapping}'s getGroups and applies the
-     * configured rules on group names before returning.
-     *
-     * @param user get groups for this user
-     * @return list of groups for a given user
-     */
+  /**
+   * Returns list of groups for a user.
+   * This calls {@link LdapGroupsMapping}'s getGroups and applies the
+   * configured rules on group names before returning.
+   *
+   * @param user get groups for this user
+   * @return list of groups for a given user
+   */
   @Override
   public synchronized List<String> getGroups(String user) {
     List<String> groups = super.getGroups(user);
     switch (rule) {
-    case TO_UPPER:
-      return groups.stream().map(StringUtils::toUpperCase).collect(
-          Collectors.toList());
-    case TO_LOWER:
-      return groups.stream().map(StringUtils::toLowerCase).collect(
-          Collectors.toList());
-    case NONE:
-    default:
-      return groups;
+      case TO_UPPER:
+        return groups.stream().map(StringUtils::toUpperCase).collect(
+            Collectors.toList());
+      case TO_LOWER:
+        return groups.stream().map(StringUtils::toLowerCase).collect(
+            Collectors.toList());
+      case NONE:
+      default:
+        return groups;
     }
   }
 

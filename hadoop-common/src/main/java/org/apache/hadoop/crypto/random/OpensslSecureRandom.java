@@ -1,18 +1,18 @@
 package org.apache.hadoop.crypto.random;
 
-import java.util.Random;
-import org.apache.hadoop.util.NativeCodeLoader;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.util.NativeCodeLoader;
 import org.apache.hadoop.util.PerformanceAdvisory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 /**
  * OpenSSL secure random using JNI.
  * This implementation is thread-safe.
  * <p>
- * 
+ *
  * If using an Intel chipset with RDRAND, the high-performance hardware 
  * random number generator will be used and it's much faster than
  * {@link java.security.SecureRandom}. If RDRAND is unavailable, default
@@ -26,10 +26,11 @@ public class OpensslSecureRandom extends Random {
   private static final long serialVersionUID = -7828193502768789584L;
   private static final Logger LOG =
       LoggerFactory.getLogger(OpensslSecureRandom.class.getName());
-  
+
   /** If native SecureRandom unavailable, use java SecureRandom */
   private java.security.SecureRandom fallback = null;
   private static boolean nativeEnabled = false;
+
   static {
     if (NativeCodeLoader.isNativeCodeLoaded() &&
         NativeCodeLoader.buildSupportsOpenssl()) {
@@ -41,11 +42,11 @@ public class OpensslSecureRandom extends Random {
       }
     }
   }
-  
+
   public static boolean isNativeCodeLoaded() {
     return nativeEnabled;
   }
-  
+
   public OpensslSecureRandom() {
     if (!nativeEnabled) {
       PerformanceAdvisory.LOG.debug("Build does not support openssl, " +
@@ -53,11 +54,11 @@ public class OpensslSecureRandom extends Random {
       fallback = new java.security.SecureRandom();
     }
   }
-  
+
   /**
    * Generates a user-specified number of random bytes.
    * It's thread-safe.
-   * 
+   *
    * @param bytes the array to be filled in with random bytes.
    */
   @Override
@@ -66,12 +67,12 @@ public class OpensslSecureRandom extends Random {
       fallback.nextBytes(bytes);
     }
   }
-  
+
   @Override
   public void setSeed(long seed) {
     // Self-seeding.
   }
-  
+
   /**
    * Generates an integer containing the user-specified number of
    * random bits (right justified, with leading zeros).
@@ -88,15 +89,16 @@ public class OpensslSecureRandom extends Random {
     int numBytes = (numBits + 7) / 8;
     byte b[] = new byte[numBytes];
     int next = 0;
-    
+
     nextBytes(b);
     for (int i = 0; i < numBytes; i++) {
       next = (next << 8) + (b[i] & 0xFF);
     }
-    
+
     return next >>> (numBytes * 8 - numBits);
   }
-  
+
   private native static void initSR();
-  private native boolean nextRandBytes(byte[] bytes); 
+
+  private native boolean nextRandBytes(byte[] bytes);
 }

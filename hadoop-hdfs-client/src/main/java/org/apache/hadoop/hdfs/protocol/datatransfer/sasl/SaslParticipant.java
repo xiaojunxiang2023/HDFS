@@ -1,20 +1,16 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer.sasl;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.util.Map;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.sasl.Sasl;
-import javax.security.sasl.SaslClient;
-import javax.security.sasl.SaslClientFactory;
-import javax.security.sasl.SaslException;
-import javax.security.sasl.SaslServer;
-import javax.security.sasl.SaslServerFactory;
 import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
 import org.apache.hadoop.security.FastSaslClientFactory;
 import org.apache.hadoop.security.FastSaslServerFactory;
 import org.apache.hadoop.security.SaslInputStream;
 import org.apache.hadoop.security.SaslOutputStream;
+
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.sasl.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.util.Map;
 
 /**
  * Strongly inspired by Thrift's TSaslTransport class.
@@ -49,6 +45,7 @@ class SaslParticipant {
       saslClientFactory = new FastSaslClientFactory(null);
     }
   }
+
   /**
    * Creates a SaslParticipant wrapping a SaslServer.
    *
@@ -62,7 +59,7 @@ class SaslParticipant {
       throws SaslException {
     initializeSaslServerFactory();
     return new SaslParticipant(saslServerFactory.createSaslServer(MECHANISM,
-      PROTOCOL, SERVER_NAME, saslProps, callbackHandler));
+        PROTOCOL, SERVER_NAME, saslProps, callbackHandler));
   }
 
   /**
@@ -75,11 +72,11 @@ class SaslParticipant {
    * @throws SaslException for any error
    */
   public static SaslParticipant createClientSaslParticipant(String userName,
-      Map<String, String> saslProps, CallbackHandler callbackHandler)
+                                                            Map<String, String> saslProps, CallbackHandler callbackHandler)
       throws SaslException {
     initializeSaslClientFactory();
     return new SaslParticipant(
-        saslClientFactory.createSaslClient(new String[] {MECHANISM}, userName,
+        saslClientFactory.createSaslClient(new String[]{MECHANISM}, userName,
             PROTOCOL, SERVER_NAME, saslProps, callbackHandler));
   }
 
@@ -196,7 +193,7 @@ class SaslParticipant {
    * @return IOStreamPair wrapping the streams
    */
   public IOStreamPair createStreamPair(DataOutputStream out,
-      DataInputStream in) {
+                                       DataInputStream in) {
     if (saslClient != null) {
       return new IOStreamPair(
           new SaslInputStream(in, saslClient),

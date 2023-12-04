@@ -1,32 +1,22 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_STORAGE_POLICY_SATISFIER_RECHECK_TIMEOUT_MILLIS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_STORAGE_POLICY_SATISFIER_RECHECK_TIMEOUT_MILLIS_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_STORAGE_POLICY_SATISFIER_SELF_RETRY_TIMEOUT_MILLIS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_STORAGE_POLICY_SATISFIER_SELF_RETRY_TIMEOUT_MILLIS_KEY;
-import static org.apache.hadoop.util.Time.monotonicNow;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.namenode.sps.StoragePolicySatisfier.AttemptedItemInfo;
 import org.apache.hadoop.hdfs.server.namenode.sps.StoragePolicySatisfier.StorageTypeNodePair;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * A monitor class for checking whether block storage movements attempt
@@ -67,8 +57,8 @@ public class BlockStorageMovementAttemptedItems {
   private final SPSService service;
 
   public BlockStorageMovementAttemptedItems(SPSService service,
-      BlockStorageMovementNeeded unsatisfiedStorageMovementFiles,
-      Context context) {
+                                            BlockStorageMovementNeeded unsatisfiedStorageMovementFiles,
+                                            Context context) {
     this.service = service;
     long recheckTimeout = this.service.getConf().getLong(
         DFS_STORAGE_POLICY_SATISFIER_RECHECK_TIMEOUT_MILLIS_KEY,
@@ -103,7 +93,7 @@ public class BlockStorageMovementAttemptedItems {
    *          - retry count
    */
   public void add(long startPathId, long fileId, long monotonicNow,
-      Map<Block, Set<StorageTypeNodePair>> assignedBlocks, int retryCount) {
+                  Map<Block, Set<StorageTypeNodePair>> assignedBlocks, int retryCount) {
     AttemptedItemInfo itemInfo = new AttemptedItemInfo(startPathId, fileId,
         monotonicNow, assignedBlocks.keySet(), retryCount);
     synchronized (storageMovementAttemptedItems) {
@@ -125,7 +115,7 @@ public class BlockStorageMovementAttemptedItems {
    *          reported block
    */
   public void notifyReportedBlock(DatanodeInfo reportedDn, StorageType type,
-      Block reportedBlock) {
+                                  Block reportedBlock) {
     synchronized (scheduledBlkLocs) {
       if (scheduledBlkLocs.size() <= 0) {
         return;
@@ -135,7 +125,7 @@ public class BlockStorageMovementAttemptedItems {
   }
 
   private void matchesReportedBlock(DatanodeInfo reportedDn, StorageType type,
-      Block reportedBlock) {
+                                    Block reportedBlock) {
     Set<StorageTypeNodePair> blkLocs = scheduledBlkLocs.get(reportedBlock);
     if (blkLocs == null) {
       return; // unknown block, simply skip.

@@ -1,4 +1,5 @@
 package org.apache.hadoop.metrics2.lib;
+
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 
@@ -66,7 +67,7 @@ public class MutableGaugeInt extends MutableGauge {
   }
 
   /**
-   * @return  the value of the metric
+   * @return the value of the metric
    */
   public String toString() {
     return value.toString();

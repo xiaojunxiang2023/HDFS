@@ -40,7 +40,7 @@ final public class ExtendedBlockId {
     if ((o == null) || (o.getClass() != this.getClass())) {
       return false;
     }
-    ExtendedBlockId other = (ExtendedBlockId)o;
+    ExtendedBlockId other = (ExtendedBlockId) o;
     return new EqualsBuilder().
         append(blockId, other.blockId).
         append(bpId, other.bpId).

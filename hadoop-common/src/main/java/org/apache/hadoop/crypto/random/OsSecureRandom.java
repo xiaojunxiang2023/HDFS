@@ -1,19 +1,20 @@
 package org.apache.hadoop.crypto.random;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Random;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Random;
+
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT;
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
 
 /**
  * A Random implementation that uses random bytes sourced from the
@@ -22,7 +23,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
 public class OsSecureRandom extends Random implements Closeable, Configurable {
   public static final Logger LOG =
       LoggerFactory.getLogger(OsSecureRandom.class);
-  
+
   private static final long serialVersionUID = 6391500337172057900L;
 
   private transient Configuration conf;
@@ -53,7 +54,7 @@ public class OsSecureRandom extends Random implements Closeable, Configurable {
 
   public OsSecureRandom() {
   }
-  
+
   @Override
   synchronized public void setConf(Configuration conf) {
     this.conf = conf;

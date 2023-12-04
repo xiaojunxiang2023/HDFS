@@ -1,14 +1,14 @@
 package org.apache.hadoop.security;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.http.FilterContainer;
 import org.apache.hadoop.http.FilterInitializer;
 import org.apache.hadoop.security.http.CrossOriginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpCrossOriginFilterInitializer extends FilterInitializer {
 
@@ -34,7 +34,7 @@ public class HttpCrossOriginFilterInitializer extends FilterInitializer {
   }
 
   protected static Map<String, String> getFilterParameters(Configuration conf,
-      String prefix) {
+                                                           String prefix) {
     Map<String, String> filterParams = new HashMap<String, String>();
     for (Map.Entry<String, String> entry : conf.getValByRegex(prefix)
         .entrySet()) {

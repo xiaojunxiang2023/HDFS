@@ -14,11 +14,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.namenode;
+ */
+package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProviderCryptoExtension.EncryptedKeyVersion;
 import org.apache.hadoop.fs.FileEncryptionInfo;
@@ -32,6 +30,9 @@ import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.FileEdekInfo;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.ReencryptionTask;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.ZoneSubmissionTracker;
 import org.apache.hadoop.ipc.RetriableException;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StopWatch;
 import org.slf4j.Logger;
@@ -43,25 +44,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_BATCH_SIZE_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_BATCH_SIZE_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_SLEEP_INTERVAL_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_SLEEP_INTERVAL_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_THROTTLE_LIMIT_HANDLER_RATIO_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_THROTTLE_LIMIT_HANDLER_RATIO_KEY;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_EDEK_THREADS_DEFAULT;
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_REENCRYPT_EDEK_THREADS_KEY;
+import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
 
 /**
  * Class for handling re-encrypt EDEK operations.
@@ -183,7 +169,7 @@ public class ReencryptionHandler implements Runnable {
   }
 
   ReencryptionHandler(final EncryptionZoneManager ezMgr,
-      final Configuration conf) {
+                      final Configuration conf) {
     this.ezManager = ezMgr;
     Preconditions.checkNotNull(ezManager.getProvider(),
         "No provider set, cannot re-encrypt");
@@ -219,23 +205,23 @@ public class ReencryptionHandler implements Runnable {
     ThreadPoolExecutor threadPool =
         new ThreadPoolExecutor(reencryptThreadPoolSize, reencryptThreadPoolSize,
             60, TimeUnit.SECONDS, taskQueue, new Daemon.DaemonFactory() {
-              private final AtomicInteger ind = new AtomicInteger(0);
+          private final AtomicInteger ind = new AtomicInteger(0);
 
-              @Override
-              public Thread newThread(Runnable r) {
-                Thread t = super.newThread(r);
-                t.setName("reencryption edek Thread-" + ind.getAndIncrement());
-                return t;
-              }
-            }, new ThreadPoolExecutor.CallerRunsPolicy() {
+          @Override
+          public Thread newThread(Runnable r) {
+            Thread t = super.newThread(r);
+            t.setName("reencryption edek Thread-" + ind.getAndIncrement());
+            return t;
+          }
+        }, new ThreadPoolExecutor.CallerRunsPolicy() {
 
-              @Override
-              public void rejectedExecution(Runnable runnable,
-                  ThreadPoolExecutor e) {
-                LOG.info("Execution rejected, executing in current thread");
-                super.rejectedExecution(runnable, e);
-              }
-            });
+          @Override
+          public void rejectedExecution(Runnable runnable,
+                                        ThreadPoolExecutor e) {
+            LOG.info("Execution rejected, executing in current thread");
+            super.rejectedExecution(runnable, e);
+          }
+        });
 
     threadPool.allowCoreThreadTimeOut(true);
     this.batchService = new ExecutorCompletionService(threadPool);
@@ -459,7 +445,7 @@ public class ReencryptionHandler implements Runnable {
    * on the LPF parent paths are added to subdirs.
    */
   private void restoreFromLastProcessedFile(final long zoneId,
-      final ZoneReencryptionStatus zs)
+                                            final ZoneReencryptionStatus zs)
       throws IOException, InterruptedException {
     final INodeDirectory parent;
     final byte[] startAfter;
@@ -524,7 +510,7 @@ public class ReencryptionHandler implements Runnable {
     private final ReencryptionHandler handler;
 
     EDEKReencryptCallable(final long zoneId,
-        final ReencryptionBatch currentBatch, final ReencryptionHandler rh) {
+                          final ReencryptionBatch currentBatch, final ReencryptionHandler rh) {
       zoneNodeId = zoneId;
       batch = currentBatch;
       handler = rh;
@@ -600,7 +586,7 @@ public class ReencryptionHandler implements Runnable {
     private final ReencryptionHandler reencryptionHandler;
 
     ReencryptionPendingInodeIdCollector(FSDirectory dir,
-        ReencryptionHandler rHandler, Configuration conf) {
+                                        ReencryptionHandler rHandler, Configuration conf) {
       super(dir, conf);
       this.reencryptionHandler = rHandler;
     }
@@ -652,7 +638,7 @@ public class ReencryptionHandler implements Runnable {
       }
       if (traverseInfo instanceof ZoneTraverseInfo
           && ((ZoneTraverseInfo) traverseInfo).getEzKeyVerName().equals(
-              feInfo.getEzKeyVersionName())) {
+          feInfo.getEzKeyVersionName())) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("File {} skipped re-encryption because edek's key version"
               + " name is not changed.", inode.getFullPathName());
@@ -775,7 +761,7 @@ public class ReencryptionHandler implements Runnable {
       final long actual = throttleTimerLocked.now(TimeUnit.MILLISECONDS);
       if (LOG.isDebugEnabled()) {
         LOG.debug("Re-encryption handler throttling expect: {}, actual: {},"
-            + " throttleTimerAll:{}", expect, actual,
+                + " throttleTimerAll:{}", expect, actual,
             throttleTimerAll.now(TimeUnit.MILLISECONDS));
       }
       if (expect - actual < 0) {

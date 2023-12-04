@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.top.metrics;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -14,6 +13,7 @@ import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.MetricsSource;
 import org.apache.hadoop.metrics2.lib.Interns;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +54,11 @@ public class TopMetrics implements MetricsSource {
 
   private static void logConf(Configuration conf) {
     LOG.info("NNTop conf: " + DFSConfigKeys.NNTOP_BUCKETS_PER_WINDOW_KEY +
-        " = " +  conf.get(DFSConfigKeys.NNTOP_BUCKETS_PER_WINDOW_KEY));
+        " = " + conf.get(DFSConfigKeys.NNTOP_BUCKETS_PER_WINDOW_KEY));
     LOG.info("NNTop conf: " + DFSConfigKeys.NNTOP_NUM_USERS_KEY +
-        " = " +  conf.get(DFSConfigKeys.NNTOP_NUM_USERS_KEY));
+        " = " + conf.get(DFSConfigKeys.NNTOP_NUM_USERS_KEY));
     LOG.info("NNTop conf: " + DFSConfigKeys.NNTOP_WINDOWS_MINUTES_KEY +
-        " = " +  conf.get(DFSConfigKeys.NNTOP_WINDOWS_MINUTES_KEY));
+        " = " + conf.get(DFSConfigKeys.NNTOP_WINDOWS_MINUTES_KEY));
   }
 
   /**
@@ -108,7 +108,7 @@ public class TopMetrics implements MetricsSource {
    * @param status
    */
   public void report(boolean succeeded, String userName, InetAddress addr,
-      String cmd, String src, String dst, FileStatus status) {
+                     String cmd, String src, String dst, FileStatus status) {
     // currently nntop only makes use of the username and the command
     report(userName, cmd);
   }
@@ -144,7 +144,7 @@ public class TopMetrics implements MetricsSource {
     for (final TopWindow window : getTopWindows()) {
       MetricsRecordBuilder rb = collector.addRecord(buildOpRecordName(window))
           .setContext("dfs");
-      for (final Op op: window.getOps()) {
+      for (final Op op : window.getOps()) {
         rb.addCounter(buildOpTotalCountMetricsInfo(op), op.getTotalCount());
         for (User user : op.getTopUsers()) {
           rb.addCounter(buildOpRecordMetricsInfo(op, user), user.getCount());
@@ -155,17 +155,17 @@ public class TopMetrics implements MetricsSource {
 
   private String buildOpRecordName(TopWindow window) {
     return TOPMETRICS_METRICS_SOURCE_NAME + ".windowMs="
-      + window.getWindowLenMs();
+        + window.getWindowLenMs();
   }
 
   private MetricsInfo buildOpTotalCountMetricsInfo(Op op) {
     return Interns.info("op=" + StringUtils.deleteWhitespace(op.getOpType())
-      + ".TotalCount", "Total operation count");
+        + ".TotalCount", "Total operation count");
   }
 
   private MetricsInfo buildOpRecordMetricsInfo(Op op, User user) {
     return Interns.info("op=" + StringUtils.deleteWhitespace(op.getOpType())
-      + ".user=" + user.getUser()
-      + ".count", "Total operations performed by user");
+        + ".user=" + user.getUser()
+        + ".count", "Total operations performed by user");
   }
 }

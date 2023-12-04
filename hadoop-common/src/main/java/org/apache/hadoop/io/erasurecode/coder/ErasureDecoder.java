@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.coder;
+
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.erasurecode.ECBlock;
 import org.apache.hadoop.io.erasurecode.ECBlockGroup;
@@ -50,13 +51,13 @@ public abstract class ErasureDecoder extends Configured
    */
   protected ECBlock[] getInputBlocks(ECBlockGroup blockGroup) {
     ECBlock[] inputBlocks = new ECBlock[getNumDataUnits() +
-            getNumParityUnits()];
+        getNumParityUnits()];
 
     System.arraycopy(blockGroup.getDataBlocks(), 0, inputBlocks,
-            0, getNumDataUnits());
+        0, getNumDataUnits());
 
     System.arraycopy(blockGroup.getParityBlocks(), 0, inputBlocks,
-            getNumDataUnits(), getNumParityUnits());
+        getNumDataUnits(), getNumParityUnits());
 
     return inputBlocks;
   }
@@ -124,7 +125,7 @@ public abstract class ErasureDecoder extends Configured
     int numErased = 0;
     for (int i = 0; i < inputBlocks.length; i++) {
       if (inputBlocks[i].isErased()) {
-        numErased ++;
+        numErased++;
       }
     }
 

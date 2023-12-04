@@ -1,10 +1,11 @@
 package org.apache.hadoop.fs.store.audit;
 
-import javax.annotation.Nullable;
-import java.util.concurrent.Callable;
 import org.apache.hadoop.util.functional.CallableRaisingIOE;
 import org.apache.hadoop.util.functional.FunctionRaisingIOE;
 import org.apache.hadoop.util.functional.InvocationRaisingIOE;
+
+import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 /**
  * Static methods to assist in working with Audit Spans.
@@ -35,9 +36,9 @@ public final class AuditingFunctions {
     return auditSpan == null
         ? operation
         : () -> {
-          auditSpan.activate();
-          return operation.apply();
-        };
+      auditSpan.activate();
+      return operation.apply();
+    };
   }
 
   /**
@@ -53,9 +54,9 @@ public final class AuditingFunctions {
     return auditSpan == null
         ? operation
         : () -> {
-          auditSpan.activate();
-          operation.apply();
-        };
+      auditSpan.activate();
+      operation.apply();
+    };
   }
 
   /**
@@ -71,9 +72,9 @@ public final class AuditingFunctions {
     return auditSpan == null
         ? operation
         : (x) -> {
-          auditSpan.activate();
-          return operation.apply(x);
-        };
+      auditSpan.activate();
+      return operation.apply(x);
+    };
   }
 
   /**
@@ -90,9 +91,9 @@ public final class AuditingFunctions {
     return auditSpan == null
         ? operation
         : () -> {
-          auditSpan.activate();
-          return operation.call();
-        };
+      auditSpan.activate();
+      return operation.call();
+    };
   }
 
 }

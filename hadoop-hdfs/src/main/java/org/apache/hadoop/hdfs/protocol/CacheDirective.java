@@ -1,15 +1,15 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Date;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.hdfs.server.namenode.CachePool;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.IntrusiveCollection;
 import org.apache.hadoop.util.IntrusiveCollection.Element;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.util.Date;
+
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Namenode class that tracks state related to a cached path.
@@ -40,7 +40,7 @@ public final class CacheDirective implements IntrusiveCollection.Element {
   }
 
   public CacheDirective(long id, String path,
-      short replication, long expiryTime) {
+                        short replication, long expiryTime) {
     Preconditions.checkArgument(id > 0);
     this.id = id;
     this.path = checkNotNull(path);
@@ -107,31 +107,35 @@ public final class CacheDirective implements IntrusiveCollection.Element {
   public CacheDirectiveEntry toEntry() {
     return new CacheDirectiveEntry(toInfo(), toStats());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("{ id:").append(id).
-      append(", path:").append(path).
-      append(", replication:").append(replication).
-      append(", pool:").append(pool).
-      append(", expiryTime: ").append(getExpiryTimeString()).
-      append(", bytesNeeded:").append(bytesNeeded).
-      append(", bytesCached:").append(bytesCached).
-      append(", filesNeeded:").append(filesNeeded).
-      append(", filesCached:").append(filesCached).
-      append(" }");
+        append(", path:").append(path).
+        append(", replication:").append(replication).
+        append(", pool:").append(pool).
+        append(", expiryTime: ").append(getExpiryTimeString()).
+        append(", bytesNeeded:").append(bytesNeeded).
+        append(", bytesCached:").append(bytesCached).
+        append(", filesNeeded:").append(filesNeeded).
+        append(", filesCached:").append(filesCached).
+        append(" }");
     return builder.toString();
   }
 
   @Override
   public boolean equals(Object o) {
-    if (o == null) { return false; }
-    if (o == this) { return true; }
+    if (o == null) {
+      return false;
+    }
+    if (o == this) {
+      return true;
+    }
     if (o.getClass() != this.getClass()) {
       return false;
     }
-    CacheDirective other = (CacheDirective)o;
+    CacheDirective other = (CacheDirective) o;
     return id == other.id;
   }
 
@@ -197,9 +201,9 @@ public final class CacheDirective implements IntrusiveCollection.Element {
   @SuppressWarnings("unchecked")
   @Override // IntrusiveCollection.Element
   public void insertInternal(IntrusiveCollection<? extends Element> list,
-      Element prev, Element next) {
+                             Element prev, Element next) {
     assert this.pool == null;
-    this.pool = ((CachePool.DirectiveList)list).getCachePool();
+    this.pool = ((CachePool.DirectiveList) list).getCachePool();
     this.prev = prev;
     this.next = next;
   }

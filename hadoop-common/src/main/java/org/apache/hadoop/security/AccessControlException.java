@@ -23,8 +23,10 @@ public class AccessControlException extends IOException {
    * with the specified detail message.
    * @param s the detail message.
    */
-  public AccessControlException(String s) {super(s);}
-  
+  public AccessControlException(String s) {
+    super(s);
+  }
+
   /**
    * Constructs a new exception with the specified cause and a detail
    * message of <tt>(cause==null ? null : cause.toString())</tt> (which

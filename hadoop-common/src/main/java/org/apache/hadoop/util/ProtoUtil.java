@@ -1,21 +1,23 @@
 package org.apache.hadoop.util;
 
-import java.io.DataInput;
-import java.io.IOException;
-
 import org.apache.hadoop.ipc.AlignmentContext;
 import org.apache.hadoop.ipc.CallerContext;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.IpcConnectionContextProto;
 import org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformationProto;
-import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.*;
+import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCCallerContextProto;
+import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RPCTraceInfoProto;
+import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcKindProto;
+import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto;
 import org.apache.hadoop.security.SaslRpcServer.AuthMethod;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.tracing.Span;
-import org.apache.hadoop.tracing.Tracer;
-import org.apache.hadoop.tracing.TraceUtils;
-
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
+import org.apache.hadoop.tracing.Span;
+import org.apache.hadoop.tracing.TraceUtils;
+import org.apache.hadoop.tracing.Tracer;
+
+import java.io.DataInput;
+import java.io.IOException;
 
 public abstract class ProtoUtil {
 
@@ -59,8 +61,8 @@ public abstract class ProtoUtil {
     return result;
   }
 
-  
-  /** 
+
+  /**
    * This method creates the connection context  using exactly the same logic
    * as the old connection context as was done for writable where
    * the effective and real users are set based on the auth method.
@@ -73,7 +75,7 @@ public abstract class ProtoUtil {
     if (protocol != null) {
       result.setProtocol(protocol);
     }
-    UserInformationProto.Builder ugiProto =  UserInformationProto.newBuilder();
+    UserInformationProto.Builder ugiProto = UserInformationProto.newBuilder();
     if (ugi != null) {
       /*
        * In the connection context we send only additional user info that
@@ -94,20 +96,20 @@ public abstract class ProtoUtil {
           ugiProto.setRealUser(ugi.getRealUser().getUserName());
         }
       }
-    }   
+    }
     result.setUserInfo(ugiProto);
     return result.build();
   }
-  
+
   public static UserGroupInformation getUgi(IpcConnectionContextProto context) {
     if (context.hasUserInfo()) {
       UserInformationProto userInfo = context.getUserInfo();
-        return getUgi(userInfo);
+      return getUgi(userInfo);
     } else {
       return null;
     }
   }
-  
+
   public static UserGroupInformation getUgi(UserInformationProto userInfo) {
     UserGroupInformation ugi = null;
     String effectiveUser = userInfo.hasEffectiveUser() ? userInfo
@@ -126,36 +128,42 @@ public abstract class ProtoUtil {
     }
     return ugi;
   }
-  
+
   static RpcKindProto convert(RPC.RpcKind kind) {
     switch (kind) {
-    case RPC_BUILTIN: return RpcKindProto.RPC_BUILTIN;
-    case RPC_WRITABLE: return RpcKindProto.RPC_WRITABLE;
-    case RPC_PROTOCOL_BUFFER: return RpcKindProto.RPC_PROTOCOL_BUFFER;
+      case RPC_BUILTIN:
+        return RpcKindProto.RPC_BUILTIN;
+      case RPC_WRITABLE:
+        return RpcKindProto.RPC_WRITABLE;
+      case RPC_PROTOCOL_BUFFER:
+        return RpcKindProto.RPC_PROTOCOL_BUFFER;
     }
     return null;
   }
-  
-  
-  public static RPC.RpcKind convert( RpcKindProto kind) {
+
+
+  public static RPC.RpcKind convert(RpcKindProto kind) {
     switch (kind) {
-    case RPC_BUILTIN: return RPC.RpcKind.RPC_BUILTIN;
-    case RPC_WRITABLE: return RPC.RpcKind.RPC_WRITABLE;
-    case RPC_PROTOCOL_BUFFER: return RPC.RpcKind.RPC_PROTOCOL_BUFFER;
+      case RPC_BUILTIN:
+        return RPC.RpcKind.RPC_BUILTIN;
+      case RPC_WRITABLE:
+        return RPC.RpcKind.RPC_WRITABLE;
+      case RPC_PROTOCOL_BUFFER:
+        return RPC.RpcKind.RPC_PROTOCOL_BUFFER;
     }
     return null;
   }
- 
+
   public static RpcRequestHeaderProto makeRpcRequestHeader(RPC.RpcKind rpcKind,
-      RpcRequestHeaderProto.OperationProto operation, int callId,
-      int retryCount, byte[] uuid) {
+                                                           RpcRequestHeaderProto.OperationProto operation, int callId,
+                                                           int retryCount, byte[] uuid) {
     return makeRpcRequestHeader(rpcKind, operation, callId, retryCount, uuid,
         null);
   }
 
   public static RpcRequestHeaderProto makeRpcRequestHeader(RPC.RpcKind rpcKind,
-      RpcRequestHeaderProto.OperationProto operation, int callId,
-      int retryCount, byte[] uuid, AlignmentContext alignmentContext) {
+                                                           RpcRequestHeaderProto.OperationProto operation, int callId,
+                                                           int retryCount, byte[] uuid, AlignmentContext alignmentContext) {
     RpcRequestHeaderProto.Builder result = RpcRequestHeaderProto.newBuilder();
     result.setRpcKind(convert(rpcKind)).setRpcOp(operation).setCallId(callId)
         .setRetryCount(retryCount).setClientId(ByteString.copyFrom(uuid));

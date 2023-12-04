@@ -1,21 +1,21 @@
 package org.apache.hadoop.hdfs.client;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.EnumSet;
 import org.apache.hadoop.crypto.CryptoOutputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.DFSOutputStream;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.EnumSet;
 
 /**
  * The Hdfs implementation of {@link FSDataOutputStream}.
  */
 public class HdfsDataOutputStream extends FSDataOutputStream {
   public HdfsDataOutputStream(DFSOutputStream out, FileSystem.Statistics stats,
-      long startPosition) throws IOException {
+                              long startPosition) throws IOException {
     super(out, stats, startPosition);
   }
 
@@ -25,7 +25,7 @@ public class HdfsDataOutputStream extends FSDataOutputStream {
   }
 
   public HdfsDataOutputStream(CryptoOutputStream out,
-      FileSystem.Statistics stats, long startPosition) throws IOException {
+                              FileSystem.Statistics stats, long startPosition) throws IOException {
     super(out, stats, startPosition);
     Preconditions.checkArgument(
         out.getWrappedStream() instanceof DFSOutputStream,
@@ -33,7 +33,7 @@ public class HdfsDataOutputStream extends FSDataOutputStream {
   }
 
   public HdfsDataOutputStream(CryptoOutputStream out,
-      FileSystem.Statistics stats) throws IOException {
+                              FileSystem.Statistics stats) throws IOException {
     this(out, stats, 0L);
   }
 

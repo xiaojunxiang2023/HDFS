@@ -1,19 +1,20 @@
 package org.apache.hadoop.fs;
 
-import java.io.DataOutputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import org.apache.hadoop.fs.impl.StoreImplementationUtils;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
 
+import java.io.DataOutputStream;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 /** Utility that wraps a {@link OutputStream} in a {@link DataOutputStream}.
  */
 public class FSDataOutputStream extends DataOutputStream
     implements Syncable, CanSetDropBehind, StreamCapabilities,
-      IOStatisticsSource, Abortable {
+    IOStatisticsSource, Abortable {
   private final OutputStream wrappedStream;
 
   private static class PositionCache extends FilterOutputStream {
@@ -34,7 +35,7 @@ public class FSDataOutputStream extends DataOutputStream
         statistics.incrementBytesWritten(1);
       }
     }
-    
+
     @Override
     public void write(byte b[], int off, int len) throws IOException {
       out.write(b, off, len);
@@ -43,7 +44,7 @@ public class FSDataOutputStream extends DataOutputStream
         statistics.incrementBytesWritten(len);
       }
     }
-      
+
     long getPos() {
       return position;                            // return cached position
     }
@@ -66,14 +67,14 @@ public class FSDataOutputStream extends DataOutputStream
     super(new PositionCache(out, stats, startPosition));
     wrappedStream = out;
   }
-  
+
   /**
    * Get the current position in the output stream.
    *
    * @return the current position in the output stream
    */
   public long getPos() {
-    return ((PositionCache)out).getPos();
+    return ((PositionCache) out).getPos();
   }
 
   /**
@@ -110,16 +111,16 @@ public class FSDataOutputStream extends DataOutputStream
   @Override  // Syncable
   public void hflush() throws IOException {
     if (wrappedStream instanceof Syncable) {
-      ((Syncable)wrappedStream).hflush();
+      ((Syncable) wrappedStream).hflush();
     } else {
       wrappedStream.flush();
     }
   }
-  
+
   @Override  // Syncable
   public void hsync() throws IOException {
     if (wrappedStream instanceof Syncable) {
-      ((Syncable)wrappedStream).hsync();
+      ((Syncable) wrappedStream).hsync();
     } else {
       wrappedStream.flush();
     }
@@ -128,7 +129,7 @@ public class FSDataOutputStream extends DataOutputStream
   @Override
   public void setDropBehind(Boolean dropBehind) throws IOException {
     try {
-      ((CanSetDropBehind)wrappedStream).setDropBehind(dropBehind);
+      ((CanSetDropBehind) wrappedStream).setDropBehind(dropBehind);
     } catch (ClassCastException e) {
       throw new UnsupportedOperationException("the wrapped stream does " +
           "not support setting the drop-behind caching setting.");

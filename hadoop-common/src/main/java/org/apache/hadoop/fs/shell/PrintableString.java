@@ -23,21 +23,21 @@ class PrintableString {
 
   PrintableString(String rawString) {
     StringBuilder stringBuilder = new StringBuilder(rawString.length());
-    for (int offset = 0; offset < rawString.length();) {
+    for (int offset = 0; offset < rawString.length(); ) {
       int codePoint = rawString.codePointAt(offset);
       offset += Character.charCount(codePoint);
 
       switch (Character.getType(codePoint)) {
-      case Character.CONTROL:     // Cc
-      case Character.FORMAT:      // Cf
-      case Character.PRIVATE_USE: // Co
-      case Character.SURROGATE:   // Cs
-      case Character.UNASSIGNED:  // Cn
-        stringBuilder.append(REPLACEMENT_CHAR);
-        break;
-      default:
-        stringBuilder.append(Character.toChars(codePoint));
-        break;
+        case Character.CONTROL:     // Cc
+        case Character.FORMAT:      // Cf
+        case Character.PRIVATE_USE: // Co
+        case Character.SURROGATE:   // Cs
+        case Character.UNASSIGNED:  // Cn
+          stringBuilder.append(REPLACEMENT_CHAR);
+          break;
+        default:
+          stringBuilder.append(Character.toChars(codePoint));
+          break;
       }
     }
     printableString = stringBuilder.toString();

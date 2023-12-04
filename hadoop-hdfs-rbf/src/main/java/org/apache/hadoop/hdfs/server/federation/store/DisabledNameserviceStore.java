@@ -12,15 +12,15 @@ import java.util.Set;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public abstract class DisabledNameserviceStore
-        extends CachedRecordStore<DisabledNameservice> {
+    extends CachedRecordStore<DisabledNameservice> {
 
-    public DisabledNameserviceStore(StateStoreDriver driver) {
-        super(DisabledNameservice.class, driver);
-    }
+  public DisabledNameserviceStore(StateStoreDriver driver) {
+    super(DisabledNameservice.class, driver);
+  }
 
-    public abstract boolean disableNameservice(String nsId) throws IOException;
+  public abstract boolean disableNameservice(String nsId) throws IOException;
 
-    public abstract boolean enableNameservice(String nsId) throws IOException;
+  public abstract boolean enableNameservice(String nsId) throws IOException;
 
-    public abstract Set<String> getDisabledNameservices() throws IOException;
+  public abstract Set<String> getDisabledNameservices() throws IOException;
 }

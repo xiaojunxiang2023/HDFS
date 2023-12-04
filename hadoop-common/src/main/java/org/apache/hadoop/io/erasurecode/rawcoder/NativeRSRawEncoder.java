@@ -1,4 +1,5 @@
 package org.apache.hadoop.io.erasurecode.rawcoder;
+
 import org.apache.hadoop.io.erasurecode.ErasureCodeNative;
 import org.apache.hadoop.io.erasurecode.ErasureCoderOptions;
 
@@ -27,8 +28,8 @@ public class NativeRSRawEncoder extends AbstractNativeRawEncoder {
 
   @Override
   protected void performEncodeImpl(
-          ByteBuffer[] inputs, int[] inputOffsets, int dataLen,
-          ByteBuffer[] outputs, int[] outputOffsets) throws IOException {
+      ByteBuffer[] inputs, int[] inputOffsets, int dataLen,
+      ByteBuffer[] outputs, int[] outputOffsets) throws IOException {
     encodeImpl(inputs, inputOffsets, dataLen, outputs, outputOffsets);
   }
 

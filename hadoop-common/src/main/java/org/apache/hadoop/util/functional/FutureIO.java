@@ -3,11 +3,7 @@ package org.apache.hadoop.util.functional;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.UncheckedIOException;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * Future IO Helper methods.
@@ -71,10 +67,10 @@ public final class FutureIO {
    * @throws TimeoutException the future timed out.
    */
   public static <T> T awaitFuture(final Future<T> future,
-      final long timeout,
-      final TimeUnit unit)
+                                  final long timeout,
+                                  final TimeUnit unit)
       throws InterruptedIOException, IOException, RuntimeException,
-             TimeoutException {
+      TimeoutException {
     try {
       return future.get(timeout, unit);
     } catch (InterruptedException e) {

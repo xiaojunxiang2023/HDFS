@@ -16,25 +16,24 @@
  */
 package org.apache.hadoop.security.token.delegation.web;
 
+import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
+import org.apache.hadoop.auth.util.HttpConstants;
+import org.apache.hadoop.auth.util.micro.AuthenticationException;
+import org.apache.hadoop.filter.AuthenticationToken;
+import org.apache.hadoop.filter.handler.AuthenticationHandler;
+import org.apache.hadoop.filter.handler.CompositeAuthenticationHandler;
+import org.apache.hadoop.filter.handler.MultiSchemeAuthenticationHandler;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.filter.handler.AuthenticationHandler;
-import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
-import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.filter.handler.CompositeAuthenticationHandler;
-import org.apache.hadoop.auth.util.HttpConstants;
-import org.apache.hadoop.filter.handler.MultiSchemeAuthenticationHandler;
-
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
 
 /**
  * A {@link CompositeAuthenticationHandler} that supports multiple HTTP
@@ -148,8 +147,8 @@ public class MultiSchemeDelegationTokenAuthenticationHandler extends
    */
   @Override
   public AuthenticationToken authenticate(HttpServletRequest request,
-      HttpServletResponse response)
-          throws IOException, AuthenticationException {
+                                          HttpServletResponse response)
+      throws IOException, AuthenticationException {
     String authorization =
         request.getHeader(HttpConstants.AUTHORIZATION_HEADER);
 

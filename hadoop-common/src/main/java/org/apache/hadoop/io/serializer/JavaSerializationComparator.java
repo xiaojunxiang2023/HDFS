@@ -1,8 +1,9 @@
 package org.apache.hadoop.io.serializer;
 
+import org.apache.hadoop.io.RawComparator;
+
 import java.io.IOException;
 import java.io.Serializable;
-import org.apache.hadoop.io.RawComparator;
 
 /**
  * <p>
@@ -13,8 +14,8 @@ import org.apache.hadoop.io.RawComparator;
  * @param <T>
  * @see JavaSerialization
  */
-public class JavaSerializationComparator<T extends Serializable&Comparable<T>>
-  extends DeserializerComparator<T> {
+public class JavaSerializationComparator<T extends Serializable & Comparable<T>>
+    extends DeserializerComparator<T> {
   public JavaSerializationComparator() throws IOException {
     super(new JavaSerialization.JavaSerializationDeserializer<T>());
   }

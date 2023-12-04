@@ -1,8 +1,9 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.util.StringInterner;
+
 import java.io.IOException;
 import java.io.Serializable;
-import org.apache.hadoop.util.StringInterner;
 
 /**
  * Represents the network location of a block, information about the hosts
@@ -79,7 +80,7 @@ public class BlockLocation implements Serializable {
   /**
    * Constructor with host, name, offset and length.
    */
-  public BlockLocation(String[] names, String[] hosts, long offset, 
+  public BlockLocation(String[] names, String[] hosts, long offset,
                        long length) {
     this(names, hosts, offset, length, false);
   }
@@ -87,7 +88,7 @@ public class BlockLocation implements Serializable {
   /**
    * Constructor with host, name, offset, length and corrupt flag.
    */
-  public BlockLocation(String[] names, String[] hosts, long offset, 
+  public BlockLocation(String[] names, String[] hosts, long offset,
                        long length, boolean corrupt) {
     this(names, hosts, null, offset, length, corrupt);
   }
@@ -110,14 +111,14 @@ public class BlockLocation implements Serializable {
   }
 
   public BlockLocation(String[] names, String[] hosts, String[] cachedHosts,
-      String[] topologyPaths, long offset, long length, boolean corrupt) {
+                       String[] topologyPaths, long offset, long length, boolean corrupt) {
     this(names, hosts, cachedHosts, topologyPaths, null, null, offset, length,
         corrupt);
   }
 
   public BlockLocation(String[] names, String[] hosts, String[] cachedHosts,
-      String[] topologyPaths, String[] storageIds, StorageType[] storageTypes,
-      long offset, long length, boolean corrupt) {
+                       String[] topologyPaths, String[] storageIds, StorageType[] storageTypes,
+                       long offset, long length, boolean corrupt) {
     if (names == null) {
       this.names = EMPTY_STR_ARRAY;
     } else {
@@ -202,7 +203,7 @@ public class BlockLocation implements Serializable {
   public long getOffset() {
     return offset;
   }
-  
+
   /**
    * Get the length of the block.
    */
@@ -314,7 +315,7 @@ public class BlockLocation implements Serializable {
     if (corrupt) {
       result.append("(corrupt)");
     }
-    for(String h: hosts) {
+    for (String h : hosts) {
       result.append(',');
       result.append(h);
     }

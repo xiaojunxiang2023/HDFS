@@ -1,21 +1,21 @@
 package org.apache.hadoop.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Class that provides utility functions for checking disk problem
@@ -32,7 +32,7 @@ public class DiskChecker {
       super(msg, cause);
     }
   }
-    
+
   public static class DiskOutOfSpaceException extends IOException {
     public DiskOutOfSpaceException(String msg) {
       super(msg);
@@ -47,7 +47,7 @@ public class DiskChecker {
   /**
    * Create the directory if it doesn't exist and check that dir is readable,
    * writable and executable
-   *  
+   *
    * @param dir
    * @throws DiskErrorException
    */
@@ -70,10 +70,10 @@ public class DiskChecker {
   }
 
   private static void checkDirInternal(File dir)
-      throws DiskErrorException {    
+      throws DiskErrorException {
     if (!mkdirsWithExistsCheck(dir)) {
       throw new DiskErrorException("Cannot create directory: "
-                                   + dir.toString());
+          + dir.toString());
     }
     checkAccessByFileMethods(dir);
   }
@@ -105,17 +105,17 @@ public class DiskChecker {
    * @param expected permission
    * @throws DiskErrorException
    * @throws IOException
-   */  
+   */
   public static void checkDirWithDiskIo(LocalFileSystem localFS, Path dir,
-                                        FsPermission expected) 
+                                        FsPermission expected)
       throws DiskErrorException, IOException {
     checkDirInternal(localFS, dir, expected);
     doDiskIo(localFS.pathToFile(dir));
-  }  
+  }
 
   private static void checkDirInternal(LocalFileSystem localFS, Path dir,
                                        FsPermission expected)
-  throws DiskErrorException, IOException {
+      throws DiskErrorException, IOException {
     mkdirsWithExistsAndPermissionCheck(localFS, dir, expected);
     checkAccessByFileMethods(localFS.pathToFile(dir));
   }
@@ -123,7 +123,7 @@ public class DiskChecker {
   /**
    * Checks that the current running process can read, write, and execute the
    * given directory by using methods of the File object.
-   * 
+   *
    * @param dir File to check
    * @throws DiskErrorException if dir is not readable, not writable, or not
    *   executable
@@ -137,17 +137,17 @@ public class DiskChecker {
 
     if (!FileUtil.canRead(dir)) {
       throw new DiskErrorException("Directory is not readable: "
-                                   + dir.toString());
+          + dir.toString());
     }
 
     if (!FileUtil.canWrite(dir)) {
       throw new DiskErrorException("Directory is not writable: "
-                                   + dir.toString());
+          + dir.toString());
     }
 
     if (!FileUtil.canExecute(dir)) {
       throw new DiskErrorException("Directory is not executable: "
-                                   + dir.toString());
+          + dir.toString());
     }
   }
 
@@ -235,7 +235,7 @@ public class DiskChecker {
       IOException ioe = null;
 
       for (int i = 0; i < DISK_IO_MAX_ITERATIONS; ++i) {
-        final File file = getFileNameForDiskIoCheck(dir, i+1);
+        final File file = getFileNameForDiskIoCheck(dir, i + 1);
         try {
           diskIoCheckWithoutNativeIo(file);
           return;
@@ -246,7 +246,7 @@ public class DiskChecker {
         }
       }
       throw ioe;  // Just rethrow the last exception to signal failure.
-    } catch(IOException e) {
+    } catch (IOException e) {
       throw new DiskErrorException("Error checking directory " + dir, e);
     }
   }
@@ -303,6 +303,7 @@ public class DiskChecker {
    */
   interface FileIoProvider {
     FileOutputStream get(File f) throws FileNotFoundException;
+
     void write(FileOutputStream fos, byte[] data) throws IOException;
   }
 

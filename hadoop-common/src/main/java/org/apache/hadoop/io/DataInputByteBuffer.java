@@ -10,6 +10,7 @@ public class DataInputByteBuffer extends DataInputStream {
     private final byte[] scratch = new byte[1];
     ByteBuffer[] buffers = new ByteBuffer[0];
     int bidx, pos, length;
+
     @Override
     public int read() {
       if (-1 == read(scratch, 0, 1)) {
@@ -17,6 +18,7 @@ public class DataInputByteBuffer extends DataInputStream {
       }
       return scratch[0] & 0xFF;
     }
+
     @Override
     public int read(byte[] b, int off, int len) {
       if (bidx >= buffers.length) {
@@ -33,6 +35,7 @@ public class DataInputByteBuffer extends DataInputStream {
       pos += cur;
       return cur;
     }
+
     public void reset(ByteBuffer[] buffers) {
       bidx = pos = length = 0;
       this.buffers = buffers;
@@ -40,12 +43,15 @@ public class DataInputByteBuffer extends DataInputStream {
         length += b.remaining();
       }
     }
+
     public int getPosition() {
       return pos;
     }
+
     public int getLength() {
       return length;
     }
+
     public ByteBuffer[] getData() {
       return buffers;
     }

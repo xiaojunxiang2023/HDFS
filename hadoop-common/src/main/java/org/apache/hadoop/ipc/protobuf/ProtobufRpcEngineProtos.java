@@ -3,15 +3,19 @@
 package org.apache.hadoop.ipc.protobuf;
 
 public final class ProtobufRpcEngineProtos {
-  private ProtobufRpcEngineProtos() {}
+  private ProtobufRpcEngineProtos() {
+  }
+
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+
   public interface RequestHeaderProtoOrBuilder extends
       com.google.protobuf.GeneratedMessage.
           ExtendableMessageOrBuilder<RequestHeaderProto> {
 
     // required string methodName = 1;
+
     /**
      * <code>required string methodName = 1;</code>
      *
@@ -20,6 +24,7 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     boolean hasMethodName();
+
     /**
      * <code>required string methodName = 1;</code>
      *
@@ -28,6 +33,7 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     java.lang.String getMethodName();
+
     /**
      * <code>required string methodName = 1;</code>
      *
@@ -36,19 +42,20 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     com.google.protobuf.ByteString
-        getMethodNameBytes();
+    getMethodNameBytes();
 
     // required string declaringClassProtocolName = 2;
+
     /**
      * <code>required string declaringClassProtocolName = 2;</code>
      *
      * <pre>
-     ** 
+     **
      * RPCs for a particular interface (ie protocol) are done using a
      * IPC connection that is setup using rpcProxy.
      * The rpcProxy's has a declared protocol name that is 
      * sent form client to server at connection time. 
-     * 
+     *
      * Each Rpc call also sends a protocol name 
      * (called declaringClassprotocolName). This name is usually the same
      * as the connection protocol name except in some cases. 
@@ -60,16 +67,17 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     boolean hasDeclaringClassProtocolName();
+
     /**
      * <code>required string declaringClassProtocolName = 2;</code>
      *
      * <pre>
-     ** 
+     **
      * RPCs for a particular interface (ie protocol) are done using a
      * IPC connection that is setup using rpcProxy.
      * The rpcProxy's has a declared protocol name that is 
      * sent form client to server at connection time. 
-     * 
+     *
      * Each Rpc call also sends a protocol name 
      * (called declaringClassprotocolName). This name is usually the same
      * as the connection protocol name except in some cases. 
@@ -81,16 +89,17 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     java.lang.String getDeclaringClassProtocolName();
+
     /**
      * <code>required string declaringClassProtocolName = 2;</code>
      *
      * <pre>
-     ** 
+     **
      * RPCs for a particular interface (ie protocol) are done using a
      * IPC connection that is setup using rpcProxy.
      * The rpcProxy's has a declared protocol name that is 
      * sent form client to server at connection time. 
-     * 
+     *
      * Each Rpc call also sends a protocol name 
      * (called declaringClassprotocolName). This name is usually the same
      * as the connection protocol name except in some cases. 
@@ -102,9 +111,10 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     com.google.protobuf.ByteString
-        getDeclaringClassProtocolNameBytes();
+    getDeclaringClassProtocolNameBytes();
 
     // required uint64 clientProtocolVersion = 3;
+
     /**
      * <code>required uint64 clientProtocolVersion = 3;</code>
      *
@@ -113,6 +123,7 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     boolean hasClientProtocolVersion();
+
     /**
      * <code>required uint64 clientProtocolVersion = 3;</code>
      *
@@ -122,6 +133,7 @@ public final class ProtobufRpcEngineProtos {
      */
     long getClientProtocolVersion();
   }
+
   /**
    * Protobuf type {@code hadoop.common.RequestHeaderProto}
    *
@@ -137,15 +149,19 @@ public final class ProtobufRpcEngineProtos {
    */
   public static final class RequestHeaderProto extends
       com.google.protobuf.GeneratedMessage.ExtendableMessage<
-        RequestHeaderProto> implements RequestHeaderProtoOrBuilder {
+          RequestHeaderProto> implements RequestHeaderProtoOrBuilder {
     // Use RequestHeaderProto.newBuilder() to construct.
     private RequestHeaderProto(com.google.protobuf.GeneratedMessage.ExtendableBuilder<org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto, ?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private RequestHeaderProto(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private RequestHeaderProto(boolean noInit) {
+      this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
 
     private static final RequestHeaderProto defaultInstance;
+
     public static RequestHeaderProto getDefaultInstance() {
       return defaultInstance;
     }
@@ -155,11 +171,13 @@ public final class ProtobufRpcEngineProtos {
     }
 
     private final com.google.protobuf.UnknownFieldSet unknownFields;
+
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
+    getUnknownFields() {
       return this.unknownFields;
     }
+
     private RequestHeaderProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -178,7 +196,7 @@ public final class ProtobufRpcEngineProtos {
               break;
             default: {
               if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
+                  extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -210,13 +228,14 @@ public final class ProtobufRpcEngineProtos {
         makeExtensionsImmutable();
       }
     }
+
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.internal_static_hadoop_common_RequestHeaderProto_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.internal_static_hadoop_common_RequestHeaderProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto.class, org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto.Builder.class);
@@ -224,13 +243,13 @@ public final class ProtobufRpcEngineProtos {
 
     public static com.google.protobuf.Parser<RequestHeaderProto> PARSER =
         new com.google.protobuf.AbstractParser<RequestHeaderProto>() {
-      public RequestHeaderProto parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RequestHeaderProto(input, extensionRegistry);
-      }
-    };
+          public RequestHeaderProto parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return new RequestHeaderProto(input, extensionRegistry);
+          }
+        };
 
     @java.lang.Override
     public com.google.protobuf.Parser<RequestHeaderProto> getParserForType() {
@@ -241,6 +260,7 @@ public final class ProtobufRpcEngineProtos {
     // required string methodName = 1;
     public static final int METHODNAME_FIELD_NUMBER = 1;
     private java.lang.Object methodName_;
+
     /**
      * <code>required string methodName = 1;</code>
      *
@@ -251,6 +271,7 @@ public final class ProtobufRpcEngineProtos {
     public boolean hasMethodName() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+
     /**
      * <code>required string methodName = 1;</code>
      *
@@ -263,7 +284,7 @@ public final class ProtobufRpcEngineProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -272,6 +293,7 @@ public final class ProtobufRpcEngineProtos {
         return s;
       }
     }
+
     /**
      * <code>required string methodName = 1;</code>
      *
@@ -280,10 +302,10 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     public com.google.protobuf.ByteString
-        getMethodNameBytes() {
+    getMethodNameBytes() {
       java.lang.Object ref = methodName_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         methodName_ = b;
@@ -296,16 +318,17 @@ public final class ProtobufRpcEngineProtos {
     // required string declaringClassProtocolName = 2;
     public static final int DECLARINGCLASSPROTOCOLNAME_FIELD_NUMBER = 2;
     private java.lang.Object declaringClassProtocolName_;
+
     /**
      * <code>required string declaringClassProtocolName = 2;</code>
      *
      * <pre>
-     ** 
+     **
      * RPCs for a particular interface (ie protocol) are done using a
      * IPC connection that is setup using rpcProxy.
      * The rpcProxy's has a declared protocol name that is 
      * sent form client to server at connection time. 
-     * 
+     *
      * Each Rpc call also sends a protocol name 
      * (called declaringClassprotocolName). This name is usually the same
      * as the connection protocol name except in some cases. 
@@ -319,16 +342,17 @@ public final class ProtobufRpcEngineProtos {
     public boolean hasDeclaringClassProtocolName() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+
     /**
      * <code>required string declaringClassProtocolName = 2;</code>
      *
      * <pre>
-     ** 
+     **
      * RPCs for a particular interface (ie protocol) are done using a
      * IPC connection that is setup using rpcProxy.
      * The rpcProxy's has a declared protocol name that is 
      * sent form client to server at connection time. 
-     * 
+     *
      * Each Rpc call also sends a protocol name 
      * (called declaringClassprotocolName). This name is usually the same
      * as the connection protocol name except in some cases. 
@@ -344,7 +368,7 @@ public final class ProtobufRpcEngineProtos {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -353,16 +377,17 @@ public final class ProtobufRpcEngineProtos {
         return s;
       }
     }
+
     /**
      * <code>required string declaringClassProtocolName = 2;</code>
      *
      * <pre>
-     ** 
+     **
      * RPCs for a particular interface (ie protocol) are done using a
      * IPC connection that is setup using rpcProxy.
      * The rpcProxy's has a declared protocol name that is 
      * sent form client to server at connection time. 
-     * 
+     *
      * Each Rpc call also sends a protocol name 
      * (called declaringClassprotocolName). This name is usually the same
      * as the connection protocol name except in some cases. 
@@ -374,10 +399,10 @@ public final class ProtobufRpcEngineProtos {
      * </pre>
      */
     public com.google.protobuf.ByteString
-        getDeclaringClassProtocolNameBytes() {
+    getDeclaringClassProtocolNameBytes() {
       java.lang.Object ref = declaringClassProtocolName_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         declaringClassProtocolName_ = b;
@@ -390,6 +415,7 @@ public final class ProtobufRpcEngineProtos {
     // required uint64 clientProtocolVersion = 3;
     public static final int CLIENTPROTOCOLVERSION_FIELD_NUMBER = 3;
     private long clientProtocolVersion_;
+
     /**
      * <code>required uint64 clientProtocolVersion = 3;</code>
      *
@@ -400,6 +426,7 @@ public final class ProtobufRpcEngineProtos {
     public boolean hasClientProtocolVersion() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
+
     /**
      * <code>required uint64 clientProtocolVersion = 3;</code>
      *
@@ -416,7 +443,9 @@ public final class ProtobufRpcEngineProtos {
       declaringClassProtocolName_ = "";
       clientProtocolVersion_ = 0L;
     }
+
     private byte memoizedIsInitialized = -1;
+
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
@@ -442,10 +471,10 @@ public final class ProtobufRpcEngineProtos {
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessage
-        .ExtendableMessage<org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto>.ExtensionWriter extensionWriter =
+          .ExtendableMessage<org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeBytes(1, getMethodNameBytes());
@@ -461,6 +490,7 @@ public final class ProtobufRpcEngineProtos {
     }
 
     private int memoizedSerializedSize = -1;
+
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -468,15 +498,15 @@ public final class ProtobufRpcEngineProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getMethodNameBytes());
+            .computeBytesSize(1, getMethodNameBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getDeclaringClassProtocolNameBytes());
+            .computeBytesSize(2, getDeclaringClassProtocolNameBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(3, clientProtocolVersion_);
+            .computeUInt64Size(3, clientProtocolVersion_);
       }
       size += extensionsSerializedSize();
       size += getUnknownFields().getSerializedSize();
@@ -485,6 +515,7 @@ public final class ProtobufRpcEngineProtos {
     }
 
     private static final long serialVersionUID = 0L;
+
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
@@ -494,7 +525,7 @@ public final class ProtobufRpcEngineProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto)) {
         return super.equals(obj);
@@ -525,6 +556,7 @@ public final class ProtobufRpcEngineProtos {
     }
 
     private int memoizedHashCode = 0;
+
     @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
@@ -555,47 +587,56 @@ public final class ProtobufRpcEngineProtos {
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
+
     public static org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -603,12 +644,21 @@ public final class ProtobufRpcEngineProtos {
       return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return Builder.create();
+    }
+
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder(org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+
+    public Builder toBuilder() {
+      return newBuilder(this);
+    }
 
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -616,6 +666,7 @@ public final class ProtobufRpcEngineProtos {
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      * Protobuf type {@code hadoop.common.RequestHeaderProto}
      *
@@ -631,14 +682,14 @@ public final class ProtobufRpcEngineProtos {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.ExtendableBuilder<
-          org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto, Builder> implements org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProtoOrBuilder {
+            org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto, Builder> implements org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.internal_static_hadoop_common_RequestHeaderProto_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.internal_static_hadoop_common_RequestHeaderProto_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto.class, org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto.Builder.class);
@@ -654,10 +705,12 @@ public final class ProtobufRpcEngineProtos {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
         }
       }
+
       private static Builder create() {
         return new Builder();
       }
@@ -678,7 +731,7 @@ public final class ProtobufRpcEngineProtos {
       }
 
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.internal_static_hadoop_common_RequestHeaderProto_descriptor;
       }
 
@@ -717,7 +770,7 @@ public final class ProtobufRpcEngineProtos {
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto) {
-          return mergeFrom((org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto)other);
+          return mergeFrom((org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto) other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -725,7 +778,8 @@ public final class ProtobufRpcEngineProtos {
       }
 
       public Builder mergeFrom(org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto other) {
-        if (other == org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto.getDefaultInstance()) return this;
+        if (other == org.apache.hadoop.ipc.protobuf.ProtobufRpcEngineProtos.RequestHeaderProto.getDefaultInstance())
+          return this;
         if (other.hasMethodName()) {
           bitField0_ |= 0x00000001;
           methodName_ = other.methodName_;
@@ -746,19 +800,19 @@ public final class ProtobufRpcEngineProtos {
 
       public final boolean isInitialized() {
         if (!hasMethodName()) {
-          
+
           return false;
         }
         if (!hasDeclaringClassProtocolName()) {
-          
+
           return false;
         }
         if (!hasClientProtocolVersion()) {
-          
+
           return false;
         }
         if (!extensionsAreInitialized()) {
-          
+
           return false;
         }
         return true;
@@ -781,10 +835,12 @@ public final class ProtobufRpcEngineProtos {
         }
         return this;
       }
+
       private int bitField0_;
 
       // required string methodName = 1;
       private java.lang.Object methodName_ = "";
+
       /**
        * <code>required string methodName = 1;</code>
        *
@@ -795,6 +851,7 @@ public final class ProtobufRpcEngineProtos {
       public boolean hasMethodName() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+
       /**
        * <code>required string methodName = 1;</code>
        *
@@ -813,6 +870,7 @@ public final class ProtobufRpcEngineProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>required string methodName = 1;</code>
        *
@@ -821,10 +879,10 @@ public final class ProtobufRpcEngineProtos {
        * </pre>
        */
       public com.google.protobuf.ByteString
-          getMethodNameBytes() {
+      getMethodNameBytes() {
         java.lang.Object ref = methodName_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           methodName_ = b;
@@ -833,6 +891,7 @@ public final class ProtobufRpcEngineProtos {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>required string methodName = 1;</code>
        *
@@ -843,13 +902,14 @@ public final class ProtobufRpcEngineProtos {
       public Builder setMethodName(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
         methodName_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>required string methodName = 1;</code>
        *
@@ -863,6 +923,7 @@ public final class ProtobufRpcEngineProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required string methodName = 1;</code>
        *
@@ -873,9 +934,9 @@ public final class ProtobufRpcEngineProtos {
       public Builder setMethodNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
         methodName_ = value;
         onChanged();
         return this;
@@ -883,16 +944,17 @@ public final class ProtobufRpcEngineProtos {
 
       // required string declaringClassProtocolName = 2;
       private java.lang.Object declaringClassProtocolName_ = "";
+
       /**
        * <code>required string declaringClassProtocolName = 2;</code>
        *
        * <pre>
-       ** 
+       **
        * RPCs for a particular interface (ie protocol) are done using a
        * IPC connection that is setup using rpcProxy.
        * The rpcProxy's has a declared protocol name that is 
        * sent form client to server at connection time. 
-       * 
+       *
        * Each Rpc call also sends a protocol name 
        * (called declaringClassprotocolName). This name is usually the same
        * as the connection protocol name except in some cases. 
@@ -906,16 +968,17 @@ public final class ProtobufRpcEngineProtos {
       public boolean hasDeclaringClassProtocolName() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+
       /**
        * <code>required string declaringClassProtocolName = 2;</code>
        *
        * <pre>
-       ** 
+       **
        * RPCs for a particular interface (ie protocol) are done using a
        * IPC connection that is setup using rpcProxy.
        * The rpcProxy's has a declared protocol name that is 
        * sent form client to server at connection time. 
-       * 
+       *
        * Each Rpc call also sends a protocol name 
        * (called declaringClassprotocolName). This name is usually the same
        * as the connection protocol name except in some cases. 
@@ -937,16 +1000,17 @@ public final class ProtobufRpcEngineProtos {
           return (java.lang.String) ref;
         }
       }
+
       /**
        * <code>required string declaringClassProtocolName = 2;</code>
        *
        * <pre>
-       ** 
+       **
        * RPCs for a particular interface (ie protocol) are done using a
        * IPC connection that is setup using rpcProxy.
        * The rpcProxy's has a declared protocol name that is 
        * sent form client to server at connection time. 
-       * 
+       *
        * Each Rpc call also sends a protocol name 
        * (called declaringClassprotocolName). This name is usually the same
        * as the connection protocol name except in some cases. 
@@ -958,10 +1022,10 @@ public final class ProtobufRpcEngineProtos {
        * </pre>
        */
       public com.google.protobuf.ByteString
-          getDeclaringClassProtocolNameBytes() {
+      getDeclaringClassProtocolNameBytes() {
         java.lang.Object ref = declaringClassProtocolName_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           declaringClassProtocolName_ = b;
@@ -970,16 +1034,17 @@ public final class ProtobufRpcEngineProtos {
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
       /**
        * <code>required string declaringClassProtocolName = 2;</code>
        *
        * <pre>
-       ** 
+       **
        * RPCs for a particular interface (ie protocol) are done using a
        * IPC connection that is setup using rpcProxy.
        * The rpcProxy's has a declared protocol name that is 
        * sent form client to server at connection time. 
-       * 
+       *
        * Each Rpc call also sends a protocol name 
        * (called declaringClassprotocolName). This name is usually the same
        * as the connection protocol name except in some cases. 
@@ -993,23 +1058,24 @@ public final class ProtobufRpcEngineProtos {
       public Builder setDeclaringClassProtocolName(
           java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         declaringClassProtocolName_ = value;
         onChanged();
         return this;
       }
+
       /**
        * <code>required string declaringClassProtocolName = 2;</code>
        *
        * <pre>
-       ** 
+       **
        * RPCs for a particular interface (ie protocol) are done using a
        * IPC connection that is setup using rpcProxy.
        * The rpcProxy's has a declared protocol name that is 
        * sent form client to server at connection time. 
-       * 
+       *
        * Each Rpc call also sends a protocol name 
        * (called declaringClassprotocolName). This name is usually the same
        * as the connection protocol name except in some cases. 
@@ -1026,16 +1092,17 @@ public final class ProtobufRpcEngineProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required string declaringClassProtocolName = 2;</code>
        *
        * <pre>
-       ** 
+       **
        * RPCs for a particular interface (ie protocol) are done using a
        * IPC connection that is setup using rpcProxy.
        * The rpcProxy's has a declared protocol name that is 
        * sent form client to server at connection time. 
-       * 
+       *
        * Each Rpc call also sends a protocol name 
        * (called declaringClassprotocolName). This name is usually the same
        * as the connection protocol name except in some cases. 
@@ -1049,16 +1116,17 @@ public final class ProtobufRpcEngineProtos {
       public Builder setDeclaringClassProtocolNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         declaringClassProtocolName_ = value;
         onChanged();
         return this;
       }
 
       // required uint64 clientProtocolVersion = 3;
-      private long clientProtocolVersion_ ;
+      private long clientProtocolVersion_;
+
       /**
        * <code>required uint64 clientProtocolVersion = 3;</code>
        *
@@ -1069,6 +1137,7 @@ public final class ProtobufRpcEngineProtos {
       public boolean hasClientProtocolVersion() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+
       /**
        * <code>required uint64 clientProtocolVersion = 3;</code>
        *
@@ -1079,6 +1148,7 @@ public final class ProtobufRpcEngineProtos {
       public long getClientProtocolVersion() {
         return clientProtocolVersion_;
       }
+
       /**
        * <code>required uint64 clientProtocolVersion = 3;</code>
        *
@@ -1092,6 +1162,7 @@ public final class ProtobufRpcEngineProtos {
         onChanged();
         return this;
       }
+
       /**
        * <code>required uint64 clientProtocolVersion = 3;</code>
        *
@@ -1118,44 +1189,46 @@ public final class ProtobufRpcEngineProtos {
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_hadoop_common_RequestHeaderProto_descriptor;
+      internal_static_hadoop_common_RequestHeaderProto_descriptor;
   private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+  com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_hadoop_common_RequestHeaderProto_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
+
   private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n\027ProtobufRpcEngine.proto\022\rhadoop.common" +
-      "\"v\n\022RequestHeaderProto\022\022\n\nmethodName\030\001 \002" +
-      "(\t\022\"\n\032declaringClassProtocolName\030\002 \002(\t\022\035" +
-      "\n\025clientProtocolVersion\030\003 \002(\004*\t\010\350\007\020\200\200\200\200\002" +
-      "B<\n\036org.apache.hadoop.ipc.protobufB\027Prot" +
-      "obufRpcEngineProtos\240\001\001"
+        "\n\027ProtobufRpcEngine.proto\022\rhadoop.common" +
+            "\"v\n\022RequestHeaderProto\022\022\n\nmethodName\030\001 \002" +
+            "(\t\022\"\n\032declaringClassProtocolName\030\002 \002(\t\022\035" +
+            "\n\025clientProtocolVersion\030\003 \002(\004*\t\010\350\007\020\200\200\200\200\002" +
+            "B<\n\036org.apache.hadoop.ipc.protobufB\027Prot" +
+            "obufRpcEngineProtos\240\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-      new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-        public com.google.protobuf.ExtensionRegistry assignDescriptors(
-            com.google.protobuf.Descriptors.FileDescriptor root) {
-          descriptor = root;
-          internal_static_hadoop_common_RequestHeaderProto_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_hadoop_common_RequestHeaderProto_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_hadoop_common_RequestHeaderProto_descriptor,
-              new java.lang.String[] { "MethodName", "DeclaringClassProtocolName", "ClientProtocolVersion", });
-          return null;
-        }
-      };
+        new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
+          public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
+            internal_static_hadoop_common_RequestHeaderProto_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+            internal_static_hadoop_common_RequestHeaderProto_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                internal_static_hadoop_common_RequestHeaderProto_descriptor,
+                new java.lang.String[]{"MethodName", "DeclaringClassProtocolName", "ClientProtocolVersion",});
+            return null;
+          }
+        };
     com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        .internalBuildGeneratedFileFrom(descriptorData,
+            new com.google.protobuf.Descriptors.FileDescriptor[]{
+            }, assigner);
   }
 
   // @@protoc_insertion_point(outer_class_scope)

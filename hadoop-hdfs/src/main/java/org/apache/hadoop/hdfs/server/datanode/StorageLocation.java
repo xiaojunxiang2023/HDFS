@@ -1,26 +1,26 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.util.regex.Pattern;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocalFileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.HdfsConfiguration;
+import org.apache.hadoop.hdfs.server.common.Storage;
+import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
+import org.apache.hadoop.hdfs.server.datanode.checker.Checkable;
+import org.apache.hadoop.hdfs.server.datanode.checker.VolumeCheckResult;
+import org.apache.hadoop.util.DiskChecker;
+import org.apache.hadoop.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocalFileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.HdfsConfiguration;
-import org.apache.hadoop.hdfs.server.common.Storage.StorageDirectory;
-import org.apache.hadoop.hdfs.server.common.Storage;
-import org.apache.hadoop.hdfs.server.datanode.checker.Checkable;
-import org.apache.hadoop.hdfs.server.datanode.checker.VolumeCheckResult;
-import org.apache.hadoop.util.DiskChecker;
-import org.apache.hadoop.util.StringUtils;
+import java.util.regex.Pattern;
 
 
 /**
@@ -31,7 +31,7 @@ import org.apache.hadoop.util.StringUtils;
  */
 public class StorageLocation
     implements Checkable<StorageLocation.CheckContext, VolumeCheckResult>,
-               Comparable<StorageLocation> {
+    Comparable<StorageLocation> {
   private final StorageType storageType;
   private final URI baseURI;
   /** Regular expression that describes a storage uri with a storage type.
@@ -58,7 +58,7 @@ public class StorageLocation
       return new URI(uriStr);
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException(
-              "URI: " + uri + " is not in the expected format");
+          "URI: " + uri + " is not in the expected format");
     }
   }
 
@@ -80,7 +80,7 @@ public class StorageLocation
   }
 
   public boolean matchesStorageDirectory(StorageDirectory sd,
-      String bpid) throws IOException {
+                                         String bpid) throws IOException {
     if (sd.getStorageLocation().getStorageType() == StorageType.PROVIDED &&
         storageType == StorageType.PROVIDED) {
       return matchesStorageDirectory(sd);
@@ -185,7 +185,7 @@ public class StorageLocation
    * @throws IOException on errors
    */
   public void makeBlockPoolDir(String blockPoolID,
-      Configuration conf) throws IOException {
+                               Configuration conf) throws IOException {
 
     if (conf == null) {
       conf = new HdfsConfiguration();

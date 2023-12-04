@@ -1,6 +1,5 @@
 package org.apache.hadoop.io.erasurecode;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.erasurecode.codec.ErasureCodec;
 import org.apache.hadoop.io.erasurecode.codec.HHXORErasureCodec;
@@ -11,6 +10,7 @@ import org.apache.hadoop.io.erasurecode.coder.ErasureEncoder;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureCoderFactory;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureDecoder;
 import org.apache.hadoop.io.erasurecode.rawcoder.RawErasureEncoder;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,8 @@ public final class CodecUtil {
   public static final String IO_ERASURECODE_CODEC_XOR_RAWCODERS_KEY =
       IO_ERASURECODE_CODEC + "xor.rawcoders";
 
-  private CodecUtil() { }
+  private CodecUtil() {
+  }
 
   /**
    * Create encoder corresponding to given codec.
@@ -67,7 +68,7 @@ public final class CodecUtil {
    * @return erasure encoder
    */
   public static ErasureEncoder createEncoder(Configuration conf,
-      ErasureCodecOptions options) {
+                                             ErasureCodecOptions options) {
     Preconditions.checkNotNull(conf);
     Preconditions.checkNotNull(options);
 
@@ -84,7 +85,7 @@ public final class CodecUtil {
    * @return erasure decoder
    */
   public static ErasureDecoder createDecoder(Configuration conf,
-      ErasureCodecOptions options) {
+                                             ErasureCodecOptions options) {
     Preconditions.checkNotNull(conf);
     Preconditions.checkNotNull(options);
 
@@ -129,7 +130,7 @@ public final class CodecUtil {
       String coderName, String codecName) {
     RawErasureCoderFactory fact;
     fact = CodecRegistry.getInstance().
-            getCoderByName(codecName, coderName);
+        getCoderByName(codecName, coderName);
 
     return fact;
   }
@@ -142,8 +143,8 @@ public final class CodecUtil {
   private static String[] getRawCoderNames(
       Configuration conf, String codecName) {
     return conf.getStrings(
-      IO_ERASURECODE_CODEC + codecName + ".rawcoders",
-      CodecRegistry.getInstance().getCoderNames(codecName)
+        IO_ERASURECODE_CODEC + codecName + ".rawcoders",
+        CodecRegistry.getInstance().getCoderNames(codecName)
     );
   }
 
@@ -166,7 +167,7 @@ public final class CodecUtil {
       }
     }
     throw new IllegalArgumentException("Fail to create raw erasure " +
-       "encoder with given codec: " + codecName);
+        "encoder with given codec: " + codecName);
   }
 
   private static RawErasureDecoder createRawDecoderWithFallback(
@@ -183,7 +184,7 @@ public final class CodecUtil {
         // Fallback to next coder if possible
         if (LOG.isDebugEnabled()) {
           LOG.debug("Failed to create raw erasure decoder " + rawCoderName +
-                  ", fallback to next codec if possible", e);
+              ", fallback to next codec if possible", e);
         }
       }
     }
@@ -192,19 +193,19 @@ public final class CodecUtil {
   }
 
   private static ErasureCodec createCodec(Configuration conf,
-      String codecClassName, ErasureCodecOptions options) {
+                                          String codecClassName, ErasureCodecOptions options) {
     ErasureCodec codec = null;
     try {
       Class<? extends ErasureCodec> codecClass =
-              conf.getClassByName(codecClassName)
+          conf.getClassByName(codecClassName)
               .asSubclass(ErasureCodec.class);
       Constructor<? extends ErasureCodec> constructor
           = codecClass.getConstructor(Configuration.class,
           ErasureCodecOptions.class);
       codec = constructor.newInstance(conf, options);
     } catch (ClassNotFoundException | InstantiationException |
-            IllegalAccessException | NoSuchMethodException |
-            InvocationTargetException e) {
+        IllegalAccessException | NoSuchMethodException |
+        InvocationTargetException e) {
       throw new RuntimeException("Failed to create erasure codec", e);
     }
 
@@ -217,32 +218,32 @@ public final class CodecUtil {
 
   private static String getCodecClassName(Configuration conf, String codec) {
     switch (codec) {
-    case ErasureCodeConstants.RS_CODEC_NAME:
-      return conf.get(
-          CodecUtil.IO_ERASURECODE_CODEC_RS_KEY,
-          CodecUtil.IO_ERASURECODE_CODEC_RS);
-    case ErasureCodeConstants.RS_LEGACY_CODEC_NAME:
-      //TODO:rs-legacy should be handled differently.
-      return conf.get(
-          CodecUtil.IO_ERASURECODE_CODEC_RS_KEY,
-          CodecUtil.IO_ERASURECODE_CODEC_RS);
-    case ErasureCodeConstants.XOR_CODEC_NAME:
-      return conf.get(
-          CodecUtil.IO_ERASURECODE_CODEC_XOR_KEY,
-          CodecUtil.IO_ERASURECODE_CODEC_XOR);
-    case ErasureCodeConstants.HHXOR_CODEC_NAME:
-      return conf.get(
-          CodecUtil.IO_ERASURECODE_CODEC_HHXOR_KEY,
-          CodecUtil.IO_ERASURECODE_CODEC_HHXOR);
-    default:
-      // For custom codec, we throw exception if the factory is not configured
-      String codecKey = "io.erasurecode.codec." + codec + ".coder";
-      String codecClass = conf.get(codecKey);
-      if (codecClass == null) {
-        throw new IllegalArgumentException("Codec not configured " +
-                "for custom codec " + codec);
-      }
-      return codecClass;
+      case ErasureCodeConstants.RS_CODEC_NAME:
+        return conf.get(
+            CodecUtil.IO_ERASURECODE_CODEC_RS_KEY,
+            CodecUtil.IO_ERASURECODE_CODEC_RS);
+      case ErasureCodeConstants.RS_LEGACY_CODEC_NAME:
+        //TODO:rs-legacy should be handled differently.
+        return conf.get(
+            CodecUtil.IO_ERASURECODE_CODEC_RS_KEY,
+            CodecUtil.IO_ERASURECODE_CODEC_RS);
+      case ErasureCodeConstants.XOR_CODEC_NAME:
+        return conf.get(
+            CodecUtil.IO_ERASURECODE_CODEC_XOR_KEY,
+            CodecUtil.IO_ERASURECODE_CODEC_XOR);
+      case ErasureCodeConstants.HHXOR_CODEC_NAME:
+        return conf.get(
+            CodecUtil.IO_ERASURECODE_CODEC_HHXOR_KEY,
+            CodecUtil.IO_ERASURECODE_CODEC_HHXOR);
+      default:
+        // For custom codec, we throw exception if the factory is not configured
+        String codecKey = "io.erasurecode.codec." + codec + ".coder";
+        String codecClass = conf.get(codecKey);
+        if (codecClass == null) {
+          throw new IllegalArgumentException("Codec not configured " +
+              "for custom codec " + codec);
+        }
+        return codecClass;
     }
   }
 }

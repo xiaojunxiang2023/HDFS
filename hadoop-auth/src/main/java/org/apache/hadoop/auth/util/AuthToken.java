@@ -3,12 +3,7 @@ package org.apache.hadoop.auth.util;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class AuthToken implements Principal {
 
@@ -64,10 +59,10 @@ public class AuthToken implements Principal {
     this.maxInactives = -1;
     this.expires = -1;
   }
-  
+
   /**
    * Check if the provided value is invalid. Throw an error if it is invalid, NOP otherwise.
-   * 
+   *
    * @param value the value to check.
    * @param name the parameter name to use in an error message if the value is invalid.
    */
@@ -94,7 +89,7 @@ public class AuthToken implements Principal {
    */
   public void setExpires(long expires) {
     this.expires = expires;
-      generateToken();
+    generateToken();
   }
 
   /**
@@ -119,7 +114,7 @@ public class AuthToken implements Principal {
     sb.append(TYPE).append("=").append(getType()).append(ATTR_SEPARATOR);
     if (getMaxInactives() != -1) {
       sb.append(MAX_INACTIVES).append("=")
-      .append(getMaxInactives()).append(ATTR_SEPARATOR);
+          .append(getMaxInactives()).append(ATTR_SEPARATOR);
     }
     sb.append(EXPIRES).append("=").append(getExpires());
     tokenStr = sb.toString();
@@ -187,10 +182,10 @@ public class AuthToken implements Principal {
     if (tokenStr.length() >= 2) {
       // strip the \" at the two ends of the tokenStr
       if (tokenStr.charAt(0) == '\"' &&
-          tokenStr.charAt(tokenStr.length()-1) == '\"') {
-        tokenStr = tokenStr.substring(1, tokenStr.length()-1);
+          tokenStr.charAt(tokenStr.length() - 1) == '\"') {
+        tokenStr = tokenStr.substring(1, tokenStr.length() - 1);
       }
-    } 
+    }
     Map<String, String> map = split(tokenStr);
     // remove the signature part, since client doesn't care about it
     map.remove("s");

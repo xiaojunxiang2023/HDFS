@@ -1,4 +1,5 @@
 package org.apache.hadoop.metrics2.lib;
+
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 
 /**
@@ -25,15 +26,21 @@ public abstract class MutableMetric {
   /**
    * Set the changed flag in mutable operations
    */
-  protected void setChanged() { changed = true; }
+  protected void setChanged() {
+    changed = true;
+  }
 
   /**
    * Clear the changed flag in the snapshot operations
    */
-  protected void clearChanged() { changed = false; }
+  protected void clearChanged() {
+    changed = false;
+  }
 
   /**
-   * @return  true if metric is changed since last snapshot/snapshot
+   * @return true if metric is changed since last snapshot/snapshot
    */
-  public boolean changed() { return changed; }
+  public boolean changed() {
+    return changed;
+  }
 }

@@ -25,14 +25,14 @@ public interface HAServiceProtocol {
       return name;
     }
   }
-  
+
   // 请求来源，来源于 ZKFC，还是用户手动执行
   enum RequestSource {
     REQUEST_BY_USER,
     REQUEST_BY_USER_FORCED,
     REQUEST_BY_ZKFC;
   }
-  
+
   class StateChangeRequestInfo {
     private final RequestSource source;
 

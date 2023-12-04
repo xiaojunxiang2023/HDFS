@@ -1,48 +1,10 @@
 package org.apache.hadoop.hdfs;
 
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.SUCCESS;
-
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InterruptedIOException;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.nio.channels.ClosedChannelException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.BlockWrite;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
-import org.apache.hadoop.hdfs.protocol.datatransfer.BlockConstructionStage;
-import org.apache.hadoop.hdfs.protocol.datatransfer.DataTransferProtoUtil;
-import org.apache.hadoop.hdfs.protocol.datatransfer.DataTransferProtocol;
-import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
-import org.apache.hadoop.hdfs.protocol.datatransfer.InvalidEncryptionKeyException;
-import org.apache.hadoop.hdfs.protocol.datatransfer.PacketHeader;
-import org.apache.hadoop.hdfs.protocol.datatransfer.PipelineAck;
-import org.apache.hadoop.hdfs.protocol.datatransfer.Sender;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocol.datatransfer.*;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BlockOpResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
@@ -53,25 +15,31 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.util.Daemon;
-import org.apache.hadoop.util.DataChecksum;
-import org.apache.hadoop.util.Progressable;
-import org.apache.hadoop.util.Time;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.cache.*;
 import org.apache.hadoop.tracing.Span;
 import org.apache.hadoop.tracing.SpanContext;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
-
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
-import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
-import org.apache.hadoop.thirdparty.com.google.common.cache.RemovalListener;
-import org.apache.hadoop.thirdparty.com.google.common.cache.RemovalNotification;
-
+import org.apache.hadoop.util.Daemon;
+import org.apache.hadoop.util.DataChecksum;
+import org.apache.hadoop.util.Progressable;
+import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.nio.channels.ClosedChannelException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.SUCCESS;
 
 /*********************************************************************
  *
@@ -104,6 +72,7 @@ class DataStreamer extends Daemon {
     RefetchEncryptionKeyPolicy(DatanodeInfo src) {
       this.src = src;
     }
+
     boolean continueRetryingOrThrow() throws InvalidEncryptionKeyException {
       if (fetchEncryptionKeyTimes >= 2) {
         // hit the same exception twice connecting to the node, so
@@ -136,8 +105,8 @@ class DataStreamer extends Daemon {
     private DataInputStream in = null;
 
     StreamerStreams(final DatanodeInfo src,
-        final long writeTimeout, final long readTimeout,
-        final Token<BlockTokenIdentifier> blockToken)
+                    final long writeTimeout, final long readTimeout,
+                    final Token<BlockTokenIdentifier> blockToken)
         throws IOException {
       sock = createSocketForPipeline(src, 2, dfsClient);
 
@@ -153,9 +122,9 @@ class DataStreamer extends Daemon {
     }
 
     void sendTransferBlock(final DatanodeInfo[] targets,
-        final StorageType[] targetStorageTypes,
-        final String[] targetStorageIDs,
-        final Token<BlockTokenIdentifier> blockToken) throws IOException {
+                           final StorageType[] targetStorageTypes,
+                           final String[] targetStorageIDs,
+                           final Token<BlockTokenIdentifier> blockToken) throws IOException {
       //send the TRANSFER_BLOCK request
       new Sender(out).transferBlock(block.getCurrentBlock(), blockToken,
           dfsClient.clientName, targets, targetStorageTypes,
@@ -223,7 +192,7 @@ class DataStreamer extends Daemon {
    * @return the socket connected to the first datanode
    */
   static Socket createSocketForPipeline(final DatanodeInfo first,
-      final int length, final DFSClient client) throws IOException {
+                                        final int length, final DFSClient client) throws IOException {
     final DfsClientConf conf = client.getConf();
     final String dnAddr = first.getXferAddr(conf.isConnectToDnViaHostname());
     LOG.debug("Connecting to datanode {}", dnAddr);
@@ -259,7 +228,7 @@ class DataStreamer extends Daemon {
    * @param bam ByteArrayManager
    */
   private static void releaseBuffer(List<DFSPacket> packets, ByteArrayManager bam) {
-    for(DFSPacket p : packets) {
+    for (DFSPacket p : packets) {
       p.releaseBuffer(bam);
     }
     packets.clear();
@@ -356,7 +325,7 @@ class DataStreamer extends Daemon {
     }
 
     synchronized void initRestartingNode(int i, String message,
-        boolean shouldWait) {
+                                         boolean shouldWait) {
       restartingNodeIndex = i;
       if (shouldWait) {
         restartingNodeDeadline = Time.monotonicNow() + datanodeRestartTimeout;
@@ -574,7 +543,7 @@ class DataStreamer extends Daemon {
    * @param lastBlock the last block of a file
    * @throws IOException
    */
-  void setPipelineInConstruction(LocatedBlock lastBlock) throws IOException{
+  void setPipelineInConstruction(LocatedBlock lastBlock) throws IOException {
     // setup pipeline to append to the last block XXX retries??
     setPipeline(lastBlock);
     if (nodes.length < 1) {
@@ -656,7 +625,7 @@ class DataStreamer extends Daemon {
             }
             try {
               dataQueue.wait(timeout);
-            } catch (InterruptedException  e) {
+            } catch (InterruptedException e) {
               LOG.debug("Thread interrupted", e);
             }
             doSleep = false;
@@ -710,7 +679,7 @@ class DataStreamer extends Daemon {
         if (one.isLastPacketInBlock()) {
           // wait for all data packets have been successfully acked
           waitForAllAcks();
-          if(shouldStop()) {
+          if (shouldStop()) {
             continue;
           }
           stage = BlockConstructionStage.PIPELINE_CLOSE;
@@ -783,7 +752,9 @@ class DataStreamer extends Daemon {
 
           endBlock();
         }
-        if (progress != null) { progress.progress(); }
+        if (progress != null) {
+          progress.progress();
+        }
 
         // This is used by unit test to trigger race conditions.
         if (artificialSlowdown != 0 && dfsClient.clientRunning) {
@@ -824,7 +795,7 @@ class DataStreamer extends Daemon {
         try {
           // wait for acks to arrive from datanodes
           dataQueue.wait(sendHeartbeat());
-        } catch (InterruptedException  e) {
+        } catch (InterruptedException e) {
           LOG.debug("Thread interrupted ", e);
         }
       }
@@ -850,7 +821,7 @@ class DataStreamer extends Daemon {
   }
 
   private long sendHeartbeat() throws IOException {
-    final long heartbeatInterval = dfsClient.getConf().getSocketTimeout()/2;
+    final long heartbeatInterval = dfsClient.getConf().getSocketTimeout() / 2;
     long timeout = heartbeatInterval - (Time.monotonicNow() - lastPacket);
     if (timeout <= 0) {
       sendPacket(createHeartbeatPacket());
@@ -905,8 +876,8 @@ class DataStreamer extends Daemon {
               long duration = Time.monotonicNow() - begin;
               if (duration > writeTimeout) {
                 LOG.error("No ack received, took {}ms (threshold={}ms). "
-                    + "File being written: {}, block: {}, "
-                    + "Write pipeline datanodes: {}.",
+                        + "File being written: {}, block: {}, "
+                        + "Write pipeline datanodes: {}.",
                     duration, writeTimeout, src, block, nodes);
                 throw new InterruptedIOException("No ack received after " +
                     duration / 1000 + "s and a timeout of " +
@@ -1014,7 +985,7 @@ class DataStreamer extends Daemon {
       try {
         response.close();
         response.join();
-      } catch (InterruptedException  e) {
+      } catch (InterruptedException e) {
         LOG.debug("Thread interrupted", e);
         Thread.currentThread().interrupt();
       } finally {
@@ -1099,7 +1070,7 @@ class DataStreamer extends Daemon {
     private DatanodeInfo[] targets = null;
     private boolean isLastPacketInBlock = false;
 
-    ResponseProcessor (DatanodeInfo[] targets) {
+    ResponseProcessor(DatanodeInfo[] targets) {
       this.targets = targets;
     }
 
@@ -1133,7 +1104,7 @@ class DataStreamer extends Daemon {
           long seqno = ack.getSeqno();
           // processes response status from datanodes.
           ArrayList<DatanodeInfo> congestedNodesFromAck = new ArrayList<>();
-          for (int i = ack.getNumOfReplies()-1; i >=0  && dfsClient.clientRunning; i--) {
+          for (int i = ack.getNumOfReplies() - 1; i >= 0 && dfsClient.clientRunning; i--) {
             final Status reply = PipelineAck.getStatusFromHeader(ack
                 .getHeaderFlag(i));
             if (PipelineAck.getECNFromHeader(ack.getHeaderFlag(i)) ==
@@ -1241,7 +1212,7 @@ class DataStreamer extends Daemon {
     }
   }
 
-  private boolean shouldHandleExternalError(){
+  private boolean shouldHandleExternalError() {
     return errorState.hasExternalError() && blockStream != null;
   }
 
@@ -1336,9 +1307,9 @@ class DataStreamer extends Daemon {
               + BlockWrite.ReplaceDatanodeOnFailure.POLICY_KEY
               + "' in its configuration.");
     }
-    for(int i = 0; i < nodes.length; i++) {
+    for (int i = 0; i < nodes.length; i++) {
       int j = 0;
-      for(; j < original.length && !nodes[i].equals(original[j]); j++);
+      for (; j < original.length && !nodes[i].equals(original[j]); j++) ;
       if (j == original.length) {
         return i;
       }
@@ -1349,25 +1320,25 @@ class DataStreamer extends Daemon {
 
   private void addDatanode2ExistingPipeline() throws IOException {
     DataTransferProtocol.LOG.debug("lastAckedSeqno = {}", lastAckedSeqno);
-      /*
-       * Is data transfer necessary?  We have the following cases.
-       *
-       * Case 1: Failure in Pipeline Setup
-       * - Append
-       *    + Transfer the stored replica, which may be a RBW or a finalized.
-       * - Create
-       *    + If no data, then no transfer is required.
-       *    + If there are data written, transfer RBW. This case may happens
-       *      when there are streaming failure earlier in this pipeline.
-       *
-       * Case 2: Failure in Streaming
-       * - Append/Create:
-       *    + transfer RBW
-       *
-       * Case 3: Failure in Close
-       * - Append/Create:
-       *    + no transfer, let NameNode replicates the block.
-       */
+    /*
+     * Is data transfer necessary?  We have the following cases.
+     *
+     * Case 1: Failure in Pipeline Setup
+     * - Append
+     *    + Transfer the stored replica, which may be a RBW or a finalized.
+     * - Create
+     *    + If no data, then no transfer is required.
+     *    + If there are data written, transfer RBW. This case may happens
+     *      when there are streaming failure earlier in this pipeline.
+     *
+     * Case 2: Failure in Streaming
+     * - Append/Create:
+     *    + transfer RBW
+     *
+     * Case 3: Failure in Close
+     * - Append/Create:
+     *    + no transfer, let NameNode replicates the block.
+     */
     if (!isAppend && lastAckedSeqno < 0
         && stage == BlockConstructionStage.PIPELINE_SETUP_CREATE) {
       //no data have been written
@@ -1454,6 +1425,7 @@ class DataStreamer extends Daemon {
   private long computeTransferWriteTimeout() {
     return dfsClient.getDatanodeWriteTimeout(2);
   }
+
   private long computeTransferReadTimeout() {
     // transfer timeout multiplier based on the transfer size
     // One per 200 packets = 12.8MB. Minimum is 2.
@@ -1510,7 +1482,7 @@ class DataStreamer extends Daemon {
   }
 
   protected void setupPipelineInternal(DatanodeInfo[] datanodes,
-      StorageType[] nodeStorageTypes, String[] nodeStorageIDs)
+                                       StorageType[] nodeStorageTypes, String[] nodeStorageIDs)
       throws IOException {
     boolean success = false;
     long newGS = 0L;
@@ -1569,7 +1541,7 @@ class DataStreamer extends Daemon {
       } catch (InterruptedException ie) {
         lastException.set(new IOException(
             "Interrupted while waiting for restarting "
-            + nodes[errorState.getRestartingNodeIndex()]));
+                + nodes[errorState.getRestartingNodeIndex()]));
         streamerClosed = true;
         return false;
       }
@@ -1598,10 +1570,10 @@ class DataStreamer extends Daemon {
       }
       LOG.warn("Error Recovery for " + block + " in pipeline "
           + Arrays.toString(nodes) + ": datanode " + badNodeIndex
-          + "("+ nodes[badNodeIndex] + ") is " + reason);
+          + "(" + nodes[badNodeIndex] + ") is " + reason);
       failed.add(nodes[badNodeIndex]);
 
-      DatanodeInfo[] newnodes = new DatanodeInfo[nodes.length-1];
+      DatanodeInfo[] newnodes = new DatanodeInfo[nodes.length - 1];
       arraycopy(nodes, newnodes, badNodeIndex);
 
       final StorageType[] newStorageTypes = new StorageType[newnodes.length];
@@ -1624,7 +1596,7 @@ class DataStreamer extends Daemon {
         nodes, isAppend, isHflushed)) {
       try {
         addDatanode2ExistingPipeline();
-      } catch(IOException ioe) {
+      } catch (IOException ioe) {
         if (!dfsClient.dtpReplaceDatanodeOnFailure.isBestEffort()) {
           throw ioe;
         }
@@ -1672,7 +1644,7 @@ class DataStreamer extends Daemon {
 
   DatanodeInfo[] getExcludedNodes() {
     return excludedNodes.getAllPresent(excludedNodes.asMap().keySet())
-            .keySet().toArray(DatanodeInfo.EMPTY_ARRAY);
+        .keySet().toArray(DatanodeInfo.EMPTY_ARRAY);
   }
 
   /**
@@ -1729,8 +1701,8 @@ class DataStreamer extends Daemon {
   // Returns true if success, otherwise return failure.
   //
   boolean createBlockOutputStream(DatanodeInfo[] nodes,
-      StorageType[] nodeStorageTypes, String[] nodeStorageIDs,
-      long newGS, boolean recoveryFlag) {
+                                  StorageType[] nodeStorageTypes, String[] nodeStorageIDs,
+                                  long newGS, boolean recoveryFlag) {
     if (nodes.length == 0) {
       LOG.info("nodes are empty for write pipeline of " + block);
       return false;
@@ -1808,7 +1780,7 @@ class DataStreamer extends Daemon {
 
         assert null == blockStream : "Previous blockStream unclosed";
         blockStream = out;
-        result =  true; // success
+        result = true; // success
         errorState.resetInternalError();
         lastException.clear();
         // remove all restarting nodes from failed nodes list
@@ -1854,7 +1826,7 @@ class DataStreamer extends Daemon {
         }
         errorState.setInternalError();
         lastException.set(ie);
-        result =  false;  // error
+        result = false;  // error
       } finally {
         if (!result) {
           IOUtils.closeSocket(s);
@@ -1891,7 +1863,7 @@ class DataStreamer extends Daemon {
   }
 
   private LocatedBlock locateFollowingBlock(DatanodeInfo[] excluded,
-      ExtendedBlock oldBlock) throws IOException {
+                                            ExtendedBlock oldBlock) throws IOException {
     return DFSOutputStream.addBlock(excluded, dfsClient, src, oldBlock,
         stat.getFileId(), favoredNodes, addBlockFlags);
   }
@@ -1914,11 +1886,11 @@ class DataStreamer extends Daemon {
           sb.append(' ').append(i);
         }
         int range = Math.abs(lastCongestionBackoffTime * 3 -
-                                CONGESTION_BACKOFF_MEAN_TIME_IN_MS);
+            CONGESTION_BACKOFF_MEAN_TIME_IN_MS);
         int base = Math.min(lastCongestionBackoffTime * 3,
-                            CONGESTION_BACKOFF_MEAN_TIME_IN_MS);
+            CONGESTION_BACKOFF_MEAN_TIME_IN_MS);
         t = Math.min(CONGESTION_BACK_OFF_MAX_TIME_IN_MS,
-                     (int)(base + Math.random() * range));
+            (int) (base + Math.random() * range));
         lastCongestionBackoffTime = t;
         sb.append(" are congested. Backing off for ").append(t).append(" ms");
         LOG.info(sb.toString());
@@ -2016,7 +1988,7 @@ class DataStreamer extends Daemon {
 
   private static <T> void arraycopy(T[] srcs, T[] dsts, int skipIndex) {
     System.arraycopy(srcs, 0, dsts, 0, skipIndex);
-    System.arraycopy(srcs, skipIndex+1, dsts, skipIndex, dsts.length-skipIndex);
+    System.arraycopy(srcs, skipIndex + 1, dsts, skipIndex, dsts.length - skipIndex);
   }
 
   /**
@@ -2024,7 +1996,7 @@ class DataStreamer extends Daemon {
    *
    * @return if to persist blocks on namenode
    */
-  AtomicBoolean getPersistBlocks(){
+  AtomicBoolean getPersistBlocks() {
     return persistBlocks;
   }
 
@@ -2033,7 +2005,7 @@ class DataStreamer extends Daemon {
    *
    * @param appendChunk if to append a chunk
    */
-  void setAppendChunk(boolean appendChunk){
+  void setAppendChunk(boolean appendChunk) {
     this.appendChunk = appendChunk;
   }
 
@@ -2042,14 +2014,14 @@ class DataStreamer extends Daemon {
    *
    * @return if to append a chunk
    */
-  boolean getAppendChunk(){
+  boolean getAppendChunk() {
     return appendChunk;
   }
 
   /**
    * @return the last exception
    */
-  LastExceptionInStreamer getLastException(){
+  LastExceptionInStreamer getLastException() {
     return lastException;
   }
 
@@ -2121,7 +2093,7 @@ class DataStreamer extends Daemon {
    *
    * @return if this streamer is to terminate
    */
-  boolean streamerClosed(){
+  boolean streamerClosed() {
     return streamerClosed;
   }
 

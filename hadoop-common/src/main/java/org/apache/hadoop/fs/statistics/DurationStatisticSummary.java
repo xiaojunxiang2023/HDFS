@@ -3,10 +3,7 @@ package org.apache.hadoop.fs.statistics;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_FAILURES;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MAX;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MEAN;
-import static org.apache.hadoop.fs.statistics.StoreStatisticNames.SUFFIX_MIN;
+import static org.apache.hadoop.fs.statistics.StoreStatisticNames.*;
 
 /**
  * Summary of duration tracking statistics
@@ -46,11 +43,11 @@ public final class DurationStatisticSummary implements Serializable {
    * @param mean Mean duration -may be null. (will be cloned)
    */
   public DurationStatisticSummary(final String key,
-      final boolean success,
-      final long count,
-      final long max,
-      final long min,
-      @Nullable final MeanStatistic mean) {
+                                  final boolean success,
+                                  final long count,
+                                  final long max,
+                                  final long min,
+                                  @Nullable final MeanStatistic mean) {
     this.key = key;
     this.success = success;
     this.count = count;

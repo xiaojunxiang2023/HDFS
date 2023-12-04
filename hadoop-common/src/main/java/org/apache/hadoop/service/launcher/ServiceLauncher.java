@@ -1,17 +1,5 @@
 package org.apache.hadoop.service.launcher;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
@@ -20,10 +8,21 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.audit.CommonAuditContext;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.service.Service;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ExitCodeProvider;
 import org.apache.hadoop.util.ExitUtil;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A class to launch any YARN service by name.
@@ -51,7 +50,7 @@ import org.apache.hadoop.util.StringUtils;
  *   becomes the exit code of the command.</li>
  * </ol>
  * Error and warning messages are logged to {@code stderr}.
- * 
+ *
  * @param <S> service class to cast the generated service to.
  */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
@@ -88,7 +87,7 @@ public class ServiceLauncher<S extends Service>
       USAGE_NAME
           + " [" + ARG_CONF_PREFIXED + " <conf file>]"
           + " [" + ARG_CONFCLASS_PREFIXED + " <configuration classname>]"
-          + " "  + USAGE_SERVICE_ARGUMENTS;
+          + " " + USAGE_SERVICE_ARGUMENTS;
 
   /**
    * The shutdown time on an interrupt: {@value}.
@@ -101,7 +100,7 @@ public class ServiceLauncher<S extends Service>
    * Invalid until the service has been created. 
    */
   private volatile S service;
-  
+
   /**
    * Exit code of the service.
    *
@@ -109,7 +108,7 @@ public class ServiceLauncher<S extends Service>
    * executed or stopped, depending on the service type.
    */
   private int serviceExitCode;
-  
+
   /**
    * Any exception raised during execution.
    */
@@ -331,7 +330,7 @@ public class ServiceLauncher<S extends Service>
    * @return the usage message
    */
   protected String getUsageMessage() {
-    String message =   USAGE_MESSAGE;
+    String message = USAGE_MESSAGE;
     if (commandOptions != null) {
       message = USAGE_NAME
           + " " + commandOptions.toString()
@@ -413,7 +412,7 @@ public class ServiceLauncher<S extends Service>
         if (!(instance instanceof Configuration)) {
           throw new ExitUtil.ExitException(EXIT_SERVICE_CREATION_FAILURE,
               "Could not create " + classname
-              + " because it is not a Configuration class/subclass");
+                  + " because it is not a Configuration class/subclass");
         }
         loaded++;
       } catch (ClassNotFoundException e) {
@@ -445,9 +444,9 @@ public class ServiceLauncher<S extends Service>
    * @return an exit exception, which will have a status code of 0 if it worked
    */
   public ExitUtil.ExitException launchService(Configuration conf,
-      List<String> processedArgs,
-      boolean addShutdownHook,
-      boolean execute) {
+                                              List<String> processedArgs,
+                                              boolean addShutdownHook,
+                                              boolean execute) {
     return launchService(conf, null, processedArgs, addShutdownHook, execute);
   }
 
@@ -466,10 +465,10 @@ public class ServiceLauncher<S extends Service>
    * @return an exit exception, which will have a status code of 0 if it worked
    */
   public ExitUtil.ExitException launchService(Configuration conf,
-      S instance,
-      List<String> processedArgs,
-      boolean addShutdownHook,
-      boolean execute) {
+                                              S instance,
+                                              List<String> processedArgs,
+                                              boolean addShutdownHook,
+                                              boolean execute) {
 
     ExitUtil.ExitException exitException;
 
@@ -551,10 +550,10 @@ public class ServiceLauncher<S extends Service>
    */
 
   protected int coreServiceLaunch(Configuration conf,
-      S instance,
-      List<String> processedArgs,
-      boolean addShutdownHook,
-      boolean execute) throws Exception {
+                                  S instance,
+                                  List<String> processedArgs,
+                                  boolean addShutdownHook,
+                                  boolean execute) throws Exception {
 
     // create the service instance
     if (instance == null) {
@@ -581,8 +580,8 @@ public class ServiceLauncher<S extends Service>
       LOG.debug("Service {} implements LaunchableService", name);
       launchableService = (LaunchableService) service;
       if (launchableService.isInState(Service.STATE.INITED)) {
-        LOG.warn("LaunchableService {}" 
-            + " initialized in constructor before CLI arguments passed in",
+        LOG.warn("LaunchableService {}"
+                + " initialized in constructor before CLI arguments passed in",
             name);
       }
       Configuration newconf = launchableService.bindArgs(configuration,
@@ -658,7 +657,7 @@ public class ServiceLauncher<S extends Service>
         LOG.debug("No empty constructor {}", noEmptyConstructor,
             noEmptyConstructor);
         instance = serviceClass.getConstructor(String.class)
-                               .newInstance(serviceClassName);
+            .newInstance(serviceClassName);
       }
     } catch (Exception e) {
       throw serviceCreationFailure(e);
@@ -681,7 +680,7 @@ public class ServiceLauncher<S extends Service>
    * This process may just be a simple pass through, otherwise a new
    * exception is created with an exit code, the text of the supplied
    * exception, and the supplied exception as an inner cause.
-   * 
+   *
    * <ol>
    *   <li>If is already the right type, pass it through.</li>
    *   <li>If it implements {@link ExitCodeProvider#getExitCode()},
@@ -689,7 +688,7 @@ public class ServiceLauncher<S extends Service>
    *   <li>Otherwise, the exit code
    *   {@link LauncherExitCodes#EXIT_EXCEPTION_THROWN} is used.</li>
    * </ol>
-   *  
+   *
    * @param thrown the exception thrown
    * @return an {@code ExitException} with a status code
    */
@@ -727,7 +726,7 @@ public class ServiceLauncher<S extends Service>
   protected ServiceLaunchException serviceCreationFailure(Exception exception) {
     return new ServiceLaunchException(EXIT_SERVICE_CREATION_FAILURE, exception);
   }
-  
+
   /**
    * Override point: register this class as the handler for the control-C
    * and SIGINT interrupts.
@@ -786,7 +785,7 @@ public class ServiceLauncher<S extends Service>
       return "service " + serviceName;
     }
   }
-  
+
   /**
    * Print a warning message.
    * <p>
@@ -823,7 +822,7 @@ public class ServiceLauncher<S extends Service>
       }
     }
   }
-  
+
   /**
    * Exit the JVM.
    *
@@ -875,7 +874,7 @@ public class ServiceLauncher<S extends Service>
    * @throws ExitUtil.ExitException if JVM exiting is disabled.
    */
   public List<String> extractCommandOptions(Configuration conf,
-      List<String> args) {
+                                            List<String> args) {
     int size = args.size();
     if (size <= 1) {
       return new ArrayList<>(0);
@@ -896,7 +895,7 @@ public class ServiceLauncher<S extends Service>
    * @throws ServiceLaunchException if processing of arguments failed
    */
   protected List<String> parseCommandArgs(Configuration conf,
-      List<String> args) {
+                                          List<String> args) {
     Preconditions.checkNotNull(commandOptions,
         "Command options have not been created");
     StringBuilder argString = new StringBuilder(args.size() * 32);
@@ -958,7 +957,7 @@ public class ServiceLauncher<S extends Service>
    * @throws IOException on any failure
    */
   protected GenericOptionsParser createGenericOptionsParser(Configuration conf,
-      String[] argArray) throws IOException {
+                                                            String[] argArray) throws IOException {
     return new MinimalGenericOptionsParser(conf, commandOptions, argArray);
   }
 
@@ -989,7 +988,7 @@ public class ServiceLauncher<S extends Service>
    * @param args arguments
    */
   protected static String startupShutdownMessage(String classname,
-      List<String> args) {
+                                                 List<String> args) {
     final String hostname = NetUtils.getHostname();
 
     return StringUtils.createStartupShutdownMessage(classname, hostname,
@@ -1035,13 +1034,13 @@ public class ServiceLauncher<S extends Service>
   }
 
   /* ====================================================================== */
+
   /**
    * The real main function, which takes the arguments as a list.
    * Argument 0 MUST be the service classname
    * @param argsList the list of arguments
    */
   /* ====================================================================== */
-
   public static void serviceMain(List<String> argsList) {
     if (argsList.isEmpty()) {
       // no arguments: usage message
@@ -1060,7 +1059,7 @@ public class ServiceLauncher<S extends Service>
   protected static class MinimalGenericOptionsParser
       extends GenericOptionsParser {
     public MinimalGenericOptionsParser(Configuration conf,
-        Options options, String[] args) throws IOException {
+                                       Options options, String[] args) throws IOException {
       super(conf, options, args);
     }
 

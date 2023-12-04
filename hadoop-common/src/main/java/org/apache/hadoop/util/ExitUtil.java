@@ -1,4 +1,5 @@
 package org.apache.hadoop.util;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +37,8 @@ public final class ExitUtil {
     }
 
     public ExitException(int status,
-        String message,
-        Throwable cause) {
+                         String message,
+                         Throwable cause) {
       super(message, cause);
       this.status = status;
     }
@@ -86,8 +87,8 @@ public final class ExitUtil {
     }
 
     public HaltException(int status,
-        String message,
-        Throwable cause) {
+                         String message,
+                         Throwable cause) {
       super(message, cause);
       this.status = status;
     }
@@ -178,7 +179,7 @@ public final class ExitUtil {
     String msg = ee.getMessage();
     if (status != 0) {
       //exit indicates a problem, log it
-      LOG.debug("Exiting with status {}: {}",  status, msg, ee);
+      LOG.debug("Exiting with status {}: {}", status, msg, ee);
       LOG.info("Exiting with status {}: {}", status, msg);
     }
     if (systemExitDisabled) {

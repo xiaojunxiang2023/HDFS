@@ -17,19 +17,18 @@
  */
 package org.apache.hadoop.ipc;
 
+import org.apache.hadoop.io.MultipleIOException;
+import org.apache.hadoop.ipc.Client.ConnectionId;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import org.apache.hadoop.io.MultipleIOException;
-import org.apache.hadoop.ipc.Client.ConnectionId;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +40,8 @@ public final class ProxyCombiner {
   private static final Logger LOG =
       LoggerFactory.getLogger(ProxyCombiner.class);
 
-  private ProxyCombiner() { }
+  private ProxyCombiner() {
+  }
 
   /**
    * Combine two or more proxies which together comprise a single proxy
@@ -61,7 +61,7 @@ public final class ProxyCombiner {
    */
   @SuppressWarnings("unchecked")
   public static <T> T combine(Class<T> combinedProxyInterface,
-      Object... proxies) {
+                              Object... proxies) {
     methodLoop:
     for (Method m : combinedProxyInterface.getMethods()) {
       for (Object proxy : proxies) {
@@ -79,7 +79,7 @@ public final class ProxyCombiner {
     InvocationHandler handler =
         new CombinedProxyInvocationHandler(combinedProxyInterface, proxies);
     return (T) Proxy.newProxyInstance(combinedProxyInterface.getClassLoader(),
-        new Class[] {combinedProxyInterface}, handler);
+        new Class[]{combinedProxyInterface}, handler);
   }
 
   private static final class CombinedProxyInvocationHandler
@@ -89,7 +89,7 @@ public final class ProxyCombiner {
     private final Object[] proxies;
 
     private CombinedProxyInvocationHandler(Class<?> proxyInterface,
-        Object[] proxies) {
+                                           Object[] proxies) {
       this.proxyInterface = proxyInterface;
       this.proxies = proxies;
     }
@@ -101,7 +101,7 @@ public final class ProxyCombiner {
       for (Object underlyingProxy : proxies) {
         try {
           return method.invoke(underlyingProxy, args);
-        } catch (IllegalAccessException|IllegalArgumentException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
           lastException = e;
         } catch (InvocationTargetException ite) {
           throw ite.getCause();

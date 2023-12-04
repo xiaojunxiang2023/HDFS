@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * FileSystem-specific class used to operate on and resolve symlinks in a path.
  * Operation can potentially span multiple {@link FileSystem}s.
- * 
+ *
  * @see FSLinkResolver
  */
 public abstract class FileSystemLinkResolver<T> {
@@ -26,7 +26,7 @@ public abstract class FileSystemLinkResolver<T> {
    * Calls the abstract FileSystem call equivalent to the specialized subclass
    * implementation in {@link #doCall(Path)}. This is used when retrying the
    * call with a newly resolved Path and corresponding new FileSystem.
-   * 
+   *
    * @param fs
    *          FileSystem with which to retry call
    * @param p
@@ -54,7 +54,7 @@ public abstract class FileSystemLinkResolver<T> {
     // Assumes path belongs to this FileSystem.
     // Callers validate this by passing paths through FileSystem#checkPath
     FileSystem fs = filesys;
-    for (boolean isLink = true; isLink;) {
+    for (boolean isLink = true; isLink; ) {
       try {
         in = doCall(p);
         isLink = false;
@@ -71,7 +71,7 @@ public abstract class FileSystemLinkResolver<T> {
         }
         if (count++ > FsConstants.MAX_PATH_LINKS) {
           throw new IOException("Possible cyclic loop while " +
-                                "following symbolic link " + path);
+              "following symbolic link " + path);
         }
         // Resolve the first unresolved path component
         p = FSLinkResolver.qualifySymlinkTarget(fs.getUri(), p,

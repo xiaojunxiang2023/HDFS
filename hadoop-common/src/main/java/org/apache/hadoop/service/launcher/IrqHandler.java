@@ -18,13 +18,13 @@
 
 package org.apache.hadoop.service.launcher;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Handler of interrupts that relays them to a registered
@@ -36,7 +36,7 @@ import sun.misc.SignalHandler;
 @SuppressWarnings("UseOfSunClasses")
 public final class IrqHandler implements SignalHandler {
   private static final Logger LOG = LoggerFactory.getLogger(IrqHandler.class);
-  
+
   /**
    * Definition of the Control-C handler name: {@value}.
    */
@@ -89,7 +89,7 @@ public final class IrqHandler implements SignalHandler {
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException(
           "Could not set handler for signal \"" + name + "\"."
-          + "This can happen if the JVM has the -Xrs set.",
+              + "This can happen if the JVM has the -Xrs set.",
           e);
     }
   }
@@ -132,7 +132,7 @@ public final class IrqHandler implements SignalHandler {
   public int getSignalCount() {
     return signalCount.get();
   }
-  
+
   /**
    * Callback issues on an interrupt.
    */

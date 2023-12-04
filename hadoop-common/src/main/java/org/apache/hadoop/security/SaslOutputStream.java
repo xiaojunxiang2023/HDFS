@@ -1,15 +1,10 @@
 package org.apache.hadoop.security;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslException;
 import javax.security.sasl.SaslServer;
+import java.io.*;
 
 /**
  * A SaslOutputStream is composed of an OutputStream and a SaslServer (or
@@ -34,7 +29,7 @@ public class SaslOutputStream extends OutputStream {
    * Constructs a SASLOutputStream from an OutputStream and a SaslServer <br>
    * Note: if the specified OutputStream or SaslServer is null, a
    * NullPointerException may be thrown later when they are used.
-   * 
+   *
    * @param outStream
    *          the OutputStream to be processed
    * @param saslServer
@@ -46,7 +41,7 @@ public class SaslOutputStream extends OutputStream {
     String qop = (String) saslServer.getNegotiatedProperty(Sasl.QOP);
     this.useWrap = qop != null && !"auth".equalsIgnoreCase(qop);
     if (useWrap) {
-      this.outStream = new BufferedOutputStream(outStream, 64*1024);
+      this.outStream = new BufferedOutputStream(outStream, 64 * 1024);
     } else {
       this.outStream = outStream;
     }
@@ -56,7 +51,7 @@ public class SaslOutputStream extends OutputStream {
    * Constructs a SASLOutputStream from an OutputStream and a SaslClient <br>
    * Note: if the specified OutputStream or SaslClient is null, a
    * NullPointerException may be thrown later when they are used.
-   * 
+   *
    * @param outStream
    *          the OutputStream to be processed
    * @param saslClient
@@ -68,7 +63,7 @@ public class SaslOutputStream extends OutputStream {
     String qop = (String) saslClient.getNegotiatedProperty(Sasl.QOP);
     this.useWrap = qop != null && !"auth".equalsIgnoreCase(qop);
     if (useWrap) {
-      this.outStream = new BufferedOutputStream(outStream, 64*1024);
+      this.outStream = new BufferedOutputStream(outStream, 64 * 1024);
     } else {
       this.outStream = outStream;
     }
@@ -77,7 +72,7 @@ public class SaslOutputStream extends OutputStream {
   /**
    * Disposes of any system resources or security-sensitive information Sasl
    * might be using.
-   * 
+   *
    * @exception SaslException
    *              if a SASL error occurs.
    */
@@ -92,7 +87,7 @@ public class SaslOutputStream extends OutputStream {
 
   /**
    * Writes the specified byte to this output stream.
-   * 
+   *
    * @param b
    *          the <code>byte</code>.
    * @exception IOException
@@ -115,7 +110,7 @@ public class SaslOutputStream extends OutputStream {
    * The <code>write</code> method of <code>SASLOutputStream</code> calls the
    * <code>write</code> method of three arguments with the three arguments
    * <code>b</code>, <code>0</code>, and <code>b.length</code>.
-   * 
+   *
    * @param b
    *          the data.
    * @exception NullPointerException
@@ -131,7 +126,7 @@ public class SaslOutputStream extends OutputStream {
   /**
    * Writes <code>len</code> bytes from the specified byte array starting at
    * offset <code>off</code> to this output stream.
-   * 
+   *
    * @param inBuf
    *          the data.
    * @param off
@@ -172,7 +167,7 @@ public class SaslOutputStream extends OutputStream {
 
   /**
    * Flushes this output stream
-   * 
+   *
    * @exception IOException
    *              if an I/O error occurs.
    */
@@ -184,7 +179,7 @@ public class SaslOutputStream extends OutputStream {
   /**
    * Closes this output stream and releases any system resources associated with
    * this stream.
-   * 
+   *
    * @exception IOException
    *              if an I/O error occurs.
    */

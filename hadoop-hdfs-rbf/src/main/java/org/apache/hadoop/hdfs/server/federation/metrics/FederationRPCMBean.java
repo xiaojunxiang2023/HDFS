@@ -6,47 +6,47 @@ import org.apache.hadoop.classification.InterfaceStability;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public interface FederationRPCMBean {
-    long getProxyOps();
+  long getProxyOps();
 
-    double getProxyAvg();
+  double getProxyAvg();
 
-    long getProcessingOps();
+  long getProcessingOps();
 
-    double getProcessingAvg();
+  double getProcessingAvg();
 
-    long getProxyOpFailureCommunicate();
+  long getProxyOpFailureCommunicate();
 
-    long getProxyOpFailureStandby();
+  long getProxyOpFailureStandby();
 
-    long getProxyOpFailureClientOverloaded();
+  long getProxyOpFailureClientOverloaded();
 
-    long getProxyOpNotImplemented();
+  long getProxyOpNotImplemented();
 
-    long getProxyOpRetries();
+  long getProxyOpRetries();
 
-    long getProxyOpNoNamenodes();
+  long getProxyOpNoNamenodes();
 
-    long getRouterFailureStateStoreOps();
+  long getRouterFailureStateStoreOps();
 
-    long getRouterFailureReadOnlyOps();
+  long getRouterFailureReadOnlyOps();
 
-    long getRouterFailureLockedOps();
+  long getRouterFailureLockedOps();
 
-    long getRouterFailureSafemodeOps();
+  long getRouterFailureSafemodeOps();
 
-    int getRpcServerCallQueue();
+  int getRpcServerCallQueue();
 
-    int getRpcServerNumOpenConnections();
+  int getRpcServerNumOpenConnections();
 
-    int getRpcClientNumConnections();
+  int getRpcClientNumConnections();
 
-    int getRpcClientNumActiveConnections();
+  int getRpcClientNumActiveConnections();
 
-    int getRpcClientNumCreatingConnections();
+  int getRpcClientNumCreatingConnections();
 
-    int getRpcClientNumConnectionPools();
+  int getRpcClientNumConnectionPools();
 
-    String getRpcClientConnections();
+  String getRpcClientConnections();
 
-    String getAsyncCallerPool();
+  String getAsyncCallerPool();
 }

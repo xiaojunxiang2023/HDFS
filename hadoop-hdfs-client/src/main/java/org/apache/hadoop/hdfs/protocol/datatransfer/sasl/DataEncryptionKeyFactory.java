@@ -1,7 +1,8 @@
 package org.apache.hadoop.hdfs.protocol.datatransfer.sasl;
 
-import java.io.IOException;
 import org.apache.hadoop.hdfs.security.token.block.DataEncryptionKey;
+
+import java.io.IOException;
 
 /**
  * Creates a new {@link DataEncryptionKey} on demand.

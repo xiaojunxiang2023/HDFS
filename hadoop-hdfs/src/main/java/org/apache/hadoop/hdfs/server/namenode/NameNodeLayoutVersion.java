@@ -1,12 +1,14 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.FeatureInfo;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.LayoutFeature;
-public class NameNodeLayoutVersion { 
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedSet;
+
+public class NameNodeLayoutVersion {
   /** Build layout version and corresponding feature matrix */
   public final static Map<Integer, SortedSet<LayoutFeature>> FEATURES
       = new HashMap<Integer, SortedSet<LayoutFeature>>();
@@ -20,7 +22,7 @@ public class NameNodeLayoutVersion {
     LayoutVersion.updateMap(FEATURES, LayoutVersion.Feature.values());
     LayoutVersion.updateMap(FEATURES, NameNodeLayoutVersion.Feature.values());
   }
-  
+
   public static SortedSet<LayoutFeature> getFeatures(int lv) {
     return FEATURES.get(lv);
   }
@@ -60,7 +62,7 @@ public class NameNodeLayoutVersion {
     EDITLOG_LENGTH(-56, -56, "Add length field to every edit log op"),
     XATTRS(-57, -57, "Extended attributes"),
     CREATE_OVERWRITE(-58, -58, "Use single editlog record for " +
-      "creating file with overwrite"),
+        "creating file with overwrite"),
     XATTRS_NAMESPACE_EXT(-59, -59, "Increase number of xattr namespaces"),
     BLOCK_STORAGE_POLICY(-60, -60, "Block Storage policy"),
     TRUNCATE(-61, -61, "Truncate"),
@@ -93,11 +95,11 @@ public class NameNodeLayoutVersion {
      * @param features set of features that are to be enabled for this version
      */
     Feature(final int lv, final int ancestorLV, int minCompatLV,
-        final String description, boolean reserved, Feature... features) {
+            final String description, boolean reserved, Feature... features) {
       info = new FeatureInfo(lv, ancestorLV, minCompatLV, description, reserved,
           features);
     }
-    
+
     @Override
     public FeatureInfo getInfo() {
       return info;

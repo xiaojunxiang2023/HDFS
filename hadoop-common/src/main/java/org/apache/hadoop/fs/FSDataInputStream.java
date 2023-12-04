@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,14 +18,6 @@
  */
 package org.apache.hadoop.fs;
 
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.EnumSet;
 import org.apache.hadoop.fs.impl.StoreImplementationUtils;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
@@ -33,29 +25,33 @@ import org.apache.hadoop.fs.statistics.IOStatisticsSupport;
 import org.apache.hadoop.io.ByteBufferPool;
 import org.apache.hadoop.util.IdentityHashStore;
 
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.EnumSet;
+
 /** Utility that wraps a {@link FSInputStream} in a {@link DataInputStream}
  * and buffers input through a {@link java.io.BufferedInputStream}. */
 public class FSDataInputStream extends DataInputStream
-    implements Seekable, PositionedReadable, 
-      ByteBufferReadable, HasFileDescriptor, CanSetDropBehind, CanSetReadahead,
-      HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,
-      ByteBufferPositionedReadable, IOStatisticsSource {
+    implements Seekable, PositionedReadable,
+    ByteBufferReadable, HasFileDescriptor, CanSetDropBehind, CanSetReadahead,
+    HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,
+    ByteBufferPositionedReadable, IOStatisticsSource {
   /**
    * Map ByteBuffers that we have handed out to readers to ByteBufferPool 
    * objects
    */
   private final IdentityHashStore<ByteBuffer, ByteBufferPool>
-    extendedReadBuffers
+      extendedReadBuffers
       = new IdentityHashStore<ByteBuffer, ByteBufferPool>(0);
 
   public FSDataInputStream(InputStream in) {
     super(in);
-    if( !(in instanceof Seekable) || !(in instanceof PositionedReadable) ) {
+    if (!(in instanceof Seekable) || !(in instanceof PositionedReadable)) {
       throw new IllegalArgumentException(in.getClass().getCanonicalName() +
           " is not an instance of Seekable or PositionedReadable");
     }
   }
-  
+
   /**
    * Seek to the given offset.
    *
@@ -63,7 +59,7 @@ public class FSDataInputStream extends DataInputStream
    */
   @Override
   public void seek(long desired) throws IOException {
-    ((Seekable)in).seek(desired);
+    ((Seekable) in).seek(desired);
   }
 
   /**
@@ -73,9 +69,9 @@ public class FSDataInputStream extends DataInputStream
    */
   @Override
   public long getPos() throws IOException {
-    return ((Seekable)in).getPos();
+    return ((Seekable) in).getPos();
   }
-  
+
   /**
    * Read bytes from the given position in the stream to the given buffer.
    *
@@ -89,8 +85,8 @@ public class FSDataInputStream extends DataInputStream
    */
   @Override
   public int read(long position, byte[] buffer, int offset, int length)
-    throws IOException {
-    return ((PositionedReadable)in).read(position, buffer, offset, length);
+      throws IOException {
+    return ((PositionedReadable) in).read(position, buffer, offset, length);
   }
 
   /**
@@ -108,19 +104,19 @@ public class FSDataInputStream extends DataInputStream
    */
   @Override
   public void readFully(long position, byte[] buffer, int offset, int length)
-    throws IOException {
-    ((PositionedReadable)in).readFully(position, buffer, offset, length);
+      throws IOException {
+    ((PositionedReadable) in).readFully(position, buffer, offset, length);
   }
-  
+
   /**
    * See {@link #readFully(long, byte[], int, int)}.
    */
   @Override
   public void readFully(long position, byte[] buffer)
-    throws IOException {
-    ((PositionedReadable)in).readFully(position, buffer, 0, buffer.length);
+      throws IOException {
+    ((PositionedReadable) in).readFully(position, buffer, 0, buffer.length);
   }
-  
+
   /**
    * Seek to the given position on an alternate copy of the data.
    *
@@ -129,9 +125,9 @@ public class FSDataInputStream extends DataInputStream
    */
   @Override
   public boolean seekToNewSource(long targetPos) throws IOException {
-    return ((Seekable)in).seekToNewSource(targetPos); 
+    return ((Seekable) in).seekToNewSource(targetPos);
   }
-  
+
   /**
    * Get a reference to the wrapped input stream. Used by unit tests.
    *
@@ -144,11 +140,11 @@ public class FSDataInputStream extends DataInputStream
   @Override
   public int read(ByteBuffer buf) throws IOException {
     if (in instanceof ByteBufferReadable) {
-      return ((ByteBufferReadable)in).read(buf);
+      return ((ByteBufferReadable) in).read(buf);
     }
 
     throw new UnsupportedOperationException("Byte-buffer read unsupported " +
-            "by " + in.getClass().getCanonicalName());
+        "by " + in.getClass().getCanonicalName());
   }
 
   @Override
@@ -166,7 +162,7 @@ public class FSDataInputStream extends DataInputStream
   public void setReadahead(Long readahead)
       throws IOException, UnsupportedOperationException {
     try {
-      ((CanSetReadahead)in).setReadahead(readahead);
+      ((CanSetReadahead) in).setReadahead(readahead);
     } catch (ClassCastException e) {
       throw new UnsupportedOperationException(in.getClass().getCanonicalName() +
           " does not support setting the readahead caching strategy.");
@@ -177,7 +173,7 @@ public class FSDataInputStream extends DataInputStream
   public void setDropBehind(Boolean dropBehind)
       throws IOException, UnsupportedOperationException {
     try {
-      ((CanSetDropBehind)in).setDropBehind(dropBehind);
+      ((CanSetDropBehind) in).setDropBehind(dropBehind);
     } catch (ClassCastException e) {
       throw new UnsupportedOperationException("this stream does not " +
           "support setting the drop-behind caching setting.");
@@ -186,13 +182,12 @@ public class FSDataInputStream extends DataInputStream
 
   @Override
   public ByteBuffer read(ByteBufferPool bufferPool, int maxLength,
-      EnumSet<ReadOption> opts) 
-          throws IOException, UnsupportedOperationException {
+                         EnumSet<ReadOption> opts)
+      throws IOException, UnsupportedOperationException {
     try {
-      return ((HasEnhancedByteBufferAccess)in).read(bufferPool,
+      return ((HasEnhancedByteBufferAccess) in).read(bufferPool,
           maxLength, opts);
-    }
-    catch (ClassCastException e) {
+    } catch (ClassCastException e) {
       ByteBuffer buffer = ByteBufferUtil.
           fallbackRead(this, bufferPool, maxLength);
       if (buffer != null) {
@@ -206,17 +201,16 @@ public class FSDataInputStream extends DataInputStream
       EnumSet.noneOf(ReadOption.class);
 
   final public ByteBuffer read(ByteBufferPool bufferPool, int maxLength)
-          throws IOException, UnsupportedOperationException {
+      throws IOException, UnsupportedOperationException {
     return read(bufferPool, maxLength, EMPTY_READ_OPTIONS_SET);
   }
-  
+
   @Override
   public void releaseBuffer(ByteBuffer buffer) {
     try {
-      ((HasEnhancedByteBufferAccess)in).releaseBuffer(buffer);
-    }
-    catch (ClassCastException e) {
-      ByteBufferPool bufferPool = extendedReadBuffers.remove( buffer);
+      ((HasEnhancedByteBufferAccess) in).releaseBuffer(buffer);
+    } catch (ClassCastException e) {
+      ByteBufferPool bufferPool = extendedReadBuffers.remove(buffer);
       if (bufferPool == null) {
         throw new IllegalArgumentException("tried to release a buffer " +
             "that was not created by this stream.");
@@ -259,7 +253,7 @@ public class FSDataInputStream extends DataInputStream
       ((ByteBufferPositionedReadable) in).readFully(position, buf);
     } else {
       throw new UnsupportedOperationException("Byte-buffer pread " +
-              "unsupported by " + in.getClass().getCanonicalName());
+          "unsupported by " + in.getClass().getCanonicalName());
     }
   }
 

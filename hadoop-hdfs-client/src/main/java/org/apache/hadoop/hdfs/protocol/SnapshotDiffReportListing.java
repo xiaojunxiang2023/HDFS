@@ -1,11 +1,10 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.util.Collections;
-import java.util.List;
-
+import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
-import org.apache.hadoop.hdfs.DFSUtilClient;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class represents to  the difference between two snapshots of
@@ -35,7 +34,7 @@ public class SnapshotDiffReportListing {
     private final byte[][] targetPath;
 
     public DiffReportListingEntry(long dirId, long fileId, byte[][] sourcePath,
-        boolean isReference, byte[][] targetPath) {
+                                  boolean isReference, byte[][] targetPath) {
       Preconditions.checkNotNull(sourcePath);
       this.dirId = dirId;
       this.fileId = fileId;
@@ -45,7 +44,7 @@ public class SnapshotDiffReportListing {
     }
 
     public DiffReportListingEntry(long dirId, long fileId, byte[] sourcePath,
-        boolean isReference, byte[] targetpath) {
+                                  boolean isReference, byte[] targetpath) {
       Preconditions.checkNotNull(sourcePath);
       this.dirId = dirId;
       this.fileId = fileId;
@@ -100,10 +99,10 @@ public class SnapshotDiffReportListing {
   }
 
   public SnapshotDiffReportListing(byte[] startPath,
-      List<DiffReportListingEntry> modifiedEntryList,
-      List<DiffReportListingEntry> createdEntryList,
-      List<DiffReportListingEntry> deletedEntryList, int index,
-      boolean isFromEarlier) {
+                                   List<DiffReportListingEntry> modifiedEntryList,
+                                   List<DiffReportListingEntry> createdEntryList,
+                                   List<DiffReportListingEntry> deletedEntryList, int index,
+                                   boolean isFromEarlier) {
     this.modifyList = modifiedEntryList;
     this.createList = createdEntryList;
     this.deleteList = deletedEntryList;

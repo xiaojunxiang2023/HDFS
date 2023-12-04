@@ -1,6 +1,6 @@
 package org.apache.hadoop.fs;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  *  Stream that permits seeking.
@@ -12,7 +12,7 @@ public interface Seekable {
    * seek past the end of the file.
    */
   void seek(long pos) throws IOException;
-  
+
   /**
    * Return the current offset from the start of the file
    */

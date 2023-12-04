@@ -14,7 +14,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.diskbalancer.datamodel;
+ */
+package org.apache.hadoop.hdfs.server.diskbalancer.datamodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,13 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * DiskBalancerVolumeSet is a collection of storage devices on the
@@ -166,23 +161,24 @@ public class DiskBalancerVolumeSet {
     final int multiplier = 10000;
     return (double) ((long) (value * multiplier)) / multiplier;
   }
+
   private void skipMisConfiguredVolume(DiskBalancerVolume volume) {
     //probably points to some sort of mis-configuration. Log this and skip
     // processing this volume.
     String errMessage = String.format("Real capacity is negative." +
-                                          "This usually points to some " +
-                                          "kind of mis-configuration.%n" +
-                                          "Capacity : %d Reserved : %d " +
-                                          "realCap = capacity - " +
-                                          "reserved = %d.%n" +
-                                          "Skipping this volume from " +
-                                          "all processing. type : %s id" +
-                                          " :%s",
-                                      volume.getCapacity(),
-                                      volume.getReserved(),
-                                      volume.computeEffectiveCapacity(),
-                                      volume.getStorageType(),
-                                      volume.getUuid());
+            "This usually points to some " +
+            "kind of mis-configuration.%n" +
+            "Capacity : %d Reserved : %d " +
+            "realCap = capacity - " +
+            "reserved = %d.%n" +
+            "Skipping this volume from " +
+            "all processing. type : %s id" +
+            " :%s",
+        volume.getCapacity(),
+        volume.getReserved(),
+        volume.computeEffectiveCapacity(),
+        volume.getStorageType(),
+        volume.getUuid());
 
     LOG.error(errMessage);
     volume.setSkip(true);
@@ -225,8 +221,8 @@ public class DiskBalancerVolumeSet {
   public void addVolume(DiskBalancerVolume volume) throws Exception {
     Preconditions.checkNotNull(volume, "volume cannot be null");
     Preconditions.checkState(isTransient() == volume.isTransient(),
-                             "Mismatch in volumeSet and volume's transient " +
-                                 "properties.");
+        "Mismatch in volumeSet and volume's transient " +
+            "properties.");
 
 
     if (this.storageType == null) {
@@ -235,7 +231,7 @@ public class DiskBalancerVolumeSet {
       this.storageType = volume.getStorageType();
     } else {
       Preconditions.checkState(this.storageType.equals(volume.getStorageType()),
-                               "Adding wrong type of disk to this volume set");
+          "Adding wrong type of disk to this volume set");
     }
     volumes.add(volume);
     computeVolumeDataDensity();
@@ -268,7 +264,7 @@ public class DiskBalancerVolumeSet {
   public boolean isBalancingNeeded(double thresholdPercentage) {
     double threshold = thresholdPercentage / 100.0d;
 
-    if(volumes == null || volumes.size() <= 1) {
+    if (volumes == null || volumes.size() <= 1) {
       // there is nothing we can do with a single volume.
       // so no planning needed.
       return false;

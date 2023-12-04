@@ -1,10 +1,9 @@
 package org.apache.hadoop.hdfs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.hadoop.hdfs.web.WebHdfsConstants;
 import org.apache.hadoop.io.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  DtFetcher for SWebHdfsFileSystem using the base class HdfsDtFetcher impl.

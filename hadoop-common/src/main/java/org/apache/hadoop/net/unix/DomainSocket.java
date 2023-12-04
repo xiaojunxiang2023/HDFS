@@ -1,26 +1,20 @@
 package org.apache.hadoop.net.unix;
 
-import java.io.Closeable;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.ByteBuffer;
-
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.hadoop.util.NativeCodeLoader;
-import org.apache.hadoop.util.CloseableReferenceCount;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.CloseableReferenceCount;
+import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.ReadableByteChannel;
+
 /**
  * The implementation of UNIX domain sockets in Java.
- * 
+ *
  * See {@link DomainSocket} for more information about UNIX domain sockets.
  */
 public class DomainSocket implements Closeable {
@@ -66,7 +60,7 @@ public class DomainSocket implements Closeable {
    * For example, one way to perform a man-in-the-middle attack would be for
    * a malicious user to move the server socket out of the way and create his
    * own socket in the same place.  Not good.
-   * 
+   *
    * Note that we only check the path once.  It's possible that the
    * permissions on the path could change, perhaps to something more relaxed,
    * immediately after the path passes our validation test-- hence creating a
@@ -83,7 +77,7 @@ public class DomainSocket implements Closeable {
    */
   @VisibleForTesting
   native static void validateSocketPathSecurity0(String path,
-      int skipComponents) throws IOException;
+                                                 int skipComponents) throws IOException;
 
   /**
    * Return true only if UNIX domain sockets are available.
@@ -108,7 +102,7 @@ public class DomainSocket implements Closeable {
    * @param path            The source path
    * @param port            Port number to use
    *
-   * @return                The effective path
+   * @return The effective path
    */
   public static String getEffectivePath(String path, int port) {
     return path.replace("_PORT", String.valueOf(port));
@@ -164,7 +158,7 @@ public class DomainSocket implements Closeable {
    * Create a new DomainSocket listening on the given path.
    *
    * @param path         The path to bind and listen on.
-   * @return             The new DomainSocket.
+   * @return The new DomainSocket.
    */
   public static DomainSocket bindAndListen(String path) throws IOException {
     if (loadingFailureReason != null) {
@@ -181,15 +175,15 @@ public class DomainSocket implements Closeable {
    * Create a pair of UNIX domain sockets which are connected to each other
    * by calling socketpair(2).
    *
-   * @return                An array of two UNIX domain sockets connected to
+   * @return An array of two UNIX domain sockets connected to
    *                        each other.
    * @throws IOException    on error.
    */
   public static DomainSocket[] socketpair() throws IOException {
     int fds[] = socketpair0();
-    return new DomainSocket[] {
-      new DomainSocket("(anonymous0)", fds[0]),
-      new DomainSocket("(anonymous1)", fds[1])
+    return new DomainSocket[]{
+        new DomainSocket("(anonymous0)", fds[0]),
+        new DomainSocket("(anonymous1)", fds[1])
     };
   }
 
@@ -202,7 +196,7 @@ public class DomainSocket implements Closeable {
    *
    * This method can only be used on sockets that were bound with bind().
    *
-   * @return                The new connection.
+   * @return The new connection.
    * @throws IOException    If there was an I/O error performing the accept--
    *                        such as the socket being closed from under us.
    *                        Particularly when the accept is timed out, it throws
@@ -228,7 +222,7 @@ public class DomainSocket implements Closeable {
    * @param path              The path to connect to.
    * @throws IOException      If there was an I/O error performing the connect.
    *
-   * @return                  The new DomainSocket.
+   * @return The new DomainSocket.
    */
   public static DomainSocket connect(String path) throws IOException {
     if (loadingFailureReason != null) {
@@ -241,35 +235,35 @@ public class DomainSocket implements Closeable {
   /**
    * Return true if the file descriptor is currently open.
    *
-   * @return                 True if the file descriptor is currently open.
+   * @return True if the file descriptor is currently open.
    */
   public boolean isOpen() {
     return refCount.isOpen();
   }
 
   /**
-   * @return                 The socket path.
+   * @return The socket path.
    */
   public String getPath() {
     return path;
   }
 
   /**
-   * @return                 The socket InputStream
+   * @return The socket InputStream
    */
   public DomainInputStream getInputStream() {
     return inputStream;
   }
 
   /**
-   * @return                 The socket OutputStream
+   * @return The socket OutputStream
    */
   public DomainOutputStream getOutputStream() {
     return outputStream;
   }
 
   /**
-   * @return                 The socket Channel
+   * @return The socket Channel
    */
   public DomainChannel getChannel() {
     return channel;
@@ -364,7 +358,7 @@ public class DomainSocket implements Closeable {
       Thread.currentThread().interrupt();
     }
   }
-  
+
   /**
    * Call shutdown(SHUT_RDWR) on the UNIX domain socket.
    *
@@ -382,13 +376,13 @@ public class DomainSocket implements Closeable {
   }
 
   private native static void sendFileDescriptors0(int fd,
-      FileDescriptor descriptors[],
-      byte jbuf[], int offset, int length) throws IOException;
+                                                  FileDescriptor descriptors[],
+                                                  byte jbuf[], int offset, int length) throws IOException;
 
   /**
    * Send some FileDescriptor objects to the process on the other side of this
    * socket.
-   * 
+   *
    * @param descriptors       The file descriptors to send.
    * @param jbuf              Some bytes to send.  You must send at least
    *                          one byte.
@@ -396,7 +390,7 @@ public class DomainSocket implements Closeable {
    * @param length            Length of the jbuf array to use.
    */
   public void sendFileDescriptors(FileDescriptor descriptors[],
-      byte jbuf[], int offset, int length) throws IOException {
+                                  byte jbuf[], int offset, int length) throws IOException {
     refCount.reference();
     boolean exc = true;
     try {
@@ -408,15 +402,15 @@ public class DomainSocket implements Closeable {
   }
 
   private static native int receiveFileDescriptors0(int fd,
-      FileDescriptor[] descriptors,
-      byte[] buf, int offset, int length) throws IOException;
+                                                    FileDescriptor[] descriptors,
+                                                    byte[] buf, int offset, int length) throws IOException;
 
   /**
    * Receive some FileDescriptor objects from the process on the other side of
    * this socket, and wrap them in FileInputStream objects.
    */
   public int recvFileInputStreams(FileInputStream[] streams, byte buf[],
-        int offset, int length) throws IOException {
+                                  int offset, int length) throws IOException {
     FileDescriptor descriptors[] = new FileDescriptor[streams.length];
     boolean success = false;
     for (int i = 0; i < streams.length; i++) {
@@ -448,7 +442,8 @@ public class DomainSocket implements Closeable {
             } catch (Throwable t) {
               LOG.warn(t.toString());
             } finally {
-              streams[i] = null; }
+              streams[i] = null;
+            }
           }
         }
       }
@@ -458,7 +453,7 @@ public class DomainSocket implements Closeable {
 
   private native static int readArray0(int fd, byte b[], int off, int len)
       throws IOException;
-  
+
   private native static int available0(int fd) throws IOException;
 
   private static native void write0(int fd, int b) throws IOException;
@@ -467,7 +462,7 @@ public class DomainSocket implements Closeable {
       throws IOException;
 
   private native static int readByteBufferDirect0(int fd, ByteBuffer dst,
-      int position, int remaining) throws IOException;
+                                                  int position, int remaining) throws IOException;
 
   /**
    * Input stream for UNIX domain sockets.
@@ -486,7 +481,7 @@ public class DomainSocket implements Closeable {
         unreference(exc);
       }
     }
-    
+
     @Override
     public int read(byte b[], int off, int len) throws IOException {
       refCount.reference();
@@ -534,7 +529,7 @@ public class DomainSocket implements Closeable {
       boolean exc = true;
       try {
         byte b[] = new byte[1];
-        b[0] = (byte)val;
+        b[0] = (byte) val;
         DomainSocket.writeArray0(DomainSocket.this.fd, b, 0, 1);
         exc = false;
       } finally {
@@ -554,6 +549,7 @@ public class DomainSocket implements Closeable {
       }
     }
   }
+
   public class DomainChannel implements ReadableByteChannel {
     @Override
     public boolean isOpen() {

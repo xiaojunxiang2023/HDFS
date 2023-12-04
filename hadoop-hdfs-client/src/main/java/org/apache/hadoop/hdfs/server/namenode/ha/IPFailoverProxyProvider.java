@@ -1,12 +1,12 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.ipc.RPC;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * A NNFailoverProxyProvider implementation which works on IP failover setup.
@@ -29,7 +29,7 @@ public class IPFailoverProxyProvider<T> extends
   private final NNProxyInfo<T> nnProxyInfo;
 
   public IPFailoverProxyProvider(Configuration conf, URI uri,
-      Class<T> xface, HAProxyFactory<T> factory) {
+                                 Class<T> xface, HAProxyFactory<T> factory) {
     super(conf, uri, xface, factory);
     this.nnProxyInfo = new NNProxyInfo<>(DFSUtilClient.getNNAddress(uri));
   }
@@ -54,7 +54,7 @@ public class IPFailoverProxyProvider<T> extends
       return;
     }
     if (nnProxyInfo.proxy instanceof Closeable) {
-      ((Closeable)nnProxyInfo.proxy).close();
+      ((Closeable) nnProxyInfo.proxy).close();
     } else {
       RPC.stopProxy(nnProxyInfo.proxy);
     }

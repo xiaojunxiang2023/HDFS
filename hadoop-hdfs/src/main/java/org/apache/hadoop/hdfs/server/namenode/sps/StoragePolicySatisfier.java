@@ -1,45 +1,25 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import static org.apache.hadoop.util.Time.monotonicNow;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfoWithStorage;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
-import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
-import org.apache.hadoop.hdfs.protocol.HdfsLocatedFileStatus;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
-import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
-import org.apache.hadoop.hdfs.protocol.LocatedStripedBlock;
 import org.apache.hadoop.hdfs.server.balancer.Matcher;
 import org.apache.hadoop.hdfs.server.namenode.ErasureCodingPolicyManager;
 import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockMovingInfo;
 import org.apache.hadoop.hdfs.util.StripedBlockUtil;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
+import java.io.IOException;
+import java.util.*;
+
+import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
  * Setting storagePolicy on a file after the file write will only update the new
@@ -108,7 +88,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     private Map<Block, Set<StorageTypeNodePair>> assignedBlocks = null;
 
     BlocksMovingAnalysis(Status status,
-        Map<Block, Set<StorageTypeNodePair>> assignedBlocks) {
+                         Map<Block, Set<StorageTypeNodePair>> assignedBlocks) {
       this.status = status;
       this.assignedBlocks = assignedBlocks;
     }
@@ -208,7 +188,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
         if (!ctxt.isInSafeMode()) {
           itemInfo = storageMovementNeeded.get();
           if (itemInfo != null) {
-            if(itemInfo.getRetryCount() >= blockMovementMaxRetry){
+            if (itemInfo.getRetryCount() >= blockMovementMaxRetry) {
               LOG.info("Failed to satisfy the policy after "
                   + blockMovementMaxRetry + " retries. Removing inode "
                   + itemInfo.getFile() + " from the queue");
@@ -235,54 +215,54 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
               status = analyseBlocksStorageMovementsAndAssignToDN(file,
                   existingStoragePolicy);
               switch (status.status) {
-              // Just add to monitor, so it will be retried after timeout
-              case ANALYSIS_SKIPPED_FOR_RETRY:
-                // Just add to monitor, so it will be tracked for report and
-                // be removed on storage movement attempt finished report.
-              case BLOCKS_TARGETS_PAIRED:
-                if (LOG.isDebugEnabled()) {
-                  LOG.debug("Block analysis status:{} for the file id:{}."
-                      + " Adding to attempt monitor queue for the storage "
-                      + "movement attempt finished report",
-                      status.status, fileStatus.getFileId());
-                }
-                this.storageMovementsMonitor.add(itemInfo.getStartPath(),
-                    itemInfo.getFile(), monotonicNow(), status.assignedBlocks,
-                    itemInfo.getRetryCount());
-                break;
-              case NO_BLOCKS_TARGETS_PAIRED:
-                if (LOG.isDebugEnabled()) {
-                  LOG.debug("Adding trackID:{} for the file id:{} back to"
-                      + " retry queue as none of the blocks found its eligible"
-                      + " targets.", trackId, fileStatus.getFileId());
-                }
-                retryItem = true;
-                break;
-              case FEW_LOW_REDUNDANCY_BLOCKS:
-                if (LOG.isDebugEnabled()) {
-                  LOG.debug("Adding trackID:{} for the file id:{} back to "
-                      + "retry queue as some of the blocks are low redundant.",
-                      trackId, fileStatus.getFileId());
-                }
-                retryItem = true;
-                break;
-              case BLOCKS_FAILED_TO_MOVE:
-                if (LOG.isDebugEnabled()) {
-                  LOG.debug("Adding trackID:{} for the file id:{} back to "
-                      + "retry queue as some of the blocks movement failed.",
-                      trackId, fileStatus.getFileId());
-                }
-                retryItem = true;
-                break;
-              // Just clean Xattrs
-              case BLOCKS_TARGET_PAIRING_SKIPPED:
-              case BLOCKS_ALREADY_SATISFIED:
-              default:
-                LOG.info("Block analysis status:{} for the file id:{}."
-                    + " So, Cleaning up the Xattrs.", status.status,
-                    fileStatus.getFileId());
-                storageMovementNeeded.removeItemTrackInfo(itemInfo, true);
-                break;
+                // Just add to monitor, so it will be retried after timeout
+                case ANALYSIS_SKIPPED_FOR_RETRY:
+                  // Just add to monitor, so it will be tracked for report and
+                  // be removed on storage movement attempt finished report.
+                case BLOCKS_TARGETS_PAIRED:
+                  if (LOG.isDebugEnabled()) {
+                    LOG.debug("Block analysis status:{} for the file id:{}."
+                            + " Adding to attempt monitor queue for the storage "
+                            + "movement attempt finished report",
+                        status.status, fileStatus.getFileId());
+                  }
+                  this.storageMovementsMonitor.add(itemInfo.getStartPath(),
+                      itemInfo.getFile(), monotonicNow(), status.assignedBlocks,
+                      itemInfo.getRetryCount());
+                  break;
+                case NO_BLOCKS_TARGETS_PAIRED:
+                  if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding trackID:{} for the file id:{} back to"
+                        + " retry queue as none of the blocks found its eligible"
+                        + " targets.", trackId, fileStatus.getFileId());
+                  }
+                  retryItem = true;
+                  break;
+                case FEW_LOW_REDUNDANCY_BLOCKS:
+                  if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding trackID:{} for the file id:{} back to "
+                            + "retry queue as some of the blocks are low redundant.",
+                        trackId, fileStatus.getFileId());
+                  }
+                  retryItem = true;
+                  break;
+                case BLOCKS_FAILED_TO_MOVE:
+                  if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding trackID:{} for the file id:{} back to "
+                            + "retry queue as some of the blocks movement failed.",
+                        trackId, fileStatus.getFileId());
+                  }
+                  retryItem = true;
+                  break;
+                // Just clean Xattrs
+                case BLOCKS_TARGET_PAIRING_SKIPPED:
+                case BLOCKS_ALREADY_SATISFIED:
+                default:
+                  LOG.info("Block analysis status:{} for the file id:{}."
+                          + " So, Cleaning up the Xattrs.", status.status,
+                      fileStatus.getFileId());
+                  storageMovementNeeded.removeItemTrackInfo(itemInfo, true);
+                  break;
               }
             }
           }
@@ -450,7 +430,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
    * @return true if the given block is low redundant.
    */
   private boolean isLowRedundancyBlock(LocatedBlock blockInfo, int replication,
-      ErasureCodingPolicy ecPolicy) {
+                                       ErasureCodingPolicy ecPolicy) {
     boolean hasLowRedundancyBlock = false;
     if (blockInfo.isStriped()) {
       // For EC blocks, redundancy is the summation of data + parity blocks.
@@ -663,7 +643,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private boolean checkIfAlreadyChosen(List<BlockMovingInfo> blockMovingInfos,
-      DatanodeInfo dn) {
+                                       DatanodeInfo dn) {
     for (BlockMovingInfo blockMovingInfo : blockMovingInfos) {
       if (blockMovingInfo.getSource().equals(dn)) {
         return true;
@@ -673,9 +653,9 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private void buildContinuousBlockMovingInfos(LocatedBlock blockInfo,
-      DatanodeInfo sourceNode, StorageType sourceStorageType,
-      DatanodeInfo targetNode, StorageType targetStorageType,
-      List<BlockMovingInfo> blkMovingInfos) {
+                                               DatanodeInfo sourceNode, StorageType sourceStorageType,
+                                               DatanodeInfo targetNode, StorageType targetStorageType,
+                                               List<BlockMovingInfo> blkMovingInfos) {
     Block blk = ExtendedBlock.getLocalBlock(blockInfo.getBlock());
     BlockMovingInfo blkMovingInfo = new BlockMovingInfo(blk, sourceNode,
         targetNode, sourceStorageType, targetStorageType);
@@ -683,9 +663,9 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private void buildStripedBlockMovingInfos(LocatedBlock blockInfo,
-      DatanodeInfo sourceNode, StorageType sourceStorageType,
-      DatanodeInfo targetNode, StorageType targetStorageType,
-      List<BlockMovingInfo> blkMovingInfos, ErasureCodingPolicy ecPolicy) {
+                                            DatanodeInfo sourceNode, StorageType sourceStorageType,
+                                            DatanodeInfo targetNode, StorageType targetStorageType,
+                                            List<BlockMovingInfo> blkMovingInfos, ErasureCodingPolicy ecPolicy) {
     // For a striped block, it needs to construct internal block at the given
     // index of a block group. Here it is iterating over all the block indices
     // and construct internal blocks which can be then considered for block
@@ -727,9 +707,9 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
    *          - list of target storage types
    */
   private StorageTypeNodePair chooseTargetTypeInSameNode(LocatedBlock blockInfo,
-      DatanodeInfo source,
-      EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>> targetDns,
-      List<StorageType> targetTypes) {
+                                                         DatanodeInfo source,
+                                                         EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>> targetDns,
+                                                         List<StorageType> targetTypes) {
     for (StorageType t : targetTypes) {
       List<DatanodeWithStorage.StorageDetails> targetNodeStorages =
           targetDns.get(t);
@@ -745,7 +725,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
           }
           if (LOG.isDebugEnabled()) {
             LOG.debug("Datanode:{} storage type:{} doesn't have sufficient "
-                + "space:{} to move the target block size:{}",
+                    + "space:{} to move the target block size:{}",
                 source, t, targetNode, blockInfo.getBlockSize());
           }
         }
@@ -755,9 +735,9 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private StorageTypeNodePair chooseTarget(LocatedBlock block,
-      DatanodeInfo source, List<StorageType> targetTypes, Matcher matcher,
-      EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>>
-      locsForExpectedStorageTypes, List<DatanodeInfo> excludeNodes) {
+                                           DatanodeInfo source, List<StorageType> targetTypes, Matcher matcher,
+                                           EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>>
+                                               locsForExpectedStorageTypes, List<DatanodeInfo> excludeNodes) {
     for (StorageType t : targetTypes) {
       List<DatanodeWithStorage.StorageDetails> nodesWithStorages =
           locsForExpectedStorageTypes.get(t);
@@ -776,7 +756,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
           }
           if (LOG.isDebugEnabled()) {
             LOG.debug("Datanode:{} storage type:{} doesn't have sufficient "
-                + "space:{} to move the target block size:{}",
+                    + "space:{} to move the target block size:{}",
                 target, t, targetNode, block.getBlockSize());
           }
         }
@@ -814,11 +794,11 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>>
-      findTargetsForExpectedStorageTypes(List<StorageType> expected,
-        DatanodeMap liveDns) {
+  findTargetsForExpectedStorageTypes(List<StorageType> expected,
+                                     DatanodeMap liveDns) {
     EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>> targetsMap =
         new EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>>(
-        StorageType.class);
+            StorageType.class);
 
     for (StorageType storageType : expected) {
       List<DatanodeWithStorage> nodes = liveDns.getTarget(storageType);
@@ -859,8 +839,8 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private boolean checkSourceAndTargetTypeExists(DatanodeInfo dn,
-      List<StorageType> existingStorageTypes,
-      List<StorageType> expectedStorageTypes, DatanodeMap liveDns) {
+                                                 List<StorageType> existingStorageTypes,
+                                                 List<StorageType> expectedStorageTypes, DatanodeMap liveDns) {
     boolean isExpectedTypeAvailable = false;
     boolean isExistingTypeAvailable = false;
     for (DatanodeWithStorage liveDn : liveDns.getTargets()) {
@@ -901,7 +881,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
      *          available space which can be used for scheduling block move
      */
     void addTarget(DatanodeInfo node, List<StorageType> storageTypes,
-        List<Long> maxSize2Move) {
+                   List<Long> maxSize2Move) {
       DatanodeWithStorage nodeStorage = new DatanodeWithStorage(node);
       targets.add(nodeStorage);
       for (int i = 0; i < storageTypes.size(); i++) {
@@ -1033,7 +1013,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
    */
   @Override
   public void notifyStorageMovementAttemptFinishedBlk(DatanodeInfo dnInfo,
-      StorageType storageType, Block block) {
+                                                      StorageType storageType, Block block) {
     storageMovementsMonitor.notifyReportedBlock(dnInfo, storageType, block);
   }
 
@@ -1076,8 +1056,8 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
      *          file retry count
      */
     AttemptedItemInfo(long rootId, long trackId,
-        long lastAttemptedOrReportedTime,
-        Set<Block> blocks, int retryCount) {
+                      long lastAttemptedOrReportedTime,
+                      Set<Block> blocks, int retryCount) {
       super(rootId, trackId, retryCount);
       this.lastAttemptedOrReportedTime = lastAttemptedOrReportedTime;
       this.blocks = blocks;
@@ -1114,7 +1094,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
 
   @Override
   public void addAllFilesToProcess(long startPath, List<ItemInfo> itemInfoList,
-      boolean scanCompleted) {
+                                   boolean scanCompleted) {
     getStorageMovementQueue().addAll(startPath, itemInfoList, scanCompleted);
   }
 
@@ -1162,7 +1142,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   private static boolean removeOverlapBetweenStorageTypes(
       List<StorageType> expected,
       List<StorageType> existing, boolean ignoreNonMovable) {
-    for (Iterator<StorageType> i = existing.iterator(); i.hasNext();) {
+    for (Iterator<StorageType> i = existing.iterator(); i.hasNext(); ) {
       final StorageType t = i.next();
       if (expected.remove(t)) {
         i.remove();
@@ -1176,7 +1156,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
   }
 
   private static void removeNonMovable(List<StorageType> types) {
-    for (Iterator<StorageType> i = types.iterator(); i.hasNext();) {
+    for (Iterator<StorageType> i = types.iterator(); i.hasNext(); ) {
       final StorageType t = i.next();
       if (!t.isMovable()) {
         i.remove();
@@ -1199,8 +1179,8 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     Preconditions.checkArgument(
         (spsWorkMultiplier > 0),
         DFSConfigKeys.DFS_SPS_WORK_MULTIPLIER_PER_ITERATION +
-        " = '" + spsWorkMultiplier + "' is invalid. " +
-        "It should be a positive, non-zero integer value.");
+            " = '" + spsWorkMultiplier + "' is invalid. " +
+            "It should be a positive, non-zero integer value.");
     return spsWorkMultiplier;
   }
 }

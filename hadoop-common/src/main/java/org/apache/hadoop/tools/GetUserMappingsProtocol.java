@@ -1,7 +1,8 @@
 package org.apache.hadoop.tools;
 
-import java.io.IOException;
 import org.apache.hadoop.io.retry.Idempotent;
+
+import java.io.IOException;
 
 /**
  * Protocol implemented by the Name Node and Job Tracker which maps users to
@@ -9,12 +10,12 @@ import org.apache.hadoop.io.retry.Idempotent;
  */
 // MapReduce也可见
 public interface GetUserMappingsProtocol {
-  
+
   /**
    * Version 1: Initial version.
    */
   public static final long versionID = 1L;
-  
+
   /**
    * Get the groups which are mapped to the given user.
    * @param user The user to get the groups for.

@@ -1,7 +1,7 @@
 package org.apache.hadoop.fs;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell;
 
 import java.io.BufferedReader;
@@ -12,7 +12,7 @@ public class DU extends CachingGetSpaceUsed {
   private final DUShell duShell;
 
   @VisibleForTesting
-   public DU(File path, long interval, long jitter, long initialUsed)
+  public DU(File path, long interval, long jitter, long initialUsed)
       throws IOException {
     super(path, interval, jitter, initialUsed);
     this.duShell = new DUShell();
@@ -35,10 +35,11 @@ public class DU extends CachingGetSpaceUsed {
     }
   }
 
-  private final class DUShell extends Shell  {
+  private final class DUShell extends Shell {
     void startRefresh() throws IOException {
       run();
     }
+
     @Override
     public String toString() {
       return
@@ -73,8 +74,8 @@ public class DU extends CachingGetSpaceUsed {
     }
 
     GetSpaceUsed du = new GetSpaceUsed.Builder().setPath(new File(path))
-                                                .setConf(new Configuration())
-                                                .build();
+        .setConf(new Configuration())
+        .build();
     String duResult = du.toString();
     System.out.println(duResult);
   }

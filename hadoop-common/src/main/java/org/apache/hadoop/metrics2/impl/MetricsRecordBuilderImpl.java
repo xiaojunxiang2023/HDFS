@@ -1,18 +1,12 @@
 package org.apache.hadoop.metrics2.impl;
 
+import org.apache.hadoop.metrics2.*;
+import org.apache.hadoop.metrics2.lib.Interns;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
+import org.apache.hadoop.util.Time;
+
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
-
-import org.apache.hadoop.metrics2.AbstractMetric;
-import org.apache.hadoop.metrics2.MetricsInfo;
-import org.apache.hadoop.metrics2.MetricsCollector;
-import org.apache.hadoop.metrics2.MetricsFilter;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
-import org.apache.hadoop.metrics2.MetricsTag;
-import org.apache.hadoop.metrics2.lib.Interns;
-import org.apache.hadoop.util.Time;
 
 /**
  * {@link MetricsRecordBuilder} implementation used for building metrics records
@@ -39,7 +33,7 @@ class MetricsRecordBuilderImpl extends MetricsRecordBuilder {
    * @param acceptable
    */
   MetricsRecordBuilderImpl(MetricsCollector parent, MetricsInfo info,
-      MetricsFilter rf, MetricsFilter mf, boolean acceptable) {
+                           MetricsFilter rf, MetricsFilter mf, boolean acceptable) {
     this.parent = parent;
     timestamp = Time.now();
     recInfo = info;
@@ -51,7 +45,9 @@ class MetricsRecordBuilderImpl extends MetricsRecordBuilder {
   }
 
   @Override
-  public MetricsCollector parent() { return parent; }
+  public MetricsCollector parent() {
+    return parent;
+  }
 
   @Override
   public MetricsRecordBuilderImpl tag(MetricsInfo info, String value) {

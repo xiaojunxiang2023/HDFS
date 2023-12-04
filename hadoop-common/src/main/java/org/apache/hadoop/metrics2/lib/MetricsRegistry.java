@@ -1,11 +1,11 @@
 package org.apache.hadoop.metrics2.lib;
 
-import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.MetricsTag;
 import org.apache.hadoop.metrics2.impl.MsInfo;
+import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 
 import java.util.Collection;
 import java.util.Map;
@@ -102,8 +102,7 @@ public class MetricsRegistry {
    * @param iVal  initial value
    * @return a new counter object
    */
-  public synchronized
-  MutableCounterLong newCounter(MetricsInfo info, long iVal) {
+  public synchronized MutableCounterLong newCounter(MetricsInfo info, long iVal) {
     checkMetricName(info.name());
     MutableCounterLong ret = new MutableCounterLong(info, iVal);
     metricsMap.put(info.name(), ret);
@@ -193,7 +192,7 @@ public class MetricsRegistry {
    * @throws MetricsException if interval is not a positive integer
    */
   public synchronized MutableQuantiles newQuantiles(String name, String desc,
-      String sampleName, String valueName, int interval) {
+                                                    String sampleName, String valueName, int interval) {
     checkMetricName(name);
     if (interval <= 0) {
       throw new MetricsException("Interval should be positive.  Value passed" +
@@ -215,7 +214,7 @@ public class MetricsRegistry {
    * @return a new mutable stat metric object
    */
   public synchronized MutableStat newStat(String name, String desc,
-      String sampleName, String valueName, boolean extended) {
+                                          String sampleName, String valueName, boolean extended) {
     checkMetricName(name);
     MutableStat ret =
         new MutableStat(name, desc, sampleName, valueName, extended);
@@ -265,14 +264,15 @@ public class MetricsRegistry {
   public MutableRate newRate(String name, String desc, boolean extended) {
     return newRate(name, desc, extended, true);
   }
+
   public synchronized MutableRate newRate(String name, String desc,
-      boolean extended, boolean returnExisting) {
+                                          boolean extended, boolean returnExisting) {
     if (returnExisting) {
       MutableMetric rate = metricsMap.get(name);
       if (rate != null) {
         if (rate instanceof MutableRate) return (MutableRate) rate;
-        throw new MetricsException("Unexpected metrics type "+ rate.getClass()
-                                   +" for "+ name);
+        throw new MetricsException("Unexpected metrics type " + rate.getClass()
+            + " for " + name);
       }
     }
     checkMetricName(name);
@@ -314,12 +314,10 @@ public class MetricsRegistry {
     if (m != null) {
       if (m instanceof MutableStat) {
         ((MutableStat) m).add(value);
+      } else {
+        throw new MetricsException("Unsupported add(value) for metric " + name);
       }
-      else {
-        throw new MetricsException("Unsupported add(value) for metric "+ name);
-      }
-    }
-    else {
+    } else {
       metricsMap.put(name, newRate(name)); // default is a rate metric
       add(name, value);
     }
@@ -365,8 +363,7 @@ public class MetricsRegistry {
    * @param override existing tag if true
    * @return the registry (for keep adding tags etc.)
    */
-  public synchronized
-  MetricsRegistry tag(MetricsInfo info, String value, boolean override) {
+  public synchronized MetricsRegistry tag(MetricsInfo info, String value, boolean override) {
     if (!override) checkTagName(info.name());
     tagsMap.put(info.name(), Interns.tag(info, value));
     return this;
@@ -395,18 +392,18 @@ public class MetricsRegistry {
       }
     }
     if (foundWhitespace) {
-      throw new MetricsException("Metric name '"+ name +
+      throw new MetricsException("Metric name '" + name +
           "' contains illegal whitespace character");
     }
     // Check if name has already been registered
     if (metricsMap.containsKey(name)) {
-      throw new MetricsException("Metric name "+ name +" already exists!");
+      throw new MetricsException("Metric name " + name + " already exists!");
     }
   }
 
   private void checkTagName(String name) {
     if (tagsMap.containsKey(name)) {
-      throw new MetricsException("Tag "+ name +" already exists!");
+      throw new MetricsException("Tag " + name + " already exists!");
     }
   }
 

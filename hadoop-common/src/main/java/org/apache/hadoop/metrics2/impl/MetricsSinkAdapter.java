@@ -1,23 +1,24 @@
 package org.apache.hadoop.metrics2.impl;
 
-import java.io.Closeable;
-import java.util.Random;
-import java.util.concurrent.*;
-
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
-
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.metrics2.lib.MutableGaugeInt;
+import org.apache.hadoop.metrics2.MetricsFilter;
+import org.apache.hadoop.metrics2.MetricsRecordBuilder;
+import org.apache.hadoop.metrics2.MetricsSink;
 import org.apache.hadoop.metrics2.lib.MetricsRegistry;
 import org.apache.hadoop.metrics2.lib.MutableCounterInt;
+import org.apache.hadoop.metrics2.lib.MutableGaugeInt;
 import org.apache.hadoop.metrics2.lib.MutableStat;
-import org.apache.hadoop.metrics2.MetricsRecordBuilder;
-import static org.apache.hadoop.metrics2.util.Contracts.*;
-import org.apache.hadoop.metrics2.MetricsFilter;
-import org.apache.hadoop.metrics2.MetricsSink;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.hadoop.metrics2.util.Contracts.checkArg;
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * An adapter class for metrics sink and associated filters
@@ -55,19 +56,20 @@ class MetricsSinkAdapter implements SinkQueue.Consumer<MetricsBuffer> {
     this.metricFilter = metricFilter;
     this.periodMs = checkArg(periodMs, periodMs > 0, "period");
     firstRetryDelay = checkArg(retryDelay, retryDelay > 0, "retry delay");
-    this.retryBackoff = checkArg(retryBackoff, retryBackoff>1, "retry backoff");
+    this.retryBackoff = checkArg(retryBackoff, retryBackoff > 1, "retry backoff");
     oobPutTimeout = (long)
         (firstRetryDelay * Math.pow(retryBackoff, retryCount) * 1000);
     this.retryCount = retryCount;
     this.queue = new SinkQueue<MetricsBuffer>(checkArg(queueCapacity,
         queueCapacity > 0, "queue capacity"));
-    latency = registry.newRate("Sink_"+ name, "Sink end to end latency", false);
-    dropped = registry.newCounter("Sink_"+ name +"Dropped",
-                                  "Dropped updates per sink", 0);
-    qsize = registry.newGauge("Sink_"+ name + "Qsize", "Queue size", 0);
+    latency = registry.newRate("Sink_" + name, "Sink end to end latency", false);
+    dropped = registry.newCounter("Sink_" + name + "Dropped",
+        "Dropped updates per sink", 0);
+    qsize = registry.newGauge("Sink_" + name + "Qsize", "Queue size", 0);
 
     sinkThread = new Thread() {
-      @Override public void run() {
+      @Override
+      public void run() {
         publishMetricsFromQueue();
       }
     };
@@ -77,7 +79,7 @@ class MetricsSinkAdapter implements SinkQueue.Consumer<MetricsBuffer> {
 
   boolean putMetrics(MetricsBuffer buffer, long logicalTimeMs) {
     if (logicalTimeMs % periodMs == 0) {
-      LOG.debug("enqueue, logicalTime="+ logicalTimeMs);
+      LOG.debug("enqueue, logicalTime=" + logicalTimeMs);
       if (queue.enqueue(buffer)) {
         refreshQueueSizeGauge();
         return true;
@@ -87,7 +89,7 @@ class MetricsSinkAdapter implements SinkQueue.Consumer<MetricsBuffer> {
     }
     return true; // OK
   }
-  
+
   public boolean putMetricsImmediate(MetricsBuffer buffer) {
     WaitableMetricsBuffer waitableBuffer =
         new WaitableMetricsBuffer(buffer);
@@ -120,24 +122,25 @@ class MetricsSinkAdapter implements SinkQueue.Consumer<MetricsBuffer> {
         n = retryCount;
         inError = false;
       } catch (InterruptedException e) {
-        LOG.info(name +" thread interrupted.");
+        LOG.info(name + " thread interrupted.");
       } catch (Exception e) {
         if (n > 0) {
           int retryWindow = Math.max(0, 1000 / 2 * retryDelay - minDelay);
           int awhile = rng.nextInt(retryWindow) + minDelay;
           if (!inError) {
-            LOG.error("Got sink exception, retry in "+ awhile +"ms", e);
+            LOG.error("Got sink exception, retry in " + awhile + "ms", e);
           }
           retryDelay *= retryBackoff;
-          try { Thread.sleep(awhile); }
-          catch (InterruptedException e2) {
-            LOG.info(name +" thread interrupted while waiting for retry", e2);
+          try {
+            Thread.sleep(awhile);
+          } catch (InterruptedException e2) {
+            LOG.info(name + " thread interrupted while waiting for retry", e2);
           }
           --n;
         } else {
           if (!inError) {
-            LOG.error("Got sink exception and over retry limit, "+
-                      "suppressing further error messages", e);
+            LOG.error("Got sink exception and over retry limit, " +
+                "suppressing further error messages", e);
           }
           queue.clear();
           refreshQueueSizeGauge();
@@ -160,8 +163,8 @@ class MetricsSinkAdapter implements SinkQueue.Consumer<MetricsBuffer> {
           if ((context == null || context.equals(record.context())) &&
               (recordFilter == null || recordFilter.accepts(record))) {
             if (LOG.isDebugEnabled()) {
-              LOG.debug("Pushing record "+ entry.name() +"."+ record.context() +
-                        "."+ record.name() +" to "+ name);
+              LOG.debug("Pushing record " + entry.name() + "." + record.context() +
+                  "." + record.name() + " to " + name);
             }
             sink.putMetrics(metricFilter == null
                 ? record
@@ -176,21 +179,21 @@ class MetricsSinkAdapter implements SinkQueue.Consumer<MetricsBuffer> {
       latency.add(Time.now() - ts);
     }
     if (buffer instanceof WaitableMetricsBuffer) {
-      ((WaitableMetricsBuffer)buffer).notifyAnyWaiters();
+      ((WaitableMetricsBuffer) buffer).notifyAnyWaiters();
     }
     LOG.debug("Done");
   }
 
   void start() {
     sinkThread.start();
-    LOG.info("Sink "+ name +" started");
+    LOG.info("Sink " + name + " started");
   }
 
   void stop() {
     stopping = true;
     sinkThread.interrupt();
     if (sink instanceof Closeable) {
-      IOUtils.cleanupWithLogger(LOG, (Closeable)sink);
+      IOUtils.cleanupWithLogger(LOG, (Closeable) sink);
     }
     try {
       sinkThread.join();

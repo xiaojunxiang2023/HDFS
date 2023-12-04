@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.hadoop.ipc.RemoteException;
+import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2005, European Commission project OneLab under contract 034819
  * (http://www.one-lab.org)
- * 
+ *
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the following 
@@ -16,7 +16,7 @@
  *    nor the names of its contributors may be used to endorse or 
  *    promote products derived from this software without specific prior 
  *    written permission.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -33,13 +33,14 @@
 
 package org.apache.hadoop.util.bloom;
 
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.util.hash.Hash;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.util.hash.Hash;
 
 /**
  * Defines the general behavior of a filter.
@@ -51,7 +52,7 @@ import org.apache.hadoop.util.hash.Hash;
  * Typically, a filter will be implemented as a Bloom filter (or a Bloom filter extension).
  * <p>
  * It must be extended in order to define the real behavior.
- * 
+ *
  * @see Key The general behavior of a key
  * @see HashFunction A hash function
  */
@@ -66,13 +67,14 @@ public abstract class Filter implements Writable {
 
   /** The number of hash function to consider. */
   protected int nbHash;
-  
+
   /** Type of hashing function to use. */
   protected int hashType;
 
-  protected Filter() {}
-  
-  /** 
+  protected Filter() {
+  }
+
+  /**
    * Constructor.
    * @param vectorSize The vector size of <i>this</i> filter.
    * @param nbHash The number of hash functions to consider.
@@ -134,12 +136,12 @@ public abstract class Filter implements Writable {
    * Adds a list of keys to <i>this</i> filter.
    * @param keys The list of keys.
    */
-  public void add(List<Key> keys){
-    if(keys == null) {
+  public void add(List<Key> keys) {
+    if (keys == null) {
       throw new IllegalArgumentException("ArrayList<Key> may not be null");
     }
 
-    for(Key key: keys) {
+    for (Key key : keys) {
       add(key);
     }
   }//end add()
@@ -148,11 +150,11 @@ public abstract class Filter implements Writable {
    * Adds a collection of keys to <i>this</i> filter.
    * @param keys The collection of keys.
    */
-  public void add(Collection<Key> keys){
-    if(keys == null) {
+  public void add(Collection<Key> keys) {
+    if (keys == null) {
       throw new IllegalArgumentException("Collection<Key> may not be null");
     }
-    for(Key key: keys) {
+    for (Key key : keys) {
       add(key);
     }
   }//end add()
@@ -161,17 +163,17 @@ public abstract class Filter implements Writable {
    * Adds an array of keys to <i>this</i> filter.
    * @param keys The array of keys.
    */
-  public void add(Key[] keys){
-    if(keys == null) {
+  public void add(Key[] keys) {
+    if (keys == null) {
       throw new IllegalArgumentException("Key[] may not be null");
     }
-    for(int i = 0; i < keys.length; i++) {
+    for (int i = 0; i < keys.length; i++) {
       add(keys[i]);
     }
   }//end add()
-  
+
   // Writable interface
-  
+
   @Override
   public void write(DataOutput out) throws IOException {
     out.writeInt(VERSION);

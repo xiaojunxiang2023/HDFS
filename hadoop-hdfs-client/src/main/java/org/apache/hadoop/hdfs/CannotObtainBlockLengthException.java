@@ -1,4 +1,5 @@
 package org.apache.hadoop.hdfs;
+
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class CannotObtainBlockLengthException extends IOException {
     super();
   }
 
-  public CannotObtainBlockLengthException(String message){
+  public CannotObtainBlockLengthException(String message) {
     super(message);
   }
 
@@ -38,7 +39,7 @@ public class CannotObtainBlockLengthException extends IOException {
    * @param src The file which include this block
    */
   public CannotObtainBlockLengthException(LocatedBlock locatedBlock,
-      String src) {
+                                          String src) {
     super("Cannot obtain block length for " + locatedBlock + " of " + src);
   }
 }

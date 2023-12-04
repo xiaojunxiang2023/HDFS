@@ -1,8 +1,6 @@
 package org.apache.hadoop.security;
 
 import java.io.IOException;
-import java.util.List;
-import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 
 /**
  * An interface for the implementation of {@literal <}userId,
@@ -24,7 +22,7 @@ public interface IdMappingServiceProvider {
   // Return group name for given groupd id gid, if not found, return 
   // <unknown> passed to this method
   public String getGroupName(int gid, String unknown);
-  
+
   // Return uid for given user name.
   // When can't map user, return user name's string hashcode
   public int getUidAllowingUnknown(String user);

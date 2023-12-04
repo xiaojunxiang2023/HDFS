@@ -1,5 +1,17 @@
 package org.apache.hadoop.fs.sftp;
 
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Progressable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,23 +20,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.util.Progressable;
-
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.ChannelSftp.LsEntry;
-import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** SFTP FileSystem. */
 public class SFTPFileSystem extends FileSystem {
@@ -90,8 +85,8 @@ public class SFTPFileSystem extends FileSystem {
 
     int port = uriInfo.getPort();
     port = (port == -1)
-      ? conf.getInt(FS_SFTP_HOST_PORT, DEFAULT_SFTP_PORT)
-      : port;
+        ? conf.getInt(FS_SFTP_HOST_PORT, DEFAULT_SFTP_PORT)
+        : port;
     conf.setInt(FS_SFTP_HOST_PORT, port);
 
     // get user/password information from URI
@@ -241,7 +236,7 @@ public class SFTPFileSystem extends FileSystem {
    * @throws IOException
    */
   private FileStatus getFileStatus(ChannelSftp channel, LsEntry sftpFile,
-      Path parentPath) throws IOException {
+                                   Path parentPath) throws IOException {
 
     SftpATTRS attr = sftpFile.getAttrs();
     long length = attr.getSize();
@@ -276,7 +271,7 @@ public class SFTPFileSystem extends FileSystem {
 
     return new FileStatus(length, isDir, blockReplication, blockSize, modTime,
         accessTime, permission, user, group, filePath.makeQualified(
-            this.getUri(), this.getWorkingDirectory(channel)));
+        this.getUri(), this.getWorkingDirectory(channel)));
   }
 
   /**
@@ -413,7 +408,7 @@ public class SFTPFileSystem extends FileSystem {
     Path absolute = makeAbsolute(workDir, file);
     FileStatus fileStat = getFileStatus(client, absolute);
     if (!fileStat.isDirectory()) {
-      return new FileStatus[] {fileStat};
+      return new FileStatus[]{fileStat};
     }
     Vector<LsEntry> sftpFiles;
     try {
@@ -509,7 +504,7 @@ public class SFTPFileSystem extends FileSystem {
       throw new IOException(e);
     }
     return new FSDataInputStream(
-        new SFTPInputStream(channel, absolute, statistics)){
+        new SFTPInputStream(channel, absolute, statistics)) {
       @Override
       public void close() throws IOException {
         try {
@@ -527,8 +522,8 @@ public class SFTPFileSystem extends FileSystem {
    */
   @Override
   public FSDataOutputStream create(Path f, FsPermission permission,
-      boolean overwrite, int bufferSize, short replication, long blockSize,
-      Progressable progress) throws IOException {
+                                   boolean overwrite, int bufferSize, short replication, long blockSize,
+                                   Progressable progress) throws IOException {
     final ChannelSftp client = connect();
     Path workDir;
     try {
@@ -573,7 +568,7 @@ public class SFTPFileSystem extends FileSystem {
 
   @Override
   public FSDataOutputStream append(Path f, int bufferSize,
-      Progressable progress)
+                                   Progressable progress)
       throws IOException {
     throw new UnsupportedOperationException("Append is not supported "
         + "by SFTPFileSystem");

@@ -45,6 +45,7 @@ public final class CallerContext {
     return signature == null ?
         null : Arrays.copyOf(signature, signature.length);
   }
+
   public boolean isContextValid() {
     return context != null && !context.isEmpty();
   }

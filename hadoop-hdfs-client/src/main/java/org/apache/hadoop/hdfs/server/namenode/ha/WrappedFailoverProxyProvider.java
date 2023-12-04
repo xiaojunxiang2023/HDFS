@@ -1,8 +1,8 @@
 package org.apache.hadoop.hdfs.server.namenode.ha;
 
-import java.io.IOException;
-
 import org.apache.hadoop.io.retry.FailoverProxyProvider;
+
+import java.io.IOException;
 
 /**
  * A NNFailoverProxyProvider implementation which wrapps old implementations

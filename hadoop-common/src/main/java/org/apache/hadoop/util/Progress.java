@@ -1,8 +1,9 @@
 package org.apache.hadoop.util;
 
-import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 /** Utility to assist with generation of progress reports.  Applications build
  * a hierarchy of {@link Progress} instances, each modelling a phase of
@@ -27,9 +28,10 @@ public class Progress {
   private boolean fixedWeightageForAllPhases = false;
   private float progressPerPhase = 0.0f;
   private ArrayList<Float> progressWeightagesForPhases = new ArrayList<Float>();
-  
+
   /** Creates a new root node. */
-  public Progress() {}
+  public Progress() {
+  }
 
   /** Adds a named node to the tree. */
   public Progress addPhase(String status) {
@@ -46,7 +48,7 @@ public class Progress {
     fixedWeightageForAllPhases = true;
     return phase;
   }
-  
+
   /** Adds a new phase. Caller needs to set progress weightage */
   private synchronized Progress addNewPhase() {
     Progress phase = new Progress();
@@ -105,9 +107,14 @@ public class Progress {
     return progressWeightagesForPhases.get(phaseNum);
   }
 
-  synchronized Progress getParent() { return parent; }
-  synchronized void setParent(Progress parent) { this.parent = parent; }
-  
+  synchronized Progress getParent() {
+    return parent;
+  }
+
+  synchronized void setParent(Progress parent) {
+    this.parent = parent;
+  }
+
   /** Called during execution to move to the next phase at this level in the
    * tree. */
   public synchronized void startNextPhase() {
@@ -123,7 +130,7 @@ public class Progress {
   public void complete() {
     // we have to traverse up to our parent, so be careful about locking.
     Progress myParent;
-    synchronized(this) {
+    synchronized (this) {
       progress = 1.0f;
       myParent = parent;
     }
@@ -141,27 +148,23 @@ public class Progress {
     if (Float.isNaN(progress)) {
       progress = 0;
       LOG.debug("Illegal progress value found, progress is Float.NaN. " +
-        "Progress will be changed to 0");
-    }
-    else if (progress == Float.NEGATIVE_INFINITY) {
+          "Progress will be changed to 0");
+    } else if (progress == Float.NEGATIVE_INFINITY) {
       progress = 0;
       LOG.debug("Illegal progress value found, progress is " +
-        "Float.NEGATIVE_INFINITY. Progress will be changed to 0");
-    }
-    else if (progress < 0) {
+          "Float.NEGATIVE_INFINITY. Progress will be changed to 0");
+    } else if (progress < 0) {
       progress = 0;
       LOG.debug("Illegal progress value found, progress is less than 0." +
-        " Progress will be changed to 0");
-    }
-    else if (progress > 1) {
+          " Progress will be changed to 0");
+    } else if (progress > 1) {
       progress = 1;
       LOG.debug("Illegal progress value found, progress is larger than 1." +
-        " Progress will be changed to 1");
-    }
-    else if (progress == Float.POSITIVE_INFINITY) {
+          " Progress will be changed to 1");
+    } else if (progress == Float.POSITIVE_INFINITY) {
       progress = 1;
       LOG.debug("Illegal progress value found, progress is " +
-        "Float.POSITIVE_INFINITY. Progress will be changed to 1");
+          "Float.POSITIVE_INFINITY. Progress will be changed to 1");
     }
     this.progress = progress;
   }
@@ -184,7 +187,7 @@ public class Progress {
   public synchronized float getProgress() {
     return getInternal();
   }
-  
+
   /** Computes progress in this node. */
   private synchronized float getInternal() {
     int phaseCount = phases.size();
@@ -194,20 +197,19 @@ public class Progress {
       if (currentPhase < phaseCount) {
         subProgress = phase().getInternal();
         progressFromCurrentPhase =
-          getProgressWeightage(currentPhase) * subProgress;
+            getProgressWeightage(currentPhase) * subProgress;
       }
-      
+
       float progressFromCompletedPhases = 0.0f;
       if (fixedWeightageForAllPhases) { // same progress weightage for each phase
         progressFromCompletedPhases = progressPerPhase * currentPhase;
-      }
-      else {
+      } else {
         for (int i = 0; i < currentPhase; i++) {
           // progress weightages of phases could be different. Add them
           progressFromCompletedPhases += getProgressWeightage(i);
         }
       }
-      return  progressFromCompletedPhases + progressFromCurrentPhase;
+      return progressFromCompletedPhases + progressFromCurrentPhase;
     } else {
       return progress;
     }

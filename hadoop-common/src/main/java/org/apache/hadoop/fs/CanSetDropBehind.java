@@ -1,6 +1,7 @@
 package org.apache.hadoop.fs;
 
 import java.io.IOException;
+
 public interface CanSetDropBehind {
   /**
    * Configure whether the stream should drop the cache.

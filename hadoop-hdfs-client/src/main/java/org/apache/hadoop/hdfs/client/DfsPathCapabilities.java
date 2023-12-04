@@ -14,13 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.client;
-
-import java.util.Optional;
+ */
+package org.apache.hadoop.hdfs.client;
 
 import org.apache.hadoop.fs.CommonPathCapabilities;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+
+import java.util.Optional;
 
 import static org.apache.hadoop.fs.impl.PathCapabilitiesSupport.validatePathCapabilityArgs;
 
@@ -37,25 +38,25 @@ public final class DfsPathCapabilities {
    * pass up to its superclass.
    */
   public static Optional<Boolean> hasPathCapability(final Path path,
-      final String capability) {
+                                                    final String capability) {
     switch (validatePathCapabilityArgs(path, capability)) {
 
-    case CommonPathCapabilities.FS_ACLS:
-    case CommonPathCapabilities.FS_APPEND:
-    case CommonPathCapabilities.FS_CHECKSUMS:
-    case CommonPathCapabilities.FS_CONCAT:
-    case CommonPathCapabilities.FS_LIST_CORRUPT_FILE_BLOCKS:
-    case CommonPathCapabilities.FS_MULTIPART_UPLOADER:
-    case CommonPathCapabilities.FS_PATHHANDLES:
-    case CommonPathCapabilities.FS_PERMISSIONS:
-    case CommonPathCapabilities.FS_SNAPSHOTS:
-    case CommonPathCapabilities.FS_STORAGEPOLICY:
-    case CommonPathCapabilities.FS_XATTRS:
-      return Optional.of(true);
-    case CommonPathCapabilities.FS_SYMLINKS:
-      return Optional.of(FileSystem.areSymlinksEnabled());
-    default:
-      return Optional.empty();
+      case CommonPathCapabilities.FS_ACLS:
+      case CommonPathCapabilities.FS_APPEND:
+      case CommonPathCapabilities.FS_CHECKSUMS:
+      case CommonPathCapabilities.FS_CONCAT:
+      case CommonPathCapabilities.FS_LIST_CORRUPT_FILE_BLOCKS:
+      case CommonPathCapabilities.FS_MULTIPART_UPLOADER:
+      case CommonPathCapabilities.FS_PATHHANDLES:
+      case CommonPathCapabilities.FS_PERMISSIONS:
+      case CommonPathCapabilities.FS_SNAPSHOTS:
+      case CommonPathCapabilities.FS_STORAGEPOLICY:
+      case CommonPathCapabilities.FS_XATTRS:
+        return Optional.of(true);
+      case CommonPathCapabilities.FS_SYMLINKS:
+        return Optional.of(FileSystem.areSymlinksEnabled());
+      default:
+        return Optional.empty();
     }
   }
 }

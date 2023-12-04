@@ -15,7 +15,9 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */package org.apache.hadoop.hdfs.web.oauth2;
+ */
+package org.apache.hadoop.hdfs.web.oauth2;
+
 import org.apache.hadoop.util.Timer;
 
 /**
@@ -60,7 +62,7 @@ public class AccessTokenTimer {
    *
    * @param expiresInMSSinceEpoch Access time expiration in ms since epoch.
    */
-  public void setExpiresInMSSinceEpoch(String expiresInMSSinceEpoch){
+  public void setExpiresInMSSinceEpoch(String expiresInMSSinceEpoch) {
     this.nextRefreshMSSinceEpoch = Long.parseLong(expiresInMSSinceEpoch);
   }
 

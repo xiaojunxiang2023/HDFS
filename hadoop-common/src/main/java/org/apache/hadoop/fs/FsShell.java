@@ -1,10 +1,5 @@
 package org.apache.hadoop.fs;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.shell.Command;
@@ -12,18 +7,24 @@ import org.apache.hadoop.fs.shell.CommandFactory;
 import org.apache.hadoop.fs.shell.FsCommand;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.tools.TableListing;
+import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.TraceUtils;
+import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.hadoop.tracing.TraceScope;
-import org.apache.hadoop.tracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 /** Provide command line access to a FileSystem. */
 public class FsShell extends Configured implements Tool {
-  
+
   static final Logger LOG = LoggerFactory.getLogger(FsShell.class);
 
   private static final int MAX_LINE_WIDTH = 80;
@@ -34,7 +35,7 @@ public class FsShell extends Configured implements Tool {
   protected CommandFactory commandFactory;
 
   private final String usagePrefix =
-    "Usage: hadoop fs [generic options]";
+      "Usage: hadoop fs [generic options]";
 
   static final String SHELL_HTRACE_PREFIX = "fs.shell.htrace.";
 
@@ -55,14 +56,14 @@ public class FsShell extends Configured implements Tool {
   public FsShell(Configuration conf) {
     super(conf);
   }
-  
+
   protected FileSystem getFS() throws IOException {
     if (fs == null) {
       fs = FileSystem.get(getConf());
     }
     return fs;
   }
-  
+
   protected Trash getTrash() throws IOException {
     if (this.trash == null) {
       this.trash = new Trash(getConf());
@@ -71,12 +72,12 @@ public class FsShell extends Configured implements Tool {
   }
 
   protected Help getHelp() throws IOException {
-    if (this.help == null){
+    if (this.help == null) {
       this.help = new Help();
     }
     return this.help;
   }
-  
+
   protected void init() {
     getConf().setQuietMode(true);
     UserGroupInformation.setConfiguration(getConf());
@@ -96,7 +97,7 @@ public class FsShell extends Configured implements Tool {
       factory.registerCommands(FsCommand.class);
     }
   }
-  
+
   /**
    * Returns the Trash object associated with this shell.
    * @return Path to the trash
@@ -122,17 +123,17 @@ public class FsShell extends Configured implements Tool {
 
   // NOTE: Usage/Help are inner classes to allow access to outer methods
   // that access commandFactory
-  
+
   /**
    *  Display help for commands with their short usage and long description.
    */
-   protected class Usage extends FsCommand {
+  protected class Usage extends FsCommand {
     public static final String NAME = "usage";
     public static final String USAGE = "[cmd ...]";
     public static final String DESCRIPTION =
-      "Displays the usage for given command or all commands if none " +
-      "is specified.";
-    
+        "Displays the usage for given command or all commands if none " +
+            "is specified.";
+
     @Override
     protected void processRawArguments(LinkedList<String> args) {
       if (args.isEmpty()) {
@@ -141,7 +142,7 @@ public class FsShell extends Configured implements Tool {
         for (String arg : args) printUsage(System.out, arg);
       }
     }
-  } 
+  }
 
   /**
    * Displays short usage of commands sans the long description
@@ -150,9 +151,9 @@ public class FsShell extends Configured implements Tool {
     public static final String NAME = "help";
     public static final String USAGE = "[cmd ...]";
     public static final String DESCRIPTION =
-      "Displays help for given command or all commands if none " +
-      "is specified.";
-    
+        "Displays help for given command or all commands if none " +
+            "is specified.";
+
     @Override
     protected void processRawArguments(LinkedList<String> args) {
       if (args.isEmpty()) {
@@ -166,14 +167,14 @@ public class FsShell extends Configured implements Tool {
   /*
    * The following are helper methods for getInfo().  They are defined
    * outside of the scope of the Help/Usage class because the run() method
-   * needs to invoke them too. 
+   * needs to invoke them too.
    */
 
   // print all usages
   private void printUsage(PrintStream out) {
     printInfo(out, null, false);
   }
-  
+
   // print one usage
   private void printUsage(PrintStream out, String cmd) {
     printInfo(out, cmd, false);
@@ -204,7 +205,7 @@ public class FsShell extends Configured implements Tool {
     } else {
       // display help or usage for all commands 
       out.println(getUsagePrefix());
-      
+
       // display list of short usages
       ArrayList<Command> instances = new ArrayList<Command>();
       for (String name : commandFactory.getNames()) {
@@ -329,7 +330,7 @@ public class FsShell extends Configured implements Tool {
     tracer.close();
     return exitCode;
   }
-  
+
   private void displayError(String cmd, String message) {
     for (String line : message.split("\n")) {
       System.err.println(cmd + ": " + line);
@@ -343,7 +344,7 @@ public class FsShell extends Configured implements Tool {
       }
     }
   }
-  
+
   /**
    *  Performs any necessary cleanup
    * @throws IOException upon error
@@ -378,7 +379,7 @@ public class FsShell extends Configured implements Tool {
   protected static FsShell newShellInstance() {
     return new FsShell();
   }
-  
+
   /**
    * The default ctor signals that the command being executed does not exist,
    * while other ctor signals that a specific command does not exist.  The
@@ -386,13 +387,19 @@ public class FsShell extends Configured implements Tool {
    */
   @SuppressWarnings("serial")
   static class UnknownCommandException extends IllegalArgumentException {
-    private final String cmd;    
-    UnknownCommandException() { this(null); }
-    UnknownCommandException(String cmd) { this.cmd = cmd; }
-    
+    private final String cmd;
+
+    UnknownCommandException() {
+      this(null);
+    }
+
+    UnknownCommandException(String cmd) {
+      this.cmd = cmd;
+    }
+
     @Override
     public String getMessage() {
-      return ((cmd != null) ? "`"+cmd+"': " : "") + "Unknown command";
+      return ((cmd != null) ? "`" + cmd + "': " : "") + "Unknown command";
     }
   }
 }

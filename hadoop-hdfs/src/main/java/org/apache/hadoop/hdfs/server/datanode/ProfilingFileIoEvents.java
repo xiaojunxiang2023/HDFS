@@ -14,16 +14,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.hadoop.hdfs.server.datanode;
+ */
+package org.apache.hadoop.hdfs.server.datanode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.common.Util;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.DataNodeVolumeMetrics;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.ThreadLocalRandom;
@@ -61,7 +62,7 @@ class ProfilingFileIoEvents {
   }
 
   public long beforeMetadataOp(@Nullable FsVolumeSpi volume,
-      FileIoProvider.OPERATION op) {
+                               FileIoProvider.OPERATION op) {
     if (isEnabled) {
       DataNodeVolumeMetrics metrics = getVolumeMetrics(volume);
       if (metrics != null) {
@@ -72,7 +73,7 @@ class ProfilingFileIoEvents {
   }
 
   public void afterMetadataOp(@Nullable FsVolumeSpi volume,
-      FileIoProvider.OPERATION op, long begin) {
+                              FileIoProvider.OPERATION op, long begin) {
     if (isEnabled) {
       DataNodeVolumeMetrics metrics = getVolumeMetrics(volume);
       if (metrics != null) {
@@ -82,7 +83,7 @@ class ProfilingFileIoEvents {
   }
 
   public long beforeFileIo(@Nullable FsVolumeSpi volume,
-      FileIoProvider.OPERATION op, long len) {
+                           FileIoProvider.OPERATION op, long len) {
     if (isEnabled && ThreadLocalRandom.current().nextInt() < sampleRangeMax) {
       DataNodeVolumeMetrics metrics = getVolumeMetrics(volume);
       if (metrics != null) {
@@ -93,32 +94,32 @@ class ProfilingFileIoEvents {
   }
 
   public void afterFileIo(@Nullable FsVolumeSpi volume,
-      FileIoProvider.OPERATION op, long begin, long len) {
+                          FileIoProvider.OPERATION op, long begin, long len) {
     if (isEnabled && begin != 0) {
       DataNodeVolumeMetrics metrics = getVolumeMetrics(volume);
       if (metrics != null) {
         long latency = Time.monotonicNow() - begin;
         metrics.addDataFileIoLatency(latency);
         switch (op) {
-        case SYNC:
-          metrics.addSyncIoLatency(latency);
-          break;
-        case FLUSH:
-          metrics.addFlushIoLatency(latency);
-          break;
-        case READ:
-          metrics.addReadIoLatency(latency);
-          break;
-        case WRITE:
-          metrics.addWriteIoLatency(latency);
-          break;
-        case TRANSFER:
-          metrics.addTransferIoLatency(latency);
-          break;
-        case NATIVE_COPY:
-          metrics.addNativeCopyIoLatency(latency);
-          break;
-        default:
+          case SYNC:
+            metrics.addSyncIoLatency(latency);
+            break;
+          case FLUSH:
+            metrics.addFlushIoLatency(latency);
+            break;
+          case READ:
+            metrics.addReadIoLatency(latency);
+            break;
+          case WRITE:
+            metrics.addWriteIoLatency(latency);
+            break;
+          case TRANSFER:
+            metrics.addTransferIoLatency(latency);
+            break;
+          case NATIVE_COPY:
+            metrics.addNativeCopyIoLatency(latency);
+            break;
+          default:
         }
       }
     }

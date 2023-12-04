@@ -1,4 +1,5 @@
 package org.apache.hadoop.security.ssl;
+
 import org.apache.hadoop.conf.Configurable;
 
 import javax.net.ssl.KeyManager;

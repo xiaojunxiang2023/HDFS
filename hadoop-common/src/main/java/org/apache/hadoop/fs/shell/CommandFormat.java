@@ -1,12 +1,6 @@
 package org.apache.hadoop.fs.shell;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Parse the args of a command and check the format of args.
@@ -16,7 +10,7 @@ public class CommandFormat {
   final Map<String, Boolean> options = new HashMap<String, Boolean>();
   final Map<String, String> optionsWithValue = new HashMap<String, String>();
   boolean ignoreUnknownOpts = false;
-  
+
   /**
    * @deprecated use replacement since name is an unused parameter
    * @param name of command, but never used
@@ -26,17 +20,17 @@ public class CommandFormat {
    * @see #CommandFormat(int, int, String...)
    */
   @Deprecated
-  public CommandFormat(String name, int min, int max, String ... possibleOpt) {
+  public CommandFormat(String name, int min, int max, String... possibleOpt) {
     this(min, max, possibleOpt);
   }
-  
+
   /**
    * Simple parsing of command line arguments
    * @param min minimum arguments required
    * @param max maximum arguments permitted
    * @param possibleOpt list of the allowed switches
    */
-  public CommandFormat(int min, int max, String ... possibleOpt) {
+  public CommandFormat(int min, int max, String... possibleOpt) {
     minPar = min;
     maxPar = max;
     for (String opt : possibleOpt) {
@@ -62,7 +56,7 @@ public class CommandFormat {
 
   /** Parse parameters starting from the given position
    * Consider using the variant that directly takes a List
-   * 
+   *
    * @param args an array of input arguments
    * @param pos the position at which starts to parse
    * @return a list of parameters
@@ -76,7 +70,7 @@ public class CommandFormat {
 
   /** Parse parameters from the given list of args.  The list is
    *  destructively modified to remove the options.
-   * 
+   *
    * @param args as a list of input arguments
    */
   public void parse(List<String> args) {
@@ -84,13 +78,13 @@ public class CommandFormat {
     while (pos < args.size()) {
       String arg = args.get(pos);
       // stop if not an opt, or the stdin arg "-" is found
-      if (!arg.startsWith("-") || arg.equals("-")) { 
+      if (!arg.startsWith("-") || arg.equals("-")) {
         break;
       } else if (arg.equals("--")) { // force end of option processing
         args.remove(pos);
         break;
       }
-      
+
       String opt = arg.substring(1);
       if (options.containsKey(opt)) {
         args.remove(pos);
@@ -98,7 +92,7 @@ public class CommandFormat {
       } else if (optionsWithValue.containsKey(opt)) {
         args.remove(pos);
         if (pos < args.size() && (args.size() > minPar)
-                && !args.get(pos).startsWith("-")) {
+            && !args.get(pos).startsWith("-")) {
           arg = args.get(pos);
           args.remove(pos);
         } else {
@@ -121,9 +115,9 @@ public class CommandFormat {
       throw new TooManyArgumentsException(maxPar, psize);
     }
   }
-  
+
   /** Return if the option is set or not
-   * 
+   *
    * @param option String representation of an option
    * @return true is the option is set; false otherwise
    */
@@ -144,7 +138,7 @@ public class CommandFormat {
   }
 
   /** Returns all the options that are set
-   * 
+   *
    * @return Set{@literal <}String{@literal >} of the enabled options
    */
   public Set<String> getOpts() {
@@ -156,11 +150,11 @@ public class CommandFormat {
     }
     return optSet;
   }
-  
+
   /** Used when the arguments exceed their bounds 
    */
   public static abstract class IllegalNumberOfArgumentsException
-  extends IllegalArgumentException {
+      extends IllegalArgumentException {
     private static final long serialVersionUID = 0L;
     protected int expected;
     protected int actual;
@@ -179,7 +173,7 @@ public class CommandFormat {
   /** Used when too many arguments are supplied to a command
    */
   public static class TooManyArgumentsException
-  extends IllegalNumberOfArgumentsException {
+      extends IllegalNumberOfArgumentsException {
     private static final long serialVersionUID = 0L;
 
     public TooManyArgumentsException(int expected, int actual) {
@@ -191,11 +185,11 @@ public class CommandFormat {
       return "Too many arguments: " + super.getMessage();
     }
   }
-  
+
   /** Used when too few arguments are supplied to a command
    */
   public static class NotEnoughArgumentsException
-  extends IllegalNumberOfArgumentsException {
+      extends IllegalNumberOfArgumentsException {
     private static final long serialVersionUID = 0L;
 
     public NotEnoughArgumentsException(int expected, int actual) {
@@ -207,18 +201,18 @@ public class CommandFormat {
       return "Not enough arguments: " + super.getMessage();
     }
   }
-  
+
   /** Used when an unsupported option is supplied to a command
    */
   public static class UnknownOptionException extends IllegalArgumentException {
     private static final long serialVersionUID = 0L;
     protected String option = null;
-    
+
     public UnknownOptionException(String unknownOption) {
       super("Illegal option " + unknownOption);
       option = unknownOption;
     }
-    
+
     public String getOption() {
       return option;
     }

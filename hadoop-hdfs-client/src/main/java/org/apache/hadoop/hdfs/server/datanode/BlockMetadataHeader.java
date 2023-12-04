@@ -1,23 +1,14 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import org.apache.hadoop.util.DataChecksum;
-
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
+import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.InvalidChecksumSizeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 
 /**
@@ -73,7 +64,7 @@ public class BlockMetadataHeader {
    * @return the data checksum obtained from the header.
    */
   public static DataChecksum readDataChecksum(final DataInputStream metaIn,
-      final Object name) throws IOException {
+                                              final Object name) throws IOException {
     // read and handle the common header here. For now just a version
     final BlockMetadataHeader header = readHeader(metaIn);
     if (header.getVersion() != VERSION) {
@@ -99,16 +90,16 @@ public class BlockMetadataHeader {
 
     while (buf.hasRemaining()) {
       if (fc.read(buf, buf.position()) <= 0) {
-        throw new CorruptMetaHeaderException("EOF while reading header from "+
+        throw new CorruptMetaHeaderException("EOF while reading header from " +
             "the metadata file. The meta file may be truncated or corrupt");
       }
     }
-    short version = (short)((arr[0] << 8) | (arr[1] & 0xff));
+    short version = (short) ((arr[0] << 8) | (arr[1] & 0xff));
     DataChecksum dataChecksum;
     try {
       dataChecksum = DataChecksum.newDataChecksum(arr, 2);
     } catch (InvalidChecksumSizeException e) {
-      throw new CorruptMetaHeaderException("The block meta file header is "+
+      throw new CorruptMetaHeaderException("The block meta file header is " +
           "corrupt", e);
     }
     return new BlockMetadataHeader(version, dataChecksum);
@@ -126,7 +117,7 @@ public class BlockMetadataHeader {
     } catch (EOFException eof) {
       // The attempt to read the header threw EOF, indicating there are not
       // enough bytes in the meta file for the header.
-      throw new CorruptMetaHeaderException("EOF while reading header from meta"+
+      throw new CorruptMetaHeaderException("EOF while reading header from meta" +
           ". The meta file may be truncated or corrupt", eof);
     }
   }
@@ -161,12 +152,12 @@ public class BlockMetadataHeader {
 
   // Version is already read.
   private static BlockMetadataHeader readHeader(short version,
-      DataInputStream in) throws IOException {
+                                                DataInputStream in) throws IOException {
     DataChecksum checksum = null;
     try {
       checksum = DataChecksum.newDataChecksum(in);
     } catch (InvalidChecksumSizeException e) {
-      throw new CorruptMetaHeaderException("The block meta file header is "+
+      throw new CorruptMetaHeaderException("The block meta file header is " +
           "corrupt", e);
     }
     return new BlockMetadataHeader(version, checksum);
@@ -179,8 +170,8 @@ public class BlockMetadataHeader {
    */
   @VisibleForTesting
   public static void writeHeader(DataOutputStream out,
-                                  BlockMetadataHeader header)
-                                  throws IOException {
+                                 BlockMetadataHeader header)
+      throws IOException {
     out.writeShort(header.getVersion());
     header.getChecksum().writeHeader(out);
   }
@@ -190,7 +181,7 @@ public class BlockMetadataHeader {
    * @throws IOException on error
    */
   public static void writeHeader(DataOutputStream out, DataChecksum checksum)
-                         throws IOException {
+      throws IOException {
     writeHeader(out, new BlockMetadataHeader(VERSION, checksum));
   }
 
@@ -198,7 +189,7 @@ public class BlockMetadataHeader {
    * Returns the size of the header
    */
   public static int getHeaderSize() {
-    return Short.SIZE/Byte.SIZE + DataChecksum.getChecksumHeaderSize();
+    return Short.SIZE / Byte.SIZE + DataChecksum.getChecksumHeaderSize();
   }
 }
 

@@ -1,13 +1,13 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Optional;
 import org.apache.hadoop.fs.InvalidPathHandleException;
 import org.apache.hadoop.fs.PathHandle;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.HdfsPathHandleProto;
-
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Optional;
 
 /**
  * Opaque handle to an entity in HDFS.
@@ -21,7 +21,7 @@ public final class HdfsPathHandle implements PathHandle {
   private final Long inodeId;
 
   public HdfsPathHandle(String path,
-      Optional<Long> inodeId, Optional<Long> mtime) {
+                        Optional<Long> inodeId, Optional<Long> mtime) {
     this.path = path;
     this.mtime = mtime.orElse(null);
     this.inodeId = inodeId.orElse(null);
@@ -34,7 +34,7 @@ public final class HdfsPathHandle implements PathHandle {
     HdfsPathHandleProto p =
         HdfsPathHandleProto.parseFrom(ByteString.copyFrom(bytes));
     path = p.getPath();
-    mtime   = p.hasMtime()   ? p.getMtime()   : null;
+    mtime = p.hasMtime() ? p.getMtime() : null;
     inodeId = p.hasInodeId() ? p.getInodeId() : null;
   }
 
@@ -77,7 +77,7 @@ public final class HdfsPathHandle implements PathHandle {
       // require exact match
       return false;
     }
-    HdfsPathHandle o = (HdfsPathHandle)other;
+    HdfsPathHandle o = (HdfsPathHandle) other;
     return getPath().equals(o.getPath());
   }
 

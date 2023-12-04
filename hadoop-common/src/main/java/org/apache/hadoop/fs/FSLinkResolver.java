@@ -7,7 +7,7 @@ import java.net.URI;
  * Used primarily by {@link FileContext} to operate on and resolve
  * symlinks in a path. Operations can potentially span multiple
  * {@link AbstractFileSystem}s.
- * 
+ *
  * @see FileSystemLinkResolver
  */
 public abstract class FSLinkResolver<T> {
@@ -22,7 +22,7 @@ public abstract class FSLinkResolver<T> {
    * @return Fully qualified version of the target.
    */
   public static Path qualifySymlinkTarget(final URI pathURI,
-      Path pathWithLink, Path target) {
+                                          Path pathWithLink, Path target) {
     // NB: makeQualified uses the target's scheme and authority, if
     // specified, and the scheme and authority of pathURI, if not.
     final URI targetUri = target.toUri();
@@ -63,7 +63,7 @@ public abstract class FSLinkResolver<T> {
     AbstractFileSystem fs = fc.getFSofPath(p);
 
     // Loop until all symlinks are resolved or the limit is reached
-    for (boolean isLink = true; isLink;) {
+    for (boolean isLink = true; isLink; ) {
       try {
         in = next(fs, p);
         isLink = false;
@@ -79,7 +79,7 @@ public abstract class FSLinkResolver<T> {
         }
         if (count++ > FsConstants.MAX_PATH_LINKS) {
           throw new IOException("Possible cyclic loop while " +
-                                "following symbolic link " + path);
+              "following symbolic link " + path);
         }
         // Resolve the first unresolved path component
         p = qualifySymlinkTarget(fs.getUri(), p, fs.getLinkTarget(p));

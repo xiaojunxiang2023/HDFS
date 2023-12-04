@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.io.*;
-import java.util.List;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
@@ -10,6 +8,8 @@ import org.apache.hadoop.io.retry.Idempotent;
 import org.apache.hadoop.security.KerberosInfo;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.List;
 
 /**********************************************************************
  * Protocol that a DFS datanode uses to communicate with the NameNode.
@@ -20,22 +20,22 @@ import javax.annotation.Nonnull;
  *
  **********************************************************************/
 @KerberosInfo(
-    serverPrincipal = DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY, 
+    serverPrincipal = DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY,
     clientPrincipal = DFSConfigKeys.DFS_DATANODE_KERBEROS_PRINCIPAL_KEY)
 public interface DatanodeProtocol {
   /**
    * This class is used by both the Namenode (client) and BackupNode (server) 
    * to insulate from the protocol serialization.
-   * 
+   *
    * If you are adding/changing DN's interface then you need to 
    * change both this class and ALSO related protocol buffer
    * wire protocol definition in DatanodeProtocol.proto.
-   * 
+   *
    * For more details on protocol buffer wire protocol, please see 
    * .../org/apache/hadoop/hdfs/protocolPB/overview.html
    */
   public static final long versionID = 28L;
-  
+
   // error code
   final static int NOTIFY = 0;
   final static int DISK_ERROR = 1; // there are still valid volumes on DN
@@ -61,7 +61,7 @@ public interface DatanodeProtocol {
   int DNA_BLOCK_STORAGE_MOVEMENT = 12; // block storage movement command
   int DNA_DROP_SPS_WORK_COMMAND = 13; // drop sps work command
 
-  /** 
+  /**
    * Register Datanode.
    *
    * @see org.apache.hadoop.hdfs.server.namenode.FSNamesystem#registerDatanode(DatanodeRegistration)
@@ -71,8 +71,8 @@ public interface DatanodeProtocol {
    */
   @Idempotent
   public DatanodeRegistration registerDatanode(DatanodeRegistration registration
-      ) throws IOException;
-  
+  ) throws IOException;
+
   /**
    * sendHeartbeat() tells the NameNode that the DataNode is still
    * alive and well.  Includes some status info, too. 
@@ -95,16 +95,16 @@ public interface DatanodeProtocol {
    */
   @Idempotent
   public HeartbeatResponse sendHeartbeat(DatanodeRegistration registration,
-                                       StorageReport[] reports,
-                                       long dnCacheCapacity,
-                                       long dnCacheUsed,
-                                       int xmitsInProgress,
-                                       int xceiverCount,
-                                       int failedVolumes,
-                                       VolumeFailureSummary volumeFailureSummary,
-                                       boolean requestFullBlockReportLease,
-                                       @Nonnull SlowPeerReports slowPeers,
-                                       @Nonnull SlowDiskReports slowDisks)
+                                         StorageReport[] reports,
+                                         long dnCacheCapacity,
+                                         long dnCacheUsed,
+                                         int xmitsInProgress,
+                                         int xceiverCount,
+                                         int failedVolumes,
+                                         VolumeFailureSummary volumeFailureSummary,
+                                         boolean requestFullBlockReportLease,
+                                         @Nonnull SlowPeerReports slowPeers,
+                                         @Nonnull SlowDiskReports slowDisks)
       throws IOException;
 
   /**
@@ -127,13 +127,13 @@ public interface DatanodeProtocol {
    */
   @Idempotent
   public DatanodeCommand blockReport(DatanodeRegistration registration,
-            String poolId, StorageBlockReport[] reports,
-            BlockReportContext context) throws IOException;
-    
+                                     String poolId, StorageBlockReport[] reports,
+                                     BlockReportContext context) throws IOException;
+
 
   /**
    * Communicates the complete list of locally cached blocks to the NameNode.
-   * 
+   *
    * This method is similar to
    * {@link #blockReport(DatanodeRegistration, String, StorageBlockReport[], BlockReportContext)},
    * which is used to communicated blocks stored on disk.
@@ -141,17 +141,17 @@ public interface DatanodeProtocol {
    * @param registration The datanode registration.
    * @param poolId     The block pool ID for the blocks.
    * @param blockIds   A list of block IDs.
-   * @return           The DatanodeCommand.
+   * @return The DatanodeCommand.
    * @throws IOException
    */
   @Idempotent
   public DatanodeCommand cacheReport(DatanodeRegistration registration,
-      String poolId, List<Long> blockIds) throws IOException;
+                                     String poolId, List<Long> blockIds) throws IOException;
 
   /**
    * blockReceivedAndDeleted() allows the DataNode to tell the NameNode about
    * recently-received and -deleted block data. 
-   * 
+   *
    * For the case of received blocks, a hint for preferred replica to be 
    * deleted when there is any excessive blocks is provided.
    * For example, whenever client code
@@ -160,9 +160,9 @@ public interface DatanodeProtocol {
    */
   @Idempotent
   public void blockReceivedAndDeleted(DatanodeRegistration registration,
-                            String poolId,
-                            StorageReceivedDeletedBlocks[] rcvdAndDeletedBlocks)
-                            throws IOException;
+                                      String poolId,
+                                      StorageReceivedDeletedBlocks[] rcvdAndDeletedBlocks)
+      throws IOException;
 
   /**
    * errorReport() tells the NameNode about something that has gone
@@ -170,9 +170,9 @@ public interface DatanodeProtocol {
    */
   @Idempotent
   public void errorReport(DatanodeRegistration registration,
-                          int errorCode, 
+                          int errorCode,
                           String msg) throws IOException;
-    
+
   @Idempotent
   public NamespaceInfo versionRequest() throws IOException;
 
@@ -182,13 +182,13 @@ public interface DatanodeProtocol {
    */
   @Idempotent
   public void reportBadBlocks(LocatedBlock[] blocks) throws IOException;
-  
+
   /**
    * Commit block synchronization in lease recovery
    */
   @Idempotent
   public void commitBlockSynchronization(ExtendedBlock block,
-      long newgenerationstamp, long newlength,
-      boolean closeFile, boolean deleteblock, DatanodeID[] newtargets,
-      String[] newtargetstorages) throws IOException;
+                                         long newgenerationstamp, long newlength,
+                                         boolean closeFile, boolean deleteblock, DatanodeID[] newtargets,
+                                         String[] newtargetstorages) throws IOException;
 }

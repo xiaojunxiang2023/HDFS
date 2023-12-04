@@ -1,17 +1,12 @@
 package org.apache.hadoop.security.http;
 
-import java.io.IOException;
-import java.util.Map;
+import org.apache.hadoop.conf.Configuration;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import org.apache.hadoop.conf.Configuration;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * This filter protects webapps from clickjacking attacks that
@@ -30,7 +25,7 @@ public class XFrameOptionsFilter implements Filter {
 
   @Override
   public void doFilter(ServletRequest req, ServletResponse res,
-      FilterChain chain) throws IOException, ServletException {
+                       FilterChain chain) throws IOException, ServletException {
     ((HttpServletResponse) res).setHeader(X_FRAME_OPTIONS, option);
     chain.doFilter(req,
         new XFrameOptionsResponseWrapper((HttpServletResponse) res));
@@ -56,7 +51,7 @@ public class XFrameOptionsFilter implements Filter {
    *     initialization
    */
   public static Map<String, String> getFilterParams(Configuration conf,
-      String confPrefix) {
+                                                    String confPrefix) {
     return conf.getPropsWithPrefix(confPrefix);
   }
 
@@ -103,7 +98,7 @@ public class XFrameOptionsFilter implements Filter {
     }
 
     @Override
-   public void addDateHeader(String name, long date) {
+    public void addDateHeader(String name, long date) {
       // don't allow additional values to be added along
       // with the configured options value
       if (!name.equals(X_FRAME_OPTIONS)) {

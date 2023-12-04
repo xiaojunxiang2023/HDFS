@@ -10,7 +10,7 @@ public class DatanodeLocalInfo {
   private final long uptime; // datanode uptime in seconds.
 
   public DatanodeLocalInfo(String softwareVersion,
-      String configVersion, long uptime) {
+                           String configVersion, long uptime) {
     this.softwareVersion = softwareVersion;
     this.configVersion = configVersion;
     this.uptime = uptime;

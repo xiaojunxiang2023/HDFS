@@ -1,51 +1,33 @@
 package org.apache.hadoop.security;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.hadoop.tracing.TraceScope;
-import org.apache.hadoop.tracing.Tracer;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-import org.apache.hadoop.thirdparty.com.google.common.base.Ticker;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
-import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
-import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
-import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.FutureCallback;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Futures;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListenableFuture;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ListeningExecutorService;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.MoreExecutors;
-import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
-
-import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.thirdparty.com.google.common.base.Ticker;
+import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
+import org.apache.hadoop.thirdparty.com.google.common.cache.CacheLoader;
+import org.apache.hadoop.thirdparty.com.google.common.cache.LoadingCache;
+import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.*;
+import org.apache.hadoop.tracing.TraceScope;
+import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Timer;
+import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * A user-to-groups mapping service.
- * 
+ *
  * {@link Groups} allows for server to get the various group memberships
  * of a given user via the {@link #getGroups(String)} call, thus ensuring 
  * a consistent user-to-groups mapping and protects against vagaries of 
@@ -55,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class Groups {
   @VisibleForTesting
   static final Logger LOG = LoggerFactory.getLogger(Groups.class);
-  
+
   private final GroupMappingServiceProvider impl;
 
   private final LoadingCache<String, List<String>> cache;
@@ -89,50 +71,50 @@ public class Groups {
             GroupMappingServiceProvider.class),
         conf);
 
-    cacheTimeout = 
-      conf.getLong(CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_SECS, 
-          CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_SECS_DEFAULT) * 1000;
+    cacheTimeout =
+        conf.getLong(CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_SECS,
+            CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_SECS_DEFAULT) * 1000;
     negativeCacheTimeout =
-      conf.getLong(CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_NEGATIVE_CACHE_SECS,
-          CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_NEGATIVE_CACHE_SECS_DEFAULT) * 1000;
+        conf.getLong(CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_NEGATIVE_CACHE_SECS,
+            CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_NEGATIVE_CACHE_SECS_DEFAULT) * 1000;
     warningDeltaMs =
-      conf.getLong(CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_WARN_AFTER_MS,
-        CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_WARN_AFTER_MS_DEFAULT);
+        conf.getLong(CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_WARN_AFTER_MS,
+            CommonConfigurationKeys.HADOOP_SECURITY_GROUPS_CACHE_WARN_AFTER_MS_DEFAULT);
     reloadGroupsInBackground =
-      conf.getBoolean(
-          CommonConfigurationKeys.
-              HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD,
-          CommonConfigurationKeys.
-              HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD_DEFAULT);
-    reloadGroupsThreadCount  =
-      conf.getInt(
-          CommonConfigurationKeys.
-              HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD_THREADS,
-          CommonConfigurationKeys.
-              HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD_THREADS_DEFAULT);
+        conf.getBoolean(
+            CommonConfigurationKeys.
+                HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD,
+            CommonConfigurationKeys.
+                HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD_DEFAULT);
+    reloadGroupsThreadCount =
+        conf.getInt(
+            CommonConfigurationKeys.
+                HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD_THREADS,
+            CommonConfigurationKeys.
+                HADOOP_SECURITY_GROUPS_CACHE_BACKGROUND_RELOAD_THREADS_DEFAULT);
     parseStaticMapping(conf);
 
     this.timer = timer;
     this.cache = CacheBuilder.newBuilder()
-      .refreshAfterWrite(cacheTimeout, TimeUnit.MILLISECONDS)
-      .ticker(new TimerToTickerAdapter(timer))
-      .expireAfterWrite(10 * cacheTimeout, TimeUnit.MILLISECONDS)
-      .build(new GroupCacheLoader());
-
-    if(negativeCacheTimeout > 0) {
-      Cache<String, Boolean> tempMap = CacheBuilder.newBuilder()
-        .expireAfterWrite(negativeCacheTimeout, TimeUnit.MILLISECONDS)
+        .refreshAfterWrite(cacheTimeout, TimeUnit.MILLISECONDS)
         .ticker(new TimerToTickerAdapter(timer))
-        .build();
+        .expireAfterWrite(10 * cacheTimeout, TimeUnit.MILLISECONDS)
+        .build(new GroupCacheLoader());
+
+    if (negativeCacheTimeout > 0) {
+      Cache<String, Boolean> tempMap = CacheBuilder.newBuilder()
+          .expireAfterWrite(negativeCacheTimeout, TimeUnit.MILLISECONDS)
+          .ticker(new TimerToTickerAdapter(timer))
+          .build();
       negativeCache = Collections.newSetFromMap(tempMap.asMap());
     }
 
-    if(LOG.isDebugEnabled())
-      LOG.debug("Group mapping impl=" + impl.getClass().getName() + 
+    if (LOG.isDebugEnabled())
+      LOG.debug("Group mapping impl=" + impl.getClass().getName() +
           "; cacheTimeout=" + cacheTimeout + "; warningDeltaMs=" +
           warningDeltaMs);
   }
-  
+
   @VisibleForTesting
   Set<String> getNegativeCache() {
     return negativeCache;
@@ -207,7 +189,7 @@ public class Groups {
     try {
       return cache.get(user);
     } catch (ExecutionException e) {
-      throw (IOException)e.getCause();
+      throw (IOException) e.getCause();
     }
   }
 
@@ -260,7 +242,7 @@ public class Groups {
         // With coreThreadCount == maxThreadCount we effectively
         // create a fixed size thread pool. As allowCoreThreadTimeOut
         // has been set, all threads will die after 60 seconds of non use
-        ThreadPoolExecutor parentExecutor =  new ThreadPoolExecutor(
+        ThreadPoolExecutor parentExecutor = new ThreadPoolExecutor(
             reloadGroupsThreadCount,
             reloadGroupsThreadCount,
             60,
@@ -350,6 +332,7 @@ public class Groups {
           backgroundRefreshSuccess.incrementAndGet();
           backgroundRefreshRunning.decrementAndGet();
         }
+
         @Override
         public void onFailure(Throwable t) {
           backgroundRefreshException.incrementAndGet();
@@ -366,11 +349,11 @@ public class Groups {
       long startMs = timer.monotonicNow();
       List<String> groupList = impl.getGroups(user);
       long endMs = timer.monotonicNow();
-      long deltaMs = endMs - startMs ;
+      long deltaMs = endMs - startMs;
       UserGroupInformation.metrics.addGetGroups(deltaMs);
       if (deltaMs > warningDeltaMs) {
-        LOG.warn("Potential performance problem: getGroups(user=" + user +") " +
-          "took " + deltaMs + " milliseconds.");
+        LOG.warn("Potential performance problem: getGroups(user=" + user + ") " +
+            "took " + deltaMs + " milliseconds.");
       }
 
       return groupList;
@@ -388,7 +371,7 @@ public class Groups {
       LOG.warn("Error refreshing groups cache", e);
     }
     cache.invalidateAll();
-    if(isNegativeCacheEnabled()) {
+    if (isNegativeCacheEnabled()) {
       negativeCache.clear();
     }
   }
@@ -407,13 +390,13 @@ public class Groups {
   }
 
   private static Groups GROUPS = null;
-  
+
   /**
    * Get the groups being used to map user-to-groups.
    * @return the groups being used to map user-to-groups.
    */
   public static Groups getUserToGroupsMappingService() {
-    return getUserToGroupsMappingService(new Configuration()); 
+    return getUserToGroupsMappingService(new Configuration());
   }
 
   /**
@@ -422,10 +405,10 @@ public class Groups {
    * @return the groups being used to map user-to-groups.
    */
   public static synchronized Groups getUserToGroupsMappingService(
-    Configuration conf) {
+      Configuration conf) {
 
-    if(GROUPS == null) {
-      if(LOG.isDebugEnabled()) {
+    if (GROUPS == null) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug(" Creating new Groups object");
       }
       GROUPS = new Groups(conf);
@@ -440,8 +423,8 @@ public class Groups {
    */
   @Private
   public static synchronized Groups
-      getUserToGroupsMappingServiceWithLoadedConfiguration(
-          Configuration conf) {
+  getUserToGroupsMappingServiceWithLoadedConfiguration(
+      Configuration conf) {
 
     GROUPS = new Groups(conf);
     return GROUPS;

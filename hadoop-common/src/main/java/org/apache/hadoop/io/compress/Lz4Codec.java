@@ -1,14 +1,14 @@
 package org.apache.hadoop.io.compress;
 
+import org.apache.hadoop.conf.Configurable;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.io.compress.lz4.Lz4Compressor;
+import org.apache.hadoop.io.compress.lz4.Lz4Decompressor;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.hadoop.conf.Configurable;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.compress.lz4.Lz4Compressor;
-import org.apache.hadoop.io.compress.lz4.Lz4Decompressor;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
 
 /**
  * This class creates lz4 compressors/decompressors.
@@ -69,7 +69,7 @@ public class Lz4Codec implements Configurable, CompressionCodec {
         CommonConfigurationKeys.IO_COMPRESSION_CODEC_LZ4_BUFFERSIZE_KEY,
         CommonConfigurationKeys.IO_COMPRESSION_CODEC_LZ4_BUFFERSIZE_DEFAULT);
 
-    int compressionOverhead = bufferSize/255 + 16;
+    int compressionOverhead = bufferSize / 255 + 16;
 
     return new BlockCompressorStream(out, compressor, bufferSize,
         compressionOverhead);

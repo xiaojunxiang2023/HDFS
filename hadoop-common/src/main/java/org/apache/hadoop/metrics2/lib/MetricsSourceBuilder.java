@@ -1,10 +1,5 @@
 package org.apache.hadoop.metrics2.lib;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.*;
 import org.apache.hadoop.metrics2.MetricsCollector;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsInfo;
@@ -14,6 +9,12 @@ import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import static org.apache.hadoop.thirdparty.com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Helper class to build {@link MetricsSource} object from annotations.
@@ -58,8 +59,7 @@ public class MetricsSourceBuilder {
         throw new MetricsException("Hybrid metrics: registry required.");
       }
       return (MetricsSource) source;
-    }
-    else if (!hasAtMetric) {
+    } else if (!hasAtMetric) {
       throw new MetricsException("No valid @Metric annotation found.");
     }
     return new MetricsSource() {
@@ -86,7 +86,7 @@ public class MetricsSourceBuilder {
         hasRegistry = r != null;
         break;
       } catch (Exception e) {
-        LOG.warn("Error accessing field "+ field, e);
+        LOG.warn("Error accessing field " + field, e);
         continue;
       }
     }
@@ -119,19 +119,19 @@ public class MetricsSourceBuilder {
         field.setAccessible(true);
         if (field.get(source) != null) continue;
       } catch (Exception e) {
-        LOG.warn("Error accessing field "+ field +" annotated with"+
-                 annotation, e);
+        LOG.warn("Error accessing field " + field + " annotated with" +
+            annotation, e);
         continue;
       }
       MutableMetric mutable = factory.newForField(field, (Metric) annotation,
-                                                  registry);
+          registry);
       if (mutable != null) {
         try {
           field.set(source, mutable); // Set the source field to MutableMetric
           hasAtMetric = true;
         } catch (Exception e) {
-          throw new MetricsException("Error setting field "+ field +
-                                     " annotated with "+ annotation, e);
+          throw new MetricsException("Error setting field " + field +
+              " annotated with " + annotation, e);
         }
       }
     }

@@ -1,10 +1,10 @@
 package org.apache.hadoop.hdfs.server.protocol;
 
-import java.util.Collection;
-
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
+
+import java.util.Collection;
 
 /**
  * A BlockStorageMovementCommand is an instruction to a DataNode to move the
@@ -33,7 +33,7 @@ public class BlockStorageMovementCommand extends DatanodeCommand {
    *          block to storage info that will be used for movement
    */
   public BlockStorageMovementCommand(int action, String blockPoolId,
-      Collection<BlockMovingInfo> blockMovingInfos) {
+                                     Collection<BlockMovingInfo> blockMovingInfos) {
     super(action);
     this.blockPoolId = blockPoolId;
     this.blockMovingTasks = blockMovingInfos;
@@ -74,8 +74,8 @@ public class BlockStorageMovementCommand extends DatanodeCommand {
      *          type of source storage media
      */
     public BlockMovingInfo(Block block, DatanodeInfo sourceDnInfo,
-        DatanodeInfo targetDnInfo, StorageType srcStorageType,
-        StorageType targetStorageType) {
+                           DatanodeInfo targetDnInfo, StorageType srcStorageType,
+                           StorageType targetStorageType) {
       this.blk = block;
       this.sourceNode = sourceDnInfo;
       this.targetNode = targetDnInfo;

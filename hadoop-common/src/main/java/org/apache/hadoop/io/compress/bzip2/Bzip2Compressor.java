@@ -1,22 +1,22 @@
 package org.apache.hadoop.io.compress.bzip2;
 
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.compress.Compressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+
 /**
  * A {@link Compressor} based on the popular 
  * bzip2 compression algorithm.
  * http://www.bzip2.org/
- * 
+ *
  */
 public class Bzip2Compressor implements Compressor {
-  private static final int DEFAULT_DIRECT_BUFFER_SIZE = 64*1024;
+  private static final int DEFAULT_DIRECT_BUFFER_SIZE = 64 * 1024;
 
   // The default values for the block size and work factor are the same 
   // those in Julian Seward's original bzip2 implementation.
@@ -52,14 +52,14 @@ public class Bzip2Compressor implements Compressor {
    */
   public Bzip2Compressor(Configuration conf) {
     this(Bzip2Factory.getBlockSize(conf),
-         Bzip2Factory.getWorkFactor(conf),
-         DEFAULT_DIRECT_BUFFER_SIZE);
+        Bzip2Factory.getWorkFactor(conf),
+        DEFAULT_DIRECT_BUFFER_SIZE);
   }
 
-  /** 
+  /**
    * Creates a new compressor using the specified block size.
    * Compressed data will be generated in bzip2 format.
-   * 
+   *
    * @param blockSize The block size to be used for compression.  This is
    *        an integer from 1 through 9, which is multiplied by 100,000 to 
    *        obtain the actual block size in bytes.
@@ -68,7 +68,7 @@ public class Bzip2Compressor implements Compressor {
    *        0 to 250.
    * @param directBufferSize Size of the direct buffer to be used.
    */
-  public Bzip2Compressor(int blockSize, int workFactor, 
+  public Bzip2Compressor(int blockSize, int workFactor,
                          int directBufferSize) {
     this.blockSize = blockSize;
     this.workFactor = workFactor;
@@ -83,7 +83,7 @@ public class Bzip2Compressor implements Compressor {
    * Prepare the compressor to be used in a new stream with settings defined in
    * the given Configuration. It will reset the compressor's block size and
    * and work factor.
-   * 
+   *
    * @param conf Configuration storing new settings
    */
   @Override
@@ -97,7 +97,7 @@ public class Bzip2Compressor implements Compressor {
     blockSize = Bzip2Factory.getBlockSize(conf);
     workFactor = Bzip2Factory.getWorkFactor(conf);
     stream = init(blockSize, workFactor);
-    if(LOG.isDebugEnabled()) {
+    if (LOG.isDebugEnabled()) {
       LOG.debug("Reinit compressor with new compression configuration");
     }
   }
@@ -110,22 +110,22 @@ public class Bzip2Compressor implements Compressor {
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    
+
     this.userBuf = b;
     this.userBufOff = off;
     this.userBufLen = len;
     uncompressedDirectBufOff = 0;
     setInputFromSavedData();
-    
+
     // Reinitialize bzip2's output direct buffer.
     compressedDirectBuf.limit(directBufferSize);
     compressedDirectBuf.position(directBufferSize);
   }
-  
+
   // Copy enough data from userBuf to uncompressedDirectBuf.
   synchronized void setInputFromSavedData() {
     int len = Math.min(userBufLen, uncompressedDirectBuf.remaining());
-    ((ByteBuffer)uncompressedDirectBuf).put(userBuf, userBufOff, len);
+    ((ByteBuffer) uncompressedDirectBuf).put(userBuf, userBufOff, len);
     userBufLen -= len;
     userBufOff += len;
     uncompressedDirectBufLen = uncompressedDirectBuf.position();
@@ -146,7 +146,7 @@ public class Bzip2Compressor implements Compressor {
     // Uncompressed data available in either the direct buffer or user buffer?
     if (keepUncompressedBuf && uncompressedDirectBufLen > 0)
       return false;
-    
+
     if (uncompressedDirectBuf.remaining() > 0) {
       // Check if we have consumed all data in the user buffer.
       if (userBufLen <= 0) {
@@ -157,15 +157,15 @@ public class Bzip2Compressor implements Compressor {
         return uncompressedDirectBuf.remaining() > 0;
       }
     }
-    
+
     return false;
   }
-  
+
   @Override
   public synchronized void finish() {
     finish = true;
   }
-  
+
   @Override
   public synchronized boolean finished() {
     // Check if bzip2 says it has finished and
@@ -174,20 +174,20 @@ public class Bzip2Compressor implements Compressor {
   }
 
   @Override
-  public synchronized int compress(byte[] b, int off, int len) 
-    throws IOException {
+  public synchronized int compress(byte[] b, int off, int len)
+      throws IOException {
     if (b == null) {
       throw new NullPointerException();
     }
     if (off < 0 || len < 0 || off > b.length - len) {
       throw new ArrayIndexOutOfBoundsException();
     }
-    
+
     // Check if there is compressed data.
     int n = compressedDirectBuf.remaining();
     if (n > 0) {
       n = Math.min(n, len);
-      ((ByteBuffer)compressedDirectBuf).get(b, off, n);
+      ((ByteBuffer) compressedDirectBuf).get(b, off, n);
       return n;
     }
 
@@ -198,7 +198,7 @@ public class Bzip2Compressor implements Compressor {
     // Compress the data.
     n = deflateBytesDirect();
     compressedDirectBuf.limit(n);
-    
+
     // Check if bzip2 has consumed the entire input buffer.
     // Set keepUncompressedBuf properly.
     if (uncompressedDirectBufLen <= 0) { // bzip2 consumed all input
@@ -212,7 +212,7 @@ public class Bzip2Compressor implements Compressor {
 
     // Get at most 'len' bytes.
     n = Math.min(n, len);
-    ((ByteBuffer)compressedDirectBuf).get(b, off, n);
+    ((ByteBuffer) compressedDirectBuf).get(b, off, n);
 
     return n;
   }
@@ -253,7 +253,7 @@ public class Bzip2Compressor implements Compressor {
     compressedDirectBuf.position(directBufferSize);
     userBufOff = userBufLen = 0;
   }
-  
+
   @Override
   public synchronized void end() {
     if (stream != 0) {
@@ -261,7 +261,7 @@ public class Bzip2Compressor implements Compressor {
       stream = 0;
     }
   }
-  
+
   static void initSymbols(String libname) {
     initIDs(libname);
   }
@@ -270,12 +270,17 @@ public class Bzip2Compressor implements Compressor {
     if (stream == 0)
       throw new NullPointerException();
   }
-  
+
   private native static void initIDs(String libname);
+
   private native static long init(int blockSize, int workFactor);
+
   private native int deflateBytesDirect();
+
   private native static long getBytesRead(long strm);
+
   private native static long getBytesWritten(long strm);
+
   private native static void end(long strm);
 
   public native static String getLibraryName();

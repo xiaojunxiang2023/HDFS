@@ -17,24 +17,19 @@
  */
 package org.apache.hadoop.metrics2.sink;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
 import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.hadoop.metrics2.AbstractMetric;
-import org.apache.hadoop.metrics2.MetricType;
-import org.apache.hadoop.metrics2.MetricsRecord;
-import org.apache.hadoop.metrics2.MetricsSink;
-import org.apache.hadoop.metrics2.MetricsTag;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.metrics2.*;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Metrics sink for prometheus exporter.
@@ -90,7 +85,7 @@ public class PrometheusMetricsSink implements MetricsSink {
     String baseName = StringUtils.capitalize(recordName)
         + StringUtils.capitalize(metricName);
     String[] parts = SPLIT_PATTERN.split(baseName);
-    String joined =  String.join("_", parts).toLowerCase();
+    String joined = String.join("_", parts).toLowerCase();
     return DELIMITERS.matcher(joined).replaceAll("_");
   }
 
@@ -159,7 +154,7 @@ public class PrometheusMetricsSink implements MetricsSink {
   }
 
   private String getMetricKey(String promMetricKey, AbstractMetric metric,
-      List<String> extendTags) {
+                              List<String> extendTags) {
     Matcher matcher = NN_TOPMETRICS_PATTERN.matcher(promMetricKey);
     if (matcher.find() && matcher.groupCount() == 2) {
       extendTags.addAll(parseTopMetricsTags(metric.name()));

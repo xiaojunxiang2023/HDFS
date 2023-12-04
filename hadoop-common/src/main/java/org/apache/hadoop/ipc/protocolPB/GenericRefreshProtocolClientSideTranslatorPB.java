@@ -1,24 +1,18 @@
 package org.apache.hadoop.ipc.protocolPB;
 
+import org.apache.hadoop.ipc.*;
+import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshRequestProto;
+import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseCollectionProto;
+import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseProto;
+import org.apache.hadoop.thirdparty.protobuf.RpcController;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.hadoop.ipc.ProtobufHelper;
-import org.apache.hadoop.ipc.ProtocolMetaInterface;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RefreshResponse;
-import org.apache.hadoop.ipc.RpcClientUtil;
-import org.apache.hadoop.ipc.GenericRefreshProtocol;
-import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshRequestProto;
-import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseProto;
-import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos.GenericRefreshResponseCollectionProto;
-
-import org.apache.hadoop.thirdparty.protobuf.RpcController;
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
 public class GenericRefreshProtocolClientSideTranslatorPB implements
     ProtocolMetaInterface, GenericRefreshProtocol, Closeable {
@@ -43,9 +37,9 @@ public class GenericRefreshProtocolClientSideTranslatorPB implements
 
     try {
       GenericRefreshRequestProto request = GenericRefreshRequestProto.newBuilder()
-        .setIdentifier(identifier)
-        .addAllArgs(argList)
-        .build();
+          .setIdentifier(identifier)
+          .addAllArgs(argList)
+          .build();
 
       GenericRefreshResponseCollectionProto resp = rpcProxy.refresh(NULL_CONTROLLER, request);
       return unpack(resp);
@@ -93,9 +87,9 @@ public class GenericRefreshProtocolClientSideTranslatorPB implements
   @Override
   public boolean isMethodSupported(String methodName) throws IOException {
     return RpcClientUtil.isMethodSupported(rpcProxy,
-      GenericRefreshProtocolPB.class,
-      RPC.RpcKind.RPC_PROTOCOL_BUFFER,
-      RPC.getProtocolVersion(GenericRefreshProtocolPB.class),
-      methodName);
+        GenericRefreshProtocolPB.class,
+        RPC.RpcKind.RPC_PROTOCOL_BUFFER,
+        RPC.getProtocolVersion(GenericRefreshProtocolPB.class),
+        methodName);
   }
 }

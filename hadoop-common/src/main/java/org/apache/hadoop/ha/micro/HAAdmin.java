@@ -1,30 +1,28 @@
 package org.apache.hadoop.ha.micro;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.*;
-
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.ha.*;
-import org.apache.hadoop.ha.status.HAServiceProtocol;
-import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
-import org.apache.hadoop.ha.status.HAServiceProtocol.StateChangeRequestInfo;
-import org.apache.hadoop.ha.status.HAServiceProtocol.RequestSource;
 import org.apache.hadoop.ha.fc.FailoverController;
 import org.apache.hadoop.ha.fc.ZKFCProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol;
+import org.apache.hadoop.ha.status.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.ha.status.HAServiceProtocol.RequestSource;
+import org.apache.hadoop.ha.status.HAServiceProtocol.StateChangeRequestInfo;
 import org.apache.hadoop.ha.status.HAServiceTarget;
+import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-
-import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.*;
 
 /**
  * haadmin命令
@@ -32,30 +30,30 @@ import org.slf4j.LoggerFactory;
 public abstract class HAAdmin extends Configured implements Tool {
 
   private static final Logger LOG = LoggerFactory.getLogger(HAAdmin.class);
-  
+
   protected static final String FORCEACTIVE = "forceactive";
   protected static final String FORCEMANUAL = "forcemanual";
 
   private int rpcTimeoutForChecks = -1;
-  
+
   protected final static Map<String, UsageInfo> USAGE =
-    ImmutableMap.<String, UsageInfo>builder()
-    .put("-transitionToActive",
-        new UsageInfo("[--"+FORCEACTIVE+"] <serviceId>", "Transitions the service into Active state"))
-    .put("-transitionToStandby",
-        new UsageInfo("<serviceId>", "Transitions the service into Standby state"))
-    .put("-getServiceState",
-        new UsageInfo("<serviceId>", "Returns the state of the service"))
-      .put("-getAllServiceState",
-          new UsageInfo(null, "Returns the state of all the services"))
-    .put("-checkHealth",
-        new UsageInfo("<serviceId>",
-            "Requests that the service perform a health check.\n" + 
-            "The HAAdmin tool will exit with a non-zero exit code\n" +
-            "if the check fails."))
-    .put("-help",
-        new UsageInfo("<command>", "Displays help on the specified command"))
-    .build();
+      ImmutableMap.<String, UsageInfo>builder()
+          .put("-transitionToActive",
+              new UsageInfo("[--" + FORCEACTIVE + "] <serviceId>", "Transitions the service into Active state"))
+          .put("-transitionToStandby",
+              new UsageInfo("<serviceId>", "Transitions the service into Standby state"))
+          .put("-getServiceState",
+              new UsageInfo("<serviceId>", "Returns the state of the service"))
+          .put("-getAllServiceState",
+              new UsageInfo(null, "Returns the state of all the services"))
+          .put("-checkHealth",
+              new UsageInfo("<serviceId>",
+                  "Requests that the service perform a health check.\n" +
+                      "The HAAdmin tool will exit with a non-zero exit code\n" +
+                      "if the check fails."))
+          .put("-help",
+              new UsageInfo("<command>", "Displays help on the specified command"))
+          .build();
 
   protected PrintStream errOut = System.err;
   protected PrintStream out = System.out;
@@ -78,7 +76,7 @@ public abstract class HAAdmin extends Configured implements Tool {
   }
 
   protected abstract HAServiceTarget resolveTarget(String string);
-  
+
   protected Collection<String> getTargetIds(String targetNodeToActivate) {
     return new ArrayList<>(Collections.singletonList(targetNodeToActivate));
   }
@@ -108,7 +106,7 @@ public abstract class HAAdmin extends Configured implements Tool {
   }
 
   protected void printUsage(PrintStream pStr, String cmd,
-      Map<String, UsageInfo> helpEntries) {
+                            Map<String, UsageInfo> helpEntries) {
     UsageInfo usage = helpEntries.get(cmd);
     if (usage == null) {
       throw new RuntimeException("No usage for cmd " + cmd);
@@ -133,8 +131,8 @@ public abstract class HAAdmin extends Configured implements Tool {
     }
     /*  returns true if other target node is active or some exception occurred 
         and forceActive was not set  */
-    if(!cmd.hasOption(FORCEACTIVE)) {
-      if(isOtherTargetNodeActive(argv[0], cmd.hasOption(FORCEACTIVE))) {
+    if (!cmd.hasOption(FORCEACTIVE)) {
+      if (isOtherTargetNodeActive(argv[0], cmd.hasOption(FORCEACTIVE))) {
         return -1;
       }
     }
@@ -147,7 +145,7 @@ public abstract class HAAdmin extends Configured implements Tool {
     svc.transitionToActive(createReqInfo());
     return 0;
   }
-  
+
   /**
    * Checks whether other target node is active or not
    * @param targetNodeToActivate
@@ -157,30 +155,30 @@ public abstract class HAAdmin extends Configured implements Tool {
   private boolean isOtherTargetNodeActive(String targetNodeToActivate, boolean forceActive) {
     Collection<String> targetIds = getTargetIds(targetNodeToActivate);
     targetIds.remove(targetNodeToActivate);
-    for(String targetId : targetIds) {
+    for (String targetId : targetIds) {
       HAServiceTarget target = resolveTarget(targetId);
       if (!checkManualStateManagementOK(target)) {
         return true;
       }
       try {
         HAServiceProtocol proto = target.getProxy(getConf(), 5000);
-        if(proto.getServiceStatus().getState() == HAServiceState.ACTIVE) {
-          errOut.println("transitionToActive: Node " +  targetId +" is already active");
+        if (proto.getServiceStatus().getState() == HAServiceState.ACTIVE) {
+          errOut.println("transitionToActive: Node " + targetId + " is already active");
           printUsage(errOut, "-transitionToActive");
           return true;
         }
       } catch (Exception e) {
         //If forceActive switch is false then return true
-        if(!forceActive) {
+        if (!forceActive) {
           errOut.println("Unexpected error occurred  " + e.getMessage());
           printUsage(errOut, "-transitionToActive");
-          return true; 
+          return true;
         }
       }
     }
     return false;
   }
-  
+
   private int transitionToStandby(final CommandLine cmd)
       throws IOException {
     String[] argv = cmd.getArgs();
@@ -189,7 +187,7 @@ public abstract class HAAdmin extends Configured implements Tool {
       printUsage(errOut, "-transitionToStandby");
       return -1;
     }
-    
+
     HAServiceTarget target = resolveTarget(argv[0]);
     if (!checkManualStateManagementOK(target)) {
       return -1;
@@ -204,7 +202,7 @@ public abstract class HAAdmin extends Configured implements Tool {
    * service. If automatic failover is configured, then the automatic
    * failover controllers should be doing state management, and it is generally
    * an error to use the HAAdmin command line to do so.
-   * 
+   *
    * @param target the target to check
    * @return true if manual state management is allowed
    */
@@ -213,10 +211,10 @@ public abstract class HAAdmin extends Configured implements Tool {
       if (requestSource != RequestSource.REQUEST_BY_USER_FORCED) {
         errOut.println(
             "Automatic failover is enabled for " + target + "\n" +
-            "Refusing to manually manage HA state, since it may cause\n" +
-            "a split-brain scenario or other incorrect state.\n" +
-            "If you are very sure you know what you are doing, please \n" +
-            "specify the --" + FORCEMANUAL + " flag.");
+                "Refusing to manually manage HA state, since it may cause\n" +
+                "a split-brain scenario or other incorrect state.\n" +
+                "If you are very sure you know what you are doing, please \n" +
+                "specify the --" + FORCEMANUAL + " flag.");
         return false;
       } else {
         LOG.warn("Proceeding with manual HA state management even though\n" +
@@ -302,7 +300,7 @@ public abstract class HAAdmin extends Configured implements Tool {
   }
 
   protected boolean checkParameterValidity(String[] argv,
-      Map<String, UsageInfo> helpEntries){
+                                           Map<String, UsageInfo> helpEntries) {
 
     if (argv.length < 1) {
       printUsage(errOut, helpEntries);
@@ -325,19 +323,19 @@ public abstract class HAAdmin extends Configured implements Tool {
     return true;
   }
 
-  protected boolean checkParameterValidity(String[] argv){
+  protected boolean checkParameterValidity(String[] argv) {
     return checkParameterValidity(argv, USAGE);
   }
 
   protected int runCmd(String[] argv) throws Exception {
-    if (!checkParameterValidity(argv, USAGE)){
+    if (!checkParameterValidity(argv, USAGE)) {
       return -1;
     }
 
     String cmd = argv[0];
     Options opts = new Options();
     // Add command-specific options
-    if("-transitionToActive".equals(cmd)) {
+    if ("-transitionToActive".equals(cmd)) {
       addTransitionToActiveCliOpts(opts);
     }
     // Mutative commands take FORCEMANUAL option
@@ -351,7 +349,7 @@ public abstract class HAAdmin extends Configured implements Tool {
       // error already printed
       return -1;
     }
-    
+
     if (cmdLine.hasOption(FORCEMANUAL)) {
       if (!confirmForceManual()) {
         LOG.error("Aborted");
@@ -378,7 +376,7 @@ public abstract class HAAdmin extends Configured implements Tool {
       // we already checked command validity above, so getting here
       // would be a coding error
       throw new AssertionError("Should not get here, command: " + cmd);
-    } 
+    }
   }
 
   protected int getAllServiceState() {
@@ -405,22 +403,21 @@ public abstract class HAAdmin extends Configured implements Tool {
   }
 
   protected boolean confirmForceManual() throws IOException {
-     return ToolRunner.confirmPrompt(
+    return ToolRunner.confirmPrompt(
         "You have specified the --" + FORCEMANUAL + " flag. This flag is " +
-        "dangerous, as it can induce a split-brain scenario that WILL " +
-        "CORRUPT your HDFS namespace, possibly irrecoverably.\n" +
-        "\n" +
-        "It is recommended not to use this flag, but instead to shut down the " +
-        "cluster and disable automatic failover if you prefer to manually " +
-        "manage your HA state.\n" +
-        "\n" +
-        "You may abort safely by answering 'n' or hitting ^C now.\n" +
-        "\n" +
-        "Are you sure you want to continue?");
+            "dangerous, as it can induce a split-brain scenario that WILL " +
+            "CORRUPT your HDFS namespace, possibly irrecoverably.\n" +
+            "\n" +
+            "It is recommended not to use this flag, but instead to shut down the " +
+            "cluster and disable automatic failover if you prefer to manually " +
+            "manage your HA state.\n" +
+            "\n" +
+            "You may abort safely by answering 'n' or hitting ^C now.\n" +
+            "\n" +
+            "Are you sure you want to continue?");
   }
 
 
-  
   /**
    * Add CLI options which are specific to the transitionToActive command and
    * no others.
@@ -430,7 +427,7 @@ public abstract class HAAdmin extends Configured implements Tool {
   }
 
   protected CommandLine parseOpts(String cmdName, Options opts, String[] argv,
-      Map<String, UsageInfo> helpEntries) {
+                                  Map<String, UsageInfo> helpEntries) {
     try {
       // Strip off the first arg, since that's just the command name
       argv = Arrays.copyOfRange(argv, 1, argv.length);
@@ -442,10 +439,11 @@ public abstract class HAAdmin extends Configured implements Tool {
       return null;
     }
   }
-  
+
   protected CommandLine parseOpts(String cmdName, Options opts, String[] argv) {
     return parseOpts(cmdName, opts, argv, USAGE);
   }
+
   protected int help(String[] argv) {
     return help(argv, USAGE);
   }
@@ -483,7 +481,7 @@ public abstract class HAAdmin extends Configured implements Tool {
   public static class UsageInfo {
     public final String args;
     public final String help;
-    
+
     public UsageInfo(String args, String help) {
       this.args = args;
       this.help = help;

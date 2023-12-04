@@ -1,21 +1,16 @@
 package org.apache.hadoop.util.functional;
 
-import javax.annotation.Nullable;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.fs.statistics.IOStatistics;
 import org.apache.hadoop.fs.statistics.IOStatisticsSource;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.hadoop.fs.statistics.IOStatisticsLogging.logIOStatisticsAtDebug;
@@ -188,7 +183,7 @@ public final class RemoteIterators {
    * @throws IOException if the source RemoteIterator raises it.
    */
   public static <T> T[] toArray(RemoteIterator<T> source,
-      T[] a) throws IOException {
+                                T[] a) throws IOException {
     List<T> list = toList(source);
     return list.toArray(a);
   }
@@ -502,7 +497,7 @@ public final class RemoteIterators {
 
     @Override
     public T next() throws IOException {
-      return (T)sourceNext();
+      return (T) sourceNext();
     }
 
     @Override

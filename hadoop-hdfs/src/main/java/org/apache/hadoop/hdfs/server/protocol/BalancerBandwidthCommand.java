@@ -12,7 +12,7 @@ package org.apache.hadoop.hdfs.server.protocol;
  * Balancer bandwidth command instructs each datanode to change its value for
  * the max amount of network bandwidth it may use during the block balancing
  * operation.
- * 
+ *
  * The Balancer Bandwidth Command contains the new bandwidth value as its
  * payload. The bandwidth value is in bytes per second.
  */

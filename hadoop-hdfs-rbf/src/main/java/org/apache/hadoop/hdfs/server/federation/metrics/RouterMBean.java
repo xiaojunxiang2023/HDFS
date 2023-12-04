@@ -6,27 +6,27 @@ import org.apache.hadoop.classification.InterfaceStability;
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public interface RouterMBean {
-    String getRouterStarted();
+  String getRouterStarted();
 
-    String getVersion();
+  String getVersion();
 
-    String getCompiledDate();
+  String getCompiledDate();
 
-    String getCompileInfo();
+  String getCompileInfo();
 
-    String getHostAndPort();
+  String getHostAndPort();
 
-    String getRouterId();
+  String getRouterId();
 
-    String getRouterStatus();
+  String getRouterStatus();
 
-    String getClusterId();
+  String getClusterId();
 
-    String getBlockPoolId();
+  String getBlockPoolId();
 
-    long getCurrentTokensCount();
+  long getCurrentTokensCount();
 
-    String getSafemode();
+  String getSafemode();
 
-    boolean isSecurityEnabled();
+  boolean isSecurityEnabled();
 }

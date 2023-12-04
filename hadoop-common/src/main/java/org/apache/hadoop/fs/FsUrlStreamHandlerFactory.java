@@ -1,21 +1,21 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.conf.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URLStreamHandlerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.hadoop.conf.Configuration;
-
 /**
  * Factory for URL stream handlers.
- * 
+ *
  * There is only one handler whose job is to create UrlConnections. A
  * FsUrlConnection relies on FileSystem to choose the appropriate FS
  * implementation.
- * 
+ *
  * Before returning our handler, we make sure that FileSystem knows an
  * implementation for the requested scheme/protocol.
  */
@@ -71,8 +71,7 @@ public class FsUrlStreamHandlerFactory implements
         Class<? extends FileSystem> impl
             = FileSystem.getFileSystemClass(protocol, conf);
         LOG.debug("Found implementation of {}: {}", protocol, impl);
-      }
-      catch (IOException ex) {
+      } catch (IOException ex) {
         known = false;
       }
       protocols.put(protocol, known);

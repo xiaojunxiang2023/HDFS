@@ -1,51 +1,20 @@
 package org.apache.hadoop.hdfs.protocolPB;
 
-import java.io.IOException;
-import java.util.List;
 import org.apache.hadoop.hdfs.client.BlockReportOptions;
 import org.apache.hadoop.hdfs.protocol.BlockLocalPathInfo;
 import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
 import org.apache.hadoop.hdfs.protocol.DatanodeVolumeInfo;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.DeleteBlockPoolRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.DeleteBlockPoolResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.EvictWritersRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.EvictWritersResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetBalancerBandwidthRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetBalancerBandwidthResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetBlockLocalPathInfoRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetBlockLocalPathInfoResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetDatanodeInfoRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetDatanodeInfoResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetReconfigurationStatusRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.GetReconfigurationStatusResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetReplicaVisibleLengthRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetReplicaVisibleLengthResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetVolumeReportRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetVolumeReportResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.GetVolumeReportResponseProto.Builder;
-import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.ListReconfigurablePropertiesRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.ListReconfigurablePropertiesResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.RefreshNamenodesRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.RefreshNamenodesResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.ShutdownDatanodeRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.ShutdownDatanodeResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.StartReconfigurationRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.StartReconfigurationResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.TriggerBlockReportRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.TriggerBlockReportResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.DatanodeVolumeInfoProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.SubmitDiskBalancerPlanRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.SubmitDiskBalancerPlanResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.CancelPlanRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.CancelPlanResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.QueryPlanStatusRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.QueryPlanStatusResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.DiskBalancerSettingRequestProto;
-import org.apache.hadoop.hdfs.protocol.proto.ClientDatanodeProtocolProtos.DiskBalancerSettingResponseProto;
-import org.apache.hadoop.thirdparty.protobuf.RpcController;
-import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+import org.apache.hadoop.hdfs.protocol.proto.ReconfigurationProtocolProtos.*;
 import org.apache.hadoop.hdfs.server.datanode.DiskBalancerWorkStatus;
 import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.thirdparty.protobuf.RpcController;
+import org.apache.hadoop.thirdparty.protobuf.ServiceException;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Implementation for protobuf service that forwards requests
@@ -66,7 +35,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
       TriggerBlockReportResponseProto.newBuilder().build();
   private final static EvictWritersResponseProto EVICT_WRITERS_RESP =
       EvictWritersResponseProto.newBuilder().build();
-  
+
   private final ClientDatanodeProtocol impl;
 
   public ClientDatanodeProtocolServerSideTranslatorPB(
@@ -102,7 +71,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
 
   @Override
   public DeleteBlockPoolResponseProto deleteBlockPool(RpcController unused,
-      DeleteBlockPoolRequestProto request) throws ServiceException {
+                                                      DeleteBlockPoolRequestProto request) throws ServiceException {
     try {
       impl.deleteBlockPool(request.getBlockPool(), request.getForce());
     } catch (IOException e) {
@@ -118,8 +87,8 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
     BlockLocalPathInfo resp;
     try {
       resp = impl.getBlockLocalPathInfo(
-                 PBHelperClient.convert(request.getBlock()),
-                 PBHelperClient.convert(request.getToken()));
+          PBHelperClient.convert(request.getBlock()),
+          PBHelperClient.convert(request.getToken()));
     } catch (IOException e) {
       throw new ServiceException(e);
     }
@@ -143,7 +112,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
 
   @Override
   public EvictWritersResponseProto evictWriters(RpcController unused,
-      EvictWritersRequestProto request) throws ServiceException {
+                                                EvictWritersRequestProto request) throws ServiceException {
     try {
       impl.evictWriters();
     } catch (IOException e) {
@@ -153,7 +122,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
   }
 
   public GetDatanodeInfoResponseProto getDatanodeInfo(RpcController unused,
-      GetDatanodeInfoRequestProto request) throws ServiceException {
+                                                      GetDatanodeInfoRequestProto request) throws ServiceException {
     GetDatanodeInfoResponseProto res;
     try {
       res = GetDatanodeInfoResponseProto.newBuilder()
@@ -204,7 +173,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
   @Override
   public TriggerBlockReportResponseProto triggerBlockReport(
       RpcController unused, TriggerBlockReportRequestProto request)
-          throws ServiceException {
+      throws ServiceException {
     try {
       BlockReportOptions.Factory factory = new BlockReportOptions.Factory().
           setIncremental(request.getIncremental());
@@ -236,7 +205,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
    * Submit a disk balancer plan for execution.
    * @param controller  - RpcController
    * @param request   - Request
-   * @return   Response
+   * @return Response
    * @throws ServiceException
    */
   @Override
@@ -253,7 +222,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
           SubmitDiskBalancerPlanResponseProto.newBuilder()
               .build();
       return response;
-    } catch(Exception e) {
+    } catch (Exception e) {
       throw new ServiceException(e);
     }
   }
@@ -317,7 +286,7 @@ public class ClientDatanodeProtocolServerSideTranslatorPB implements
 
   @Override
   public GetVolumeReportResponseProto getVolumeReport(RpcController controller,
-      GetVolumeReportRequestProto request) throws ServiceException {
+                                                      GetVolumeReportRequestProto request) throws ServiceException {
     try {
       Builder builder = GetVolumeReportResponseProto.newBuilder();
       List<DatanodeVolumeInfo> volumeReport = impl.getVolumeReport();

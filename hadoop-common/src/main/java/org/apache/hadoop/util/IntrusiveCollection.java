@@ -1,12 +1,12 @@
 package org.apache.hadoop.util;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Implements an intrusive doubly-linked list.
@@ -31,7 +31,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
      * be called on the element.
      */
     void insertInternal(IntrusiveCollection<? extends Element> list,
-        Element prev, Element next);
+                        Element prev, Element next);
 
     /**
      * Set the prev pointer of an element already in the list.
@@ -69,39 +69,39 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
     // We keep references to the first and last elements for easy access.
     Element first = this;
     Element last = this;
-  
+
     @Override
     public void insertInternal(IntrusiveCollection<? extends Element> list,
-        Element prev, Element next) {
+                               Element prev, Element next) {
       throw new RuntimeException("Can't insert root element");
     }
 
     @Override
     public void setPrev(IntrusiveCollection<? extends Element> list,
-        Element prev) {
+                        Element prev) {
       Preconditions.checkState(list == IntrusiveCollection.this);
       last = prev;
     }
 
     @Override
     public void setNext(IntrusiveCollection<? extends Element> list,
-        Element next) {
+                        Element next) {
       Preconditions.checkState(list == IntrusiveCollection.this);
       first = next;
     }
-  
+
     @Override
     public void removeInternal(IntrusiveCollection<? extends Element> list) {
       throw new RuntimeException("Can't remove root element");
     }
-    
+
     @Override
     public Element getNext(
         IntrusiveCollection<? extends Element> list) {
       Preconditions.checkState(list == IntrusiveCollection.this);
       return first;
     }
-  
+
     @Override
     public Element getPrev(
         IntrusiveCollection<? extends Element> list) {
@@ -157,7 +157,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
       }
       cur = next;
       next = null;
-      return (E)cur;
+      return (E) cur;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
       cur = null;
     }
   }
-  
+
   private Element removeElement(Element elem) {
     Element prev = elem.getPrev(IntrusiveCollection.this);
     Element next = elem.getNext(IntrusiveCollection.this);
@@ -185,8 +185,8 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
    * Get an iterator over the list.  This can be used to remove elements.
    * It is not safe to do concurrent modifications from other threads while
    * using this iterator.
-   * 
-   * @return         The iterator.
+   *
+   * @return The iterator.
    */
   public Iterator<E> iterator() {
     return new IntrusiveIterator();
@@ -205,7 +205,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
   @Override
   public boolean contains(Object o) {
     try {
-      Element element = (Element)o;
+      Element element = (Element) o;
       return element.isInList(this);
     } catch (ClassCastException e) {
       return false;
@@ -226,11 +226,11 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
   @Override
   public <T> T[] toArray(T[] array) {
     if (array.length < size) {
-      return (T[])toArray();
+      return (T[]) toArray();
     } else {
       int i = 0;
       for (Iterator<E> iter = iterator(); iter.hasNext(); ) {
-        array[i++] = (T)iter.next();
+        array[i++] = (T) iter.next();
       }
     }
     return array;
@@ -238,7 +238,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
 
   /**
    * Add an element to the end of the list.
-   * 
+   *
    * @param elem     The new element to add.
    */
   @Override
@@ -283,7 +283,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
   @Override
   public boolean remove(Object o) {
     try {
-      Element elem = (Element)o;
+      Element elem = (Element) o;
       if (!elem.isInList(this)) {
         return false;
       }
@@ -330,7 +330,7 @@ public class IntrusiveCollection<E extends IntrusiveCollection.Element>
   public boolean retainAll(Collection<?> collection) {
     boolean changed = false;
     for (Iterator<E> iter = iterator();
-        iter.hasNext(); ) {
+         iter.hasNext(); ) {
       Element elem = iter.next();
       if (!collection.contains(elem)) {
         iter.remove();

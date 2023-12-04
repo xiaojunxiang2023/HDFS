@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */package org.apache.hadoop.hdfs.server.datanode;
+ */
+package org.apache.hadoop.hdfs.server.datanode;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,7 @@ public class DiskBalancerWorkItem {
   private static final ObjectReader READER =
       new ObjectMapper().readerFor(DiskBalancerWorkItem.class);
 
-  private  long startTime;
+  private long startTime;
   private long secondsElapsed;
   private long bytesToCopy;
   private long bytesCopied;

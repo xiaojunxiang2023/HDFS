@@ -1,17 +1,17 @@
 package org.apache.hadoop.fs;
 
+import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.util.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
-import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.util.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A daemon thread that waits for the next file system to renew.
@@ -40,7 +40,7 @@ public class DelegationTokenRenewer
     private long renewalTime;
     /** a weak reference to the file system so that it can be garbage collected */
     private final WeakReference<T> weakFs;
-    private Token<?> token; 
+    private Token<?> token;
     boolean isValid = true;
 
     private RenewAction(final T fs) {
@@ -48,11 +48,11 @@ public class DelegationTokenRenewer
       this.token = fs.getRenewToken();
       updateRenewalTime(renewCycle);
     }
- 
+
     public boolean isValid() {
       return isValid;
     }
-    
+
     /** Get the delay until this event should happen. */
     @Override
     public long getDelay(final TimeUnit unit) {
@@ -62,9 +62,9 @@ public class DelegationTokenRenewer
 
     @Override
     public int compareTo(final Delayed delayed) {
-      final RenewAction<?> that = (RenewAction<?>)delayed;
-      return this.renewalTime < that.renewalTime? -1
-          : this.renewalTime == that.renewalTime? 0: 1;
+      final RenewAction<?> that = (RenewAction<?>) delayed;
+      return this.renewalTime < that.renewalTime ? -1
+          : this.renewalTime == that.renewalTime ? 0 : 1;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class DelegationTokenRenewer
       } else if (that == null || !(that instanceof RenewAction)) {
         return false;
       }
-      return token.equals(((RenewAction<?>)that).token);
+      return token.equals(((RenewAction<?>) that).token);
     }
 
     /**
@@ -89,7 +89,7 @@ public class DelegationTokenRenewer
      * @param newTime the new time
      */
     private void updateRenewalTime(long delay) {
-      renewalTime = Time.now() + delay - delay/10;
+      renewalTime = Time.now() + delay - delay / 10;
     }
 
     /**
@@ -102,7 +102,7 @@ public class DelegationTokenRenewer
       final T fs = weakFs.get();
       final boolean b = fs != null;
       if (b) {
-        synchronized(fs) {
+        synchronized (fs) {
           try {
             long expires = token.renew(fs.getConf());
             updateRenewalTime(expires - Time.now());
@@ -135,20 +135,20 @@ public class DelegationTokenRenewer
     @Override
     public String toString() {
       Renewable fs = weakFs.get();
-      return fs == null? "evaporated token renew"
+      return fs == null ? "evaporated token renew"
           : "The token will be renewed in " + getDelay(TimeUnit.SECONDS)
-            + " secs, renewToken=" + token;
+          + " secs, renewToken=" + token;
     }
   }
 
   /** assumes renew cycle for a token is 24 hours... */
-  private static final long RENEW_CYCLE = 24 * 60 * 60 * 1000; 
+  private static final long RENEW_CYCLE = 24 * 60 * 60 * 1000;
   @VisibleForTesting
   public static long renewCycle = RENEW_CYCLE;
 
   /** Queue to maintain the RenewActions to be processed by the {@link #run()} */
   private volatile DelayQueue<RenewAction<?>> queue = new DelayQueue<RenewAction<?>>();
-  
+
   /** For testing purposes */
   @VisibleForTesting
   protected int getRenewQueueLength() {
@@ -187,7 +187,7 @@ public class DelegationTokenRenewer
       }
     }
   }
-  
+
   /** Add a renew action to the queue. */
   @SuppressWarnings("static-access")
   public <T extends FileSystem & Renewable> RenewAction<T> addRenewAction(final T fs) {
@@ -207,7 +207,7 @@ public class DelegationTokenRenewer
 
   /**
    * Remove the associated renew action from the queue
-   * 
+   *
    * @throws IOException
    */
   public <T extends FileSystem & Renewable> void removeRenewAction(
@@ -227,7 +227,7 @@ public class DelegationTokenRenewer
   @SuppressWarnings("static-access")
   @Override
   public void run() {
-    for(;;) {
+    for (; ; ) {
       RenewAction<?> action = null;
       try {
         action = queue.take();

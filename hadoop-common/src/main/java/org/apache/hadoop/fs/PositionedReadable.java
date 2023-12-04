@@ -1,6 +1,7 @@
 package org.apache.hadoop.fs;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.IOException;
 
 /**
  * Stream that permits positional reading.
@@ -31,8 +32,8 @@ public interface PositionedReadable {
    * @throws IOException IO problems.
    */
   int read(long position, byte[] buffer, int offset, int length)
-    throws IOException;
-  
+      throws IOException;
+
   /**
    * Read the specified number of bytes, from a given
    * position within a file. This does not
@@ -48,8 +49,8 @@ public interface PositionedReadable {
    * the read operation completed
    */
   void readFully(long position, byte[] buffer, int offset, int length)
-    throws IOException;
-  
+      throws IOException;
+
   /**
    * Read number of bytes equal to the length of the buffer, from a given
    * position within a file. This does not

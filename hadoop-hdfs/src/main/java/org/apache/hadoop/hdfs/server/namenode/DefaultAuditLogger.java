@@ -1,13 +1,14 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.net.InetAddress;
-import java.util.HashSet;
-import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenSecretManager;
 import org.apache.hadoop.ipc.CallerContext;
 import org.apache.hadoop.security.UserGroupInformation;
+
+import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class provides an interface for Namenode and Router to Audit events
@@ -59,12 +60,12 @@ public abstract class DefaultAuditLogger extends HdfsAuditLogger {
   public abstract void logAuditMessage(String message);
 
   public abstract void logAuditEvent(boolean succeeded, String userName,
-      InetAddress addr, String cmd, String src, String dst, FileStatus status,
-      UserGroupInformation ugi, DelegationTokenSecretManager dtSecretManager);
+                                     InetAddress addr, String cmd, String src, String dst, FileStatus status,
+                                     UserGroupInformation ugi, DelegationTokenSecretManager dtSecretManager);
 
   public abstract void logAuditEvent(boolean succeeded, String userName,
-      InetAddress addr, String cmd, String src, String dst, FileStatus status,
-      CallerContext callerContext, UserGroupInformation ugi,
-      DelegationTokenSecretManager dtSecretManager);
+                                     InetAddress addr, String cmd, String src, String dst, FileStatus status,
+                                     CallerContext callerContext, UserGroupInformation ugi,
+                                     DelegationTokenSecretManager dtSecretManager);
 
 }

@@ -18,18 +18,18 @@ public final class ReplicatedBlockStats {
   private final Long highestPriorityLowRedundancyBlocks;
 
   public ReplicatedBlockStats(long lowRedundancyBlocks,
-      long corruptBlocks, long missingBlocks,
-      long missingReplicationOneBlocks, long bytesInFutureBlocks,
-      long pendingDeletionBlocks) {
+                              long corruptBlocks, long missingBlocks,
+                              long missingReplicationOneBlocks, long bytesInFutureBlocks,
+                              long pendingDeletionBlocks) {
     this(lowRedundancyBlocks, corruptBlocks, missingBlocks,
         missingReplicationOneBlocks, bytesInFutureBlocks, pendingDeletionBlocks,
         null);
   }
 
   public ReplicatedBlockStats(long lowRedundancyBlocks,
-      long corruptBlocks, long missingBlocks,
-      long missingReplicationOneBlocks, long bytesInFutureBlocks,
-      long pendingDeletionBlocks, Long highestPriorityLowRedundancyBlocks) {
+                              long corruptBlocks, long missingBlocks,
+                              long missingReplicationOneBlocks, long bytesInFutureBlocks,
+                              long pendingDeletionBlocks, Long highestPriorityLowRedundancyBlocks) {
     this.lowRedundancyBlocks = lowRedundancyBlocks;
     this.corruptBlocks = corruptBlocks;
     this.missingBlocks = missingBlocks;
@@ -68,7 +68,7 @@ public final class ReplicatedBlockStats {
     return getHighestPriorityLowRedundancyBlocks() != null;
   }
 
-  public Long getHighestPriorityLowRedundancyBlocks(){
+  public Long getHighestPriorityLowRedundancyBlocks() {
     return highestPriorityLowRedundancyBlocks;
   }
 
@@ -80,13 +80,13 @@ public final class ReplicatedBlockStats {
         .append(", CorruptBlocks=").append(getCorruptBlocks())
         .append(", MissingReplicaBlocks=").append(getMissingReplicaBlocks())
         .append(", MissingReplicationOneBlocks=").append(
-            getMissingReplicationOneBlocks())
+        getMissingReplicationOneBlocks())
         .append(", BytesInFutureBlocks=").append(getBytesInFutureBlocks())
         .append(", PendingDeletionBlocks=").append(
-            getPendingDeletionBlocks());
+        getPendingDeletionBlocks());
     if (hasHighestPriorityLowRedundancyBlocks()) {
-        statsBuilder.append(", HighestPriorityLowRedundancyBlocks=").append(
-            getHighestPriorityLowRedundancyBlocks());
+      statsBuilder.append(", HighestPriorityLowRedundancyBlocks=").append(
+          getHighestPriorityLowRedundancyBlocks());
     }
     statsBuilder.append("]");
     return statsBuilder.toString();
