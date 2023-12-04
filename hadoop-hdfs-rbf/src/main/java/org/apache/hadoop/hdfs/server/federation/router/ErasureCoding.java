@@ -1,11 +1,13 @@
 package org.apache.hadoop.hdfs.server.federation.router;
 
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.federation.resolver.ActiveNamenodeResolver;
 import org.apache.hadoop.hdfs.server.federation.resolver.FederationNamespaceInfo;
 import org.apache.hadoop.hdfs.server.federation.resolver.RemoteLocation;
 import org.apache.hadoop.hdfs.server.namenode.NameNode.OperationCategory;
 
 import java.io.IOException;
+import java.util.*;
 
 import static org.apache.hadoop.hdfs.server.federation.router.RouterRpcServer.merge;
 

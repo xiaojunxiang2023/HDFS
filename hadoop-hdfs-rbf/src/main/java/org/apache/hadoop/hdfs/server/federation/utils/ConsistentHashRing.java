@@ -2,6 +2,7 @@ package org.apache.hadoop.hdfs.server.federation.utils;
 
 import org.apache.hadoop.io.MD5Hash;
 
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

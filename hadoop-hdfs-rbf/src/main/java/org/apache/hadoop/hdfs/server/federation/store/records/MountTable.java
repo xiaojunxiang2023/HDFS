@@ -14,6 +14,7 @@ import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.IOException;
+import java.util.*;
 import java.util.Map.Entry;
 
 public abstract class MountTable extends BaseRecord {

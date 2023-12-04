@@ -9,6 +9,7 @@ import org.apache.hadoop.hdfs.server.federation.router.NameserviceManager;
 import org.apache.hadoop.hdfs.server.federation.router.RouterStateManager;
 import org.apache.hadoop.hdfs.server.federation.store.protocol.*;
 import org.apache.hadoop.hdfs.server.federation.store.protocol.impl.pb.*;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
 import java.io.Closeable;

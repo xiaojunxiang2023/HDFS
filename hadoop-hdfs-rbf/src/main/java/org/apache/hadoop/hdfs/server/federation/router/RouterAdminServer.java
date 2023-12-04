@@ -21,6 +21,7 @@ import org.apache.hadoop.hdfs.server.federation.store.StateStoreCache;
 import org.apache.hadoop.hdfs.server.federation.store.protocol.*;
 import org.apache.hadoop.hdfs.server.federation.store.records.MountTable;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.RPC.Server;
 import org.apache.hadoop.ipc.proto.GenericRefreshProtocolProtos;
 import org.apache.hadoop.ipc.proto.RefreshCallQueueProtocolProtos;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.*;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTHORIZATION;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_PERMISSIONS_ENABLED_DEFAULT;

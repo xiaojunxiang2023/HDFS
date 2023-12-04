@@ -8,6 +8,8 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
+import java.util.*;
+
 // 用户到 NameNode连接的 唯一标识符
 @InterfaceAudience.Private
 @InterfaceStability.Evolving

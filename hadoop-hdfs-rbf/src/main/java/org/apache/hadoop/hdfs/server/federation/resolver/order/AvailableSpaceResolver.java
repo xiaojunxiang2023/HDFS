@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.*;
 
 // 注意，这是个概率值(权重，即 preference的值)，并不是绝对地以空间大小来排序
 // 

@@ -4,6 +4,8 @@ import org.apache.hadoop.hdfs.server.federation.resolver.order.DestinationOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+
 public class PathLocation {
 
   private static final Logger LOG = LoggerFactory.getLogger(PathLocation.class);

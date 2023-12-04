@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.hadoop.hdfs.server.federation.resolver.FederationNamenodeServiceState.*;

@@ -13,6 +13,7 @@ import org.apache.hadoop.hdfs.server.federation.resolver.RemoteLocation;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 
 import java.io.IOException;
+import java.util.*;
 
 // 缓存管理相关的向 NameNode RPC调用
 public class RouterCacheAdmin {
