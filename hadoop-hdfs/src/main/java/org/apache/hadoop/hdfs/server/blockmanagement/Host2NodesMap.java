@@ -7,26 +7,25 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/** A map from host names to datanode descriptors. */
+// host -> node
 public class Host2NodesMap {
-  private HashMap<String, String> mapHost = new HashMap<String, String>();
-  private final HashMap<String, DatanodeDescriptor[]> map
-    = new HashMap<String, DatanodeDescriptor[]>();
+  private HashMap<String, String> mapHost = new HashMap<>();
+  private final HashMap<String, DatanodeDescriptor[]> map = new HashMap<>();
   private final ReadWriteLock hostmapLock = new ReentrantReadWriteLock();
 
   /** Check if node is already in the map. */
   boolean contains(DatanodeDescriptor node) {
-    if (node==null) {
+    if (node == null) {
       return false;
     }
-      
+
     String ipAddr = node.getIpAddr();
     hostmapLock.readLock().lock();
     try {
       DatanodeDescriptor[] nodes = map.get(ipAddr);
       if (nodes != null) {
-        for(DatanodeDescriptor containedNode:nodes) {
-          if (node==containedNode) {
+        for (DatanodeDescriptor containedNode : nodes) {
+          if (node == containedNode) {
             return true;
           }
         }
@@ -36,29 +35,29 @@ public class Host2NodesMap {
     }
     return false;
   }
-    
+
   /** add node to the map 
    * return true if the node is added; false otherwise.
    */
   boolean add(DatanodeDescriptor node) {
     hostmapLock.writeLock().lock();
     try {
-      if (node==null || contains(node)) {
+      if (node == null || contains(node)) {
         return false;
       }
-      
+
       String ipAddr = node.getIpAddr();
       String hostname = node.getHostName();
-      
+
       mapHost.put(hostname, ipAddr);
-      
+
       DatanodeDescriptor[] nodes = map.get(ipAddr);
       DatanodeDescriptor[] newNodes;
-      if (nodes==null) {
+      if (nodes == null) {
         newNodes = new DatanodeDescriptor[1];
-        newNodes[0]=node;
+        newNodes[0] = node;
       } else { // rare case: more than one datanode on the host
-        newNodes = new DatanodeDescriptor[nodes.length+1];
+        newNodes = new DatanodeDescriptor[nodes.length + 1];
         System.arraycopy(nodes, 0, newNodes, 0, nodes.length);
         newNodes[nodes.length] = node;
       }
@@ -68,26 +67,26 @@ public class Host2NodesMap {
       hostmapLock.writeLock().unlock();
     }
   }
-    
+
   /** remove node from the map 
    * return true if the node is removed; false otherwise.
    */
   boolean remove(DatanodeDescriptor node) {
-    if (node==null) {
+    if (node == null) {
       return false;
     }
-      
+
     String ipAddr = node.getIpAddr();
     String hostname = node.getHostName();
     hostmapLock.writeLock().lock();
     try {
 
       DatanodeDescriptor[] nodes = map.get(ipAddr);
-      if (nodes==null) {
+      if (nodes == null) {
         return false;
       }
-      if (nodes.length==1) {
-        if (nodes[0]==node) {
+      if (nodes.length == 1) {
+        if (nodes[0] == node) {
           map.remove(ipAddr);
           //remove hostname key since last datanode is removed
           mapHost.remove(hostname);
@@ -97,19 +96,19 @@ public class Host2NodesMap {
         }
       }
       //rare case
-      int i=0;
-      for(; i<nodes.length; i++) {
-        if (nodes[i]==node) {
+      int i = 0;
+      for (; i < nodes.length; i++) {
+        if (nodes[i] == node) {
           break;
         }
       }
-      if (i==nodes.length) {
+      if (i == nodes.length) {
         return false;
       } else {
         DatanodeDescriptor[] newNodes;
-        newNodes = new DatanodeDescriptor[nodes.length-1];
+        newNodes = new DatanodeDescriptor[nodes.length - 1];
         System.arraycopy(nodes, 0, newNodes, 0, i);
-        System.arraycopy(nodes, i+1, newNodes, i, nodes.length-i-1);
+        System.arraycopy(nodes, i + 1, newNodes, i, nodes.length - i - 1);
         map.put(ipAddr, newNodes);
         return true;
       }
@@ -117,7 +116,7 @@ public class Host2NodesMap {
       hostmapLock.writeLock().unlock();
     }
   }
-    
+
   /**
    * Get a data node by its IP address.
    * @return DatanodeDescriptor if found, null otherwise 
@@ -126,12 +125,12 @@ public class Host2NodesMap {
     if (ipAddr == null) {
       return null;
     }
-      
+
     hostmapLock.readLock().lock();
     try {
       DatanodeDescriptor[] nodes = map.get(ipAddr);
       // no entry
-      if (nodes== null) {
+      if (nodes == null) {
         return null;
       }
       // one node
@@ -144,15 +143,15 @@ public class Host2NodesMap {
       hostmapLock.readLock().unlock();
     }
   }
-  
+
   /**
    * Find data node by its transfer address
    *
    * @return DatanodeDescriptor if found or null otherwise
    */
   public DatanodeDescriptor getDatanodeByXferAddr(String ipAddr,
-      int xferPort) {
-    if (ipAddr==null) {
+                                                  int xferPort) {
+    if (ipAddr == null) {
       return null;
     }
 
@@ -160,10 +159,10 @@ public class Host2NodesMap {
     try {
       DatanodeDescriptor[] nodes = map.get(ipAddr);
       // no entry
-      if (nodes== null) {
+      if (nodes == null) {
         return null;
       }
-      for(DatanodeDescriptor containedNode:nodes) {
+      for (DatanodeDescriptor containedNode : nodes) {
         if (xferPort == containedNode.getXferPort()) {
           return containedNode;
         }
@@ -174,7 +173,6 @@ public class Host2NodesMap {
     }
   }
 
-  
 
   /** get a data node by its hostname. This should be used if only one 
    * datanode service is running on a hostname. If multiple datanodes
@@ -183,16 +181,16 @@ public class Host2NodesMap {
    * @return DatanodeDescriptor if found; otherwise null.
    */
   DatanodeDescriptor getDataNodeByHostName(String hostname) {
-    if(hostname == null) {
+    if (hostname == null) {
       return null;
     }
-    
+
     hostmapLock.readLock().lock();
     try {
       String ipAddr = mapHost.get(hostname);
-      if(ipAddr == null) {
+      if (ipAddr == null) {
         return null;
-      } else {  
+      } else {
         return getDatanodeByHost(ipAddr);
       }
     } finally {
@@ -204,9 +202,9 @@ public class Host2NodesMap {
   public String toString() {
     final StringBuilder b = new StringBuilder(getClass().getSimpleName())
         .append("[");
-    for(Map.Entry<String, String> host: mapHost.entrySet()) {
+    for (Map.Entry<String, String> host : mapHost.entrySet()) {
       DatanodeDescriptor[] e = map.get(host.getValue());
-      b.append("\n  " + host.getKey() + " => "+host.getValue() + " => " 
+      b.append("\n  " + host.getKey() + " => " + host.getValue() + " => "
           + Arrays.asList(e));
     }
     return b.append("\n]").toString();

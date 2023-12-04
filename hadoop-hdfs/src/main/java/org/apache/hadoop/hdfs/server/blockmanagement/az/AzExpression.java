@@ -9,7 +9,7 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
  */
 public class AzExpression {
 
-  //表达式列表
+  // 表达式列表
   public String[] policies;
   public String mainAz;
   public boolean nativeWrite;

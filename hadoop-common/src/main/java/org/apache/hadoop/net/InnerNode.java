@@ -3,7 +3,6 @@ package org.apache.hadoop.net;
 import java.util.List;
 
 
-// MapReduce也可见
 public interface InnerNode extends Node {
   interface Factory<N extends InnerNode> {
     /** Construct an InnerNode from a path-like string */
@@ -16,11 +15,7 @@ public interface InnerNode extends Node {
    */
   boolean add(Node n);
 
-  /** Given a node's string representation, return a reference to the node
-   * @param loc string location of the form /rack/node
-   * @return null if the node is not found or the childnode is there but
-   * not an instance of {@link InnerNodeImpl}
-   */
+  // 得到这个节点的绝对路径
   Node getLoc(String loc);
 
   /** @return its children */

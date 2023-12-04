@@ -69,7 +69,7 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
     Path path = new Path(srcPath);
     AzExpression azExpression = AzUtils.getAZExpression(path);
 
-    // 第一个副本。TODO: 表达式待定
+    // 第一个副本 TODO: 表达式待定
     if (numOfReplicas == 0) {
       if (AzUtils.existAz(az) && AzUtils.isAzAvailable(az) && AzUtils.isInPolicy(azExpression, az)) {
         return chooseAllOneAz(writer, path, az);
@@ -116,6 +116,10 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
 
   }
 
+
+  /*
+    Balance相关的，先不看
+   */
   @Override
   public boolean isMovable(Collection<DatanodeInfo> candidates, DatanodeInfo source, DatanodeInfo target) {
     if (!AzUtils.isSameAZ(source, target)) {

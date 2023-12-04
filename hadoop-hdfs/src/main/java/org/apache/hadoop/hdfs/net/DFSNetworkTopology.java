@@ -16,13 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-/**
- * The HDFS specific network topology class. The main purpose of doing this
- * subclassing is to add storage-type-aware chooseRandom method. All the
- * remaining parts should be the same.
- *
- * Currently a placeholder to test storage type info.
- */
 public class DFSNetworkTopology extends NetworkTopology {
 
     private static final Random RANDOM = new Random();
@@ -36,18 +29,7 @@ public class DFSNetworkTopology extends NetworkTopology {
         return (DFSNetworkTopology) nt.init(DFSTopologyNodeImpl.FACTORY);
     }
 
-    /**
-     * Randomly choose one node from <i>scope</i>, with specified storage type.
-     *
-     * If scope starts with ~, choose one from the all nodes except for the
-     * ones in <i>scope</i>; otherwise, choose one from <i>scope</i>.
-     * If excludedNodes is given, choose a node that's not in excludedNodes.
-     *
-     * @param scope range of nodes from which a node will be chosen
-     * @param excludedNodes nodes to be excluded from
-     * @param type the storage type we search for
-     * @return the chosen node
-     */
+    // 考虑了 StorageType去  chooseRandom
     public Node chooseRandomWithStorageType(final String scope,
                                             final Collection<Node> excludedNodes, StorageType type) {
         netlock.readLock().lock();
@@ -64,28 +46,6 @@ public class DFSNetworkTopology extends NetworkTopology {
         }
     }
 
-    /**
-     * Randomly choose one node from <i>scope</i> with the given storage type.
-     *
-     * If scope starts with ~, choose one from the all nodes except for the
-     * ones in <i>scope</i>; otherwise, choose one from <i>scope</i>.
-     * If excludedNodes is given, choose a node that's not in excludedNodes.
-     *
-     * This call would make up to two calls. It first tries to get a random node
-     * (with old method) and check if it satisfies. If yes, simply return it.
-     * Otherwise, it make a second call (with the new method) by passing in a
-     * storage type.
-     *
-     * This is for better performance reason. Put in short, the key note is that
-     * the old method is faster but may take several runs, while the new method
-     * is somewhat slower, and always succeed in one trial.
-     * See HDFS-11535 for more detail.
-     *
-     * @param scope range of nodes from which a node will be chosen
-     * @param excludedNodes nodes to be excluded from
-     * @param type the storage type we search for
-     * @return the chosen node
-     */
     public Node chooseRandomWithStorageTypeTwoTrial(final String scope,
                                                     final Collection<Node> excludedNodes, StorageType type) {
         netlock.readLock().lock();
@@ -127,37 +87,6 @@ public class DFSNetworkTopology extends NetworkTopology {
         }
     }
 
-    /**
-     * Choose a random node based on given scope, excludedScope and excludedNodes
-     * set. Although in general the topology has at most three layers, this class
-     * will not impose such assumption.
-     *
-     * At high level, the idea is like this, say:
-     *
-     * R has two children A and B, and storage type is X, say:
-     * A has X = 6 (rooted at A there are 6 datanodes with X) and B has X = 8.
-     *
-     * Then R will generate a random int between 1~14, if it's <= 6, recursively
-     * call into A, otherwise B. This will maintain a uniformed randomness of
-     * choosing datanodes.
-     *
-     * The tricky part is how to handle excludes.
-     *
-     * For excludedNodes, since this set is small: currently the main reason of
-     * being an excluded node is because it already has a replica. So randomly
-     * picking up this node again should be rare. Thus we only check that, if the
-     * chosen node is excluded, we do chooseRandom again.
-     *
-     * For excludedScope, we locate the root of the excluded scope. Subtracting
-     * all it's ancestors' storage counters accordingly, this way the excluded
-     * root is out of the picture.
-     *
-     * @param scope the scope where we look for node.
-     * @param excludedScope the scope where the node must NOT be from.
-     * @param excludedNodes the returned node must not be in this set
-     * @return a node with required storage type
-     */
-    @VisibleForTesting
     Node chooseRandomWithStorageType(final String scope,
                                      String excludedScope, final Collection<Node> excludedNodes,
                                      StorageType type) {
@@ -248,17 +177,7 @@ public class DFSNetworkTopology extends NetworkTopology {
         return nodeLocation.startsWith(scope);
     }
 
-    /**
-     * Choose a random node that has the required storage type, under the given
-     * root, with an excluded subtree root (could also just be a leaf node).
-     *
-     * @param root the root node where we start searching for a datanode
-     * @param excludeRoot the root of the subtree what should be excluded
-     * @param type the expected storage type
-     * @param excludedNodes the list of nodes to be excluded
-     * @return a random datanode, with the storage type, and is not in excluded
-     * scope
-     */
+    // 基于 root为根去搜索
     private Node chooseRandomWithStorageTypeAndExcludeRoot(
             DFSTopologyNodeImpl root, Node excludeRoot, StorageType type,
             Collection<Node> excludedNodes) {
@@ -319,18 +238,6 @@ public class DFSNetworkTopology extends NetworkTopology {
         return chosenNode;
     }
 
-    /**
-     * Given root, excluded root and storage type. Find all the children of the
-     * root, that has the storage type available. One check is that if the
-     * excluded root is under a children, this children must subtract the storage
-     * count of the excluded root.
-     * @param root the subtree root we check.
-     * @param excludeRoot the root of the subtree that should be excluded.
-     * @param type the storage type we look for.
-     * @param excludedNodes the list of excluded nodes.
-     * @return a list of possible nodes, each of them is eligible as the next
-     * level root we search.
-     */
     private ArrayList<DFSTopologyNodeImpl> getEligibleChildren(
             DFSTopologyNodeImpl root, Node excludeRoot, StorageType type,
             Collection<Node> excludedNodes) {

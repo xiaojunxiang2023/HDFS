@@ -10,7 +10,6 @@ package org.apache.hadoop.net;
  * network location is /dog/orange
  */
 
-// MapReduce也可见
 public interface Node {
   /** @return the string representation of this node's network location */
   public String getNetworkLocation();
