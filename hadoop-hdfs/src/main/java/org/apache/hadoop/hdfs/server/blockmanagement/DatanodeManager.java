@@ -872,8 +872,24 @@ public class DatanodeManager {
       host2DatanodeMap.remove(datanodeMap.put(node.getDatanodeUuid(), node));
     }
 
+    node.setNetworkLocation("/rack1");
     networktopology.add(node); // may throw InvalidTopologyException
     host2DatanodeMap.add(node);
+    {
+      node.setNetworkLocation("/rack2");
+      networktopology.add(node);
+      host2DatanodeMap.add(node);
+    }
+    {
+      node.setNetworkLocation("/rack3");
+      networktopology.add(node);
+      host2DatanodeMap.add(node);
+    }
+    {
+      node.setNetworkLocation("/rack4");
+      networktopology.add(node);
+      host2DatanodeMap.add(node);
+    }
     checkIfClusterIsNowMultiRack(node);
     resolveUpgradeDomain(node);
 

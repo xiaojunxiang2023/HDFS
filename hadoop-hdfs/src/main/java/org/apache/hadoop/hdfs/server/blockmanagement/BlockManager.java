@@ -4916,7 +4916,8 @@ public class BlockManager implements BlockStatsMXBean {
         try {
           // Process recovery work only when active NN is out of safe mode.
           if (isPopulatingReplQueues()) {
-            computeDatanodeWork();
+            // 调试，注释掉 RedundancyMonitor
+            // computeDatanodeWork();
             processPendingReconstructions();
             rescanPostponedMisreplicatedBlocks();
             lastRedundancyCycleTS.set(Time.monotonicNow());

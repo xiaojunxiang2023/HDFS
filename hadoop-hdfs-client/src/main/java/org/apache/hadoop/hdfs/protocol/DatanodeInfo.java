@@ -693,9 +693,10 @@ public class DatanodeInfo extends DatanodeID implements Node {
     private int xceiverCount;
     private DatanodeInfo.AdminStates adminState;
     private String upgradeDomain;
-    private String ipAddr;
-    private String hostName;
-    private String datanodeUuid;
+    // 为了调试改成 public
+    public String hostName;
+    public String ipAddr;
+    public String datanodeUuid;
     private int xferPort;
     private int infoPort;
     private int infoSecurePort;
