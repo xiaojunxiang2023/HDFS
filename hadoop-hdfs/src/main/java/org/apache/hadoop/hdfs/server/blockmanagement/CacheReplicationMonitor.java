@@ -135,12 +135,12 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
               return;
             }
             if (completedScanCount < neededScanCount) {
-              LOG.debug("Rescanning because of pending operations");
+              LOG.trace("Rescanning because of pending operations");
               break;
             }
             long delta = (startTimeMs + intervalMs) - curTimeMs;
             if (delta <= 0) {
-              LOG.debug("Rescanning after {} milliseconds", (curTimeMs - startTimeMs));
+              LOG.trace("Rescanning after {} milliseconds", (curTimeMs - startTimeMs));
               break;
             }
             doRescan.await(delta, TimeUnit.MILLISECONDS);
@@ -162,7 +162,7 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
         } finally {
           lock.unlock();
         }
-        LOG.debug("Scanned {} directive(s) and {} block(s) in {} millisecond(s).",
+        LOG.trace("Scanned {} directive(s) and {} block(s) in {} millisecond(s).",
             scannedDirectives, scannedBlocks, (curTimeMs - startTimeMs));
       }
     } catch (InterruptedException e) {
@@ -291,7 +291,7 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
       scannedDirectives++;
       // Skip processing this entry if it has expired
       if (directive.getExpiryTime() > 0 && directive.getExpiryTime() <= now) {
-        LOG.debug("Directive {}: the directive expired at {} (now = {})",
+        LOG.trace("Directive {}: the directive expired at {} (now = {})",
             directive.getId(), directive.getExpiryTime(), now);
         continue;
       }
@@ -301,12 +301,12 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
         node = fsDir.getINode(path, DirOp.READ);
       } catch (IOException e) {
         // We don't cache through symlinks or invalid paths
-        LOG.debug("Directive {}: Failed to resolve path {} ({})",
+        LOG.trace("Directive {}: Failed to resolve path {} ({})",
             directive.getId(), path, e.getMessage());
         continue;
       }
       if (node == null) {
-        LOG.debug("Directive {}: No inode found at {}", directive.getId(),
+        LOG.trace("Directive {}: No inode found at {}", directive.getId(),
             path);
       } else if (node.isDirectory()) {
         INodeDirectory dir = node.asDirectory();
@@ -320,7 +320,7 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
       } else if (node.isFile()) {
         rescanFile(directive, node.asFile());
       } else {
-        LOG.debug("Directive {}: ignoring non-directive, non-file inode {} ",
+        LOG.trace("Directive {}: ignoring non-directive, non-file inode {} ",
             directive.getId(), node);
       }
     }
@@ -347,7 +347,7 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
     // do not cache this file.
     CachePool pool = directive.getPool();
     if (pool.getBytesNeeded() > pool.getLimit()) {
-      LOG.debug("Directive {}: not scanning file {} because " +
+      LOG.trace("Directive {}: not scanning file {} because " +
               "bytesNeeded for pool {} is {}, but the pool's limit is {}",
           directive.getId(),
           file.getFullPathName(),
@@ -412,7 +412,7 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
     if (cachedTotal == neededTotal) {
       directive.addFilesCached(1);
     }
-    LOG.debug("Directive {}: caching {}: {}/{} bytes", directive.getId(),
+    LOG.trace("Directive {}: caching {}: {}/{} bytes", directive.getId(),
         file.getFullPathName(), cachedTotal, neededTotal);
   }
 
@@ -468,13 +468,13 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
         if (blockInfo == null) {
           // Cannot find this block on the NameNode, skip this block from
           // capacity calculation. Later logic will handle this block.
-          LOG.debug("Block {}: cannot be found in block manager and hence"
+          LOG.trace("Block {}: cannot be found in block manager and hence"
                   + " skipped from calculation for node {}.", cblock.getBlockId(),
               dn.getDatanodeUuid());
           continue;
         }
         if (blockInfo.getNumBytes() > remaining) {
-          LOG.debug("Block {}: removing from PENDING_CACHED for node {} "
+          LOG.trace("Block {}: removing from PENDING_CACHED for node {} "
                   + "because it cannot fit in remaining cache size {}.",
               cblock.getBlockId(), dn.getDatanodeUuid(), remaining);
           it.remove();
@@ -623,13 +623,13 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
     BlockInfo blockInfo = blockManager.
         getStoredBlock(new Block(cachedBlock.getBlockId()));
     if (blockInfo == null) {
-      LOG.debug("Block {}: can't add new cached replicas," +
+      LOG.trace("Block {}: can't add new cached replicas," +
           " because there is no record of this block " +
           "on the NameNode.", cachedBlock.getBlockId());
       return;
     }
     if (!blockInfo.isComplete()) {
-      LOG.debug("Block {}: can't cache this block, because it is not yet"
+      LOG.trace("Block {}: can't cache this block, because it is not yet"
           + " complete.", cachedBlock.getBlockId());
       return;
     }
@@ -699,7 +699,7 @@ public class CacheReplicationMonitor extends Thread implements Closeable {
     }
     // We were unable to satisfy the requested replication factor
     if (neededCached > chosen.size()) {
-      LOG.debug("Block {}: we only have {} of {} cached replicas."
+      LOG.trace("Block {}: we only have {} of {} cached replicas."
               + " {} DataNodes have insufficient cache capacity.",
           blockInfo.getBlockId(),
           (cachedBlock.getReplication() - neededCached + chosen.size()),

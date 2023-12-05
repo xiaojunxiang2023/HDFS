@@ -117,7 +117,7 @@ public class DatanodeAdminDefaultMonitor extends DatanodeAdminMonitorBase
 
   @Override
   public void run() {
-    LOG.debug("DatanodeAdminMonitor is running.");
+    LOG.trace("DatanodeAdminMonitor is running.");
     if (!namesystem.isRunning()) {
       LOG.info("Namesystem is not running, skipping " +
           "decommissioning/maintenance checks.");
