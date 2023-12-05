@@ -159,12 +159,10 @@ public class RollingWindow {
       if (!stale) {
         sum += bucket.value.get();
       }
-      if (LOG.isDebugEnabled()) {
-        long bucketTime = bucket.updateTime.get();
-        String timeStr = new Date(bucketTime).toString();
-        LOG.debug("Sum: + " + sum + " Bucket: updateTime: " + timeStr + " ("
-            + bucketTime + ") isStale " + stale + " at " + time);
-      }
+      long bucketTime = bucket.updateTime.get();
+      String timeStr = new Date(bucketTime).toString();
+      LOG.trace("Sum: + " + sum + " Bucket: updateTime: " + timeStr + " ("
+          + bucketTime + ") isStale " + stale + " at " + time);
     }
     return sum;
   }

@@ -62,7 +62,7 @@ public class NameNodeResourceChecker {
     public boolean isResourceAvailable() {
       long availableSpace = df.getAvailable();
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Space available on volume '" + volume + "' is "
+        LOG.trace("Space available on volume '" + volume + "' is "
             + availableSpace);
       }
       if (availableSpace < duReserved) {

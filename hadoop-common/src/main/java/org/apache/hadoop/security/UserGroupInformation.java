@@ -1762,10 +1762,8 @@ public class UserGroupInformation {
   public <T> T doAs(PrivilegedExceptionAction<T> action
   ) throws IOException, InterruptedException {
     try {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("PrivilegedAction [as: {}][action: {}]", this, action,
-            new Exception());
-      }
+      LOG.trace("PrivilegedAction [as: {}][action: {}]", this, action,
+          new Exception());
       return Subject.doAs(subject, action);
     } catch (PrivilegedActionException pae) {
       Throwable cause = pae.getCause();

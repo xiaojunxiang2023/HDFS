@@ -1631,13 +1631,11 @@ public class DatanodeManager {
       }
     }
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("getDatanodeListForReport with " +
-          "includedNodes = " + hostConfigManager.getIncludes() +
-          ", excludedNodes = " + hostConfigManager.getExcludes() +
-          ", foundNodes = " + foundNodes +
-          ", nodes = " + nodes);
-    }
+    LOG.trace("getDatanodeListForReport with " +
+        "includedNodes = " + hostConfigManager.getIncludes() +
+        ", excludedNodes = " + hostConfigManager.getExcludes() +
+        ", foundNodes = " + foundNodes +
+        ", nodes = " + nodes);
     return nodes;
   }
 

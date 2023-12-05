@@ -236,7 +236,7 @@ public class RollingWindowManager {
   public TopWindow snapshot(long time) {
     TopWindow window = new TopWindow(windowLenMs);
     Set<String> metricNames = metricMap.keySet();
-    LOG.debug("iterating in reported metrics, size={} values={}",
+    LOG.trace("iterating in reported metrics, size={} values={}",
         metricNames.size(), metricNames);
     UserCounts totalCounts = new UserCounts(metricMap.size());
     for (Map.Entry<String, RollingWindowMap> entry : metricMap.entrySet()) {
@@ -280,16 +280,16 @@ public class RollingWindowManager {
       long windowSum = aWindow.getSum(time);
       // do the gc here
       if (windowSum == 0) {
-        LOG.debug("gc window of metric: {} userName: {}",
+        LOG.trace("gc window of metric: {} userName: {}",
             metricName, userName);
         iterator.remove();
         continue;
       }
-      LOG.debug("offer window of metric: {} userName: {} sum: {}",
+      LOG.trace("offer window of metric: {} userName: {} sum: {}",
           metricName, userName, windowSum);
       topN.add(new User(userName, windowSum));
     }
-    LOG.debug("topN users size for command {} is: {}",
+    LOG.trace("topN users size for command {} is: {}",
         metricName, topN.size());
     return topN;
   }
