@@ -156,59 +156,9 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
                                      List<DatanodeDescriptor> favoredNodes,
                                      BlockStoragePolicy storagePolicy,
                                      EnumSet<AddBlockFlag> flags) {  // flags一般为空
-//    try {
-//      if (favoredNodes == null || favoredNodes.size() == 0) {
     return chooseTarget(src, numOfReplicas, writer,
         new ArrayList<>(numOfReplicas), false,
         excludedNodes, blocksize, storagePolicy, flags);
-//      }
-    // favoredNodes才会走的逻辑
-//      Set<Node> favoriteAndExcludedNodes = excludedNodes == null ?
-//          new HashSet<>() : new HashSet<>(excludedNodes);
-//      final List<StorageType> requiredStorageTypes = storagePolicy
-//          .chooseStorageTypes((short) numOfReplicas);
-//      final EnumMap<StorageType, Integer> storageTypes =
-//          getRequiredStorageTypes(requiredStorageTypes);
-//
-//      // Choose favored nodes
-//      List<DatanodeStorageInfo> results = new ArrayList<>();
-//      boolean avoidStaleNodes = stats != null
-//          && stats.isAvoidingStaleDataNodesForWrite();
-//
-//      int[] maxNodesAndReplicas = getMaxNodesPerRack(0, numOfReplicas);
-//      numOfReplicas = maxNodesAndReplicas[0];
-//      int maxNodesPerRack = maxNodesAndReplicas[1];
-//
-//      chooseFavouredNodes(src, numOfReplicas, favoredNodes,
-//          favoriteAndExcludedNodes, blocksize, maxNodesPerRack, results,
-//          avoidStaleNodes, storageTypes);
-//
-//      if (results.size() < numOfReplicas) {
-//        // Not enough favored nodes, choose other nodes, based on block
-//        // placement policy (HDFS-9393).
-//        numOfReplicas -= results.size();
-//        for (DatanodeStorageInfo storage : results) {
-//          // add localMachine and related nodes to favoriteAndExcludedNodes
-//          addToExcludedNodes(storage.getDatanodeDescriptor(),
-//              favoriteAndExcludedNodes);
-//        }
-//        DatanodeStorageInfo[] remainingTargets =
-//            chooseTarget(src, numOfReplicas, writer,
-//                new ArrayList<>(numOfReplicas), false,
-//                favoriteAndExcludedNodes, blocksize, storagePolicy, flags,
-//                storageTypes);
-//        results.addAll(Arrays.asList(remainingTargets));
-//      }
-//      return getPipeline(writer,
-//          results.toArray(DatanodeStorageInfo.EMPTY_ARRAY));
-//    } catch (NotEnoughReplicasException nr) {
-//      LOG.debug("Failed to choose with favored nodes (={}), disregard favored"
-//          + " nodes hint and retry.", favoredNodes, nr);
-//      // Fall back to regular block placement disregarding favored nodes hint
-//      return chooseTarget(src, numOfReplicas, writer,
-//          new ArrayList<>(numOfReplicas), false,
-//          excludedNodes, blocksize, storagePolicy, flags);
-//    }
   }
 
   protected void chooseFavouredNodes(String src, int numOfReplicas,
@@ -266,42 +216,12 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         && writer != null
         && !excludedNodes.contains(writer));
 
-    if (avoidLocalRack) {  // 一般都不会执行
-      results = new ArrayList<>(chosenStorage);
-      Set<Node> excludedNodeCopy = new HashSet<>(excludedNodes);
-      excludedNodeCopy
-          .addAll(clusterMap.getLeaves(writer.getNetworkLocation()));
-
-      localNode = chooseTarget(numOfReplicas, writer, excludedNodeCopy,
-          blocksize, maxNodesPerRack, results, avoidStaleNodes, storagePolicy,
-          EnumSet.noneOf(StorageType.class), results.isEmpty(), sTypes);
-      if (results.size() < numOfReplicas) {
-        // not enough nodes; discard results and fall back
-        results = null;
-      }
-    }
-    // Attempt to exclude local node if the client suggests so. If no enough
-    // nodes can be obtained, it falls back to the default block placement
-    // policy.
-    if (avoidLocalNode && results == null) {  // 一般都不会执行
-      results = new ArrayList<>(chosenStorage);
-      Set<Node> excludedNodeCopy = new HashSet<>(excludedNodes);
-      excludedNodeCopy.add(writer);
-      localNode = chooseTarget(numOfReplicas, writer,
-          excludedNodeCopy, blocksize, maxNodesPerRack, results,
-          avoidStaleNodes, storagePolicy,
-          EnumSet.noneOf(StorageType.class), results.isEmpty(), sTypes);
-      if (results.size() < numOfReplicas) {
-        results = null;
-      }
-    }
-    if (results == null) { // 真正执行的地方
-      results = new ArrayList<>(chosenStorage);
-      localNode = chooseTarget(numOfReplicas, writer, excludedNodes,
-          blocksize, maxNodesPerRack, results, avoidStaleNodes,
-          storagePolicy, EnumSet.noneOf(StorageType.class), results.isEmpty(),
-          sTypes);
-    }
+    // 真正执行的地方
+    results = new ArrayList<>(chosenStorage);
+    localNode = chooseTarget(numOfReplicas, writer, excludedNodes,
+        blocksize, maxNodesPerRack, results, avoidStaleNodes,
+        storagePolicy, EnumSet.noneOf(StorageType.class), results.isEmpty(),
+        sTypes);
 
     if (!returnChosenNodes) {
       results.removeAll(chosenStorage);
