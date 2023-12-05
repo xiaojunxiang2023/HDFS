@@ -113,7 +113,7 @@ public class AzUtils {
     return !az.isEmpty();
   }
 
-  // TODO
+  // TODO，只要在里面就认为是 available的?
   public static boolean isAzAvailable(String az) {
     return false;
   }

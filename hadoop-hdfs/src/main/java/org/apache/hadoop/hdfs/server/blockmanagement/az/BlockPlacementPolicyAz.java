@@ -41,12 +41,7 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
   private DatanodeStorageInfo[] chooseTarget_NativeWrite(String srcPath, int numOfReplicas, Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy, EnumSet<AddBlockFlag> flags) {
     String az = AzUtils.getAz(writer);
     if (AzUtils.existAz(az)) {
-      if (AzUtils.isAzAvailable(az)) {
-        return chooseAllOneAz(writer, new Path(srcPath), az);
-      } else {
-        // TODO 异常
-        return null;
-      }
+      return chooseAllOneAz(writer, new Path(srcPath), az);
     } else if (AzUtils.existMainAz()) {
       return chooseAllOneAz(writer, new Path(srcPath), AzUtils.getMainAz());
     } else {
@@ -71,7 +66,7 @@ public class BlockPlacementPolicyAz extends BlockPlacementPolicy {
 
     // 第一个副本 TODO: 表达式待定
     if (numOfReplicas == 0) {
-      if (AzUtils.existAz(az) && AzUtils.isAzAvailable(az) && AzUtils.isInPolicy(azExpression, az)) {
+      if (AzUtils.existAz(az) && AzUtils.isInPolicy(azExpression, az)) {
         return chooseAllOneAz(writer, path, az);
       } else {
         return chooseInPolicy(writer, path, azExpression);
