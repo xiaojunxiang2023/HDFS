@@ -528,7 +528,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     if (!fallbackToLocalRack) {
       return null;
     }
-    // try a node on local rack
+    // fallback到 chooseLocalRack
     return chooseLocalRack(localMachine, excludedNodes, blocksize,
         maxNodesPerRack, results, avoidStaleNodes, storageTypes);
   }
@@ -571,7 +571,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
       return chooseRandom(localRack, excludedNodes,
           blocksize, maxNodesPerRack, results, avoidStaleNodes, storageTypes);
     } catch (NotEnoughReplicasException e) {
-      // find the next replica and retry with its rack
+      // fallback 到任意
       for (DatanodeStorageInfo resultStorage : results) {
         DatanodeDescriptor nextNode = resultStorage.getDatanodeDescriptor();
         if (nextNode != localMachine) {
@@ -588,7 +588,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
       LOG.debug("Failed to choose from local rack (location = {}); the second"
           + " replica is not found, retry choosing randomly", localRack, e);
 
-      //the second replica is not found, randomly choose one from the network
       return chooseRandom(NodeBase.ROOT, excludedNodes, blocksize,
           maxNodesPerRack, results, avoidStaleNodes, storageTypes);
     }
@@ -608,7 +607,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     } catch (NotEnoughReplicasException e) {
       LOG.debug("Failed to choose from the next rack (location = {}), "
           + "retry choosing randomly", nextRack, e);
-      // otherwise randomly choose one from the network
+      // fallback 到任意
       return chooseRandom(NodeBase.ROOT, excludedNodes, blocksize,
           maxNodesPerRack, results, avoidStaleNodes, storageTypes);
     }
@@ -639,6 +638,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         LOG.debug("Failed to choose remote rack (location = ~"
             + localMachine.getNetworkLocation() + "), fallback to local rack", e);
       }
+      // fallback 到 localRack
       chooseRandom(1 - (results.size() - oldNumOfReplicas),
           localMachine.getNetworkLocation(), excludedNodes, blocksize,
           maxReplicasPerRack, results, avoidStaleNodes, storageTypes);
