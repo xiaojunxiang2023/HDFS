@@ -9,7 +9,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 // host -> node
 public class Host2NodesMap {
+  
+  // hostname -> ipAddr
   private HashMap<String, String> mapHost = new HashMap<>();
+  
+  // 保存总的节点数据, ipAddr -> node
   private final HashMap<String, DatanodeDescriptor[]> map = new HashMap<>();
   private final ReadWriteLock hostmapLock = new ReentrantReadWriteLock();
 
@@ -36,9 +40,6 @@ public class Host2NodesMap {
     return false;
   }
 
-  /** add node to the map 
-   * return true if the node is added; false otherwise.
-   */
   boolean add(DatanodeDescriptor node) {
     hostmapLock.writeLock().lock();
     try {
@@ -68,9 +69,6 @@ public class Host2NodesMap {
     }
   }
 
-  /** remove node from the map 
-   * return true if the node is removed; false otherwise.
-   */
   boolean remove(DatanodeDescriptor node) {
     if (node == null) {
       return false;
@@ -117,10 +115,6 @@ public class Host2NodesMap {
     }
   }
 
-  /**
-   * Get a data node by its IP address.
-   * @return DatanodeDescriptor if found, null otherwise 
-   */
   DatanodeDescriptor getDatanodeByHost(String ipAddr) {
     if (ipAddr == null) {
       return null;
@@ -144,11 +138,6 @@ public class Host2NodesMap {
     }
   }
 
-  /**
-   * Find data node by its transfer address
-   *
-   * @return DatanodeDescriptor if found or null otherwise
-   */
   public DatanodeDescriptor getDatanodeByXferAddr(String ipAddr,
                                                   int xferPort) {
     if (ipAddr == null) {
@@ -174,12 +163,6 @@ public class Host2NodesMap {
   }
 
 
-  /** get a data node by its hostname. This should be used if only one 
-   * datanode service is running on a hostname. If multiple datanodes
-   * are running on a hostname then use methods getDataNodeByXferAddr and
-   * getDataNodeByHostNameAndPort.
-   * @return DatanodeDescriptor if found; otherwise null.
-   */
   DatanodeDescriptor getDataNodeByHostName(String hostname) {
     if (hostname == null) {
       return null;

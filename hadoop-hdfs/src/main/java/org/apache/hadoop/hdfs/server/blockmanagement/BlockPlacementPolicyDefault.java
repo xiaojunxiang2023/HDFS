@@ -122,6 +122,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         DFS_NAMENODE_BLOCKPLACEMENTPOLICY_EXCLUDE_SLOW_NODES_ENABLED_DEFAULT);
   }
 
+  // Redundancy的入口
   @Override
   public DatanodeStorageInfo[] chooseTarget(String srcPath,
                                             int numOfReplicas,
@@ -145,69 +146,69 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         excludedNodes, blocksize, storagePolicy, flags, storageTypes);
   }
 
+  // 当作入口
   @Override
-  DatanodeStorageInfo[] chooseTarget(String src,
-                                     int numOfReplicas,
-                                     Node writer,
+  DatanodeStorageInfo[] chooseTarget(String src,  // 源地址
+                                     int numOfReplicas, // 目标要选择的副本数
+                                     Node writer,  // Client
                                      Set<Node> excludedNodes,
                                      long blocksize,
                                      List<DatanodeDescriptor> favoredNodes,
                                      BlockStoragePolicy storagePolicy,
-                                     EnumSet<AddBlockFlag> flags) {
-    try {
-      if (favoredNodes == null || favoredNodes.size() == 0) {
-        // Favored nodes not specified, fall back to regular block placement.
-        return chooseTarget(src, numOfReplicas, writer,
-            new ArrayList<>(numOfReplicas), false,
-            excludedNodes, blocksize, storagePolicy, flags);
-      }
-
-      Set<Node> favoriteAndExcludedNodes = excludedNodes == null ?
-          new HashSet<>() : new HashSet<>(excludedNodes);
-      final List<StorageType> requiredStorageTypes = storagePolicy
-          .chooseStorageTypes((short) numOfReplicas);
-      final EnumMap<StorageType, Integer> storageTypes =
-          getRequiredStorageTypes(requiredStorageTypes);
-
-      // Choose favored nodes
-      List<DatanodeStorageInfo> results = new ArrayList<>();
-      boolean avoidStaleNodes = stats != null
-          && stats.isAvoidingStaleDataNodesForWrite();
-
-      int[] maxNodesAndReplicas = getMaxNodesPerRack(0, numOfReplicas);
-      numOfReplicas = maxNodesAndReplicas[0];
-      int maxNodesPerRack = maxNodesAndReplicas[1];
-
-      chooseFavouredNodes(src, numOfReplicas, favoredNodes,
-          favoriteAndExcludedNodes, blocksize, maxNodesPerRack, results,
-          avoidStaleNodes, storageTypes);
-
-      if (results.size() < numOfReplicas) {
-        // Not enough favored nodes, choose other nodes, based on block
-        // placement policy (HDFS-9393).
-        numOfReplicas -= results.size();
-        for (DatanodeStorageInfo storage : results) {
-          // add localMachine and related nodes to favoriteAndExcludedNodes
-          addToExcludedNodes(storage.getDatanodeDescriptor(),
-              favoriteAndExcludedNodes);
-        }
-        DatanodeStorageInfo[] remainingTargets =
-            chooseTarget(src, numOfReplicas, writer,
-                new ArrayList<>(numOfReplicas), false,
-                favoriteAndExcludedNodes, blocksize, storagePolicy, flags,
-                storageTypes);
-        results.addAll(Arrays.asList(remainingTargets));
-      }
-      return getPipeline(writer,
-          results.toArray(DatanodeStorageInfo.EMPTY_ARRAY));
-    } catch (NotEnoughReplicasException nr) {
-      LOG.debug("Failed to choose with favored nodes (={}), disregard favored"
-          + " nodes hint and retry.", favoredNodes, nr);
-      // Fall back to regular block placement disregarding favored nodes hint
-      return chooseTarget(src, numOfReplicas, writer,
-          new ArrayList<>(numOfReplicas), false,
-          excludedNodes, blocksize, storagePolicy, flags);
-    }
+                                     EnumSet<AddBlockFlag> flags) {  // flags一般为空
+//    try {
+//      if (favoredNodes == null || favoredNodes.size() == 0) {
+    return chooseTarget(src, numOfReplicas, writer,
+        new ArrayList<>(numOfReplicas), false,
+        excludedNodes, blocksize, storagePolicy, flags);
+//      }
+    // favoredNodes才会走的逻辑
+//      Set<Node> favoriteAndExcludedNodes = excludedNodes == null ?
+//          new HashSet<>() : new HashSet<>(excludedNodes);
+//      final List<StorageType> requiredStorageTypes = storagePolicy
+//          .chooseStorageTypes((short) numOfReplicas);
+//      final EnumMap<StorageType, Integer> storageTypes =
+//          getRequiredStorageTypes(requiredStorageTypes);
+//
+//      // Choose favored nodes
+//      List<DatanodeStorageInfo> results = new ArrayList<>();
+//      boolean avoidStaleNodes = stats != null
+//          && stats.isAvoidingStaleDataNodesForWrite();
+//
+//      int[] maxNodesAndReplicas = getMaxNodesPerRack(0, numOfReplicas);
+//      numOfReplicas = maxNodesAndReplicas[0];
+//      int maxNodesPerRack = maxNodesAndReplicas[1];
+//
+//      chooseFavouredNodes(src, numOfReplicas, favoredNodes,
+//          favoriteAndExcludedNodes, blocksize, maxNodesPerRack, results,
+//          avoidStaleNodes, storageTypes);
+//
+//      if (results.size() < numOfReplicas) {
+//        // Not enough favored nodes, choose other nodes, based on block
+//        // placement policy (HDFS-9393).
+//        numOfReplicas -= results.size();
+//        for (DatanodeStorageInfo storage : results) {
+//          // add localMachine and related nodes to favoriteAndExcludedNodes
+//          addToExcludedNodes(storage.getDatanodeDescriptor(),
+//              favoriteAndExcludedNodes);
+//        }
+//        DatanodeStorageInfo[] remainingTargets =
+//            chooseTarget(src, numOfReplicas, writer,
+//                new ArrayList<>(numOfReplicas), false,
+//                favoriteAndExcludedNodes, blocksize, storagePolicy, flags,
+//                storageTypes);
+//        results.addAll(Arrays.asList(remainingTargets));
+//      }
+//      return getPipeline(writer,
+//          results.toArray(DatanodeStorageInfo.EMPTY_ARRAY));
+//    } catch (NotEnoughReplicasException nr) {
+//      LOG.debug("Failed to choose with favored nodes (={}), disregard favored"
+//          + " nodes hint and retry.", favoredNodes, nr);
+//      // Fall back to regular block placement disregarding favored nodes hint
+//      return chooseTarget(src, numOfReplicas, writer,
+//          new ArrayList<>(numOfReplicas), false,
+//          excludedNodes, blocksize, storagePolicy, flags);
+//    }
   }
 
   protected void chooseFavouredNodes(String src, int numOfReplicas,
@@ -324,36 +325,30 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
    *         is independent of the number of chosen nodes, as it is calculated
    *         using the target number of replicas.
    */
+  // results[0]=除了已经选择的节点之外，允许分配的节点数。
+  // results[1]=每个 rack允许的最大节点数。这与所选节点的数量无关，因为它是使用目标副本数量计算的。
   protected int[] getMaxNodesPerRack(int numOfChosen, int numOfReplicas) {
     int clusterSize = clusterMap.getNumOfLeaves();
     int totalNumOfReplicas = numOfChosen + numOfReplicas;
     if (totalNumOfReplicas > clusterSize) {
+      // 即 numOfReplicas = clusterSize - numOfChosen
+      // totalNumOfReplicas = clusterSize;
       numOfReplicas -= (totalNumOfReplicas - clusterSize);
       totalNumOfReplicas = clusterSize;
     }
-    // No calculation needed when there is only one rack or picking one node.
+
     int numOfRacks = clusterMap.getNumOfRacks();
-    // HDFS-14527 return default when numOfRacks = 0 to avoid
-    // ArithmeticException when calc maxNodesPerRack at following logic.
     if (numOfRacks <= 1 || totalNumOfReplicas <= 1) {
       return new int[]{numOfReplicas, totalNumOfReplicas};
+    } else {
+      int maxNodesPerRack = (totalNumOfReplicas - 1) / numOfRacks + 2;
+      // 1) maxNodesPerRack >= 2
+      // 2) (maxNodesPerRack-1) * numOfRacks > totalNumOfReplicas  when numOfRacks > 1
+      if (maxNodesPerRack == totalNumOfReplicas) {
+        maxNodesPerRack--;
+      }
+      return new int[]{numOfReplicas, maxNodesPerRack};
     }
-
-    int maxNodesPerRack = (totalNumOfReplicas - 1) / numOfRacks + 2;
-    // At this point, there are more than one racks and more than one replicas
-    // to store. Avoid all replicas being in the same rack.
-    //
-    // maxNodesPerRack has the following properties at this stage.
-    //   1) maxNodesPerRack >= 2
-    //   2) (maxNodesPerRack-1) * numOfRacks > totalNumOfReplicas
-    //          when numOfRacks > 1
-    //
-    // Thus, the following adjustment will still result in a value that forces
-    // multi-rack allocation and gives enough number of total nodes.
-    if (maxNodesPerRack == totalNumOfReplicas) {
-      maxNodesPerRack--;
-    }
-    return new int[]{numOfReplicas, maxNodesPerRack};
   }
 
   private EnumMap<StorageType, Integer> getRequiredStorageTypes(

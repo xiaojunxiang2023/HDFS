@@ -233,7 +233,7 @@ class FSDirWriteFileOp {
     boolean ignoreClientLocality = (flags != null
         && flags.contains(AddBlockFlag.IGNORE_CLIENT_LOCALITY));
 
-    // If client locality is ignored, clientNode remains 'null' to indicate
+    // 如果 clientNode是 DataNode节点，则 return DatanodeDescriptor, 否则 return 基类Node
     if (!ignoreClientLocality) {
       clientNode = bm.getDatanodeManager().getDatanodeByHost(r.clientMachine);
       if (clientNode == null) {
