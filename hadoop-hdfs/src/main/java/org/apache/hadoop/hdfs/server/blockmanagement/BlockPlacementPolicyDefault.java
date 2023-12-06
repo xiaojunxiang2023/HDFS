@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.net.Node;
 import org.apache.hadoop.net.NodeBase;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.util.*;
@@ -28,16 +27,10 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
           + NetworkTopology.class.getName();
 
   private static final ThreadLocal<StringBuilder> debugLoggingBuilder
-      = new ThreadLocal<StringBuilder>() {
-    @Override
-    protected StringBuilder initialValue() {
-      return new StringBuilder();
-    }
-  };
+      = ThreadLocal.withInitial(() -> new StringBuilder());
 
   private static final ThreadLocal<HashMap<NodeNotChosenReason, Integer>>
-      CHOOSE_RANDOM_REASONS = ThreadLocal
-      .withInitial(HashMap::new);
+      CHOOSE_RANDOM_REASONS = ThreadLocal.withInitial(HashMap::new);
 
   private static final BlockPlacementStatus ONE_RACK_PLACEMENT =
       new BlockPlacementStatusDefault(1, 1, 1);
@@ -62,26 +55,34 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     }
   }
 
-  // 是否考虑目标节点的负载
+  // 集群状态
+  private FSClusterStats stats;
+  // 网络拓扑
+  protected NetworkTopology clusterMap;
+  // host -> node
+  protected Host2NodesMap host2datanodeMap;
+
+
+  // 默认为 true，考虑目标节点的负载
   protected boolean considerLoad;
   protected double considerLoadFactor;
+  // 默认为 false，不考虑目标相对于存储类型的负载 
   private boolean considerLoadByStorageType;
+
+  // 默认为 true，优先选择客户端正在运行的节点来存储第一个副本
   private boolean preferLocalNode;
+
+  // 默认为 false，关闭跟踪 DataNode 对等统计信息的开关。
   private boolean dataNodePeerStatsEnabled;
+
+  // 默认为 false，不排除慢节点
   private volatile boolean excludeSlowNodesEnabled;
-  protected NetworkTopology clusterMap;
-  protected Host2NodesMap host2datanodeMap;
-  private FSClusterStats stats;
+
   protected long heartbeatInterval;   // interval for DataNode heartbeats
   private long staleInterval;   // interval used to identify stale DataNodes
 
-  /**
-   * A miss of that many heartbeats is tolerated for replica deletion policy.
-   */
+  // 对于副本删除策略来说，可以容忍如此多的心跳丢失。
   protected int tolerateHeartbeatMultiplier;
-
-  protected BlockPlacementPolicyDefault() {
-  }
 
   @Override
   public void initialize(Configuration conf, FSClusterStats stats,
@@ -90,12 +91,12 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     this.considerLoad = conf.getBoolean(
         DFSConfigKeys.DFS_NAMENODE_REDUNDANCY_CONSIDERLOAD_KEY,
         DFSConfigKeys.DFS_NAMENODE_REDUNDANCY_CONSIDERLOAD_DEFAULT);
-    this.considerLoadByStorageType = conf.getBoolean(
-        DFS_NAMENODE_REDUNDANCY_CONSIDERLOADBYSTORAGETYPE_KEY,
-        DFS_NAMENODE_REDUNDANCY_CONSIDERLOADBYSTORAGETYPE_DEFAULT);
     this.considerLoadFactor = conf.getDouble(
         DFSConfigKeys.DFS_NAMENODE_REDUNDANCY_CONSIDERLOAD_FACTOR,
         DFSConfigKeys.DFS_NAMENODE_REDUNDANCY_CONSIDERLOAD_FACTOR_DEFAULT);
+    this.considerLoadByStorageType = conf.getBoolean(
+        DFS_NAMENODE_REDUNDANCY_CONSIDERLOADBYSTORAGETYPE_KEY,
+        DFS_NAMENODE_REDUNDANCY_CONSIDERLOADBYSTORAGETYPE_DEFAULT);
     this.stats = stats;
     this.clusterMap = clusterMap;
     this.host2datanodeMap = host2datanodeMap;
@@ -122,7 +123,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         DFS_NAMENODE_BLOCKPLACEMENTPOLICY_EXCLUDE_SLOW_NODES_ENABLED_DEFAULT);
   }
 
-  // Redundancy的入口
+  // chooseTarget的实现，Redundancy的入口
   @Override
   public DatanodeStorageInfo[] chooseTarget(String srcPath,
                                             int numOfReplicas,
@@ -137,16 +138,9 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         excludedNodes, blocksize, storagePolicy, flags, null);
   }
 
-  @Override
-  public DatanodeStorageInfo[] chooseTarget(String srcPath, int numOfReplicas,
-                                            Node writer, List<DatanodeStorageInfo> chosen, boolean returnChosenNodes,
-                                            Set<Node> excludedNodes, long blocksize, BlockStoragePolicy storagePolicy,
-                                            EnumSet<AddBlockFlag> flags, EnumMap<StorageType, Integer> storageTypes) {
-    return chooseTarget(numOfReplicas, writer, chosen, returnChosenNodes,
-        excludedNodes, blocksize, storagePolicy, flags, storageTypes);
-  }
 
-  // 当作入口
+  // chooseTarget favoredNodes的实现，正常写文件的入口
+  // 基于 numOfReplicas去创建 results 或者 chosenNodes，结果都会写到这块内存里
   @Override
   DatanodeStorageInfo[] chooseTarget(String src,  // 源地址
                                      int numOfReplicas, // 目标要选择的副本数
@@ -156,10 +150,12 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
                                      List<DatanodeDescriptor> favoredNodes,
                                      BlockStoragePolicy storagePolicy,
                                      EnumSet<AddBlockFlag> flags) {  // flags一般为空
+    // 不考虑 favoredNodes, 则转到了 "chooseTarget的实现，Redundancy的入口"
     return chooseTarget(src, numOfReplicas, writer,
         new ArrayList<>(numOfReplicas), false,
         excludedNodes, blocksize, storagePolicy, flags);
   }
+
 
   protected void chooseFavouredNodes(String src, int numOfReplicas,
                                      List<DatanodeDescriptor> favoredNodes,
@@ -167,25 +163,25 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
                                      List<DatanodeStorageInfo> results, boolean avoidStaleNodes,
                                      EnumMap<StorageType, Integer> storageTypes)
       throws NotEnoughReplicasException {
-    for (int i = 0; i < favoredNodes.size() && results.size() < numOfReplicas;
-         i++) {
-      DatanodeDescriptor favoredNode = favoredNodes.get(i);
-      // Choose a single node which is local to favoredNode.
-      // 'results' is updated within chooseLocalNode
-      final DatanodeStorageInfo target = chooseLocalOrFavoredStorage(
-          favoredNode, true, favoriteAndExcludedNodes, blocksize,
-          maxNodesPerRack, results, avoidStaleNodes, storageTypes);
-
-      if (target == null) {
-        LOG.warn("Could not find a target for file " + src
-            + " with favored node " + favoredNode);
-        continue;
-      }
-      favoriteAndExcludedNodes.add(target.getDatanodeDescriptor());
-    }
+//    for (int i = 0; i < favoredNodes.size() && results.size() < numOfReplicas;
+//         i++) {
+//      DatanodeDescriptor favoredNode = favoredNodes.get(i);
+//      // Choose a single node which is local to favoredNode.
+//      // 'results' is updated within chooseLocalNode
+//      final DatanodeStorageInfo target = chooseLocalOrFavoredStorage(
+//          favoredNode, true, favoriteAndExcludedNodes, blocksize,
+//          maxNodesPerRack, results, avoidStaleNodes, storageTypes);
+//
+//      if (target == null) {
+//        LOG.warn("Could not find a target for file " + src
+//            + " with favored node " + favoredNode);
+//        continue;
+//      }
+//      favoriteAndExcludedNodes.add(target.getDatanodeDescriptor());
+//    }
   }
 
-  /** This is the implementation. */
+  // chooseTarget的实现 
   private DatanodeStorageInfo[] chooseTarget(int numOfReplicas,
                                              Node writer,
                                              List<DatanodeStorageInfo> chosenStorage,
@@ -204,20 +200,12 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
       addToExcludedNodes(storage.getDatanodeDescriptor(), excludedNodes);
     }
 
-    List<DatanodeStorageInfo> results = null;
-    Node localNode = null;
-    boolean avoidStaleNodes = (stats != null
-        && stats.isAvoidingStaleDataNodesForWrite());
-    boolean avoidLocalRack = (addBlockFlags != null
-        && addBlockFlags.contains(AddBlockFlag.NO_LOCAL_RACK) && writer != null
-        && clusterMap.getNumOfRacks() > 2);
-    boolean avoidLocalNode = (addBlockFlags != null
-        && addBlockFlags.contains(AddBlockFlag.NO_LOCAL_WRITE)
-        && writer != null
-        && !excludedNodes.contains(writer));
+    List<DatanodeStorageInfo> results;
+    Node localNode;
+    boolean avoidStaleNodes = (stats != null && stats.isAvoidingStaleDataNodesForWrite());
 
-    // 真正执行的地方
     results = new ArrayList<>(chosenStorage);
+    // 真正执行的地方
     localNode = chooseTarget(numOfReplicas, writer, excludedNodes,
         blocksize, maxNodesPerRack, results, avoidStaleNodes,
         storagePolicy, EnumSet.noneOf(StorageType.class), results.isEmpty(),
@@ -227,24 +215,12 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
       results.removeAll(chosenStorage);
     }
 
-    // sorting nodes to form a pipeline
+    // 对节点进行排序返回 pipeline
     return getPipeline((writer instanceof DatanodeDescriptor) ? writer : localNode,
         results.toArray(DatanodeStorageInfo.EMPTY_ARRAY));
   }
 
-  /**
-   * Calculate the maximum number of replicas to allocate per rack. It also
-   * limits the total number of replicas to the total number of nodes in the
-   * cluster. Caller should adjust the replica count to the return value.
-   *
-   * @param numOfChosen The number of already chosen nodes.
-   * @param numOfReplicas The number of additional nodes to allocate.
-   * @return integer array. Index 0: The number of nodes allowed to allocate
-   *         in addition to already chosen nodes.
-   *         Index 1: The maximum allowed number of nodes per rack. This
-   *         is independent of the number of chosen nodes, as it is calculated
-   *         using the target number of replicas.
-   */
+  // numOfChosen是已经具有了的副本，numOfReplicas是期待 是还需要的副本
   // results[0]=除了已经选择的节点之外，允许分配的节点数。
   // results[1]=每个 rack允许的最大节点数。这与所选节点的数量无关，因为它是使用目标副本数量计算的。
   protected int[] getMaxNodesPerRack(int numOfChosen, int numOfReplicas) {
@@ -259,7 +235,8 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
 
     int numOfRacks = clusterMap.getNumOfRacks();
     if (numOfRacks <= 1 || totalNumOfReplicas <= 1) {
-      return new int[]{numOfReplicas, totalNumOfReplicas};  // 第一次 put文件会走这里，因为 totalNumOfReplicas = 1
+      // // 第一次 put文件会走这里，因为 totalNumOfReplicas = 1
+      return new int[]{numOfReplicas, totalNumOfReplicas};
     } else {
       int maxNodesPerRack = (totalNumOfReplicas - 1) / numOfRacks + 2;
       // 1) maxNodesPerRack >= 2
@@ -285,18 +262,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return map;
   }
 
-  /**
-   * choose <i>numOfReplicas</i> from all data nodes
-   * @param numOfReplicas additional number of replicas wanted
-   * @param writer the writer's machine, could be a non-DatanodeDescriptor node
-   * @param excludedNodes datanodes that should not be considered as targets
-   * @param blocksize size of the data to be written
-   * @param maxNodesPerRack max nodes allowed per rack
-   * @param results the target nodes already chosen
-   * @param avoidStaleNodes avoid stale nodes in replica choosing
-   * @param storageTypes storage type to be considered for target
-   * @return local node of writer (not chosen node)
-   */
   private Node chooseTarget(final int numOfReplicas,
                             Node writer,
                             final Set<Node> excludedNodes,
@@ -313,7 +278,8 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     }
     final int numOfResults = results.size();
     final int totalReplicasExpected = numOfReplicas + numOfResults;
-    if ((!(writer instanceof DatanodeDescriptor)) && !newBlock) { // 如果 Client不是 DataNode节点，并且不是新的 Block
+    // 如果 Client不是 DataNode节点，并且不是新的 Block, 则返回首个 DataNode节点
+    if ((!(writer instanceof DatanodeDescriptor)) && !newBlock) {
       writer = results.get(0).getDatanodeDescriptor();
     }
 
@@ -331,7 +297,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     LOG.trace("storageTypes={}", storageTypes);
 
     try {
-      if (requiredStorageTypes.size() == 0) { // 没有能存储的节点甚至是类型了
+      if (requiredStorageTypes.size() == 0) { // 没有能存储的节点 甚至是类型了
         throw new NotEnoughReplicasException(
             "All required storage types are unavailable: "
                 + " unavailableStorages=" + unavailableStorages
@@ -383,9 +349,10 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
               oldExcludedNodes);
         }
         int newNumOfReplicas = totalReplicasExpected - results.size();
+        // 递归，但是参数值更新为了 newNumOfReplicas
         return chooseTarget(newNumOfReplicas, writer, oldExcludedNodes, blocksize,
             maxNodesPerRack, results, false, storagePolicy, unavailableStorages,
-            newBlock, null); // 递归，但是参数值更新为了 newNumOfReplicas
+            newBlock, null);
       }
     }
     return writer;
@@ -407,8 +374,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
           excludedNodes, blocksize, maxNodesPerRack, results, avoidStaleNodes,
           storageTypes, true);
 
-      writer = (storageInfo != null) ? storageInfo.getDatanodeDescriptor()
-          : null;
+      writer = (storageInfo != null) ? storageInfo.getDatanodeDescriptor() : null;
 
       if (--numOfReplicas == 0) {
         return writer;
@@ -453,19 +419,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         storageTypes);
   }
 
-  /**
-   * Choose storage of local or favored node.
-   * @param localOrFavoredNode local or favored node
-   * @param isFavoredNode if target node is favored node
-   * @param excludedNodes datanodes that should not be considered as targets
-   * @param blocksize size of the data to be written
-   * @param maxNodesPerRack max nodes allowed per rack
-   * @param results the target nodes already chosen
-   * @param avoidStaleNodes avoid stale nodes in replica choosing
-   * @param storageTypes storage type to be considered for target
-   * @return storage of local or favored node (not chosen node)
-   * @throws NotEnoughReplicasException
-   */
   protected DatanodeStorageInfo chooseLocalOrFavoredStorage(
       Node localOrFavoredNode, boolean isFavoredNode, Set<Node> excludedNodes,
       long blocksize, int maxNodesPerRack, List<DatanodeStorageInfo> results,
@@ -507,12 +460,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return null;
   }
 
-  /**
-   * Choose <i>localMachine</i> as the target.
-   * if <i>localMachine</i> is not available,
-   * choose a node on the same rack
-   * @return the chosen storage
-   */
   protected DatanodeStorageInfo chooseLocalStorage(Node localMachine,
                                                    Set<Node> excludedNodes, long blocksize, int maxNodesPerRack,
                                                    List<DatanodeStorageInfo> results, boolean avoidStaleNodes,
@@ -533,11 +480,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         maxNodesPerRack, results, avoidStaleNodes, storageTypes);
   }
 
-  /**
-   * Add <i>localMachine</i> and related nodes to <i>excludedNodes</i>
-   * for next replica choosing. In sub class, we can add more nodes within
-   * the same failure domain of localMachine
-   */
   protected void addToExcludedNodes(DatanodeDescriptor localMachine,
                                     Set<Node> excludedNodes) {
     excludedNodes.add(localMachine);
@@ -777,36 +719,19 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return firstChosen;
   }
 
-  /**
-   * Choose a datanode from the given <i>scope</i>.
-   * @return the chosen node, if there is any.
-   */
+  // 在给定的 scope间随机选取 DataNode
   protected DatanodeDescriptor chooseDataNode(final String scope,
                                               final Collection<Node> excludedNodes) {
     return (DatanodeDescriptor) clusterMap.chooseRandom(scope, excludedNodes);
   }
 
-  /**
-   * Choose a datanode from the given <i>scope</i> with specified
-   * storage type.
-   * @return the chosen node, if there is any.
-   */
+  // 在给定的 scope间随机选取 DataNode，同时考虑存储类型
   protected DatanodeDescriptor chooseDataNode(final String scope,
                                               final Collection<Node> excludedNodes, StorageType type) {
     return (DatanodeDescriptor) ((DFSNetworkTopology) clusterMap)
         .chooseRandomWithStorageTypeTwoTrial(scope, excludedNodes, type);
   }
 
-  /**
-   * Choose a good storage of given storage type from datanode, and add it to
-   * the result list.
-   *
-   * @param dnd datanode descriptor
-   * @param blockSize requested block size
-   * @param results the result storages
-   * @param storageType requested storage type
-   * @return the chosen datanode storage
-   */
   DatanodeStorageInfo chooseStorage4Block(DatanodeDescriptor dnd,
                                           long blockSize,
                                           List<DatanodeStorageInfo> results,
@@ -850,12 +775,7 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     reasonMap.put(reason, base + 1);
   }
 
-  /**
-   * Determine if a datanode should be chosen based on current workload.
-   *
-   * @param node The target datanode
-   * @return Return true if the datanode should be excluded, otherwise false
-   */
+  // 根据负载来判断此 DataNode是否应该被排除 
   boolean excludeNodeByLoad(DatanodeDescriptor node) {
     double inServiceXceiverCount = getInServiceXceiverAverage(node);
     final double maxLoad = considerLoadFactor * inServiceXceiverCount;
@@ -869,13 +789,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return false;
   }
 
-  /**
-   * Gets the inServiceXceiver average count for the cluster, if
-   * considerLoadByStorageType is true, then load is calculated only for the
-   * storage types present on the datanode.
-   * @param node the datanode whose storage types are to be taken into account.
-   * @return the InServiceXceiverAverage count.
-   */
   private double getInServiceXceiverAverage(DatanodeDescriptor node) {
     double inServiceXceiverCount;
     if (considerLoadByStorageType) {
@@ -887,11 +800,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return inServiceXceiverCount;
   }
 
-  /**
-   * Gets the average xceiver count with respect to the storage types.
-   * @param storageTypes the storage types.
-   * @return the average xceiver count wrt the provided storage types.
-   */
   private double getInServiceXceiverAverageByStorageType(
       Set<StorageType> storageTypes) {
     double avgLoad = 0;
@@ -911,19 +819,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return avgLoad;
   }
 
-  /**
-   * Determine if a datanode is good for placing block.
-   *
-   * @param node The target datanode
-   * @param maxTargetPerRack Maximum number of targets per rack. The value of
-   *                       this parameter depends on the number of racks in
-   *                       the cluster and total number of replicas for a block
-   * @param considerLoad whether or not to consider load of the target node
-   * @param results A list containing currently chosen nodes. Used to check if
-   *                too many nodes has been chosen in the target rack.
-   * @param avoidStaleNodes Whether or not to avoid choosing stale nodes
-   * @return Return true if the datanode is good candidate, otherwise false
-   */
   boolean isGoodDatanode(DatanodeDescriptor node,
                          int maxTargetPerRack, boolean considerLoad,
                          List<DatanodeStorageInfo> results,
@@ -974,12 +869,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
     return true;
   }
 
-  /**
-   * Return a pipeline of nodes.
-   * The pipeline is formed finding a shortest path that 
-   * starts from the writer and traverses all <i>nodes</i>
-   * This is basically a traveling salesman problem.
-   */
   private DatanodeStorageInfo[] getPipeline(Node writer,
                                             DatanodeStorageInfo[] storages) {
     if (storages.length == 0) {
@@ -1036,19 +925,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
         minRacks, clusterMap.getNumOfRacks());
   }
 
-  /**
-   * Decide whether deleting the specified replica of the block still makes
-   * the block conform to the configured block placement policy.
-   * @param moreThanOne The replica locations of this block that are present
-   *                    on more than one unique racks.
-   * @param exactlyOne Replica locations of this block that  are present
-   *                    on exactly one unique racks.
-   * @param excessTypes The excess {@link StorageType}s according to the
-   *                    {@link BlockStoragePolicy}.
-   *
-   * @return the replica that is the best candidate for deletion
-   */
-  @VisibleForTesting
   public DatanodeStorageInfo chooseReplicaToDelete(
       Collection<DatanodeStorageInfo> moreThanOne,
       Collection<DatanodeStorageInfo> exactlyOne,
@@ -1150,7 +1026,6 @@ public class BlockPlacementPolicyDefault extends BlockPlacementPolicy {
   }
 
   /** Check if we can use delHint. */
-  @VisibleForTesting
   boolean useDelHint(DatanodeStorageInfo delHint,
                      DatanodeStorageInfo added, List<DatanodeStorageInfo> moreThanOne,
                      Collection<DatanodeStorageInfo> exactlyOne,
