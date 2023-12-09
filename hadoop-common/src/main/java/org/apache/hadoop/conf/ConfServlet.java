@@ -60,7 +60,7 @@ public class ConfServlet extends HttpServlet {
     out.close();
   }
 
-  @VisibleForTesting
+  
   static String parseAcceptHeader(HttpServletRequest request) {
     String format = request.getHeader(HttpHeaders.ACCEPT);
     return format != null && format.contains(FORMAT_JSON) ?

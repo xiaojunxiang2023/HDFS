@@ -60,7 +60,7 @@ public class Stat extends Shell {
     return false;
   }
 
-  @VisibleForTesting
+  
   FileStatus getFileStatusForTesting() {
     return stat;
   }

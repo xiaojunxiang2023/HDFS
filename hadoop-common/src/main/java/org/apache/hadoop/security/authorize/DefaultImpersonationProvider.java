@@ -149,7 +149,7 @@ public class DefaultImpersonationProvider implements ImpersonationProvider {
     return configPrefix + userName + CONF_HOSTS;
   }
 
-  @VisibleForTesting
+  
   public Map<String, Collection<String>> getProxyGroups() {
     Map<String, Collection<String>> proxyGroups = new HashMap<String, Collection<String>>();
     for (Entry<String, AccessControlList> entry : proxyUserAcl.entrySet()) {
@@ -158,7 +158,7 @@ public class DefaultImpersonationProvider implements ImpersonationProvider {
     return proxyGroups;
   }
 
-  @VisibleForTesting
+  
   public Map<String, Collection<String>> getProxyHosts() {
     Map<String, Collection<String>> tmpProxyHosts =
         new HashMap<String, Collection<String>>();

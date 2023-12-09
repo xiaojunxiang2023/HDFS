@@ -340,7 +340,7 @@ public class EditLogFileInputStream extends EditLogInputStream {
    * @return the edit log version number
    * @throws IOException if error occurs
    */
-  @VisibleForTesting
+  
   static int readLogVersion(DataInputStream in, boolean verifyLayoutVersion)
       throws IOException, LogHeaderCorruptException {
     int logVersion;

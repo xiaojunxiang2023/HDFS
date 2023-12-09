@@ -85,7 +85,7 @@ public class SaslRpcClient {
     this.saslPropsResolver = SaslPropertiesResolver.getInstance(conf);
   }
 
-  @VisibleForTesting
+  
   public Object getNegotiatedProperty(String key) {
     return (saslClient != null) ? saslClient.getNegotiatedProperty(key) : null;
   }
@@ -255,7 +255,7 @@ public class SaslRpcClient {
    * @return String of the server's principal
    * @throws IOException - error determining configured principal
    */
-  @VisibleForTesting
+  
   String getServerPrincipal(SaslAuth authType) throws IOException {
     KerberosInfo krbInfo = SecurityUtil.getKerberosInfo(protocol, conf);
     LOG.debug("Get kerberos info proto:" + protocol + " info:" + krbInfo);

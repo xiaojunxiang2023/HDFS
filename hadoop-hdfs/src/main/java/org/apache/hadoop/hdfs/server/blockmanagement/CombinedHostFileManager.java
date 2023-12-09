@@ -177,7 +177,7 @@ public class CombinedHostFileManager extends HostConfigManager {
     refresh(hostProps);
   }
 
-  @VisibleForTesting
+  
   static InetSocketAddress parseEntry(final String fn, final String hostName,
                                       final int port) {
     InetSocketAddress addr = new InetSocketAddress(hostName, port);
@@ -217,7 +217,7 @@ public class CombinedHostFileManager extends HostConfigManager {
    * old instance is discarded.
    * @param hostProperties the new properties list
    */
-  @VisibleForTesting
+  
   private void refresh(final HostProperties hostProperties) {
     synchronized (this) {
       this.hostProperties = hostProperties;

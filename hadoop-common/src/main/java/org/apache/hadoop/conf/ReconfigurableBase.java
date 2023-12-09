@@ -66,7 +66,7 @@ public abstract class ReconfigurableBase
     super((conf == null) ? new Configuration() : conf);
   }
 
-  @VisibleForTesting
+  
   public void setReconfigurationUtil(ReconfigurationUtil ru) {
     reconfigurationUtil = Preconditions.checkNotNull(ru);
   }
@@ -76,7 +76,7 @@ public abstract class ReconfigurableBase
    */
   protected abstract Configuration getNewConf();
 
-  @VisibleForTesting
+  
   public Collection<PropertyChange> getChangedProperties(
       Configuration newConf, Configuration oldConf) {
     return reconfigurationUtil.parseChangedProperties(newConf, oldConf);

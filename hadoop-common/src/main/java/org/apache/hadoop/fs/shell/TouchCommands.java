@@ -102,7 +102,7 @@ public class TouchCommands extends FsCommand {
     private final SimpleDateFormat dateFormat =
         new SimpleDateFormat("yyyyMMdd:HHmmss");
 
-    @VisibleForTesting
+    
     public DateFormat getDateFormat() {
       return dateFormat;
     }

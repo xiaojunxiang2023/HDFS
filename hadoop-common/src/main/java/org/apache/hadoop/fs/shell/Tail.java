@@ -30,7 +30,7 @@ class Tail extends FsCommand {
   private boolean follow = false;
   private long followDelay = 5000; // milliseconds
 
-  @VisibleForTesting
+  
   public long getFollowDelay() {
     return followDelay;
   }

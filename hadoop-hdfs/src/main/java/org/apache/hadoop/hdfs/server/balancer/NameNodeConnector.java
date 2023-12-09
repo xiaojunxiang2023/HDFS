@@ -173,12 +173,12 @@ public class NameNodeConnector implements Closeable {
     return connectors;
   }
 
-  @VisibleForTesting
+  
   public static void setWrite2IdFile(boolean write2IdFile) {
     NameNodeConnector.write2IdFile = write2IdFile;
   }
 
-  @VisibleForTesting
+  
   public static void checkOtherInstanceRunning(boolean toCheck) {
     NameNodeConnector.checkOtherInstanceRunning = toCheck;
   }

@@ -42,7 +42,7 @@ AbstractFSBuilderImpl<S, B extends FSBuilder<S, B>>
 
   public static final String UNKNOWN_MANDATORY_KEY = "Unknown mandatory key";
 
-  @VisibleForTesting
+  
   static final String E_BOTH_A_PATH_AND_A_PATH_HANDLE
       = "Both a path and a pathHandle has been provided to the constructor";
 

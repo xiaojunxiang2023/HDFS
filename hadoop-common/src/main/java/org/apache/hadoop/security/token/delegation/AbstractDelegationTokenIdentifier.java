@@ -178,7 +178,7 @@ public abstract class AbstractDelegationTokenIdentifier
     masterKeyId = WritableUtils.readVInt(in);
   }
 
-  @VisibleForTesting
+  
   void writeImpl(DataOutput out) throws IOException {
     out.writeByte(VERSION);
     owner.write(out);

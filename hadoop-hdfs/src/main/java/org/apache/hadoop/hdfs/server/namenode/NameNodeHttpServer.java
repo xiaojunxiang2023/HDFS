@@ -291,7 +291,7 @@ public class NameNodeHttpServer {
    * Returns the httpServer.
    * @return HttpServer2
    */
-  @VisibleForTesting
+  
   public HttpServer2 getHttpServer() {
     return httpServer;
   }

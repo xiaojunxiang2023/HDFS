@@ -134,7 +134,7 @@ class Ls extends FsCommand {
    * Should display only paths of files and directories.
    * @return true display paths only, false display all fields
    */
-  @VisibleForTesting
+  
   boolean isPathOnly() {
     return this.pathOnly;
   }
@@ -143,7 +143,7 @@ class Ls extends FsCommand {
    * Should the contents of the directory be shown or just the directory?
    * @return true if directory contents, false if just directory
    */
-  @VisibleForTesting
+  
   boolean isDirRecurse() {
     return this.dirRecurse;
   }
@@ -152,12 +152,12 @@ class Ls extends FsCommand {
    * Should file sizes be returned in human readable format rather than bytes?
    * @return true is human readable, false if bytes
    */
-  @VisibleForTesting
+  
   boolean isHumanReadable() {
     return this.humanReadable;
   }
 
-  @VisibleForTesting
+  
   private boolean isHideNonPrintable() {
     return hideNonPrintable;
   }
@@ -166,7 +166,7 @@ class Ls extends FsCommand {
    * Should directory contents be displayed in reverse order
    * @return true reverse order, false default order
    */
-  @VisibleForTesting
+  
   boolean isOrderReverse() {
     return this.orderReverse;
   }
@@ -175,7 +175,7 @@ class Ls extends FsCommand {
    * Should directory contents be displayed in mtime order.
    * @return true mtime order, false default order
    */
-  @VisibleForTesting
+  
   boolean isOrderTime() {
     return this.orderTime;
   }
@@ -184,7 +184,7 @@ class Ls extends FsCommand {
    * Should directory contents be displayed in size order.
    * @return true size order, false default order
    */
-  @VisibleForTesting
+  
   boolean isOrderSize() {
     return this.orderSize;
   }
@@ -193,7 +193,7 @@ class Ls extends FsCommand {
    * Should access time be used rather than modification time.
    * @return true use access time, false use modification time
    */
-  @VisibleForTesting
+  
   boolean isUseAtime() {
     return this.useAtime;
   }
@@ -202,7 +202,7 @@ class Ls extends FsCommand {
    * Should EC policies be displayed.
    * @return true display EC policies, false doesn't display EC policies
    */
-  @VisibleForTesting
+  
   boolean isDisplayECPolicy() {
     return this.displayECPolicy;
   }

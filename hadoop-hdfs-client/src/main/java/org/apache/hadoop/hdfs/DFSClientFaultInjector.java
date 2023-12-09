@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Used for injecting faults in DFSClient and DFSOutputStream tests.
  * Calls into this are a no-op in production code.
  */
-@VisibleForTesting
+
 public class DFSClientFaultInjector {
   private static DFSClientFaultInjector instance = new DFSClientFaultInjector();
   public static AtomicLong exceptionNum = new AtomicLong(0);

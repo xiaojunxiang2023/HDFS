@@ -63,7 +63,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DiskBalancer {
 
-  @VisibleForTesting
+  
   public static final Logger LOG = LoggerFactory.getLogger(DiskBalancer
       .class);
   private final FsDatasetSpi<?> dataset;
@@ -850,7 +850,7 @@ public class DiskBalancer {
      * @param item        DiskBalancerWorkItem
      * @return sleep delay in Milliseconds.
      */
-    @VisibleForTesting
+    
     public long computeDelay(long bytesCopied, long timeUsed,
                              DiskBalancerWorkItem item) {
 

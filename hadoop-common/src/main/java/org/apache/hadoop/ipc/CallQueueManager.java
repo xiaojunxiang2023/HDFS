@@ -73,7 +73,7 @@ public class CallQueueManager<E extends Schedulable>
         backingClass, maxQueueSize, schedulerClass, clientBackOffEnabled);
   }
 
-  @VisibleForTesting
+  
     // only!
   CallQueueManager(BlockingQueue<E> queue, RpcScheduler scheduler,
                    boolean clientBackOffEnabled, boolean serverFailOverEnabled) {
@@ -232,7 +232,7 @@ public class CallQueueManager<E extends Schedulable>
     return addInternal(e, true);
   }
 
-  @VisibleForTesting
+  
   boolean addInternal(E e, boolean checkBackoff) {
     if (checkBackoff && isClientBackoffEnabled() && shouldBackOff(e)) {
       throwBackoff();

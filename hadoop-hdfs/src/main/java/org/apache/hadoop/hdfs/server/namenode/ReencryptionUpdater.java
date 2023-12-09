@@ -179,28 +179,28 @@ public final class ReencryptionUpdater implements Runnable {
     }
   }
 
-  @VisibleForTesting
+  
   synchronized void pauseForTesting() {
     shouldPauseForTesting = true;
     LOG.info("Pausing re-encrypt updater for testing.");
     notify();
   }
 
-  @VisibleForTesting
+  
   synchronized void resumeForTesting() {
     shouldPauseForTesting = false;
     LOG.info("Resuming re-encrypt updater for testing.");
     notify();
   }
 
-  @VisibleForTesting
+  
   void pauseForTestingAfterNthCheckpoint(final long zoneId, final int count) {
     assert pauseAfterNthCheckpoint == 0;
     pauseAfterNthCheckpoint = count;
     pauseZoneId = zoneId;
   }
 
-  @VisibleForTesting
+  
   boolean isRunning() {
     return isRunning;
   }

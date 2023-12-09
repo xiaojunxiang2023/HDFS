@@ -11,7 +11,7 @@ import java.io.IOException;
 public class DU extends CachingGetSpaceUsed {
   private final DUShell duShell;
 
-  @VisibleForTesting
+  
   public DU(File path, long interval, long jitter, long initialUsed)
       throws IOException {
     super(path, interval, jitter, initialUsed);

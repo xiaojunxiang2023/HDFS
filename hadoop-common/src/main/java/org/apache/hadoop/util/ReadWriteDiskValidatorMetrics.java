@@ -135,7 +135,7 @@ public class ReadWriteDiskValidatorMetrics {
    *
    * @return {@link MutableQuantiles} metrics for the file read time
    */
-  @VisibleForTesting
+  
   protected MutableQuantiles[] getFileReadQuantiles() {
     return fileReadQuantiles;
   }
@@ -145,7 +145,7 @@ public class ReadWriteDiskValidatorMetrics {
    *
    * @return {@link MutableQuantiles} metrics for the file write time
    */
-  @VisibleForTesting
+  
   protected MutableQuantiles[] getFileWriteQuantiles() {
     return fileWriteQuantiles;
   }

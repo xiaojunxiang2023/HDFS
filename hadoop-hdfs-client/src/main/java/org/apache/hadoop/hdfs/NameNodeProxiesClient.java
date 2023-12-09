@@ -185,7 +185,7 @@ public class NameNodeProxiesClient {
   }
 
   /** Creates the Failover proxy provider instance*/
-  @VisibleForTesting
+  
   public static <T> AbstractNNFailoverProxyProvider<T> createFailoverProxyProvider(
       Configuration conf, URI nameNodeUri, Class<T> xface, boolean checkPort,
       AtomicBoolean fallbackToSimpleAuth) throws IOException {
@@ -248,7 +248,7 @@ public class NameNodeProxiesClient {
   }
 
   /** Gets the configured Failover proxy provider's class */
-  @VisibleForTesting
+  
   public static <T> Class<FailoverProxyProvider<T>> getFailoverProxyProviderClass(
       Configuration conf, URI nameNodeUri) throws IOException {
     if (nameNodeUri == null) {

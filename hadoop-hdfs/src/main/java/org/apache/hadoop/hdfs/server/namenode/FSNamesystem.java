@@ -453,7 +453,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   }
 
   //This is for testing purposes only
-  @VisibleForTesting
+  
   boolean isImageLoaded() {
     return imageLoaded;
   }
@@ -476,7 +476,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     blockManager.clear();
   }
 
-  @VisibleForTesting
+  
   LeaseManager getLeaseManager() {
     return leaseManager;
   }
@@ -489,7 +489,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * @return the current {@link #lazyPersistFileScrubberTS} if {@link
    *         #lazyPersistFileScrubber} is not null.
    */
-  @VisibleForTesting
+  
   public long getLazyPersistFileScrubberTS() {
     return lazyPersistFileScrubber == null ? -1
         : lazyPersistFileScrubberTS.get();
@@ -813,22 +813,22 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  @VisibleForTesting
+  
   public List<AuditLogger> getAuditLoggers() {
     return auditLoggers;
   }
 
-  @VisibleForTesting
+  
   public RetryCache getRetryCache() {
     return retryCache;
   }
 
-  @VisibleForTesting
+  
   public long getLeaseRecheckIntervalMs() {
     return leaseRecheckIntervalMs;
   }
 
-  @VisibleForTesting
+  
   public long getMaxLockHoldToReleaseLeaseMs() {
     return maxLockHoldToReleaseLeaseMs;
   }
@@ -866,12 +866,12 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  @VisibleForTesting
+  
   public KeyProviderCryptoExtension getProvider() {
     return provider;
   }
 
-  @VisibleForTesting
+  
   static RetryCache initRetryCache(Configuration conf) {
     boolean enable = conf.getBoolean(DFS_NAMENODE_ENABLE_RETRY_CACHE_KEY,
         DFS_NAMENODE_ENABLE_RETRY_CACHE_DEFAULT);
@@ -1588,7 +1588,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * @return time in milliseconds.
    * See {@link org.apache.hadoop.util.Time#now()}.
    */
-  @VisibleForTesting
+  
   long getCTime() {
     return fsImage == null ? 0 : fsImage.getStorage().getCTime();
   }
@@ -1801,7 +1801,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     return sw.toString();
   }
 
-  @VisibleForTesting
+  
   public FsServerDefaults getServerDefaults() throws StandbyException {
     checkOperation(OperationCategory.READ);
     return serverDefaults;
@@ -3573,7 +3573,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     blockManager.checkRedundancy(pendingFile);
   }
 
-  @VisibleForTesting
+  
   BlockInfo getStoredBlock(Block block) {
     return blockManager.getStoredBlock(block);
   }
@@ -3786,7 +3786,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * @param storedBlock last block
    * @throws IOException on error
    */
-  @VisibleForTesting
+  
   void closeFileCommitBlocks(String src, INodeFile pendingFile,
                              BlockInfo storedBlock) throws IOException {
     final INodesInPath iip = INodesInPath.fromINode(pendingFile);
@@ -6391,7 +6391,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     return blockManager;
   }
 
-  @VisibleForTesting
+  
   public void setBlockManagerForTesting(BlockManager bm) {
     this.blockManager = bm;
   }
@@ -6403,7 +6403,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   }
 
   /** Set the FSDirectory. */
-  @VisibleForTesting
+  
   public void setFSDirectory(FSDirectory dir) {
     this.dir = dir;
   }
@@ -6539,32 +6539,32 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  @VisibleForTesting
+  
   public EditLogTailer getEditLogTailer() {
     return editLogTailer;
   }
 
-  @VisibleForTesting
+  
   public void setEditLogTailerForTests(EditLogTailer tailer) {
     this.editLogTailer = tailer;
   }
 
-  @VisibleForTesting
+  
   void setFsLockForTests(ReentrantReadWriteLock lock) {
     this.fsLock.coarseLock = lock;
   }
 
-  @VisibleForTesting
+  
   public ReentrantReadWriteLock getFsLockForTests() {
     return fsLock.coarseLock;
   }
 
-  @VisibleForTesting
+  
   public ReentrantLock getCpLockForTests() {
     return cpLock;
   }
 
-  @VisibleForTesting
+  
   public void setNNResourceChecker(NameNodeResourceChecker nnResourceChecker) {
     this.nnResourceChecker = nnResourceChecker;
   }
@@ -7042,7 +7042,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
         NameNodeLayoutVersion.CURRENT_LAYOUT_VERSION);
   }
 
-  @VisibleForTesting
+  
   static int getEffectiveLayoutVersion(boolean isRollingUpgrade, int storageLV,
                                        int minCompatLV, int currentLV) {
     if (isRollingUpgrade) {
@@ -7816,7 +7816,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * is defined in the config file. It can also be explicitly listed in the
    * config file.
    */
-  @VisibleForTesting
+  
   static class FSNamesystemAuditLogger extends DefaultAuditLogger {
 
     @Override

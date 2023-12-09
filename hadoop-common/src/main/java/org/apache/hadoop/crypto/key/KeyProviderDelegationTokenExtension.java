@@ -41,7 +41,7 @@ public class KeyProviderDelegationTokenExtension extends
     Void cancelDelegationToken(final Token<?> token) throws IOException;
 
     // Do NOT call this. Only intended for internal use.
-    @VisibleForTesting
+    
     Token<?> selectDelegationToken(Credentials creds);
   }
 

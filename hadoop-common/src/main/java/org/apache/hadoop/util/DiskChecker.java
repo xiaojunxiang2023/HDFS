@@ -216,7 +216,7 @@ public class DiskChecker {
   private static final String DISK_IO_FILE_PREFIX =
       "DiskChecker.OK_TO_DELETE_.";
 
-  @VisibleForTesting
+  
   static final int DISK_IO_MAX_ITERATIONS = 3;
 
   /**
@@ -284,7 +284,7 @@ public class DiskChecker {
    *
    * @return file object.
    */
-  @VisibleForTesting
+  
   static File getFileNameForDiskIoCheck(File dir, int iterationCount) {
     if (iterationCount < DISK_IO_MAX_ITERATIONS) {
       // Use file names of the format prefix.001 by default.
@@ -335,7 +335,7 @@ public class DiskChecker {
    * @param newFosProvider
    * @return the old FileIoProvider.
    */
-  @VisibleForTesting
+  
   static FileIoProvider replaceFileOutputStreamProvider(
       FileIoProvider newFosProvider) {
     return fileIoProvider.getAndSet(newFosProvider);
@@ -347,7 +347,7 @@ public class DiskChecker {
    *
    * @return the current FileIoProvider.
    */
-  @VisibleForTesting
+  
   static FileIoProvider getFileOutputStreamProvider() {
     return fileIoProvider.get();
   }

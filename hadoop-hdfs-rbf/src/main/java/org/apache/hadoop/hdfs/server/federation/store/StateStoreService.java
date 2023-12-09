@@ -206,7 +206,7 @@ public class StateStoreService extends CompositeService {
     return this.driver.isDriverReady();
   }
 
-  @VisibleForTesting
+  
   public void closeDriver() throws Exception {
     if (this.driver != null) {
       this.driver.close();
@@ -231,7 +231,7 @@ public class StateStoreService extends CompositeService {
     return this.cacheLastUpdateTime;
   }
 
-  @VisibleForTesting
+  
   public void stopCacheUpdateService() {
     if (this.cacheUpdater != null) {
       this.cacheUpdater.stop();

@@ -103,12 +103,12 @@ public class DecayRpcSchedulerDetailedMetrics {
     return name;
   }
 
-  @VisibleForTesting
+  
   MutableRatesWithAggregation getRpcQueueRates() {
     return rpcQueueRates;
   }
 
-  @VisibleForTesting
+  
   MutableRatesWithAggregation getRpcProcessingRates() {
     return rpcProcessingRates;
   }

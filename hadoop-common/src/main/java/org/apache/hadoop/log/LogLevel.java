@@ -71,7 +71,7 @@ public class LogLevel {
         protocol.equals(PROTOCOL_HTTPS)));
   }
 
-  @VisibleForTesting
+  
   static class CLI extends Configured implements Tool {
     private Operations operation = Operations.UNKNOWN;
     private String protocol;

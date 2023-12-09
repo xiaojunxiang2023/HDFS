@@ -56,7 +56,7 @@ public class LocalResolver extends RouterResolver<String, String> {
     return localSubcluster;
   }
 
-  @VisibleForTesting
+  
   String getClientAddr() {
     return Server.getRemoteAddress();
   }

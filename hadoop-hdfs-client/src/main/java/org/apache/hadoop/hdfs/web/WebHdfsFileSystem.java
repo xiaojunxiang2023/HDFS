@@ -84,7 +84,7 @@ public class WebHdfsFileSystem extends FileSystem
    */
   protected URLConnectionFactory connectionFactory;
 
-  @VisibleForTesting
+  
   public static final String CANT_FALLBACK_TO_INSECURE_MSG =
       "The client is configured to only allow connecting to secure cluster";
 
@@ -311,7 +311,7 @@ public class WebHdfsFileSystem extends FileSystem
     return delegationToken;
   }
 
-  @VisibleForTesting
+  
   synchronized boolean replaceExpiredDelegationToken() throws IOException {
     boolean replaced = false;
     if (canRefreshDelegationToken) {
@@ -1957,12 +1957,12 @@ public class WebHdfsFileSystem extends FileSystem
     }.run();
   }
 
-  @VisibleForTesting
+  
   InetSocketAddress[] getResolvedNNAddr() {
     return nnAddrs;
   }
 
-  @VisibleForTesting
+  
   public void setRetryPolicy(RetryPolicy rp) {
     this.retryPolicy = rp;
   }
@@ -2002,7 +2002,7 @@ public class WebHdfsFileSystem extends FileSystem
     return KMSUtil.createKeyProviderFromUri(getConf(), keyProviderUri);
   }
 
-  @VisibleForTesting
+  
   public void setTestProvider(KeyProvider kp) {
     testProvider = kp;
   }
@@ -2036,7 +2036,7 @@ public class WebHdfsFileSystem extends FileSystem
    * WebHdfsFileSystem. This class will invoke the retry policy when performing
    * any of these actions.
    */
-  @VisibleForTesting
+  
   public class WebHdfsInputStream extends FSInputStream {
     private ReadRunner readRunner = null;
 
@@ -2093,12 +2093,12 @@ public class WebHdfsFileSystem extends FileSystem
       return readRunner.getFileLength();
     }
 
-    @VisibleForTesting
+    
     ReadRunner getReadRunner() {
       return readRunner;
     }
 
-    @VisibleForTesting
+    
     void setReadRunner(ReadRunner rr) {
       this.readRunner = rr;
     }
@@ -2140,7 +2140,7 @@ public class WebHdfsFileSystem extends FileSystem
    * already been initialized and read the requested data from the specified
    * input stream.
    */
-  @VisibleForTesting
+  
   protected class ReadRunner extends AbstractFsPathRunner<Integer> {
     private InputStream in = null;
     private HttpURLConnection cachedConnection = null;
@@ -2342,7 +2342,7 @@ public class WebHdfsFileSystem extends FileSystem
       }
     }
 
-    @VisibleForTesting
+    
     InputStream initializeInputStream(HttpURLConnection conn)
         throws IOException {
       // Cache the resolved URL so that it can be used in the event of
@@ -2369,7 +2369,7 @@ public class WebHdfsFileSystem extends FileSystem
     }
 
     // Close both the InputStream and the connection.
-    @VisibleForTesting
+    
     void closeInputStream(RunnerState rs) throws IOException {
       if (in != null) {
         in = null;
@@ -2383,12 +2383,12 @@ public class WebHdfsFileSystem extends FileSystem
 
     /* Getters and Setters */
 
-    @VisibleForTesting
+    
     protected InputStream getInputStream() {
       return in;
     }
 
-    @VisibleForTesting
+    
     protected void setInputStream(InputStream inStream) {
       in = inStream;
     }

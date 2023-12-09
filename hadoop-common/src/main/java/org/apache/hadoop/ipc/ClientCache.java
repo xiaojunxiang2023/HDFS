@@ -94,7 +94,7 @@ public class ClientCache {
     }
   }
 
-  @VisibleForTesting
+  
   public void clearCache() {
     clients.values().forEach(c -> c.stop());
     clients.clear();

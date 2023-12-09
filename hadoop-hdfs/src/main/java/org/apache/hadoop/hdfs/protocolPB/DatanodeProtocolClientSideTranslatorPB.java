@@ -33,7 +33,7 @@ public class DatanodeProtocolClientSideTranslatorPB implements
       VersionRequestProto.newBuilder().build();
   private final static RpcController NULL_CONTROLLER = null;
 
-  @VisibleForTesting
+  
   public DatanodeProtocolClientSideTranslatorPB(DatanodeProtocolPB rpcProxy) {
     this.rpcProxy = rpcProxy;
   }

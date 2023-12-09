@@ -172,7 +172,7 @@ class AsyncLoggerSet {
    * @return the (mutable) list of loggers, for use in tests to
    * set up spies
    */
-  @VisibleForTesting
+  
   List<AsyncLogger> getLoggersForTests() {
     return loggers;
   }

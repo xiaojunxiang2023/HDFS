@@ -36,7 +36,7 @@ public class NameNodeResourceChecker {
   private Map<String, CheckedVolume> volumes;
   private int minimumRedundantVolumes;
 
-  @VisibleForTesting
+  
   class CheckedVolume implements CheckableNameNodeResource {
     private DF df;
     private boolean required;
@@ -164,7 +164,7 @@ public class NameNodeResourceChecker {
    *
    * @return the set of directories whose free space is below the threshold.
    */
-  @VisibleForTesting
+  
   Collection<String> getVolumesLowOnSpace() throws IOException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Going to check the following volumes disk space: " + volumes);
@@ -176,12 +176,12 @@ public class NameNodeResourceChecker {
     return lowVolumes;
   }
 
-  @VisibleForTesting
+  
   void setVolumes(Map<String, CheckedVolume> volumes) {
     this.volumes = volumes;
   }
 
-  @VisibleForTesting
+  
   void setMinimumReduntdantVolumes(int minimumRedundantVolumes) {
     this.minimumRedundantVolumes = minimumRedundantVolumes;
   }

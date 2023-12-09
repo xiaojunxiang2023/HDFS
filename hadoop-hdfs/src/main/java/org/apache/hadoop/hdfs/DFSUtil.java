@@ -983,7 +983,7 @@ public class DFSUtil {
    * @return the substituted address
    * @throws IOException if it is a wildcard address and security is enabled
    */
-  @VisibleForTesting
+  
   static String substituteForWildcardAddress(String configuredAddress,
                                              String defaultHost) {
     InetSocketAddress sockAddr = NetUtils.createSocketAddr(configuredAddress);

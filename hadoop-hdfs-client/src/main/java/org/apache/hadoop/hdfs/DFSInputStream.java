@@ -47,7 +47,7 @@ public class DFSInputStream extends FSInputStream
     implements ByteBufferReadable, CanSetDropBehind, CanSetReadahead,
     HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,
     ByteBufferPositionedReadable {
-  @VisibleForTesting
+  
   public static boolean tcpReadsDisabledForTesting = false;
   private long hedgedReadOpsLoopNumForTesting = 0;
   protected final DFSClient dfsClient;
@@ -162,17 +162,17 @@ public class DFSInputStream extends FSInputStream
     openInfo(false);
   }
 
-  @VisibleForTesting
+  
   long getlastBlockBeingWrittenLengthForTesting() {
     return lastBlockBeingWrittenLength;
   }
 
-  @VisibleForTesting
+  
   boolean deadNodesContain(DatanodeInfo nodeInfo) {
     return deadNodes.containsKey(nodeInfo);
   }
 
-  @VisibleForTesting
+  
   void setReadTimeStampsForTesting(long timeStamp) {
     setLocatedBlocksTimeStamp(timeStamp);
   }
@@ -1329,7 +1329,7 @@ public class DFSInputStream extends FSInputStream
     }
   }
 
-  @VisibleForTesting
+  
   public long getHedgedReadOpsLoopNumForTesting() {
     return hedgedReadOpsLoopNumForTesting;
   }

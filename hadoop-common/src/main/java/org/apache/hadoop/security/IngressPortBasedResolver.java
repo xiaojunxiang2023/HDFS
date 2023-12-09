@@ -69,7 +69,7 @@ public class IngressPortBasedResolver extends SaslPropertiesResolver {
    * @return the sasl properties to be used for the connection.
    */
   @Override
-  @VisibleForTesting
+  
   public Map<String, String> getServerProperties(InetAddress clientAddress,
                                                  int ingressPort) {
     LOG.debug("Resolving SASL properties for " + clientAddress + " "

@@ -371,7 +371,7 @@ public class ShortCircuitCache implements Closeable {
     return staleThresholdMs;
   }
 
-  @VisibleForTesting
+  
   public void setMaxTotalSize(int maxTotalSize) {
     this.maxTotalSize = maxTotalSize;
   }
@@ -709,7 +709,7 @@ public class ShortCircuitCache implements Closeable {
    *
    * @throws RetriableException   If the caller needs to retry.
    */
-  @VisibleForTesting // ONLY for testing
+   // ONLY for testing
   protected ShortCircuitReplicaInfo fetch(ExtendedBlockId key,
                                           Waitable<ShortCircuitReplicaInfo> waitable) throws RetriableException {
     // Another thread is already in the process of loading this
@@ -914,7 +914,7 @@ public class ShortCircuitCache implements Closeable {
     IOUtilsClient.cleanupWithLogger(LOG, shmManager);
   }
 
-  @VisibleForTesting // ONLY for testing
+   // ONLY for testing
   public interface CacheVisitor {
     void visit(int numOutstandingMmaps,
                Map<ExtendedBlockId, ShortCircuitReplica> replicas,
@@ -923,7 +923,7 @@ public class ShortCircuitCache implements Closeable {
                LinkedMap evictableMmapped);
   }
 
-  @VisibleForTesting // ONLY for testing
+   // ONLY for testing
   public void accept(CacheVisitor visitor) {
     lock.lock();
     try {
@@ -1012,7 +1012,7 @@ public class ShortCircuitCache implements Closeable {
     releaserExecutor.execute(new SlotReleaser(slot));
   }
 
-  @VisibleForTesting
+  
   public DfsClientShmManager getDfsClientShmManager() {
     return shmManager;
   }
@@ -1021,7 +1021,7 @@ public class ShortCircuitCache implements Closeable {
    * Can be used in testing to verify whether a read went through SCR, after
    * the read is done and before the stream is closed.
    */
-  @VisibleForTesting
+  
   public int getReplicaInfoMapSize() {
     return replicaInfoMap.size();
   }

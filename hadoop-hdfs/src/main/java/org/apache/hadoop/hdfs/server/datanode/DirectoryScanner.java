@@ -44,27 +44,27 @@ public class DirectoryScanner implements Runnable {
    * Total combined wall clock time (in milliseconds) spent by the report
    * compiler threads executing. Used for testing purposes.
    */
-  @VisibleForTesting
+  
   final AtomicLong timeRunningMs = new AtomicLong(0L);
 
   /**
    * Total combined wall clock time (in milliseconds) spent by the report
    * compiler threads blocked by the throttle. Used for testing purposes.
    */
-  @VisibleForTesting
+  
   final AtomicLong timeWaitingMs = new AtomicLong(0L);
 
   /**
    * The complete list of block differences indexed by block pool ID.
    */
-  @VisibleForTesting
+  
   final BlockPoolReport diffs = new BlockPoolReport();
 
   /**
    * Statistics about the block differences in each blockpool, indexed by block
    * pool ID.
    */
-  @VisibleForTesting
+  
   final Map<String, Stats> stats;
 
   /**
@@ -72,7 +72,7 @@ public class DirectoryScanner implements Runnable {
    *
    * @param b whether to retain diffs
    */
-  @VisibleForTesting
+  
   public void setRetainDiffs(boolean b) {
     retainDiffs = b;
   }
@@ -80,7 +80,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Stats tracked for reporting and testing, per blockpool
    */
-  @VisibleForTesting
+  
   static class Stats {
     final String bpid;
     long totalBlocks = 0;
@@ -116,7 +116,7 @@ public class DirectoryScanner implements Runnable {
    * objects. If a block pool exists but has no ScanInfo objects associated with
    * it, there will be no mapping for that particular block pool.
    */
-  @VisibleForTesting
+  
   public static class ScanInfoVolumeReport {
 
     @SuppressWarnings("unused")
@@ -174,7 +174,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Helper class for compiling block info reports per block pool.
    */
-  @VisibleForTesting
+  
   public static class BlockPoolReport {
 
     @SuppressWarnings("unused")
@@ -305,7 +305,7 @@ public class DirectoryScanner implements Runnable {
    *
    * @return whether the scanner has been started
    */
-  @VisibleForTesting
+  
   boolean getRunStatus() {
     return shouldRun.get();
   }
@@ -389,7 +389,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Reconcile differences between disk and in-memory blocks
    */
-  @VisibleForTesting
+  
   public void reconcile() throws IOException {
     LOG.debug("reconcile start DirectoryScanning");
     scan();
@@ -554,7 +554,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Get the lists of blocks on the disks in the data set.
    */
-  @VisibleForTesting
+  
   public Collection<ScanInfoVolumeReport> getVolumeReports() {
     List<ScanInfoVolumeReport> volReports = new ArrayList<>();
     List<Future<ScanInfoVolumeReport>> compilersInProgress = new ArrayList<>();

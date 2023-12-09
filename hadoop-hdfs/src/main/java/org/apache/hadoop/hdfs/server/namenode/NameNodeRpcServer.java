@@ -91,7 +91,7 @@ import static org.apache.hadoop.util.Time.now;
  * This class is responsible for handling all of the RPC calls to the NameNode.
  * It is created, started, and stopped by {@link NameNode}.
  */
-@VisibleForTesting
+
 public class NameNodeRpcServer implements NamenodeProtocols {
 
   private static final Logger LOG = NameNode.LOG;
@@ -412,19 +412,19 @@ public class NameNodeRpcServer implements NamenodeProtocols {
   }
 
   /** Allow access to the lifeline RPC server for testing */
-  @VisibleForTesting
+  
   RPC.Server getLifelineRpcServer() {
     return lifelineRpcServer;
   }
 
   /** Allow access to the client RPC server for testing */
-  @VisibleForTesting
+  
   public RPC.Server getClientRpcServer() {
     return clientRpcServer;
   }
 
   /** Allow access to the service RPC server for testing */
-  @VisibleForTesting
+  
   RPC.Server getServiceRpcServer() {
     return serviceRpcServer;
   }
@@ -478,12 +478,12 @@ public class NameNodeRpcServer implements NamenodeProtocols {
     return serviceRPCAddress;
   }
 
-  @VisibleForTesting
+  
   public InetSocketAddress getRpcAddress() {
     return clientRpcAddress;
   }
 
-  @VisibleForTesting
+  
   public Set<InetSocketAddress> getAuxiliaryRpcAddresses() {
     return clientRpcServer.getAuxiliaryListenerAddresses();
   }

@@ -100,7 +100,7 @@ public class BlockReaderRemote implements BlockReader {
 
   private final int networkDistance;
 
-  @VisibleForTesting
+  
   public Peer getPeer() {
     return peer;
   }

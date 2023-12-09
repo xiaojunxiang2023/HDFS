@@ -51,7 +51,7 @@ public class ReferenceCountMap<E extends ReferenceCountMap.ReferenceCounter> {
    *
    * @return
    */
-  @VisibleForTesting
+  
   public ImmutableList<E> getEntries() {
     return new ImmutableList.Builder<E>().addAll(referenceMap.keySet()).build();
   }
@@ -77,7 +77,7 @@ public class ReferenceCountMap<E extends ReferenceCountMap.ReferenceCounter> {
   /**
    * Clear the contents
    */
-  @VisibleForTesting
+  
   public void clear() {
     referenceMap.clear();
   }

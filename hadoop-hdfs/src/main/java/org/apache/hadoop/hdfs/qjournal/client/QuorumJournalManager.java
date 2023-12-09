@@ -81,7 +81,7 @@ public class QuorumJournalManager implements JournalManager {
   private final LogThrottlingHelper selectInputStreamLogHelper =
       new LogThrottlingHelper(SELECT_INPUT_STREAM_LOG_INTERVAL_MS);
 
-  @VisibleForTesting
+  
   public QuorumJournalManager(Configuration conf,
                               URI uri,
                               NamespaceInfo nsInfo) throws IOException {
@@ -93,7 +93,7 @@ public class QuorumJournalManager implements JournalManager {
     this(conf, uri, nsInfo, nameServiceId, IPCLoggerChannel.FACTORY);
   }
 
-  @VisibleForTesting
+  
   QuorumJournalManager(Configuration conf,
                        URI uri, NamespaceInfo nsInfo,
                        AsyncLogger.Factory loggerFactory) throws IOException {
@@ -631,7 +631,7 @@ public class QuorumJournalManager implements JournalManager {
     return "QJM to " + loggers;
   }
 
-  @VisibleForTesting
+  
   AsyncLoggerSet getLoggerSetForTests() {
     return loggers;
   }

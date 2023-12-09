@@ -752,7 +752,7 @@ public class Journal implements Closeable {
    * @return the current state of the given segment, or null if the
    * segment does not exist.
    */
-  @VisibleForTesting
+  
   SegmentStateProto getSegmentInfo(long segmentTxId)
       throws IOException {
     EditLogFile elf = fjm.getLogFile(segmentTxId);
@@ -1190,7 +1190,7 @@ public class Journal implements Closeable {
     return storage.getJournalManager().getJournalCTime();
   }
 
-  @VisibleForTesting
+  
   JournaledEditsCache getJournaledEditsCache() {
     return cache;
   }

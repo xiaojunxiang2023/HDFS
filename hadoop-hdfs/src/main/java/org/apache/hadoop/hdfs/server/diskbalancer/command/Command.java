@@ -461,7 +461,7 @@ public abstract class Command extends Configured implements Closeable {
    *
    * @return Cluster.
    */
-  @VisibleForTesting
+  
   DiskBalancerCluster getCluster() {
     return cluster;
   }
@@ -567,7 +567,7 @@ public abstract class Command extends Configured implements Closeable {
   /**
    * Set DiskBalancer cluster
    */
-  @VisibleForTesting
+  
   public void setCluster(DiskBalancerCluster newCluster) {
     this.cluster = newCluster;
   }

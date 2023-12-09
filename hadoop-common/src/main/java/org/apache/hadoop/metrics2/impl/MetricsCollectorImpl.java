@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.apache.hadoop.metrics2.lib.Interns.info;
 
-@VisibleForTesting
+
 public class MetricsCollectorImpl implements MetricsCollector,
     Iterable<MetricsRecordBuilderImpl> {
 

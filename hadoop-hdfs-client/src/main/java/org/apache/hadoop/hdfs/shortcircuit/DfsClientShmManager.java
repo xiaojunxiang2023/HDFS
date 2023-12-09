@@ -404,7 +404,7 @@ public class DfsClientShmManager implements Closeable {
     }
   }
 
-  @VisibleForTesting
+  
   public static class PerDatanodeVisitorInfo {
     public final TreeMap<ShmId, DfsClientShm> full;
     public final TreeMap<ShmId, DfsClientShm> notFull;
@@ -418,13 +418,13 @@ public class DfsClientShmManager implements Closeable {
     }
   }
 
-  @VisibleForTesting
+  
   public interface Visitor {
     void visit(HashMap<DatanodeInfo, PerDatanodeVisitorInfo> info)
         throws IOException;
   }
 
-  @VisibleForTesting
+  
   public void visit(Visitor visitor) throws IOException {
     lock.lock();
     try {
@@ -467,12 +467,12 @@ public class DfsClientShmManager implements Closeable {
         System.identityHashCode(this));
   }
 
-  @VisibleForTesting
+  
   public DomainSocketWatcher getDomainSocketWatcher() {
     return domainSocketWatcher;
   }
 
-  @VisibleForTesting
+  
   public int getShmNum() {
     int segments = 0;
     for (EndpointShmManager endpointShmManager : datanodes.values()) {

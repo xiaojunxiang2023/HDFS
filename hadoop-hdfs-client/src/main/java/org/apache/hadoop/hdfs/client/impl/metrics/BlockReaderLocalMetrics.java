@@ -52,7 +52,7 @@ public class BlockReaderLocalMetrics {
    * Get the MutableRollingAverage metric for testing only.
    * @return
    */
-  @VisibleForTesting
+  
   public MutableRollingAverages getShortCircuitReadRollingAverages() {
     return shortCircuitReadRollingAverages;
   }

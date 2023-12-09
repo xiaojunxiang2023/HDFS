@@ -408,7 +408,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     }
   }
 
-  @VisibleForTesting
+  
   static boolean isRpcInvocation(Object proxy) {
     if (proxy instanceof ProtocolTranslator) {
       proxy = ((ProtocolTranslator) proxy).getUnderlyingProxyObject();
@@ -430,7 +430,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     return RPC.getConnectionIdForProxy(proxyDescriptor.getProxy());
   }
 
-  @VisibleForTesting
+  
   public FailoverProxyProvider<T> getProxyProvider() {
     return proxyDescriptor.fpp;
   }

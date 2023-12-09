@@ -100,7 +100,7 @@ class NativeCrc32 {
    *   ByteBuffer, int, int, String, long, boolean)} instead
    */
   @Deprecated
-  @VisibleForTesting
+  
   static native void nativeVerifyChunkedSums(
       int bytesPerSum, int checksumType,
       ByteBuffer sums, int sumsOffset,

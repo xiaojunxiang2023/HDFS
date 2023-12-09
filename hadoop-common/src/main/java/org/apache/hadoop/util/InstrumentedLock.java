@@ -79,7 +79,7 @@ public class InstrumentedLock implements Lock {
         minLoggingGapMs, lockWarningThresholdMs, new Timer());
   }
 
-  @VisibleForTesting
+  
   InstrumentedLock(String name, Logger logger, Lock lock,
                    long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {
     this.name = name;
@@ -143,7 +143,7 @@ public class InstrumentedLock implements Lock {
     return lock.newCondition();
   }
 
-  @VisibleForTesting
+  
   void logWarning(long lockHeldTime, SuppressedSnapshot stats) {
     logger.warn(String.format("Lock held time above threshold(%d ms): " +
             "lock identifier: %s " +
@@ -155,7 +155,7 @@ public class InstrumentedLock implements Lock {
         StringUtils.getStackTrace(Thread.currentThread())));
   }
 
-  @VisibleForTesting
+  
   void logWaitWarning(long lockWaitTime, SuppressedSnapshot stats) {
     logger.warn(String.format("Waited above threshold(%d ms) to acquire lock: " +
             "lock identifier: %s " +

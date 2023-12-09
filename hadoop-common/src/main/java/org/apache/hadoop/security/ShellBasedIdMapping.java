@@ -83,7 +83,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
    *        true, otherwise initialize the maps to empty. This parameter is
    *        intended for testing only, its default is false.
    */
-  @VisibleForTesting
+  
   public ShellBasedIdMapping(Configuration conf,
                              boolean constructFullMapAtInit) throws IOException {
     this.constructFullMapAtInit = constructFullMapAtInit;
@@ -116,22 +116,22 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     this(conf, false);
   }
 
-  @VisibleForTesting
+  
   public long getTimeout() {
     return timeout;
   }
 
-  @VisibleForTesting
+  
   public BiMap<Integer, String> getUidNameMap() {
     return uidNameMap;
   }
 
-  @VisibleForTesting
+  
   public BiMap<Integer, String> getGidNameMap() {
     return gidNameMap;
   }
 
-  @VisibleForTesting
+  
   synchronized public void clearNameMaps() {
     uidNameMap.clear();
     gidNameMap.clear();
@@ -194,7 +194,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
    * and save them in the corresponding map.
    * @throws IOException
    */
-  @VisibleForTesting
+  
   public static boolean updateMapInternal(BiMap<Integer, String> map,
                                           String mapName, String command, String regex,
                                           Map<Integer, Integer> staticMapping) throws IOException {
@@ -537,7 +537,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     }
   }
 
-  @VisibleForTesting
+  
   static final class StaticMapping {
     final Map<Integer, Integer> uidMapping;
     final Map<Integer, Integer> gidMapping;

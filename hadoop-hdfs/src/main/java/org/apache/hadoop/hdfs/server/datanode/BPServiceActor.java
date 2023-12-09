@@ -161,12 +161,12 @@ class BPServiceActor implements Runnable {
   /**
    * Used to inject a spy NN in the unit tests.
    */
-  @VisibleForTesting
+  
   void setNameNode(DatanodeProtocolClientSideTranslatorPB dnProtocol) {
     bpNamenode = dnProtocol;
   }
 
-  @VisibleForTesting
+  
   DatanodeProtocolClientSideTranslatorPB getNameNodeProxy() {
     return bpNamenode;
   }
@@ -174,13 +174,13 @@ class BPServiceActor implements Runnable {
   /**
    * Used to inject a spy NN in the unit tests.
    */
-  @VisibleForTesting
+  
   void setLifelineNameNode(
       DatanodeLifelineProtocolClientSideTranslatorPB dnLifelineProtocol) {
     lifelineSender.lifelineNamenode = dnLifelineProtocol;
   }
 
-  @VisibleForTesting
+  
   DatanodeLifelineProtocolClientSideTranslatorPB getLifelineNameNodeProxy() {
     return lifelineSender.lifelineNamenode;
   }
@@ -193,7 +193,7 @@ class BPServiceActor implements Runnable {
    *
    * @return the NamespaceInfo
    */
-  @VisibleForTesting
+  
   NamespaceInfo retrieveNamespaceInfo() throws IOException {
     NamespaceInfo nsInfo = null;
     while (shouldRun()) {
@@ -262,7 +262,7 @@ class BPServiceActor implements Runnable {
   /**
    * Run an immediate block report on this thread. Used by tests.
    */
-  @VisibleForTesting
+  
   void triggerBlockReportForTests() {
     synchronized (ibrManager) {
       scheduler.scheduleHeartbeat();
@@ -279,7 +279,7 @@ class BPServiceActor implements Runnable {
     }
   }
 
-  @VisibleForTesting
+  
   void triggerHeartbeatForTests() {
     synchronized (ibrManager) {
       final long nextHeartbeatTime = scheduler.scheduleHeartbeat();
@@ -517,7 +517,7 @@ class BPServiceActor implements Runnable {
     return response;
   }
 
-  @VisibleForTesting
+  
   void sendLifelineForTests() throws IOException {
     lifelineSender.sendLifeline();
   }
@@ -1070,25 +1070,25 @@ class BPServiceActor implements Runnable {
     // nextBlockReportTime and nextHeartbeatTime may be assigned/read
     // by testing threads (through BPServiceActor#triggerXXX), while also
     // assigned/read by the actor thread.
-    @VisibleForTesting
+    
     volatile long nextBlockReportTime = monotonicNow();
 
-    @VisibleForTesting
+    
     volatile long nextHeartbeatTime = monotonicNow();
 
-    @VisibleForTesting
+    
     volatile long nextLifelineTime;
 
-    @VisibleForTesting
+    
     volatile long lastBlockReportTime = monotonicNow();
 
-    @VisibleForTesting
+    
     volatile long lastHeartbeatTime = monotonicNow();
 
-    @VisibleForTesting
+    
     boolean resetBlockReportTime = true;
 
-    @VisibleForTesting
+    
     volatile long nextOutliersReportTime = monotonicNow();
 
     private final AtomicBoolean forceFullBlockReport =
@@ -1247,7 +1247,7 @@ class BPServiceActor implements Runnable {
      * Wrapped for testing.
      * @return
      */
-    @VisibleForTesting
+    
     public long monotonicNow() {
       return Time.monotonicNow();
     }
@@ -1365,7 +1365,7 @@ class BPServiceActor implements Runnable {
     }
   }
 
-  @VisibleForTesting
+  
   void stopCommandProcessingThread() {
     if (commandProcessingThread != null) {
       commandProcessingThread.interrupt();

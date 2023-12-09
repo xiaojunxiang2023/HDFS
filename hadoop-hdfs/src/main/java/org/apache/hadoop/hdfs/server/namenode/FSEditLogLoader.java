@@ -48,7 +48,7 @@ public class FSEditLogLoader {
   static final long REPLAY_TRANSACTION_LOG_INTERVAL = 1000; // 1sec
 
   /** Limit logging about edit loading to every 5 seconds max. */
-  @VisibleForTesting
+  
   static final long LOAD_EDIT_LOG_INTERVAL_MS = 5000;
   private final LogThrottlingHelper loadEditsLogHelper =
       new LogThrottlingHelper(LOAD_EDIT_LOG_INTERVAL_MS);
@@ -64,7 +64,7 @@ public class FSEditLogLoader {
     this(fsNamesys, lastAppliedTxId, new Timer());
   }
 
-  @VisibleForTesting
+  
   FSEditLogLoader(FSNamesystem fsNamesys, long lastAppliedTxId, Timer timer) {
     this.fsNamesys = fsNamesys;
     this.blockManager = fsNamesys.getBlockManager();

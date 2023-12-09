@@ -33,7 +33,7 @@ import java.net.URL;
 
 import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_RPC_BIND_HOST_KEY;
 
-@VisibleForTesting
+
 public class JournalNodeRpcServer implements QJournalProtocol,
     InterQJournalProtocol {
   private static final Logger LOG = JournalNode.LOG;
@@ -293,7 +293,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
   }
 
   /** Allow access to the RPC server for testing. */
-  @VisibleForTesting
+  
   Server getRpcServer() {
     return server;
   }

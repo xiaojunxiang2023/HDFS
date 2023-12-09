@@ -519,7 +519,7 @@ public class INodeFile extends INodeWithAdditionalFields
   /**
    * @return The type of the INodeFile based on block id.
    */
-  @VisibleForTesting
+  
   @Override
   public BlockType getBlockType() {
     return HeaderFormat.getBlockType(header);
@@ -932,7 +932,7 @@ public class INodeFile extends INodeWithAdditionalFields
     return blocks.length;
   }
 
-  @VisibleForTesting
+  
   @Override
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
                                   final int snapshotId) {

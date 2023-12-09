@@ -261,7 +261,7 @@ public final class DomainSocketWatcher implements Closeable {
     Uninterruptibles.joinUninterruptibly(watcherThread);
   }
 
-  @VisibleForTesting
+  
   public boolean isClosed() {
     lock.lock();
     try {
@@ -417,7 +417,7 @@ public final class DomainSocketWatcher implements Closeable {
     }
   }
 
-  @VisibleForTesting
+  
   final Thread watcherThread = new Thread(new Runnable() {
     @Override
     public void run() {

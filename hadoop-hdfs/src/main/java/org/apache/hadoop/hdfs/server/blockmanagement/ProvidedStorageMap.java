@@ -124,7 +124,7 @@ public class ProvidedStorageMap {
     }
   }
 
-  @VisibleForTesting
+  
   public DatanodeStorageInfo getProvidedStorageInfo() {
     return providedStorageInfo;
   }
@@ -183,7 +183,7 @@ public class ProvidedStorageMap {
     return providedDescriptor.chooseRandom();
   }
 
-  @VisibleForTesting
+  
   public BlockAliasMap getAliasMap() {
     return aliasMap;
   }

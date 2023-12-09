@@ -230,7 +230,7 @@ public class RetryPolicies {
       return constructReasonString(maxRetries);
     }
 
-    @VisibleForTesting
+    
     public static String constructReasonString(int retries) {
       return "retries get failed due to exceeded maximum allowed retries " +
           "number: " + retries;
@@ -291,7 +291,7 @@ public class RetryPolicies {
       return constructReasonString(this.maxTime, this.timeUnit);
     }
 
-    @VisibleForTesting
+    
     public static String constructReasonString(long maxTime,
                                                TimeUnit timeUnit) {
       return "retries get failed due to exceeded maximum allowed time (" +

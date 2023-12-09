@@ -141,7 +141,7 @@ public abstract class ZKFailoverController {
 
   protected abstract String getScopeInsideParentNode();
 
-  @VisibleForTesting
+  
   public HAServiceState getServiceState() {
     return serviceState;
   }

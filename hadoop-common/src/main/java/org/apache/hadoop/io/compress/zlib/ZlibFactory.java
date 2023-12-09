@@ -30,7 +30,7 @@ public class ZlibFactory {
    * Load native library and set the flag whether to use native library. The
    * method is also used for reset the flag modified by setNativeZlibLoaded
    */
-  @VisibleForTesting
+  
   public static void loadNativeZLib() {
     if (NativeCodeLoader.isNativeCodeLoaded()) {
       nativeZlibLoaded = ZlibCompressor.isNativeZlibLoaded() &&
@@ -49,7 +49,7 @@ public class ZlibFactory {
    * libraries
    *
    */
-  @VisibleForTesting
+  
   public static void setNativeZlibLoaded(final boolean isLoaded) {
     ZlibFactory.nativeZlibLoaded = isLoaded;
   }

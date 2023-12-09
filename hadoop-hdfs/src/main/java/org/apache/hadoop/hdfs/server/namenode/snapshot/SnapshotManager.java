@@ -100,7 +100,7 @@ public class SnapshotManager implements SnapshotStatsMXBean {
     DirectoryDiffListFactory.init(skipInterval, maxLevels, LOG);
   }
 
-  @VisibleForTesting
+  
   void setCaptureOpenFiles(boolean captureOpenFiles) {
     this.captureOpenFiles = captureOpenFiles;
   }

@@ -264,7 +264,7 @@ public class CacheManager {
     return Collections.unmodifiableCollection(directivesById.values());
   }
 
-  @VisibleForTesting
+  
   public GSet<CachedBlock, CachedBlock> getCachedBlocks() {
     assert namesystem.hasReadLock();
     return cachedBlocks;
@@ -1247,7 +1247,7 @@ public class CacheManager {
     }
   }
 
-  @VisibleForTesting
+  
   public Thread getCacheReplicationMonitor() {
     crmLock.lock();
     try {

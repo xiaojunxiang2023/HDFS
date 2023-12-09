@@ -60,7 +60,7 @@ public class MountTableResolver
   private final Lock writeLock = readWriteLock.writeLock();
 
 
-  @VisibleForTesting
+  
   public MountTableResolver(Configuration conf) {
     this(conf, (StateStoreService) null);
   }
@@ -212,7 +212,7 @@ public class MountTableResolver
     return true;
   }
 
-  @VisibleForTesting
+  
   public void refreshEntries(final Collection<MountTable> entries) {
     writeLock.lock();
     try {
@@ -487,27 +487,27 @@ public class MountTableResolver
     throw new IOException("localCache is null");
   }
 
-  @VisibleForTesting
+  
   public String getDefaultNameService() {
     return defaultNameService;
   }
 
-  @VisibleForTesting
+  
   public void setDefaultNameService(String defaultNameService) {
     this.defaultNameService = defaultNameService;
   }
 
-  @VisibleForTesting
+  
   public boolean isDefaultNSEnable() {
     return defaultNSEnable;
   }
 
-  @VisibleForTesting
+  
   public void setDefaultNSEnable(boolean defaultNSRWEnable) {
     this.defaultNSEnable = defaultNSRWEnable;
   }
 
-  @VisibleForTesting
+  
   public void setDisabled(boolean disable) {
     this.disabled = disable;
   }

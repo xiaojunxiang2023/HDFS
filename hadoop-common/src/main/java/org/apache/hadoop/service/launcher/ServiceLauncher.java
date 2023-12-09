@@ -401,7 +401,7 @@ public class ServiceLauncher<S extends Service>
    * a subclass of {@link Configuration}.
    * @throws ExitUtil.ExitException if a loaded class is of the wrong type
    */
-  @VisibleForTesting
+  
   public int loadConfigurationClasses() {
     List<String> toCreate = getConfigurationsToCreate();
     int loaded = 0;

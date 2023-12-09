@@ -58,7 +58,7 @@ public class MultipleDestinationMountTableResolver extends MountTableResolver {
     return mountTableResult;
   }
 
-  @VisibleForTesting
+  
   public void addResolver(DestinationOrder order, OrderedResolver resolver) {
     orderedResolvers.put(order, resolver);
   }

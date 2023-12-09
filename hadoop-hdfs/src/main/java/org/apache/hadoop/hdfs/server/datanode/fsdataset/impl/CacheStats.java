@@ -107,7 +107,7 @@ class CacheStats {
   /**
    * Used to count operating system page size.
    */
-  @VisibleForTesting
+  
   static class PageRounder {
     private final long osPageSize = NativeIO.POSIX.getCacheManipulator()
         .getOperatingSystemPageSize();

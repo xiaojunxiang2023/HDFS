@@ -33,7 +33,7 @@ public class TextFileRegionAliasMap
   private ReaderOptions readerOpts = TextReader.defaults();
   private WriterOptions writerOpts = TextWriter.defaults();
 
-  @VisibleForTesting
+  
   public static String blockPoolIDFromFileName(Path file) {
     if (file == null) {
       return "";
@@ -42,7 +42,7 @@ public class TextFileRegionAliasMap
     return fileName.substring("blocks_".length()).split("\\.")[0];
   }
 
-  @VisibleForTesting
+  
   public static String fileNameFromBlockPoolID(String blockPoolID) {
     return "blocks_" + blockPoolID + ".csv";
   }
@@ -75,7 +75,7 @@ public class TextFileRegionAliasMap
     return createReader(o.file, o.delim, readerConf, blockPoolID);
   }
 
-  @VisibleForTesting
+  
   TextReader createReader(Path file, String delim, Configuration cfg,
                           String blockPoolID) throws IOException {
     FileSystem fs = file.getFileSystem(cfg);
@@ -116,7 +116,7 @@ public class TextFileRegionAliasMap
     return createWriter(blocksFile, null, o.delim, conf);
   }
 
-  @VisibleForTesting
+  
   TextWriter createWriter(Path file, CompressionCodec codec, String delim,
                           Configuration cfg) throws IOException {
     FileSystem fs = file.getFileSystem(cfg);

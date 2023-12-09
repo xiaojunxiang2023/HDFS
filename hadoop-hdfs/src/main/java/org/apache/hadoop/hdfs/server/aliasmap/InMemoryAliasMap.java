@@ -67,7 +67,7 @@ public class InMemoryAliasMap implements InMemoryAliasMapProtocol,
   private Configuration conf;
   private String blockPoolID;
 
-  @VisibleForTesting
+  
   InMemoryAliasMap(URI aliasMapURI, DB levelDb, String blockPoolID) {
     this.aliasMapURI = aliasMapURI;
     this.levelDb = levelDb;

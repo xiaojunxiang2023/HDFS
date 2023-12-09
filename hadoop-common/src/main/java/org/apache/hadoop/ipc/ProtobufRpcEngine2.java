@@ -330,7 +330,7 @@ public class ProtobufRpcEngine2 implements RpcEngine {
     }
   }
 
-  @VisibleForTesting
+  
   static Client getClient(Configuration conf) {
     return CLIENTS.getClient(conf, SocketFactory.getDefault(),
         RpcWritable.Buffer.class);
@@ -349,7 +349,7 @@ public class ProtobufRpcEngine2 implements RpcEngine {
         portRangeConfig, alignmentContext);
   }
 
-  @VisibleForTesting
+  
   public static void clearClientCache() {
     CLIENTS.clearCache();
   }

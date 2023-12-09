@@ -455,17 +455,17 @@ public class Router extends CompositeService implements TokenVerifier<Delegation
     return this.quotaManager;
   }
 
-  @VisibleForTesting
+  
   RouterQuotaUpdateService getQuotaCacheUpdateService() {
     return this.quotaUpdateService;
   }
 
-  @VisibleForTesting
+  
   Collection<NamenodeHeartbeatService> getNamenodeHeartbeatServices() {
     return this.namenodeHeartbeatServices;
   }
 
-  @VisibleForTesting
+  
   RouterHeartbeatService getRouterHeartbeatService() {
     return this.routerHeartbeatService;
   }

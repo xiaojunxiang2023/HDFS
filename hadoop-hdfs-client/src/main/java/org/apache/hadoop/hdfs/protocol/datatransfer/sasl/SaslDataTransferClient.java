@@ -370,7 +370,7 @@ public class SaslDataTransferClient {
     }
   }
 
-  @VisibleForTesting
+  
   public String getTargetQOP() {
     return targetQOP;
   }

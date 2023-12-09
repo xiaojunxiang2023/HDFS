@@ -71,7 +71,7 @@ class BlockManagerSafeMode {
   private long blockReplQueueThreshold;
 
   /** How long (in ms) is the extension period. */
-  @VisibleForTesting
+  
   final long extension;
   /** Timestamp of the first time when thresholds are met. */
   private final AtomicLong reachedTime = new AtomicLong();

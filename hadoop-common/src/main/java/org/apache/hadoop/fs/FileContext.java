@@ -469,7 +469,7 @@ public class FileContext implements PathCapabilities {
     return getFileContext(FsConstants.LOCAL_FS_URI, aConf);
   }
 
-  @VisibleForTesting
+  
   public AbstractFileSystem getDefaultFileSystem() {
     return defaultFS;
   }

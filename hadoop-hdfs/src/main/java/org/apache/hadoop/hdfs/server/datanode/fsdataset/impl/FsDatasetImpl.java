@@ -80,11 +80,11 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
   final RamDiskReplicaTracker ramDiskReplicaTracker;
   final RamDiskAsyncLazyPersistService asyncLazyPersistService;
   final LocalFileSystem localFS;
-  @VisibleForTesting
+  
   final AutoCloseableLock datasetWriteLock;
-  @VisibleForTesting
+  
   final AutoCloseableLock datasetReadLock;
-  @VisibleForTesting
+  
   final InstrumentedReadWriteLock datasetRWLock;
   private final FsVolumeList volumes;
   private final Configuration conf;
@@ -503,7 +503,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
     return rur.createInfo();
   }
 
-  @VisibleForTesting
+  
   public static void setBlockPoolId(String bpid) {
     blockPoolId = bpid;
   }
@@ -666,7 +666,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
         storageLocation.getStorageType());
   }
 
-  @VisibleForTesting
+  
   public FsVolumeImpl createFsVolume(String storageUuid,
                                      Storage.StorageDirectory sd,
                                      final StorageLocation location) throws IOException {
@@ -1064,7 +1064,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
    * @throws ReplicaNotFoundException if no entry is in the map or 
    *                        there is a generation stamp mismatch
    */
-  @VisibleForTesting
+  
   ReplicaInfo getReplicaInfo(String bpid, long blkid)
       throws ReplicaNotFoundException {
     ReplicaInfo info = volumeMap.get(bpid, blkid);
@@ -1158,7 +1158,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
    * @return newReplicaInfo
    * @throws IOException
    */
-  @VisibleForTesting
+  
   ReplicaInfo moveBlock(ExtendedBlock block, ReplicaInfo replicaInfo,
                         FsVolumeReference volumeRef) throws IOException {
     ReplicaInfo newReplicaInfo = copyReplicaToVolume(block, replicaInfo,
@@ -1193,7 +1193,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
    * @return newReplicaInfo new replica object created in specified volume.
    * @throws IOException
    */
-  @VisibleForTesting
+  
   ReplicaInfo copyReplicaToVolume(ExtendedBlock block, ReplicaInfo replicaInfo,
                                   FsVolumeReference volumeRef) throws IOException {
     FsVolumeImpl targetVolume = (FsVolumeImpl) volumeRef.getVolume();
@@ -1210,7 +1210,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
    * @param block          - Extended Block
    * @throws IOException
    */
-  @VisibleForTesting
+  
   void finalizeNewReplica(ReplicaInfo newReplicaInfo,
                           ExtendedBlock block) throws IOException {
     // Finalize the copied files
@@ -3089,7 +3089,7 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
    *
    * @param bytesNeeded
    */
-  @VisibleForTesting
+  
   public void evictLazyPersistBlocks(long bytesNeeded) {
     try {
       ((LazyWriter) lazyWriter.getRunnable()).evictBlocks(bytesNeeded);
@@ -3115,12 +3115,12 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
     return cacheManager.reserve(bytesNeeded) > 0;
   }
 
-  @VisibleForTesting
+  
   public int getNonPersistentReplicas() {
     return ramDiskReplicaTracker.numReplicasNotPersisted();
   }
 
-  @VisibleForTesting
+  
   public void setTimer(Timer newTimer) {
     this.timer = newTimer;
   }

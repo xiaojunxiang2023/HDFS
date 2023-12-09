@@ -40,7 +40,7 @@ public class SysInfoWindows extends SysInfo {
     reset();
   }
 
-  @VisibleForTesting
+  
   long now() {
     return Time.monotonicNow();
   }

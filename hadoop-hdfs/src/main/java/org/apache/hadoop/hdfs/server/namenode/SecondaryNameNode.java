@@ -113,32 +113,32 @@ public class SecondaryNameNode implements Runnable,
         + "\nCheckpoint Edits Dirs  : " + checkpointEditsDirs;
   }
 
-  @VisibleForTesting
+  
   FSImage getFSImage() {
     return checkpointImage;
   }
 
-  @VisibleForTesting
+  
   int getMergeErrorCount() {
     return checkpointImage.getMergeErrorCount();
   }
 
-  @VisibleForTesting
+  
   public FSNamesystem getFSNamesystem() {
     return namesystem;
   }
 
-  @VisibleForTesting
+  
   void setFSImage(CheckpointStorage image) {
     this.checkpointImage = image;
   }
 
-  @VisibleForTesting
+  
   NamenodeProtocol getNameNode() {
     return namenode;
   }
 
-  @VisibleForTesting
+  
   void setNameNode(NamenodeProtocol namenode) {
     this.namenode = namenode;
   }
@@ -436,7 +436,7 @@ public class SecondaryNameNode implements Runnable,
   /**
    * Start the web server.
    */
-  @VisibleForTesting
+  
   public void startInfoServer() throws IOException {
     final InetSocketAddress httpAddr = getHttpAddress(conf);
     final String httpsAddrString = conf.getTrimmed(
@@ -490,7 +490,7 @@ public class SecondaryNameNode implements Runnable,
    * Create a new checkpoint
    * @return if the image is fetched from primary or not
    */
-  @VisibleForTesting
+  
   @SuppressWarnings("deprecated")
   public boolean doCheckpoint() throws IOException {
     checkpointImage.ensureCurrentDirExists();

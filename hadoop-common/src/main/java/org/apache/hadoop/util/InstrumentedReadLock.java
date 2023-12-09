@@ -38,7 +38,7 @@ public class InstrumentedReadLock extends InstrumentedLock {
         new Timer());
   }
 
-  @VisibleForTesting
+  
   InstrumentedReadLock(String name, Logger logger,
                        ReentrantReadWriteLock readWriteLock,
                        long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {

@@ -888,7 +888,7 @@ public class INodeDirectory extends INodeWithAdditionalFields
   static final String DUMPTREE_EXCEPT_LAST_ITEM = "+-";
   static final String DUMPTREE_LAST_ITEM = "\\-";
 
-  @VisibleForTesting
+  
   @Override
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
                                   final int snapshot) {
@@ -950,7 +950,7 @@ public class INodeDirectory extends INodeWithAdditionalFields
    * @param prefix The prefix string that each line should print.
    * @param subs The subtrees.
    */
-  @VisibleForTesting
+  
   public static void dumpTreeRecursively(PrintWriter out,
                                          StringBuilder prefix, Iterable<SnapshotAndINode> subs) {
     if (subs != null) {

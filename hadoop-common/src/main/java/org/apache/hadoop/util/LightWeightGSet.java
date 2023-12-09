@@ -338,7 +338,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
         mapName);
   }
 
-  @VisibleForTesting
+  
   static int computeCapacity(long maxMemory, double percentage,
                              String mapName) {
     if (percentage > 100.0 || percentage < 0.0) {

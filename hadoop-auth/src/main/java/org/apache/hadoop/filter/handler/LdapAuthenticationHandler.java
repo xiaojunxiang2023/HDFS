@@ -97,7 +97,7 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
    * @param enableStartTls true If the StartTLS LDAP extension is to be enabled
    *          false otherwise
    */
-  @VisibleForTesting
+  
   public void setEnableStartTls(Boolean enableStartTls) {
     this.enableStartTls = enableStartTls;
   }
@@ -109,7 +109,7 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
    * @param disableHostNameVerification true to disable host-name verification
    *          false otherwise
    */
-  @VisibleForTesting
+  
   public void setDisableHostNameVerification(
       Boolean disableHostNameVerification) {
     this.disableHostNameVerification = disableHostNameVerification;

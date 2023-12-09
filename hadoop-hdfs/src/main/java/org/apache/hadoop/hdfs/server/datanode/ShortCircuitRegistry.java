@@ -379,12 +379,12 @@ public class ShortCircuitRegistry {
                    HashMultimap<ExtendedBlockId, Slot> slots);
   }
 
-  @VisibleForTesting
+  
   public synchronized boolean visit(Visitor visitor) {
     return visitor.accept(segments, slots);
   }
 
-  @VisibleForTesting
+  
   public int getShmNum() {
     return segments.size();
   }

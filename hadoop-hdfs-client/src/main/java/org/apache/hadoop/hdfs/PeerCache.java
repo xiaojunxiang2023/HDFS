@@ -20,7 +20,7 @@ import java.util.Map.Entry;
  * A cache of input stream sockets to Data Node.
  */
 
-@VisibleForTesting
+
 public class PeerCache {
   private static final Logger LOG = LoggerFactory.getLogger(PeerCache.class);
 
@@ -242,7 +242,7 @@ public class PeerCache {
   /**
    * Empty the cache, and close all sockets.
    */
-  @VisibleForTesting
+  
   synchronized void clear() {
     for (Value value : multimap.values()) {
       IOUtilsClient.cleanupWithLogger(LOG, value.getPeer());
@@ -250,7 +250,7 @@ public class PeerCache {
     multimap.clear();
   }
 
-  @VisibleForTesting
+  
   void close() {
     clear();
     if (daemon != null) {

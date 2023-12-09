@@ -125,7 +125,7 @@ public abstract class FSEditLogOp {
    * Constructor for an EditLog Op. EditLog ops cannot be constructed
    * directly, but only through Reader#readOp.
    */
-  @VisibleForTesting
+  
   protected FSEditLogOp(FSEditLogOpCodes opCode) {
     this.opCode = opCode;
     reset();

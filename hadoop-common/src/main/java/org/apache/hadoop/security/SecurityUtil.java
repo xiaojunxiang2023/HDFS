@@ -63,9 +63,9 @@ public final class SecurityUtil {
 
   // controls whether buildTokenService will use an ip or host/ip as given
   // by the user
-  @VisibleForTesting
+  
   static boolean useIpForTokenService;
-  @VisibleForTesting
+  
   static HostResolver hostResolver;
 
   private static boolean logSlowLookups;
@@ -102,7 +102,7 @@ public final class SecurityUtil {
   /**
    * For use only by tests and initialization
    */
-  @VisibleForTesting
+  
   public static void setTokenServiceUseIp(boolean flag) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Setting "

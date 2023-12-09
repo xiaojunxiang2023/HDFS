@@ -119,7 +119,7 @@ public class URLConnectionFactory {
     return new URLConnectionFactory(conn);
   }
 
-  @VisibleForTesting
+  
   URLConnectionFactory(ConnectionConfigurator connConfigurator) {
     this.connConfigurator = connConfigurator;
   }

@@ -47,10 +47,10 @@ public class QuotaCounts {
 
   // Name space and storage space counts (HDFS-7775 refactors the original disk
   // space count to storage space counts)
-  @VisibleForTesting
+  
   EnumCounters<Quota> nsSsCounts;
   // Storage type space counts
-  @VisibleForTesting
+  
   EnumCounters<StorageType> tsCounts;
 
   public static class Builder {

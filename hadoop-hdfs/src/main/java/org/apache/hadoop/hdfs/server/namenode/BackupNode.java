@@ -159,7 +159,7 @@ public class BackupNode extends NameNode {
     stop(true);
   }
 
-  @VisibleForTesting
+  
   void stop(boolean reportError) {
 
     if (checkpointManager != null) {

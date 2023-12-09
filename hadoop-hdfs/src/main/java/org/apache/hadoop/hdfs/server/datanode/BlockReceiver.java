@@ -48,7 +48,7 @@ class BlockReceiver implements Closeable {
   public static final Logger LOG = DataNode.LOG;
   static final Log ClientTraceLog = DataNode.ClientTraceLog;
 
-  @VisibleForTesting
+  
   static long CACHE_DROP_LAG_BYTES = 8 * 1024 * 1024;
   private final long datanodeSlowLogThresholdMs;
   private DataInputStream in = null; // from where data are read

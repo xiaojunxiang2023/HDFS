@@ -96,7 +96,7 @@ public class HardLink {
   /**
    * Implementation of HardLinkCommandGetter class for Windows
    */
-  @VisibleForTesting
+  
   static class HardLinkCGWin extends HardLinkCommandGetter {
 
     /**

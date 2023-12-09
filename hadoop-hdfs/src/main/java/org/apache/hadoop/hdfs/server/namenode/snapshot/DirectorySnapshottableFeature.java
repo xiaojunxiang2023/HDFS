@@ -527,7 +527,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
     return "snapshotsByNames=" + snapshotsByNames;
   }
 
-  @VisibleForTesting
+  
   public void dumpTreeRecursively(INodeDirectory snapshotRoot, PrintWriter out,
                                   StringBuilder prefix, int snapshot) {
     if (snapshot == Snapshot.CURRENT_STATE_ID) {

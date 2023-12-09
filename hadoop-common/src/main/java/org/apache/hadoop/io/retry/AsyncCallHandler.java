@@ -323,7 +323,7 @@ public class AsyncCallHandler {
     ASYNC_RETURN.set(asyncGet);
   }
 
-  @VisibleForTesting
+  
   public static long getGracePeriod() {
     return AsyncCallQueue.Processor.GRACE_PERIOD;
   }

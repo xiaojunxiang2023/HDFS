@@ -1632,7 +1632,7 @@ class DataStreamer extends Daemon {
   }
 
   /** update pipeline at the namenode */
-  @VisibleForTesting
+  
   public void updatePipeline(long newGS) throws IOException {
     final ExtendedBlock oldBlock = block.getCurrentBlock();
     // the new GS has been propagated to all DN, it should be ok to update the
@@ -2100,7 +2100,7 @@ class DataStreamer extends Daemon {
   /**
    * @return The times have retried to recover pipeline, for the same packet.
    */
-  @VisibleForTesting
+  
   int getPipelineRecoveryCount() {
     return pipelineRecoveryCount;
   }

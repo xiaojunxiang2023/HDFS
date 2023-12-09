@@ -76,7 +76,7 @@ class ProvidedVolumeImpl extends FsVolumeImpl {
    * @return the suffix of the path, which when resolved against {@code prefix}
    *         gets back the {@code fullPath}.
    */
-  @VisibleForTesting
+  
   protected static String getSuffix(final Path prefix, final Path fullPath) {
     String prefixStr = prefix.toString();
     String pathStr = fullPath.toString();
@@ -107,7 +107,7 @@ class ProvidedVolumeImpl extends FsVolumeImpl {
    * @return true if the {@code blockURI} can belong to the volume or both URIs
    * are null.
    */
-  @VisibleForTesting
+  
   public static boolean containsBlock(URI volumeURI, URI blockURI) {
     if (volumeURI == null && blockURI == null) {
       return true;
@@ -267,7 +267,7 @@ class ProvidedVolumeImpl extends FsVolumeImpl {
         remoteFS);
   }
 
-  @VisibleForTesting
+  
   BlockAliasMap<FileRegion> getBlockFormat(String bpid) throws IOException {
     return getProvidedBlockPoolSlice(bpid).getBlockAliasMap();
   }
@@ -382,13 +382,13 @@ class ProvidedVolumeImpl extends FsVolumeImpl {
         "ProvidedVolume does not yet support writes");
   }
 
-  @VisibleForTesting
+  
   BlockAliasMap<FileRegion> getFileRegionProvider(String bpid) throws
       IOException {
     return getProvidedBlockPoolSlice(bpid).getBlockAliasMap();
   }
 
-  @VisibleForTesting
+  
   void setFileRegionProvider(String bpid,
                              BlockAliasMap<FileRegion> blockAliasMap) throws IOException {
     ProvidedBlockPoolSlice bp = bpSlices.get(bpid);
@@ -453,7 +453,7 @@ class ProvidedVolumeImpl extends FsVolumeImpl {
       return aliasMap;
     }
 
-    @VisibleForTesting
+    
     void setFileRegionProvider(BlockAliasMap<FileRegion> blockAliasMap) {
       this.aliasMap = blockAliasMap;
     }

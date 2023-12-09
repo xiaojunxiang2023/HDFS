@@ -18,12 +18,12 @@ public class UserParam extends StringParam {
   private static Domain domain = new Domain(NAME,
       Pattern.compile(DFS_WEBHDFS_USER_PATTERN_DEFAULT));
 
-  @VisibleForTesting
+  
   public static Domain getUserPatternDomain() {
     return domain;
   }
 
-  @VisibleForTesting
+  
   public static void setUserPatternDomain(Domain dm) {
     domain = dm;
   }

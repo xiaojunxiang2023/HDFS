@@ -190,7 +190,7 @@ public class StoragePolicySatisfyManager {
    * @return true if the internal storage policy satisfier daemon is running,
    *         false otherwise.
    */
-  @VisibleForTesting
+  
   public boolean isSatisfierRunning() {
     return spsService.isRunning();
   }

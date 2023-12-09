@@ -70,7 +70,7 @@ public class TransferFsImage {
     }
   }
 
-  @VisibleForTesting
+  
   static int timeout = 0;
   private static final Logger LOG =
       LoggerFactory.getLogger(TransferFsImage.class);

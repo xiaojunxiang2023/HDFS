@@ -133,13 +133,13 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
   private boolean initialized = false;
   private SubsetConfiguration properties;
   private Configuration conf;
-  @VisibleForTesting
+  
   protected String source;
-  @VisibleForTesting
+  
   protected boolean ignoreError;
-  @VisibleForTesting
+  
   protected boolean allowAppend;
-  @VisibleForTesting
+  
   protected Path basePath;
   private FileSystem fileSystem;
   // The current directory path into which we're writing files
@@ -152,29 +152,29 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
   private FSDataOutputStream currentFSOutStream;
   private Timer flushTimer;
   // The amount of time between rolls
-  @VisibleForTesting
+  
   protected long rollIntervalMillis;
   // The maximum amount of random time to add to the initial roll
-  @VisibleForTesting
+  
   protected long rollOffsetIntervalMillis;
   // The time for the nextFlush
-  @VisibleForTesting
+  
   protected Calendar nextFlush = null;
   // This flag when true causes a metrics write to schedule a flush thread to
   // run immediately, but only if a flush thread is already scheduled. (It's a
   // timing thing.  If the first write forces the flush, it will strand the
   // second write.)
-  @VisibleForTesting
+  
   protected static boolean forceFlush = false;
   // This flag is used by the flusher thread to indicate that it has run. Used
   // only for testing purposes.
-  @VisibleForTesting
+  
   protected static volatile boolean hasFlushed = false;
   // Use this configuration instead of loading a new one.
-  @VisibleForTesting
+  
   protected static Configuration suppliedConf = null;
   // Use this file system instead of getting a new one.
-  @VisibleForTesting
+  
   protected static FileSystem suppliedFilesystem = null;
 
   /**
@@ -189,7 +189,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
    * @param flushIntervalMillis the roll interval in millis
    * @param flushOffsetIntervalMillis the roll offset interval in millis
    */
-  @VisibleForTesting
+  
   protected RollingFileSystemSink(long flushIntervalMillis,
                                   long flushOffsetIntervalMillis) {
     this.rollIntervalMillis = flushIntervalMillis;
@@ -304,7 +304,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
    *
    * @return the roll interval in millis
    */
-  @VisibleForTesting
+  
   protected long getRollInterval() {
     String rollInterval =
         properties.getString(ROLL_INTERVAL_KEY, DEFAULT_ROLL_INTERVAL);
@@ -553,7 +553,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
    *
    * @param now the current time
    */
-  @VisibleForTesting
+  
   protected void updateFlushTime(Date now) {
     // In non-initial rounds, add an integer number of intervals to the last
     // flush until a time in the future is achieved, thus preserving the
@@ -574,7 +574,7 @@ public class RollingFileSystemSink implements MetricsSink, Closeable {
    *
    * @param now the current time
    */
-  @VisibleForTesting
+  
   protected void setInitialFlushTime(Date now) {
     // Start with the beginning of the current hour
     nextFlush = Calendar.getInstance();

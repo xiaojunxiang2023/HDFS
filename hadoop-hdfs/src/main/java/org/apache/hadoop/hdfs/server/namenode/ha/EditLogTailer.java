@@ -244,12 +244,12 @@ public class EditLogTailer {
     }
   }
 
-  @VisibleForTesting
+  
   FSEditLog getEditLog() {
     return editLog;
   }
 
-  @VisibleForTesting
+  
   public void setEditLog(FSEditLog editLog) {
     this.editLog = editLog;
   }
@@ -286,7 +286,7 @@ public class EditLogTailer {
     });
   }
 
-  @VisibleForTesting
+  
   public long doTailEdits() throws IOException, InterruptedException {
     // Write lock needs to be interruptible here because the 
     // transitionToActive RPC takes the write lock before calling
@@ -368,7 +368,7 @@ public class EditLogTailer {
    * NameNodeProxy factory method.
    * @return a Callable to roll logs on remote NameNode.
    */
-  @VisibleForTesting
+  
   Callable<Void> getNameNodeProxy() {
     return new MultipleNameNodeProxy<Void>() {
       @Override
@@ -382,7 +382,7 @@ public class EditLogTailer {
   /**
    * Trigger the active node to roll its logs.
    */
-  @VisibleForTesting
+  
   void triggerActiveLogRoll() {
     LOG.info("Triggering log roll on remote NameNode");
     Future<Void> future = null;
@@ -404,7 +404,7 @@ public class EditLogTailer {
     }
   }
 
-  @VisibleForTesting
+  
   void sleep(long sleepTimeMillis) throws InterruptedException {
     Thread.sleep(sleepTimeMillis);
   }
@@ -520,7 +520,7 @@ public class EditLogTailer {
    * This mechanism is <b>very bad</b> for cases where we care about being <i>fast</i>; it just
    * blindly goes and tries namenodes.
    */
-  @VisibleForTesting
+  
   abstract class MultipleNameNodeProxy<T> implements Callable<T> {
 
     /**

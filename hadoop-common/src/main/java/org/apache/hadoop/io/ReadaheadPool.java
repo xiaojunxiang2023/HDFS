@@ -39,7 +39,7 @@ public class ReadaheadPool {
     }
   }
 
-  @VisibleForTesting
+  
   public static void resetInstance() {
     synchronized (ReadaheadPool.class) {
       if (instance != null) {

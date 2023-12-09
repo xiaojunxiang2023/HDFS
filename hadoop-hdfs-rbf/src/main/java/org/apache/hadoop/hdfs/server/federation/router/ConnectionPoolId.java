@@ -81,7 +81,7 @@ public class ConnectionPoolId implements Comparable<ConnectionPoolId> {
     return ret;
   }
 
-  @VisibleForTesting
+  
   UserGroupInformation getUgi() {
     return this.ugi;
   }

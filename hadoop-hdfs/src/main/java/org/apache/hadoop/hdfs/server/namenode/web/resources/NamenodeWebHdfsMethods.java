@@ -215,7 +215,7 @@ public class NamenodeWebHdfsMethods {
     namenode.queueExternalCall(call);
   }
 
-  @VisibleForTesting
+  
   static DatanodeInfo chooseDatanode(final NameNode namenode,
                                      final String path, final HttpOpParam.Op op, final long openOffset,
                                      final long blocksize, final String excludeDatanodes,

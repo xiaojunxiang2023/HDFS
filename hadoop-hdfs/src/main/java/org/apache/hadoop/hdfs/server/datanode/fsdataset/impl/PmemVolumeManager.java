@@ -75,17 +75,17 @@ public final class PmemVolumeManager {
     return pmemVolumeManager;
   }
 
-  @VisibleForTesting
+  
   public static void reset() {
     pmemVolumeManager = null;
   }
 
-  @VisibleForTesting
+  
   public static void setMaxBytes(long maxBytes) {
     maxBytesPerPmem = maxBytes;
   }
 
-  @VisibleForTesting
+  
   static File verifyIfValidPmemVolume(File pmemDir)
       throws IOException {
     if (!pmemDir.exists()) {
@@ -329,7 +329,7 @@ public final class PmemVolumeManager {
         maxAvailableSpace + ", but " + bytesCount + "is required.");
   }
 
-  @VisibleForTesting
+  
   String getVolumeByIndex(Byte index) {
     return pmemVolumes.get(index);
   }
@@ -385,7 +385,7 @@ public final class PmemVolumeManager {
     return idToCacheFilePath(volumeIndex, key);
   }
 
-  @VisibleForTesting
+  
   Map<ExtendedBlockId, Byte> getBlockKeyToVolume() {
     return blockKeyToVolume;
   }

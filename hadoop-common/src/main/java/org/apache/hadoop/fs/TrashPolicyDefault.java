@@ -295,7 +295,7 @@ public class TrashPolicyDefault extends TrashPolicy {
       return (time / interval) * interval;
     }
 
-    @VisibleForTesting
+    
     protected long getEmptierInterval() {
       return this.emptierInterval / MSECS_PER_MINUTE;
     }

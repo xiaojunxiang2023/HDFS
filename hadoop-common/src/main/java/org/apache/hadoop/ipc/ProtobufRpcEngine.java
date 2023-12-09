@@ -321,7 +321,7 @@ public class ProtobufRpcEngine implements RpcEngine {
     }
   }
 
-  @VisibleForTesting
+  
   static Client getClient(Configuration conf) {
     return CLIENTS.getClient(conf, SocketFactory.getDefault(),
         RpcWritable.Buffer.class);

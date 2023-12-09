@@ -87,7 +87,7 @@ public final class ShutdownHookManager {
    * This is exposed purely for testing: do not invoke it.
    * @return the number of shutdown hooks which timed out.
    */
-  @VisibleForTesting
+  
   int executeShutdown() {
     int timeouts = 0;
     for (HookEntry entry : getShutdownHooksInOrder()) {
@@ -148,7 +148,7 @@ public final class ShutdownHookManager {
    * @param conf configuration to use.
    * @return a timeout, always greater than or equal to {@link #TIMEOUT_MINIMUM}
    */
-  @VisibleForTesting
+  
   static long getShutdownTimeout(Configuration conf) {
     long duration = conf.getTimeDuration(
         SERVICE_SHUTDOWN_TIMEOUT,
@@ -164,7 +164,7 @@ public final class ShutdownHookManager {
    * Private structure to store ShutdownHook, its priority and timeout
    * settings.
    */
-  @VisibleForTesting
+  
   static class HookEntry {
     private final Runnable hook;
     private final int priority;
@@ -223,7 +223,7 @@ public final class ShutdownHookManager {
   private AtomicBoolean shutdownInProgress = new AtomicBoolean(false);
 
   //private to constructor to ensure singularity
-  @VisibleForTesting
+  
   ShutdownHookManager() {
   }
 
@@ -233,7 +233,7 @@ public final class ShutdownHookManager {
    *
    * @return the list of shutdownHooks in order of execution.
    */
-  @VisibleForTesting
+  
   List<HookEntry> getShutdownHooksInOrder() {
     List<HookEntry> list;
     synchronized (hooks) {

@@ -110,9 +110,9 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * Name of the lock znode used by the library. Protected for access in test
    * classes
    */
-  @VisibleForTesting
+  
   protected static final String LOCK_FILENAME = "ActiveStandbyElectorLock";
-  @VisibleForTesting
+  
   protected static final String BREADCRUMB_FILENAME = "ActiveBreadCrumb";
 
   public static final Logger LOG =
@@ -557,7 +557,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     fatalError(errorMessage);
   }
 
-  @VisibleForTesting
+  
   public boolean getWantToBeInElection() {
     return wantToBeInElection;
   }
@@ -761,7 +761,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * This is non-static, and separated out, so that unit tests
    * can override the behavior not to sleep.
    */
-  @VisibleForTesting
+  
   protected void sleepFor(int sleepMs) {
     if (sleepMs > 0) {
       try {
@@ -772,17 +772,17 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     }
   }
 
-  @VisibleForTesting
+  
   void preventSessionReestablishmentForTests() {
     sessionReestablishLockForTests.lock();
   }
 
-  @VisibleForTesting
+  
   void allowSessionReestablishmentForTests() {
     sessionReestablishLockForTests.unlock();
   }
 
-  @VisibleForTesting
+  
   synchronized long getZKSessionIdForTests() {
     if (zkClient != null) {
       return zkClient.getSessionId();
@@ -791,12 +791,12 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     }
   }
 
-  @VisibleForTesting
+  
   synchronized State getStateForTests() {
     return state;
   }
 
-  @VisibleForTesting
+  
   synchronized boolean isMonitorLockNodePending() {
     return monitorLockNodePending;
   }

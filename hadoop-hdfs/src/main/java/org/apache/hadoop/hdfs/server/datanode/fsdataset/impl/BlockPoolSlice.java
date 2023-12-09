@@ -40,7 +40,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * This class is synchronized by {@link FsVolumeImpl}.
  */
 class BlockPoolSlice {
-  @VisibleForTesting
+  
   public static final String DU_CACHE_FILE = "dfsUsed";
   static final Logger LOG = LoggerFactory.getLogger(BlockPoolSlice.class);
   private static final int SHUTDOWN_HOOK_PRIORITY = 30;
@@ -194,7 +194,7 @@ class BlockPoolSlice {
     }
   }
 
-  @VisibleForTesting
+  
   static ReplicaInfo selectReplicaToDelete(final ReplicaInfo replica1,
                                            final ReplicaInfo replica2) {
     ReplicaInfo replicaToKeep;
@@ -230,12 +230,12 @@ class BlockPoolSlice {
   /**
    * Return the size of fork pool used for adding replica in map.
    */
-  @VisibleForTesting
+  
   public static int getAddReplicaForkPoolSize() {
     return addReplicaThreadPool.getPoolSize();
   }
 
-  @VisibleForTesting
+  
   public static void reInitializeAddReplicaThreadPool() {
     addReplicaThreadPool.shutdown();
     addReplicaThreadPool = null;
@@ -986,7 +986,7 @@ class BlockPoolSlice {
     return numOfBlocks.get();
   }
 
-  @VisibleForTesting
+  
   public ForkJoinPool getAddReplicaThreadPool() {
     return addReplicaThreadPool;
   }

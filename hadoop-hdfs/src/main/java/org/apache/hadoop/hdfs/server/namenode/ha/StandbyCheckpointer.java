@@ -343,7 +343,7 @@ public class StandbyCheckpointer {
     }
   }
 
-  @VisibleForTesting
+  
   static int getCanceledCount() {
     return canceledCount;
   }
@@ -481,7 +481,7 @@ public class StandbyCheckpointer {
     }
   }
 
-  @VisibleForTesting
+  
   List<URL> getActiveNNAddresses() {
     return activeNNAddresses;
   }

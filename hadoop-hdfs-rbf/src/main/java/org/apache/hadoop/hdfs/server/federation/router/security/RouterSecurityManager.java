@@ -42,7 +42,7 @@ public class RouterSecurityManager {
     }
   }
 
-  @VisibleForTesting
+  
   public RouterSecurityManager(AbstractDelegationTokenSecretManager
                                    <DelegationTokenIdentifier> dtSecretManager) {
     this.dtSecretManager = dtSecretManager;

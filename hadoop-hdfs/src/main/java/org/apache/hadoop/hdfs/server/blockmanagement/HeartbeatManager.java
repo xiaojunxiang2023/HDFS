@@ -309,12 +309,12 @@ class HeartbeatManager implements DatanodeStatistics {
     }
   }
 
-  @VisibleForTesting
+  
   void restartHeartbeatStopWatch() {
     heartbeatStopWatch.reset().start();
   }
 
-  @VisibleForTesting
+  
   boolean shouldAbortHeartbeatCheck(long offset) {
     long elapsed = heartbeatStopWatch.now(TimeUnit.MILLISECONDS);
     return elapsed + offset > heartbeatRecheckInterval;
@@ -399,7 +399,7 @@ class HeartbeatManager implements DatanodeStatistics {
    * B. Remove all blocks in PendingDataNodeMessages for the failed storage
    *    when we remove all blocks from BlocksMap for that storage.
    */
-  @VisibleForTesting
+  
   void heartbeatCheck() {
     final DatanodeManager dm = blockManager.getDatanodeManager();
     // It's OK to check safe mode w/o taking the lock here, we re-check

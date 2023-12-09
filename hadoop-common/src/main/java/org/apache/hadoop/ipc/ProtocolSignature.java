@@ -155,7 +155,7 @@ public class ProtocolSignature implements Writable {
       PROTOCOL_FINGERPRINT_CACHE =
       new HashMap<String, ProtocolSigFingerprint>();
 
-  @VisibleForTesting
+  
   public static void resetCache() {
     PROTOCOL_FINGERPRINT_CACHE.clear();
   }

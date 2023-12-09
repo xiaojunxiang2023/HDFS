@@ -27,7 +27,7 @@ public class DelegationTokenIdentifier
   private static Map<TokenIdentifier, UserGroupInformation> ugiCache =
       Collections.synchronizedMap(new LRUMap(64));
 
-  @VisibleForTesting
+  
   public void clearCache() {
     ugiCache.clear();
   }

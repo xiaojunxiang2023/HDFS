@@ -52,7 +52,7 @@ public class OutlierDetector {
    * low. The median multiplier introduces another safeguard to avoid
    * overaggressive outlier detection.
    */
-  @VisibleForTesting
+  
   static final int MEDIAN_MULTIPLIER = 3;
   /**
    * The multiplier is from Leys, C. et al.

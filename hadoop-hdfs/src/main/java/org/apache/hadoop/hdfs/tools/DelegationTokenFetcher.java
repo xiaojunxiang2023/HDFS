@@ -62,7 +62,7 @@ public class DelegationTokenFetcher {
    * @throws org.apache.hadoop.util.ExitUtil.ExitException if the command
    * failed and exiting was disabled.
    */
-  @VisibleForTesting
+  
   public static void main(Configuration conf, final String[] args)
       throws Exception {
     Options fetcherOptions = new Options();
@@ -145,7 +145,7 @@ public class DelegationTokenFetcher {
     return FileSystem.get(fsUri, conf);
   }
 
-  @VisibleForTesting
+  
   static void cancelTokens(final Configuration conf, final Path tokenFile)
       throws IOException, InterruptedException {
     for (Token<?> token : readTokens(tokenFile, conf)) {
@@ -158,7 +158,7 @@ public class DelegationTokenFetcher {
     }
   }
 
-  @VisibleForTesting
+  
   static void renewTokens(final Configuration conf, final Path tokenFile)
       throws IOException, InterruptedException {
     for (Token<?> token : readTokens(tokenFile, conf)) {
@@ -172,7 +172,7 @@ public class DelegationTokenFetcher {
     }
   }
 
-  @VisibleForTesting
+  
   static void saveDelegationToken(Configuration conf, FileSystem fs,
                                   final String renewer, final Path tokenFile)
       throws IOException {
@@ -193,7 +193,7 @@ public class DelegationTokenFetcher {
     }
   }
 
-  @VisibleForTesting
+  
   public static String printTokensToString(
       final Configuration conf,
       final Path tokenFile,

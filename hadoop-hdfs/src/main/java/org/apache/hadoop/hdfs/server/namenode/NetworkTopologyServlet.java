@@ -147,7 +147,7 @@ public class NetworkTopologyServlet extends DfsServlet {
     }
   }
 
-  @VisibleForTesting
+  
   protected static String parseAcceptHeader(HttpServletRequest request) {
     String format = request.getHeader(HttpHeaders.ACCEPT);
     return format != null && format.contains(FORMAT_JSON) ?

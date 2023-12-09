@@ -22,7 +22,7 @@ public class FileMonitoringTimerTask extends TimerTask {
 
   static final Logger LOG = LoggerFactory.getLogger(FileMonitoringTimerTask.class);
 
-  @VisibleForTesting
+  
   static final String PROCESS_ERROR_MESSAGE =
       "Could not process file change : ";
 

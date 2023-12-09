@@ -916,7 +916,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     encKeyVersionQueue.drain(keyName);
   }
 
-  @VisibleForTesting
+  
   public int getEncKeyQueueSize(String keyName) {
     return encKeyVersionQueue.getSize(keyName);
   }
@@ -930,7 +930,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     clientTokenProvider = provider;
   }
 
-  @VisibleForTesting
+  
   DelegationTokenAuthenticatedURL createAuthenticatedURL() {
     return new DelegationTokenAuthenticatedURL(configurator) {
       @Override
@@ -1116,7 +1116,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     return false;
   }
 
-  @VisibleForTesting
+  
   UserGroupInformation getActualUgi() throws IOException {
     final UserGroupInformation currentUgi = UserGroupInformation
         .getCurrentUser();
@@ -1158,7 +1158,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     }
   }
 
-  @VisibleForTesting
+  
   String getKMSUrl() {
     return kmsUrl.toString();
   }

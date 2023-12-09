@@ -48,7 +48,7 @@ public class BlockScanner {
    */
   private long joinVolumeScannersTimeOutMs;
 
-  @VisibleForTesting
+  
   void setConf(Conf conf) {
     this.conf = conf;
     for (Entry<String, VolumeScanner> entry : scanners.entrySet()) {
@@ -64,27 +64,27 @@ public class BlockScanner {
     // They can't be set unless the static boolean allowUnitTestSettings has
     // been set to true.
 
-    @VisibleForTesting
+    
     static final String INTERNAL_DFS_DATANODE_SCAN_PERIOD_MS =
         "internal.dfs.datanode.scan.period.ms.key";
 
-    @VisibleForTesting
+    
     static final String INTERNAL_VOLUME_SCANNER_SCAN_RESULT_HANDLER =
         "internal.volume.scanner.scan.result.handler";
 
-    @VisibleForTesting
+    
     static final String INTERNAL_DFS_BLOCK_SCANNER_MAX_STALENESS_MS =
         "internal.dfs.block.scanner.max_staleness.ms";
 
-    @VisibleForTesting
+    
     static final long INTERNAL_DFS_BLOCK_SCANNER_MAX_STALENESS_MS_DEFAULT =
         TimeUnit.MILLISECONDS.convert(15, TimeUnit.MINUTES);
 
-    @VisibleForTesting
+    
     static final String INTERNAL_DFS_BLOCK_SCANNER_CURSOR_SAVE_INTERVAL_MS =
         "dfs.block.scanner.cursor.save.interval.ms";
 
-    @VisibleForTesting
+    
     static final long
         INTERNAL_DFS_BLOCK_SCANNER_CURSOR_SAVE_INTERVAL_MS_DEFAULT =
         TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
@@ -298,7 +298,7 @@ public class BlockScanner {
     }
   }
 
-  @VisibleForTesting
+  
   synchronized VolumeScanner.Statistics getVolumeStats(String volumeId) {
     VolumeScanner scanner = scanners.get(volumeId);
     if (scanner == null) {

@@ -84,7 +84,7 @@ public class WebImageViewer implements Closeable {
    * @param fsimage the fsimage to load.
    * @throws IOException if fail to load the fsimage.
    */
-  @VisibleForTesting
+  
   public void initServer(String fsimage)
       throws IOException, InterruptedException {
     final FSImageLoader loader = FSImageLoader.load(fsimage);
@@ -111,7 +111,7 @@ public class WebImageViewer implements Closeable {
    * Get the listening port.
    * @return the port WebImageViewer is listening on
    */
-  @VisibleForTesting
+  
   public int getPort() {
     return address.getPort();
   }

@@ -202,12 +202,12 @@ public class RetryCache {
     retryCacheMetrics.incrCacheCleared();
   }
 
-  @VisibleForTesting
+  
   public LightWeightGSet<CacheEntry, CacheEntry> getCacheSet() {
     return set;
   }
 
-  @VisibleForTesting
+  
   public RetryCacheMetrics getMetricsForTests() {
     return retryCacheMetrics;
   }

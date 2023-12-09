@@ -153,7 +153,7 @@ public final class AclStorage {
    * @param aclFeature AclFeature
    * @return List of entries
    */
-  @VisibleForTesting
+  
   static ImmutableList<AclEntry> getEntriesFromAclFeature(AclFeature aclFeature) {
     if (aclFeature == null) {
       return ImmutableList.<AclEntry>of();
@@ -351,7 +351,7 @@ public final class AclStorage {
         existingPerm.getStickyBit());
   }
 
-  @VisibleForTesting
+  
   public static ReferenceCountMap<AclFeature> getUniqueAclFeatures() {
     return UNIQUE_ACL_FEATURES;
   }

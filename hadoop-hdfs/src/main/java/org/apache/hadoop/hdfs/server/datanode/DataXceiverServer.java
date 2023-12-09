@@ -125,7 +125,7 @@ class DataXceiverServer implements Runnable {
       }
     }
 
-    @VisibleForTesting
+    
     int getMaxConcurrentMovers() {
       return this.maxThreads;
     }
@@ -434,7 +434,7 @@ class DataXceiverServer implements Runnable {
    *
    * @return the number of peers and DataXceivers.
    */
-  @VisibleForTesting
+  
   int getNumPeersXceiver() {
     lock.lock();
     try {
@@ -444,7 +444,7 @@ class DataXceiverServer implements Runnable {
     }
   }
 
-  @VisibleForTesting
+  
   PeerServer getPeerServer() {
     return peerServer;
   }
@@ -491,7 +491,7 @@ class DataXceiverServer implements Runnable {
    *
    * @param max The new maximum number of threads for block moving, in seconds
    */
-  @VisibleForTesting
+  
   void setMaxReconfigureWaitTime(int max) {
     this.maxReconfigureWaitTime = max;
   }

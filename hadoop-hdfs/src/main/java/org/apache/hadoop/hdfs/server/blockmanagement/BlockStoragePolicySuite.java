@@ -25,7 +25,7 @@ public class BlockStoragePolicySuite {
 
   public static final int ID_BIT_LENGTH = 4;
 
-  @VisibleForTesting
+  
   public static BlockStoragePolicySuite createDefaultSuite() {
     final BlockStoragePolicy[] policies =
         new BlockStoragePolicy[1 << ID_BIT_LENGTH];

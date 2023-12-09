@@ -76,7 +76,7 @@ public class DirectBufferPool {
    * Return the number of available buffers of a given size.
    * This is used only for tests.
    */
-  @VisibleForTesting
+  
   int countBuffersOfSize(int size) {
     Queue<WeakReference<ByteBuffer>> list = buffersBySize.get(size);
     if (list == null) {

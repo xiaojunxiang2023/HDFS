@@ -631,14 +631,14 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     return getLocalName();
   }
 
-  @VisibleForTesting
+  
   public final String getObjectString() {
     return getClass().getSimpleName() + "@"
         + Integer.toHexString(super.hashCode());
   }
 
   /** @return a string description of the parent. */
-  @VisibleForTesting
+  
   public final String getParentString() {
     final INodeReference parentRef = getParentReference();
     if (parentRef != null) {
@@ -653,7 +653,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     }
   }
 
-  @VisibleForTesting
+  
   public String toDetailString() {
     return toString() + "(" + getObjectString() + "), " + getParentString();
   }
@@ -794,7 +794,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * @return array of byte arrays each of which represents
    * a single path component.
    */
-  @VisibleForTesting
+  
   public static byte[][] getPathComponents(String path) {
     checkAbsolutePath(path);
     return DFSUtil.getPathComponents(path);
@@ -852,7 +852,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Dump the subtree starting from this inode.
    * @return a text representation of the tree.
    */
-  @VisibleForTesting
+  
   public final StringBuffer dumpTreeRecursively() {
     final StringWriter out = new StringWriter();
     dumpTreeRecursively(new PrintWriter(out, true), new StringBuilder(),
@@ -860,7 +860,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     return out.getBuffer();
   }
 
-  @VisibleForTesting
+  
   public final void dumpTreeRecursively(PrintStream out) {
     out.println(dumpTreeRecursively().toString());
   }
@@ -869,7 +869,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Dump tree recursively.
    * @param prefix The prefix string that each line should print.
    */
-  @VisibleForTesting
+  
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
                                   int snapshotId) {
     out.print(prefix);

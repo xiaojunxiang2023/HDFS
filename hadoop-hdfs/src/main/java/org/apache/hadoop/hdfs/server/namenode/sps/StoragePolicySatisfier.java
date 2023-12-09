@@ -935,7 +935,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     storageMovementsMonitor.notifyReportedBlock(dnInfo, storageType, block);
   }
 
-  @VisibleForTesting
+  
   public BlockStorageMovementAttemptedItems getAttemptedItemsMonitor() {
     return storageMovementsMonitor;
   }
@@ -1026,7 +1026,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     return conf;
   }
 
-  @VisibleForTesting
+  
   public BlockStorageMovementNeeded getStorageMovementQueue() {
     return storageMovementNeeded;
   }

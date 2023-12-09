@@ -40,7 +40,7 @@ public class RawLocalFileSystem extends FileSystem {
   // Temporary workaround for HADOOP-9652.
   private static boolean useDeprecatedFileStatus = true;
 
-  @VisibleForTesting
+  
   public static void useStatIfAvailable() {
     useDeprecatedFileStatus = !Stat.isAvailable();
   }
@@ -484,7 +484,7 @@ public class RawLocalFileSystem extends FileSystem {
     return FileUtil.copy(this, src, this, dst, true, getConf());
   }
 
-  @VisibleForTesting
+  
   public final boolean handleEmptyDstDirectoryOnWindows(Path src, File srcFile,
                                                         Path dst, File dstFile) throws IOException {
 
@@ -836,7 +836,7 @@ public class RawLocalFileSystem extends FileSystem {
     }
 
     /// loads permissions, owner, and group from `ls -ld`
-    @VisibleForTesting
+    
     void loadPermissionInfoByNonNativeIO() {
       IOException e = null;
       try {
@@ -901,7 +901,7 @@ public class RawLocalFileSystem extends FileSystem {
     // loads permissions, owner, and group from `ls -ld`
     // but use JNI to more efficiently get file mode (permission, owner, group)
     // by calling file stat() in *nix or some similar calls in Windows
-    @VisibleForTesting
+    
     void loadPermissionInfoByNativeIO() throws IOException {
       Path path = getPath();
       String pathName = path.toUri().getPath();

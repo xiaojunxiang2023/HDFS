@@ -297,7 +297,7 @@ public abstract class INodeAttributeProvider {
       this.setCallerContext(builder.callerContext);
     }
 
-    @VisibleForTesting
+    
     @Override
     public boolean equals(Object obj) {
       if (obj == this) {

@@ -90,7 +90,7 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
   /**
    * For testing only: reset the socket factory.
    */
-  @VisibleForTesting
+  
   public static synchronized void resetDefaultFactory() {
     LOG.info("Resetting default SSL Socket Factory");
     instance = null;

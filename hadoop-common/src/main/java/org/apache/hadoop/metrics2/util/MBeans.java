@@ -126,7 +126,7 @@ public final class MBeans {
     DefaultMetricsSystem.removeMBeanName(mbeanName);
   }
 
-  @VisibleForTesting
+  
   static ObjectName getMBeanName(String serviceName, String nameName,
                                  Map<String, String> additionalParameters) {
 

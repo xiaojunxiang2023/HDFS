@@ -143,7 +143,7 @@ public class FTPFileSystem extends FileSystem {
    * Set the FTPClient's timeout based on configuration.
    * FS_FTP_TIMEOUT is set as timeout (defaults to DEFAULT_TIMEOUT).
    */
-  @VisibleForTesting
+  
   void setTimeout(FTPClient client, Configuration conf) {
     long timeout = conf.getLong(FS_FTP_TIMEOUT, DEFAULT_TIMEOUT);
     client.setControlKeepAliveTimeout(timeout);
@@ -158,7 +158,7 @@ public class FTPFileSystem extends FileSystem {
    * @param conf
    * @return
    */
-  @VisibleForTesting
+  
   int getTransferMode(Configuration conf) {
     final String mode = conf.get(FS_FTP_TRANSFER_MODE);
     // FTP default is STREAM_TRANSFER_MODE, but Hadoop FTPFS's default is
@@ -192,7 +192,7 @@ public class FTPFileSystem extends FileSystem {
    * @param conf
    * @throws IOException
    */
-  @VisibleForTesting
+  
   void setDataConnectionMode(FTPClient client, Configuration conf)
       throws IOException {
     final String mode = conf.get(FS_FTP_DATA_CONNECTION_MODE);
@@ -410,7 +410,7 @@ public class FTPFileSystem extends FileSystem {
     return client.removeDirectory(pathName);
   }
 
-  @VisibleForTesting
+  
   FsAction getFsAction(int accessGroup, FTPFile ftpFile) {
     FsAction action = FsAction.NONE;
     if (ftpFile.hasPermission(accessGroup, FTPFile.READ_PERMISSION)) {

@@ -1314,7 +1314,7 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
     return subclusterResolver;
   }
 
-  @VisibleForTesting
+  
   public Server getServer() {
     return rpcServer;
   }

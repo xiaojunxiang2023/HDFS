@@ -59,7 +59,7 @@ public class NNStorage extends Storage implements Closeable,
       this.fileName = name;
     }
 
-    @VisibleForTesting
+    
     public String getName() {
       return fileName;
     }
@@ -71,7 +71,7 @@ public class NNStorage extends Storage implements Closeable,
    * or of type EDITS which stores edits or of type IMAGE_AND_EDITS which
    * stores both fsimage and edits.
    */
-  @VisibleForTesting
+  
   public enum NameNodeDirType implements StorageDirType {
     UNDEFINED,
     IMAGE,
@@ -239,7 +239,7 @@ public class NNStorage extends Storage implements Closeable,
   /**
    * See {@link NNStorage#setStorageDirectories(Collection, Collection, Collection)}.
    */
-  @VisibleForTesting
+  
   synchronized void setStorageDirectories(Collection<URI> fsNameDirs,
                                           Collection<URI> fsEditsDirs)
       throws IOException {
@@ -259,7 +259,7 @@ public class NNStorage extends Storage implements Closeable,
    * @param fsEditsDirs Locations to store edit logs.
    * @throws IOException
    */
-  @VisibleForTesting
+  
   synchronized void setStorageDirectories(Collection<URI> fsNameDirs,
                                           Collection<URI> fsEditsDirs,
                                           Collection<URI> sharedEditsDirs)
@@ -715,17 +715,17 @@ public class NNStorage extends Storage implements Closeable,
     return new File(sd.getCurrentDir(), type.getName());
   }
 
-  @VisibleForTesting
+  
   public static String getCheckpointImageFileName(long txid) {
     return getNameNodeFileName(NameNodeFile.IMAGE_NEW, txid);
   }
 
-  @VisibleForTesting
+  
   public static String getImageFileName(long txid) {
     return getNameNodeFileName(NameNodeFile.IMAGE, txid);
   }
 
-  @VisibleForTesting
+  
   public static String getRollbackImageFileName(long txid) {
     return getNameNodeFileName(NameNodeFile.IMAGE_ROLLBACK, txid);
   }
@@ -738,7 +738,7 @@ public class NNStorage extends Storage implements Closeable,
     return String.format("%s_%019d", nnf.getName(), txid);
   }
 
-  @VisibleForTesting
+  
   public static String getInProgressEditsFileName(long startTxId) {
     return getNameNodeFileName(NameNodeFile.EDITS_INPROGRESS, startTxId);
   }
@@ -763,7 +763,7 @@ public class NNStorage extends Storage implements Closeable,
     return new File(sd.getCurrentDir(), getNameNodeFileName(nnf, txid));
   }
 
-  @VisibleForTesting
+  
   public static String getFinalizedEditsFileName(long startTxId, long endTxId) {
     return String.format("%s_%019d-%019d", NameNodeFile.EDITS.getName(),
         startTxId, endTxId);

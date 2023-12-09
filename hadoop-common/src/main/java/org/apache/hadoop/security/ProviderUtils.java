@@ -23,19 +23,19 @@ import java.nio.charset.Charset;
  *
  */
 public final class ProviderUtils {
-  @VisibleForTesting
+  
   public static final String NO_PASSWORD_WARN =
       "WARNING: You have accepted the use of the default provider password\n" +
           "by not configuring a password in one of the two following locations:\n";
-  @VisibleForTesting
+  
   public static final String NO_PASSWORD_ERROR =
       "ERROR: The provider cannot find a password in the expected " +
           "locations.\nPlease supply a password using one of the " +
           "following two mechanisms:\n";
-  @VisibleForTesting
+  
   public static final String NO_PASSWORD_CONT =
       "Continuing with the default provider password.\n";
-  @VisibleForTesting
+  
   public static final String NO_PASSWORD_INSTRUCTIONS_DOC =
       "Please review the documentation regarding provider passwords in\n" +
           "the keystore passwords section of the Credential Provider API\n";

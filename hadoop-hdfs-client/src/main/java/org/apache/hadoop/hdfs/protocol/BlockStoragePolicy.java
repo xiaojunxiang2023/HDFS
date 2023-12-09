@@ -36,14 +36,14 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
    */
   private boolean copyOnCreateFile;
 
-  @VisibleForTesting
+  
   public BlockStoragePolicy(byte id, String name, StorageType[] storageTypes,
                             StorageType[] creationFallbacks, StorageType[] replicationFallbacks) {
     this(id, name, storageTypes, creationFallbacks, replicationFallbacks,
         false);
   }
 
-  @VisibleForTesting
+  
   public BlockStoragePolicy(byte id, String name, StorageType[] storageTypes,
                             StorageType[] creationFallbacks, StorageType[] replicationFallbacks,
                             boolean copyOnCreateFile) {

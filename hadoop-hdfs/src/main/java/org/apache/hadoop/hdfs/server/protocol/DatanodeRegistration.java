@@ -19,7 +19,7 @@ public class DatanodeRegistration extends DatanodeID
   private final String softwareVersion;
   private NamespaceInfo nsInfo;
 
-  @VisibleForTesting
+  
   public DatanodeRegistration(String uuid, DatanodeRegistration dnr) {
     this(new DatanodeID(uuid, dnr),
         dnr.getStorageInfo(),

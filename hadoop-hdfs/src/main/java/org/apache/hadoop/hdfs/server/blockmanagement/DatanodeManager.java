@@ -444,7 +444,7 @@ public class DatanodeManager {
     return heartbeatManager;
   }
 
-  @VisibleForTesting
+  
   public DatanodeAdminManager getDatanodeAdminManager() {
     return datanodeAdminManager;
   }
@@ -453,17 +453,17 @@ public class DatanodeManager {
     return hostConfigManager;
   }
 
-  @VisibleForTesting
+  
   public void setHeartbeatExpireInterval(long expiryMs) {
     this.heartbeatExpireInterval = expiryMs;
   }
 
-  @VisibleForTesting
+  
   public FSClusterStats getFSClusterStats() {
     return fsClusterStats;
   }
 
-  @VisibleForTesting
+  
   public int getBlockInvalidateLimit() {
     return blockInvalidateLimit;
   }
@@ -486,7 +486,7 @@ public class DatanodeManager {
     this.avoidSlowDataNodesForRead = enable;
   }
 
-  @VisibleForTesting
+  
   public boolean getEnableAvoidSlowDataNodesForRead() {
     return this.avoidSlowDataNodesForRead;
   }
@@ -495,7 +495,7 @@ public class DatanodeManager {
     this.maxSlowPeerReportNodes = maxNodes;
   }
 
-  @VisibleForTesting
+  
   public int getMaxSlowpeerCollectNodes() {
     return this.maxSlowPeerReportNodes;
   }
@@ -1460,7 +1460,7 @@ public class DatanodeManager {
    *
    * @param node DN which caused cluster to become multi-rack. Used for logging.
    */
-  @VisibleForTesting
+  
   void checkIfClusterIsNowMultiRack(DatanodeDescriptor node) {
     if (!hasClusterEverBeenMultiRack && networktopology.getNumOfRacks() > 1) {
       String message = "DN " + node + " joining cluster has expanded a formerly " +
@@ -2074,7 +2074,7 @@ public class DatanodeManager {
   /**
    * Use only for testing.
    */
-  @VisibleForTesting
+  
   public SlowPeerTracker getSlowPeerTracker() {
     return slowPeerTracker;
   }
@@ -2082,12 +2082,12 @@ public class DatanodeManager {
   /**
    * Use only for testing.
    */
-  @VisibleForTesting
+  
   public SlowDiskTracker getSlowDiskTracker() {
     return slowDiskTracker;
   }
 
-  @VisibleForTesting
+  
   public void addSlowPeers(String dnUuid) {
     slowNodesUuidSet.add(dnUuid);
   }

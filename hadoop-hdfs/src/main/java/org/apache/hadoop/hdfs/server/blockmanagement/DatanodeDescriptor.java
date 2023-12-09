@@ -244,19 +244,19 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return leavingServiceStatus;
   }
 
-  @VisibleForTesting
+  
   public boolean isHeartbeatedSinceRegistration() {
     return heartbeatedSinceRegistration;
   }
 
-  @VisibleForTesting
+  
   public DatanodeStorageInfo getStorageInfo(String storageID) {
     synchronized (storageMap) {
       return storageMap.get(storageID);
     }
   }
 
-  @VisibleForTesting
+  
   public DatanodeStorageInfo[] getStorageInfos() {
     synchronized (storageMap) {
       final Collection<DatanodeStorageInfo> storages = storageMap.values();
@@ -594,12 +594,12 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return new BlockIterator(startBlock, getStorageInfos());
   }
 
-  @VisibleForTesting
+  
   public void incrementPendingReplicationWithoutTargets() {
     pendingReplicationWithoutTargets++;
   }
 
-  @VisibleForTesting
+  
   public void decrementPendingReplicationWithoutTargets() {
     pendingReplicationWithoutTargets--;
   }
@@ -607,7 +607,7 @@ public class DatanodeDescriptor extends DatanodeInfo {
   /**
    * Store block replication work.
    */
-  @VisibleForTesting
+  
   public void addBlockToBeReplicated(Block block,
                                      DatanodeStorageInfo[] targets) {
     assert (block != null && targets != null && targets.length > 0);
@@ -645,7 +645,7 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return pendingReplicationWithoutTargets + replicateBlocks.size();
   }
 
-  @VisibleForTesting
+  
   public int getNumberOfReplicateBlocks() {
     return replicateBlocks.size();
   }
@@ -672,7 +672,7 @@ public class DatanodeDescriptor extends DatanodeInfo {
     }
   }
 
-  @VisibleForTesting
+  
   public boolean containsInvalidateBlock(Block block) {
     synchronized (invalidateBlocks) {
       return invalidateBlocks.contains(block);

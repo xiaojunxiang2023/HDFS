@@ -192,7 +192,7 @@ public class DataStorage extends Storage {
     private Map<String, List<StorageDirectory>> bpStorageDirMap =
         Maps.newHashMap();
 
-    @VisibleForTesting
+    
     public VolumeBuilder(DataStorage storage, StorageDirectory sd) {
       this.storage = storage;
       this.sd = sd;
@@ -339,7 +339,7 @@ public class DataStorage extends Storage {
    * @param startOpt startup option
    * @return a list of successfully loaded storage directories.
    */
-  @VisibleForTesting
+  
   synchronized List<StorageDirectory> addStorageLocations(DataNode datanode,
                                                           NamespaceInfo nsInfo, Collection<StorageLocation> dataDirs,
                                                           StartupOption startOpt) throws IOException {

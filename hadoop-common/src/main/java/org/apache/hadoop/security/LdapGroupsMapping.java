@@ -419,7 +419,7 @@ public class LdapGroupsMapping
    * @return a list of strings representing group names of the user.
    * @throws NamingException if unable to find group names
    */
-  @VisibleForTesting
+  
   List<String> lookupGroup(SearchResult result, DirContext c,
                            int goUpHierarchy)
       throws NamingException {

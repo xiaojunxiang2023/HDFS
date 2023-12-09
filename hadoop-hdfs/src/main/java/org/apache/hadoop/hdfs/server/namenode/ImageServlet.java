@@ -83,7 +83,7 @@ public class ImageServlet extends HttpServlet {
    */
   private static double recentImageCheckTimePrecision = 0.75;
 
-  @VisibleForTesting
+  
   static void setRecentImageCheckTimePrecision(double ratio) {
     recentImageCheckTimePrecision = ratio;
   }
@@ -266,7 +266,7 @@ public class ImageServlet extends HttpServlet {
     return throttler;
   }
 
-  @VisibleForTesting
+  
   static boolean isValidRequestor(ServletContext context, String remoteUser,
                                   Configuration conf) throws IOException {
     if (remoteUser == null) { // This really shouldn't happen...

@@ -215,7 +215,7 @@ public class BlockStorageMovementAttemptedItems {
     }
   }
 
-  @VisibleForTesting
+  
   void blocksStorageMovementUnReportedItemsCheck() {
     synchronized (storageMovementAttemptedItems) {
       Iterator<AttemptedItemInfo> iter = storageMovementAttemptedItems
@@ -237,7 +237,7 @@ public class BlockStorageMovementAttemptedItems {
     }
   }
 
-  @VisibleForTesting
+  
   void blockStorageMovementReportedItemsCheck() throws IOException {
     // Removes all available blocks from this queue and process it.
     Collection<Block> finishedBlks = new ArrayList<>();
@@ -262,12 +262,12 @@ public class BlockStorageMovementAttemptedItems {
     }
   }
 
-  @VisibleForTesting
+  
   public int getMovementFinishedBlocksCount() {
     return movementFinishedBlocks.size();
   }
 
-  @VisibleForTesting
+  
   public int getAttemptedItemsCount() {
     synchronized (storageMovementAttemptedItems) {
       return storageMovementAttemptedItems.size();

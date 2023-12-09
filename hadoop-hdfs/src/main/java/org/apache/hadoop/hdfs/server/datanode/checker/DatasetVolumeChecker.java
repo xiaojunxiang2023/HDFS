@@ -303,7 +303,7 @@ public class DatasetVolumeChecker {
    *
    * @param testDelegate
    */
-  @VisibleForTesting
+  
   void setDelegateChecker(
       AsyncChecker<VolumeCheckContext, VolumeCheckResult> testDelegate) {
     delegateChecker = testDelegate;

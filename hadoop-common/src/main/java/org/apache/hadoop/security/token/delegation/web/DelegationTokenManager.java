@@ -192,7 +192,7 @@ public class DelegationTokenManager {
     return id.getUser();
   }
 
-  @VisibleForTesting
+  
   @SuppressWarnings("rawtypes")
   public AbstractDelegationTokenSecretManager getDelegationTokenSecretManager() {
     return secretManager;

@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataNodeUGIProvider {
   public static final Logger LOG = LoggerFactory.getLogger(Client.class);
-  @VisibleForTesting
+  
   static Cache<String, UserGroupInformation> ugiCache;
   private final ParameterParser params;
 
@@ -60,7 +60,7 @@ public class DataNodeUGIProvider {
     }
   }
 
-  @VisibleForTesting
+  
   void clearCache() throws IOException {
     if (UserGroupInformation.isSecurityEnabled()) {
       params.delegationToken().decodeIdentifier().clearCache();

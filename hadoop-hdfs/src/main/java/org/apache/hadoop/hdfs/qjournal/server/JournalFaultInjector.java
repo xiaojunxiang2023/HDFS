@@ -8,7 +8,7 @@ import java.io.IOException;
  * Used for injecting faults in QuorumJournalManager tests.
  * Calls into this are a no-op in production code. 
  */
-@VisibleForTesting
+
 public class JournalFaultInjector {
   public static JournalFaultInjector instance = new JournalFaultInjector();
 

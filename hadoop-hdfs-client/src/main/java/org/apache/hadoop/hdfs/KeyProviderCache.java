@@ -84,7 +84,7 @@ public class KeyProviderCache {
     return providerUri;
   }
 
-  @VisibleForTesting
+  
   public void setKeyProvider(Configuration conf, KeyProvider keyProvider) {
     URI uri = createKeyProviderURI(conf);
     assert uri != null;

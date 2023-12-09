@@ -88,7 +88,7 @@ public abstract class DelegationTokenAuthenticationHandler
     authType = handler.getType();
   }
 
-  @VisibleForTesting
+  
   DelegationTokenManager getTokenManager() {
     return tokenManager;
   }
@@ -118,7 +118,7 @@ public abstract class DelegationTokenAuthenticationHandler
     tokenManager.setExternalDelegationTokenSecretManager(secretManager);
   }
 
-  @VisibleForTesting
+  
   @SuppressWarnings("unchecked")
   public void initTokenManager(Properties config) {
     Configuration conf = new Configuration(false);
@@ -135,7 +135,7 @@ public abstract class DelegationTokenAuthenticationHandler
     tokenManager.init();
   }
 
-  @VisibleForTesting
+  
   public void initJsonFactory(Properties config) {
     boolean hasFeature = false;
     JsonFactory tmpJsonFactory = new JsonFactory();

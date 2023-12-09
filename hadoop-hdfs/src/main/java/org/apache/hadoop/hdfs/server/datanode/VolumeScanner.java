@@ -58,7 +58,7 @@ public class VolumeScanner extends Thread {
    */
   private Conf conf;
 
-  @VisibleForTesting
+  
   void setConf(Conf conf) {
     this.conf = conf;
   }
@@ -439,7 +439,7 @@ public class VolumeScanner extends Thread {
     return -1;
   }
 
-  @VisibleForTesting
+  
   static boolean calculateShouldScan(String storageId, long targetBytesPerSec,
                                      long scannedBytesSum, long startMinute, long curMinute) {
     long runMinutes = curMinute - startMinute;
@@ -761,7 +761,7 @@ public class VolumeScanner extends Thread {
         "added.", this, bpid);
   }
 
-  @VisibleForTesting
+  
   Statistics getStatistics() {
     synchronized (stats) {
       return new Statistics(stats);

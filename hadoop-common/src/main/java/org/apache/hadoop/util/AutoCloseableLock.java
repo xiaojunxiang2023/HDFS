@@ -111,7 +111,7 @@ public class AutoCloseableLock implements AutoCloseable {
    * @return {@code true} if any thread holds this lock and
    *         {@code false} otherwise
    */
-  @VisibleForTesting
+  
   boolean isLocked() {
     if (lock instanceof ReentrantLock) {
       return ((ReentrantLock) lock).isLocked();

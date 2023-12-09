@@ -677,12 +677,12 @@ class BlockReaderLocal implements BlockReader {
     return clientMmap;
   }
 
-  @VisibleForTesting
+  
   boolean getVerifyChecksum() {
     return this.verifyChecksum;
   }
 
-  @VisibleForTesting
+  
   int getMaxReadaheadLength() {
     return this.maxReadaheadLength;
   }
@@ -691,7 +691,7 @@ class BlockReaderLocal implements BlockReader {
    * Make the replica anchorable.  Normally this can only be done by the
    * DataNode.  This method is only for testing.
    */
-  @VisibleForTesting
+  
   void forceAnchorable() {
     replica.getSlot().makeAnchorable();
   }
@@ -700,7 +700,7 @@ class BlockReaderLocal implements BlockReader {
    * Make the replica unanchorable.  Normally this can only be done by the
    * DataNode.  This method is only for testing.
    */
-  @VisibleForTesting
+  
   void forceUnanchorable() {
     replica.getSlot().makeUnanchorable();
   }

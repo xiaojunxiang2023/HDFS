@@ -22,7 +22,7 @@ public class InstrumentedWriteLock extends InstrumentedLock {
         new Timer());
   }
 
-  @VisibleForTesting
+  
   InstrumentedWriteLock(String name, Logger logger,
                         ReentrantReadWriteLock readWriteLock,
                         long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {

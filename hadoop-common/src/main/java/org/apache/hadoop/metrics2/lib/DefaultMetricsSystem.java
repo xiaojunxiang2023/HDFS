@@ -20,7 +20,7 @@ public enum DefaultMetricsSystem {
   private AtomicReference<MetricsSystem> impl =
       new AtomicReference<MetricsSystem>(new MetricsSystemImpl());
 
-  @VisibleForTesting
+  
   volatile boolean miniClusterMode = false;
 
   transient final UniqueNames mBeanNames = new UniqueNames();
@@ -73,12 +73,12 @@ public enum DefaultMetricsSystem {
     return impl.get();
   }
 
-  @VisibleForTesting
+  
   public static void setMiniClusterMode(boolean choice) {
     INSTANCE.miniClusterMode = choice;
   }
 
-  @VisibleForTesting
+  
   public static boolean inMiniClusterMode() {
     return INSTANCE.miniClusterMode;
   }

@@ -135,32 +135,32 @@ public class EncryptionZoneManager {
   public static final BatchedListEntries<ZoneReencryptionStatus> EMPTY_LIST =
       new BatchedListEntries<>(new ArrayList<ZoneReencryptionStatus>(), false);
 
-  @VisibleForTesting
+  
   public void pauseReencryptForTesting() {
     reencryptionHandler.pauseForTesting();
   }
 
-  @VisibleForTesting
+  
   public void resumeReencryptForTesting() {
     reencryptionHandler.resumeForTesting();
   }
 
-  @VisibleForTesting
+  
   public void pauseForTestingAfterNthSubmission(final int count) {
     reencryptionHandler.pauseForTestingAfterNthSubmission(count);
   }
 
-  @VisibleForTesting
+  
   public void pauseReencryptUpdaterForTesting() {
     reencryptionHandler.pauseUpdaterForTesting();
   }
 
-  @VisibleForTesting
+  
   public void resumeReencryptUpdaterForTesting() {
     reencryptionHandler.resumeUpdaterForTesting();
   }
 
-  @VisibleForTesting
+  
   public void pauseForTestingAfterNthCheckpoint(final String zone,
                                                 final int count) throws IOException {
     INodesInPath iip;
@@ -175,17 +175,17 @@ public class EncryptionZoneManager {
         .pauseForTestingAfterNthCheckpoint(iip.getLastINode().getId(), count);
   }
 
-  @VisibleForTesting
+  
   public void resetMetricsForTesting() {
     reencryptionStatus.resetMetrics();
   }
 
-  @VisibleForTesting
+  
   public ReencryptionStatus getReencryptionStatus() {
     return reencryptionStatus;
   }
 
-  @VisibleForTesting
+  
   public ZoneReencryptionStatus getZoneStatus(final String zone)
       throws IOException {
     final FSPermissionChecker pc = dir.getPermissionChecker();

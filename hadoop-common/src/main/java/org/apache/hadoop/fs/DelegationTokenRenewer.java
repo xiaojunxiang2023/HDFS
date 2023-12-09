@@ -143,14 +143,14 @@ public class DelegationTokenRenewer
 
   /** assumes renew cycle for a token is 24 hours... */
   private static final long RENEW_CYCLE = 24 * 60 * 60 * 1000;
-  @VisibleForTesting
+  
   public static long renewCycle = RENEW_CYCLE;
 
   /** Queue to maintain the RenewActions to be processed by the {@link #run()} */
   private volatile DelayQueue<RenewAction<?>> queue = new DelayQueue<RenewAction<?>>();
 
   /** For testing purposes */
-  @VisibleForTesting
+  
   protected int getRenewQueueLength() {
     return queue.size();
   }
@@ -173,7 +173,7 @@ public class DelegationTokenRenewer
     return INSTANCE;
   }
 
-  @VisibleForTesting
+  
   static synchronized void reset() {
     if (INSTANCE != null) {
       INSTANCE.queue.clear();

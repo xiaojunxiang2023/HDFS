@@ -57,7 +57,7 @@ public final class ReencryptionStatus {
     zoneStatuses = new TreeMap<>();
   }
 
-  @VisibleForTesting
+  
   public ReencryptionStatus(ReencryptionStatus rhs) {
     if (rhs != null) {
       this.zoneStatuses = new TreeMap<>(rhs.zoneStatuses);
@@ -67,7 +67,7 @@ public final class ReencryptionStatus {
     }
   }
 
-  @VisibleForTesting
+  
   public void resetMetrics() {
     zonesReencrypted = 0;
     for (Map.Entry<Long, ZoneReencryptionStatus> entry : zoneStatuses
@@ -171,7 +171,7 @@ public final class ReencryptionStatus {
     return zoneStatuses.remove(zoneId) != null;
   }
 
-  @VisibleForTesting
+  
   public int zonesQueued() {
     int ret = 0;
     for (Map.Entry<Long, ZoneReencryptionStatus> entry : zoneStatuses
@@ -183,12 +183,12 @@ public final class ReencryptionStatus {
     return ret;
   }
 
-  @VisibleForTesting
+  
   public int zonesTotal() {
     return zoneStatuses.size();
   }
 
-  @VisibleForTesting
+  
   public long getNumZonesReencrypted() {
     return zonesReencrypted;
   }

@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class ShellBasedUnixGroupsMapping extends Configured
     implements GroupMappingServiceProvider {
 
-  @VisibleForTesting
+  
   protected static final Logger LOG =
       LoggerFactory.getLogger(ShellBasedUnixGroupsMapping.class);
 
@@ -308,7 +308,7 @@ public class ShellBasedUnixGroupsMapping extends Configured
    * @param groupNames a string representing the user's group names
    * @return a linked list of group names
    */
-  @VisibleForTesting
+  
   protected List<String> resolveFullGroupNames(String groupNames) {
     StringTokenizer tokenizer =
         new StringTokenizer(groupNames, Shell.TOKEN_SEPARATOR_REGEX);

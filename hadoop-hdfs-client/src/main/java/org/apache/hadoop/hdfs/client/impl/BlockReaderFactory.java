@@ -66,7 +66,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     }
   }
 
-  @VisibleForTesting
+  
   static ShortCircuitReplicaCreator
       createShortCircuitReplicaInfoCallback = null;
 
@@ -262,7 +262,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     return this;
   }
 
-  @VisibleForTesting
+  
   public static void setFailureInjectorForTesting(FailureInjector injector) {
     failureInjector = injector;
   }

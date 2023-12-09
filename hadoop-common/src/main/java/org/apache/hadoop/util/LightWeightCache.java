@@ -95,7 +95,7 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
         creationExpirationPeriod, accessExpirationPeriod, new Timer());
   }
 
-  @VisibleForTesting
+  
   LightWeightCache(final int recommendedLength,
                    final int sizeLimit,
                    final long creationExpirationPeriod,

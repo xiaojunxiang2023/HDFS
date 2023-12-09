@@ -1432,7 +1432,7 @@ public class DistributedFileSystem extends FileSystem
     return "DFS[" + dfs + "]";
   }
 
-  @VisibleForTesting
+  
   public DFSClient getClient() {
     return dfs;
   }
@@ -3188,7 +3188,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    @VisibleForTesting
+    
     String getStoragePolicyName() {
       return storagePolicyName;
     }
@@ -3204,7 +3204,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    @VisibleForTesting
+    
     String getEcPolicyName() {
       return ecPolicyName;
     }
@@ -3223,7 +3223,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    @VisibleForTesting
+    
     boolean shouldReplicate() {
       return getFlags().contains(CreateFlag.SHOULD_REPLICATE);
     }
@@ -3250,7 +3250,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    @VisibleForTesting
+    
     @Override
     protected EnumSet<CreateFlag> getFlags() {
       return super.getFlags();

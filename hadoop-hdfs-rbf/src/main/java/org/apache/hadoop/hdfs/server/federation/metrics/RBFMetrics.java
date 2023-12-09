@@ -733,7 +733,7 @@ public class RBFMetrics implements RouterMBean, FederationMBean {
    * @param time Seconds since 1970.
    * @return String representing the date.
    */
-  @VisibleForTesting
+  
   static String getDateString(long time) {
     if (time <= 0) {
       return "-";

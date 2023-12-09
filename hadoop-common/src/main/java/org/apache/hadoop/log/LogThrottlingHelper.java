@@ -142,7 +142,7 @@ public class LogThrottlingHelper {
     this(minLogPeriodMs, primaryRecorderName, new Timer());
   }
 
-  @VisibleForTesting
+  
   LogThrottlingHelper(long minLogPeriodMs, String primaryRecorderName,
                       Timer timer) {
     this.minLogPeriodMs = minLogPeriodMs;

@@ -275,7 +275,7 @@ public class SlowPeerTracker {
     return topNReports;
   }
 
-  @VisibleForTesting
+  
   long getReportValidityMs() {
     return reportValidityMs;
   }

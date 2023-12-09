@@ -374,7 +374,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
    * Sample all the sources for a snapshot of metrics/tags
    * @return the metrics buffer containing the snapshot
    */
-  @VisibleForTesting
+  
   public synchronized MetricsBuffer sampleMetrics() {
     collector.clear();
     MetricsBufferBuilder bufferBuilder = new MetricsBufferBuilder();
@@ -592,12 +592,12 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     return allSources.get(name);
   }
 
-  @VisibleForTesting
+  
   MetricsSourceAdapter getSourceAdapter(String name) {
     return sources.get(name);
   }
 
-  @VisibleForTesting
+  
   public MetricsSinkAdapter getSinkAdapter(String name) {
     return sinks.get(name);
   }

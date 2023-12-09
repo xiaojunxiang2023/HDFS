@@ -45,7 +45,7 @@ public class DatanodeID implements Comparable<DatanodeID> {
     this(from.getDatanodeUuid(), from);
   }
 
-  @VisibleForTesting
+  
   public DatanodeID(String datanodeUuid, DatanodeID from) {
     this(from.getIpAddr(),
         from.getIpAddrBytes(),

@@ -187,7 +187,7 @@ final class FSDirTruncateOp {
    *         into this method upon loading.
    * @throws IOException
    */
-  @VisibleForTesting
+  
   static Block prepareFileForTruncate(FSNamesystem fsn, INodesInPath iip,
                                       String leaseHolder, String clientMachine, long lastBlockDelta,
                                       Block newBlock) throws IOException {

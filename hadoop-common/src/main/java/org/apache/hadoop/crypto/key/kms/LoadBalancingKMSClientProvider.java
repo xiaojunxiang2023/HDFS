@@ -70,7 +70,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
     this(providerUri, providers, Time.monotonicNow(), conf);
   }
 
-  @VisibleForTesting
+  
   LoadBalancingKMSClientProvider(KMSClientProvider[] providers, long seed,
                                  Configuration conf) {
     this(URI.create("kms://testing"), providers, seed, conf);
@@ -118,7 +118,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
         uri, providers.length, dtService, canonicalService);
   }
 
-  @VisibleForTesting
+  
   public KMSClientProvider[] getProviders() {
     return providers;
   }

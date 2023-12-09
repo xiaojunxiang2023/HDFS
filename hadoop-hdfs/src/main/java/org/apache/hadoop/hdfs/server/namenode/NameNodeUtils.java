@@ -59,7 +59,7 @@ public final class NameNodeUtils {
    * 6. If port number in the authority is missing or zero in step 6:
    *    - return null
    */
-  @VisibleForTesting
+  
   @Nullable
   static String getClientNamenodeAddress(
       Configuration conf, @Nullable String nsId) {

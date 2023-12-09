@@ -32,12 +32,12 @@ public class AclPermissionParam extends StringParam {
     super(DOMAIN, parseAclSpec(acl).equals(DEFAULT) ? null : parseAclSpec(acl));
   }
 
-  @VisibleForTesting
+  
   public static Domain getAclPermissionPattern() {
     return DOMAIN;
   }
 
-  @VisibleForTesting
+  
   public static void setAclPermissionPattern(Domain dm) {
     DOMAIN = dm;
   }

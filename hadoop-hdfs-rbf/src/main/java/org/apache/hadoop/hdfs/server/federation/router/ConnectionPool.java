@@ -155,7 +155,7 @@ public class ConnectionPool {
    * Get the clientIndex used to calculate index for lookup.
    * @return Client index.
    */
-  @VisibleForTesting
+  
   public AtomicInteger getClientIndex() {
     return this.clientIndex;
   }

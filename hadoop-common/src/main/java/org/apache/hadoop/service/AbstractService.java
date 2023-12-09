@@ -362,7 +362,7 @@ public abstract class AbstractService implements Service {
   /**
    * Package-scoped method for testing -resets the global listener list
    */
-  @VisibleForTesting
+  
   static void resetGlobalListeners() {
     globalListeners.reset();
   }

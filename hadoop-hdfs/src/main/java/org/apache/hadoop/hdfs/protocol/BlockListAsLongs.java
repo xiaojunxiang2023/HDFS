@@ -61,7 +61,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @param blocksBufs - list of ByteString encoded varints
    * @return BlockListAsLongs
    */
-  @VisibleForTesting
+  
   public static BlockListAsLongs decodeBuffers(final int numBlocks,
                                                final List<ByteString> blocksBufs) {
     return decodeBuffers(numBlocks, blocksBufs,
@@ -113,7 +113,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @param replicas - replicas to encode
    * @return BlockListAsLongs
    */
-  @VisibleForTesting
+  
   public static BlockListAsLongs encode(
       final Collection<? extends Replica> replicas) {
     BlockListAsLongs.Builder builder = builder(IPC_MAXIMUM_DATA_LENGTH_DEFAULT);
@@ -161,7 +161,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     cos.flush();
   }
 
-  @VisibleForTesting
+  
   public static Builder builder() {
     return builder(IPC_MAXIMUM_DATA_LENGTH_DEFAULT);
   }

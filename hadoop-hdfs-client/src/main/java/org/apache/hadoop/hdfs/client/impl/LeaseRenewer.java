@@ -207,7 +207,7 @@ public class LeaseRenewer {
   }
 
   /** Used for testing only. */
-  @VisibleForTesting
+  
   public synchronized void setRenewalTime(final long renewal) {
     this.renewal = renewal;
   }
@@ -266,7 +266,7 @@ public class LeaseRenewer {
         half : LEASE_RENEWER_SLEEP_DEFAULT;
   }
 
-  @VisibleForTesting
+  
   /** Is the daemon running? */
   public synchronized boolean isRunning() {
     return daemon != null && daemon.isAlive();
@@ -334,7 +334,7 @@ public class LeaseRenewer {
     return true;
   }
 
-  @VisibleForTesting
+  
   synchronized void setEmptyTime(long time) {
     emptyTime = time;
   }
@@ -491,7 +491,7 @@ public class LeaseRenewer {
     }
   }
 
-  @VisibleForTesting
+  
   public static void setLeaseRenewerGraceDefault(
       long leaseRenewerGraceDefault) {
     LeaseRenewer.leaseRenewerGraceDefault = leaseRenewerGraceDefault;

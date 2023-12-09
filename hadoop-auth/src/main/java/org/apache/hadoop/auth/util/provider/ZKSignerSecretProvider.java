@@ -140,7 +140,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * is meant for testing.
    * @param seed the seed for the random number generator
    */
-  @VisibleForTesting
+  
   public ZKSignerSecretProvider(long seed) {
     super();
     rand = new Random(seed);
@@ -325,7 +325,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
     }
   }
 
-  @VisibleForTesting
+  
   protected byte[] generateRandomSecret() {
     byte[] secret = new byte[32]; // 32 bytes = 256 bits
     rand.nextBytes(secret);

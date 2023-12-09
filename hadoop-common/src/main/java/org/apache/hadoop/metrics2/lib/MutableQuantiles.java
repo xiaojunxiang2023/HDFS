@@ -24,7 +24,7 @@ import static org.apache.hadoop.metrics2.lib.Interns.info;
  */
 public class MutableQuantiles extends MutableMetric {
 
-  @VisibleForTesting
+  
   public static final Quantile[] quantiles = {new Quantile(0.50, 0.050),
       new Quantile(0.75, 0.025), new Quantile(0.90, 0.010),
       new Quantile(0.95, 0.005), new Quantile(0.99, 0.001)};
@@ -37,7 +37,7 @@ public class MutableQuantiles extends MutableMetric {
   private long previousCount = 0;
   private ScheduledFuture<?> scheduledTask = null;
 
-  @VisibleForTesting
+  
   protected Map<Quantile, Long> previousSnapshot = null;
 
   private static final ScheduledExecutorService scheduler = Executors
@@ -126,7 +126,7 @@ public class MutableQuantiles extends MutableMetric {
    *
    * @return the quantile estimator
    */
-  @VisibleForTesting
+  
   public synchronized QuantileEstimator getEstimator() {
     return estimator;
   }

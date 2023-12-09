@@ -75,7 +75,7 @@ public class FSDirectory implements Closeable {
     return r;
   }
 
-  @VisibleForTesting
+  
   static boolean CHECK_RESERVED_FILE_NAMES = true;
   public final static String DOT_RESERVED_STRING =
       HdfsConstants.DOT_RESERVED_STRING;
@@ -246,7 +246,7 @@ public class FSDirectory implements Closeable {
     return lsLimit;
   }
 
-  @VisibleForTesting
+  
   public final EncryptionZoneManager ezManager;
 
   /**
@@ -467,7 +467,7 @@ public class FSDirectory implements Closeable {
    * @param conf
    * @return a TreeSet
    */
-  @VisibleForTesting
+  
   static SortedSet<String> parseProtectedDirectories(Configuration conf) {
     return parseProtectedDirectories(conf
         .getTrimmedStringCollection(FS_PROTECTED_DIRECTORIES));
@@ -481,7 +481,7 @@ public class FSDirectory implements Closeable {
    *          a comma separated String representing a bunch of paths.
    * @return a TreeSet
    */
-  @VisibleForTesting
+  
   static SortedSet<String> parseProtectedDirectories(
       final String protectedDirsString) {
     return parseProtectedDirectories(StringUtils
@@ -549,12 +549,12 @@ public class FSDirectory implements Closeable {
     return isPermissionContentSummarySubAccess;
   }
 
-  @VisibleForTesting
+  
   public boolean isPosixAclInheritanceEnabled() {
     return posixAclInheritanceEnabled;
   }
 
-  @VisibleForTesting
+  
   public void setPosixAclInheritanceEnabled(
       boolean posixAclInheritanceEnabled) {
     this.posixAclInheritanceEnabled = posixAclInheritanceEnabled;
@@ -657,7 +657,7 @@ public class FSDirectory implements Closeable {
    * @throws ParentNotDirectoryException
    * @throws UnresolvedLinkException
    */
-  @VisibleForTesting
+  
   public INodesInPath resolvePath(FSPermissionChecker pc, String src,
                                   DirOp dirOp) throws UnresolvedLinkException, FileNotFoundException,
       AccessControlException, ParentNotDirectoryException {
@@ -1273,7 +1273,7 @@ public class FSDirectory implements Closeable {
    * @param checkQuota whether to check quota
    * @return an INodesInPath instance containing the new INode
    */
-  @VisibleForTesting
+  
   public INodesInPath addLastINode(INodesInPath existing, INode inode,
                                    FsPermission modes, boolean checkQuota) throws QuotaExceededException {
     assert existing.getLastINode() != null &&
@@ -1349,7 +1349,7 @@ public class FSDirectory implements Closeable {
    *            reference nodes;
    *          1 otherwise.
    */
-  @VisibleForTesting
+  
   public long removeLastINode(final INodesInPath iip) {
     final int latestSnapshot = iip.getLatestSnapshotId();
     final INode last = iip.getLastINode();
@@ -1401,7 +1401,7 @@ public class FSDirectory implements Closeable {
     return src;
   }
 
-  @VisibleForTesting
+  
   public long getYieldCount() {
     return yieldCount;
   }
@@ -1504,7 +1504,7 @@ public class FSDirectory implements Closeable {
     return inodeMap.get(id);
   }
 
-  @VisibleForTesting
+  
   int getInodeMapSize() {
     return inodeMap.size();
   }
@@ -1763,7 +1763,7 @@ public class FSDirectory implements Closeable {
    * Get {@link INode} associated with the file / directory.
    * See {@link #getINode(String, DirOp)}
    */
-  @VisibleForTesting // should be removed after a lot of tests are updated
+   // should be removed after a lot of tests are updated
   public INode getINode(String src) throws UnresolvedLinkException,
       AccessControlException, ParentNotDirectoryException {
     return getINode(src, DirOp.READ);
@@ -1773,7 +1773,7 @@ public class FSDirectory implements Closeable {
    * Get {@link INode} associated with the file / directory.
    * See {@link #getINode(String, DirOp)}
    */
-  @VisibleForTesting // should be removed after a lot of tests are updated
+   // should be removed after a lot of tests are updated
   public INode getINode4Write(String src) throws UnresolvedLinkException,
       AccessControlException, FileNotFoundException,
       ParentNotDirectoryException {
@@ -1798,7 +1798,7 @@ public class FSDirectory implements Closeable {
     }
   }
 
-  @VisibleForTesting
+  
   FSPermissionChecker getPermissionChecker(String fsOwner, String superGroup,
                                            UserGroupInformation ugi) throws AccessControlException {
     return new FSPermissionChecker(

@@ -59,7 +59,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ObserverReadProxyProvider<T>
     extends AbstractNNFailoverProxyProvider<T> {
-  @VisibleForTesting
+  
   static final Logger LOG = LoggerFactory.getLogger(
       ObserverReadProxyProvider.class);
 
@@ -240,12 +240,12 @@ public class ObserverReadProxyProvider<T>
     return !method.getAnnotationsByType(ReadOnly.class)[0].activeOnly();
   }
 
-  @VisibleForTesting
+  
   void setObserverReadEnabled(boolean flag) {
     this.observerReadEnabled = flag;
   }
 
-  @VisibleForTesting
+  
   ProxyInfo<T> getLastProxy() {
     return lastProxy;
   }

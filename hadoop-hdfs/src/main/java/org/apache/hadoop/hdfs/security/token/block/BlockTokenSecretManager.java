@@ -133,7 +133,7 @@ public class BlockTokenSecretManager extends
     generateKeys();
   }
 
-  @VisibleForTesting
+  
   public synchronized void setSerialNo(int nextNo) {
     // we mod the serial number by the range and then add that times the index
     this.serialNo = (nextNo % intRange) + (nnRangeStart);
@@ -538,23 +538,23 @@ public class BlockTokenSecretManager extends
     return currentKey;
   }
 
-  @VisibleForTesting
+  
   public synchronized void setKeyUpdateIntervalForTesting(long millis) {
     this.keyUpdateInterval = millis;
   }
 
-  @VisibleForTesting
+  
   public void clearAllKeysForTesting() {
     allKeys.clear();
   }
 
-  @VisibleForTesting
+  
   public synchronized boolean hasKey(int keyId) {
     BlockKey key = allKeys.get(keyId);
     return key != null;
   }
 
-  @VisibleForTesting
+  
   public synchronized int getSerialNoForTesting() {
     return serialNo;
   }

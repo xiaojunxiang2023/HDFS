@@ -95,7 +95,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     return journal;
   }
 
-  @VisibleForTesting
+  
   public boolean getJournalSyncerStatus(String jid) {
     if (journalSyncersById.get(jid) != null) {
       return journalSyncersById.get(jid).isJournalSyncerStarted();
@@ -113,7 +113,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     jSyncer.start(nameServiceId);
   }
 
-  @VisibleForTesting
+  
   public Journal getOrCreateJournal(String jid) throws IOException {
     return getOrCreateJournal(jid, null, StartupOption.REGULAR);
   }
@@ -452,7 +452,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     return getOrCreateJournal(journalId, nameServiceId).getJournalCTime();
   }
 
-  @VisibleForTesting
+  
   public Journal getJournal(String jid) {
     return journalsById.get(jid);
   }
@@ -480,7 +480,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     return bindAddress;
   }
 
-  @VisibleForTesting
+  
   public JournalNodeRpcServer getRpcServer() {
     return rpcServer;
   }

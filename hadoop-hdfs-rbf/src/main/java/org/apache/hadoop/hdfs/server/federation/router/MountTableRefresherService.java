@@ -105,7 +105,7 @@ public class MountTableRefresherService extends AbstractService {
     };
   }
 
-  @VisibleForTesting
+  
   protected void closeRouterClient(RouterClient client) {
     client.close();
   }
@@ -124,7 +124,7 @@ public class MountTableRefresherService extends AbstractService {
     };
   }
 
-  @VisibleForTesting
+  
   protected RouterClient createRouterClient(InetSocketAddress routerSocket,
                                             Configuration config) throws IOException {
     return SecurityUtil.doAsLoginUser(() -> {
@@ -200,7 +200,7 @@ public class MountTableRefresherService extends AbstractService {
     }
   }
 
-  @VisibleForTesting
+  
   protected MountTableRefresherThread getLocalRefresher(String adminAddress) {
     // RouterAdminServer是 MountTableManager的后代
     return new MountTableRefresherThread(router.getAdminServer(), adminAddress);

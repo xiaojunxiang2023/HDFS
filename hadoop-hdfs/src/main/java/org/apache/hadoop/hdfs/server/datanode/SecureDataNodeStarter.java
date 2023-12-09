@@ -98,7 +98,7 @@ public class SecureDataNodeStarter implements Daemon {
    * node. The privileged resources consist of the port of the RPC server and
    * the port of HTTP (not HTTPS) server.
    */
-  @VisibleForTesting
+  
   public static SecureResources getSecureResources(Configuration conf)
       throws Exception {
     HttpConfig.Policy policy = DFSUtil.getHttpPolicy(conf);

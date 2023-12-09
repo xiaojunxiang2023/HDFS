@@ -76,7 +76,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
     }
   }
 
-  @VisibleForTesting
+  
   @Override
   public void restart() {
     stopSyncThread();

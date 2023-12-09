@@ -63,9 +63,9 @@ public class DFSOutputStream extends FSOutputSummer
    * Number of times to retry creating a file when there are transient
    * errors (typically related to encryption zones and KeyProvider operations).
    */
-  @VisibleForTesting
+  
   static final int CREATE_RETRY_COUNT = 10;
-  @VisibleForTesting
+  
   static CryptoProtocolVersion[] SUPPORTED_CRYPTO_VERSIONS =
       CryptoProtocolVersion.supported();
 
@@ -122,7 +122,7 @@ public class DFSOutputStream extends FSOutputSummer
   //
   // returns the list of targets, if any, that is being currently used.
   //
-  @VisibleForTesting
+  
   public synchronized DatanodeInfo[] getPipeline() {
     if (getStreamer().streamerClosed()) {
       return null;
@@ -486,7 +486,7 @@ public class DFSOutputStream extends FSOutputSummer
   /**
    * Used in test only.
    */
-  @VisibleForTesting
+  
   void setAppendChunk(final boolean appendChunk) {
     getStreamer().setAppendChunk(appendChunk);
   }
@@ -494,7 +494,7 @@ public class DFSOutputStream extends FSOutputSummer
   /**
    * Used in test only.
    */
-  @VisibleForTesting
+  
   void setBytesCurBlock(final long bytesCurBlock) {
     getStreamer().setBytesCurBlock(bytesCurBlock);
   }
@@ -937,12 +937,12 @@ public class DFSOutputStream extends FSOutputSummer
     }
   }
 
-  @VisibleForTesting
+  
   public void setArtificialSlowdown(long period) {
     getStreamer().setArtificialSlowdown(period);
   }
 
-  @VisibleForTesting
+  
   public synchronized void setChunksPerPacket(int value) {
     chunksPerPacket = Math.min(chunksPerPacket, value);
     packetSize = (bytesPerChecksum + getChecksumSize()) * chunksPerPacket;
@@ -1000,12 +1000,12 @@ public class DFSOutputStream extends FSOutputSummer
     } while (!this.cachingStrategy.compareAndSet(prevStrategy, nextStrategy));
   }
 
-  @VisibleForTesting
+  
   ExtendedBlock getBlock() {
     return getStreamer().getBlock();
   }
 
-  @VisibleForTesting
+  
   public long getFileId() {
     return fileId;
   }

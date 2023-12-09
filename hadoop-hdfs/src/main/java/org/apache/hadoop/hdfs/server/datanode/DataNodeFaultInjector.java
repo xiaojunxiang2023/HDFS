@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
  * Used for injecting faults in DFSClient and DFSOutputStream tests.
  * Calls into this are a no-op in production code. 
  */
-@VisibleForTesting
+
 public class DataNodeFaultInjector {
   private static DataNodeFaultInjector instance = new DataNodeFaultInjector();
 

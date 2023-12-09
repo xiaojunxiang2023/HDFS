@@ -218,7 +218,7 @@ class BPOfferService {
     }
   }
 
-  @VisibleForTesting
+  
   NamespaceInfo setNamespaceInfo(NamespaceInfo nsInfo) throws IOException {
     writeLock();
     try {
@@ -511,7 +511,7 @@ class BPOfferService {
     }
   }
 
-  @VisibleForTesting
+  
   List<BPServiceActor> getBPServiceActors() {
     return Lists.newArrayList(bpServices);
   }
@@ -602,7 +602,7 @@ class BPOfferService {
     return false;
   }
 
-  @VisibleForTesting
+  
   int countNameNodes() {
     return bpServices.size();
   }
@@ -610,7 +610,7 @@ class BPOfferService {
   /**
    * Run an immediate block report on this thread. Used by tests.
    */
-  @VisibleForTesting
+  
   void triggerBlockReportForTests() throws IOException {
     for (BPServiceActor actor : bpServices) {
       actor.triggerBlockReportForTests();
@@ -620,7 +620,7 @@ class BPOfferService {
   /**
    * Run an immediate deletion report on this thread. Used by tests.
    */
-  @VisibleForTesting
+  
   void triggerDeletionReportForTests() throws IOException {
     for (BPServiceActor actor : bpServices) {
       actor.getIbrManager().triggerDeletionReportForTests();
@@ -630,7 +630,7 @@ class BPOfferService {
   /**
    * Run an immediate heartbeat from all actors. Used by tests.
    */
-  @VisibleForTesting
+  
   void triggerHeartbeatForTests() throws IOException {
     for (BPServiceActor actor : bpServices) {
       actor.triggerHeartbeatForTests();

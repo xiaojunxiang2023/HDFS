@@ -140,7 +140,7 @@ final class TokenAspect<T extends FileSystem & Renewable> {
     }
   }
 
-  @VisibleForTesting
+  
   Token<DelegationTokenIdentifier> selectDelegationToken(
       UserGroupInformation ugi) {
     return dtSelector.selectToken(serviceName, ugi.getTokens());

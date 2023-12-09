@@ -172,7 +172,7 @@ public class DataNodeDiskMetrics {
   /**
    * Use only for testing.
    */
-  @VisibleForTesting
+  
   public void addSlowDiskForTesting(String slowDiskPath,
                                     Map<DiskOp, Double> latencies) {
     overrideStatus = false;

@@ -30,7 +30,7 @@ class ExcessRedundancyMap {
   /**
    * @return the number of redundancies corresponding to the given datanode.
    */
-  @VisibleForTesting
+  
   synchronized int getSize4Testing(String dnUuid) {
     final LightWeightHashSet<BlockInfo> set = map.get(dnUuid);
     return set == null ? 0 : set.size();

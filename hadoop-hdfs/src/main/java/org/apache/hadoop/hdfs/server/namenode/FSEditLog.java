@@ -86,7 +86,7 @@ public class FSEditLog implements LogsPurgeable {
   //initialize
   private JournalSet journalSet = null;
 
-  @VisibleForTesting
+  
   EditLogOutputStream editLogStream = null;
 
   // a monotonically increasing counter that represents transactionIds.
@@ -503,7 +503,7 @@ public class FSEditLog implements LogsPurgeable {
   /**
    * @return the first transaction ID in the current log segment
    */
-  @VisibleForTesting
+  
   public synchronized long getCurSegmentTxId() {
     Preconditions.checkState(isSegmentOpen(),
         "Bad state: %s", state);
@@ -1220,12 +1220,12 @@ public class FSEditLog implements LogsPurgeable {
   /**
    * Used only by tests.
    */
-  @VisibleForTesting
+  
   public JournalSet getJournalSet() {
     return journalSet;
   }
 
-  @VisibleForTesting
+  
   synchronized void setJournalSetForTesting(JournalSet js) {
     this.journalSet = js;
   }
@@ -1233,7 +1233,7 @@ public class FSEditLog implements LogsPurgeable {
   /**
    * Used only by tests.
    */
-  @VisibleForTesting
+  
   void setMetricsForTests(NameNodeMetrics metrics) {
     this.metrics = metrics;
   }
@@ -1750,7 +1750,7 @@ public class FSEditLog implements LogsPurgeable {
    * @return The constructed journal manager
    * @throws IllegalArgumentException if no class is configured for uri
    */
-  @VisibleForTesting
+  
   JournalManager createJournal(URI uri) {
     Class<? extends JournalManager> clazz
         = getJournalClass(conf, uri.getScheme());
@@ -1778,7 +1778,7 @@ public class FSEditLog implements LogsPurgeable {
     }
   }
 
-  @VisibleForTesting
+  
   // needed by async impl to restart thread when edit log is replaced by a
   // spy because a spy is a shallow copy
   public void restart() {

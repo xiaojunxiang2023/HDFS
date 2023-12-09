@@ -32,7 +32,7 @@ public final class IOStatisticsBinding {
   public static final String ENTRY_PATTERN = "(%s=%s)";
 
   /** String to return when a source is null. */
-  @VisibleForTesting
+  
   public static final String NULL_SOURCE = "()";
 
   private IOStatisticsBinding() {

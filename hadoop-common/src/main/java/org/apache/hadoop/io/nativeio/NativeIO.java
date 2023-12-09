@@ -254,7 +254,7 @@ public class NativeIO {
     /**
      * Used to manipulate the operating system cache.
      */
-    @VisibleForTesting
+    
     public static class CacheManipulator {
       public void mlock(String identifier, ByteBuffer buffer,
                         long len) throws IOException {
@@ -286,7 +286,7 @@ public class NativeIO {
      * This allows many tests to be run even when the operating system does not
      * allow mlock, or only allows limited mlocking.
      */
-    @VisibleForTesting
+    
     public static class NoMlockCacheManipulator extends CacheManipulator {
       public void mlock(String identifier, ByteBuffer buffer,
                         long len) throws IOException {

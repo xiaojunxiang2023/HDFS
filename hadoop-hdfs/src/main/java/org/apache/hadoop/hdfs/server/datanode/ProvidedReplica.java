@@ -134,12 +134,12 @@ public abstract class ProvidedReplica extends ReplicaInfo {
     return getRemoteURI();
   }
 
-  @VisibleForTesting
+  
   public String getPathSuffix() {
     return pathSuffix;
   }
 
-  @VisibleForTesting
+  
   public Path getPathPrefix() {
     return pathPrefix;
   }
@@ -318,7 +318,7 @@ public abstract class ProvidedReplica extends ReplicaInfo {
         "ProvidedReplica does not yet support copy data");
   }
 
-  @VisibleForTesting
+  
   public void setPathHandle(PathHandle pathHandle) {
     this.pathHandle = pathHandle;
   }

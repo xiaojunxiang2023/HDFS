@@ -276,7 +276,7 @@ public class BlockManager implements BlockStatsMXBean {
   public final LowRedundancyBlocks neededReconstruction =
       new LowRedundancyBlocks();
 
-  @VisibleForTesting
+  
   final PendingReconstructionBlocks pendingReconstruction;
 
   /** Stores information about block recovery attempts. */
@@ -617,13 +617,13 @@ public class BlockManager implements BlockStatsMXBean {
   }
 
   /** get the BlockTokenSecretManager */
-  @VisibleForTesting
+  
   public BlockTokenSecretManager getBlockTokenSecretManager() {
     return blockTokenSecretManager;
   }
 
   /** Allow silent termination of redundancy monitor for testing. */
-  @VisibleForTesting
+  
   void enableRMTerminationForTesting() {
     checkNSRunning = false;
   }
@@ -674,12 +674,12 @@ public class BlockManager implements BlockStatsMXBean {
     return datanodeManager;
   }
 
-  @VisibleForTesting
+  
   public BlockPlacementPolicy getBlockPlacementPolicy() {
     return placementPolicies.getPolicy(CONTIGUOUS);
   }
 
-  @VisibleForTesting
+  
   public BlockPlacementPolicy getStriptedBlockPlacementPolicy() {
     return placementPolicies.getPolicy(STRIPED);
   }
@@ -1746,7 +1746,7 @@ public class BlockManager implements BlockStatsMXBean {
     this.shouldPostponeBlocksFromFuture = postpone;
   }
 
-  @VisibleForTesting
+  
   void postponeBlock(Block blk) {
     postponedMisreplicatedBlocks.add(blk);
   }
@@ -1826,7 +1826,7 @@ public class BlockManager implements BlockStatsMXBean {
    * @param blocksToReconstruct blocks to be reconstructed, for each priority
    * @return the number of blocks scheduled for replication
    */
-  @VisibleForTesting
+  
   int computeReconstructionWorkForBlocks(
       List<List<BlockInfo>> blocksToReconstruct) {
     int scheduledWork = 0;
@@ -1924,7 +1924,7 @@ public class BlockManager implements BlockStatsMXBean {
         (pendingReplicaNum > 0 || isPlacementPolicySatisfied(block));
   }
 
-  @VisibleForTesting
+  
   BlockReconstructionWork scheduleReconstruction(BlockInfo block,
                                                  int priority) {
     // skip abandoned block or block reopened for append
@@ -2171,7 +2171,7 @@ public class BlockManager implements BlockStatsMXBean {
    * @return the array of DatanodeDescriptor of the chosen nodes from which to
    *         recover the given block
    */
-  @VisibleForTesting
+  
   DatanodeDescriptor[] chooseSourceDatanodes(BlockInfo block,
                                              List<DatanodeDescriptor> containingNodes,
                                              List<DatanodeStorageInfo> nodesContainingLiveReplicas,
@@ -3796,7 +3796,7 @@ public class BlockManager implements BlockStatsMXBean {
   /**
    * The given node is reporting that it received a certain block.
    */
-  @VisibleForTesting
+  
   public void addBlock(DatanodeStorageInfo storageInfo, Block block,
                        String delHint) throws IOException {
     DatanodeDescriptor node = storageInfo.getDatanodeDescriptor();
@@ -4058,7 +4058,7 @@ public class BlockManager implements BlockStatsMXBean {
     }
   }
 
-  @VisibleForTesting
+  
   int getExcessSize4Testing(String dnUuid) {
     return excessRedundancyMap.getSize4Testing(dnUuid);
   }
@@ -4304,7 +4304,7 @@ public class BlockManager implements BlockStatsMXBean {
     return toInvalidate.size();
   }
 
-  @VisibleForTesting
+  
   public boolean containsInvalidateBlock(final DatanodeInfo dn,
                                          final Block block) {
     return invalidateBlocks.contains(dn, block);
@@ -4496,7 +4496,7 @@ public class BlockManager implements BlockStatsMXBean {
    * {@link #lastRedundancyCycleTS} is updated.
    * @return the current {@link #lastRedundancyCycleTS}.
    */
-  @VisibleForTesting
+  
   public long getLastRedundancyMonitorTS() {
     return lastRedundancyCycleTS.get();
   }
@@ -4807,7 +4807,7 @@ public class BlockManager implements BlockStatsMXBean {
     return pendingRecoveryBlocks.add(b);
   }
 
-  @VisibleForTesting
+  
   public void flushBlockOps() throws IOException {
     runBlockOp(new Callable<Void>() {
       @Override
@@ -4894,7 +4894,7 @@ public class BlockManager implements BlockStatsMXBean {
   /**
    * @return redundancy thread.
    */
-  @VisibleForTesting
+  
   Daemon getRedundancyThread() {
     return redundancyThread;
   }
@@ -4903,7 +4903,7 @@ public class BlockManager implements BlockStatsMXBean {
     return blockIdManager;
   }
 
-  @VisibleForTesting
+  
   public ConcurrentLinkedQueue<List<BlockInfo>> getMarkedDeleteQueue() {
     return markedDeleteQueue;
   }
@@ -4950,12 +4950,12 @@ public class BlockManager implements BlockStatsMXBean {
         BLOCK_RECOVERY_TIMEOUT_MULTIPLIER);
   }
 
-  @VisibleForTesting
+  
   public void setBlockRecoveryTimeout(long blockRecoveryTimeout) {
     pendingRecoveryBlocks.setRecoveryTimeoutInterval(blockRecoveryTimeout);
   }
 
-  @VisibleForTesting
+  
   public ProvidedStorageMap getProvidedStorageMap() {
     return providedStorageMap;
   }
@@ -5023,7 +5023,7 @@ public class BlockManager implements BlockStatsMXBean {
     placementPolicies.getPolicy(STRIPED).setExcludeSlowNodesEnabled(enable);
   }
 
-  @VisibleForTesting
+  
   public boolean getExcludeSlowNodesEnabled(BlockType blockType) {
     return placementPolicies.getPolicy(blockType).getExcludeSlowNodesEnabled();
   }

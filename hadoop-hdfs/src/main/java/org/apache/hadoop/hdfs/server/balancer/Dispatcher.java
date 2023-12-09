@@ -194,7 +194,7 @@ public class Dispatcher {
     return hasSuccess;
   }
 
-  @VisibleForTesting
+  
   public static void setDelayAfterErrors(long time) {
     delayAfterErrors = time;
   }

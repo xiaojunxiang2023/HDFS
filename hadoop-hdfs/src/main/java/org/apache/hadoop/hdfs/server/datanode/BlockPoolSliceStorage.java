@@ -722,7 +722,7 @@ public class BlockPoolSliceStorage extends Storage {
    * is disallowed if a 'previous' directory exists for the
    * storage directory containing the block.
    */
-  @VisibleForTesting
+  
   public boolean isTrashAllowed(File blockFile) {
     Matcher matcher = BLOCK_POOL_CURRENT_PATH_PATTERN.matcher(blockFile.getParent());
     String previousDir = matcher.replaceFirst("$1$2" + STORAGE_DIR_PREVIOUS);
@@ -769,7 +769,7 @@ public class BlockPoolSliceStorage extends Storage {
    * @param blockFile  block file that is being restored from trash.
    * @return the target directory to restore a previously deleted block file.
    */
-  @VisibleForTesting
+  
   String getRestoreDirectory(File blockFile) {
     Matcher matcher = BLOCK_POOL_TRASH_PATH_PATTERN.matcher(blockFile.getParent());
     String restoreDirectory = matcher.replaceFirst("$1$2" + STORAGE_DIR_CURRENT + "$4");
@@ -818,7 +818,7 @@ public class BlockPoolSliceStorage extends Storage {
   }
 
   /** trash is enabled if at least one storage directory contains trash root */
-  @VisibleForTesting
+  
   public boolean trashEnabled() {
     for (StorageDirectory sd : getStorageDirs()) {
       if (getTrashRootDir(sd).exists()) {

@@ -209,7 +209,7 @@ public class KerberosAuthenticator implements Authenticator {
     }
   }
 
-  @VisibleForTesting
+  
   static <T extends Exception> T wrapExceptionWithMessage(
       T exception, String msg) {
     Class<? extends Throwable> exceptionClass = exception.getClass();

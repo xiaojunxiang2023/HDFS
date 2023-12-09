@@ -255,7 +255,7 @@ public class Client implements AutoCloseable {
     conf.setInt(CommonConfigurationKeys.IPC_CLIENT_CONNECT_TIMEOUT_KEY, timeout);
   }
 
-  @VisibleForTesting
+  
   public static final ExecutorService getClientExecutor() {
     return Client.clientExcecutorFactory.clientExecutor;
   }
@@ -1562,7 +1562,7 @@ public class Client implements AutoCloseable {
     asyncCallCounter.decrementAndGet();
   }
 
-  @VisibleForTesting
+  
   int getAsyncCallCount() {
     return asyncCallCounter.get();
   }
@@ -1756,7 +1756,7 @@ public class Client implements AutoCloseable {
       return pingInterval;
     }
 
-    @VisibleForTesting
+    
     String getSaslQop() {
       return saslQop;
     }

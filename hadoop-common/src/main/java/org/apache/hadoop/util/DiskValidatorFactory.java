@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * The factory class to create instance of {@link DiskValidator}.
  */
 public final class DiskValidatorFactory {
-  @VisibleForTesting
+  
   static final ConcurrentHashMap<Class<? extends DiskValidator>, DiskValidator>
       INSTANCES = new ConcurrentHashMap<>();
 

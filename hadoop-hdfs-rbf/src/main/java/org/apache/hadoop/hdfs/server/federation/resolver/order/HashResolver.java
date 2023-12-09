@@ -62,7 +62,7 @@ public class HashResolver implements OrderedResolver {
   }
 
   // 获取处理后的值，例如 hosts._COPYING 返回 hosts
-  @VisibleForTesting
+  
   public static String extractTempFileName(final String input) {
     StringBuilder sb = new StringBuilder();
     Matcher matcher = TEMP_FILE_PATTERN.matcher(input);

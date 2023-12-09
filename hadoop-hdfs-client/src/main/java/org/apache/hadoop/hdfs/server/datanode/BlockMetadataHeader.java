@@ -30,7 +30,7 @@ public class BlockMetadataHeader {
   private final short version;
   private DataChecksum checksum = null;
 
-  @VisibleForTesting
+  
   public BlockMetadataHeader(short version, DataChecksum checksum) {
     this.checksum = checksum;
     this.version = version;
@@ -168,7 +168,7 @@ public class BlockMetadataHeader {
    * @param out DataOutputStream
    * @throws IOException
    */
-  @VisibleForTesting
+  
   public static void writeHeader(DataOutputStream out,
                                  BlockMetadataHeader header)
       throws IOException {

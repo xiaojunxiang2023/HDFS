@@ -57,7 +57,7 @@ public class ZStandardCompressor implements Compressor {
     return getStreamSize();
   }
 
-  @VisibleForTesting
+  
   ZStandardCompressor() {
     this(CommonConfigurationKeys.IO_COMPRESSION_CODEC_ZSTD_LEVEL_DEFAULT,
         CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT);
@@ -71,7 +71,7 @@ public class ZStandardCompressor implements Compressor {
     this(level, bufferSize, bufferSize);
   }
 
-  @VisibleForTesting
+  
   ZStandardCompressor(int level, int inputBufferSize, int outputBufferSize) {
     this.level = level;
     stream = create();

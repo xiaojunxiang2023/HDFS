@@ -341,7 +341,7 @@ class JournaledEditsCache {
    * @param txnId Transaction ID whose containing buffer should be fetched.
    * @return The data buffer for the transaction
    */
-  @VisibleForTesting
+  
   byte[] getRawDataForTests(long txnId) {
     try (AutoCloseableLock l = readLock.acquire()) {
       return dataMap.floorEntry(txnId).getValue();

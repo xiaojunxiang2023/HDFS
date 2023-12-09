@@ -169,7 +169,7 @@ public class MachineList {
    *
    * @return contents of the MachineList.
    */
-  @VisibleForTesting
+  
   public Collection<String> getCollection() {
     return entries;
   }

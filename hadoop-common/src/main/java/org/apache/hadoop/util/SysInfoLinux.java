@@ -168,7 +168,7 @@ public class SysInfoLinux extends SysInfo {
    * @param procfsDisksFile fake file for /proc/diskstats
    * @param jiffyLengthInMillis fake jiffy length value
    */
-  @VisibleForTesting
+  
   public SysInfoLinux(String procfsMemFile,
                       String procfsCpuFile,
                       String procfsStatFile,
@@ -710,7 +710,7 @@ public class SysInfoLinux extends SysInfo {
     System.out.println("CPU usage % : " + plugin.getCpuUsagePercentage());
   }
 
-  @VisibleForTesting
+  
   void setReadCpuInfoFile(boolean readCpuInfoFileValue) {
     this.readCpuInfoFile = readCpuInfoFileValue;
   }

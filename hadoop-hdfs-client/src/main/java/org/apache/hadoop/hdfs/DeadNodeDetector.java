@@ -260,7 +260,7 @@ public class DeadNodeDetector extends Daemon {
     }
   }
 
-  @VisibleForTesting
+  
   boolean isThreadsShutdown() {
     return !this.isAlive() && !probeDeadNodesSchedulerThr.isAlive()
         && !probeSuspectNodesSchedulerThr.isAlive()
@@ -269,7 +269,7 @@ public class DeadNodeDetector extends Daemon {
         && rpcThreadPool.isShutdown();
   }
 
-  @VisibleForTesting
+  
   static void setDisabledProbeThreadForTest(
       boolean disabledProbeThreadForTest) {
     DeadNodeDetector.disabledProbeThreadForTest = disabledProbeThreadForTest;
@@ -278,7 +278,7 @@ public class DeadNodeDetector extends Daemon {
   /**
    * Start probe dead node and suspect node thread.
    */
-  @VisibleForTesting
+  
   void startProbeScheduler() {
     probeDeadNodesSchedulerThr =
         new Thread(new ProbeScheduler(this, ProbeType.CHECK_DEAD));
@@ -457,12 +457,12 @@ public class DeadNodeDetector extends Daemon {
     return suspectNodesProbeQueue;
   }
 
-  @VisibleForTesting
+  
   void setSuspectQueue(UniqueQueue<DatanodeInfo> queue) {
     this.suspectNodesProbeQueue = queue;
   }
 
-  @VisibleForTesting
+  
   void setDeadQueue(UniqueQueue<DatanodeInfo> queue) {
     this.deadNodesProbeQueue = queue;
   }

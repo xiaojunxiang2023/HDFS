@@ -151,12 +151,12 @@ public class ChunkedArrayList<T> extends AbstractList<T> {
     return size;
   }
 
-  @VisibleForTesting
+  
   int getNumChunks() {
     return chunks.size();
   }
 
-  @VisibleForTesting
+  
   int getMaxChunkSize() {
     int size = 0;
     for (List<T> chunk : chunks) {

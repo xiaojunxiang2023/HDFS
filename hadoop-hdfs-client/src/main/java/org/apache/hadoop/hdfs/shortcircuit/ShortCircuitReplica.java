@@ -187,7 +187,7 @@ public class ShortCircuitReplica {
    *
    * Must be called with the cache lock held.
    */
-  @VisibleForTesting
+  
   public boolean hasMmap() {
     return ((mmapData != null) && (mmapData instanceof MappedByteBuffer));
   }
@@ -292,7 +292,7 @@ public class ShortCircuitReplica {
     this.evictableTimeNs = evictableTimeNs;
   }
 
-  @VisibleForTesting
+  
   public Slot getSlot() {
     return slot;
   }

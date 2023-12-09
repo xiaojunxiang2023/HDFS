@@ -168,7 +168,7 @@ public class DatanodeStorageInfo {
     blockReportCount++;
   }
 
-  @VisibleForTesting
+  
   public void setUtilizationForTesting(long capacity, long dfsUsed,
                                        long remaining, long blockPoolUsed) {
     this.capacity = capacity;
@@ -193,7 +193,7 @@ public class DatanodeStorageInfo {
     return getState() == State.FAILED && numBlocks != 0;
   }
 
-  @VisibleForTesting
+  
   public String getStorageID() {
     return storageID;
   }
@@ -287,7 +287,7 @@ public class DatanodeStorageInfo {
    * Used for testing only.
    * @return the head of the blockList
    */
-  @VisibleForTesting
+  
   BlockInfo getBlockListHeadForTesting() {
     return blockList;
   }
@@ -392,7 +392,7 @@ public class DatanodeStorageInfo {
     return null;
   }
 
-  @VisibleForTesting
+  
   void setRemainingForTests(int remaining) {
     this.remaining = remaining;
   }

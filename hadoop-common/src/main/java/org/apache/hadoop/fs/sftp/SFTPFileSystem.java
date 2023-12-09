@@ -710,7 +710,7 @@ public class SFTPFileSystem extends FileSystem {
     }
   }
 
-  @VisibleForTesting
+  
   SFTPConnectionPool getConnectionPool() {
     return connectionPool;
   }

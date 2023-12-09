@@ -304,17 +304,17 @@ public final class Preconditions {
     }
   }
 
-  /* @VisibleForTesting */
+  /*  */
   static String getDefaultNullMSG() {
     return VALIDATE_IS_NOT_NULL_EX_MESSAGE;
   }
 
-  /* @VisibleForTesting */
+  /*  */
   static String getDefaultCheckArgumentMSG() {
     return CHECK_ARGUMENT_EX_MESSAGE;
   }
 
-  /* @VisibleForTesting */
+  /*  */
   static String getDefaultCheckStateMSG() {
     return CHECK_STATE_EX_MESSAGE;
   }

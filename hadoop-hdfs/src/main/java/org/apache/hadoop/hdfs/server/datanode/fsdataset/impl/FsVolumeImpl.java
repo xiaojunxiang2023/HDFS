@@ -51,7 +51,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * It uses the {@link FsDatasetImpl} object for synchronization.
  */
-@VisibleForTesting
+
 public class FsVolumeImpl implements FsVolumeSpi {
   public static final Logger LOG =
       LoggerFactory.getLogger(FsVolumeImpl.class);
@@ -144,7 +144,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     this.fileIoProvider = fileIoProvider;
   }
 
-  @VisibleForTesting
+  
   public static String nextSorted(List<String> arr, String prev) {
     int res = 0;
     if (prev != null) {
@@ -259,7 +259,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     Preconditions.checkState(reference.getReferenceCount() > 0);
   }
 
-  @VisibleForTesting
+  
   public int getReferenceCount() {
     return this.reference.getReferenceCount();
   }
@@ -289,7 +289,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return true;
   }
 
-  @VisibleForTesting
+  
   File getCurrentDir() {
     return currentDir;
   }
@@ -346,7 +346,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     }
   }
 
-  @VisibleForTesting
+  
   public long getDfsUsed() throws IOException {
     long dfsUsed = 0;
     for (BlockPoolSlice s : bpSlices.values()) {
@@ -366,7 +366,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
    * @return the unreserved number of bytes left in this filesystem. May be
    *         zero.
    */
-  @VisibleForTesting
+  
   public long getCapacity() {
     if (configuredCapacity < 0L) {
       long remaining;
@@ -385,7 +385,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
    *
    * @param capacity
    */
-  @VisibleForTesting
+  
   public void setCapacityForTesting(long capacity) {
     this.configuredCapacity = capacity;
   }
@@ -434,17 +434,17 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return Math.max(nonDfsUsed, 0L);
   }
 
-  @VisibleForTesting
+  
   long getDfAvailable() {
     return usage.getAvailable();
   }
 
-  @VisibleForTesting
+  
   public long getReservedForReplicas() {
     return reservedForReplicas.get();
   }
 
-  @VisibleForTesting
+  
   long getRecentReserved() {
     return recentReserved;
   }
@@ -453,7 +453,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return reserved != null ? reserved.getReserved() : 0;
   }
 
-  @VisibleForTesting
+  
   BlockPoolSlice getBlockPoolSlice(String bpid) throws IOException {
     BlockPoolSlice bp = bpSlices.get(bpid);
     if (bp == null) {
@@ -489,7 +489,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return storageType.isTransient();
   }
 
-  @VisibleForTesting
+  
   public File getFinalizedDir(String bpid) throws IOException {
     return getBlockPoolSlice(bpid).getFinalizedDir();
   }

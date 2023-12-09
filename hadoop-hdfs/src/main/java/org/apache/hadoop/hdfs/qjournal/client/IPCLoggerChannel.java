@@ -218,7 +218,7 @@ public class IPCLoggerChannel implements AsyncLogger {
   /**
    * Separated out for easy overriding in tests.
    */
-  @VisibleForTesting
+  
   protected ExecutorService createSingleThreadExecutor() {
     return Executors.newSingleThreadExecutor(
         new ThreadFactoryBuilder()
@@ -233,7 +233,7 @@ public class IPCLoggerChannel implements AsyncLogger {
   /**
    * Separated out for easy overriding in tests.
    */
-  @VisibleForTesting
+  
   protected ExecutorService createParallelExecutor() {
     int numThreads =
         conf.getInt(DFSConfigKeys.DFS_QJOURNAL_PARALLEL_READ_NUM_THREADS_KEY,
@@ -268,7 +268,7 @@ public class IPCLoggerChannel implements AsyncLogger {
         epoch, ipcSerial++, committedTxId);
   }
 
-  @VisibleForTesting
+  
   synchronized long getNextIpcSerial() {
     return ipcSerial;
   }
@@ -290,7 +290,7 @@ public class IPCLoggerChannel implements AsyncLogger {
     return outOfSync;
   }
 
-  @VisibleForTesting
+  
   void waitForAllPendingCalls() throws InterruptedException {
     try {
       singleThreadExecutor.submit(new Runnable() {

@@ -133,37 +133,37 @@ public class ReencryptionHandler implements Runnable {
     updaterExecutor.execute(reencryptionUpdater);
   }
 
-  @VisibleForTesting
+  
   synchronized void pauseForTesting() {
     shouldPauseForTesting = true;
     LOG.info("Pausing re-encrypt handler for testing.");
     notify();
   }
 
-  @VisibleForTesting
+  
   synchronized void resumeForTesting() {
     shouldPauseForTesting = false;
     LOG.info("Resuming re-encrypt handler for testing.");
     notify();
   }
 
-  @VisibleForTesting
+  
   void pauseForTestingAfterNthSubmission(final int count) {
     assert pauseAfterNthSubmission == 0;
     pauseAfterNthSubmission = count;
   }
 
-  @VisibleForTesting
+  
   void pauseUpdaterForTesting() {
     reencryptionUpdater.pauseForTesting();
   }
 
-  @VisibleForTesting
+  
   void resumeUpdaterForTesting() {
     reencryptionUpdater.resumeForTesting();
   }
 
-  @VisibleForTesting
+  
   void pauseForTestingAfterNthCheckpoint(final long zoneId, final int count) {
     reencryptionUpdater.pauseForTestingAfterNthCheckpoint(zoneId, count);
   }
@@ -725,7 +725,7 @@ public class ReencryptionHandler implements Runnable {
      *
      * @throws InterruptedException
      */
-    @VisibleForTesting
+    
     @Override
     protected void throttle() throws InterruptedException {
       assert !dir.hasReadLock();

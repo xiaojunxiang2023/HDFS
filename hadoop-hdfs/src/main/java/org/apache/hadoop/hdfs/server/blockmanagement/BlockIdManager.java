@@ -104,7 +104,7 @@ public class BlockIdManager {
     return legacyGenerationStampLimit;
   }
 
-  @VisibleForTesting
+  
   SequentialBlockIdGenerator getBlockIdGenerator() {
     return blockIdGenerator;
   }
@@ -178,7 +178,7 @@ public class BlockIdManager {
     setGenerationStampIfGreater(impendingGenerationStamp.getCurrentValue());
   }
 
-  @VisibleForTesting
+  
   public long getImpendingGenerationStamp() {
     return impendingGenerationStamp.getCurrentValue();
   }
@@ -203,7 +203,7 @@ public class BlockIdManager {
         getNextGenerationStamp();
   }
 
-  @VisibleForTesting
+  
   long getNextLegacyGenerationStamp() throws IOException {
     long legacyGenStamp = legacyGenerationStamp.nextValue();
 
@@ -218,7 +218,7 @@ public class BlockIdManager {
     return legacyGenStamp;
   }
 
-  @VisibleForTesting
+  
   long getNextGenerationStamp() {
     return generationStamp.nextValue();
   }

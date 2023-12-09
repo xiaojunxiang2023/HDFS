@@ -145,7 +145,7 @@ public class LeaseManager {
    *
    * @return Set<INodesInPath>
    */
-  @VisibleForTesting
+  
   Set<INodesInPath> getINodeWithLeases() throws IOException {
     return getINodeWithLeases(null);
   }
@@ -307,7 +307,7 @@ public class LeaseManager {
   }
 
   /** @return the number of leases currently in the system */
-  @VisibleForTesting
+  
   public synchronized int countLease() {
     return leases.size();
   }
@@ -473,7 +473,7 @@ public class LeaseManager {
       return holder;
     }
 
-    @VisibleForTesting
+    
     long getLastUpdate() {
       return lastUpdate;
     }
@@ -541,7 +541,7 @@ public class LeaseManager {
   /** Check the leases beginning from the oldest.
    *  @return true is sync is needed.
    */
-  @VisibleForTesting
+  
   synchronized boolean checkLeases() {
     return checkLeases(getExpiredCandidateLeases());
   }
@@ -663,14 +663,14 @@ public class LeaseManager {
    * Trigger the currently-running Lease monitor to re-check
    * its leases immediately. This is for use by unit tests.
    */
-  @VisibleForTesting
+  
   public void triggerMonitorCheckNow() {
     Preconditions.checkState(lmthread != null,
         "Lease monitor is not running");
     lmthread.interrupt();
   }
 
-  @VisibleForTesting
+  
   public void runLeaseChecks() {
     checkLeases();
   }

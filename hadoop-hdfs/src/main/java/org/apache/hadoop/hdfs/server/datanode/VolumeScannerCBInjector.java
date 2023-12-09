@@ -7,7 +7,7 @@ import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTest
  * and {@link BlockScanner} tests.
  * Calls into this are a no-op in production code.
  */
-@VisibleForTesting
+
 public class VolumeScannerCBInjector {
   private static VolumeScannerCBInjector instance =
       new VolumeScannerCBInjector();

@@ -87,7 +87,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
   protected abstract URL getResolvedUrl(final HttpURLConnection connection
   ) throws IOException;
 
-  @VisibleForTesting
+  
   protected InputStream getInputStream() throws IOException {
     switch (status) {
       case NORMAL:
@@ -107,7 +107,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
     return in;
   }
 
-  @VisibleForTesting
+  
   protected InputStreamAndFileLength openInputStream(long startOffset)
       throws IOException {
     if (startOffset < 0) {

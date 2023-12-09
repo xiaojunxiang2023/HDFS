@@ -317,7 +317,7 @@ public class DfsClientConf {
     return dataChecksum;
   }
 
-  @VisibleForTesting
+  
   public int getBlockWriteLocateFollowingInitialDelayMs() {
     return blockWriteLocateFollowingInitialDelayMs;
   }

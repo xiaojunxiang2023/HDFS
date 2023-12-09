@@ -238,7 +238,7 @@ public class SampleQuantiles implements QuantileEstimator {
    *
    * @return count current number of samples
    */
-  @VisibleForTesting
+  
   synchronized public int getSampleCount() {
     return samples.size();
   }

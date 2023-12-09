@@ -18,7 +18,7 @@ public class StorageTypeStats {
   private int nodesInService = 0;
   private StorageType storageType;
 
-  @VisibleForTesting
+  
   void setDataNodesInServiceXceiverCount(int avgXceiverPerDatanode,
                                          int numNodesInService) {
     this.nodesInService = numNodesInService;

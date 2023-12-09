@@ -78,7 +78,7 @@ abstract public class LocalReplica extends ReplicaInfo {
    * Get the full path of this replica's data file.
    * @return the full path of this replica's data file
    */
-  @VisibleForTesting
+  
   public File getBlockFile() {
     return new File(getDir(), getBlockName());
   }
@@ -87,7 +87,7 @@ abstract public class LocalReplica extends ReplicaInfo {
    * Get the full path of this replica's meta file.
    * @return the full path of this replica's meta file
    */
-  @VisibleForTesting
+  
   public File getMetaFile() {
     return new File(getDir(),
         DatanodeUtil.getMetaName(getBlockName(), getGenerationStamp()));
@@ -126,7 +126,7 @@ abstract public class LocalReplica extends ReplicaInfo {
     }
   }
 
-  @VisibleForTesting
+  
   public static class ReplicaDirInfo {
     public String baseDirPath;
     public boolean hasSubidrs;
@@ -137,7 +137,7 @@ abstract public class LocalReplica extends ReplicaInfo {
     }
   }
 
-  @VisibleForTesting
+  
   public static ReplicaDirInfo parseBaseDir(File dir, long blockId) {
     File currentDir = dir;
     boolean hasSubdirs = false;

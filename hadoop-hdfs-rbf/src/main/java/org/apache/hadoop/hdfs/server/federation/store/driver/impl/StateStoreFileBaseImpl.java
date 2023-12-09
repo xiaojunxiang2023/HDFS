@@ -217,7 +217,7 @@ public abstract class StateStoreFileBaseImpl
    * @param pathRecord Path for the record to check.
    * @return If the record is temporary and old.
    */
-  @VisibleForTesting
+  
   public static boolean isOldTempRecord(final String pathRecord) {
     if (!pathRecord.endsWith(TMP_MARK)) {
       return false;

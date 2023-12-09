@@ -56,7 +56,7 @@ public class RouterHeartbeatService extends PeriodicService {
 
   // 被 periodicInvoke()定期性调用, 和 updateStateAsync() 异步调用
   // 更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
-  @VisibleForTesting
+  
   synchronized void updateStateStore() {
     String routerId = router.getRouterId();
     if (isStoreAvailable()) {

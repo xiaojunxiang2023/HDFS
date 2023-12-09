@@ -31,7 +31,7 @@ public class BlockPoolTokenSecretManager extends
     map.put(bpid, secretMgr);
   }
 
-  @VisibleForTesting
+  
   public BlockTokenSecretManager get(String bpid) {
     BlockTokenSecretManager secretMgr = map.get(bpid);
     if (secretMgr == null) {
@@ -139,7 +139,7 @@ public class BlockPoolTokenSecretManager extends
         storageIds);
   }
 
-  @VisibleForTesting
+  
   public void clearAllKeysForTesting() {
     for (BlockTokenSecretManager btsm : map.values()) {
       btsm.clearAllKeysForTesting();

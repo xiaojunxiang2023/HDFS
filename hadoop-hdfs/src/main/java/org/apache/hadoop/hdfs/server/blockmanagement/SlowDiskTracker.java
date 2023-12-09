@@ -105,7 +105,7 @@ public class SlowDiskTracker {
     this.reportValidityMs = reportGenerationIntervalMs * 3;
   }
 
-  @VisibleForTesting
+  
   public static String getSlowDiskIDForReport(String datanodeID,
                                               String slowDisk) {
     return datanodeID + DATANODE_DISK_SEPARATOR + slowDisk;
@@ -140,7 +140,7 @@ public class SlowDiskTracker {
     }
   }
 
-  @VisibleForTesting
+  
   public void updateSlowDiskReportAsync(long now) {
     if (isUpdateInProgress.compareAndSet(false, true)) {
       lastUpdateTime = now;
@@ -276,17 +276,17 @@ public class SlowDiskTracker {
     oldSlowDisksCheck = null;
   }
 
-  @VisibleForTesting
+  
   ArrayList<DiskLatency> getSlowDisksReport() {
     return this.slowDisksReport;
   }
 
-  @VisibleForTesting
+  
   long getReportValidityMs() {
     return reportValidityMs;
   }
 
-  @VisibleForTesting
+  
   void setReportValidityMs(long reportValidityMs) {
     this.reportValidityMs = reportValidityMs;
   }

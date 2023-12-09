@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 // MapReduce也可见
 public class Groups {
-  @VisibleForTesting
+  
   static final Logger LOG = LoggerFactory.getLogger(Groups.class);
 
   private final GroupMappingServiceProvider impl;
@@ -115,7 +115,7 @@ public class Groups {
           warningDeltaMs);
   }
 
-  @VisibleForTesting
+  
   Set<String> getNegativeCache() {
     return negativeCache;
   }

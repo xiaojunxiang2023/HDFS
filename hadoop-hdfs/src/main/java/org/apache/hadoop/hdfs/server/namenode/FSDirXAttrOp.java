@@ -204,7 +204,7 @@ class FSDirXAttrOp {
    * @param filtered Return parameter, XAttrs that were filtered
    * @return List of XAttrs that does not contain filtered XAttrs
    */
-  @VisibleForTesting
+  
   static List<XAttr> filterINodeXAttrs(
       final List<XAttr> existingXAttrs, final List<XAttr> toFilter,
       final List<XAttr> filtered)

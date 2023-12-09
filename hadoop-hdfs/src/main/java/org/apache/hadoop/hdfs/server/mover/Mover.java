@@ -331,7 +331,7 @@ public class Mover {
     }
   }
 
-  @VisibleForTesting
+  
   static class StorageTypeDiff {
     final List<StorageType> expected;
     final List<StorageType> existing;
@@ -471,7 +471,7 @@ public class Mover {
       return map;
     }
 
-    @VisibleForTesting
+    
     static Map<URI, List<Path>> getNameNodePathsToMove(Configuration conf,
                                                        String... args) throws Exception {
       final Options opts = buildCliOptions();
@@ -756,7 +756,7 @@ public class Mover {
       return false;
     }
 
-    @VisibleForTesting
+    
     boolean scheduleMoveReplica(DBlock db, MLocation ml,
                                 List<StorageType> targetTypes) {
       final Source source = storages.getSource(ml);

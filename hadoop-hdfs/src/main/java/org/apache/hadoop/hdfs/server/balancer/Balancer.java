@@ -172,7 +172,7 @@ public class Balancer {
       new AtomicInteger(0);
   private static final AtomicInteger
       FAILED_TIMES_SINCE_LAST_SUCCESSFUL_BALANCE = new AtomicInteger(0);
-  @VisibleForTesting
+  
   private static volatile boolean serviceRunning = false;
   private final Dispatcher dispatcher;
   private final NameNodeConnector nnc;

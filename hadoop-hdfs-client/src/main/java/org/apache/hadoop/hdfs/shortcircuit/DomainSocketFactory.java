@@ -172,7 +172,7 @@ public class DomainSocketFactory {
     pathMap.put(path, PathState.UNUSABLE);
   }
 
-  @VisibleForTesting
+  
   public void clearPathMap() {
     pathMap.invalidateAll();
   }

@@ -333,7 +333,7 @@ public class RpcMetrics {
     return deferredRpcProcessingTime.lastStat().stddev();
   }
 
-  @VisibleForTesting
+  
   public MetricsTag getTag(String tagName) {
     return registry.getTag(tagName);
   }

@@ -1007,7 +1007,7 @@ public class FSImageFormat {
     }
   }
 
-  @VisibleForTesting
+  
   public static final TreeMap<String, String> renameReservedMap =
       new TreeMap<String, String>();
 
@@ -1015,7 +1015,7 @@ public class FSImageFormat {
    * Use the default key-value pairs that will be used to determine how to
    * rename reserved paths on upgrade.
    */
-  @VisibleForTesting
+  
   public static void useDefaultRenameReservedPairs() {
     renameReservedMap.clear();
     for (String key : HdfsServerConstants.RESERVED_PATH_COMPONENTS) {
@@ -1030,7 +1030,7 @@ public class FSImageFormat {
    * Set the key-value pairs that will be used to determine how to rename
    * reserved paths on upgrade.
    */
-  @VisibleForTesting
+  
   public static void setRenameReservedPairs(String renameReserved) {
     // Clear and set the default values
     useDefaultRenameReservedPairs();

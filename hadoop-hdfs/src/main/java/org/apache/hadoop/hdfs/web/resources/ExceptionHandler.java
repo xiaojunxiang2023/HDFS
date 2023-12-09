@@ -99,7 +99,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
     return Response.status(s).type(MediaType.APPLICATION_JSON).entity(js).build();
   }
 
-  @VisibleForTesting
+  
   public void initResponse(HttpServletResponse response) {
     this.response = response;
   }

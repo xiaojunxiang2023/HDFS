@@ -449,7 +449,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     out.println();
   }
 
-  @VisibleForTesting
+  
   void check(String parent, HdfsFileStatus file, Result replRes, Result ecRes)
       throws IOException {
     String path = file.getFullName(parent);
@@ -1111,7 +1111,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
   /**
    * FsckResult of checking, plus overall DFS statistics.
    */
-  @VisibleForTesting
+  
   static class Result {
     final List<String> missingIds = new ArrayList<String>();
     long missingSize = 0L;
@@ -1166,7 +1166,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     }
   }
 
-  @VisibleForTesting
+  
   static class ReplicationResult extends Result {
     final short replication;
     final short minReplication;
@@ -1287,7 +1287,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     }
   }
 
-  @VisibleForTesting
+  
   static class ErasureCodingResult extends Result {
 
     ErasureCodingResult(Configuration conf) {

@@ -112,7 +112,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
    * @param out the output stream to write the header to.
    * @throws IOException in the event of error writing to the stream.
    */
-  @VisibleForTesting
+  
   public static void writeHeader(int layoutVersion, DataOutputStream out)
       throws IOException {
     out.writeInt(layoutVersion);
@@ -240,12 +240,12 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
     return fp != null;
   }
 
-  @VisibleForTesting
+  
   public void setFileChannelForTesting(FileChannel fc) {
     this.fc = fc;
   }
 
-  @VisibleForTesting
+  
   public FileChannel getFileChannelForTesting() {
     return fc;
   }
@@ -256,7 +256,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
    * for a speed improvement.
    * @param skip true if fsync should <em>not</em> be called
    */
-  @VisibleForTesting
+  
   public static void setShouldSkipFsyncForTesting(boolean skip) {
     shouldSkipFsyncForTests = skip;
   }

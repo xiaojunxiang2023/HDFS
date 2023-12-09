@@ -826,7 +826,7 @@ public class SequenceFile {
     // starts and ends by scanning for this value.
     long lastSyncPos;                     // position of last sync
     byte[] sync;                          // 16 random bytes
-    @VisibleForTesting
+    
     int syncInterval;
 
     {

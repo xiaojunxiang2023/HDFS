@@ -73,7 +73,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
 
   private final Map<String, Metadata> cache = new HashMap<String, Metadata>();
 
-  @VisibleForTesting
+  
   JavaKeyStoreProvider(JavaKeyStoreProvider other) {
     super(new Configuration());
     uri = other.uri;

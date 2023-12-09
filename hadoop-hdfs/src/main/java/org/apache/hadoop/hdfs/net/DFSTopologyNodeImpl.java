@@ -239,7 +239,7 @@ public class DFSTopologyNodeImpl extends InnerNodeImpl {
     }
   }
 
-  @VisibleForTesting
+  
   HashMap<String, EnumMap<StorageType, Integer>> getChildrenStorageInfo() {
     return childrenStorageInfo;
   }

@@ -75,7 +75,7 @@ public class KerberosName {
 
   private static String defaultRealm = null;
 
-  @VisibleForTesting
+  
   public static void resetDefaultRealm() {
     try {
       defaultRealm = KerberosUtil.getDefaultRealm();

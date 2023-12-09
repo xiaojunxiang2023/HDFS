@@ -137,7 +137,7 @@ public final class FindClass extends Configured implements Tool {
    * @param out new stdout stream
    * @param err new stderr stream
    */
-  @VisibleForTesting
+  
   public static void setOutputStreams(PrintStream out, PrintStream err) {
     stdout = out;
     stderr = err;

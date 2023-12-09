@@ -54,7 +54,7 @@ public class FileJournalManager implements JournalManager {
   private static final Pattern EDITS_INPROGRESS_STALE_REGEX = Pattern.compile(
       NameNodeFile.EDITS_INPROGRESS.getName() + "_(\\d+).*(\\S+)");
 
-  @VisibleForTesting
+  
   File currentInProgress = null;
 
   /**
@@ -66,7 +66,7 @@ public class FileJournalManager implements JournalManager {
    */
   private long lastReadableTxId = Long.MAX_VALUE;
 
-  @VisibleForTesting
+  
   StoragePurger purger
       = new NNStorageRetentionManager.DeletionStoragePurger();
 
@@ -140,7 +140,7 @@ public class FileJournalManager implements JournalManager {
     }
   }
 
-  @VisibleForTesting
+  
   public StorageDirectory getStorageDirectory() {
     return sd;
   }

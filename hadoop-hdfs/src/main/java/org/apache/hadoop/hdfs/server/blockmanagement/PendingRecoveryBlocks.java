@@ -81,7 +81,7 @@ class PendingRecoveryBlocks {
     return Time.monotonicNow();
   }
 
-  @VisibleForTesting
+  
   synchronized void setRecoveryTimeoutInterval(long recoveryTimeoutInterval) {
     this.recoveryTimeoutInterval = recoveryTimeoutInterval;
   }

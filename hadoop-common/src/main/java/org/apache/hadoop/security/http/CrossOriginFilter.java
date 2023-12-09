@@ -127,12 +127,12 @@ public class CrossOriginFilter implements Filter {
     res.setHeader(ACCESS_CONTROL_MAX_AGE, maxAge);
   }
 
-  @VisibleForTesting
+  
   String getAllowedHeadersHeader() {
     return StringUtils.join(allowedHeaders, ',');
   }
 
-  @VisibleForTesting
+  
   String getAllowedMethodsHeader() {
     return StringUtils.join(allowedMethods, ',');
   }
@@ -201,7 +201,7 @@ public class CrossOriginFilter implements Filter {
     return originsList != null;
   }
 
-  @VisibleForTesting
+  
   boolean areOriginsAllowed(String originsList) {
     if (allowAllOrigins) {
       return true;

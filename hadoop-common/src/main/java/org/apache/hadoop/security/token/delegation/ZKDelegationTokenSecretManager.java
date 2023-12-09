@@ -930,19 +930,19 @@ public abstract class ZKDelegationTokenSecretManager<TokenIdent extends Abstract
     }
   }
 
-  @VisibleForTesting
+  
   @Private
   @Unstable
   static String getNodePath(String root, String nodeName) {
     return (root + "/" + nodeName);
   }
 
-  @VisibleForTesting
+  
   public ExecutorService getListenerThreadPool() {
     return listenerThreadPool;
   }
 
-  @VisibleForTesting
+  
   DelegationTokenInformation getTokenInfoFromMemory(TokenIdent ident) {
     return currentTokens.get(ident);
   }

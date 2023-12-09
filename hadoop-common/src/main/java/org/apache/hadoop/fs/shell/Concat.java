@@ -62,7 +62,7 @@ public class Concat extends FsCommand {
     }
   }
 
-  @VisibleForTesting
+  
   static void setTestFs(FileSystem fs) {
     testFs = fs;
   }

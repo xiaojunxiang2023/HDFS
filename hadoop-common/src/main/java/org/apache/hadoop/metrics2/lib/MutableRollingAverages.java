@@ -35,7 +35,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
   private MutableRatesWithAggregation innerMetrics =
       new MutableRatesWithAggregation();
 
-  @VisibleForTesting
+  
   static final ScheduledExecutorService SCHEDULER = Executors
       .newScheduledThreadPool(1, new ThreadFactoryBuilder().setDaemon(true)
           .setNameFormat("MutableRollingAverages-%d").build());
@@ -129,7 +129,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
   /**
    * This method is for testing only to replace the scheduledTask.
    */
-  @VisibleForTesting
+  
   synchronized void replaceScheduledTask(int windows, long interval,
                                          TimeUnit timeUnit) {
     numWindows = windows;
@@ -284,7 +284,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
   /**
    * Use for test only.
    */
-  @VisibleForTesting
+  
   public synchronized void setRecordValidityMs(long value) {
     this.recordValidityMs = value;
   }

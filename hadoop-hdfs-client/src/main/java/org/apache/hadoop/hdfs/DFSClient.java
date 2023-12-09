@@ -137,7 +137,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
   private static volatile boolean disabledStopDeadNodeDetectorThreadForTest =
       false;
 
-  @VisibleForTesting
+  
   public static void setDisabledStopDeadNodeDetectorThreadForTest(
       boolean disabledStopDeadNodeDetectorThreadForTest) {
     DFSClient.disabledStopDeadNodeDetectorThreadForTest =
@@ -199,7 +199,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * {@link LossyRetryInvocationHandler} as its RetryInvocationHandler.
    * Otherwise one of nameNodeUri or rpcNamenode must be null.
    */
-  @VisibleForTesting
+  
   public DFSClient(URI nameNodeUri, ClientProtocol rpcNamenode,
                    Configuration conf, FileSystem.Statistics stats) throws IOException {
     // Copy only the required DFSClient configuration
@@ -365,7 +365,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     return t > 0 ? HdfsConstants.READ_TIMEOUT_EXTENSION * numNodes + t : 0;
   }
 
-  @VisibleForTesting
+  
   public String getClientName() {
     return clientName;
   }
@@ -761,7 +761,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * This is just a wrapper around callGetBlockLocations, but non-static so that
    * we can stub it out for tests.
    */
-  @VisibleForTesting
+  
   public LocatedBlocks getLocatedBlocks(String src, long start, long length)
       throws IOException {
     try (TraceScope ignored = newPathTraceScope("getBlockLocations", src)) {
@@ -1710,7 +1710,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     }
   }
 
-  @VisibleForTesting
+  
   public DataEncryptionKey getEncryptionKey() {
     return encryptionKey;
   }
@@ -2242,7 +2242,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     }
   }
 
-  @VisibleForTesting
+  
   ExtendedBlock getPreviousBlock(long fileId) {
     return filesBeingWritten.get(fileId).getBlock();
   }
@@ -2915,7 +2915,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     return clientContext.getKeyProviderCache().get(conf, getKeyProviderUri());
   }
 
-  @VisibleForTesting
+  
   public void setKeyProvider(KeyProvider provider) {
     clientContext.getKeyProviderCache().setKeyProvider(conf, provider);
   }
@@ -3051,7 +3051,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * @return HA state of NameNode
    * @throws IOException
    */
-  @VisibleForTesting
+  
   public HAServiceProtocol.HAServiceState getHAServiceState()
       throws IOException {
     return namenode.getHAServiceState();

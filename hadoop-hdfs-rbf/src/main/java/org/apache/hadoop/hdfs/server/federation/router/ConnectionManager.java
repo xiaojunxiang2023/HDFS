@@ -283,7 +283,7 @@ public class ConnectionManager {
     return JSON.toString(info);
   }
 
-  @VisibleForTesting
+  
   Map<ConnectionPoolId, ConnectionPool> getPools() {
     return this.pools;
   }
@@ -293,7 +293,7 @@ public class ConnectionManager {
    *
    * @param pool Connection pool to cleanup.
    */
-  @VisibleForTesting
+  
   void cleanup(ConnectionPool pool) {
     if (pool.getNumConnections() > pool.getMinSize()) {
       // Check if the pool hasn't been active in a while or not 50% are used

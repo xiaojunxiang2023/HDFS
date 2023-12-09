@@ -115,7 +115,7 @@ public class ProxyUsers {
     authorize(user, remoteAddress);
   }
 
-  @VisibleForTesting
+  
   public static DefaultImpersonationProvider getDefaultImpersonationProvider() {
     return ((DefaultImpersonationProvider) getSip());
   }

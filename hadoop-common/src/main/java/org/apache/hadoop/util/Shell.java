@@ -421,7 +421,7 @@ public abstract class Shell {
    * @throws FileNotFoundException if the specified
    * path is not a reference to a valid directory.
    */
-  @VisibleForTesting
+  
   static File checkHadoopHomeInner(String home) throws FileNotFoundException {
     // couldn't find either setting for hadoop's home directory
     if (home == null) {
@@ -1153,7 +1153,7 @@ public abstract class Shell {
      * Returns the timeout value set for the executor's sub-commands.
      * @return The timeout value in milliseconds
      */
-    @VisibleForTesting
+    
     public long getTimeoutInterval() {
       return timeOutInterval;
     }

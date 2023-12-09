@@ -95,7 +95,7 @@ public class SecureIOUtils {
    * Same as openForRandomRead except that it will run even if security is off.
    * This is used by unit tests.
    */
-  @VisibleForTesting
+  
   protected static RandomAccessFile forceSecureOpenForRandomRead(File f,
                                                                  String mode, String expectedOwner, String expectedGroup)
       throws IOException {
@@ -136,7 +136,7 @@ public class SecureIOUtils {
    * Same as openFSDataInputStream except that it will run even if security is
    * off. This is used by unit tests.
    */
-  @VisibleForTesting
+  
   protected static FSDataInputStream forceSecureOpenFSDataInputStream(
       File file,
       String expectedOwner, String expectedGroup) throws IOException {
@@ -182,7 +182,7 @@ public class SecureIOUtils {
    * Same as openForRead() except that it will run even if security is off.
    * This is used by unit tests.
    */
-  @VisibleForTesting
+  
   protected static FileInputStream forceSecureOpenForRead(File f, String expectedOwner,
                                                           String expectedGroup) throws IOException {
 

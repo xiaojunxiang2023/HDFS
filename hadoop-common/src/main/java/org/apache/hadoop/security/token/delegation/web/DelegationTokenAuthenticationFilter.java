@@ -196,7 +196,7 @@ public class DelegationTokenAuthenticationFilter
     this.handlerAuthMethod = authMethod;
   }
 
-  @VisibleForTesting
+  
   static String getDoAs(HttpServletRequest request) {
     String queryString = request.getQueryString();
     if (queryString == null) {

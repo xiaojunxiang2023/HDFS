@@ -211,7 +211,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     }
   }
 
-  @VisibleForTesting
+  
   void readFieldsLegacy(DataInput in) throws IOException {
     expiryDate = WritableUtils.readVLong(in);
     keyId = WritableUtils.readVInt(in);
@@ -254,7 +254,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     useProto = false;
   }
 
-  @VisibleForTesting
+  
   void readFieldsProtobuf(DataInput in) throws IOException {
     BlockTokenSecretProto blockTokenSecretProto =
         BlockTokenSecretProto.parseFrom((DataInputStream) in);
@@ -300,7 +300,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     }
   }
 
-  @VisibleForTesting
+  
   void writeLegacy(DataOutput out) throws IOException {
     WritableUtils.writeVLong(out, expiryDate);
     WritableUtils.writeVInt(out, keyId);
@@ -329,7 +329,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     }
   }
 
-  @VisibleForTesting
+  
   void writeProtobuf(DataOutput out) throws IOException {
     BlockTokenSecretProto secret = PBHelperClient.convert(this);
     out.write(secret.toByteArray());

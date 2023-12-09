@@ -186,32 +186,32 @@ public class ServiceAuthorizationManager {
     return serviceKey;
   }
 
-  @VisibleForTesting
+  
   public Set<Class<?>> getProtocolsWithAcls() {
     return protocolToAcls.keySet();
   }
 
-  @VisibleForTesting
+  
   public AccessControlList getProtocolsAcls(Class<?> className) {
     return protocolToAcls.get(className)[0];
   }
 
-  @VisibleForTesting
+  
   public AccessControlList getProtocolsBlockedAcls(Class<?> className) {
     return protocolToAcls.get(className)[1];
   }
 
-  @VisibleForTesting
+  
   public Set<Class<?>> getProtocolsWithMachineLists() {
     return protocolToMachineLists.keySet();
   }
 
-  @VisibleForTesting
+  
   public MachineList getProtocolsMachineList(Class<?> className) {
     return protocolToMachineLists.get(className)[0];
   }
 
-  @VisibleForTesting
+  
   public MachineList getProtocolsBlockedMachineList(Class<?> className) {
     return protocolToMachineLists.get(className)[1];
   }

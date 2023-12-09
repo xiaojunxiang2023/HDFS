@@ -174,7 +174,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    * @param priority - queue priority
    * @param e - element to add
    */
-  @VisibleForTesting
+  
   void putQueue(int priority, E e) throws InterruptedException {
     queues.get(priority).put(e);
     signalNotEmpty();
@@ -186,7 +186,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    * @param e - element to add
    * @return boolean if added to the given queue
    */
-  @VisibleForTesting
+  
   boolean offerQueue(int priority, E e) {
     boolean ret = queues.get(priority).offer(e);
     if (ret) {
@@ -445,7 +445,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
     return calls;
   }
 
-  @VisibleForTesting
+  
   public void setMultiplexer(RpcMultiplexer newMux) {
     this.multiplexer = newMux;
   }

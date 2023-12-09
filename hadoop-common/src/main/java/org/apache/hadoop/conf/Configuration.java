@@ -1177,7 +1177,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
    *
    * @param val If true, will allow Configuration to store keys without values
    */
-  @VisibleForTesting
+  
   public void setAllowNullValueProperties(boolean val) {
     this.allowNullValueProperties = val;
   }
@@ -1194,7 +1194,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
    * @param name the property name
    * @return true if the property <code>name</code> exists without value
    */
-  @VisibleForTesting
+  
   public boolean onlyKeyExists(String name) {
     String[] names = handleDeprecation(deprecationContext.get(), name);
     for (String n : names) {
@@ -1357,7 +1357,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
     }
   }
 
-  @VisibleForTesting
+  
   void logDeprecation(String message) {
     LOG_DEPRECATION.info(message);
   }

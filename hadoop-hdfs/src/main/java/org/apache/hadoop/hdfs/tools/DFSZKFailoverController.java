@@ -252,7 +252,7 @@ public class DFSZKFailoverController extends ZKFailoverController {
     }
   }
 
-  @VisibleForTesting
+  
   boolean isThreadDumpCaptured() {
     return isThreadDumpCaptured;
   }

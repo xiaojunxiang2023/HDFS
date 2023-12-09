@@ -84,7 +84,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
   /**
    * Constant for the list of endpoints that skips Kerberos authentication.
    */
-  @VisibleForTesting
+  
   static final String ENDPOINT_WHITELIST = TYPE + ".endpoint.whitelist";
   private static final Pattern ENDPOINT_PATTERN = Pattern.compile("^/[\\w]+");
 

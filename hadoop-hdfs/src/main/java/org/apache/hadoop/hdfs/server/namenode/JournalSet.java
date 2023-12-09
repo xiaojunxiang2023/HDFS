@@ -119,7 +119,7 @@ public class JournalSet implements JournalManager {
       this.stream = stream;
     }
 
-    @VisibleForTesting
+    
     void setJournalForTests(JournalManager jm) {
       this.journal = jm;
     }

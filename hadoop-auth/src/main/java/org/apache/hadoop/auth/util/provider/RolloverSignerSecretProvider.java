@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class RolloverSignerSecretProvider extends SignerSecretProvider {
 
-  @VisibleForTesting
+  
   static Logger LOG = LoggerFactory.getLogger(
       RolloverSignerSecretProvider.class);
   /**

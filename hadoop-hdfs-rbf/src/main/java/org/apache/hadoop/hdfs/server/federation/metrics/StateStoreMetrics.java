@@ -119,7 +119,7 @@ public class StateStoreMetrics implements StateStoreMBean {
     counter.set(size);
   }
 
-  @VisibleForTesting
+  
   public void reset() {
     reads.resetMinMax();
     writes.resetMinMax();

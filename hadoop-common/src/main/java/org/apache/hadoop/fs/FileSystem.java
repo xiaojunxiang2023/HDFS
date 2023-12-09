@@ -188,19 +188,19 @@ public abstract class FileSystem extends Configured
    * @param fs the FileSystem to store
    * @throws IOException if the current user cannot be determined.
    */
-  @VisibleForTesting
+  
   static void addFileSystemForTesting(URI uri, Configuration conf,
                                       FileSystem fs) throws IOException {
     CACHE.map.put(new Cache.Key(uri, conf), fs);
   }
 
-  @VisibleForTesting
+  
   static void removeFileSystemForTesting(URI uri, Configuration conf,
                                          FileSystem fs) throws IOException {
     CACHE.map.remove(new Cache.Key(uri, conf), fs);
   }
 
-  @VisibleForTesting
+  
   static int cacheSize() {
     return CACHE.map.size();
   }
@@ -641,7 +641,7 @@ public abstract class FileSystem extends Configured
    * @return FileSystems that are direct children of this FileSystem,
    *         or null for "no children"
    */
-  @VisibleForTesting
+  
   public FileSystem[] getChildFileSystems() {
     return null;
   }
@@ -3570,7 +3570,7 @@ public abstract class FileSystem extends Configured
      * Get the count of discarded instances.
      * @return the new instance.
      */
-    @VisibleForTesting
+    
     long getDiscardedInstances() {
       return discardedInstances.get();
     }
@@ -4311,7 +4311,7 @@ public abstract class FileSystem extends Configured
       return scheme;
     }
 
-    @VisibleForTesting
+    
     synchronized int getAllThreadLocalDataSize() {
       return allData.size();
     }
@@ -4388,12 +4388,12 @@ public abstract class FileSystem extends Configured
   // Symlinks are temporarily disabled - see HADOOP-10020 and HADOOP-10052
   private static boolean symlinksEnabled = false;
 
-  @VisibleForTesting
+  
   public static boolean areSymlinksEnabled() {
     return symlinksEnabled;
   }
 
-  @VisibleForTesting
+  
   public static void enableSymlinks() {
     symlinksEnabled = true;
   }

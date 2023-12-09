@@ -106,12 +106,12 @@ public class NamespaceInfo extends StorageInfo {
     return capabilities;
   }
 
-  @VisibleForTesting
+  
   public void setCapabilities(long capabilities) {
     this.capabilities = capabilities;
   }
 
-  @VisibleForTesting
+  
   public void setState(HAServiceState state) {
     this.state = state;
   }

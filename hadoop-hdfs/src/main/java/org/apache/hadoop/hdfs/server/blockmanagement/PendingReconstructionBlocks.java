@@ -270,7 +270,7 @@ class PendingReconstructionBlocks {
   /**
    * @return timer thread.
    */
-  @VisibleForTesting
+  
   public Daemon getTimerThread() {
     return timerThread;
   }

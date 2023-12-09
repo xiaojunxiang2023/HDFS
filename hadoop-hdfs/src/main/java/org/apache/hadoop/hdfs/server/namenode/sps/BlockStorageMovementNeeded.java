@@ -71,7 +71,7 @@ public class BlockStorageMovementNeeded {
    *          -Indicates whether the start id directory has no more elements to
    *          scan.
    */
-  @VisibleForTesting
+  
   public synchronized void addAll(long startPath, List<ItemInfo> itemInfoList,
                                   boolean scanCompleted) {
     storageMovementNeeded.addAll(itemInfoList);
@@ -88,7 +88,7 @@ public class BlockStorageMovementNeeded {
    *          -Indicates whether the ItemInfo start id directory has no more
    *          elements to scan.
    */
-  @VisibleForTesting
+  
   public synchronized void add(ItemInfo itemInfo, boolean scanCompleted) {
     storageMovementNeeded.add(itemInfo);
     // This represents sps start id is file, so no need to update pending dir
@@ -300,14 +300,14 @@ public class BlockStorageMovementNeeded {
     }
   }
 
-  @VisibleForTesting
+  
   public static void setStatusClearanceElapsedTimeMs(
       long statusClearanceElapsedTimeMs) {
     BlockStorageMovementNeeded.statusClearanceElapsedTimeMs =
         statusClearanceElapsedTimeMs;
   }
 
-  @VisibleForTesting
+  
   public static long getStatusClearanceElapsedTimeMs() {
     return statusClearanceElapsedTimeMs;
   }

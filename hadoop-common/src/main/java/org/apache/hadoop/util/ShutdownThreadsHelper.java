@@ -14,7 +14,7 @@ public class ShutdownThreadsHelper {
   private static final Logger LOG =
       LoggerFactory.getLogger(ShutdownThreadsHelper.class);
 
-  @VisibleForTesting
+  
   static final int SHUTDOWN_WAIT_MS = 3000;
 
   /**

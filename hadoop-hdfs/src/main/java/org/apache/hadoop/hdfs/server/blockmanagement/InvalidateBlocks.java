@@ -205,7 +205,7 @@ class InvalidateBlocks {
   /**
    * @return the remianing pending time
    */
-  @VisibleForTesting
+  
   long getInvalidationDelay() {
     return pendingPeriodInMs - (Time.monotonicNow() - startupTime);
   }

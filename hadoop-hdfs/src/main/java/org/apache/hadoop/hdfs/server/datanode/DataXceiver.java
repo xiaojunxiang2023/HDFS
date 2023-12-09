@@ -1206,7 +1206,7 @@ class DataXceiver extends Receiver implements Runnable {
   /**
    * Separated for testing.
    */
-  @VisibleForTesting
+  
   BlockReceiver getBlockReceiver(
       final ExtendedBlock block, final StorageType storageType,
       final DataInputStream in,
@@ -1229,7 +1229,7 @@ class DataXceiver extends Receiver implements Runnable {
    * Separated for testing.
    * @return
    */
-  @VisibleForTesting
+  
   DataOutputStream getBufferedOutputStream() {
     return new DataOutputStream(
         new BufferedOutputStream(getOutputStream(), smallBufferSize));

@@ -56,7 +56,7 @@ public abstract class BaseRecord implements Comparable<BaseRecord> {
     return generateMashupKey(getPrimaryKeys());
   }
 
-  @VisibleForTesting
+  
   public boolean hasOtherFields() {
     return true;
   }

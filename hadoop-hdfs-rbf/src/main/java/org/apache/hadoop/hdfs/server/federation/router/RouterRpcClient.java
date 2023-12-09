@@ -766,7 +766,7 @@ public class RouterRpcClient {
    * @param src Path in the subcluster.
    * @return Message processed for federation.
    */
-  @VisibleForTesting
+  
   static String processExceptionMsg(
       final String msg, final String dst, final String src) {
     if (dst.equals(src) || !dst.startsWith("/") || !src.startsWith("/")) {

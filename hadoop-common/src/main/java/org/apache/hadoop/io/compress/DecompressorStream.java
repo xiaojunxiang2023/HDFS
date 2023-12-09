@@ -26,7 +26,7 @@ public class DecompressorStream extends CompressionInputStream {
   protected boolean closed = false;
   private int lastBytesSent = 0;
 
-  @VisibleForTesting
+  
   DecompressorStream(InputStream in, Decompressor decompressor,
                      int bufferSize, int skipBufferSize)
       throws IOException {

@@ -70,7 +70,7 @@ public class HostFileManager extends HostConfigManager {
     return res;
   }
 
-  @VisibleForTesting
+  
   static InetSocketAddress parseEntry(String type, String fn, String line) {
     try {
       URI uri = new URI("dummy", line, null, null, null);
@@ -149,7 +149,7 @@ public class HostFileManager extends HostConfigManager {
    * @param newIncludes the new includes list
    * @param newExcludes the new excludes list
    */
-  @VisibleForTesting
+  
   void refresh(HostSet newIncludes, HostSet newExcludes) {
     synchronized (this) {
       includes = newIncludes;

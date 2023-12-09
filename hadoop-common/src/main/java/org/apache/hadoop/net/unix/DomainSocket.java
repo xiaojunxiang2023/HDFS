@@ -75,7 +75,7 @@ public class DomainSocket implements Closeable {
    * @param skipComponents   the number of starting path components to skip 
    *                         validation for (used only for testing)
    */
-  @VisibleForTesting
+  
   native static void validateSocketPathSecurity0(String path,
                                                  int skipComponents) throws IOException;
 
@@ -89,7 +89,7 @@ public class DomainSocket implements Closeable {
   /**
    * Disable validation of the server bind paths.
    */
-  @VisibleForTesting
+  
   public static void disableBindPathValidation() {
     validateBindPaths = false;
   }

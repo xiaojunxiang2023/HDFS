@@ -1832,7 +1832,7 @@ public class RouterClientProtocol implements ClientProtocol {
    * @param date Map with the dates.
    * @return New HDFS file status representing a mount point.
    */
-  @VisibleForTesting
+  
   HdfsFileStatus getMountPointStatus(
       String name, int childrenNum, long date) {
     long modTime = date;
@@ -2029,7 +2029,7 @@ public class RouterClientProtocol implements ClientProtocol {
    *         subclusters else false in all other scenarios.
    * @throws IOException if unable to get the file status.
    */
-  @VisibleForTesting
+  
   boolean isMultiDestDirectory(String src) throws IOException {
     try {
       if (rpcServer.isPathAll(src)) {

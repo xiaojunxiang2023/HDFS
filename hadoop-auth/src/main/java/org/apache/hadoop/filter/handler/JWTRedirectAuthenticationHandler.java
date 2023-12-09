@@ -202,7 +202,7 @@ public class JWTRedirectAuthenticationHandler extends
    * @param request for getting the original request URL
    * @return url to use as login url for redirect
    */
-  @VisibleForTesting
+  
   String constructLoginURL(HttpServletRequest request) {
     String delimiter = "?";
     if (authenticationProviderUrl.contains("?")) {

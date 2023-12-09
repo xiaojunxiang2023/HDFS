@@ -43,7 +43,7 @@ public class JvmMetrics implements MetricsSource {
     }
   }
 
-  @VisibleForTesting
+  
   public synchronized void registerIfNeeded() {
     // during tests impl might exist, but is not registered
     MetricsSystem ms = DefaultMetricsSystem.instance();
@@ -65,7 +65,7 @@ public class JvmMetrics implements MetricsSource {
       new ConcurrentHashMap<String, MetricsInfo[]>();
   private GcTimeMonitor gcTimeMonitor = null;
 
-  @VisibleForTesting
+  
   JvmMetrics(String processName, String sessionId, boolean useThreadMXBean) {
     this.processName = processName;
     this.sessionId = sessionId;

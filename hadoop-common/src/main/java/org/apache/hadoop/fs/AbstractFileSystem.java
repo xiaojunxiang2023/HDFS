@@ -61,7 +61,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   /** The statistics for this file system. */
   protected Statistics statistics;
 
-  @VisibleForTesting
+  
   static final String NO_ABSTRACT_FS_ERROR = "No AbstractFileSystem configured for scheme";
 
   private final URI myUri;

@@ -342,7 +342,7 @@ public class NameNode extends ReconfigurableBase implements
     return rpcServer;
   }
 
-  @VisibleForTesting
+  
   public HttpServer2 getHttpServer() {
     return httpServer.getHttpServer();
   }
@@ -671,7 +671,7 @@ public class NameNode extends ReconfigurableBase implements
     startMetricsLogger(conf);
   }
 
-  @VisibleForTesting
+  
   public InMemoryLevelDBAliasMapServer getAliasMapServer() {
     return levelDBAliasMapServer;
   }
@@ -1000,7 +1000,7 @@ public class NameNode extends ReconfigurableBase implements
   }
 
   /** get FSImage */
-  @VisibleForTesting
+  
   public FSImage getFSImage() {
     return namesystem.getFSImage();
   }
@@ -1036,7 +1036,7 @@ public class NameNode extends ReconfigurableBase implements
    * @return a string of format host:port that points to an auxiliary NameNode
    *         address, or null if there is no such address.
    */
-  @VisibleForTesting
+  
   public String getNNAuxiliaryRpcAddress() {
     Set<InetSocketAddress> auxiliaryAddrs = getAuxiliaryNameNodeAddresses();
     if (auxiliaryAddrs.isEmpty()) {
@@ -1077,7 +1077,7 @@ public class NameNode extends ReconfigurableBase implements
    * NameNodeHttpServer, used by unit tests to ensure a full shutdown,
    * so that no bind exception is thrown during restart.
    */
-  @VisibleForTesting
+  
   public void joinHttpServer() {
     if (httpServer != null) {
       try {
@@ -1180,12 +1180,12 @@ public class NameNode extends ReconfigurableBase implements
     }
   }
 
-  @VisibleForTesting
+  
   public static boolean initializeSharedEdits(Configuration conf) throws IOException {
     return initializeSharedEdits(conf, true);
   }
 
-  @VisibleForTesting
+  
   public static boolean initializeSharedEdits(Configuration conf,
                                               boolean force) throws IOException {
     return initializeSharedEdits(conf, force, false);
@@ -1359,7 +1359,7 @@ public class NameNode extends ReconfigurableBase implements
     }
   }
 
-  @VisibleForTesting
+  
   public static boolean doRollback(Configuration conf,
                                    boolean isConfirmationNeeded) throws IOException {
     String nsId = DFSUtil.getNamenodeNameServiceId(conf);
@@ -1387,7 +1387,7 @@ public class NameNode extends ReconfigurableBase implements
     out.println(USAGE + "\n");
   }
 
-  @VisibleForTesting
+  
   static StartupOption parseArguments(String args[]) {
     int argsLen = (args == null) ? 0 : args.length;
     StartupOption startOpt = StartupOption.REGULAR;

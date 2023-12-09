@@ -192,7 +192,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
    * @param template property name template.
    * @return the resolved property name.
    */
-  @VisibleForTesting
+  
   public static String resolvePropertyName(SSLFactory.Mode mode,
                                            String template) {
     return MessageFormat.format(

@@ -202,12 +202,12 @@ class MetricsSourceAdapter implements DynamicMBean {
     }
   }
 
-  @VisibleForTesting
+  
   ObjectName getMBeanName() {
     return mbeanName;
   }
 
-  @VisibleForTesting
+  
   long getJmxCacheTTL() {
     return jmxCacheTTL;
   }

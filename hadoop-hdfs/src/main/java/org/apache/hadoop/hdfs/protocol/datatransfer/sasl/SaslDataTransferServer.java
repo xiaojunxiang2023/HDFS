@@ -315,7 +315,7 @@ public class SaslDataTransferServer {
     return identifier;
   }
 
-  @VisibleForTesting
+  
   public String getNegotiatedQOP() {
     return negotiatedQOP;
   }

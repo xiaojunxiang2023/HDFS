@@ -190,7 +190,7 @@ public class ClientContext {
    * This method is less efficient than the version which takes a DFSClient#Conf
    * object, and should be mostly used by tests.
    */
-  @VisibleForTesting
+  
   public static ClientContext getFromConf(Configuration conf) {
     return get(conf.get(HdfsClientConfigKeys.DFS_CLIENT_CONTEXT,
         HdfsClientConfigKeys.DFS_CLIENT_CONTEXT_DEFAULT), conf);

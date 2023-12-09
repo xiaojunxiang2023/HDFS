@@ -587,14 +587,14 @@ public class DecayRpcScheduler implements RpcScheduler,
     return Math.max(0, cachedOrComputedPriorityLevel(identity));
   }
 
-  @VisibleForTesting
+  
   int getPriorityLevel(UserGroupInformation ugi) {
     String identity = getIdentity(newSchedulable(ugi));
     // returns true priority of the user.
     return cachedOrComputedPriorityLevel(identity);
   }
 
-  @VisibleForTesting
+  
   void setPriorityLevel(UserGroupInformation ugi, int priority) {
     String identity = getIdentity(newSchedulable(ugi));
     priority = Math.min(numLevels - 1, priority);
@@ -703,27 +703,27 @@ public class DecayRpcScheduler implements RpcScheduler,
   }
 
   // For testing
-  @VisibleForTesting
+  
   double getDecayFactor() {
     return decayFactor;
   }
 
-  @VisibleForTesting
+  
   long getDecayPeriodMillis() {
     return decayPeriodMillis;
   }
 
-  @VisibleForTesting
+  
   double[] getThresholds() {
     return thresholds;
   }
 
-  @VisibleForTesting
+  
   void forceDecay() {
     decayCurrentCosts();
   }
 
-  @VisibleForTesting
+  
   Map<Object, Long> getCallCostSnapshot() {
     HashMap<Object, Long> snapshot = new HashMap<Object, Long>();
 
@@ -734,7 +734,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     return Collections.unmodifiableMap(snapshot);
   }
 
-  @VisibleForTesting
+  
   long getTotalCallSnapshot() {
     return totalDecayedCallCost.get();
   }
@@ -1022,7 +1022,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     return decayedCallCosts;
   }
 
-  @VisibleForTesting
+  
   public DecayRpcSchedulerDetailedMetrics
   getDecayRpcSchedulerDetailedMetrics() {
     return decayRpcSchedulerDetailedMetrics;
