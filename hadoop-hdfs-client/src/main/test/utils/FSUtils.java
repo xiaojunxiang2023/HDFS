@@ -26,7 +26,7 @@ public class FSUtils {
       args = new String[]{Constant.defaultFSId};
     }
 
-    System.setProperty("HADOOP_USER_NAME", Constant.HADOOP_USER_NAME);
+    // System.setProperty("HADOOP_USER_NAME", Constant.HADOOP_USER_NAME);
     conf.set("fs.defaultFS", "hdfs://" + "localhost:8020");
     conf.set("dfs.client.use.datanode.hostname", Constant.useDNHostName);
 
