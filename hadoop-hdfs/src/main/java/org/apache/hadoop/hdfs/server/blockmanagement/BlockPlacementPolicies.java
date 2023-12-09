@@ -9,7 +9,6 @@ import org.apache.hadoop.util.ReflectionUtils;
 public class BlockPlacementPolicies {
 
   private final BlockPlacementPolicy replicationPolicy;
-  private final BlockPlacementPolicy ecPolicy;
 
   public BlockPlacementPolicies(Configuration conf, FSClusterStats stats,
                                 NetworkTopology clusterMap,
@@ -20,20 +19,12 @@ public class BlockPlacementPolicies {
             BlockPlacementPolicy.class);
     replicationPolicy = ReflectionUtils.newInstance(replicatorClass, conf);
     replicationPolicy.initialize(conf, stats, clusterMap, host2datanodeMap);
-    final Class<? extends BlockPlacementPolicy> blockPlacementECClass =
-        conf.getClass(DFSConfigKeys.DFS_BLOCK_PLACEMENT_EC_CLASSNAME_KEY,
-            DFSConfigKeys.DFS_BLOCK_PLACEMENT_EC_CLASSNAME_DEFAULT,
-            BlockPlacementPolicy.class);
-    ecPolicy = ReflectionUtils.newInstance(blockPlacementECClass, conf);
-    ecPolicy.initialize(conf, stats, clusterMap, host2datanodeMap);
   }
 
   public BlockPlacementPolicy getPolicy(BlockType blockType) {
     switch (blockType) {
       case CONTIGUOUS:
         return replicationPolicy;
-      case STRIPED:
-        return ecPolicy;
       default:
         throw new IllegalArgumentException(
             "getPolicy received a BlockType that isn't supported.");
