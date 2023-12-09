@@ -407,9 +407,7 @@ class BlockManagerSafeMode {
       return;
     }
 
-    final int safeNumberOfNodes = storedBlock.isStriped() ?
-        ((BlockInfoStriped) storedBlock).getRealDataBlockNum() : safeReplication;
-    if (storageNum == safeNumberOfNodes) {
+    if (storageNum == safeReplication) {
       this.blockSafe++;
 
       // Report startup progress only if we haven't completed startup yet.
@@ -439,8 +437,7 @@ class BlockManagerSafeMode {
       return;
     }
 
-    final int safeNumberOfNodes = b.isStriped() ?
-        ((BlockInfoStriped) b).getRealDataBlockNum() : safeReplication;
+    final int safeNumberOfNodes = safeReplication;
     BlockInfo storedBlock = blockManager.getStoredBlock(b);
     if (storedBlock.isComplete() &&
         blockManager.countNodes(b).liveReplicas() == safeNumberOfNodes - 1) {
@@ -464,11 +461,7 @@ class BlockManagerSafeMode {
 
     if (!blockManager.getShouldPostponeBlocksFromFuture() &&
         !inRollBack && blockManager.isGenStampInFuture(brr)) {
-      if (blockManager.getBlockIdManager().isStripedBlock(brr)) {
-        bytesInFutureECBlockGroups.add(brr.getBytesOnDisk());
-      } else {
-        bytesInFutureBlocks.add(brr.getBytesOnDisk());
-      }
+      bytesInFutureBlocks.add(brr.getBytesOnDisk());
     }
   }
 

@@ -26,7 +26,6 @@ import org.apache.hadoop.hdfs.protocol.proto.EncryptionZonesProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.ErasureCodingProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BatchedDirectoryListingProto;
-import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetXAttrsRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.ListXAttrsRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.RemoveXAttrRequestProto;
@@ -53,7 +52,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * This class forwards NN's ClientProtocol calls as RPC calls to the NN server
@@ -73,10 +71,6 @@ public class ClientNamenodeProtocolTranslatorPB implements
   private final static GetFsReplicatedBlockStatsRequestProto
       VOID_GET_FS_REPLICATED_BLOCK_STATS_REQUEST =
       GetFsReplicatedBlockStatsRequestProto.newBuilder().build();
-
-  private final static GetFsECBlockGroupStatsRequestProto
-      VOID_GET_FS_ECBLOCKGROUP_STATS_REQUEST =
-      GetFsECBlockGroupStatsRequestProto.newBuilder().build();
 
   private final static RollEditsRequestProto VOID_ROLLEDITS_REQUEST =
       RollEditsRequestProto.getDefaultInstance();
@@ -577,16 +571,6 @@ public class ClientNamenodeProtocolTranslatorPB implements
     try {
       return PBHelperClient.convert(rpcProxy.getFsReplicatedBlockStats(null,
           VOID_GET_FS_REPLICATED_BLOCK_STATS_REQUEST));
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public ECBlockGroupStats getECBlockGroupStats() throws IOException {
-    try {
-      return PBHelperClient.convert(rpcProxy.getFsECBlockGroupStats(null,
-          VOID_GET_FS_ECBLOCKGROUP_STATS_REQUEST));
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }
@@ -1448,53 +1432,6 @@ public class ClientNamenodeProtocolTranslatorPB implements
   }
 
   @Override
-  public void setErasureCodingPolicy(String src, String ecPolicyName)
-      throws IOException {
-    final SetErasureCodingPolicyRequestProto.Builder builder =
-        SetErasureCodingPolicyRequestProto.newBuilder();
-    builder.setSrc(src);
-    if (ecPolicyName != null) {
-      builder.setEcPolicyName(ecPolicyName);
-    }
-    SetErasureCodingPolicyRequestProto req = builder.build();
-    try {
-      rpcProxy.setErasureCodingPolicy(null, req);
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public void unsetErasureCodingPolicy(String src) throws IOException {
-    final UnsetErasureCodingPolicyRequestProto.Builder builder =
-        UnsetErasureCodingPolicyRequestProto.newBuilder();
-    builder.setSrc(src);
-    UnsetErasureCodingPolicyRequestProto req = builder.build();
-    try {
-      rpcProxy.unsetErasureCodingPolicy(null, req);
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public ECTopologyVerifierResult getECTopologyResultForPolicies(
-      final String... policyNames) throws IOException {
-    final GetECTopologyResultForPoliciesRequestProto.Builder builder =
-        GetECTopologyResultForPoliciesRequestProto.newBuilder();
-    builder.addAllPolicies(Arrays.asList(policyNames));
-    GetECTopologyResultForPoliciesRequestProto req = builder.build();
-    try {
-      GetECTopologyResultForPoliciesResponseProto response =
-          rpcProxy.getECTopologyResultForPolicies(null, req);
-      return PBHelperClient
-          .convertECTopologyVerifierResultProto(response.getResponse());
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
   public void reencryptEncryptionZone(String zone, ReencryptAction action)
       throws IOException {
     final ReencryptEncryptionZoneRequestProto.Builder builder =
@@ -1656,122 +1593,6 @@ public class ClientNamenodeProtocolTranslatorPB implements
         .setTxid(txid).build();
     try {
       return PBHelperClient.convert(rpcProxy.getEditsFromTxid(null, req));
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException {
-    List<ErasureCodingPolicyProto> protos = Arrays.stream(policies)
-        .map(PBHelperClient::convertErasureCodingPolicy)
-        .collect(Collectors.toList());
-    AddErasureCodingPoliciesRequestProto req =
-        AddErasureCodingPoliciesRequestProto.newBuilder()
-            .addAllEcPolicies(protos).build();
-    try {
-      AddErasureCodingPoliciesResponseProto rep = rpcProxy
-          .addErasureCodingPolicies(null, req);
-      AddErasureCodingPolicyResponse[] responses =
-          rep.getResponsesList().stream()
-              .map(PBHelperClient::convertAddErasureCodingPolicyResponse)
-              .toArray(AddErasureCodingPolicyResponse[]::new);
-      return responses;
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public void removeErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    RemoveErasureCodingPolicyRequestProto.Builder builder =
-        RemoveErasureCodingPolicyRequestProto.newBuilder();
-    builder.setEcPolicyName(ecPolicyName);
-    RemoveErasureCodingPolicyRequestProto req = builder.build();
-    try {
-      rpcProxy.removeErasureCodingPolicy(null, req);
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public void enableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    EnableErasureCodingPolicyRequestProto.Builder builder =
-        EnableErasureCodingPolicyRequestProto.newBuilder();
-    builder.setEcPolicyName(ecPolicyName);
-    EnableErasureCodingPolicyRequestProto req = builder.build();
-    try {
-      rpcProxy.enableErasureCodingPolicy(null, req);
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public void disableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    DisableErasureCodingPolicyRequestProto.Builder builder =
-        DisableErasureCodingPolicyRequestProto.newBuilder();
-    builder.setEcPolicyName(ecPolicyName);
-    DisableErasureCodingPolicyRequestProto req = builder.build();
-    try {
-      rpcProxy.disableErasureCodingPolicy(null, req);
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public ErasureCodingPolicyInfo[] getErasureCodingPolicies()
-      throws IOException {
-    try {
-      GetErasureCodingPoliciesResponseProto response = rpcProxy
-          .getErasureCodingPolicies(null, VOID_GET_EC_POLICIES_REQUEST);
-      ErasureCodingPolicyInfo[] ecPolicies =
-          new ErasureCodingPolicyInfo[response.getEcPoliciesCount()];
-      int i = 0;
-      for (ErasureCodingPolicyProto proto : response.getEcPoliciesList()) {
-        ecPolicies[i++] =
-            PBHelperClient.convertErasureCodingPolicyInfo(proto);
-      }
-      return ecPolicies;
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public Map<String, String> getErasureCodingCodecs() throws IOException {
-    try {
-      GetErasureCodingCodecsResponseProto response = rpcProxy
-          .getErasureCodingCodecs(null, VOID_GET_EC_CODEC_REQUEST);
-      Map<String, String> ecCodecs = new HashMap<>();
-      for (CodecProto codec : response.getCodecList()) {
-        ecCodecs.put(codec.getCodec(), codec.getCoders());
-      }
-      return ecCodecs;
-    } catch (ServiceException e) {
-      throw ProtobufHelper.getRemoteException(e);
-    }
-  }
-
-  @Override
-  public ErasureCodingPolicy getErasureCodingPolicy(String src)
-      throws IOException {
-    GetErasureCodingPolicyRequestProto req =
-        GetErasureCodingPolicyRequestProto.newBuilder().setSrc(src).build();
-    try {
-      GetErasureCodingPolicyResponseProto response =
-          rpcProxy.getErasureCodingPolicy(null, req);
-      if (response.hasEcPolicy()) {
-        return PBHelperClient.convertErasureCodingPolicy(
-            response.getEcPolicy());
-      }
-      return null;
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }

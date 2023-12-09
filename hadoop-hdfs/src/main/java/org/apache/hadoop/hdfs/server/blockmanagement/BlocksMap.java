@@ -52,7 +52,6 @@ class BlocksMap {
   private GSet<Block, BlockInfo> blocks;
 
   private final LongAdder totalReplicatedBlocks = new LongAdder();
-  private final LongAdder totalECBlockGroups = new LongAdder();
 
   BlocksMap(int capacity) {
     // Use 2% of total memory to size the GSet capacity
@@ -83,7 +82,6 @@ class BlocksMap {
     if (blocks != null) {
       blocks.clear();
       totalReplicatedBlocks.reset();
-      totalECBlockGroups.reset();
     }
   }
 
@@ -114,8 +112,7 @@ class BlocksMap {
     decrementBlockStat(block);
 
     assert blockInfo.getBlockCollectionId() == INodeId.INVALID_INODE_ID;
-    final int size = blockInfo.isStriped() ?
-        blockInfo.getCapacity() : blockInfo.numNodes();
+    final int size = blockInfo.numNodes();
     for (int idx = size - 1; idx >= 0; idx--) {
       DatanodeDescriptor dn = blockInfo.getDatanode(idx);
       if (dn != null) {
@@ -205,30 +202,17 @@ class BlocksMap {
   }
 
   private void incrementBlockStat(BlockInfo block) {
-    if (block.isStriped()) {
-      totalECBlockGroups.increment();
-    } else {
-      totalReplicatedBlocks.increment();
-    }
+    totalReplicatedBlocks.increment();
   }
 
   private void decrementBlockStat(BlockInfo block) {
-    if (block.isStriped()) {
-      totalECBlockGroups.decrement();
-      assert totalECBlockGroups.longValue() >= 0 :
-          "Total number of ec block groups should be non-negative";
-    } else {
-      totalReplicatedBlocks.decrement();
-      assert totalReplicatedBlocks.longValue() >= 0 :
-          "Total number of replicated blocks should be non-negative";
-    }
+    totalReplicatedBlocks.decrement();
+    assert totalReplicatedBlocks.longValue() >= 0 :
+        "Total number of replicated blocks should be non-negative";
   }
 
   long getReplicatedBlocks() {
     return totalReplicatedBlocks.longValue();
   }
-
-  long getECBlockGroups() {
-    return totalECBlockGroups.longValue();
-  }
+  
 }

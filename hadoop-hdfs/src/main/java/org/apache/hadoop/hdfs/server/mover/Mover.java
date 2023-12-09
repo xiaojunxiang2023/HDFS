@@ -18,7 +18,6 @@ import org.apache.hadoop.hdfs.server.balancer.Matcher;
 import org.apache.hadoop.hdfs.server.balancer.NameNodeConnector;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.hdfs.server.namenode.ErasureCodingPolicyManager;
 import org.apache.hadoop.hdfs.server.namenode.INode;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorageReport;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
@@ -257,21 +256,10 @@ public class Mover {
     }
   }
 
-  DBlock newDBlock(LocatedBlock lb, List<MLocation> locations,
-                   ErasureCodingPolicy ecPolicy) {
+  DBlock newDBlock(LocatedBlock lb, List<MLocation> locations) {
     Block blk = lb.getBlock().getLocalBlock();
     DBlock db;
-    if (lb.isStriped()) {
-      LocatedStripedBlock lsb = (LocatedStripedBlock) lb;
-      byte[] indices = new byte[lsb.getBlockIndices().length];
-      for (int i = 0; i < indices.length; i++) {
-        indices[i] = (byte) lsb.getBlockIndices()[i];
-      }
-      db = new DBlockStriped(blk, indices, (short) ecPolicy.getNumDataUnits(),
-          ecPolicy.getCellSize());
-    } else {
-      db = new DBlock(blk);
-    }
+    db = new DBlock(blk);
     for (MLocation ml : locations) {
       StorageGroup source = storages.getSource(ml);
       if (source != null) {
@@ -725,7 +713,6 @@ public class Mover {
       List<StorageType> types = policy.chooseStorageTypes(
           status.getReplication());
 
-      final ErasureCodingPolicy ecPolicy = status.getErasureCodingPolicy();
       final LocatedBlocks locatedBlocks = status.getLocatedBlocks();
       final boolean lastBlkComplete = locatedBlocks.isLastBlockComplete();
       List<LocatedBlock> lbs = locatedBlocks.getLocatedBlocks();
@@ -735,25 +722,10 @@ public class Mover {
           continue;
         }
         LocatedBlock lb = lbs.get(i);
-        if (lb.isStriped()) {
-          if (ErasureCodingPolicyManager
-              .checkStoragePolicySuitableForECStripedMode(policyId)) {
-            types = policy.chooseStorageTypes((short) lb.getLocations().length);
-          } else {
-            // Currently we support only limited policies (HOT, COLD, ALLSSD)
-            // for EC striped mode files.
-            // Mover tool will ignore to move the blocks if the storage policy
-            // is not in EC Striped mode supported policies
-            LOG.warn("The storage policy " + policy.getName()
-                + " is not suitable for Striped EC files. "
-                + "So, Ignoring to move the blocks");
-            return;
-          }
-        }
         final StorageTypeDiff diff = new StorageTypeDiff(types,
             lb.getStorageTypes());
         if (!diff.removeOverlap(true)) {
-          if (scheduleMoves4Block(diff, lb, ecPolicy)) {
+          if (scheduleMoves4Block(diff, lb)) {
             result.updateHasRemaining(diff.existing.size() > 1
                 && diff.expected.size() > 1);
             // One block scheduled successfully, set noBlockMoved to false
@@ -765,13 +737,10 @@ public class Mover {
       }
     }
 
-    boolean scheduleMoves4Block(StorageTypeDiff diff, LocatedBlock lb,
-                                ErasureCodingPolicy ecPolicy) {
+    boolean scheduleMoves4Block(StorageTypeDiff diff, LocatedBlock lb) {
       final List<MLocation> locations = MLocation.toLocations(lb);
-      if (!(lb instanceof LocatedStripedBlock)) {
-        Collections.shuffle(locations);
-      }
-      final DBlock db = newDBlock(lb, locations, ecPolicy);
+      Collections.shuffle(locations);
+      final DBlock db = newDBlock(lb, locations);
 
       for (final StorageType t : diff.existing) {
         for (final MLocation ml : locations) {

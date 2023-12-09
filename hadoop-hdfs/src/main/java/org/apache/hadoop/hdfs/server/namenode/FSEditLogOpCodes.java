@@ -59,7 +59,6 @@ public enum FSEditLogOpCodes {
   OP_TRUNCATE((byte) 46, TruncateOp.class),
   OP_APPEND((byte) 47, AppendOp.class),
   OP_SET_QUOTA_BY_STORAGETYPE((byte) 48, SetQuotaByStorageTypeOp.class),
-  OP_ADD_ERASURE_CODING_POLICY((byte) 49, AddErasureCodingPolicyOp.class),
   OP_ENABLE_ERASURE_CODING_POLICY((byte) 50, EnableErasureCodingPolicyOp.class),
   OP_DISABLE_ERASURE_CODING_POLICY((byte) 51,
       DisableErasureCodingPolicyOp.class),

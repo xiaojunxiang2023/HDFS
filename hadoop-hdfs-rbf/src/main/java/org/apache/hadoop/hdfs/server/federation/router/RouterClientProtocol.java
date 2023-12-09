@@ -72,8 +72,6 @@ public class RouterClientProtocol implements ClientProtocol {
   private String superUser;
   /** Identifier for the super group. */
   private final String superGroup;
-  /** Erasure coding calls. */
-  private final ErasureCoding erasureCoding;
   /** Cache Admin calls. */
   private final RouterCacheAdmin routerCacheAdmin;
   /** StoragePolicy calls. **/
@@ -111,7 +109,6 @@ public class RouterClientProtocol implements ClientProtocol {
     this.superGroup = conf.get(
         DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY,
         DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_DEFAULT);
-    this.erasureCoding = new ErasureCoding(rpcServer);
     this.storagePolicy = new RouterStoragePolicy(rpcServer);
     this.snapshotProto = new RouterSnapshot(rpcServer);
     this.routerCacheAdmin = new RouterCacheAdmin(rpcServer);
@@ -1612,70 +1609,6 @@ public class RouterClientProtocol implements ClientProtocol {
   }
 
   @Override
-  public ErasureCodingPolicyInfo[] getErasureCodingPolicies()
-      throws IOException {
-    return erasureCoding.getErasureCodingPolicies();
-  }
-
-  @Override
-  public Map<String, String> getErasureCodingCodecs() throws IOException {
-    return erasureCoding.getErasureCodingCodecs();
-  }
-
-  @Override
-  public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException {
-    return erasureCoding.addErasureCodingPolicies(policies);
-  }
-
-  @Override
-  public void removeErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    erasureCoding.removeErasureCodingPolicy(ecPolicyName);
-  }
-
-  @Override
-  public void disableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    erasureCoding.disableErasureCodingPolicy(ecPolicyName);
-  }
-
-  @Override
-  public void enableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    erasureCoding.enableErasureCodingPolicy(ecPolicyName);
-  }
-
-  @Override
-  public ErasureCodingPolicy getErasureCodingPolicy(String src)
-      throws IOException {
-    return erasureCoding.getErasureCodingPolicy(src);
-  }
-
-  @Override
-  public void setErasureCodingPolicy(String src, String ecPolicyName)
-      throws IOException {
-    erasureCoding.setErasureCodingPolicy(src, ecPolicyName);
-  }
-
-  @Override
-  public void unsetErasureCodingPolicy(String src) throws IOException {
-    erasureCoding.unsetErasureCodingPolicy(src);
-  }
-
-  @Override
-  public ECTopologyVerifierResult getECTopologyResultForPolicies(
-      String... policyNames) throws IOException {
-    rpcServer.checkOperation(NameNode.OperationCategory.UNCHECKED, true);
-    return erasureCoding.getECTopologyResultForPolicies(policyNames);
-  }
-
-  @Override
-  public ECBlockGroupStats getECBlockGroupStats() throws IOException {
-    return erasureCoding.getECBlockGroupStats();
-  }
-
-  @Override
   public ReplicatedBlockStats getReplicatedBlockStats() throws IOException {
     rpcServer.checkOperation(NameNode.OperationCategory.READ);
 
@@ -1929,8 +1862,7 @@ public class RouterClientProtocol implements ClientProtocol {
             group = fInfo.getGroup();
             childrenNum = fInfo.getChildrenNum();
             flags = DFSUtil
-                .getFlags(fInfo.isEncrypted(), fInfo.isErasureCoded(),
-                    fInfo.isSnapshotEnabled(), fInfo.hasAcl());
+                .getFlags(fInfo.isEncrypted(), fInfo.isSnapshotEnabled(), fInfo.hasAcl());
           }
         }
       } catch (IOException e) {

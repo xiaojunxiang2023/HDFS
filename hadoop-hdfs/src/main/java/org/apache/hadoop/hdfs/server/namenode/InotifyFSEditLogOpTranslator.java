@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import org.apache.hadoop.hdfs.inotify.Event;
 import org.apache.hadoop.hdfs.inotify.EventBatch;
 import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
 import java.util.List;
@@ -35,8 +34,6 @@ public class InotifyFSEditLogOpTranslator {
                   .perms(addOp.permissions.getPermission())
                   .overwrite(addOp.overwrite)
                   .defaultBlockSize(addOp.blockSize)
-                  .erasureCoded(addOp.erasureCodingPolicyId
-                      != ErasureCodeConstants.REPLICATION_POLICY_ID)
                   .iNodeType(Event.CreateEvent.INodeType.FILE).build()});
         } else { // append
           return new EventBatch(op.txid,

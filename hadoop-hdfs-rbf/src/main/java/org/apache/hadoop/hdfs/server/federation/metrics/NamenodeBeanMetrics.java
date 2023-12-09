@@ -820,11 +820,6 @@ public class NamenodeBeanMetrics
   }
 
   @Override
-  public String getVerifyECWithTopologyResult() {
-    return null;
-  }
-
-  @Override
   public long getCurrentTokensCount() {
     return 0;
   }

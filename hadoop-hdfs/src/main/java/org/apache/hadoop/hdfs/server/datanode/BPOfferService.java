@@ -8,7 +8,6 @@ import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.RollingUpgradeStatus;
 import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
 import org.apache.hadoop.hdfs.server.protocol.*;
-import org.apache.hadoop.hdfs.server.protocol.BlockECReconstructionCommand.BlockECReconstructionInfo;
 import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
@@ -771,12 +770,6 @@ class BPOfferService {
               + "to: " + bandwidth + " bytes/s.");
           dxcs.balanceThrottler.setBandwidth(bandwidth);
         }
-        break;
-      case DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION:
-        LOG.info("DatanodeCommand action: DNA_ERASURE_CODING_RECOVERY");
-        Collection<BlockECReconstructionInfo> ecTasks =
-            ((BlockECReconstructionCommand) cmd).getECTasks();
-        dn.getErasureCodingWorker().processErasureCodingTasks(ecTasks);
         break;
       default:
         LOG.warn("Unknown DatanodeCommand action: " + cmd.getAction());

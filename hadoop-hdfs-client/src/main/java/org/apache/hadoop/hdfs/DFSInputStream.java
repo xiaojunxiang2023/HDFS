@@ -865,8 +865,7 @@ public class DFSInputStream extends FSInputStream
         } finally {
           // Check if need to report block replicas corruption either read
           // was successful or ChecksumException occurred.
-          reportCheckSumFailure(corruptedBlocks,
-              getCurrentBlockLocationsLength(), false);
+          reportCheckSumFailure(corruptedBlocks, getCurrentBlockLocationsLength());
         }
       }
     }
@@ -1446,7 +1445,7 @@ public class DFSInputStream extends FSInputStream
           blk.getBlockSize() - targetStart);
       long targetEnd = targetStart + bytesToRead - 1;
       try {
-        if (dfsClient.isHedgedReadsEnabled() && !blk.isStriped()) {
+        if (dfsClient.isHedgedReadsEnabled()) {
           hedgedFetchBlockByteRange(blk, targetStart,
               targetEnd, buffer, corruptedBlocks);
         } else {
@@ -1457,8 +1456,7 @@ public class DFSInputStream extends FSInputStream
         // Check and report if any block replicas are corrupted.
         // BlockMissingException may be caught if all block replicas are
         // corrupted.
-        reportCheckSumFailure(corruptedBlocks, blk.getLocations().length,
-            false);
+        reportCheckSumFailure(corruptedBlocks, blk.getLocations().length);
       }
 
       remaining -= bytesToRead;
@@ -1488,7 +1486,7 @@ public class DFSInputStream extends FSInputStream
    * @param dataNodeCount number of data nodes who contains the block replicas
    */
   protected void reportCheckSumFailure(CorruptedBlocks corruptedBlocks,
-                                       int dataNodeCount, boolean isStriped) {
+                                       int dataNodeCount) {
 
     Map<ExtendedBlock, Set<DatanodeInfo>> corruptedBlockMap =
         corruptedBlocks.getCorruptionMap();
@@ -1500,7 +1498,7 @@ public class DFSInputStream extends FSInputStream
         corruptedBlockMap.entrySet()) {
       ExtendedBlock blk = entry.getKey();
       Set<DatanodeInfo> dnSet = entry.getValue();
-      if (isStriped || ((dnSet.size() < dataNodeCount) && (dnSet.size() > 0))
+      if (((dnSet.size() < dataNodeCount) && (dnSet.size() > 0))
           || ((dataNodeCount == 1) && (dnSet.size() == dataNodeCount))) {
         DatanodeInfo[] locs = new DatanodeInfo[dnSet.size()];
         int i = 0;

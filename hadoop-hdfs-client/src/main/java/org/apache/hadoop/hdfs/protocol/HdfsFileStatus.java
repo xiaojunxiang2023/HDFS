@@ -56,7 +56,6 @@ public interface HdfsFileStatus
     private FileEncryptionInfo feInfo = null;
     private byte storagePolicy =
         HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED;
-    private ErasureCodingPolicy ecPolicy = null;
     private LocatedBlocks locations = null;
 
     /**
@@ -227,16 +226,6 @@ public interface HdfsFileStatus
     }
 
     /**
-     * Set the erasure coding policy for this entity (default = null).
-     * @param ecPolicy Erasure coding policy
-     * @return This Builder instance
-     */
-    public Builder ecPolicy(ErasureCodingPolicy ecPolicy) {
-      this.ecPolicy = ecPolicy;
-      return this;
-    }
-
-    /**
      * Set the block locations for this entity (default = null).
      * @param locations HDFS locations
      *       (see {@link HdfsLocatedFileStatus#makeQualifiedLocated(URI, Path)})
@@ -254,11 +243,11 @@ public interface HdfsFileStatus
       if (null == locations && !isdir && null == symlink) {
         return new HdfsNamedFileStatus(length, isdir, replication, blocksize,
             mtime, atime, permission, flags, owner, group, symlink, path,
-            fileId, childrenNum, feInfo, storagePolicy, ecPolicy);
+            fileId, childrenNum, feInfo, storagePolicy);
       }
       return new HdfsLocatedFileStatus(length, isdir, replication, blocksize,
           mtime, atime, permission, flags, owner, group, symlink, path,
-          fileId, childrenNum, feInfo, storagePolicy, ecPolicy, locations);
+          fileId, childrenNum, feInfo, storagePolicy, locations);
     }
 
   }
@@ -342,12 +331,6 @@ public interface HdfsFileStatus
    * @return number of children for this inode.
    */
   int getChildrenNum();
-
-  /**
-   * Get the erasure coding policy if it's set.
-   * @return the erasure coding policy
-   */
-  ErasureCodingPolicy getErasureCodingPolicy();
 
   /** @return the storage policy id */
   byte getStoragePolicy();
@@ -464,11 +447,6 @@ public interface HdfsFileStatus
    * See {@link FileStatus#isEncrypted()}.
    */
   boolean isEncrypted();
-
-  /**
-   * See {@link FileStatus#isErasureCoded()}.
-   */
-  boolean isErasureCoded();
 
   /**
    * See {@link FileStatus#isSnapshotEnabled()}.

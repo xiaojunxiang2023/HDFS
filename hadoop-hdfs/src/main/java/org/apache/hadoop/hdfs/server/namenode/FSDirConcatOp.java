@@ -146,12 +146,6 @@ class FSDirConcatOp {
             + " which is greater than the target file's preferred block size "
             + targetINode.getPreferredBlockSize());
       }
-      if (srcINodeFile.getErasureCodingPolicyID() !=
-          targetINode.getErasureCodingPolicyID()) {
-        throw new HadoopIllegalArgumentException("Source file " + src
-            + " and target file " + targetIIP.getPath()
-            + " have different erasure coding policy");
-      }
       si.add(srcINodeFile);
     }
 
@@ -161,7 +155,7 @@ class FSDirConcatOp {
       throw new HadoopIllegalArgumentException(
           "concat: at least two of the source files are the same");
     }
-    return si.toArray(new INodeFile[si.size()]);
+    return si.toArray(new INodeFile[0]);
   }
 
   private static QuotaCounts computeQuotaDeltas(FSDirectory fsd,

@@ -18,9 +18,7 @@ import org.apache.hadoop.hdfs.server.namenode.CachedBlock;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 import org.apache.hadoop.hdfs.server.protocol.*;
-import org.apache.hadoop.hdfs.server.protocol.BlockECReconstructionCommand.BlockECReconstructionInfo;
 import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringBlock;
-import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringStripedBlock;
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.net.*;
 import org.apache.hadoop.net.NetworkTopology.InvalidTopologyException;
@@ -526,43 +524,7 @@ public class DatanodeManager {
             new DFSUtil.ServiceComparator();
     // sort located block
     for (LocatedBlock lb : locatedBlocks) {
-      if (lb.isStriped()) {
-        sortLocatedStripedBlock(lb, comparator);
-      } else {
-        sortLocatedBlock(lb, targetHost, comparator);
-      }
-    }
-  }
-
-  /**
-   * Move decommissioned/entering_maintenance/stale/slow
-   * datanodes to the bottom. After sorting it will
-   * update block indices and block tokens respectively.
-   *
-   * @param lb located striped block
-   * @param comparator dn comparator
-   */
-  private void sortLocatedStripedBlock(final LocatedBlock lb,
-                                       Comparator<DatanodeInfo> comparator) {
-    DatanodeInfo[] di = lb.getLocations();
-    HashMap<DatanodeInfo, Byte> locToIndex = new HashMap<>();
-    HashMap<DatanodeInfo, Token<BlockTokenIdentifier>> locToToken =
-        new HashMap<>();
-    LocatedStripedBlock lsb = (LocatedStripedBlock) lb;
-    for (int i = 0; i < di.length; i++) {
-      locToIndex.put(di[i], lsb.getBlockIndices()[i]);
-      locToToken.put(di[i], lsb.getBlockTokens()[i]);
-    }
-    // Move decommissioned/stale datanodes to the bottom
-    Arrays.sort(di, comparator);
-
-    // must update cache since we modified locations array
-    lb.updateCachedStorageInfo();
-
-    // must update block indices and block tokens respectively
-    for (int i = 0; i < di.length; i++) {
-      lsb.getBlockIndices()[i] = locToIndex.get(di[i]);
-      lsb.getBlockTokens()[i] = locToToken.get(di[i]);
+      sortLocatedBlock(lb, targetHost, comparator);
     }
   }
 
@@ -1711,10 +1673,6 @@ public class DatanodeManager {
       } else {
         rBlock = new RecoveringBlock(primaryBlock, recoveryInfos,
             uc.getBlockRecoveryId());
-        if (b.isStriped()) {
-          rBlock = new RecoveringStripedBlock(rBlock, uc.getBlockIndices(),
-              ((BlockInfoStriped) b).getErasureCodingPolicy());
-        }
       }
       brCommand.add(rBlock);
     }
@@ -1793,17 +1751,10 @@ public class DatanodeManager {
     // NN chooses pending tasks based on the ratio between the lengths of
     // replication and erasure-coded block queues.
     int totalReplicateBlocks = nodeinfo.getNumberOfReplicateBlocks();
-    int totalECBlocks = nodeinfo.getNumberOfBlocksToBeErasureCoded();
-    int totalBlocks = totalReplicateBlocks + totalECBlocks;
+    int totalBlocks = totalReplicateBlocks;
     if (totalBlocks > 0) {
       int numReplicationTasks = (int) Math.ceil(
           (double) (totalReplicateBlocks * maxTransfers) / totalBlocks);
-      int numECTasks = (int) Math.ceil(
-          (double) (totalECBlocks * maxTransfers) / totalBlocks);
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Pending replication tasks: " + numReplicationTasks
-            + " erasure-coded tasks: " + numECTasks);
-      }
       // check pending replication tasks
       List<BlockTargetPair> pendingList = nodeinfo.getReplicationCommand(
           numReplicationTasks);
@@ -1826,13 +1777,6 @@ public class DatanodeManager {
           cmds.add(new BlockCommand(DatanodeProtocol.DNA_TRANSFER, blockPoolId,
               pendingList));
         }
-      }
-      // check pending erasure coding tasks
-      List<BlockECReconstructionInfo> pendingECList = nodeinfo
-          .getErasureCodeCommand(numECTasks);
-      if (pendingECList != null && !pendingECList.isEmpty()) {
-        cmds.add(new BlockECReconstructionCommand(
-            DNA_ERASURE_CODING_RECONSTRUCTION, pendingECList));
       }
     }
 

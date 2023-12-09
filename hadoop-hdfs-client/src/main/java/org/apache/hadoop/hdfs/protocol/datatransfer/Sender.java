@@ -4,7 +4,6 @@ import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.StripedBlockInfo;
 import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.*;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
@@ -245,26 +244,4 @@ public class Sender implements DataTransferProtocol {
     send(out, Op.BLOCK_CHECKSUM, proto);
   }
 
-  @Override
-  public void blockGroupChecksum(StripedBlockInfo stripedBlockInfo,
-                                 Token<BlockTokenIdentifier> blockToken,
-                                 long requestedNumBytes,
-                                 BlockChecksumOptions blockChecksumOptions) throws IOException {
-    OpBlockGroupChecksumProto proto = OpBlockGroupChecksumProto.newBuilder()
-        .setHeader(DataTransferProtoUtil.buildBaseHeader(
-            stripedBlockInfo.getBlock(), blockToken))
-        .setDatanodes(PBHelperClient.convertToProto(
-            stripedBlockInfo.getDatanodes()))
-        .addAllBlockTokens(PBHelperClient.convert(
-            stripedBlockInfo.getBlockTokens()))
-        .addAllBlockIndices(PBHelperClient
-            .convertBlockIndices(stripedBlockInfo.getBlockIndices()))
-        .setEcPolicy(PBHelperClient.convertErasureCodingPolicy(
-            stripedBlockInfo.getErasureCodingPolicy()))
-        .setRequestedNumBytes(requestedNumBytes)
-        .setBlockChecksumOptions(PBHelperClient.convert(blockChecksumOptions))
-        .build();
-
-    send(out, Op.BLOCK_GROUP_CHECKSUM, proto);
-  }
 }

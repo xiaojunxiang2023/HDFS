@@ -5,7 +5,6 @@ import org.apache.hadoop.crypto.OpensslCipher;
 import org.apache.hadoop.io.compress.ZStandardCodec;
 import org.apache.hadoop.io.compress.bzip2.Bzip2Factory;
 import org.apache.hadoop.io.compress.zlib.ZlibFactory;
-import org.apache.hadoop.io.erasurecode.ErasureCodeNative;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,14 +68,6 @@ public class NativeLibraryChecker {
           ZStandardCodec.isNativeCodeLoaded();
       if (zStdLoaded && NativeCodeLoader.buildSupportsZstd()) {
         zstdLibraryName = ZStandardCodec.getLibraryName();
-      }
-
-      isalDetail = ErasureCodeNative.getLoadingFailureReason();
-      if (isalDetail != null) {
-        isalLoaded = false;
-      } else {
-        isalDetail = ErasureCodeNative.getLibraryName();
-        isalLoaded = true;
       }
 
       pmdkDetail = NativeIO.POSIX.getPmdkSupportStateMessage();

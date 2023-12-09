@@ -6,13 +6,11 @@ import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.PermissionStatus;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.BlockType;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BlockProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoContiguous;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoStriped;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf.LoaderContext;
@@ -31,7 +29,6 @@ import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress.Co
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.Step;
 import org.apache.hadoop.hdfs.util.EnumCounters;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
@@ -490,26 +487,13 @@ public final class FSImageFormatPBINode {
       List<BlockProto> bp = f.getBlocksList();
       BlockType blockType = PBHelperClient.convert(f.getBlockType());
       LoaderContext state = parent.getLoaderContext();
-      boolean isStriped = f.hasErasureCodingPolicyID();
-      assert ((!isStriped) || (isStriped && !f.hasReplication()));
-      Short replication = (!isStriped ? (short) f.getReplication() : null);
-      Byte ecPolicyID = (isStriped ?
-          (byte) f.getErasureCodingPolicyID() : null);
-      ErasureCodingPolicy ecPolicy = isStriped ?
-          fsn.getErasureCodingPolicyManager().getByID(ecPolicyID) : null;
+      Short replication = (short) f.getReplication();
 
       BlockInfo[] blocks = new BlockInfo[bp.size()];
       for (int i = 0; i < bp.size(); ++i) {
         BlockProto b = bp.get(i);
-        if (isStriped) {
-          Preconditions.checkState(ecPolicy.getId() > 0,
-              "File with ID " + n.getId() +
-                  " has an invalid erasure coding policy ID " + ecPolicy.getId());
-          blocks[i] = new BlockInfoStriped(PBHelperClient.convert(b), ecPolicy);
-        } else {
-          blocks[i] = new BlockInfoContiguous(PBHelperClient.convert(b),
-              replication);
-        }
+        blocks[i] = new BlockInfoContiguous(PBHelperClient.convert(b),
+            replication);
       }
 
       final PermissionStatus permissions = loadPermission(f.getPermission(),
@@ -517,8 +501,8 @@ public final class FSImageFormatPBINode {
 
       final INodeFile file = new INodeFile(n.getId(),
           n.getName().toByteArray(), permissions, f.getModificationTime(),
-          f.getAccessTime(), blocks, replication, ecPolicyID,
-          f.getPreferredBlockSize(), (byte) f.getStoragePolicyID(), blockType);
+          f.getAccessTime(), blocks, replication, null,
+          f.getPreferredBlockSize(), (byte)f.getStoragePolicyID(), blockType);
 
       if (f.hasAcl()) {
         int[] entries = AclEntryStatusFormat.toInt(loadAclEntries(
@@ -541,13 +525,8 @@ public final class FSImageFormatPBINode {
           BlockInfo lastBlk = file.getLastBlock();
           // replace the last block of file
           final BlockInfo ucBlk;
-          if (isStriped) {
-            BlockInfoStriped striped = (BlockInfoStriped) lastBlk;
-            ucBlk = new BlockInfoStriped(striped, ecPolicy);
-          } else {
-            ucBlk = new BlockInfoContiguous(lastBlk,
-                replication);
-          }
+          ucBlk = new BlockInfoContiguous(lastBlk,
+              replication);
           ucBlk.convertToBlockUnderConstruction(
               HdfsServerConstants.BlockUCState.UNDER_CONSTRUCTION, null);
           file.setBlock(file.numBlocks() - 1, ucBlk);
@@ -598,7 +577,7 @@ public final class FSImageFormatPBINode {
   }
 
   // the saver can directly write out fields referencing serial numbers.
-  // the serial number maps will be compacted when loading.
+// the serial number maps will be compacted when loading.
   public final static class Saver {
     private long numImageErrors;
 
@@ -657,16 +636,13 @@ public final class FSImageFormatPBINode {
           .setStoragePolicyID(file.getLocalStoragePolicyID())
           .setBlockType(PBHelperClient.convert(file.getBlockType()));
 
-      if (file.isStriped()) {
-        b.setErasureCodingPolicyID(file.getErasureCodingPolicyID());
-      } else {
-        b.setReplication(file.getFileReplication());
-      }
+      b.setReplication(file.getFileReplication());
 
       AclFeature f = file.getAclFeature();
       if (f != null) {
         b.setAcl(buildAclEntries(f));
       }
+
       XAttrFeature xAttrFeature = file.getXAttrFeature();
       if (xAttrFeature != null) {
         b.setXAttrs(buildXAttrs(xAttrFeature));
@@ -893,6 +869,7 @@ public final class FSImageFormatPBINode {
     public long getNumImageErrors() {
       return numImageErrors;
     }
+
   }
 
   private FSImageFormatPBINode() {

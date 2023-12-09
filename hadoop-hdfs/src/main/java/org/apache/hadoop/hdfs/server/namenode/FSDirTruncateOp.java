@@ -65,12 +65,6 @@ final class FSDirTruncateOp {
       }
       INodeFile file = INodeFile.valueOf(iip.getLastINode(), src);
 
-      // not support truncating file with striped blocks
-      if (file.isStriped()) {
-        throw new UnsupportedOperationException(
-            "Cannot truncate file with striped block " + src);
-      }
-
       final BlockStoragePolicy lpPolicy = fsd.getBlockManager()
           .getStoragePolicy("LAZY_PERSIST");
 
@@ -200,7 +194,6 @@ final class FSDirTruncateOp {
     assert fsn.hasWriteLock();
 
     INodeFile file = iip.getLastINode().asFile();
-    assert !file.isStriped();
     file.recordModification(iip.getLatestSnapshotId());
     file.toUnderConstruction(leaseHolder, clientMachine);
     assert file.isUnderConstruction() : "inode should be under construction.";

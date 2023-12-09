@@ -788,14 +788,6 @@ public interface ClientProtocol {
   ReplicatedBlockStats getReplicatedBlockStats() throws IOException;
 
   /**
-   * Get statistics pertaining to blocks of type {@link BlockType#STRIPED}
-   * in the filesystem.
-   */
-  @Idempotent
-  @ReadOnly
-  ECBlockGroupStats getECBlockGroupStats() throws IOException;
-
-  /**
    * Get a report on the system's current datanodes.
    * One DatanodeInfo object is returned for each DataNode.
    * Return live datanodes if type is LIVE; dead datanodes if type is DEAD;
@@ -1647,103 +1639,6 @@ public interface ClientProtocol {
   @Idempotent
   @ReadOnly(isCoordinated = true)
   EventBatchList getEditsFromTxid(long txid) throws IOException;
-
-  /**
-   * Set an erasure coding policy on a specified path.
-   * @param src The path to set policy on.
-   * @param ecPolicyName The erasure coding policy name.
-   */
-  @AtMostOnce
-  void setErasureCodingPolicy(String src, String ecPolicyName)
-      throws IOException;
-
-  /**
-   * Add Erasure coding policies to HDFS. For each policy input, schema and
-   * cellSize are musts, name and id are ignored. They will be automatically
-   * created and assigned by Namenode once the policy is successfully added, and
-   * will be returned in the response.
-   *
-   * @param policies The user defined ec policy list to add.
-   * @return Return the response list of adding operations.
-   * @throws IOException
-   */
-  @AtMostOnce
-  AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException;
-
-  /**
-   * Remove erasure coding policy.
-   * @param ecPolicyName The name of the policy to be removed.
-   * @throws IOException
-   */
-  @AtMostOnce
-  void removeErasureCodingPolicy(String ecPolicyName) throws IOException;
-
-  /**
-   * Enable erasure coding policy.
-   * @param ecPolicyName The name of the policy to be enabled.
-   * @throws IOException
-   */
-  @AtMostOnce
-  void enableErasureCodingPolicy(String ecPolicyName) throws IOException;
-
-  /**
-   * Disable erasure coding policy.
-   * @param ecPolicyName The name of the policy to be disabled.
-   * @throws IOException
-   */
-  @AtMostOnce
-  void disableErasureCodingPolicy(String ecPolicyName) throws IOException;
-
-
-  /**
-   * Get the erasure coding policies loaded in Namenode, excluding REPLICATION
-   * policy.
-   *
-   * @throws IOException
-   */
-  @Idempotent
-  @ReadOnly(isCoordinated = true)
-  ErasureCodingPolicyInfo[] getErasureCodingPolicies() throws IOException;
-
-  /**
-   * Get the erasure coding codecs loaded in Namenode.
-   *
-   * @throws IOException
-   */
-  @Idempotent
-  @ReadOnly(isCoordinated = true)
-  Map<String, String> getErasureCodingCodecs() throws IOException;
-
-  /**
-   * Get the information about the EC policy for the path. Null will be returned
-   * if directory or file has REPLICATION policy.
-   *
-   * @param src path to get the info for
-   * @throws IOException
-   */
-  @Idempotent
-  @ReadOnly(isCoordinated = true)
-  ErasureCodingPolicy getErasureCodingPolicy(String src) throws IOException;
-
-  /**
-   * Unset erasure coding policy from a specified path.
-   * @param src The path to unset policy.
-   */
-  @AtMostOnce
-  void unsetErasureCodingPolicy(String src) throws IOException;
-
-  /**
-   * Verifies if the given policies are supported in the given cluster setup.
-   * If not policy is specified checks for all enabled policies.
-   * @param policyNames name of policies.
-   * @return the result if the given policies are supported in the cluster setup
-   * @throws IOException
-   */
-  @Idempotent
-  @ReadOnly
-  ECTopologyVerifierResult getECTopologyResultForPolicies(String... policyNames)
-      throws IOException;
 
   /**
    * Get {@link QuotaUsage} rooted at the specified directory.

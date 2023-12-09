@@ -38,7 +38,6 @@ import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.datanode.SecureDataNodeStarter.SecureResources;
 import org.apache.hadoop.hdfs.server.datanode.checker.DatasetVolumeChecker;
 import org.apache.hadoop.hdfs.server.datanode.checker.StorageLocationChecker;
-import org.apache.hadoop.hdfs.server.datanode.erasurecode.ErasureCodingWorker;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.AddBlockPoolException;
@@ -250,7 +249,6 @@ public class DataNode extends ReconfigurableBase
    * BlockRecoveryWorker、ErasureCodingWorker
    */
   private BlockRecoveryWorker blockRecoveryWorker;
-  private ErasureCodingWorker ecWorker;
   private final Tracer tracer;
 
   // 获取可分配给当前 JVM进程的 cpu核数
@@ -1243,7 +1241,6 @@ public class DataNode extends ReconfigurableBase
         DataNodePeerMetrics.create(getDisplayName(), getConf()) : null;
     metrics.getJvmMetrics().setPauseMonitor(pauseMonitor);
 
-    ecWorker = new ErasureCodingWorker(getConf(), this);
     blockRecoveryWorker = new BlockRecoveryWorker(this);
 
     blockPoolManager = new BlockPoolManager(this);
@@ -1917,10 +1914,6 @@ public class DataNode extends ReconfigurableBase
     // shutdown command response won't get sent.
     if (ipcServer != null) {
       ipcServer.stop();
-    }
-
-    if (ecWorker != null) {
-      ecWorker.shutDown();
     }
 
     if (blockPoolManager != null) {
@@ -3276,10 +3269,6 @@ public class DataNode extends ReconfigurableBase
 
   public BlockRecoveryWorker getBlockRecoveryWorker() {
     return blockRecoveryWorker;
-  }
-
-  public ErasureCodingWorker getErasureCodingWorker() {
-    return ecWorker;
   }
 
   IOStreamPair connectToDN(DatanodeInfo datanodeID, int timeout,

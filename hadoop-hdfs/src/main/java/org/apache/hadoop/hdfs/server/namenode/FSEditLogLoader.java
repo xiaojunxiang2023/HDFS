@@ -3,7 +3,9 @@ package org.apache.hadoop.hdfs.server.namenode;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.XAttrSetFlag;
 import org.apache.hadoop.hdfs.protocol.*;
-import org.apache.hadoop.hdfs.server.blockmanagement.*;
+import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
+import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoContiguous;
+import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.RollingUpgradeStartupOption;
@@ -384,10 +386,7 @@ public class FSEditLogLoader {
         // Update the salient file attributes.
         newFile.setAccessTime(addCloseOp.atime, Snapshot.CURRENT_STATE_ID, false);
         newFile.setModificationTime(addCloseOp.mtime, Snapshot.CURRENT_STATE_ID);
-        ErasureCodingPolicy ecPolicy =
-            FSDirErasureCodingOp.unprotectedGetErasureCodingPolicy(
-                fsDir.getFSNamesystem(), iip);
-        updateBlocks(fsDir, addCloseOp, iip, newFile, ecPolicy);
+        updateBlocks(fsDir, addCloseOp, iip, newFile);
         break;
       }
       case OP_CLOSE: {
@@ -407,10 +406,7 @@ public class FSEditLogLoader {
         // Update the salient file attributes.
         file.setAccessTime(addCloseOp.atime, Snapshot.CURRENT_STATE_ID, false);
         file.setModificationTime(addCloseOp.mtime, Snapshot.CURRENT_STATE_ID);
-        ErasureCodingPolicy ecPolicy =
-            FSDirErasureCodingOp.unprotectedGetErasureCodingPolicy(
-                fsDir.getFSNamesystem(), iip);
-        updateBlocks(fsDir, addCloseOp, iip, file, ecPolicy);
+        updateBlocks(fsDir, addCloseOp, iip, file);
 
         // Now close the file
         if (!file.isUnderConstruction() &&
@@ -466,11 +462,7 @@ public class FSEditLogLoader {
         }
         INodesInPath iip = fsDir.getINodesInPath(path, DirOp.READ);
         INodeFile oldFile = INodeFile.valueOf(iip.getLastINode(), path);
-        // Update in-memory data structures
-        ErasureCodingPolicy ecPolicy =
-            FSDirErasureCodingOp.unprotectedGetErasureCodingPolicy(
-                fsDir.getFSNamesystem(), iip);
-        updateBlocks(fsDir, updateOp, iip, oldFile, ecPolicy);
+        updateBlocks(fsDir, updateOp, iip, oldFile);
 
         if (toAddRetryCache) {
           fsNamesys.addCacheEntry(updateOp.rpcClientId, updateOp.rpcCallId);
@@ -486,11 +478,7 @@ public class FSEditLogLoader {
         }
         INodesInPath iip = fsDir.getINodesInPath(path, DirOp.READ);
         INodeFile oldFile = INodeFile.valueOf(iip.getLastINode(), path);
-        // add the new block to the INodeFile
-        ErasureCodingPolicy ecPolicy =
-            FSDirErasureCodingOp.unprotectedGetErasureCodingPolicy(
-                fsDir.getFSNamesystem(), iip);
-        addNewBlock(addBlockOp, oldFile, ecPolicy);
+        addNewBlock(addBlockOp, oldFile);
         break;
       }
       case OP_SET_REPLICATION: {
@@ -792,15 +780,8 @@ public class FSEditLogLoader {
       }
       case OP_ALLOCATE_BLOCK_ID: {
         AllocateBlockIdOp allocateBlockIdOp = (AllocateBlockIdOp) op;
-        if (BlockIdManager.isStripedBlockID(allocateBlockIdOp.blockId)) {
-          // ALLOCATE_BLOCK_ID is added for sequential block id, thus if the id
-          // is negative, it must belong to striped blocks
-          blockManager.getBlockIdManager().setLastAllocatedStripedBlockId(
-              allocateBlockIdOp.blockId);
-        } else {
-          blockManager.getBlockIdManager().setLastAllocatedContiguousBlockId(
-              allocateBlockIdOp.blockId);
-        }
+        blockManager.getBlockIdManager().setLastAllocatedContiguousBlockId(
+            allocateBlockIdOp.blockId);
         break;
       }
       case OP_ROLLING_UPGRADE_START: {
@@ -930,41 +911,6 @@ public class FSEditLogLoader {
             setStoragePolicyOp.policyId);
         break;
       }
-      case OP_ADD_ERASURE_CODING_POLICY:
-        AddErasureCodingPolicyOp addOp = (AddErasureCodingPolicyOp) op;
-        fsNamesys.getErasureCodingPolicyManager().addPolicy(
-            addOp.getEcPolicy());
-
-        if (toAddRetryCache) {
-          fsNamesys.addCacheEntryWithPayload(op.rpcClientId, op.rpcCallId,
-              addOp.getEcPolicy());
-        }
-        break;
-      case OP_ENABLE_ERASURE_CODING_POLICY:
-        EnableErasureCodingPolicyOp enableOp = (EnableErasureCodingPolicyOp) op;
-        fsNamesys.getErasureCodingPolicyManager().enablePolicy(
-            enableOp.getEcPolicy());
-        if (toAddRetryCache) {
-          fsNamesys.addCacheEntry(op.rpcClientId, op.rpcCallId);
-        }
-        break;
-      case OP_DISABLE_ERASURE_CODING_POLICY:
-        DisableErasureCodingPolicyOp disableOp =
-            (DisableErasureCodingPolicyOp) op;
-        fsNamesys.getErasureCodingPolicyManager().disablePolicy(
-            disableOp.getEcPolicy());
-        if (toAddRetryCache) {
-          fsNamesys.addCacheEntry(op.rpcClientId, op.rpcCallId);
-        }
-        break;
-      case OP_REMOVE_ERASURE_CODING_POLICY:
-        RemoveErasureCodingPolicyOp removeOp = (RemoveErasureCodingPolicyOp) op;
-        fsNamesys.getErasureCodingPolicyManager().removePolicy(
-            removeOp.getEcPolicy());
-        if (toAddRetryCache) {
-          fsNamesys.addCacheEntry(op.rpcClientId, op.rpcCallId);
-        }
-        break;
       default:
         throw new IOException("Invalid operation read " + op.opCode);
     }
@@ -991,8 +937,7 @@ public class FSEditLogLoader {
   /**
    * Add a new block into the given INodeFile
    */
-  private void addNewBlock(AddBlockOp op, INodeFile file,
-                           ErasureCodingPolicy ecPolicy) throws IOException {
+  private void addNewBlock(AddBlockOp op, INodeFile file) throws IOException {
     BlockInfo[] oldBlocks = file.getBlocks();
     Block pBlock = op.getPenultimateBlock();
     Block newBlock = op.getLastBlock();
@@ -1019,13 +964,8 @@ public class FSEditLogLoader {
     }
     // add the new block
     final BlockInfo newBlockInfo;
-    boolean isStriped = ecPolicy != null;
-    if (isStriped) {
-      newBlockInfo = new BlockInfoStriped(newBlock, ecPolicy);
-    } else {
-      newBlockInfo = new BlockInfoContiguous(newBlock,
-          file.getPreferredBlockReplication());
-    }
+    newBlockInfo = new BlockInfoContiguous(newBlock,
+        file.getPreferredBlockReplication());
     newBlockInfo.convertToBlockUnderConstruction(
         BlockUCState.UNDER_CONSTRUCTION, null);
     fsNamesys.getBlockManager().addBlockCollectionWithCheck(newBlockInfo, file);
@@ -1038,7 +978,7 @@ public class FSEditLogLoader {
    * @throws IOException
    */
   private void updateBlocks(FSDirectory fsDir, BlockListUpdatingOp op,
-                            INodesInPath iip, INodeFile file, ErasureCodingPolicy ecPolicy)
+                            INodesInPath iip, INodeFile file)
       throws IOException {
     // Update its block list
     BlockInfo[] oldBlocks = file.getBlocks();
@@ -1102,7 +1042,6 @@ public class FSEditLogLoader {
         throw new IOException("Trying to delete non-existant block " + oldBlock);
       }
     } else if (newBlocks.length > oldBlocks.length) {
-      final boolean isStriped = ecPolicy != null;
       // We're adding blocks
       for (int i = oldBlocks.length; i < newBlocks.length; i++) {
         Block newBlock = newBlocks[i];
@@ -1111,12 +1050,8 @@ public class FSEditLogLoader {
           // TODO: shouldn't this only be true for the last block?
           // what about an old-version fsync() where fsync isn't called
           // until several blocks in?
-          if (isStriped) {
-            newBI = new BlockInfoStriped(newBlock, ecPolicy);
-          } else {
-            newBI = new BlockInfoContiguous(newBlock,
-                file.getPreferredBlockReplication());
-          }
+          newBI = new BlockInfoContiguous(newBlock,
+              file.getPreferredBlockReplication());
           newBI.convertToBlockUnderConstruction(
               BlockUCState.UNDER_CONSTRUCTION, null);
         } else {
@@ -1124,12 +1059,8 @@ public class FSEditLogLoader {
           // is only executed when loading edits written by prior
           // versions of Hadoop. Current versions always log
           // OP_ADD operations as each block is allocated.
-          if (isStriped) {
-            newBI = new BlockInfoStriped(newBlock, ecPolicy);
-          } else {
-            newBI = new BlockInfoContiguous(newBlock,
-                file.getFileReplication());
-          }
+          newBI = new BlockInfoContiguous(newBlock,
+              file.getFileReplication());
         }
         fsNamesys.getBlockManager().addBlockCollectionWithCheck(newBI, file);
         file.addBlock(newBI);

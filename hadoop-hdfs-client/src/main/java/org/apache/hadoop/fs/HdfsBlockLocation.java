@@ -32,9 +32,4 @@ public class HdfsBlockLocation extends BlockLocation implements Serializable {
     // LocatedBlock is not Serializable
     block = null;
   }
-
-  @Override
-  public boolean isStriped() {
-    return block.isStriped();
-  }
 }

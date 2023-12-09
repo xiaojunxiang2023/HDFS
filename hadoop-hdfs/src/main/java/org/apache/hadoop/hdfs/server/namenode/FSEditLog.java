@@ -11,7 +11,6 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo;
 import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
@@ -766,8 +765,7 @@ public class FSEditLog implements LogsPurgeable {
         .setClientMachine(
             newNode.getFileUnderConstructionFeature().getClientMachine())
         .setOverwrite(overwrite)
-        .setStoragePolicyId(newNode.getLocalStoragePolicyID())
-        .setErasureCodingPolicyId(newNode.getErasureCodingPolicyID());
+        .setStoragePolicyId(newNode.getLocalStoragePolicyID());
 
     AclFeature f = newNode.getAclFeature();
     if (f != null) {
@@ -1206,39 +1204,6 @@ public class FSEditLog implements LogsPurgeable {
     final RemoveXAttrOp op = RemoveXAttrOp.getInstance(cache.get());
     op.src = src;
     op.xAttrs = xAttrs;
-    logRpcIds(op, toLogRpcIds);
-    logEdit(op);
-  }
-
-  void logAddErasureCodingPolicy(ErasureCodingPolicy ecPolicy,
-                                 boolean toLogRpcIds) {
-    AddErasureCodingPolicyOp op =
-        AddErasureCodingPolicyOp.getInstance(cache.get());
-    op.setErasureCodingPolicy(ecPolicy);
-    logRpcIds(op, toLogRpcIds);
-    logEdit(op);
-  }
-
-  void logEnableErasureCodingPolicy(String ecPolicyName, boolean toLogRpcIds) {
-    EnableErasureCodingPolicyOp op =
-        EnableErasureCodingPolicyOp.getInstance(cache.get());
-    op.setErasureCodingPolicy(ecPolicyName);
-    logRpcIds(op, toLogRpcIds);
-    logEdit(op);
-  }
-
-  void logDisableErasureCodingPolicy(String ecPolicyName, boolean toLogRpcIds) {
-    DisableErasureCodingPolicyOp op =
-        DisableErasureCodingPolicyOp.getInstance(cache.get());
-    op.setErasureCodingPolicy(ecPolicyName);
-    logRpcIds(op, toLogRpcIds);
-    logEdit(op);
-  }
-
-  void logRemoveErasureCodingPolicy(String ecPolicyName, boolean toLogRpcIds) {
-    RemoveErasureCodingPolicyOp op =
-        RemoveErasureCodingPolicyOp.getInstance(cache.get());
-    op.setErasureCodingPolicy(ecPolicyName);
     logRpcIds(op, toLogRpcIds);
     logEdit(op);
   }

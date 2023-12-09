@@ -1107,13 +1107,6 @@ public class NameNodeRpcServer implements NamenodeProtocols {
   }
 
   @Override // ClientProtocol
-  public ECBlockGroupStats getECBlockGroupStats() throws IOException {
-    checkNNStartup();
-    namesystem.checkOperation(OperationCategory.READ);
-    return namesystem.getECBlockGroupStats();
-  }
-
-  @Override // ClientProtocol
   public DatanodeInfo[] getDatanodeReport(DatanodeReportType type)
       throws IOException {
     checkNNStartup();
@@ -2102,29 +2095,6 @@ public class NameNodeRpcServer implements NamenodeProtocols {
   }
 
   @Override // ClientProtocol
-  public void setErasureCodingPolicy(String src, String ecPolicyName)
-      throws IOException {
-    checkNNStartup();
-    final CacheEntry cacheEntry = RetryCache.waitForCompletion(retryCache);
-    if (cacheEntry != null && cacheEntry.isSuccess()) {
-      return;
-    }
-    boolean success = false;
-    try {
-      if (ecPolicyName == null) {
-        ecPolicyName = defaultECPolicyName;
-        LOG.debug("No policy name is specified, " +
-            "set the default policy name instead");
-      }
-      LOG.debug("Set erasure coding policy {} on {}", ecPolicyName, src);
-      namesystem.setErasureCodingPolicy(src, ecPolicyName, cacheEntry != null);
-      success = true;
-    } finally {
-      RetryCache.setState(cacheEntry, success);
-    }
-  }
-
-  @Override // ClientProtocol
   public void setXAttr(String src, XAttr xAttr, EnumSet<XAttrSetFlag> flag)
       throws IOException {
     checkNNStartup();
@@ -2318,124 +2288,6 @@ public class NameNodeRpcServer implements NamenodeProtocols {
     return new EventBatchList(batches, firstSeenTxid, maxSeenTxid, syncTxid);
   }
 
-  @Override // ClientProtocol
-  public ErasureCodingPolicyInfo[] getErasureCodingPolicies()
-      throws IOException {
-    checkNNStartup();
-    return namesystem.getErasureCodingPolicies();
-  }
-
-  @Override // ClientProtocol
-  public Map<String, String> getErasureCodingCodecs() throws IOException {
-    checkNNStartup();
-    return namesystem.getErasureCodingCodecs();
-  }
-
-  @Override // ClientProtocol
-  public ErasureCodingPolicy getErasureCodingPolicy(String src) throws IOException {
-    checkNNStartup();
-    return namesystem.getErasureCodingPolicy(src);
-  }
-
-  @Override // ClientProtocol
-  public void unsetErasureCodingPolicy(String src) throws IOException {
-    checkNNStartup();
-    final CacheEntry cacheEntry = RetryCache.waitForCompletion(retryCache);
-    if (cacheEntry != null && cacheEntry.isSuccess()) {
-      return;
-    }
-    boolean success = false;
-    try {
-      LOG.debug("Unset erasure coding policy on {}", src);
-      namesystem.unsetErasureCodingPolicy(src, cacheEntry != null);
-      success = true;
-    } finally {
-      RetryCache.setState(cacheEntry, success);
-    }
-  }
-
-  @Override
-  public ECTopologyVerifierResult getECTopologyResultForPolicies(
-      String... policyNames) throws IOException {
-    return namesystem.getECTopologyResultForPolicies(policyNames);
-  }
-
-  @Override
-  public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException {
-    checkNNStartup();
-    namesystem.checkSuperuserPrivilege();
-    final CacheEntryWithPayload cacheEntry =
-        RetryCache.waitForCompletion(retryCache, null);
-    if (cacheEntry != null && cacheEntry.isSuccess()) {
-      return (AddErasureCodingPolicyResponse[]) cacheEntry.getPayload();
-    }
-    boolean success = false;
-    AddErasureCodingPolicyResponse[] responses =
-        new AddErasureCodingPolicyResponse[0];
-    try {
-      responses =
-          namesystem.addErasureCodingPolicies(policies, cacheEntry != null);
-      success = true;
-    } finally {
-      RetryCache.setState(cacheEntry, success, responses);
-    }
-    return responses;
-  }
-
-  @Override
-  public void removeErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    checkNNStartup();
-    namesystem.checkSuperuserPrivilege();
-    final CacheEntry cacheEntry = RetryCache.waitForCompletion(retryCache);
-    if (cacheEntry != null && cacheEntry.isSuccess()) {
-      return;
-    }
-    boolean success = false;
-    try {
-      namesystem.removeErasureCodingPolicy(ecPolicyName, cacheEntry != null);
-      success = true;
-    } finally {
-      RetryCache.setState(cacheEntry, success);
-    }
-  }
-
-  @Override // ClientProtocol
-  public void enableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    checkNNStartup();
-    namesystem.checkSuperuserPrivilege();
-    final CacheEntry cacheEntry = RetryCache.waitForCompletion(retryCache);
-    if (cacheEntry != null && cacheEntry.isSuccess()) {
-      return;
-    }
-    boolean success = false;
-    try {
-      success = namesystem.enableErasureCodingPolicy(ecPolicyName,
-          cacheEntry != null);
-    } finally {
-      RetryCache.setState(cacheEntry, success);
-    }
-  }
-
-  @Override // ClientProtocol
-  public void disableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    checkNNStartup();
-    namesystem.checkSuperuserPrivilege();
-    final CacheEntry cacheEntry = RetryCache.waitForCompletion(retryCache);
-    if (cacheEntry != null && cacheEntry.isSuccess()) {
-      return;
-    }
-    boolean success = false;
-    try {
-      success = namesystem.disableErasureCodingPolicy(ecPolicyName,
-          cacheEntry != null);
-    } finally {
-      RetryCache.setState(cacheEntry, success);
-    }
-  }
 
   @Override // ReconfigurationProtocol
   public void startReconfiguration() throws IOException {

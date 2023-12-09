@@ -19,7 +19,6 @@ import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.GetBlockLocationsResponseProto.Builder;
 import org.apache.hadoop.hdfs.protocol.proto.EncryptionZonesProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.ErasureCodingProtos.*;
-import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.*;
 import org.apache.hadoop.hdfs.security.token.block.DataEncryptionKey;
@@ -36,7 +35,6 @@ import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class is used on the server side. Calls come across the wire for the
@@ -597,15 +595,10 @@ public class ClientNamenodeProtocolServerSideTranslatorPB implements
   }
 
   @Override
-  public GetFsECBlockGroupStatsResponseProto getFsECBlockGroupStats(
-      RpcController controller, GetFsECBlockGroupStatsRequestProto request)
-      throws ServiceException {
-    try {
-      return PBHelperClient.convert(server.getECBlockGroupStats());
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public GetFsECBlockGroupStatsResponseProto getFsECBlockGroupStats(RpcController rpcController, GetFsECBlockGroupStatsRequestProto getFsECBlockGroupStatsRequestProto) throws ServiceException {
+    return null;
   }
+
 
   @Override
   public GetDatanodeReportResponseProto getDatanodeReport(
@@ -1396,44 +1389,19 @@ public class ClientNamenodeProtocolServerSideTranslatorPB implements
   public SetErasureCodingPolicyResponseProto setErasureCodingPolicy(
       RpcController controller, SetErasureCodingPolicyRequestProto req)
       throws ServiceException {
-    try {
-      String ecPolicyName = req.hasEcPolicyName() ?
-          req.getEcPolicyName() : null;
-      server.setErasureCodingPolicy(req.getSrc(), ecPolicyName);
-      return SetErasureCodingPolicyResponseProto.newBuilder().build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+    return null;
   }
 
   @Override
   public UnsetErasureCodingPolicyResponseProto unsetErasureCodingPolicy(
       RpcController controller, UnsetErasureCodingPolicyRequestProto req)
       throws ServiceException {
-    try {
-      server.unsetErasureCodingPolicy(req.getSrc());
-      return UnsetErasureCodingPolicyResponseProto.newBuilder().build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+    return null;
   }
 
   @Override
-  public GetECTopologyResultForPoliciesResponseProto getECTopologyResultForPolicies(
-      RpcController controller, GetECTopologyResultForPoliciesRequestProto req)
-      throws ServiceException {
-    try {
-      ProtocolStringList policies = req.getPoliciesList();
-      ECTopologyVerifierResult result = server.getECTopologyResultForPolicies(
-          policies.toArray(policies.toArray(new String[policies.size()])));
-      GetECTopologyResultForPoliciesResponseProto.Builder builder =
-          GetECTopologyResultForPoliciesResponseProto.newBuilder();
-      builder
-          .setResponse(PBHelperClient.convertECTopologyVerifierResult(result));
-      return builder.build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public GetECTopologyResultForPoliciesResponseProto getECTopologyResultForPolicies(RpcController rpcController, GetECTopologyResultForPoliciesRequestProto getECTopologyResultForPoliciesRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
@@ -1571,115 +1539,40 @@ public class ClientNamenodeProtocolServerSideTranslatorPB implements
   }
 
   @Override
-  public GetErasureCodingPoliciesResponseProto getErasureCodingPolicies(RpcController controller,
-                                                                        GetErasureCodingPoliciesRequestProto request) throws ServiceException {
-    try {
-      ErasureCodingPolicyInfo[] ecpInfos = server.getErasureCodingPolicies();
-      GetErasureCodingPoliciesResponseProto.Builder resBuilder = GetErasureCodingPoliciesResponseProto
-          .newBuilder();
-      for (ErasureCodingPolicyInfo info : ecpInfos) {
-        resBuilder.addEcPolicies(
-            PBHelperClient.convertErasureCodingPolicy(info));
-      }
-      return resBuilder.build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public GetErasureCodingPoliciesResponseProto getErasureCodingPolicies(RpcController rpcController, GetErasureCodingPoliciesRequestProto getErasureCodingPoliciesRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
-  public GetErasureCodingCodecsResponseProto getErasureCodingCodecs(
-      RpcController controller, GetErasureCodingCodecsRequestProto request)
-      throws ServiceException {
-    try {
-      Map<String, String> codecs = server.getErasureCodingCodecs();
-      GetErasureCodingCodecsResponseProto.Builder resBuilder =
-          GetErasureCodingCodecsResponseProto.newBuilder();
-      for (Map.Entry<String, String> codec : codecs.entrySet()) {
-        resBuilder.addCodec(
-            PBHelperClient.convertErasureCodingCodec(
-                codec.getKey(), codec.getValue()));
-      }
-      return resBuilder.build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public AddErasureCodingPoliciesResponseProto addErasureCodingPolicies(RpcController rpcController, AddErasureCodingPoliciesRequestProto addErasureCodingPoliciesRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
-  public AddErasureCodingPoliciesResponseProto addErasureCodingPolicies(
-      RpcController controller, AddErasureCodingPoliciesRequestProto request)
-      throws ServiceException {
-    try {
-      ErasureCodingPolicy[] policies = request.getEcPoliciesList().stream()
-          .map(PBHelperClient::convertErasureCodingPolicy)
-          .toArray(ErasureCodingPolicy[]::new);
-      AddErasureCodingPolicyResponse[] result = server
-          .addErasureCodingPolicies(policies);
-
-      List<HdfsProtos.AddErasureCodingPolicyResponseProto> responseProtos =
-          Arrays.stream(result)
-              .map(PBHelperClient::convertAddErasureCodingPolicyResponse)
-              .collect(Collectors.toList());
-      AddErasureCodingPoliciesResponseProto response =
-          AddErasureCodingPoliciesResponseProto.newBuilder()
-              .addAllResponses(responseProtos).build();
-      return response;
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public RemoveErasureCodingPolicyResponseProto removeErasureCodingPolicy(RpcController rpcController, RemoveErasureCodingPolicyRequestProto removeErasureCodingPolicyRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
-  public RemoveErasureCodingPolicyResponseProto removeErasureCodingPolicy(
-      RpcController controller, RemoveErasureCodingPolicyRequestProto request)
-      throws ServiceException {
-    try {
-      server.removeErasureCodingPolicy(request.getEcPolicyName());
-      return RemoveErasureCodingPolicyResponseProto.newBuilder().build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public EnableErasureCodingPolicyResponseProto enableErasureCodingPolicy(RpcController rpcController, EnableErasureCodingPolicyRequestProto enableErasureCodingPolicyRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
-  public EnableErasureCodingPolicyResponseProto enableErasureCodingPolicy(
-      RpcController controller, EnableErasureCodingPolicyRequestProto request)
-      throws ServiceException {
-    try {
-      server.enableErasureCodingPolicy(request.getEcPolicyName());
-      return EnableErasureCodingPolicyResponseProto.newBuilder().build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public DisableErasureCodingPolicyResponseProto disableErasureCodingPolicy(RpcController rpcController, DisableErasureCodingPolicyRequestProto disableErasureCodingPolicyRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
-  public DisableErasureCodingPolicyResponseProto disableErasureCodingPolicy(
-      RpcController controller, DisableErasureCodingPolicyRequestProto request)
-      throws ServiceException {
-    try {
-      server.disableErasureCodingPolicy(request.getEcPolicyName());
-      return DisableErasureCodingPolicyResponseProto.newBuilder().build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public GetErasureCodingPolicyResponseProto getErasureCodingPolicy(RpcController rpcController, GetErasureCodingPolicyRequestProto getErasureCodingPolicyRequestProto) throws ServiceException {
+    return null;
   }
 
   @Override
-  public GetErasureCodingPolicyResponseProto getErasureCodingPolicy(RpcController controller,
-                                                                    GetErasureCodingPolicyRequestProto request) throws ServiceException {
-    try {
-      ErasureCodingPolicy ecPolicy = server.getErasureCodingPolicy(request.getSrc());
-      GetErasureCodingPolicyResponseProto.Builder builder = GetErasureCodingPolicyResponseProto.newBuilder();
-      if (ecPolicy != null) {
-        builder.setEcPolicy(PBHelperClient.convertErasureCodingPolicy(ecPolicy));
-      }
-      return builder.build();
-    } catch (IOException e) {
-      throw new ServiceException(e);
-    }
+  public GetErasureCodingCodecsResponseProto getErasureCodingCodecs(RpcController rpcController, GetErasureCodingCodecsRequestProto getErasureCodingCodecsRequestProto) throws ServiceException {
+    return null;
   }
+
 
   @Override
   public GetQuotaUsageResponseProto getQuotaUsage(

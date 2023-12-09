@@ -11,7 +11,6 @@ import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo.DatanodeInfoBuilder;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
-import org.apache.hadoop.io.erasurecode.ECSchema;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
@@ -111,20 +110,6 @@ public class JsonUtilClient {
       f.add(HdfsFileStatus.Flags.SNAPSHOT_ENABLED);
     }
 
-    Map<String, Object> ecPolicyObj = (Map) m.get("ecPolicyObj");
-    ErasureCodingPolicy ecPolicy = null;
-    if (ecPolicyObj != null) {
-      Map<String, String> extraOptions = (Map) ecPolicyObj.get("extraOptions");
-      ECSchema ecSchema = new ECSchema((String) ecPolicyObj.get("codecName"),
-          (int) ((Number) ecPolicyObj.get("numDataUnits")).longValue(),
-          (int) ((Number) ecPolicyObj.get("numParityUnits")).longValue(),
-          extraOptions);
-      ecPolicy = new ErasureCodingPolicy((String) ecPolicyObj.get("name"),
-          ecSchema, (int) ((Number) ecPolicyObj.get("cellSize")).longValue(),
-          (byte) (int) ((Number) ecPolicyObj.get("id")).longValue());
-
-    }
-
     final long aTime = ((Number) m.get("accessTime")).longValue();
     final long mTime = ((Number) m.get("modificationTime")).longValue();
     final long blockSize = ((Number) m.get("blockSize")).longValue();
@@ -152,7 +137,6 @@ public class JsonUtilClient {
         .fileId(fileId)
         .children(childrenNum)
         .storagePolicy(storagePolicy)
-        .ecPolicy(ecPolicy)
         .build();
   }
 
@@ -655,7 +639,7 @@ public class JsonUtilClient {
         (Map<?, ?>) m.get("lastLocatedBlock"));
     final boolean isLastBlockComplete = (Boolean) m.get("isLastBlockComplete");
     return new LocatedBlocks(fileLength, isUnderConstruction, locatedBlocks,
-        lastLocatedBlock, isLastBlockComplete, null, null);
+        lastLocatedBlock, isLastBlockComplete, null);
   }
 
   public static Collection<BlockStoragePolicy> getStoragePolicies(
@@ -690,20 +674,6 @@ public class JsonUtilClient {
     Boolean copyOnCreateFile = (Boolean) m.get("copyOnCreateFile");
     return new BlockStoragePolicy(id, name, storageTypes, creationFallbacks,
         replicationFallbacks, copyOnCreateFile.booleanValue());
-  }
-
-  public static ErasureCodingPolicy toECPolicy(Map<?, ?> m) {
-    if (m == null) {
-      return null;
-    }
-    byte id = ((Number) m.get("id")).byteValue();
-    String name = (String) m.get("name");
-    String codec = (String) m.get("codecName");
-    int cellsize = ((Number) m.get("cellSize")).intValue();
-    int dataunits = ((Number) m.get("numDataUnits")).intValue();
-    int parityunits = ((Number) m.get("numParityUnits")).intValue();
-    ECSchema ecs = new ECSchema(codec, dataunits, parityunits);
-    return new ErasureCodingPolicy(name, ecs, cellsize, id);
   }
 
   private static StorageType[] toStorageTypes(List<?> list) {

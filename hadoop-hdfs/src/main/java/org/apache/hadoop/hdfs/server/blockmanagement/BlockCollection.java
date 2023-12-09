@@ -31,7 +31,5 @@ public interface BlockCollection {
 
   boolean isUnderConstruction();
 
-  boolean isStriped();
-
   long getId();
 }

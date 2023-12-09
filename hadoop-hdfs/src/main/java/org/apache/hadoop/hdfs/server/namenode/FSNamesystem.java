@@ -29,7 +29,6 @@ import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifie
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenSecretManager;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenSecretManager.SecretManagerState;
 import org.apache.hadoop.hdfs.server.blockmanagement.*;
-import org.apache.hadoop.hdfs.server.common.ECTopologyVerifier;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.NamenodeRole;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.RollingUpgradeStartupOption;
@@ -50,7 +49,6 @@ import org.apache.hadoop.hdfs.server.namenode.NameNodeLayoutVersion.Feature;
 import org.apache.hadoop.hdfs.server.namenode.ha.EditLogTailer;
 import org.apache.hadoop.hdfs.server.namenode.ha.HAContext;
 import org.apache.hadoop.hdfs.server.namenode.ha.StandbyCheckpointer;
-import org.apache.hadoop.hdfs.server.namenode.metrics.ECBlockGroupsMBean;
 import org.apache.hadoop.hdfs.server.namenode.metrics.FSNamesystemMBean;
 import org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics;
 import org.apache.hadoop.hdfs.server.namenode.metrics.ReplicatedBlocksMBean;
@@ -173,7 +171,7 @@ import static org.apache.hadoop.util.Time.now;
  */
 @Metrics(context = "dfs")
 public class FSNamesystem implements Namesystem, FSNamesystemMBean,
-    NameNodeMXBean, ReplicatedBlocksMBean, ECBlockGroupsMBean {
+    NameNodeMXBean, ReplicatedBlocksMBean {
 
   public static final org.slf4j.Logger LOG = LoggerFactory
       .getLogger(FSNamesystem.class.getName());
@@ -476,7 +474,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     cacheManager.clear();
     setImageLoaded(false);
     blockManager.clear();
-    ErasureCodingPolicyManager.getInstance().clear();
   }
 
   @VisibleForTesting
@@ -776,8 +773,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
       this.dir = new FSDirectory(this, conf);
       this.snapshotManager = new SnapshotManager(conf, dir);
       this.cacheManager = new CacheManager(this, conf, blockManager);
-      // Init ErasureCodingPolicyManager instance.
-      ErasureCodingPolicyManager.getInstance().init(conf);
       this.topConf = new TopConf(conf);
       this.auditLoggers = initAuditLoggers(conf);
       this.isDefaultAuditLogger = auditLoggers.size() == 1 &&
@@ -2474,20 +2469,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
 
       if (shouldReplicate) {
         blockManager.verifyReplication(src, replication, clientMachine);
-      } else {
-        final ErasureCodingPolicy ecPolicy = FSDirErasureCodingOp
-            .getErasureCodingPolicy(this, ecPolicyName, iip);
-        if (ecPolicy != null && (!ecPolicy.isReplicationPolicy())) {
-          checkErasureCodingSupported("createWithEC");
-          if (blockSize < ecPolicy.getCellSize()) {
-            throw new IOException("Specified block size (" + blockSize
-                + ") is less than the cell size (" + ecPolicy.getCellSize()
-                + ") of the erasure coding policy (" + ecPolicy + ").");
-          }
-        } else {
-          blockManager.verifyReplication(src, replication, clientMachine);
-        }
-      }
+      } 
 
       FileEncryptionInfo feInfo = null;
       if (!iip.isRaw() && provider != null) {
@@ -3750,9 +3732,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
                 dsInfos[i].addBlock(truncatedBlock, truncatedBlock);
               } else {
                 Block bi = new Block(storedBlock);
-                if (storedBlock.isStriped()) {
-                  bi.setBlockId(bi.getBlockId() + i);
-                }
                 dsInfos[i].addBlock(storedBlock, bi);
               }
             }
@@ -4447,19 +4426,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
         getHighestPriorityLowRedundancyReplicatedBlocks());
   }
 
-  /**
-   * Get statistics pertaining to blocks of type {@link BlockType#STRIPED}
-   * in the filesystem.
-   * <p>
-   * @see ClientProtocol#getECBlockGroupStats()
-   */
-  ECBlockGroupStats getECBlockGroupStats() {
-    return new ECBlockGroupStats(getLowRedundancyECBlockGroups(),
-        getCorruptECBlockGroups(), getMissingECBlockGroups(),
-        getBytesInFutureECBlockGroups(), getPendingDeletionECBlocks(),
-        getHighestPriorityLowRedundancyECBlocks());
-  }
-
   @Override // FSNamesystemMBean
   @Metric({"CapacityTotal",
       "Total raw capacity of data nodes in bytes"})
@@ -5111,56 +5077,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     return blockManager.getTotalReplicatedBlocks();
   }
 
-  @Override // ECBlockGroupsMBean
-  @Metric({"LowRedundancyECBlockGroups", "Number of erasure coded block " +
-      "groups with low redundancy"})
-  public long getLowRedundancyECBlockGroups() {
-    return blockManager.getLowRedundancyECBlockGroups();
-  }
-
-  @Override // ECBlockGroupsMBean
-  @Metric({"CorruptECBlockGroups", "Number of erasure coded block groups that" +
-      " are corrupt"})
-  public long getCorruptECBlockGroups() {
-    return blockManager.getCorruptECBlockGroups();
-  }
-
-  @Override // ECBlockGroupsMBean
-  @Metric({"MissingECBlockGroups", "Number of erasure coded block groups that" +
-      " are missing"})
-  public long getMissingECBlockGroups() {
-    return blockManager.getMissingECBlockGroups();
-  }
-
-  @Override // ECBlockGroupsMBean
-  @Metric({"BytesInFutureECBlockGroups", "Total bytes in erasure coded block " +
-      "groups with future generation stamp"})
-  public long getBytesInFutureECBlockGroups() {
-    return blockManager.getBytesInFutureECBlockGroups();
-  }
-
-  @Override // ECBlockGroupsMBean
-  @Metric({"PendingDeletionECBlocks", "Number of erasure coded blocks " +
-      "that are pending deletion"})
-  public long getPendingDeletionECBlocks() {
-    return blockManager.getPendingDeletionECBlocks();
-  }
-
-  @Override // ECBlockGroupsMBean
-  @Metric({"TotalECBlockGroups", "Total number of erasure coded block groups"})
-  public long getTotalECBlockGroups() {
-    return blockManager.getTotalECBlockGroups();
-  }
-
-  /**
-   * Get the enabled erasure coding policies separated with comma.
-   */
-  @Override // ECBlockGroupsMBean
-  @Metric({"EnabledEcPolicies", "Enabled erasure coding policies"})
-  public String getEnabledEcPolicies() {
-    return getErasureCodingPolicyManager().getEnabledPoliciesMetric();
-  }
-
   @Override
   public long getBlockDeletionStartTime() {
     return startTime + blockManager.getStartupDelayBlockDeletionInMs();
@@ -5237,14 +5153,10 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
           this, FSNamesystemMBean.class);
       StandardMBean replicaBean = new StandardMBean(
           this, ReplicatedBlocksMBean.class);
-      StandardMBean ecBean = new StandardMBean(
-          this, ECBlockGroupsMBean.class);
       namesystemMBeanName = MBeans.register(
           "NameNode", "FSNamesystemState", namesystemBean);
       replicatedBlocksMBeanName = MBeans.register(
           "NameNode", "ReplicatedBlocksState", replicaBean);
-      ecBlockGroupsMBeanName = MBeans.register(
-          "NameNode", "ECBlockGroupsState", ecBean);
     } catch (NotCompliantMBeanException e) {
       throw new RuntimeException("Bad MBean setup", e);
     }
@@ -5266,10 +5178,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     if (replicatedBlocksMBeanName != null) {
       MBeans.unregister(replicatedBlocksMBeanName);
       replicatedBlocksMBeanName = null;
-    }
-    if (ecBlockGroupsMBeanName != null) {
-      MBeans.unregister(ecBlockGroupsMBeanName);
-      ecBlockGroupsMBeanName = null;
     }
     if (namenodeMXBeanName != null) {
       MBeans.unregister(namenodeMXBeanName);
@@ -6504,11 +6412,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   @Override
   public CacheManager getCacheManager() {
     return cacheManager;
-  }
-
-  /** @return the ErasureCodingPolicyManager. */
-  public ErasureCodingPolicyManager getErasureCodingPolicyManager() {
-    return ErasureCodingPolicyManager.getInstance();
   }
 
   @Override
@@ -7761,313 +7664,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     getEditLog().logSync();
   }
 
-  /**
-   * Set an erasure coding policy on the given path.
-   * @param srcArg  The path of the target directory.
-   * @param ecPolicyName The erasure coding policy to set on the target
-   *                    directory.
-   * @throws AccessControlException  if the caller is not the superuser.
-   * @throws UnresolvedLinkException if the path can't be resolved.
-   * @throws SafeModeException       if the Namenode is in safe mode.
-   */
-  void setErasureCodingPolicy(final String srcArg, final String ecPolicyName,
-                              final boolean logRetryCache) throws IOException,
-      UnresolvedLinkException, SafeModeException, AccessControlException {
-    final String operationName = "setErasureCodingPolicy";
-    checkOperation(OperationCategory.WRITE);
-    checkErasureCodingSupported(operationName);
-    FileStatus resultingStat = null;
-    final FSPermissionChecker pc = getPermissionChecker();
-    FSPermissionChecker.setOperationType(operationName);
-    writeLock();
-    try {
-      checkOperation(OperationCategory.WRITE);
-      checkNameNodeSafeMode("Cannot set erasure coding policy on " + srcArg);
-      resultingStat = FSDirErasureCodingOp.setErasureCodingPolicy(this,
-          srcArg, ecPolicyName, pc, logRetryCache);
-    } catch (AccessControlException ace) {
-      logAuditEvent(false, operationName, srcArg);
-      throw ace;
-    } finally {
-      writeUnlock(operationName);
-    }
-    getEditLog().logSync();
-    logAuditEvent(true, operationName, srcArg, null, resultingStat);
-  }
-
-  /**
-   * Add multiple erasure coding policies to the ErasureCodingPolicyManager.
-   * @param policies The policies to add.
-   * @param logRetryCache whether to record RPC ids in editlog for retry cache
-   *                      rebuilding
-   * @return The according result of add operation.
-   */
-  AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies, final boolean logRetryCache)
-      throws IOException {
-    final String operationName = "addErasureCodingPolicies";
-    List<String> addECPolicyNames = new ArrayList<>(policies.length);
-    checkOperation(OperationCategory.WRITE);
-    checkErasureCodingSupported(operationName);
-    List<AddErasureCodingPolicyResponse> responses =
-        new ArrayList<>(policies.length);
-    writeLock();
-    try {
-      checkOperation(OperationCategory.WRITE);
-      checkNameNodeSafeMode("Cannot add erasure coding policy");
-      for (ErasureCodingPolicy policy : policies) {
-        try {
-          ErasureCodingPolicy newPolicy =
-              FSDirErasureCodingOp.addErasureCodingPolicy(this, policy,
-                  logRetryCache);
-          addECPolicyNames.add(newPolicy.getName());
-          responses.add(new AddErasureCodingPolicyResponse(newPolicy));
-        } catch (HadoopIllegalArgumentException e) {
-          responses.add(new AddErasureCodingPolicyResponse(policy, e));
-        }
-      }
-    } finally {
-      writeUnlock(operationName);
-    }
-    getEditLog().logSync();
-    logAuditEvent(true, operationName, addECPolicyNames.toString());
-    return responses.toArray(new AddErasureCodingPolicyResponse[0]);
-  }
-
-  /**
-   * Remove an erasure coding policy.
-   * @param ecPolicyName the name of the policy to be removed
-   * @param logRetryCache whether to record RPC ids in editlog for retry cache
-   *                      rebuilding
-   * @throws IOException
-   */
-  void removeErasureCodingPolicy(String ecPolicyName,
-                                 final boolean logRetryCache) throws IOException {
-    final String operationName = "removeErasureCodingPolicy";
-    checkOperation(OperationCategory.WRITE);
-    checkErasureCodingSupported(operationName);
-    writeLock();
-    try {
-      checkOperation(OperationCategory.WRITE);
-      checkNameNodeSafeMode("Cannot remove erasure coding policy "
-          + ecPolicyName);
-      FSDirErasureCodingOp.removeErasureCodingPolicy(this, ecPolicyName,
-          logRetryCache);
-    } finally {
-      writeUnlock(operationName);
-    }
-    getEditLog().logSync();
-    logAuditEvent(true, operationName, ecPolicyName, null, null);
-  }
-
-  /**
-   * Enable an erasure coding policy.
-   * @param ecPolicyName the name of the policy to be enabled
-   * @param logRetryCache whether to record RPC ids in editlog for retry cache
-   *                      rebuilding
-   * @return
-   * @throws IOException
-   */
-  boolean enableErasureCodingPolicy(String ecPolicyName,
-                                    final boolean logRetryCache) throws IOException {
-    final String operationName = "enableErasureCodingPolicy";
-    checkOperation(OperationCategory.WRITE);
-    checkErasureCodingSupported(operationName);
-    boolean success = false;
-    try {
-      writeLock();
-      try {
-        checkOperation(OperationCategory.WRITE);
-        checkNameNodeSafeMode("Cannot enable erasure coding policy "
-            + ecPolicyName);
-        success = FSDirErasureCodingOp.enableErasureCodingPolicy(this,
-            ecPolicyName, logRetryCache);
-      } finally {
-        writeUnlock(operationName);
-      }
-    } catch (AccessControlException ace) {
-      logAuditEvent(false, operationName, ecPolicyName);
-      throw ace;
-    }
-    if (success) {
-      getEditLog().logSync();
-      logAuditEvent(true, operationName, ecPolicyName);
-    }
-    return success;
-  }
-
-  /**
-   * Disable an erasure coding policy.
-   * @param ecPolicyName the name of the policy to be disabled
-   * @param logRetryCache whether to record RPC ids in editlog for retry cache
-   *                      rebuilding
-   * @throws IOException
-   */
-  boolean disableErasureCodingPolicy(String ecPolicyName,
-                                     final boolean logRetryCache) throws IOException {
-    final String operationName = "disableErasureCodingPolicy";
-    checkOperation(OperationCategory.WRITE);
-    checkErasureCodingSupported(operationName);
-    boolean success = false;
-    try {
-      writeLock();
-      try {
-        checkOperation(OperationCategory.WRITE);
-        checkNameNodeSafeMode("Cannot disable erasure coding policy "
-            + ecPolicyName);
-        success = FSDirErasureCodingOp.disableErasureCodingPolicy(this,
-            ecPolicyName, logRetryCache);
-      } finally {
-        writeUnlock(operationName);
-      }
-    } catch (AccessControlException ace) {
-      logAuditEvent(false, operationName, ecPolicyName);
-      throw ace;
-    }
-    if (success) {
-      getEditLog().logSync();
-      logAuditEvent(true, operationName, ecPolicyName);
-    }
-    return success;
-  }
-
-  /**
-   * Unset an erasure coding policy from the given path.
-   * @param srcArg  The path of the target directory.
-   * @throws AccessControlException  if the caller is not the superuser.
-   * @throws UnresolvedLinkException if the path can't be resolved.
-   * @throws SafeModeException       if the Namenode is in safe mode.
-   */
-  void unsetErasureCodingPolicy(final String srcArg,
-                                final boolean logRetryCache) throws IOException,
-      UnresolvedLinkException, SafeModeException, AccessControlException {
-    final String operationName = "unsetErasureCodingPolicy";
-    checkOperation(OperationCategory.WRITE);
-    checkErasureCodingSupported(operationName);
-    FileStatus resultingStat = null;
-    final FSPermissionChecker pc = getPermissionChecker();
-    FSPermissionChecker.setOperationType(operationName);
-    writeLock();
-    try {
-      checkOperation(OperationCategory.WRITE);
-      checkNameNodeSafeMode("Cannot unset erasure coding policy on " + srcArg);
-      resultingStat = FSDirErasureCodingOp.unsetErasureCodingPolicy(this,
-          srcArg, pc, logRetryCache);
-    } finally {
-      writeUnlock(operationName);
-    }
-    getEditLog().logSync();
-    logAuditEvent(true, operationName, srcArg, null, resultingStat);
-  }
-
-  /**
-   * Verifies if the given policies are supported in the given cluster setup.
-   * If not policy is specified checks for all enabled policies.
-   * @param policyNames name of policies.
-   * @return the result if the given policies are supported in the cluster setup
-   * @throws IOException
-   */
-  public ECTopologyVerifierResult getECTopologyResultForPolicies(
-      String[] policyNames) throws IOException {
-    String operationName = "getECTopologyResultForPolicies";
-    checkSuperuserPrivilege(operationName);
-    checkOperation(OperationCategory.UNCHECKED);
-    ECTopologyVerifierResult result;
-    readLock();
-    try {
-      checkOperation(OperationCategory.UNCHECKED);
-      // If no policy name is specified return the result
-      // for all enabled policies.
-      if (policyNames == null || policyNames.length == 0) {
-        result = getEcTopologyVerifierResultForEnabledPolicies();
-      } else {
-        Collection<ErasureCodingPolicy> policies =
-            new ArrayList<ErasureCodingPolicy>();
-        for (int i = 0; i < policyNames.length; i++) {
-          policies.add(FSDirErasureCodingOp
-              .getErasureCodingPolicyByName(this, policyNames[i]));
-        }
-        int numOfDataNodes =
-            getBlockManager().getDatanodeManager().getNumOfDataNodes();
-        int numOfRacks =
-            getBlockManager().getDatanodeManager().getNetworkTopology()
-                .getNumOfRacks();
-        result = ECTopologyVerifier
-            .getECTopologyVerifierResult(numOfRacks, numOfDataNodes, policies);
-      }
-    } finally {
-      readUnlock();
-    }
-    logAuditEvent(true, operationName, null);
-    return result;
-  }
-
-  /**
-   * Get the erasure coding policy information for specified path
-   */
-  ErasureCodingPolicy getErasureCodingPolicy(String src)
-      throws AccessControlException, UnresolvedLinkException, IOException {
-    final String operationName = "getErasureCodingPolicy";
-    boolean success = false;
-    checkOperation(OperationCategory.READ);
-    checkErasureCodingSupported(operationName);
-    final FSPermissionChecker pc = getPermissionChecker();
-    FSPermissionChecker.setOperationType(operationName);
-    readLock();
-    try {
-      checkOperation(OperationCategory.READ);
-      final ErasureCodingPolicy ret =
-          FSDirErasureCodingOp.getErasureCodingPolicy(this, src, pc);
-      success = true;
-      return ret;
-    } finally {
-      readUnlock(operationName);
-      logAuditEvent(success, operationName, src);
-    }
-  }
-
-  /**
-   * Get all erasure coding polices.
-   */
-  ErasureCodingPolicyInfo[] getErasureCodingPolicies() throws IOException {
-    final String operationName = "getErasureCodingPolicies";
-    boolean success = false;
-    checkOperation(OperationCategory.READ);
-    checkErasureCodingSupported(operationName);
-    readLock();
-    try {
-      checkOperation(OperationCategory.READ);
-      final ErasureCodingPolicyInfo[] ret =
-          FSDirErasureCodingOp.getErasureCodingPolicies(this);
-      success = true;
-      return ret;
-    } finally {
-      readUnlock(operationName);
-      logAuditEvent(success, operationName, null);
-    }
-  }
-
-  /**
-   * Get available erasure coding codecs and corresponding coders.
-   */
-  Map<String, String> getErasureCodingCodecs() throws IOException {
-    final String operationName = "getErasureCodingCodecs";
-    boolean success = false;
-    checkOperation(OperationCategory.READ);
-    checkErasureCodingSupported(operationName);
-    readLock();
-    try {
-      checkOperation(OperationCategory.READ);
-      final Map<String, String> ret =
-          FSDirErasureCodingOp.getErasureCodingCodecs(this);
-      success = true;
-      return ret;
-    } finally {
-      readUnlock(operationName);
-      logAuditEvent(success, operationName, null);
-    }
-  }
-
   void setXAttr(String src, XAttr xAttr, EnumSet<XAttrSetFlag> flag,
                 boolean logRetryCache)
       throws IOException {
@@ -8418,29 +8014,6 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   public int getNumEnteringMaintenanceDataNodes() {
     return getBlockManager().getDatanodeManager().getEnteringMaintenanceNodes()
         .size();
-  }
-
-  @Override // NameNodeMXBean
-  public String getVerifyECWithTopologyResult() {
-    ECTopologyVerifierResult result =
-        getEcTopologyVerifierResultForEnabledPolicies();
-
-    Map<String, String> resultMap = new HashMap<String, String>();
-    resultMap.put("isSupported", Boolean.toString(result.isSupported()));
-    resultMap.put("resultMessage", result.getResultMessage());
-    return JSON.toString(resultMap);
-  }
-
-  private ECTopologyVerifierResult getEcTopologyVerifierResultForEnabledPolicies() {
-    int numOfDataNodes =
-        getBlockManager().getDatanodeManager().getNumOfDataNodes();
-    int numOfRacks = getBlockManager().getDatanodeManager().getNetworkTopology()
-        .getNumOfRacks();
-    ErasureCodingPolicy[] enabledEcPolicies =
-        getErasureCodingPolicyManager().getCopyOfEnabledPolicies();
-    return ECTopologyVerifier
-        .getECTopologyVerifierResult(numOfRacks, numOfDataNodes,
-            Arrays.asList(enabledEcPolicies));
   }
 
   // This method logs operatoinName without super user privilege.

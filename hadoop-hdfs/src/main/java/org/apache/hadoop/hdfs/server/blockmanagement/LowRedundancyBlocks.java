@@ -195,14 +195,8 @@ class LowRedundancyBlocks implements Iterable<BlockInfo> {
       // Block has enough copies, but not enough racks
       return QUEUE_REPLICAS_BADLY_DISTRIBUTED;
     }
-    if (block.isStriped()) {
-      BlockInfoStriped sblk = (BlockInfoStriped) block;
-      return getPriorityStriped(curReplicas, outOfServiceReplicas,
-          sblk.getRealDataBlockNum(), sblk.getParityBlockNum());
-    } else {
-      return getPriorityContiguous(curReplicas, readOnlyReplicas,
-          outOfServiceReplicas, expectedReplicas);
-    }
+    return getPriorityContiguous(curReplicas, readOnlyReplicas,
+        outOfServiceReplicas, expectedReplicas);
   }
 
   private int getPriorityContiguous(int curReplicas, int readOnlyReplicas,
@@ -291,25 +285,15 @@ class LowRedundancyBlocks implements Iterable<BlockInfo> {
 
   private void incrementBlockStat(BlockInfo blockInfo, int priLevel,
                                   int expectedReplicas) {
-    if (blockInfo.isStriped()) {
-      lowRedundancyECBlockGroups.increment();
-      if (priLevel == QUEUE_WITH_CORRUPT_BLOCKS) {
-        corruptECBlockGroups.increment();
+    lowRedundancyBlocks.increment();
+    if (priLevel == QUEUE_WITH_CORRUPT_BLOCKS) {
+      corruptBlocks.increment();
+      if (expectedReplicas == 1) {
+        corruptReplicationOneBlocks.increment();
       }
-      if (priLevel == QUEUE_HIGHEST_PRIORITY) {
-        highestPriorityLowRedundancyECBlocks.increment();
-      }
-    } else {
-      lowRedundancyBlocks.increment();
-      if (priLevel == QUEUE_WITH_CORRUPT_BLOCKS) {
-        corruptBlocks.increment();
-        if (expectedReplicas == 1) {
-          corruptReplicationOneBlocks.increment();
-        }
-      }
-      if (priLevel == QUEUE_HIGHEST_PRIORITY) {
-        highestPriorityLowRedundancyReplicatedBlocks.increment();
-      }
+    }
+    if (priLevel == QUEUE_HIGHEST_PRIORITY) {
+      highestPriorityLowRedundancyReplicatedBlocks.increment();
     }
   }
 
@@ -378,24 +362,14 @@ class LowRedundancyBlocks implements Iterable<BlockInfo> {
 
   private void decrementBlockStat(BlockInfo blockInfo, int priLevel,
                                   int oldExpectedReplicas) {
-    if (blockInfo.isStriped()) {
-      lowRedundancyECBlockGroups.decrement();
-      if (priLevel == QUEUE_WITH_CORRUPT_BLOCKS) {
-        corruptECBlockGroups.decrement();
-      }
-      if (priLevel == QUEUE_HIGHEST_PRIORITY) {
-        highestPriorityLowRedundancyECBlocks.decrement();
-      }
-    } else {
-      lowRedundancyBlocks.decrement();
-      if (priLevel == QUEUE_WITH_CORRUPT_BLOCKS) {
-        corruptBlocks.decrement();
-        if (oldExpectedReplicas == 1) {
-          corruptReplicationOneBlocks.decrement();
-          assert corruptReplicationOneBlocks.longValue() >= 0 :
-              "Number of corrupt blocks with replication factor 1 " +
-                  "should be non-negative";
-        }
+    lowRedundancyBlocks.decrement();
+    if (priLevel == QUEUE_WITH_CORRUPT_BLOCKS) {
+      corruptBlocks.decrement();
+      if (oldExpectedReplicas == 1) {
+        corruptReplicationOneBlocks.decrement();
+        assert corruptReplicationOneBlocks.longValue() >= 0 :
+            "Number of corrupt blocks with replication factor 1 " +
+                "should be non-negative";
       }
       if (priLevel == QUEUE_HIGHEST_PRIORITY) {
         highestPriorityLowRedundancyReplicatedBlocks.decrement();

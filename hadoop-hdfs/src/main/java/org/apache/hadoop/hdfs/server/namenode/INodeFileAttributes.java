@@ -12,13 +12,7 @@ public interface INodeFileAttributes extends INodeAttributes {
   short getFileReplication();
 
   /** @return whether the file is striped (instead of contiguous) */
-  boolean isStriped();
-
-  /** @return whether the file is striped (instead of contiguous) */
   BlockType getBlockType();
-
-  /** @return the ID of the ErasureCodingPolicy */
-  byte getErasureCodingPolicyID();
 
   /** @return preferred block size in bytes */
   long getPreferredBlockSize();
@@ -63,21 +57,8 @@ public interface INodeFileAttributes extends INodeAttributes {
     }
 
     @Override
-    public boolean isStriped() {
-      return HeaderFormat.isStriped(header);
-    }
-
-    @Override
     public BlockType getBlockType() {
       return HeaderFormat.getBlockType(header);
-    }
-
-    @Override
-    public byte getErasureCodingPolicyID() {
-      if (isStriped()) {
-        return HeaderFormat.getECPolicyID(header);
-      }
-      return -1;
     }
 
     @Override

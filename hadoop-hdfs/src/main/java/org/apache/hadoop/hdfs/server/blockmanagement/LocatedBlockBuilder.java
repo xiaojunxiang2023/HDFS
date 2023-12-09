@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.fs.FileEncryptionInfo;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.protocol.LocatedBlocks;
@@ -19,7 +18,6 @@ class LocatedBlockBuilder {
   protected boolean lastComplete;
   protected FileEncryptionInfo feInfo;
   private final int maxBlocks;
-  protected ErasureCodingPolicy ecPolicy;
 
   LocatedBlockBuilder(int maxBlocks) {
     this.maxBlocks = maxBlocks;
@@ -71,18 +69,13 @@ class LocatedBlockBuilder {
     return this;
   }
 
-  LocatedBlockBuilder erasureCoding(ErasureCodingPolicy codingPolicy) {
-    ecPolicy = codingPolicy;
-    return this;
-  }
-
   LocatedBlocks build(DatanodeDescriptor client) {
     return build();
   }
 
   LocatedBlocks build() {
     return new LocatedBlocks(flen, isUC, blocks, last,
-        lastComplete, feInfo, ecPolicy);
+        lastComplete, feInfo);
   }
 
 }

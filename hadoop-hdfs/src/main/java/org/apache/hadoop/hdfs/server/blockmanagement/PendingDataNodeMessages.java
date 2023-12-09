@@ -77,16 +77,9 @@ class PendingDataNodeMessages {
 
   void enqueueReportedBlock(DatanodeStorageInfo storageInfo, Block block,
                             ReplicaState reportedState) {
-    if (BlockIdManager.isStripedBlockID(block.getBlockId())) {
-      Block blkId = new Block(BlockIdManager.convertToStripedID(block
-          .getBlockId()));
-      getBlockQueue(blkId).add(
-          new ReportedBlockInfo(storageInfo, new Block(block), reportedState));
-    } else {
-      block = new Block(block);
-      getBlockQueue(block).add(
-          new ReportedBlockInfo(storageInfo, block, reportedState));
-    }
+    block = new Block(block);
+    getBlockQueue(block).add(
+        new ReportedBlockInfo(storageInfo, block, reportedState));
     count++;
   }
 

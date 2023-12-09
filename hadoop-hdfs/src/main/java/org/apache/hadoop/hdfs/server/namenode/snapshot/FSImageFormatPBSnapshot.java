@@ -189,11 +189,9 @@ public class FSImageFormatPBSnapshot {
               (fileInPb.getBlockType() == BlockTypeProto.STRIPED);
           Short replication =
               (!isStriped ? (short) fileInPb.getReplication() : null);
-          Byte ecPolicyID =
-              (isStriped ? (byte) fileInPb.getErasureCodingPolicyID() : null);
           copy = new INodeFileAttributes.SnapshotCopy(pbf.getName()
               .toByteArray(), permission, acl, fileInPb.getModificationTime(),
-              fileInPb.getAccessTime(), replication, ecPolicyID,
+              fileInPb.getAccessTime(), replication, null,
               fileInPb.getPreferredBlockSize(),
               (byte) fileInPb.getStoragePolicyID(), xAttrs,
               PBHelperClient.convert(fileInPb.getBlockType()));

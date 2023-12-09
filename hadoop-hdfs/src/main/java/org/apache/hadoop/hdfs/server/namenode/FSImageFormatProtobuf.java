@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
-import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicyInfo;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CacheDirectiveInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CachePoolInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ErasureCodingPolicyProto;
@@ -340,18 +339,15 @@ public final class FSImageFormatProtobuf {
 
       ArrayList<FileSummary.Section> sections = Lists.newArrayList(summary
           .getSectionsList());
-      Collections.sort(sections, new Comparator<FileSummary.Section>() {
-        @Override
-        public int compare(FileSummary.Section s1, FileSummary.Section s2) {
-          SectionName n1 = SectionName.fromString(s1.getName());
-          SectionName n2 = SectionName.fromString(s2.getName());
-          if (n1 == null) {
-            return n2 == null ? 0 : -1;
-          } else if (n2 == null) {
-            return -1;
-          } else {
-            return n1.ordinal() - n2.ordinal();
-          }
+      Collections.sort(sections, (s1, s2) -> {
+        SectionName n1 = SectionName.fromString(s1.getName());
+        SectionName n2 = SectionName.fromString(s2.getName());
+        if (n1 == null) {
+          return n2 == null ? 0 : -1;
+        } else if (n2 == null) {
+          return -1;
+        } else {
+          return n1.ordinal() - n2.ordinal();
         }
       });
 
@@ -444,12 +440,6 @@ public final class FSImageFormatProtobuf {
             prog.endStep(Phase.LOADING_FSIMAGE, step);
           }
           break;
-          case ERASURE_CODING:
-            Step step = new Step(StepType.ERASURE_CODING_POLICIES);
-            prog.beginStep(Phase.LOADING_FSIMAGE, step);
-            loadErasureCodingSection(in);
-            prog.endStep(Phase.LOADING_FSIMAGE, step);
-            break;
           default:
             LOG.warn("Unrecognized section {}", n);
             break;
@@ -532,17 +522,6 @@ public final class FSImageFormatProtobuf {
           new CacheManager.PersistState(s, pools, directives));
     }
 
-    private void loadErasureCodingSection(InputStream in)
-        throws IOException {
-      ErasureCodingSection s = ErasureCodingSection.parseDelimitedFrom(in);
-      List<ErasureCodingPolicyInfo> ecPolicies = Lists
-          .newArrayListWithCapacity(s.getPoliciesCount());
-      for (int i = 0; i < s.getPoliciesCount(); ++i) {
-        ecPolicies.add(PBHelperClient.convertErasureCodingPolicyInfo(
-            s.getPolicies(i)));
-      }
-      fsn.getErasureCodingPolicyManager().loadPolicies(ecPolicies, conf);
-    }
   }
 
   private static boolean enableParallelSaveAndLoad(Configuration conf) {
@@ -827,7 +806,6 @@ public final class FSImageFormatProtobuf {
           NameNodeLayoutVersion.Feature.ERASURE_CODING, layoutVersion)) {
         step = new Step(StepType.ERASURE_CODING_POLICIES, filePath);
         prog.beginStep(Phase.SAVING_CHECKPOINT, step);
-        saveErasureCodingSection(b);
         prog.endStep(Phase.SAVING_CHECKPOINT, step);
       }
 
@@ -889,23 +867,6 @@ public final class FSImageFormatProtobuf {
         p.writeDelimitedTo(sectionOutputStream);
 
       commitSection(summary, SectionName.CACHE_MANAGER);
-    }
-
-    private void saveErasureCodingSection(
-        FileSummary.Builder summary) throws IOException {
-      final FSNamesystem fsn = context.getSourceNamesystem();
-      ErasureCodingPolicyInfo[] ecPolicies =
-          fsn.getErasureCodingPolicyManager().getPersistedPolicies();
-      ArrayList<ErasureCodingPolicyProto> ecPolicyProtoes =
-          new ArrayList<ErasureCodingPolicyProto>();
-      for (ErasureCodingPolicyInfo p : ecPolicies) {
-        ecPolicyProtoes.add(PBHelperClient.convertErasureCodingPolicy(p));
-      }
-
-      ErasureCodingSection section = ErasureCodingSection.newBuilder().
-          addAllPolicies(ecPolicyProtoes).build();
-      section.writeDelimitedTo(sectionOutputStream);
-      commitSection(summary, SectionName.ERASURE_CODING);
     }
 
     private void saveNameSystemSection(FileSummary.Builder summary)

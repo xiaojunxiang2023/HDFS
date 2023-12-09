@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.KeyValueProto;
 import org.apache.hadoop.hdfs.protocol.proto.DatanodeProtocolProtos.*;
-import org.apache.hadoop.hdfs.protocol.proto.ErasureCodingProtos.BlockECReconstructionInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsServerProtos.*;
@@ -21,11 +20,8 @@ import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.namenode.CheckpointSignature;
 import org.apache.hadoop.hdfs.server.protocol.*;
-import org.apache.hadoop.hdfs.server.protocol.BlockECReconstructionCommand.BlockECReconstructionInfo;
 import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringBlock;
-import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringStripedBlock;
 import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations.BlockWithLocations;
-import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations.StripedBlockWithLocations;
 import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 
@@ -48,7 +44,6 @@ public class PBHelper {
   private static final RegisterCommand REG_CMD = new RegisterCommand();
 
   private PBHelper() {
-    /** Hidden constructor */
   }
 
   public static NamenodeRole convert(NamenodeRoleProto role) {
@@ -105,12 +100,6 @@ public class PBHelper {
         .addAllDatanodeUuids(Arrays.asList(blk.getDatanodeUuids()))
         .addAllStorageUuids(Arrays.asList(blk.getStorageIDs()))
         .addAllStorageTypes(PBHelperClient.convertStorageTypes(blk.getStorageTypes()));
-    if (blk instanceof StripedBlockWithLocations) {
-      StripedBlockWithLocations sblk = (StripedBlockWithLocations) blk;
-      builder.setIndices(PBHelperClient.getByteString(sblk.getIndices()));
-      builder.setDataBlockNum(sblk.getDataBlockNum());
-      builder.setCellSize(sblk.getCellSize());
-    }
     return builder.build();
   }
 
@@ -118,16 +107,11 @@ public class PBHelper {
     final List<String> datanodeUuids = b.getDatanodeUuidsList();
     final List<String> storageUuids = b.getStorageUuidsList();
     final List<StorageTypeProto> storageTypes = b.getStorageTypesList();
-    BlockWithLocations blk = new BlockWithLocations(PBHelperClient.
+    return new BlockWithLocations(PBHelperClient.
         convert(b.getBlock()),
-        datanodeUuids.toArray(new String[datanodeUuids.size()]),
+        datanodeUuids.toArray(new String[0]),
         storageUuids.toArray(new String[storageUuids.size()]),
         PBHelperClient.convertStorageTypes(storageTypes, storageUuids.size()));
-    if (b.hasIndices()) {
-      blk = new StripedBlockWithLocations(blk, b.getIndices().toByteArray(),
-          (short) b.getDataBlockNum(), b.getCellSize());
-    }
-    return blk;
   }
 
   public static BlocksWithLocationsProto convert(BlocksWithLocations blks) {
@@ -284,12 +268,6 @@ public class PBHelper {
     builder.setBlock(lb).setNewGenStamp(b.getNewGenerationStamp());
     if (b.getNewBlock() != null)
       builder.setTruncateBlock(PBHelperClient.convert(b.getNewBlock()));
-    if (b instanceof RecoveringStripedBlock) {
-      RecoveringStripedBlock sb = (RecoveringStripedBlock) b;
-      builder.setEcPolicy(PBHelperClient.convertErasureCodingPolicy(
-          sb.getErasureCodingPolicy()));
-      builder.setBlockIndices(PBHelperClient.getByteString(sb.getBlockIndices()));
-    }
     return builder.build();
   }
 
@@ -302,13 +280,6 @@ public class PBHelper {
     } else {
       rBlock = new RecoveringBlock(lb.getBlock(), lb.getLocations(),
           b.getNewGenStamp());
-    }
-
-    if (b.hasEcPolicy()) {
-      assert b.hasBlockIndices();
-      byte[] indices = b.getBlockIndices().toByteArray();
-      rBlock = new RecoveringStripedBlock(rBlock, indices,
-          PBHelperClient.convertErasureCodingPolicy(b.getEcPolicy()));
     }
     return rBlock;
   }
@@ -377,8 +348,6 @@ public class PBHelper {
         return REG_CMD;
       case BlockIdCommand:
         return PBHelper.convert(proto.getBlkIdCmd());
-      case BlockECReconstructionCommand:
-        return PBHelper.convert(proto.getBlkECReconstructionCmd());
       default:
         return null;
     }
@@ -507,11 +476,6 @@ public class PBHelper {
       case DatanodeProtocol.DNA_UNCACHE:
         builder.setCmdType(DatanodeCommandProto.Type.BlockIdCommand).
             setBlkIdCmd(PBHelper.convert((BlockIdCommand) datanodeCommand));
-        break;
-      case DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION:
-        builder.setCmdType(DatanodeCommandProto.Type.BlockECReconstructionCommand)
-            .setBlkECReconstructionCmd(
-                convert((BlockECReconstructionCommand) datanodeCommand));
         break;
       case DatanodeProtocol.DNA_UNKNOWN: //Not expected
       default:
@@ -923,95 +887,6 @@ public class PBHelper {
       storageUuids[i] = storageUuidsList.get(i);
     }
     return storageUuids;
-  }
-
-  public static BlockECReconstructionInfo convertBlockECReconstructionInfo(
-      BlockECReconstructionInfoProto blockEcReconstructionInfoProto) {
-    ExtendedBlockProto blockProto = blockEcReconstructionInfoProto.getBlock();
-    ExtendedBlock block = PBHelperClient.convert(blockProto);
-
-    DatanodeInfosProto sourceDnInfosProto = blockEcReconstructionInfoProto
-        .getSourceDnInfos();
-    DatanodeInfo[] sourceDnInfos = PBHelperClient.convert(sourceDnInfosProto);
-
-    DatanodeInfosProto targetDnInfosProto = blockEcReconstructionInfoProto
-        .getTargetDnInfos();
-    DatanodeInfo[] targetDnInfos = PBHelperClient.convert(targetDnInfosProto);
-
-    HdfsProtos.StorageUuidsProto targetStorageUuidsProto =
-        blockEcReconstructionInfoProto.getTargetStorageUuids();
-    String[] targetStorageUuids = convert(targetStorageUuidsProto);
-
-    StorageTypesProto targetStorageTypesProto = blockEcReconstructionInfoProto
-        .getTargetStorageTypes();
-    StorageType[] convertStorageTypes = PBHelperClient.convertStorageTypes(
-        targetStorageTypesProto.getStorageTypesList(), targetStorageTypesProto
-            .getStorageTypesList().size());
-
-    byte[] liveBlkIndices = blockEcReconstructionInfoProto.getLiveBlockIndices()
-        .toByteArray();
-    ErasureCodingPolicy ecPolicy =
-        PBHelperClient.convertErasureCodingPolicy(
-            blockEcReconstructionInfoProto.getEcPolicy());
-    return new BlockECReconstructionInfo(block, sourceDnInfos, targetDnInfos,
-        targetStorageUuids, convertStorageTypes, liveBlkIndices, ecPolicy);
-  }
-
-  public static BlockECReconstructionInfoProto convertBlockECRecoveryInfo(
-      BlockECReconstructionInfo blockEcRecoveryInfo) {
-    BlockECReconstructionInfoProto.Builder builder =
-        BlockECReconstructionInfoProto.newBuilder();
-    builder.setBlock(PBHelperClient.convert(
-        blockEcRecoveryInfo.getExtendedBlock()));
-
-    DatanodeInfo[] sourceDnInfos = blockEcRecoveryInfo.getSourceDnInfos();
-    builder.setSourceDnInfos(convertToDnInfosProto(sourceDnInfos));
-
-    DatanodeInfo[] targetDnInfos = blockEcRecoveryInfo.getTargetDnInfos();
-    builder.setTargetDnInfos(convertToDnInfosProto(targetDnInfos));
-
-    String[] targetStorageIDs = blockEcRecoveryInfo.getTargetStorageIDs();
-    builder.setTargetStorageUuids(convertStorageIDs(targetStorageIDs));
-
-    StorageType[] targetStorageTypes = blockEcRecoveryInfo
-        .getTargetStorageTypes();
-    builder.setTargetStorageTypes(convertStorageTypesProto(targetStorageTypes));
-
-    byte[] liveBlockIndices = blockEcRecoveryInfo.getLiveBlockIndices();
-    builder.setLiveBlockIndices(PBHelperClient.getByteString(liveBlockIndices));
-
-    builder.setEcPolicy(PBHelperClient.convertErasureCodingPolicy(
-        blockEcRecoveryInfo.getErasureCodingPolicy()));
-
-    return builder.build();
-  }
-
-  public static BlockECReconstructionCommandProto convert(
-      BlockECReconstructionCommand blkECReconstructionCmd) {
-    BlockECReconstructionCommandProto.Builder builder =
-        BlockECReconstructionCommandProto.newBuilder();
-    Collection<BlockECReconstructionInfo> blockECRInfos =
-        blkECReconstructionCmd.getECTasks();
-    for (BlockECReconstructionInfo blkECReconstructInfo : blockECRInfos) {
-      builder.addBlockECReconstructioninfo(
-          convertBlockECRecoveryInfo(blkECReconstructInfo));
-    }
-    return builder.build();
-  }
-
-  public static BlockECReconstructionCommand convert(
-      BlockECReconstructionCommandProto blkECReconstructionCmdProto) {
-    Collection<BlockECReconstructionInfo> blkECReconstructionInfos =
-        new ArrayList<>();
-    List<BlockECReconstructionInfoProto> blkECRInfoList =
-        blkECReconstructionCmdProto.getBlockECReconstructioninfoList();
-    for (BlockECReconstructionInfoProto blkECRInfoProto : blkECRInfoList) {
-      blkECReconstructionInfos
-          .add(convertBlockECReconstructionInfo(blkECRInfoProto));
-    }
-    return new BlockECReconstructionCommand(
-        DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION,
-        blkECReconstructionInfos);
   }
 
   public static KeyValueProto convert(FileRegion fileRegion) {

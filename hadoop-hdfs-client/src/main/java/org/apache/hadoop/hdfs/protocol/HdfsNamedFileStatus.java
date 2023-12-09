@@ -21,7 +21,6 @@ public class HdfsNamedFileStatus extends FileStatus implements HdfsFileStatus {
   private byte[] uSymlink; // symlink target encoded in java UTF8/null
   private final long fileId;
   private final FileEncryptionInfo feInfo;
-  private final ErasureCodingPolicy ecPolicy;
 
   // Used by dir, not including dot and dotdot. Always zero for a regular file.
   private final int childrenNum;
@@ -44,7 +43,6 @@ public class HdfsNamedFileStatus extends FileStatus implements HdfsFileStatus {
    * @param childrenNum the number of children. Used by directory.
    * @param feInfo the file's encryption info
    * @param storagePolicy ID which specifies storage policy
-   * @param ecPolicy the erasure coding policy
    */
   HdfsNamedFileStatus(long length, boolean isdir, int replication,
                       long blocksize, long mtime, long atime,
@@ -52,7 +50,7 @@ public class HdfsNamedFileStatus extends FileStatus implements HdfsFileStatus {
                       String owner, String group,
                       byte[] symlink, byte[] path, long fileId,
                       int childrenNum, FileEncryptionInfo feInfo,
-                      byte storagePolicy, ErasureCodingPolicy ecPolicy) {
+                      byte storagePolicy) {
     super(length, isdir, replication, blocksize, mtime, atime,
         HdfsFileStatus.convert(isdir, symlink != null, permission, flags),
         owner, group, null, null,
@@ -63,7 +61,6 @@ public class HdfsNamedFileStatus extends FileStatus implements HdfsFileStatus {
     this.childrenNum = childrenNum;
     this.feInfo = feInfo;
     this.storagePolicy = storagePolicy;
-    this.ecPolicy = ecPolicy;
   }
 
   @Override
@@ -127,15 +124,6 @@ public class HdfsNamedFileStatus extends FileStatus implements HdfsFileStatus {
     return feInfo;
   }
 
-  /**
-   * Get the erasure coding policy if it's set.
-   *
-   * @return the erasure coding policy
-   */
-  @Override
-  public ErasureCodingPolicy getErasureCodingPolicy() {
-    return ecPolicy;
-  }
 
   @Override
   public int getChildrenNum() {

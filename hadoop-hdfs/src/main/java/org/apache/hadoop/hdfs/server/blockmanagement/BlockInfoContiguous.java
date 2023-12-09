@@ -97,11 +97,6 @@ public class BlockInfoContiguous extends BlockInfo {
   }
 
   @Override
-  public final boolean isStriped() {
-    return false;
-  }
-
-  @Override
   public BlockType getBlockType() {
     return BlockType.CONTIGUOUS;
   }

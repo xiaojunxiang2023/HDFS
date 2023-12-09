@@ -450,18 +450,6 @@ public interface HdfsClientConfigKeys {
     int THREADPOOL_SIZE_DEFAULT = 0;
   }
 
-  /** dfs.client.read.striped configuration properties */
-  interface StripedRead {
-    String PREFIX = Read.PREFIX + "striped.";
-
-    String THREADPOOL_SIZE_KEY = PREFIX + "threadpool.size";
-    /**
-     * With default RS-6-3-1024k erasure coding policy, each normal read could
-     * span 6 DNs, so this default value accommodates 3 read streams
-     */
-    int THREADPOOL_SIZE_DEFAULT = 18;
-  }
-
   /** dfs.http.client configuration properties */
   interface HttpClient {
     String PREFIX = "dfs.http.client.";

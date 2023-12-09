@@ -17,7 +17,6 @@ import org.apache.hadoop.hdfs.server.balancer.Dispatcher.DDatanode.StorageGroup;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicies;
 import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations;
 import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations.BlockWithLocations;
-import org.apache.hadoop.hdfs.server.protocol.BlocksWithLocations.StripedBlockWithLocations;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorageReport;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.net.NetUtils;
@@ -37,7 +36,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.*;
 
 import static org.apache.hadoop.hdfs.protocolPB.PBHelperClient.vintPrefixed;
-import static org.apache.hadoop.hdfs.util.StripedBlockUtil.getInternalBlockLength;
 
 public class Dispatcher {
   static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
@@ -559,70 +557,6 @@ public class Dispatcher {
     }
   }
 
-  public static class DBlockStriped extends DBlock {
-
-    final short dataBlockNum;
-    final int cellSize;
-    private byte[] indices;
-
-    public DBlockStriped(Block block, byte[] indices, short dataBlockNum,
-                         int cellSize) {
-      super(block);
-      this.indices = indices;
-      this.dataBlockNum = dataBlockNum;
-      this.cellSize = cellSize;
-    }
-
-    DBlock getInternalBlock(StorageGroup storage) {
-      int idxInLocs = locations.indexOf(storage);
-      if (idxInLocs == -1) {
-        return null;
-      }
-      byte idxInGroup = indices[idxInLocs];
-      long blkId = getBlock().getBlockId() + idxInGroup;
-      long numBytes = getInternalBlockLength(getNumBytes(), cellSize,
-          dataBlockNum, idxInGroup);
-      Block blk = new Block(getBlock());
-      blk.setBlockId(blkId);
-      blk.setNumBytes(numBytes);
-      DBlock dblk = new DBlock(blk);
-      dblk.addLocation(storage);
-      return dblk;
-    }
-
-    @Override
-    public long getNumBytes(StorageGroup storage) {
-      DBlock block = getInternalBlock(storage);
-      if (block == null) {
-        return 0;
-      }
-      return block.getNumBytes();
-    }
-
-    public void setIndices(byte[] indices) {
-      this.indices = indices;
-    }
-
-    /**
-     * Adjust EC block indices，it will remove the element of adjustList from indices.
-     * @param adjustList the list will be removed from indices
-     */
-    public void adjustIndices(List<Integer> adjustList) {
-      if (adjustList.isEmpty()) {
-        return;
-      }
-
-      byte[] newIndices = new byte[indices.length - adjustList.size()];
-      for (int i = 0, j = 0; i < indices.length; ++i) {
-        if (!adjustList.contains(i)) {
-          newIndices[j] = indices[i];
-          ++j;
-        }
-      }
-      this.indices = newIndices;
-    }
-  }
-
   /** The class represents a desired move. */
   static class Task {
     private final StorageGroup target;
@@ -938,17 +872,7 @@ public class Dispatcher {
       synchronized (block) {
         synchronized (movedBlocks) {
           if (isGoodBlockCandidate(source, target, targetStorageType, block)) {
-            if (block instanceof DBlockStriped) {
-              reportedBlock = ((DBlockStriped) block).getInternalBlock(source);
-              if (reportedBlock == null) {
-                LOG.info(
-                    "No striped internal block on source {}, block {}. Skipping.",
-                    source, block);
-                return false;
-              }
-            } else {
-              reportedBlock = block;
-            }
+            reportedBlock = block;
             if (chooseProxySource()) {
               movedBlocks.put(block);
               if (LOG.isDebugEnabled()) {
@@ -1020,7 +944,6 @@ public class Dispatcher {
           throw new IOException("Block move cancelled.");
         }
         LOG.info("Start moving " + this);
-        assert !(reportedBlock instanceof DBlockStriped);
 
         sock.connect(
             NetUtils.createSocketAddr(target.getDatanodeInfo().
@@ -1197,29 +1120,13 @@ public class Dispatcher {
         }
 
         DBlock block;
-        if (blkLocs instanceof StripedBlockWithLocations) {
-          StripedBlockWithLocations sblkLocs =
-              (StripedBlockWithLocations) blkLocs;
-          // approximate size
-          bytesReceived += sblkLocs.getBlock().getNumBytes() /
-              sblkLocs.getDataBlockNum();
-          block = new DBlockStriped(sblkLocs.getBlock(), sblkLocs.getIndices(),
-              sblkLocs.getDataBlockNum(), sblkLocs.getCellSize());
-        } else {
-          bytesReceived += blkLocs.getBlock().getNumBytes();
-          block = new DBlock(blkLocs.getBlock());
-        }
+        bytesReceived += blkLocs.getBlock().getNumBytes();
+        block = new DBlock(blkLocs.getBlock());
 
         synchronized (globalBlocks) {
           block = globalBlocks.putIfAbsent(blkLocs.getBlock(), block);
           synchronized (block) {
             block.clearLocations();
-
-            if (blkLocs instanceof StripedBlockWithLocations) {
-              // EC block may adjust indices before, avoid repeated adjustments
-              ((DBlockStriped) block).setIndices(
-                  ((StripedBlockWithLocations) blkLocs).getIndices());
-            }
 
             // update locations
             List<Integer> adjustList = new ArrayList<>();
@@ -1230,19 +1137,7 @@ public class Dispatcher {
                   datanodeUuids[i], storageTypes[i]);
               if (g != null) { // not unknown
                 block.addLocation(g);
-              } else if (blkLocs instanceof StripedBlockWithLocations) {
-                // some datanode may not in storageGroupMap due to decommission operation
-                // or balancer cli with "-exclude" parameter
-                adjustList.add(i);
               }
-            }
-
-            if (!adjustList.isEmpty()) {
-              // block.locations mismatch with block.indices
-              // adjust indices to get correct internalBlock for Datanode in #getInternalBlock
-              ((DBlockStriped) block).adjustIndices(adjustList);
-              Preconditions.checkArgument(((DBlockStriped) block).indices.length
-                  == block.locations.size());
             }
           }
           if (!srcBlocks.contains(block) && isGoodBlockCandidate(block)) {

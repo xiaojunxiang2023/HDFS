@@ -16,7 +16,6 @@ import org.apache.hadoop.hdfs.security.token.block.BlockKey;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.AbstractBlockChecksumComputer;
 import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.BlockChecksumComputer;
-import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.BlockGroupNonStripedChecksumComputer;
 import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.ReplicatedBlockChecksumComputer;
 import org.apache.hadoop.hdfs.server.datanode.DataNode.ShortCircuitFdsUnsupportedException;
 import org.apache.hadoop.hdfs.server.datanode.DataNode.ShortCircuitFdsVersionException;
@@ -982,51 +981,6 @@ class DataXceiver extends Receiver implements Runnable {
     datanode.metrics.addBlockChecksumOp(elapsed());
   }
 
-  @Override
-  public void blockGroupChecksum(final StripedBlockInfo stripedBlockInfo,
-                                 final Token<BlockTokenIdentifier> blockToken,
-                                 long requestedNumBytes,
-                                 BlockChecksumOptions blockChecksumOptions)
-      throws IOException {
-    final ExtendedBlock block = stripedBlockInfo.getBlock();
-    updateCurrentThreadName("Getting checksum for block group" +
-        block);
-    final DataOutputStream out = new DataOutputStream(getOutputStream());
-    checkAccess(out, true, block, blockToken, Op.BLOCK_GROUP_CHECKSUM,
-        BlockTokenIdentifier.AccessMode.READ);
-
-    AbstractBlockChecksumComputer maker =
-        new BlockGroupNonStripedChecksumComputer(datanode, stripedBlockInfo,
-            requestedNumBytes, blockChecksumOptions);
-
-    try {
-      maker.compute();
-
-      //write reply
-      BlockOpResponseProto.newBuilder()
-          .setStatus(SUCCESS)
-          .setChecksumResponse(OpBlockChecksumResponseProto.newBuilder()
-              .setBytesPerCrc(maker.getBytesPerCRC())
-              .setCrcPerBlock(maker.getCrcPerBlock())
-              .setBlockChecksum(ByteString.copyFrom(maker.getOutBytes()))
-              .setCrcType(PBHelperClient.convert(maker.getCrcType()))
-              .setBlockChecksumOptions(
-                  PBHelperClient.convert(blockChecksumOptions)))
-          .build()
-          .writeDelimitedTo(out);
-      out.flush();
-    } catch (IOException ioe) {
-      LOG.info("blockChecksum {} received exception {}",
-          stripedBlockInfo.getBlock(), ioe.toString());
-      incrDatanodeNetworkErrors();
-      throw ioe;
-    } finally {
-      IOUtils.closeStream(out);
-    }
-
-    //update metrics
-    datanode.metrics.addBlockChecksumOp(elapsed());
-  }
 
   @Override
   public void copyBlock(final ExtendedBlock block,

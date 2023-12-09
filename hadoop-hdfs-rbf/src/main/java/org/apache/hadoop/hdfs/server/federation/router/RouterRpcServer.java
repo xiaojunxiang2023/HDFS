@@ -984,69 +984,6 @@ public class RouterRpcServer extends AbstractService implements ClientProtocol,
   }
 
   @Override // ClientProtocol
-  public ErasureCodingPolicyInfo[] getErasureCodingPolicies()
-      throws IOException {
-    return clientProto.getErasureCodingPolicies();
-  }
-
-  @Override // ClientProtocol
-  public Map<String, String> getErasureCodingCodecs() throws IOException {
-    return clientProto.getErasureCodingCodecs();
-  }
-
-  @Override // ClientProtocol
-  public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException {
-    return clientProto.addErasureCodingPolicies(policies);
-  }
-
-  @Override // ClientProtocol
-  public void removeErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    clientProto.removeErasureCodingPolicy(ecPolicyName);
-  }
-
-  @Override // ClientProtocol
-  public void disableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    clientProto.disableErasureCodingPolicy(ecPolicyName);
-  }
-
-  @Override // ClientProtocol
-  public void enableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    clientProto.enableErasureCodingPolicy(ecPolicyName);
-  }
-
-  @Override // ClientProtocol
-  public ErasureCodingPolicy getErasureCodingPolicy(String src)
-      throws IOException {
-    return clientProto.getErasureCodingPolicy(src);
-  }
-
-  @Override // ClientProtocol
-  public void setErasureCodingPolicy(String src, String ecPolicyName)
-      throws IOException {
-    clientProto.setErasureCodingPolicy(src, ecPolicyName);
-  }
-
-  @Override // ClientProtocol
-  public void unsetErasureCodingPolicy(String src) throws IOException {
-    clientProto.unsetErasureCodingPolicy(src);
-  }
-
-  @Override
-  public ECTopologyVerifierResult getECTopologyResultForPolicies(
-      String... policyNames) throws IOException {
-    return clientProto.getECTopologyResultForPolicies(policyNames);
-  }
-
-  @Override // ClientProtocol
-  public ECBlockGroupStats getECBlockGroupStats() throws IOException {
-    return clientProto.getECBlockGroupStats();
-  }
-
-  @Override // ClientProtocol
   public ReplicatedBlockStats getReplicatedBlockStats() throws IOException {
     return clientProto.getReplicatedBlockStats();
   }

@@ -466,33 +466,6 @@ public class HdfsAdmin {
     return dfs.getAllStoragePolicies();
   }
 
-  /**
-   * Set the source path to the specified erasure coding policy.
-   *
-   * @param path The source path referring to a directory.
-   * @param ecPolicyName The erasure coding policy name for the directory.
-   *
-   * @throws IOException
-   * @throws HadoopIllegalArgumentException if the specified EC policy is not
-   * enabled on the cluster
-   */
-  public void setErasureCodingPolicy(final Path path,
-                                     final String ecPolicyName) throws IOException {
-    dfs.setErasureCodingPolicy(path, ecPolicyName);
-  }
-
-  /**
-   * Get the erasure coding policy information for the specified path
-   *
-   * @param path
-   * @return Returns the policy information if file or directory on the path is
-   *          erasure coded. Null otherwise.
-   * @throws IOException
-   */
-  public ErasureCodingPolicy getErasureCodingPolicy(final Path path)
-      throws IOException {
-    return dfs.getErasureCodingPolicy(path);
-  }
 
   /**
    * Set the source path to the specified storage policy.
@@ -504,74 +477,6 @@ public class HdfsAdmin {
     dfs.satisfyStoragePolicy(path);
   }
 
-  /**
-   * Get the Erasure coding policies supported.
-   *
-   * @throws IOException
-   */
-  public ErasureCodingPolicyInfo[] getErasureCodingPolicies()
-      throws IOException {
-    return dfs.getClient().getErasureCodingPolicies();
-  }
-
-  /**
-   * Unset erasure coding policy from the directory.
-   *
-   * @param path The source path referring to a directory.
-   * @throws IOException
-   */
-  public void unsetErasureCodingPolicy(final Path path) throws IOException {
-    dfs.unsetErasureCodingPolicy(path);
-  }
-
-  /**
-   * Add Erasure coding policies to HDFS. For each policy input, schema and
-   * cellSize are musts, name and id are ignored. They will be automatically
-   * created and assigned by Namenode once the policy is successfully added,
-   * and will be returned in the response; policy states will be set to
-   * DISABLED automatically.
-   *
-   * @param policies The user defined ec policy list to add.
-   * @return Return the response list of adding operations.
-   * @throws IOException
-   */
-  public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException {
-    return dfs.addErasureCodingPolicies(policies);
-  }
-
-  /**
-   * Remove erasure coding policy.
-   *
-   * @param ecPolicyName The name of the policy to be removed.
-   * @throws IOException
-   */
-  public void removeErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    dfs.removeErasureCodingPolicy(ecPolicyName);
-  }
-
-  /**
-   * Enable erasure coding policy.
-   *
-   * @param ecPolicyName The name of the policy to be enabled.
-   * @throws IOException
-   */
-  public void enableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    dfs.enableErasureCodingPolicy(ecPolicyName);
-  }
-
-  /**
-   * Disable erasure coding policy.
-   *
-   * @param ecPolicyName The name of the policy to be disabled.
-   * @throws IOException
-   */
-  public void disableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    dfs.disableErasureCodingPolicy(ecPolicyName);
-  }
 
   /**
    * Returns a RemoteIterator which can be used to list all open files

@@ -79,8 +79,6 @@ public class DfsClientConf {
   private final List<Class<? extends ReplicaAccessorBuilder>>
       replicaAccessorBuilderClasses;
 
-  private final int stripedReadThreadpoolSize;
-
   private final boolean dataTransferTcpNoDelay;
 
   private final boolean readUseCachePriority;
@@ -203,12 +201,6 @@ public class DfsClientConf {
         conf.getBoolean(DFS_CLIENT_DEAD_NODE_DETECTION_ENABLED_KEY,
             DFS_CLIENT_DEAD_NODE_DETECTION_ENABLED_DEFAULT);
 
-    stripedReadThreadpoolSize = conf.getInt(
-        HdfsClientConfigKeys.StripedRead.THREADPOOL_SIZE_KEY,
-        HdfsClientConfigKeys.StripedRead.THREADPOOL_SIZE_DEFAULT);
-    Preconditions.checkArgument(stripedReadThreadpoolSize > 0, "The value of " +
-        HdfsClientConfigKeys.StripedRead.THREADPOOL_SIZE_KEY +
-        " must be greater than 0.");
     replicaAccessorBuilderClasses = loadReplicaAccessorBuilderClasses(conf);
 
     leaseHardLimitPeriod =
@@ -584,13 +576,6 @@ public class DfsClientConf {
    */
   public int getHedgedReadThreadpoolSize() {
     return hedgedReadThreadpoolSize;
-  }
-
-  /**
-   * @return the stripedReadThreadpoolSize
-   */
-  public int getStripedReadThreadpoolSize() {
-    return stripedReadThreadpoolSize;
   }
 
   /**

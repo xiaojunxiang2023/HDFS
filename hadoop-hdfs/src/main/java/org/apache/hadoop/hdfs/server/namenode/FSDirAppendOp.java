@@ -85,12 +85,6 @@ final class FSDirAppendOp {
       }
       final INodeFile file = INodeFile.valueOf(inode, path, true);
 
-      if (file.isStriped() && !newBlock) {
-        throw new UnsupportedOperationException(
-            "Append on EC file without new block is not supported. Use "
-                + CreateFlag.NEW_BLOCK + " create flag while appending file.");
-      }
-
       BlockManager blockManager = fsd.getBlockManager();
       final BlockStoragePolicy lpPolicy = blockManager
           .getStoragePolicy("LAZY_PERSIST");

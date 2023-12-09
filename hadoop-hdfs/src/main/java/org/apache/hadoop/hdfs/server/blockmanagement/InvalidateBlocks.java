@@ -93,22 +93,13 @@ class InvalidateBlocks {
 
   private LightWeightHashSet<Block> getBlocksSet(final DatanodeInfo dn,
                                                  final Block block) {
-    if (blockIdManager.isStripedBlock(block)) {
-      return getECBlocksSet(dn);
-    } else {
-      return getBlocksSet(dn);
-    }
+    return getBlocksSet(dn);
   }
 
-  private void putBlocksSet(final DatanodeInfo dn, final Block block,
+  private void putBlocksSet(final DatanodeInfo dn,
                             final LightWeightHashSet set) {
-    if (blockIdManager.isStripedBlock(block)) {
-      assert getECBlocksSet(dn) == null;
-      nodeToECBlocks.put(dn, set);
-    } else {
-      assert getBlocksSet(dn) == null;
-      nodeToBlocks.put(dn, set);
-    }
+    assert getBlocksSet(dn) == null;
+    nodeToBlocks.put(dn, set);
   }
 
   private long getBlockSetsSize(final DatanodeInfo dn) {
@@ -144,14 +135,10 @@ class InvalidateBlocks {
     LightWeightHashSet<Block> set = getBlocksSet(datanode, block);
     if (set == null) {
       set = new LightWeightHashSet<>();
-      putBlocksSet(datanode, block, set);
+      putBlocksSet(datanode, set);
     }
     if (set.add(block)) {
-      if (blockIdManager.isStripedBlock(block)) {
-        numECBlocks.increment();
-      } else {
-        numBlocks.increment();
-      }
+      numBlocks.increment();
       if (log) {
         NameNode.blockStateChangeLog.debug("BLOCK* {}: add {} to {}",
             getClass().getSimpleName(), block, datanode);
@@ -175,11 +162,7 @@ class InvalidateBlocks {
   synchronized void remove(final DatanodeInfo dn, final Block block) {
     final LightWeightHashSet<Block> v = getBlocksSet(dn, block);
     if (v != null && v.remove(block)) {
-      if (blockIdManager.isStripedBlock(block)) {
-        numECBlocks.decrement();
-      } else {
-        numBlocks.decrement();
-      }
+      numBlocks.decrement();
       if (v.isEmpty() && getBlockSetsSize(dn) == 0) {
         remove(dn);
       }

@@ -61,7 +61,6 @@ import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.ShmId;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
 import org.apache.hadoop.io.EnumSetWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.erasurecode.ECSchema;
 import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.security.proto.SecurityProtos.TokenProto;
 import org.apache.hadoop.security.token.Token;
@@ -533,21 +532,12 @@ public class PBHelperClient {
       }
     }
 
-    final LocatedBlock lb;
+    LocatedBlock lb = null;
     if (indices == null) {
       lb = new LocatedBlock(PBHelperClient.convert(proto.getB()), targets,
           storageIDs, storageTypes, proto.getOffset(), proto.getCorrupt(),
           cachedLocs.toArray(new DatanodeInfo[cachedLocs.size()]));
-    } else {
-      lb = new LocatedStripedBlock(PBHelperClient.convert(proto.getB()),
-          targets, storageIDs, storageTypes, indices, proto.getOffset(),
-          proto.getCorrupt(),
-          cachedLocs.toArray(new DatanodeInfo[cachedLocs.size()]));
-      List<TokenProto> tokenProtos = proto.getBlockTokensList();
-      Token<BlockTokenIdentifier>[] blockTokens =
-          convertTokens(tokenProtos);
-      ((LocatedStripedBlock) lb).setBlockTokens(blockTokens);
-    }
+    } 
     lb.setBlockToken(convert(proto.getBlockToken()));
 
     return lb;
@@ -717,8 +707,7 @@ public class PBHelperClient {
         lb.hasLastBlock() ?
             convertLocatedBlockProto(lb.getLastBlock()) : null,
         lb.getIsLastBlockComplete(),
-        lb.hasFileEncryptionInfo() ? convert(lb.getFileEncryptionInfo()) : null,
-        lb.hasEcPolicy() ? convertErasureCodingPolicy(lb.getEcPolicy()) : null);
+        lb.hasFileEncryptionInfo() ? convert(lb.getFileEncryptionInfo()) : null);
   }
 
   public static BlockStoragePolicy[] convertStoragePolicies(
@@ -775,9 +764,6 @@ public class PBHelperClient {
                     create.getSymlinkTarget())
                 .defaultBlockSize(create.getDefaultBlockSize())
                 .overwrite(create.getOverwrite());
-            if (create.hasErasureCoded()) {
-              builder.erasureCoded(create.getErasureCoded());
-            }
             events.add(builder.build());
             break;
           case EVENT_METADATA:
@@ -906,14 +892,6 @@ public class PBHelperClient {
     if (storageIDs != null) {
       builder.addAllStorageIDs(Arrays.asList(storageIDs));
     }
-    if (b instanceof LocatedStripedBlock) {
-      LocatedStripedBlock sb = (LocatedStripedBlock) b;
-      byte[] indices = sb.getBlockIndices();
-      builder.setBlockIndices(PBHelperClient.getByteString(indices));
-      Token<BlockTokenIdentifier>[] blockTokens = sb.getBlockTokens();
-      builder.addAllBlockTokens(convert(blockTokens));
-    }
-
     return builder.setB(PBHelperClient.convert(b.getBlock()))
         .setBlockToken(PBHelperClient.convert(b.getBlockToken()))
         .setCorrupt(b.isCorrupt()).setOffset(b.getStartOffset()).build();
@@ -1615,9 +1593,6 @@ public class PBHelperClient {
         .storagePolicy(fs.hasStoragePolicy()
             ? (byte) fs.getStoragePolicy()
             : HdfsConstants.BLOCK_STORAGE_POLICY_ID_UNSPECIFIED)
-        .ecPolicy(fs.hasEcPolicy()
-            ? convertErasureCodingPolicy(fs.getEcPolicy())
-            : null)
         .build();
   }
 
@@ -1862,19 +1837,6 @@ public class PBHelperClient {
         res.getPendingDeletionBlocks());
   }
 
-  public static ECBlockGroupStats convert(
-      GetFsECBlockGroupStatsResponseProto res) {
-    if (res.hasHighestPrioLowRedundancyBlocks()) {
-      return new ECBlockGroupStats(res.getLowRedundancy(),
-          res.getCorruptBlocks(), res.getMissingBlocks(),
-          res.getBlocksInFuture(), res.getPendingDeletionBlocks(),
-          res.getHighestPrioLowRedundancyBlocks());
-    }
-    return new ECBlockGroupStats(res.getLowRedundancy(),
-        res.getCorruptBlocks(), res.getMissingBlocks(),
-        res.getBlocksInFuture(), res.getPendingDeletionBlocks());
-  }
-
   public static DatanodeReportTypeProto convert(DatanodeReportType t) {
     switch (t) {
       case ALL:
@@ -2105,10 +2067,6 @@ public class PBHelperClient {
     if (lb.getFileEncryptionInfo() != null) {
       builder.setFileEncryptionInfo(convert(lb.getFileEncryptionInfo()));
     }
-    if (lb.getErasureCodingPolicy() != null) {
-      builder.setEcPolicy(convertErasureCodingPolicy(
-          lb.getErasureCodingPolicy()));
-    }
     return builder.setFileLength(lb.getFileLength())
         .setUnderConstruction(lb.isUnderConstruction())
         .addAllBlocks(convertLocatedBlocks2(lb.getLocatedBlocks()))
@@ -2220,13 +2178,9 @@ public class PBHelperClient {
         builder.setLocations(convert(locations));
       }
     }
-    if (fs.getErasureCodingPolicy() != null) {
-      builder.setEcPolicy(convertErasureCodingPolicy(
-          fs.getErasureCodingPolicy()));
-    }
     int flags = fs.hasAcl() ? HdfsFileStatusProto.Flags.HAS_ACL_VALUE : 0;
     flags |= fs.isEncrypted() ? HdfsFileStatusProto.Flags.HAS_CRYPT_VALUE : 0;
-    flags |= fs.isErasureCoded() ? HdfsFileStatusProto.Flags.HAS_EC_VALUE : 0;
+    flags |= 0;
     flags |= fs.isSnapshotEnabled() ? HdfsFileStatusProto.Flags
         .SNAPSHOT_ENABLED_VALUE : 0;
     builder.setFlags(flags);
@@ -2329,25 +2283,6 @@ public class PBHelperClient {
     if (replicatedBlockStats.hasHighestPriorityLowRedundancyBlocks()) {
       result.setHighestPrioLowRedundancyBlocks(
           replicatedBlockStats.getHighestPriorityLowRedundancyBlocks());
-    }
-    return result.build();
-  }
-
-  public static GetFsECBlockGroupStatsResponseProto convert(
-      ECBlockGroupStats ecBlockGroupStats) {
-    GetFsECBlockGroupStatsResponseProto.Builder result =
-        GetFsECBlockGroupStatsResponseProto.newBuilder();
-    result.setLowRedundancy(
-        ecBlockGroupStats.getLowRedundancyBlockGroups());
-    result.setCorruptBlocks(ecBlockGroupStats.getCorruptBlockGroups());
-    result.setMissingBlocks(ecBlockGroupStats.getMissingBlockGroups());
-    result.setBlocksInFuture(
-        ecBlockGroupStats.getBytesInFutureBlockGroups());
-    result.setPendingDeletionBlocks(
-        ecBlockGroupStats.getPendingDeletionBlocks());
-    if (ecBlockGroupStats.hasHighestPriorityLowRedundancyBlocks()) {
-      result.setHighestPrioLowRedundancyBlocks(
-          ecBlockGroupStats.getHighestPriorityLowRedundancyBlocks());
     }
     return result.build();
   }
@@ -3058,148 +2993,6 @@ public class PBHelperClient {
     return Arrays.asList(ret);
   }
 
-  public static ECSchema convertECSchema(HdfsProtos.ECSchemaProto schema) {
-    List<HdfsProtos.ECSchemaOptionEntryProto> optionsList =
-        schema.getOptionsList();
-    Map<String, String> options = new HashMap<>(optionsList.size());
-    for (HdfsProtos.ECSchemaOptionEntryProto option : optionsList) {
-      options.put(option.getKey(), option.getValue());
-    }
-    return new ECSchema(schema.getCodecName(), schema.getDataUnits(),
-        schema.getParityUnits(), options);
-  }
-
-  public static HdfsProtos.ECSchemaProto convertECSchema(ECSchema schema) {
-    HdfsProtos.ECSchemaProto.Builder builder =
-        HdfsProtos.ECSchemaProto.newBuilder()
-            .setCodecName(schema.getCodecName())
-            .setDataUnits(schema.getNumDataUnits())
-            .setParityUnits(schema.getNumParityUnits());
-    Set<Map.Entry<String, String>> entrySet =
-        schema.getExtraOptions().entrySet();
-    for (Map.Entry<String, String> entry : entrySet) {
-      builder.addOptions(HdfsProtos.ECSchemaOptionEntryProto.newBuilder()
-          .setKey(entry.getKey()).setValue(entry.getValue()).build());
-    }
-    return builder.build();
-  }
-
-  public static ErasureCodingPolicyState convertECState(
-      HdfsProtos.ErasureCodingPolicyState state) {
-    return ErasureCodingPolicyState.fromValue(state.getNumber());
-  }
-
-  public static HdfsProtos.ErasureCodingPolicyState convertECState(
-      ErasureCodingPolicyState state) {
-    return HdfsProtos.ErasureCodingPolicyState.forNumber(state.getValue());
-  }
-
-  /**
-   * Convert the protobuf to a {@link ErasureCodingPolicy}.
-   */
-  public static ErasureCodingPolicy convertErasureCodingPolicy(
-      ErasureCodingPolicyProto proto) {
-    final byte id = (byte) (proto.getId() & 0xFF);
-    ErasureCodingPolicy policy = SystemErasureCodingPolicies.getByID(id);
-    if (policy == null) {
-      // If it's not a built-in policy, populate from the optional PB fields.
-      // The optional fields are required in this case.
-      Preconditions.checkArgument(proto.hasName(),
-          "Missing name field in ErasureCodingPolicy proto");
-      Preconditions.checkArgument(proto.hasSchema(),
-          "Missing schema field in ErasureCodingPolicy proto");
-      Preconditions.checkArgument(proto.hasCellSize(),
-          "Missing cellsize field in ErasureCodingPolicy proto");
-
-      return new ErasureCodingPolicy(proto.getName(),
-          convertECSchema(proto.getSchema()),
-          proto.getCellSize(), id);
-    }
-    return policy;
-  }
-
-  /**
-   * Convert the protobuf to a {@link ErasureCodingPolicyInfo}. This should only
-   * be needed when the caller is interested in the state of the policy.
-   */
-  public static ErasureCodingPolicyInfo convertErasureCodingPolicyInfo(
-      ErasureCodingPolicyProto proto) {
-    ErasureCodingPolicy policy = convertErasureCodingPolicy(proto);
-    ErasureCodingPolicyInfo info = new ErasureCodingPolicyInfo(policy);
-    Preconditions.checkArgument(proto.hasState(),
-        "Missing state field in ErasureCodingPolicy proto");
-    info.setState(convertECState(proto.getState()));
-    return info;
-  }
-
-  private static ErasureCodingPolicyProto.Builder createECPolicyProtoBuilder(
-      ErasureCodingPolicy policy) {
-    final ErasureCodingPolicyProto.Builder builder =
-        ErasureCodingPolicyProto.newBuilder().setId(policy.getId());
-    // If it's not a built-in policy, need to set the optional fields.
-    if (SystemErasureCodingPolicies.getByID(policy.getId()) == null) {
-      builder.setName(policy.getName())
-          .setSchema(convertECSchema(policy.getSchema()))
-          .setCellSize(policy.getCellSize());
-    }
-    return builder;
-  }
-
-  /**
-   * Convert a {@link ErasureCodingPolicy} to protobuf.
-   * This means no state of the policy will be set on the protobuf.
-   */
-  public static ErasureCodingPolicyProto convertErasureCodingPolicy(
-      ErasureCodingPolicy policy) {
-    return createECPolicyProtoBuilder(policy).build();
-  }
-
-  /**
-   * Convert a {@link ErasureCodingPolicyInfo} to protobuf.
-   * The protobuf will have the policy, and state. State is relevant when:
-   * 1. Persisting a policy to fsimage
-   * 2. Returning the policy to the RPC call
-   * {@link DistributedFileSystem#getAllErasureCodingPolicies()}
-   */
-  public static ErasureCodingPolicyProto convertErasureCodingPolicy(
-      ErasureCodingPolicyInfo info) {
-    final ErasureCodingPolicyProto.Builder builder =
-        createECPolicyProtoBuilder(info.getPolicy());
-    builder.setState(convertECState(info.getState()));
-    return builder.build();
-  }
-
-  public static CodecProto convertErasureCodingCodec(String codec,
-                                                     String coders) {
-    CodecProto.Builder builder = CodecProto.newBuilder()
-        .setCodec(codec).setCoders(coders);
-    return builder.build();
-  }
-
-  public static AddErasureCodingPolicyResponseProto
-  convertAddErasureCodingPolicyResponse(
-      AddErasureCodingPolicyResponse response) {
-    AddErasureCodingPolicyResponseProto.Builder builder =
-        AddErasureCodingPolicyResponseProto.newBuilder()
-            .setPolicy(convertErasureCodingPolicy(response.getPolicy()))
-            .setSucceed(response.isSucceed());
-    if (!response.isSucceed()) {
-      builder.setErrorMsg(response.getErrorMsg());
-    }
-    return builder.build();
-  }
-
-  public static AddErasureCodingPolicyResponse
-  convertAddErasureCodingPolicyResponse(
-      AddErasureCodingPolicyResponseProto proto) {
-    ErasureCodingPolicy policy = convertErasureCodingPolicy(proto.getPolicy());
-    if (proto.getSucceed()) {
-      return new AddErasureCodingPolicyResponse(policy);
-    } else {
-      return new AddErasureCodingPolicyResponse(policy, proto.getErrorMsg());
-    }
-  }
-
   public static HdfsProtos.DatanodeInfosProto convertToProto(
       DatanodeInfo[] datanodeInfos) {
     HdfsProtos.DatanodeInfosProto.Builder builder =
@@ -3207,21 +3000,6 @@ public class PBHelperClient {
     for (DatanodeInfo datanodeInfo : datanodeInfos) {
       builder.addDatanodes(PBHelperClient.convert(datanodeInfo));
     }
-    return builder.build();
-  }
-
-  public static ECTopologyVerifierResult convertECTopologyVerifierResultProto(
-      HdfsProtos.ECTopologyVerifierResultProto resp) {
-    return new ECTopologyVerifierResult(resp.getIsSupported(),
-        resp.getResultMessage());
-  }
-
-  public static HdfsProtos.ECTopologyVerifierResultProto convertECTopologyVerifierResult(
-      ECTopologyVerifierResult resp) {
-    final HdfsProtos.ECTopologyVerifierResultProto.Builder builder =
-        HdfsProtos.ECTopologyVerifierResultProto.newBuilder()
-            .setIsSupported(resp.isSupported())
-            .setResultMessage(resp.getResultMessage());
     return builder.build();
   }
 

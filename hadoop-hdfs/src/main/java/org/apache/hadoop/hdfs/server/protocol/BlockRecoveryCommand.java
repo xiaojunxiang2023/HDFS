@@ -72,31 +72,6 @@ public class BlockRecoveryCommand extends DatanodeCommand {
     }
   }
 
-  public static class RecoveringStripedBlock extends RecoveringBlock {
-    private final byte[] blockIndices;
-    private final ErasureCodingPolicy ecPolicy;
-
-    public RecoveringStripedBlock(RecoveringBlock rBlock, byte[] blockIndices,
-                                  ErasureCodingPolicy ecPolicy) {
-      super(rBlock);
-      this.blockIndices = blockIndices == null ? new byte[]{} : blockIndices;
-      this.ecPolicy = ecPolicy;
-    }
-
-    public byte[] getBlockIndices() {
-      return blockIndices;
-    }
-
-    public ErasureCodingPolicy getErasureCodingPolicy() {
-      return ecPolicy;
-    }
-
-    @Override
-    public boolean isStriped() {
-      return true;
-    }
-  }
-
   /**
    * Create empty BlockRecoveryCommand.
    */

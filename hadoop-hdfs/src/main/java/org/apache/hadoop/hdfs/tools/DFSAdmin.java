@@ -327,23 +327,6 @@ public class DFSAdmin extends FsShell {
     System.out.println("\tPending deletion blocks: " +
         replicatedBlockStats.getPendingDeletionBlocks());
 
-    ECBlockGroupStats ecBlockGroupStats =
-        dfs.getClient().getNamenode().getECBlockGroupStats();
-    System.out.println("Erasure Coded Block Groups: ");
-    System.out.println("\tLow redundancy block groups: " +
-        ecBlockGroupStats.getLowRedundancyBlockGroups());
-    System.out.println("\tBlock groups with corrupt internal blocks: " +
-        ecBlockGroupStats.getCorruptBlockGroups());
-    System.out.println("\tMissing block groups: " +
-        ecBlockGroupStats.getMissingBlockGroups());
-    if (ecBlockGroupStats.hasHighestPriorityLowRedundancyBlocks()) {
-      System.out.println("\tLow redundancy blocks with highest priority " +
-          "to recover: " +
-          ecBlockGroupStats.getHighestPriorityLowRedundancyBlocks());
-    }
-    System.out.println("\tPending deletion blocks: " +
-        ecBlockGroupStats.getPendingDeletionBlocks());
-
     System.out.println();
 
     System.out.println("-------------------------------------------------");

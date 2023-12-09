@@ -14,7 +14,6 @@ import org.apache.hadoop.hdfs.util.XMLUtils;
 import org.apache.hadoop.hdfs.util.XMLUtils.InvalidXmlException;
 import org.apache.hadoop.hdfs.util.XMLUtils.Stanza;
 import org.apache.hadoop.io.*;
-import org.apache.hadoop.io.erasurecode.ECSchema;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -724,45 +723,4 @@ public class FSImageSerialization {
     return info;
   }
 
-  public static void writeErasureCodingPolicy(DataOutputStream out,
-                                              ErasureCodingPolicy ecPolicy) throws IOException {
-    writeString(ecPolicy.getSchema().getCodecName(), out);
-    writeInt(ecPolicy.getNumDataUnits(), out);
-    writeInt(ecPolicy.getNumParityUnits(), out);
-    writeInt(ecPolicy.getCellSize(), out);
-
-    Map<String, String> extraOptions = ecPolicy.getSchema().getExtraOptions();
-    if (extraOptions == null || extraOptions.isEmpty()) {
-      writeInt(0, out);
-      return;
-    }
-
-    writeInt(extraOptions.size(), out);
-    for (Map.Entry<String, String> entry : extraOptions.entrySet()) {
-      writeString(entry.getKey(), out);
-      writeString(entry.getValue(), out);
-    }
-  }
-
-  public static ErasureCodingPolicy readErasureCodingPolicy(DataInput in)
-      throws IOException {
-    String codecName = readString(in);
-    int numDataUnits = readInt(in);
-    int numParityUnits = readInt(in);
-    int cellSize = readInt(in);
-
-    int size = readInt(in);
-    Map<String, String> extraOptions = new HashMap<>(size);
-
-    if (size != 0) {
-      for (int i = 0; i < size; i++) {
-        String key = readString(in);
-        String value = readString(in);
-        extraOptions.put(key, value);
-      }
-    }
-    ECSchema ecSchema = new ECSchema(codecName, numDataUnits,
-        numParityUnits, extraOptions);
-    return new ErasureCodingPolicy(ecSchema, cellSize);
-  }
 }

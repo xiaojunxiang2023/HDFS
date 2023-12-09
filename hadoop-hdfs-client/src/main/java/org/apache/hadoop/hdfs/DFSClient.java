@@ -294,8 +294,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
           getHedgedReadThreadpoolSize());
     }
 
-    this.initThreadsNumForStripedReads(dfsClientConf.
-        getStripedReadThreadpoolSize());
     this.saslClient = new SaslDataTransferClient(
         conf, DataTransferSaslUtil.getSaslPropertiesResolver(conf),
         TrustedChannelResolver.getInstance(conf), nnFallbackToSimpleAuth);
@@ -957,11 +955,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
   private DFSInputStream openInternal(LocatedBlocks locatedBlocks, String src,
                                       boolean verifyChecksum) throws IOException {
     if (locatedBlocks != null) {
-      ErasureCodingPolicy ecPolicy = locatedBlocks.getErasureCodingPolicy();
-      if (ecPolicy != null) {
-        return new DFSStripedInputStream(this, src, verifyChecksum, ecPolicy,
-            locatedBlocks);
-      }
       return new DFSInputStream(this, src, verifyChecksum, locatedBlocks);
     } else {
       throw new IOException("Cannot open filename " + src);
@@ -1730,16 +1723,11 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
 
     LocatedBlocks blockLocations = null;
     FileChecksumHelper.FileChecksumComputer maker = null;
-    ErasureCodingPolicy ecPolicy = null;
     if (length > 0) {
       blockLocations = getBlockLocations(src, length);
-      ecPolicy = blockLocations.getErasureCodingPolicy();
     }
 
-    maker = ecPolicy != null ?
-        new FileChecksumHelper.StripedFileNonStripedChecksumComputer(src,
-            length, blockLocations, namenode, this, ecPolicy, combineMode) :
-        new FileChecksumHelper.ReplicatedFileChecksumComputer(src, length,
+    maker = new FileChecksumHelper.ReplicatedFileChecksumComputer(src, length,
             blockLocations, namenode, this, combineMode);
 
     maker.compute();
@@ -2705,44 +2693,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     return new ReencryptionStatusIterator(namenode, tracer);
   }
 
-  public void setErasureCodingPolicy(String src, String ecPolicyName)
-      throws IOException {
-    checkOpen();
-    try (TraceScope ignored =
-             newPathTraceScope("setErasureCodingPolicy", src)) {
-      namenode.setErasureCodingPolicy(src, ecPolicyName);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class,
-          UnresolvedPathException.class,
-          FileNotFoundException.class);
-    }
-  }
-
-  public void unsetErasureCodingPolicy(String src) throws IOException {
-    checkOpen();
-    try (TraceScope ignored =
-             newPathTraceScope("unsetErasureCodingPolicy", src)) {
-      namenode.unsetErasureCodingPolicy(src);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class,
-          UnresolvedPathException.class,
-          FileNotFoundException.class, NoECPolicySetException.class);
-    }
-  }
-
-  public ECTopologyVerifierResult getECTopologyResultForPolicies(
-      final String... policyNames) throws IOException {
-    checkOpen();
-    try {
-      return namenode.getECTopologyResultForPolicies(policyNames);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class);
-    }
-  }
-
   public void setXAttr(String src, String name, byte[] value,
                        EnumSet<XAttrSetFlag> flag) throws IOException {
     checkOpen();
@@ -2830,65 +2780,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
       throw re.unwrapRemoteException(AccessControlException.class,
           FileNotFoundException.class,
           UnresolvedPathException.class);
-    }
-  }
-
-  public ErasureCodingPolicyInfo[] getErasureCodingPolicies()
-      throws IOException {
-    checkOpen();
-    try (TraceScope ignored = tracer.newScope("getErasureCodingPolicies")) {
-      return namenode.getErasureCodingPolicies();
-    }
-  }
-
-  public Map<String, String> getErasureCodingCodecs() throws IOException {
-    checkOpen();
-    try (TraceScope ignored = tracer.newScope("getErasureCodingCodecs")) {
-      return namenode.getErasureCodingCodecs();
-    }
-  }
-
-  public AddErasureCodingPolicyResponse[] addErasureCodingPolicies(
-      ErasureCodingPolicy[] policies) throws IOException {
-    checkOpen();
-    try (TraceScope ignored = tracer.newScope("addErasureCodingPolicies")) {
-      return namenode.addErasureCodingPolicies(policies);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class);
-    }
-  }
-
-  public void removeErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    checkOpen();
-    try (TraceScope ignored = tracer.newScope("removeErasureCodingPolicy")) {
-      namenode.removeErasureCodingPolicy(ecPolicyName);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class);
-    }
-  }
-
-  public void enableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    checkOpen();
-    try (TraceScope ignored = tracer.newScope("enableErasureCodingPolicy")) {
-      namenode.enableErasureCodingPolicy(ecPolicyName);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class);
-    }
-  }
-
-  public void disableErasureCodingPolicy(String ecPolicyName)
-      throws IOException {
-    checkOpen();
-    try (TraceScope ignored = tracer.newScope("disableErasureCodingPolicy")) {
-      namenode.disableErasureCodingPolicy(ecPolicyName);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(AccessControlException.class,
-          SafeModeException.class);
     }
   }
 
@@ -3063,27 +2954,6 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
       scope.addKVAnnotation("dst", dst);
     }
     return scope;
-  }
-
-  /**
-   * Get the erasure coding policy information for the specified path
-   *
-   * @param src path to get the information for
-   * @return Returns the policy information if file or directory on the path is
-   * erasure coded, null otherwise. Null will be returned if directory or file
-   * has REPLICATION policy.
-   * @throws IOException
-   */
-  public ErasureCodingPolicy getErasureCodingPolicy(String src)
-      throws IOException {
-    checkOpen();
-    try (TraceScope ignored =
-             newPathTraceScope("getErasureCodingPolicy", src)) {
-      return namenode.getErasureCodingPolicy(src);
-    } catch (RemoteException re) {
-      throw re.unwrapRemoteException(FileNotFoundException.class,
-          AccessControlException.class, UnresolvedPathException.class);
-    }
   }
 
   /**

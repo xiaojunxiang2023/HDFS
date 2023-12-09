@@ -153,11 +153,6 @@ public abstract class Event {
         return this;
       }
 
-      public Builder erasureCoded(boolean ecCoded) {
-        this.erasureCoded = Optional.of(ecCoded);
-        return this;
-      }
-
       public CreateEvent build() {
         return new CreateEvent(this);
       }

@@ -8009,9 +8009,6 @@ public final class FsImageProto {
           if (other.hasBlockType()) {
             setBlockType(other.getBlockType());
           }
-          if (other.hasErasureCodingPolicyID()) {
-            setErasureCodingPolicyID(other.getErasureCodingPolicyID());
-          }
           this.mergeUnknownFields(other.unknownFields);
           onChanged();
           return this;

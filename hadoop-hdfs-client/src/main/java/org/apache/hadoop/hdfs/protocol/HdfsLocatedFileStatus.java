@@ -24,7 +24,6 @@ public class HdfsLocatedFileStatus
   private byte[] uSymlink; // symlink target encoded in java UTF8/null
   private final long fileId;
   private final FileEncryptionInfo feInfo;
-  private final ErasureCodingPolicy ecPolicy;
 
   // Used by dir, not including dot and dotdot. Always zero for a regular file.
   private final int childrenNum;
@@ -50,7 +49,6 @@ public class HdfsLocatedFileStatus
    * @param childrenNum the number of children. Used by directory.
    * @param feInfo the file's encryption info
    * @param storagePolicy ID which specifies storage policy
-   * @param ecPolicy the erasure coding policy
    * @param hdfsloc block locations
    */
   HdfsLocatedFileStatus(long length, boolean isdir, int replication,
@@ -59,8 +57,7 @@ public class HdfsLocatedFileStatus
                         String owner, String group,
                         byte[] symlink, byte[] path, long fileId,
                         int childrenNum, FileEncryptionInfo feInfo,
-                        byte storagePolicy, ErasureCodingPolicy ecPolicy,
-                        LocatedBlocks hdfsloc) {
+                        byte storagePolicy, LocatedBlocks hdfsloc) {
     super(length, isdir, replication, blocksize, mtime, atime,
         HdfsFileStatus.convert(isdir, symlink != null, permission, flags),
         owner, group, null, null, HdfsFileStatus.convert(flags),
@@ -71,7 +68,6 @@ public class HdfsLocatedFileStatus
     this.childrenNum = childrenNum;
     this.feInfo = feInfo;
     this.storagePolicy = storagePolicy;
-    this.ecPolicy = ecPolicy;
     this.hdfsloc = hdfsloc;
   }
 
@@ -133,15 +129,6 @@ public class HdfsLocatedFileStatus
   @Override
   public FileEncryptionInfo getFileEncryptionInfo() {
     return feInfo;
-  }
-
-  /**
-   * Get the erasure coding policy if it's set.
-   * @return the erasure coding policy
-   */
-  @Override
-  public ErasureCodingPolicy getErasureCodingPolicy() {
-    return ecPolicy;
   }
 
   @Override

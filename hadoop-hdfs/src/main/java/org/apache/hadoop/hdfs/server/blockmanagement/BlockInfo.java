@@ -36,14 +36,14 @@ public abstract class BlockInfo extends Block implements LightWeightGSet.LinkedE
   public BlockInfo(short size) {
     this.triplets = new Object[3 * size];
     this.bcId = INVALID_INODE_ID;
-    this.replication = isStriped() ? 0 : size;
+    this.replication = size;
   }
 
   public BlockInfo(Block blk, short size) {
     super(blk);
     this.triplets = new Object[3 * size];
     this.bcId = INVALID_INODE_ID;
-    this.replication = isStriped() ? 0 : size;
+    this.replication = size;
   }
 
   public short getReplication() {
@@ -169,8 +169,6 @@ public abstract class BlockInfo extends Block implements LightWeightGSet.LinkedE
    * Remove {@link DatanodeStorageInfo} location for a block
    */
   abstract boolean removeStorage(DatanodeStorageInfo storage);
-
-  public abstract boolean isStriped();
 
   public abstract BlockType getBlockType();
 
@@ -391,5 +389,11 @@ public abstract class BlockInfo extends Block implements LightWeightGSet.LinkedE
     this.setNumBytes(block.getNumBytes());
     // Sort out invalid replicas.
     return setGenerationStampAndVerifyReplicas(block.getGenerationStamp());
+  }
+
+  private byte[] indices;
+  public byte getStorageBlockIndex(DatanodeStorageInfo storage) {
+    int i = this.findStorageInfo(storage);
+    return i == -1 ? -1 : indices[i];
   }
 }

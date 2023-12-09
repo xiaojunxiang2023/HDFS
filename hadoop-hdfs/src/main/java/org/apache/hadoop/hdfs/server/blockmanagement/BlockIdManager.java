@@ -270,37 +270,6 @@ public class BlockIdManager {
     legacyGenerationStampLimit = HdfsConstants.GRANDFATHER_GENERATION_STAMP;
   }
 
-  /**
-   * Return true if the block is a striped block.
-   *
-   * Before HDFS-4645, block ID was randomly generated (legacy), so it is
-   * possible that legacy block ID to be negative, which should not be
-   * considered as striped block ID.
-   *
-   * @see #isLegacyBlock(Block) detecting legacy block IDs.
-   */
-  public boolean isStripedBlock(Block block) {
-    return isStripedBlockID(block.getBlockId()) && !isLegacyBlock(block);
-  }
-
-  /**
-   * See {@link #isStripedBlock(Block)}, we should not use this function alone
-   * to determine a block is striped block.
-   */
-  public static boolean isStripedBlockID(long id) {
-    return BlockType.fromBlockId(id) == STRIPED;
-  }
-
-  /**
-   * The last 4 bits of HdfsConstants.BLOCK_GROUP_INDEX_MASK(15) is 1111,
-   * so the last 4 bits of (~HdfsConstants.BLOCK_GROUP_INDEX_MASK) is 0000
-   * and the other 60 bits are 1. Group ID is the first 60 bits of any
-   * data/parity block id in the same striped block group.
-   */
-  static long convertToStripedID(long id) {
-    return id & (~HdfsServerConstants.BLOCK_GROUP_INDEX_MASK);
-  }
-
   public static byte getBlockIndex(Block reportedBlock) {
     return (byte) (reportedBlock.getBlockId() &
         HdfsServerConstants.BLOCK_GROUP_INDEX_MASK);

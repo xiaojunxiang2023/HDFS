@@ -15,7 +15,6 @@ import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoStriped;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
@@ -114,7 +113,7 @@ public class FSDirectory implements Closeable {
   private final long contentSleepMicroSec;
   private final INodeMap inodeMap; // Synchronized by dirLock
   private long yieldCount = 0; // keep track of lock yield count.
-  private int quotaInitThreads;
+  private final int quotaInitThreads;
 
   private final int inodeXAttrsLimit; //inode xattrs max limit
 
@@ -264,10 +263,8 @@ public class FSDirectory implements Closeable {
     WRITE,  // disallows snapshot paths.
     WRITE_LINK,
     CREATE, // like write, but also blocks invalid path names.
-    CREATE_LINK;
+    CREATE_LINK
   }
-
-  ;
 
   FSDirectory(FSNamesystem ns, Configuration conf) throws IOException {
     this.inodeId = new INodeId();
@@ -1062,27 +1059,8 @@ public class FSDirectory implements Closeable {
     // Adjust disk space consumption if required
     final long diff;
     final short replicationFactor;
-    if (fileINode.isStriped()) {
-      final ErasureCodingPolicy ecPolicy =
-          FSDirErasureCodingOp
-              .unprotectedGetErasureCodingPolicy(namesystem, iip);
-      final short numDataUnits = (short) ecPolicy.getNumDataUnits();
-      final short numParityUnits = (short) ecPolicy.getNumParityUnits();
-
-      final long numBlocks = numDataUnits + numParityUnits;
-      final long fullBlockGroupSize =
-          fileINode.getPreferredBlockSize() * numBlocks;
-
-      final BlockInfoStriped striped =
-          new BlockInfoStriped(completeBlk, ecPolicy);
-      final long actualBlockGroupSize = striped.spaceConsumed();
-
-      diff = fullBlockGroupSize - actualBlockGroupSize;
-      replicationFactor = (short) 1;
-    } else {
-      diff = fileINode.getPreferredBlockSize() - completeBlk.getNumBytes();
-      replicationFactor = fileINode.getFileReplication();
-    }
+    diff = fileINode.getPreferredBlockSize() - completeBlk.getNumBytes();
+    replicationFactor = fileINode.getFileReplication();
     if (diff > 0) {
       try {
         updateSpaceConsumed(iip, 0, -diff, replicationFactor);
@@ -1090,6 +1068,7 @@ public class FSDirectory implements Closeable {
         LOG.warn("Unexpected exception while updating disk space.", e);
       }
     }
+
   }
 
   public EnumCounters<StorageType> getStorageTypeDeltas(byte storagePolicyID,

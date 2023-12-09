@@ -6,9 +6,7 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
 import org.apache.hadoop.hdfs.server.balancer.Matcher;
-import org.apache.hadoop.hdfs.server.namenode.ErasureCodingPolicyManager;
 import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockMovingInfo;
-import org.apache.hadoop.hdfs.util.StripedBlockUtil;
 import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
@@ -309,7 +307,6 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
       BlockStoragePolicy existingStoragePolicy) throws IOException {
     BlocksMovingAnalysis.Status status =
         BlocksMovingAnalysis.Status.BLOCKS_ALREADY_SATISFIED;
-    final ErasureCodingPolicy ecPolicy = fileInfo.getErasureCodingPolicy();
     final LocatedBlocks locatedBlocks = fileInfo.getLocatedBlocks();
     final boolean lastBlkComplete = locatedBlocks.isLastBlockComplete();
     if (!lastBlkComplete) {
@@ -339,31 +336,11 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
       // Block is considered as low redundancy when the block locations array
       // length is less than expected replication factor. If any of the block is
       // low redundant, then hasLowRedundancyBlocks will be marked as true.
-      hasLowRedundancyBlocks |= isLowRedundancyBlock(blockInfo, replication,
-          ecPolicy);
+      hasLowRedundancyBlocks |= isLowRedundancyBlock(blockInfo, replication);
 
       List<StorageType> expectedStorageTypes;
-      if (blockInfo.isStriped()) {
-        if (ErasureCodingPolicyManager
-            .checkStoragePolicySuitableForECStripedMode(
-                existingStoragePolicy.getId())) {
-          expectedStorageTypes = existingStoragePolicy
-              .chooseStorageTypes((short) blockInfo.getLocations().length);
-        } else {
-          // Currently we support only limited policies (HOT, COLD, ALLSSD)
-          // for EC striped mode files. SPS will ignore to move the blocks if
-          // the storage policy is not in EC Striped mode supported policies
-          LOG.warn("The storage policy " + existingStoragePolicy.getName()
-              + " is not suitable for Striped EC files. "
-              + "So, ignoring to move the blocks");
-          return new BlocksMovingAnalysis(
-              BlocksMovingAnalysis.Status.BLOCKS_TARGET_PAIRING_SKIPPED,
-              new HashMap<>());
-        }
-      } else {
-        expectedStorageTypes = existingStoragePolicy
-            .chooseStorageTypes(fileInfo.getReplication());
-      }
+      expectedStorageTypes = existingStoragePolicy
+          .chooseStorageTypes(fileInfo.getReplication());
 
       List<StorageType> existing = new LinkedList<StorageType>(
           Arrays.asList(blockInfo.getStorageTypes()));
@@ -371,7 +348,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
           existing, true)) {
         boolean blocksPaired = computeBlockMovingInfos(blockMovingInfos,
             blockInfo, expectedStorageTypes, existing, blockInfo.getLocations(),
-            liveDns, ecPolicy);
+            liveDns);
         if (blocksPaired) {
           status = BlocksMovingAnalysis.Status.BLOCKS_TARGETS_PAIRED;
         } else if (status !=
@@ -425,21 +402,13 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
    *          block
    * @param replication
    *          replication factor of the given file block
-   * @param ecPolicy
-   *          erasure coding policy of the given file block
    * @return true if the given block is low redundant.
    */
-  private boolean isLowRedundancyBlock(LocatedBlock blockInfo, int replication,
-                                       ErasureCodingPolicy ecPolicy) {
+  private boolean isLowRedundancyBlock(LocatedBlock blockInfo, int replication) {
     boolean hasLowRedundancyBlock = false;
-    if (blockInfo.isStriped()) {
-      // For EC blocks, redundancy is the summation of data + parity blocks.
-      replication = ecPolicy.getNumDataUnits() + ecPolicy.getNumParityUnits();
-    }
     // block is considered as low redundancy when the block locations length is
     // less than expected replication factor.
-    hasLowRedundancyBlock = blockInfo.getLocations().length < replication ? true
-        : false;
+    hasLowRedundancyBlock = blockInfo.getLocations().length < replication;
     return hasLowRedundancyBlock;
   }
 
@@ -462,16 +431,13 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
    *          - available storages
    * @param liveDns
    *          - live datanodes which can be used as targets
-   * @param ecPolicy
-   *          - ec policy of sps invoked file
    * @return false if some of the block locations failed to find target node to
    *         satisfy the storage policy, true otherwise
    */
   private boolean computeBlockMovingInfos(
       List<BlockMovingInfo> blockMovingInfos, LocatedBlock blockInfo,
       List<StorageType> expectedStorageTypes, List<StorageType> existing,
-      DatanodeInfo[] storages, DatanodeMap liveDns,
-      ErasureCodingPolicy ecPolicy) {
+      DatanodeInfo[] storages, DatanodeMap liveDns) {
     boolean foundMatchingTargetNodesForBlock = true;
     if (!removeOverlapBetweenStorageTypes(expectedStorageTypes,
         existing, true)) {
@@ -520,8 +486,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
 
       foundMatchingTargetNodesForBlock |= findSourceAndTargetToMove(
           blockMovingInfos, blockInfo, sourceWithStorageMap,
-          expectedStorageTypes, targetDns,
-          ecPolicy, excludeNodes);
+          expectedStorageTypes, targetDns, excludeNodes);
     }
     return foundMatchingTargetNodesForBlock;
   }
@@ -540,8 +505,6 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
    *          - Expecting storages to move
    * @param targetDns
    *          - Available DNs for expected storage types
-   * @param ecPolicy
-   *          - erasure coding policy of sps invoked file
    * @param excludeNodes
    *          - existing source nodes, which has replica copy
    * @return false if some of the block locations failed to find target node to
@@ -552,7 +515,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
       List<StorageTypeNodePair> sourceWithStorageList,
       List<StorageType> expectedTypes,
       EnumMap<StorageType, List<DatanodeWithStorage.StorageDetails>> targetDns,
-      ErasureCodingPolicy ecPolicy, List<DatanodeInfo> excludeNodes) {
+      List<DatanodeInfo> excludeNodes) {
     boolean foundMatchingTargetNodesForBlock = true;
 
     // Looping over all the source node locations and choose the target
@@ -567,16 +530,9 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
         StorageTypeNodePair chosenTarget = chooseTargetTypeInSameNode(blockInfo,
             existingTypeNodePair.dn, targetDns, expectedTypes);
         if (chosenTarget != null) {
-          if (blockInfo.isStriped()) {
-            buildStripedBlockMovingInfos(blockInfo, existingTypeNodePair.dn,
-                existingTypeNodePair.storageType, chosenTarget.dn,
-                chosenTarget.storageType, blockMovingInfos,
-                ecPolicy);
-          } else {
-            buildContinuousBlockMovingInfos(blockInfo, existingTypeNodePair.dn,
-                existingTypeNodePair.storageType, chosenTarget.dn,
-                chosenTarget.storageType, blockMovingInfos);
-          }
+          buildContinuousBlockMovingInfos(blockInfo, existingTypeNodePair.dn,
+              existingTypeNodePair.storageType, chosenTarget.dn,
+              chosenTarget.storageType, blockMovingInfos);
           expectedTypes.remove(chosenTarget.storageType);
         }
       }
@@ -615,15 +571,9 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
                 Matcher.ANY_OTHER, targetDns, excludeNodes);
       }
       if (null != chosenTarget) {
-        if (blockInfo.isStriped()) {
-          buildStripedBlockMovingInfos(blockInfo, existingTypeNodePair.dn,
-              existingTypeNodePair.storageType, chosenTarget.dn,
-              chosenTarget.storageType, blockMovingInfos, ecPolicy);
-        } else {
-          buildContinuousBlockMovingInfos(blockInfo, existingTypeNodePair.dn,
-              existingTypeNodePair.storageType, chosenTarget.dn,
-              chosenTarget.storageType, blockMovingInfos);
-        }
+        buildContinuousBlockMovingInfos(blockInfo, existingTypeNodePair.dn,
+            existingTypeNodePair.storageType, chosenTarget.dn,
+            chosenTarget.storageType, blockMovingInfos);
 
         expectedTypes.remove(chosenTarget.storageType);
         excludeNodes.add(chosenTarget.dn);
@@ -660,38 +610,6 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     BlockMovingInfo blkMovingInfo = new BlockMovingInfo(blk, sourceNode,
         targetNode, sourceStorageType, targetStorageType);
     blkMovingInfos.add(blkMovingInfo);
-  }
-
-  private void buildStripedBlockMovingInfos(LocatedBlock blockInfo,
-                                            DatanodeInfo sourceNode, StorageType sourceStorageType,
-                                            DatanodeInfo targetNode, StorageType targetStorageType,
-                                            List<BlockMovingInfo> blkMovingInfos, ErasureCodingPolicy ecPolicy) {
-    // For a striped block, it needs to construct internal block at the given
-    // index of a block group. Here it is iterating over all the block indices
-    // and construct internal blocks which can be then considered for block
-    // movement.
-    LocatedStripedBlock sBlockInfo = (LocatedStripedBlock) blockInfo;
-    byte[] indices = sBlockInfo.getBlockIndices();
-    DatanodeInfo[] locations = sBlockInfo.getLocations();
-    for (int i = 0; i < indices.length; i++) {
-      byte blkIndex = indices[i];
-      if (blkIndex >= 0) {
-        // pick block movement only for the given source node.
-        if (sourceNode.equals(locations[i])) {
-          // construct internal block
-          ExtendedBlock extBlock = sBlockInfo.getBlock();
-          long numBytes = StripedBlockUtil.getInternalBlockLength(
-              extBlock.getNumBytes(), ecPolicy, blkIndex);
-          Block blk = new Block(ExtendedBlock.getLocalBlock(extBlock));
-          long blkId = blk.getBlockId() + blkIndex;
-          blk.setBlockId(blkId);
-          blk.setNumBytes(numBytes);
-          BlockMovingInfo blkMovingInfo = new BlockMovingInfo(blk, sourceNode,
-              targetNode, sourceStorageType, targetStorageType);
-          blkMovingInfos.add(blkMovingInfo);
-        }
-      }
-    }
   }
 
   /**

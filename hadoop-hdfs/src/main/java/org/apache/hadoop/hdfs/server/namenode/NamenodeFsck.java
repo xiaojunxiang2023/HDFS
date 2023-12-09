@@ -14,7 +14,6 @@ import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataEncryptionKeyFactor
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.security.token.block.DataEncryptionKey;
 import org.apache.hadoop.hdfs.server.blockmanagement.*;
-import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfoStriped.StorageAndBlockIndex;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.NetworkTopology;
@@ -280,21 +279,12 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
         corruptionRecord = blockManager.getCorruptReplicas(block);
       }
       // report block replicas status on datanodes
-      if (blockInfo.isStriped()) {
-        for (int idx = (blockInfo.getCapacity() - 1); idx >= 0; idx--) {
-          DatanodeDescriptor dn = blockInfo.getDatanode(idx);
-          if (dn == null) {
-            continue;
-          }
-          printDatanodeReplicaStatus(block, corruptionRecord, dn);
-        }
-      } else {
-        for (int idx = (blockInfo.numNodes() - 1); idx >= 0; idx--) {
-          DatanodeDescriptor dn = blockInfo.getDatanode(idx);
-          printDatanodeReplicaStatus(block, corruptionRecord, dn);
-        }
+      for (int idx = (blockInfo.numNodes() - 1); idx >= 0; idx--) {
+        DatanodeDescriptor dn = blockInfo.getDatanode(idx);
+        printDatanodeReplicaStatus(block, corruptionRecord, dn);
       }
-    } catch (Exception e) {
+    } catch (
+        Exception e) {
       String errMsg = "Fsck on blockId '" + blockId;
       LOG.warn(errMsg, e);
       out.println(e.getMessage());
@@ -485,7 +475,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
       return;
     }
 
-    final Result r = file.getErasureCodingPolicy() != null ? ecRes : replRes;
+    final Result r = replRes;
     collectFileSummary(path, file, r, blocks);
     collectBlocksSummary(parent, file, r, blocks);
   }
@@ -557,13 +547,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     res.totalSize += fileLen;
     res.totalBlocks += blocks.locatedBlockCount();
     String redundancyPolicy;
-    ErasureCodingPolicy ecPolicy = file.getErasureCodingPolicy();
-    if (ecPolicy == null) { // a replicated file
-      redundancyPolicy = "replicated: replication=" +
-          file.getReplication() + ",";
-    } else {
-      redundancyPolicy = "erasure-coded: policy=" + ecPolicy.getName() + ",";
-    }
+    redundancyPolicy = "replicated: replication=" + file.getReplication() + ",";
 
     if (showOpenFiles && isOpen) {
       out.print(path + " " + fileLen + " bytes, " + redundancyPolicy + " " +
@@ -588,17 +572,8 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     final boolean isComplete = storedBlock.isComplete();
     Iterator<DatanodeStorageInfo> storagesItr;
     StringBuilder sb = new StringBuilder(" [");
-    final boolean isStriped = storedBlock.isStriped();
     Map<DatanodeStorageInfo, Long> storage2Id = new HashMap<>();
     if (isComplete) {
-      if (isStriped) {
-        long blockId = storedBlock.getBlockId();
-        Iterable<StorageAndBlockIndex> sis =
-            ((BlockInfoStriped) storedBlock).getStorageAndIndexInfos();
-        for (StorageAndBlockIndex si : sis) {
-          storage2Id.put(si.getStorage(), blockId + si.getBlockIndex());
-        }
-      }
       storagesItr = storedBlock.getStorageInfos();
     } else {
       storagesItr = storedBlock.getUnderConstructionFeature()
@@ -607,10 +582,6 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
 
     while (storagesItr.hasNext()) {
       DatanodeStorageInfo storage = storagesItr.next();
-      if (isStriped && isComplete) {
-        long index = storage2Id.get(storage);
-        sb.append("blk_" + index + ":");
-      }
       DatanodeDescriptor dnDesc = storage.getDatanodeDescriptor();
       if (showRacks) {
         sb.append(NodeBase.getPath(dnDesc));
@@ -709,21 +680,11 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
       res.totalReplicas += totalReplicasPerBlock;
 
       boolean isMissing;
-      if (storedBlock.isStriped()) {
-        isMissing = totalReplicasPerBlock < minReplication;
-      } else {
-        isMissing = totalReplicasPerBlock == 0;
-      }
+      isMissing = totalReplicasPerBlock == 0;
 
       // count expected replicas
       short targetFileReplication;
-      if (file.getErasureCodingPolicy() != null) {
-        assert storedBlock instanceof BlockInfoStriped;
-        targetFileReplication = ((BlockInfoStriped) storedBlock)
-            .getRealTotalBlockNum();
-      } else {
-        targetFileReplication = file.getReplication();
-      }
+      targetFileReplication = file.getReplication();
       res.numExpectedReplicas += targetFileReplication;
 
       // count under min repl'd blocks
@@ -808,13 +769,6 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
         res.addMissing(blkName, block.getNumBytes());
         missing++;
         missize += block.getNumBytes();
-        if (storedBlock.isStriped()) {
-          report.append(" Live_repl=" + liveReplicas);
-          String info = getReplicaInfo(storedBlock);
-          if (!info.isEmpty()) {
-            report.append(" ").append(info);
-          }
-        }
       } else {
         report.append(" Live_repl=" + liveReplicas);
         String info = getReplicaInfo(storedBlock);

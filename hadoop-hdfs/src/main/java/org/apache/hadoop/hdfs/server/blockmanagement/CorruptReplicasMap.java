@@ -33,7 +33,6 @@ public class CorruptReplicasMap {
       new HashMap<Block, Map<DatanodeDescriptor, Reason>>();
 
   private final LongAdder totalCorruptBlocks = new LongAdder();
-  private final LongAdder totalCorruptECBlockGroups = new LongAdder();
 
   /**
    * Mark the block belonging to datanode as corrupt.
@@ -44,12 +43,12 @@ public class CorruptReplicasMap {
    * @param reasonCode the enum representation of the reason
    */
   void addToCorruptReplicasMap(Block blk, DatanodeDescriptor dn,
-                               String reason, Reason reasonCode, boolean isStriped) {
+                               String reason, Reason reasonCode) {
     Map<DatanodeDescriptor, Reason> nodes = corruptReplicasMap.get(blk);
     if (nodes == null) {
       nodes = new HashMap<DatanodeDescriptor, Reason>();
       corruptReplicasMap.put(blk, nodes);
-      incrementBlockStat(isStriped);
+      incrementBlockStat();
     }
 
     String reasonText;
@@ -82,7 +81,7 @@ public class CorruptReplicasMap {
     if (corruptReplicasMap != null) {
       Map<DatanodeDescriptor, Reason> value = corruptReplicasMap.remove(blk);
       if (value != null) {
-        decrementBlockStat(blk.isStriped());
+        decrementBlockStat();
       }
     }
   }
@@ -117,27 +116,19 @@ public class CorruptReplicasMap {
       if (datanodes.isEmpty()) {
         // remove the block if there is no more corrupted replicas
         corruptReplicasMap.remove(blk);
-        decrementBlockStat(blk.isStriped());
+        decrementBlockStat();
       }
       return true;
     }
     return false;
   }
 
-  private void incrementBlockStat(boolean isStriped) {
-    if (isStriped) {
-      totalCorruptECBlockGroups.increment();
-    } else {
-      totalCorruptBlocks.increment();
-    }
+  private void incrementBlockStat() {
+    totalCorruptBlocks.increment();
   }
 
-  private void decrementBlockStat(boolean isStriped) {
-    if (isStriped) {
-      totalCorruptECBlockGroups.decrement();
-    } else {
-      totalCorruptBlocks.decrement();
-    }
+  private void decrementBlockStat() {
+    totalCorruptBlocks.decrement();
   }
 
   /**
@@ -175,51 +166,11 @@ public class CorruptReplicasMap {
   }
 
   /**
-   * Return a range of corrupt replica block ids. Up to numExpectedBlocks 
-   * blocks starting at the next block after startingBlockId are returned
-   * (fewer if numExpectedBlocks blocks are unavailable). If startingBlockId 
-   * is null, up to numExpectedBlocks blocks are returned from the beginning.
-   * If startingBlockId cannot be found, null is returned.
-   *
-   * @param bim BlockIdManager to determine the block type.
-   * @param blockType desired block type to return.
-   * @param numExpectedBlocks Number of block ids to return.
-   *  0 <= numExpectedBlocks <= 100
-   * @param startingBlockId Block id from which to start. If null, start at
-   *  beginning.
-   * @return Up to numExpectedBlocks blocks from startingBlockId if it exists
-   */
-  @VisibleForTesting
-  long[] getCorruptBlockIdsForTesting(BlockIdManager bim, BlockType blockType,
-                                      int numExpectedBlocks, Long startingBlockId) {
-    if (numExpectedBlocks < 0 || numExpectedBlocks > 100) {
-      return null;
-    }
-    long cursorBlockId =
-        startingBlockId != null ? startingBlockId : Long.MIN_VALUE;
-    return corruptReplicasMap.keySet()
-        .stream()
-        .filter(r -> {
-          if (blockType == BlockType.STRIPED) {
-            return bim.isStripedBlock(r) && r.getBlockId() >= cursorBlockId;
-          } else {
-            return !bim.isStripedBlock(r) && r.getBlockId() >= cursorBlockId;
-          }
-        })
-        .sorted()
-        .limit(numExpectedBlocks)
-        .mapToLong(Block::getBlockId)
-        .toArray();
-  }
-
-  /**
    * method to get the set of corrupt blocks in corruptReplicasMap.
    * @return Set of Block objects
    */
   Set<Block> getCorruptBlocksSet() {
-    Set<Block> corruptBlocks = new HashSet<Block>();
-    corruptBlocks.addAll(corruptReplicasMap.keySet());
-    return corruptBlocks;
+    return new HashSet<>(corruptReplicasMap.keySet());
   }
 
   /**
@@ -247,7 +198,4 @@ public class CorruptReplicasMap {
     return totalCorruptBlocks.longValue();
   }
 
-  long getCorruptECBlockGroups() {
-    return totalCorruptECBlockGroups.longValue();
-  }
 }

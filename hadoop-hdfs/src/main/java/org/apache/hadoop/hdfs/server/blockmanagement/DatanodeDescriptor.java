@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.net.DFSTopologyNodeImpl;
 import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.CachedBlock;
-import org.apache.hadoop.hdfs.server.protocol.BlockECReconstructionCommand.BlockECReconstructionInfo;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage.State;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
@@ -159,9 +158,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
 
   /** A queue of blocks to be replicated by this datanode */
   private final BlockQueue<BlockTargetPair> replicateBlocks =
-      new BlockQueue<>();
-  /** A queue of blocks to be erasure coded by this datanode */
-  private final BlockQueue<BlockECReconstructionInfo> erasurecodeBlocks =
       new BlockQueue<>();
   /** A queue of blocks to be recovered by this datanode */
   private final BlockQueue<BlockInfo> recoverBlocks = new BlockQueue<>();
@@ -321,7 +317,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
     }
     this.recoverBlocks.clear();
     this.replicateBlocks.clear();
-    this.erasurecodeBlocks.clear();
     // pendingCached, cached, and pendingUncached are protected by the
     // FSN lock.
     this.pendingCached.clear();
@@ -620,20 +615,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
   }
 
   /**
-   * Store block erasure coding work.
-   */
-  void addBlockToBeErasureCoded(ExtendedBlock block,
-                                DatanodeDescriptor[] sources, DatanodeStorageInfo[] targets,
-                                byte[] liveBlockIndices, ErasureCodingPolicy ecPolicy) {
-    assert (block != null && sources != null && sources.length > 0);
-    BlockECReconstructionInfo task = new BlockECReconstructionInfo(block,
-        sources, targets, liveBlockIndices, ecPolicy);
-    erasurecodeBlocks.offer(task);
-    BlockManager.LOG.debug("Adding block reconstruction task " + task + "to "
-        + getName() + ", current queue size is " + erasurecodeBlocks.size());
-  }
-
-  /**
    * Store block recovery work.
    */
   void addBlockToBeRecovered(BlockInfo block) {
@@ -664,14 +645,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return pendingReplicationWithoutTargets + replicateBlocks.size();
   }
 
-  /**
-   * The number of work items that are pending to be reconstructed.
-   */
-  @VisibleForTesting
-  public int getNumberOfBlocksToBeErasureCoded() {
-    return erasurecodeBlocks.size();
-  }
-
   @VisibleForTesting
   public int getNumberOfReplicateBlocks() {
     return replicateBlocks.size();
@@ -679,11 +652,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
 
   List<BlockTargetPair> getReplicationCommand(int maxTransfers) {
     return replicateBlocks.poll(maxTransfers);
-  }
-
-  public List<BlockECReconstructionInfo> getErasureCodeCommand(
-      int maxTransfers) {
-    return erasurecodeBlocks.poll(maxTransfers);
   }
 
   public BlockInfo[] getLeaseRecoveryCommand(int maxTransfers) {
@@ -940,10 +908,6 @@ public class DatanodeDescriptor extends DatanodeInfo {
     int repl = replicateBlocks.size();
     if (repl > 0) {
       sb.append(" ").append(repl).append(" blocks to be replicated;");
-    }
-    int ec = erasurecodeBlocks.size();
-    if (ec > 0) {
-      sb.append(" ").append(ec).append(" blocks to be erasure coded;");
     }
     int inval = invalidateBlocks.size();
     if (inval > 0) {

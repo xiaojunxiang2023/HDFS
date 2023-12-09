@@ -1286,34 +1286,6 @@ public class WebHdfsFileSystem extends FileSystem
     new FsPathRunner(op, null, new ECPolicyParam(policyName)).run();
   }
 
-  public void setErasureCodingPolicy(Path p, String policyName)
-      throws IOException {
-    statistics.incrementWriteOps(1);
-    storageStatistics.incrementOpCounter(OpType.SET_EC_POLICY);
-    final HttpOpParam.Op op = PutOpParam.Op.SETECPOLICY;
-    new FsPathRunner(op, p, new ECPolicyParam(policyName)).run();
-  }
-
-  public void unsetErasureCodingPolicy(Path p) throws IOException {
-    statistics.incrementWriteOps(1);
-    storageStatistics.incrementOpCounter(OpType.UNSET_EC_POLICY);
-    final HttpOpParam.Op op = PostOpParam.Op.UNSETECPOLICY;
-    new FsPathRunner(op, p).run();
-  }
-
-  public ErasureCodingPolicy getErasureCodingPolicy(Path p)
-      throws IOException {
-    statistics.incrementReadOps(1);
-    storageStatistics.incrementOpCounter(OpType.GET_EC_POLICY);
-    final HttpOpParam.Op op = GetOpParam.Op.GETECPOLICY;
-    return new FsPathResponseRunner<ErasureCodingPolicy>(op, p) {
-      @Override
-      ErasureCodingPolicy decodeResponse(Map<?, ?> json) throws IOException {
-        return JsonUtilClient.toECPolicy((Map<?, ?>) json);
-      }
-    }.run();
-  }
-
   @Override
   public Path createSnapshot(final Path path, final String snapshotName)
       throws IOException {
