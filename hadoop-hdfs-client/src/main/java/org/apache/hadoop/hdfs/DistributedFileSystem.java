@@ -33,7 +33,6 @@ import org.apache.hadoop.ipc.RpcNoSuchMethodException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.token.DelegationTokenIssuer;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.ChunkedArrayList;
@@ -1432,7 +1431,7 @@ public class DistributedFileSystem extends FileSystem
     return "DFS[" + dfs + "]";
   }
 
-  
+
   public DFSClient getClient() {
     return dfs;
   }
@@ -3188,7 +3187,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    
+
     String getStoragePolicyName() {
       return storagePolicyName;
     }
@@ -3204,7 +3203,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    
+
     String getEcPolicyName() {
       return ecPolicyName;
     }
@@ -3223,7 +3222,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    
+
     boolean shouldReplicate() {
       return getFlags().contains(CreateFlag.SHOULD_REPLICATE);
     }
@@ -3250,7 +3249,7 @@ public class DistributedFileSystem extends FileSystem
       return this;
     }
 
-    
+
     @Override
     protected EnumSet<CreateFlag> getFlags() {
       return super.getFlags();

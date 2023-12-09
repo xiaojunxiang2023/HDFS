@@ -2,14 +2,15 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.fs.permission.PermissionStatus;
-import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.hdfs.protocol.BlockStoragePolicy;
+import org.apache.hadoop.hdfs.protocol.BlockType;
+import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
 import org.apache.hadoop.hdfs.server.blockmanagement.*;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.*;
 import org.apache.hadoop.hdfs.util.LongBitFormat;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
-import org.apache.hadoop.util.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -519,7 +520,7 @@ public class INodeFile extends INodeWithAdditionalFields
   /**
    * @return The type of the INodeFile based on block id.
    */
-  
+
   @Override
   public BlockType getBlockType() {
     return HeaderFormat.getBlockType(header);
@@ -932,7 +933,7 @@ public class INodeFile extends INodeWithAdditionalFields
     return blocks.length;
   }
 
-  
+
   @Override
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
                                   final int snapshotId) {

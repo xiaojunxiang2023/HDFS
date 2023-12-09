@@ -53,7 +53,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenRenewer;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -137,7 +136,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
   private static volatile boolean disabledStopDeadNodeDetectorThreadForTest =
       false;
 
-  
+
   public static void setDisabledStopDeadNodeDetectorThreadForTest(
       boolean disabledStopDeadNodeDetectorThreadForTest) {
     DFSClient.disabledStopDeadNodeDetectorThreadForTest =
@@ -199,7 +198,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * {@link LossyRetryInvocationHandler} as its RetryInvocationHandler.
    * Otherwise one of nameNodeUri or rpcNamenode must be null.
    */
-  
+
   public DFSClient(URI nameNodeUri, ClientProtocol rpcNamenode,
                    Configuration conf, FileSystem.Statistics stats) throws IOException {
     // Copy only the required DFSClient configuration
@@ -365,7 +364,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     return t > 0 ? HdfsConstants.READ_TIMEOUT_EXTENSION * numNodes + t : 0;
   }
 
-  
+
   public String getClientName() {
     return clientName;
   }
@@ -761,7 +760,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * This is just a wrapper around callGetBlockLocations, but non-static so that
    * we can stub it out for tests.
    */
-  
+
   public LocatedBlocks getLocatedBlocks(String src, long start, long length)
       throws IOException {
     try (TraceScope ignored = newPathTraceScope("getBlockLocations", src)) {
@@ -1710,7 +1709,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     }
   }
 
-  
+
   public DataEncryptionKey getEncryptionKey() {
     return encryptionKey;
   }
@@ -1728,7 +1727,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     }
 
     maker = new FileChecksumHelper.ReplicatedFileChecksumComputer(src, length,
-            blockLocations, namenode, this, combineMode);
+        blockLocations, namenode, this, combineMode);
 
     maker.compute();
 
@@ -2242,7 +2241,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     }
   }
 
-  
+
   ExtendedBlock getPreviousBlock(long fileId) {
     return filesBeingWritten.get(fileId).getBlock();
   }
@@ -2915,7 +2914,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     return clientContext.getKeyProviderCache().get(conf, getKeyProviderUri());
   }
 
-  
+
   public void setKeyProvider(KeyProvider provider) {
     clientContext.getKeyProviderCache().setKeyProvider(conf, provider);
   }
@@ -3051,7 +3050,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
    * @return HA state of NameNode
    * @throws IOException
    */
-  
+
   public HAServiceProtocol.HAServiceState getHAServiceState()
       throws IOException {
     return namenode.getHAServiceState();

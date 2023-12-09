@@ -12,7 +12,6 @@ import org.apache.hadoop.hdfs.server.federation.store.protocol.GetMountTableEntr
 import org.apache.hadoop.hdfs.server.federation.store.protocol.GetMountTableEntriesResponse;
 import org.apache.hadoop.hdfs.server.federation.store.records.MountTable;
 import org.apache.hadoop.hdfs.tools.federation.RouterAdmin;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
@@ -60,7 +59,6 @@ public class MountTableResolver
   private final Lock writeLock = readWriteLock.writeLock();
 
 
-  
   public MountTableResolver(Configuration conf) {
     this(conf, (StateStoreService) null);
   }
@@ -212,7 +210,7 @@ public class MountTableResolver
     return true;
   }
 
-  
+
   public void refreshEntries(final Collection<MountTable> entries) {
     writeLock.lock();
     try {
@@ -487,27 +485,27 @@ public class MountTableResolver
     throw new IOException("localCache is null");
   }
 
-  
+
   public String getDefaultNameService() {
     return defaultNameService;
   }
 
-  
+
   public void setDefaultNameService(String defaultNameService) {
     this.defaultNameService = defaultNameService;
   }
 
-  
+
   public boolean isDefaultNSEnable() {
     return defaultNSEnable;
   }
 
-  
+
   public void setDefaultNSEnable(boolean defaultNSRWEnable) {
     this.defaultNSEnable = defaultNSRWEnable;
   }
 
-  
+
   public void setDisabled(boolean disable) {
     this.disabled = disable;
   }

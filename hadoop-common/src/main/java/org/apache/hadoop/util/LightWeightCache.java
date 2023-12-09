@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
@@ -95,7 +94,7 @@ public class LightWeightCache<K, E extends K> extends LightWeightGSet<K, E> {
         creationExpirationPeriod, accessExpirationPeriod, new Timer());
   }
 
-  
+
   LightWeightCache(final int recommendedLength,
                    final int sizeLimit,
                    final long creationExpirationPeriod,

@@ -7,7 +7,6 @@ import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
 import org.apache.hadoop.hdfs.server.balancer.Matcher;
 import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockMovingInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StringUtils;
@@ -935,7 +934,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     storageMovementsMonitor.notifyReportedBlock(dnInfo, storageType, block);
   }
 
-  
+
   public BlockStorageMovementAttemptedItems getAttemptedItemsMonitor() {
     return storageMovementsMonitor;
   }
@@ -1026,7 +1025,7 @@ public class StoragePolicySatisfier implements SPSService, Runnable {
     return conf;
   }
 
-  
+
   public BlockStorageMovementNeeded getStorageMovementQueue() {
     return storageMovementNeeded;
   }

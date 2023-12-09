@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcResponseHeaderProto.RpcStatusProto;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,8 +72,8 @@ public class CallQueueManager<E extends Schedulable>
         backingClass, maxQueueSize, schedulerClass, clientBackOffEnabled);
   }
 
-  
-    // only!
+
+  // only!
   CallQueueManager(BlockingQueue<E> queue, RpcScheduler scheduler,
                    boolean clientBackOffEnabled, boolean serverFailOverEnabled) {
     this.putRef = new AtomicReference<BlockingQueue<E>>(queue);
@@ -232,7 +231,7 @@ public class CallQueueManager<E extends Schedulable>
     return addInternal(e, true);
   }
 
-  
+
   boolean addInternal(E e, boolean checkBackoff) {
     if (checkBackoff && isClientBackoffEnabled() && shouldBackOff(e)) {
       throwBackoff();

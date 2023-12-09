@@ -5,7 +5,6 @@ import org.apache.hadoop.auth.util.AuthenticationHandlerUtil;
 import org.apache.hadoop.auth.util.HttpConstants;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +96,7 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
    * @param enableStartTls true If the StartTLS LDAP extension is to be enabled
    *          false otherwise
    */
-  
+
   public void setEnableStartTls(Boolean enableStartTls) {
     this.enableStartTls = enableStartTls;
   }
@@ -109,7 +108,7 @@ public class LdapAuthenticationHandler implements AuthenticationHandler {
    * @param disableHostNameVerification true to disable host-name verification
    *          false otherwise
    */
-  
+
   public void setDisableHostNameVerification(
       Boolean disableHostNameVerification) {
     this.disableHostNameVerification = disableHostNameVerification;

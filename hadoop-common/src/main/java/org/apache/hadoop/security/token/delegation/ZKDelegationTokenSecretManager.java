@@ -21,7 +21,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.web.DelegationTokenManager;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -930,19 +929,19 @@ public abstract class ZKDelegationTokenSecretManager<TokenIdent extends Abstract
     }
   }
 
-  
+
   @Private
   @Unstable
   static String getNodePath(String root, String nodeName) {
     return (root + "/" + nodeName);
   }
 
-  
+
   public ExecutorService getListenerThreadPool() {
     return listenerThreadPool;
   }
 
-  
+
   DelegationTokenInformation getTokenInfoFromMemory(TokenIdent ident) {
     return currentTokens.get(ident);
   }

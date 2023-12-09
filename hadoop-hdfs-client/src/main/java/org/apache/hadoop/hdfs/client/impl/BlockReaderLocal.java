@@ -12,7 +12,6 @@ import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.server.datanode.CachingStrategy;
 import org.apache.hadoop.hdfs.shortcircuit.ClientMmap;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitReplica;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.DirectBufferPool;
@@ -677,12 +676,12 @@ class BlockReaderLocal implements BlockReader {
     return clientMmap;
   }
 
-  
+
   boolean getVerifyChecksum() {
     return this.verifyChecksum;
   }
 
-  
+
   int getMaxReadaheadLength() {
     return this.maxReadaheadLength;
   }
@@ -691,7 +690,7 @@ class BlockReaderLocal implements BlockReader {
    * Make the replica anchorable.  Normally this can only be done by the
    * DataNode.  This method is only for testing.
    */
-  
+
   void forceAnchorable() {
     replica.getSlot().makeAnchorable();
   }
@@ -700,7 +699,7 @@ class BlockReaderLocal implements BlockReader {
    * Make the replica unanchorable.  Normally this can only be done by the
    * DataNode.  This method is only for testing.
    */
-  
+
   void forceUnanchorable() {
     replica.getSlot().makeUnanchorable();
   }

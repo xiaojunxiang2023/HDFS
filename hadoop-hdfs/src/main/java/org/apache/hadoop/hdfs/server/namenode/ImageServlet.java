@@ -21,7 +21,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ServletUtil;
 import org.apache.hadoop.util.StringUtils;
@@ -83,7 +82,7 @@ public class ImageServlet extends HttpServlet {
    */
   private static double recentImageCheckTimePrecision = 0.75;
 
-  
+
   static void setRecentImageCheckTimePrecision(double ratio) {
     recentImageCheckTimePrecision = ratio;
   }
@@ -266,7 +265,7 @@ public class ImageServlet extends HttpServlet {
     return throttler;
   }
 
-  
+
   static boolean isValidRequestor(ServletContext context, String remoteUser,
                                   Configuration conf) throws IOException {
     if (remoteUser == null) { // This really shouldn't happen...

@@ -1,7 +1,6 @@
 package org.apache.hadoop.net.unix;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.CloseableReferenceCount;
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
@@ -75,7 +74,7 @@ public class DomainSocket implements Closeable {
    * @param skipComponents   the number of starting path components to skip 
    *                         validation for (used only for testing)
    */
-  
+
   native static void validateSocketPathSecurity0(String path,
                                                  int skipComponents) throws IOException;
 
@@ -89,7 +88,7 @@ public class DomainSocket implements Closeable {
   /**
    * Disable validation of the server bind paths.
    */
-  
+
   public static void disableBindPathValidation() {
     validateBindPaths = false;
   }

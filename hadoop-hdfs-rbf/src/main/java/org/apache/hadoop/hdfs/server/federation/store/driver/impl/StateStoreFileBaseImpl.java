@@ -7,7 +7,6 @@ import org.apache.hadoop.hdfs.server.federation.store.driver.StateStoreDriver;
 import org.apache.hadoop.hdfs.server.federation.store.records.BaseRecord;
 import org.apache.hadoop.hdfs.server.federation.store.records.Query;
 import org.apache.hadoop.hdfs.server.federation.store.records.QueryResult;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,7 +216,7 @@ public abstract class StateStoreFileBaseImpl
    * @param pathRecord Path for the record to check.
    * @return If the record is temporary and old.
    */
-  
+
   public static boolean isOldTempRecord(final String pathRecord) {
     if (!pathRecord.endsWith(TMP_MARK)) {
       return false;

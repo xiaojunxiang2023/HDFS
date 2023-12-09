@@ -2,7 +2,6 @@ package org.apache.hadoop.security.alias;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.tools.CommandShell;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -26,7 +25,7 @@ public class CredentialShell extends CommandShell {
           "   [" + DeleteCommand.USAGE + "]\n" +
           "   [" + ListCommand.USAGE + "]\n" +
           "   [" + CheckCommand.USAGE + "]\n";
-  
+
   public static final String NO_VALID_PROVIDERS =
       "There are no valid (non-transient) providers configured.\n" +
           "No action has been taken. Use the -provider option to specify\n" +

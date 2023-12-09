@@ -10,7 +10,6 @@ import org.apache.hadoop.io.WritableUtils;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.*;
 import java.util.Arrays;
@@ -211,7 +210,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     }
   }
 
-  
+
   void readFieldsLegacy(DataInput in) throws IOException {
     expiryDate = WritableUtils.readVLong(in);
     keyId = WritableUtils.readVInt(in);
@@ -254,7 +253,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     useProto = false;
   }
 
-  
+
   void readFieldsProtobuf(DataInput in) throws IOException {
     BlockTokenSecretProto blockTokenSecretProto =
         BlockTokenSecretProto.parseFrom((DataInputStream) in);
@@ -300,7 +299,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     }
   }
 
-  
+
   void writeLegacy(DataOutput out) throws IOException {
     WritableUtils.writeVLong(out, expiryDate);
     WritableUtils.writeVInt(out, keyId);
@@ -329,7 +328,7 @@ public class BlockTokenIdentifier extends TokenIdentifier {
     }
   }
 
-  
+
   void writeProtobuf(DataOutput out) throws IOException {
     BlockTokenSecretProto secret = PBHelperClient.convert(this);
     out.write(secret.toByteArray());

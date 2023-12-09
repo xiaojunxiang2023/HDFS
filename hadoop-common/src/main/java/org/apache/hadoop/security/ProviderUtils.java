@@ -7,7 +7,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.alias.CredentialProviderFactory;
 import org.apache.hadoop.security.alias.JavaKeyStoreProvider;
 import org.apache.hadoop.security.alias.LocalJavaKeyStoreProvider;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,19 +22,19 @@ import java.nio.charset.Charset;
  *
  */
 public final class ProviderUtils {
-  
+
   public static final String NO_PASSWORD_WARN =
       "WARNING: You have accepted the use of the default provider password\n" +
           "by not configuring a password in one of the two following locations:\n";
-  
+
   public static final String NO_PASSWORD_ERROR =
       "ERROR: The provider cannot find a password in the expected " +
           "locations.\nPlease supply a password using one of the " +
           "following two mechanisms:\n";
-  
+
   public static final String NO_PASSWORD_CONT =
       "Continuing with the default provider password.\n";
-  
+
   public static final String NO_PASSWORD_INSTRUCTIONS_DOC =
       "Please review the documentation regarding provider passwords in\n" +
           "the keystore passwords section of the Credential Provider API\n";

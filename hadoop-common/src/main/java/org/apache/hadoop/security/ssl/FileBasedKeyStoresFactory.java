@@ -1,7 +1,6 @@
 package org.apache.hadoop.security.ssl;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,7 +191,7 @@ public class FileBasedKeyStoresFactory implements KeyStoresFactory {
    * @param template property name template.
    * @return the resolved property name.
    */
-  
+
   public static String resolvePropertyName(SSLFactory.Mode mode,
                                            String template) {
     return MessageFormat.format(

@@ -5,7 +5,6 @@ import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.io.compress.Compressor;
 import org.apache.hadoop.io.compress.ZStandardCodec;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,7 @@ public class ZStandardCompressor implements Compressor {
     return getStreamSize();
   }
 
-  
+
   ZStandardCompressor() {
     this(CommonConfigurationKeys.IO_COMPRESSION_CODEC_ZSTD_LEVEL_DEFAULT,
         CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_DEFAULT);
@@ -71,7 +70,7 @@ public class ZStandardCompressor implements Compressor {
     this(level, bufferSize, bufferSize);
   }
 
-  
+
   ZStandardCompressor(int level, int inputBufferSize, int outputBufferSize) {
     this.level = level;
     stream = create();

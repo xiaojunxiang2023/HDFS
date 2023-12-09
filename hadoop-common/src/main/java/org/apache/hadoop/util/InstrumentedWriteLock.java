@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -22,7 +21,7 @@ public class InstrumentedWriteLock extends InstrumentedLock {
         new Timer());
   }
 
-  
+
   InstrumentedWriteLock(String name, Logger logger,
                         ReentrantReadWriteLock readWriteLock,
                         long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {

@@ -3,7 +3,6 @@ package org.apache.hadoop.metrics2.lib;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.impl.MetricsSystemImpl;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import javax.management.ObjectName;
 import java.util.concurrent.atomic.AtomicReference;
@@ -20,7 +19,7 @@ public enum DefaultMetricsSystem {
   private AtomicReference<MetricsSystem> impl =
       new AtomicReference<MetricsSystem>(new MetricsSystemImpl());
 
-  
+
   volatile boolean miniClusterMode = false;
 
   transient final UniqueNames mBeanNames = new UniqueNames();
@@ -73,12 +72,12 @@ public enum DefaultMetricsSystem {
     return impl.get();
   }
 
-  
+
   public static void setMiniClusterMode(boolean choice) {
     INSTANCE.miniClusterMode = choice;
   }
 
-  
+
   public static boolean inMiniClusterMode() {
     return INSTANCE.miniClusterMode;
   }

@@ -29,7 +29,6 @@ import org.apache.hadoop.io.retry.RetryPolicy;
 import org.apache.hadoop.io.retry.RetryPolicy.RetryAction;
 import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.Client.ConnectionId;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ObserverReadProxyProvider<T>
     extends AbstractNNFailoverProxyProvider<T> {
-  
+
   static final Logger LOG = LoggerFactory.getLogger(
       ObserverReadProxyProvider.class);
 
@@ -240,12 +239,12 @@ public class ObserverReadProxyProvider<T>
     return !method.getAnnotationsByType(ReadOnly.class)[0].activeOnly();
   }
 
-  
+
   void setObserverReadEnabled(boolean flag) {
     this.observerReadEnabled = flag;
   }
 
-  
+
   ProxyInfo<T> getLastProxy() {
     return lastProxy;
   }

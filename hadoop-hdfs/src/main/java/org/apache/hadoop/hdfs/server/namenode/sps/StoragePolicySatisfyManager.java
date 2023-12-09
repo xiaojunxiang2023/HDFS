@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.protocol.HdfsConstants.StoragePolicySatisfierMode;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 import org.apache.hadoop.hdfs.server.sps.ExternalStoragePolicySatisfier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,7 +189,7 @@ public class StoragePolicySatisfyManager {
    * @return true if the internal storage policy satisfier daemon is running,
    *         false otherwise.
    */
-  
+
   public boolean isSatisfierRunning() {
     return spsService.isRunning();
   }

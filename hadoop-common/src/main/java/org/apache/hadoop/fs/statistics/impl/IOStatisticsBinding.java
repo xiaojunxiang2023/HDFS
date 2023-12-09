@@ -2,7 +2,6 @@ package org.apache.hadoop.fs.statistics.impl;
 
 import org.apache.hadoop.fs.StorageStatistics;
 import org.apache.hadoop.fs.statistics.*;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.functional.CallableRaisingIOE;
 import org.apache.hadoop.util.functional.ConsumerRaisingIOE;
 import org.apache.hadoop.util.functional.FunctionRaisingIOE;
@@ -32,7 +31,7 @@ public final class IOStatisticsBinding {
   public static final String ENTRY_PATTERN = "(%s=%s)";
 
   /** String to return when a source is null. */
-  
+
   public static final String NULL_SOURCE = "()";
 
   private IOStatisticsBinding() {

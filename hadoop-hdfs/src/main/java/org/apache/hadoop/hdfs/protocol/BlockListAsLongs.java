@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.protocol;
 import org.apache.hadoop.hdfs.protocol.BlockListAsLongs.BlockReportReplica;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.Replica;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.thirdparty.protobuf.CodedInputStream;
@@ -61,7 +60,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @param blocksBufs - list of ByteString encoded varints
    * @return BlockListAsLongs
    */
-  
+
   public static BlockListAsLongs decodeBuffers(final int numBlocks,
                                                final List<ByteString> blocksBufs) {
     return decodeBuffers(numBlocks, blocksBufs,
@@ -113,7 +112,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
    * @param replicas - replicas to encode
    * @return BlockListAsLongs
    */
-  
+
   public static BlockListAsLongs encode(
       final Collection<? extends Replica> replicas) {
     BlockListAsLongs.Builder builder = builder(IPC_MAXIMUM_DATA_LENGTH_DEFAULT);
@@ -161,7 +160,7 @@ public abstract class BlockListAsLongs implements Iterable<BlockReportReplica> {
     cos.flush();
   }
 
-  
+
   public static Builder builder() {
     return builder(IPC_MAXIMUM_DATA_LENGTH_DEFAULT);
   }

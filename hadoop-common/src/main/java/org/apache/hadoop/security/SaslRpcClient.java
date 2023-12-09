@@ -22,7 +22,6 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.TokenInfo;
 import org.apache.hadoop.security.token.TokenSelector;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.util.ProtoUtil;
 import org.slf4j.Logger;
@@ -85,7 +84,7 @@ public class SaslRpcClient {
     this.saslPropsResolver = SaslPropertiesResolver.getInstance(conf);
   }
 
-  
+
   public Object getNegotiatedProperty(String key) {
     return (saslClient != null) ? saslClient.getNegotiatedProperty(key) : null;
   }
@@ -255,7 +254,7 @@ public class SaslRpcClient {
    * @return String of the server's principal
    * @throws IOException - error determining configured principal
    */
-  
+
   String getServerPrincipal(SaslAuth authType) throws IOException {
     KerberosInfo krbInfo = SecurityUtil.getKerberosInfo(protocol, conf);
     LOG.debug("Get kerberos info proto:" + protocol + " info:" + krbInfo);

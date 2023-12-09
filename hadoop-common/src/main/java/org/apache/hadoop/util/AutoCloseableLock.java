@@ -1,7 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -111,7 +109,7 @@ public class AutoCloseableLock implements AutoCloseable {
    * @return {@code true} if any thread holds this lock and
    *         {@code false} otherwise
    */
-  
+
   boolean isLocked() {
     if (lock instanceof ReentrantLock) {
       return ((ReentrantLock) lock).isLocked();

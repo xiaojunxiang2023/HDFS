@@ -9,7 +9,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.LengthInputStream;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.FsDatasetUtil;
 import org.apache.hadoop.hdfs.server.protocol.ReplicaRecoveryInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,12 +133,12 @@ public abstract class ProvidedReplica extends ReplicaInfo {
     return getRemoteURI();
   }
 
-  
+
   public String getPathSuffix() {
     return pathSuffix;
   }
 
-  
+
   public Path getPathPrefix() {
     return pathPrefix;
   }
@@ -318,7 +317,7 @@ public abstract class ProvidedReplica extends ReplicaInfo {
         "ProvidedReplica does not yet support copy data");
   }
 
-  
+
   public void setPathHandle(PathHandle pathHandle) {
     this.pathHandle = pathHandle;
   }

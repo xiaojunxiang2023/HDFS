@@ -6,7 +6,6 @@ import org.apache.hadoop.log.metrics.EventCounter;
 import org.apache.hadoop.metrics2.*;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.Interns;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.GcTimeMonitor;
 import org.apache.hadoop.util.JvmPauseMonitor;
@@ -43,7 +42,7 @@ public class JvmMetrics implements MetricsSource {
     }
   }
 
-  
+
   public synchronized void registerIfNeeded() {
     // during tests impl might exist, but is not registered
     MetricsSystem ms = DefaultMetricsSystem.instance();
@@ -65,7 +64,7 @@ public class JvmMetrics implements MetricsSource {
       new ConcurrentHashMap<String, MetricsInfo[]>();
   private GcTimeMonitor gcTimeMonitor = null;
 
-  
+
   JvmMetrics(String processName, String sessionId, boolean useThreadMXBean) {
     this.processName = processName;
     this.sessionId = sessionId;

@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.beans.ConstructorProperties;
 
@@ -18,7 +17,7 @@ public class StorageTypeStats {
   private int nodesInService = 0;
   private StorageType storageType;
 
-  
+
   void setDataNodesInServiceXceiverCount(int avgXceiverPerDatanode,
                                          int numNodesInService) {
     this.nodesInService = numNodesInService;

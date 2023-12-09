@@ -4,7 +4,6 @@ import org.apache.hadoop.io.retry.FailoverProxyProvider.ProxyInfo;
 import org.apache.hadoop.io.retry.RetryPolicy.RetryAction;
 import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.Client.ConnectionId;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -408,7 +407,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     }
   }
 
-  
+
   static boolean isRpcInvocation(Object proxy) {
     if (proxy instanceof ProtocolTranslator) {
       proxy = ((ProtocolTranslator) proxy).getUnderlyingProxyObject();
@@ -430,7 +429,7 @@ public class RetryInvocationHandler<T> implements RpcInvocationHandler {
     return RPC.getConnectionIdForProxy(proxyDescriptor.getProxy());
   }
 
-  
+
   public FailoverProxyProvider<T> getProxyProvider() {
     return proxyDescriptor.fpp;
   }

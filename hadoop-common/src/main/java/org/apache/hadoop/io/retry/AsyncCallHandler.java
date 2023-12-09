@@ -1,7 +1,6 @@
 package org.apache.hadoop.io.retry;
 
 import org.apache.hadoop.ipc.Client;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.Time;
@@ -323,7 +322,7 @@ public class AsyncCallHandler {
     ASYNC_RETURN.set(asyncGet);
   }
 
-  
+
   public static long getGracePeriod() {
     return AsyncCallQueue.Processor.GRACE_PERIOD;
   }

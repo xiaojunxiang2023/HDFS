@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.apache.hadoop.hdfs.protocol.proto.AliasMapProtocolProtos.*;
 import static org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap.IterationResult;
 
 /**

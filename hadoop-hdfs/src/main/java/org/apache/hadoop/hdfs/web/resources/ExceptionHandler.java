@@ -7,7 +7,6 @@ import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.security.authorize.AuthorizationException;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +98,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
     return Response.status(s).type(MediaType.APPLICATION_JSON).entity(js).build();
   }
 
-  
+
   public void initResponse(HttpServletResponse response) {
     this.response = response;
   }

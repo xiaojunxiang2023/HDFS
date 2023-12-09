@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.protocol.OpenFileEntry;
 import org.apache.hadoop.hdfs.protocol.OpenFilesIterator;
 import org.apache.hadoop.hdfs.server.blockmanagement.BlockInfo;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.Daemon;
@@ -145,7 +144,7 @@ public class LeaseManager {
    *
    * @return Set<INodesInPath>
    */
-  
+
   Set<INodesInPath> getINodeWithLeases() throws IOException {
     return getINodeWithLeases(null);
   }
@@ -307,7 +306,7 @@ public class LeaseManager {
   }
 
   /** @return the number of leases currently in the system */
-  
+
   public synchronized int countLease() {
     return leases.size();
   }
@@ -473,7 +472,7 @@ public class LeaseManager {
       return holder;
     }
 
-    
+
     long getLastUpdate() {
       return lastUpdate;
     }
@@ -541,7 +540,7 @@ public class LeaseManager {
   /** Check the leases beginning from the oldest.
    *  @return true is sync is needed.
    */
-  
+
   synchronized boolean checkLeases() {
     return checkLeases(getExpiredCandidateLeases());
   }
@@ -663,14 +662,14 @@ public class LeaseManager {
    * Trigger the currently-running Lease monitor to re-check
    * its leases immediately. This is for use by unit tests.
    */
-  
+
   public void triggerMonitorCheckNow() {
     Preconditions.checkState(lmthread != null,
         "Lease monitor is not running");
     lmthread.interrupt();
   }
 
-  
+
   public void runLeaseChecks() {
     checkLeases();
   }

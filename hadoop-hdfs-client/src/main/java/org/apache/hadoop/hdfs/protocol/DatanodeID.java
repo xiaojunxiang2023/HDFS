@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.protocol;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 
 import java.net.InetSocketAddress;
@@ -45,7 +44,7 @@ public class DatanodeID implements Comparable<DatanodeID> {
     this(from.getDatanodeUuid(), from);
   }
 
-  
+
   public DatanodeID(String datanodeUuid, DatanodeID from) {
     this(from.getIpAddr(),
         from.getIpAddrBytes(),

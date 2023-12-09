@@ -15,7 +15,6 @@ import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
 import org.apache.hadoop.hdfs.web.URLConnectionFactory;
 import org.apache.hadoop.log.LogThrottlingHelper;
 import org.apache.hadoop.log.LogThrottlingHelper.LogAction;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -81,7 +80,7 @@ public class QuorumJournalManager implements JournalManager {
   private final LogThrottlingHelper selectInputStreamLogHelper =
       new LogThrottlingHelper(SELECT_INPUT_STREAM_LOG_INTERVAL_MS);
 
-  
+
   public QuorumJournalManager(Configuration conf,
                               URI uri,
                               NamespaceInfo nsInfo) throws IOException {
@@ -93,7 +92,7 @@ public class QuorumJournalManager implements JournalManager {
     this(conf, uri, nsInfo, nameServiceId, IPCLoggerChannel.FACTORY);
   }
 
-  
+
   QuorumJournalManager(Configuration conf,
                        URI uri, NamespaceInfo nsInfo,
                        AsyncLogger.Factory loggerFactory) throws IOException {
@@ -631,7 +630,7 @@ public class QuorumJournalManager implements JournalManager {
     return "QJM to " + loggers;
   }
 
-  
+
   AsyncLoggerSet getLoggerSetForTests() {
     return loggers;
   }

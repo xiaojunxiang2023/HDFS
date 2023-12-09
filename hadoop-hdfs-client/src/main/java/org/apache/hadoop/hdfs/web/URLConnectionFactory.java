@@ -6,7 +6,6 @@ import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.web.oauth2.OAuth2ConnectionConfigurator;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +118,7 @@ public class URLConnectionFactory {
     return new URLConnectionFactory(conn);
   }
 
-  
+
   URLConnectionFactory(ConnectionConfigurator connConfigurator) {
     this.connConfigurator = connConfigurator;
   }

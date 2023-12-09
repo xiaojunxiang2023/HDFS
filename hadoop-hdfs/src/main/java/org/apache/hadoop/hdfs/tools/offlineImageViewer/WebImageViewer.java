@@ -17,7 +17,6 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +83,7 @@ public class WebImageViewer implements Closeable {
    * @param fsimage the fsimage to load.
    * @throws IOException if fail to load the fsimage.
    */
-  
+
   public void initServer(String fsimage)
       throws IOException, InterruptedException {
     final FSImageLoader loader = FSImageLoader.load(fsimage);
@@ -111,7 +110,7 @@ public class WebImageViewer implements Closeable {
    * Get the listening port.
    * @return the port WebImageViewer is listening on
    */
-  
+
   public int getPort() {
     return address.getPort();
   }

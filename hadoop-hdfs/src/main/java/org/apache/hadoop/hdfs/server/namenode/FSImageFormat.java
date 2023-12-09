@@ -32,7 +32,6 @@ import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
@@ -1007,7 +1006,7 @@ public class FSImageFormat {
     }
   }
 
-  
+
   public static final TreeMap<String, String> renameReservedMap =
       new TreeMap<String, String>();
 
@@ -1015,7 +1014,7 @@ public class FSImageFormat {
    * Use the default key-value pairs that will be used to determine how to
    * rename reserved paths on upgrade.
    */
-  
+
   public static void useDefaultRenameReservedPairs() {
     renameReservedMap.clear();
     for (String key : HdfsServerConstants.RESERVED_PATH_COMPONENTS) {
@@ -1030,7 +1029,7 @@ public class FSImageFormat {
    * Set the key-value pairs that will be used to determine how to rename
    * reserved paths on upgrade.
    */
-  
+
   public static void setRenameReservedPairs(String renameReserved) {
     // Clear and set the default values
     useDefaultRenameReservedPairs();

@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.protocol;
 
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.Block;
-import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 /**
  * Maintains an array of blocks and their corresponding storage IDs.

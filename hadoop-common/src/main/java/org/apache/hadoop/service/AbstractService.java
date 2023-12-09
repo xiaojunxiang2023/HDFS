@@ -3,7 +3,6 @@ package org.apache.hadoop.service;
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.classification.InterfaceStability.Evolving;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -362,7 +361,7 @@ public abstract class AbstractService implements Service {
   /**
    * Package-scoped method for testing -resets the global listener list
    */
-  
+
   static void resetGlobalListeners() {
     globalListeners.reset();
   }

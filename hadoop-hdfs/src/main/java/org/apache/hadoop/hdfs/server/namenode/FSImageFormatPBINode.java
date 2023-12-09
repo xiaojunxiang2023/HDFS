@@ -502,7 +502,7 @@ public final class FSImageFormatPBINode {
       final INodeFile file = new INodeFile(n.getId(),
           n.getName().toByteArray(), permissions, f.getModificationTime(),
           f.getAccessTime(), blocks, replication, null,
-          f.getPreferredBlockSize(), (byte)f.getStoragePolicyID(), blockType);
+          f.getPreferredBlockSize(), (byte) f.getStoragePolicyID(), blockType);
 
       if (f.hasAcl()) {
         int[] entries = AclEntryStatusFormat.toInt(loadAclEntries(

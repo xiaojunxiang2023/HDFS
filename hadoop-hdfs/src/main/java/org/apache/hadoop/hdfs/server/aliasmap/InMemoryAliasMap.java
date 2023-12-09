@@ -33,7 +33,6 @@ import org.apache.hadoop.hdfs.server.namenode.ImageServlet;
 import org.apache.hadoop.hdfs.server.namenode.TransferFsImage;
 import org.apache.hadoop.hdfs.util.DataTransferThrottler;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.protobuf.InvalidProtocolBufferException;
 import org.fusesource.leveldbjni.JniDBFactory;
@@ -67,7 +66,7 @@ public class InMemoryAliasMap implements InMemoryAliasMapProtocol,
   private Configuration conf;
   private String blockPoolID;
 
-  
+
   InMemoryAliasMap(URI aliasMapURI, DB levelDb, String blockPoolID) {
     this.aliasMapURI = aliasMapURI;
     this.levelDb = levelDb;

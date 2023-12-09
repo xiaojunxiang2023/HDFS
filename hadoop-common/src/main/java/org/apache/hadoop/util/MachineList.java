@@ -1,7 +1,6 @@
 package org.apache.hadoop.util;
 
 import org.apache.commons.net.util.SubnetUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,7 +168,7 @@ public class MachineList {
    *
    * @return contents of the MachineList.
    */
-  
+
   public Collection<String> getCollection() {
     return entries;
   }

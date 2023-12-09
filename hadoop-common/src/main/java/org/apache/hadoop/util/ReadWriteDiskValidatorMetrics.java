@@ -4,7 +4,6 @@ import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.lib.*;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -135,7 +134,7 @@ public class ReadWriteDiskValidatorMetrics {
    *
    * @return {@link MutableQuantiles} metrics for the file read time
    */
-  
+
   protected MutableQuantiles[] getFileReadQuantiles() {
     return fileReadQuantiles;
   }
@@ -145,7 +144,7 @@ public class ReadWriteDiskValidatorMetrics {
    *
    * @return {@link MutableQuantiles} metrics for the file write time
    */
-  
+
   protected MutableQuantiles[] getFileWriteQuantiles() {
     return fileWriteQuantiles;
   }

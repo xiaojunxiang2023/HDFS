@@ -20,7 +20,6 @@ import org.apache.hadoop.hdfs.server.common.JspHelper;
 import org.apache.hadoop.ipc.Client;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
@@ -40,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataNodeUGIProvider {
   public static final Logger LOG = LoggerFactory.getLogger(Client.class);
-  
+
   static Cache<String, UserGroupInformation> ugiCache;
   private final ParameterParser params;
 
@@ -60,7 +59,7 @@ public class DataNodeUGIProvider {
     }
   }
 
-  
+
   void clearCache() throws IOException {
     if (UserGroupInformation.isSecurityEnabled()) {
       params.delegationToken().decodeIdentifier().clearCache();

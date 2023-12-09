@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.PrintStream;
@@ -338,7 +337,7 @@ public class LightWeightGSet<K, E extends K> implements GSet<K, E> {
         mapName);
   }
 
-  
+
   static int computeCapacity(long maxMemory, double percentage,
                              String mapName) {
     if (percentage > 100.0 || percentage < 0.0) {

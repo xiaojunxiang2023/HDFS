@@ -13,7 +13,6 @@ import org.apache.hadoop.hdfs.server.common.blockaliasmap.BlockAliasMap;
 import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +32,7 @@ public class TextFileRegionAliasMap
   private ReaderOptions readerOpts = TextReader.defaults();
   private WriterOptions writerOpts = TextWriter.defaults();
 
-  
+
   public static String blockPoolIDFromFileName(Path file) {
     if (file == null) {
       return "";
@@ -42,7 +41,7 @@ public class TextFileRegionAliasMap
     return fileName.substring("blocks_".length()).split("\\.")[0];
   }
 
-  
+
   public static String fileNameFromBlockPoolID(String blockPoolID) {
     return "blocks_" + blockPoolID + ".csv";
   }
@@ -75,7 +74,7 @@ public class TextFileRegionAliasMap
     return createReader(o.file, o.delim, readerConf, blockPoolID);
   }
 
-  
+
   TextReader createReader(Path file, String delim, Configuration cfg,
                           String blockPoolID) throws IOException {
     FileSystem fs = file.getFileSystem(cfg);
@@ -116,7 +115,7 @@ public class TextFileRegionAliasMap
     return createWriter(blocksFile, null, o.delim, conf);
   }
 
-  
+
   TextWriter createWriter(Path file, CompressionCodec codec, String delim,
                           Configuration cfg) throws IOException {
     FileSystem fs = file.getFileSystem(cfg);

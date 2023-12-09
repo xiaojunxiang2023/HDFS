@@ -15,7 +15,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.ReplicaInputStreams;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.RamDiskReplicaTracker.RamDiskReplica;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MultipleIOException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.DataChecksum.Type;
 import org.apache.hadoop.util.DiskChecker;
@@ -40,7 +39,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * This class is synchronized by {@link FsVolumeImpl}.
  */
 class BlockPoolSlice {
-  
+
   public static final String DU_CACHE_FILE = "dfsUsed";
   static final Logger LOG = LoggerFactory.getLogger(BlockPoolSlice.class);
   private static final int SHUTDOWN_HOOK_PRIORITY = 30;
@@ -194,7 +193,7 @@ class BlockPoolSlice {
     }
   }
 
-  
+
   static ReplicaInfo selectReplicaToDelete(final ReplicaInfo replica1,
                                            final ReplicaInfo replica2) {
     ReplicaInfo replicaToKeep;
@@ -230,12 +229,12 @@ class BlockPoolSlice {
   /**
    * Return the size of fork pool used for adding replica in map.
    */
-  
+
   public static int getAddReplicaForkPoolSize() {
     return addReplicaThreadPool.getPoolSize();
   }
 
-  
+
   public static void reInitializeAddReplicaThreadPool() {
     addReplicaThreadPool.shutdown();
     addReplicaThreadPool = null;
@@ -986,7 +985,7 @@ class BlockPoolSlice {
     return numOfBlocks.get();
   }
 
-  
+
   public ForkJoinPool getAddReplicaThreadPool() {
     return addReplicaThreadPool;
   }

@@ -1,6 +1,5 @@
 package org.apache.hadoop.security.ssl;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,7 @@ public class FileMonitoringTimerTask extends TimerTask {
 
   static final Logger LOG = LoggerFactory.getLogger(FileMonitoringTimerTask.class);
 
-  
+
   static final String PROCESS_ERROR_MESSAGE =
       "Could not process file change : ";
 

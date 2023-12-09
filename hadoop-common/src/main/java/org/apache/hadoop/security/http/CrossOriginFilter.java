@@ -1,7 +1,6 @@
 package org.apache.hadoop.security.http;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,12 +126,12 @@ public class CrossOriginFilter implements Filter {
     res.setHeader(ACCESS_CONTROL_MAX_AGE, maxAge);
   }
 
-  
+
   String getAllowedHeadersHeader() {
     return StringUtils.join(allowedHeaders, ',');
   }
 
-  
+
   String getAllowedMethodsHeader() {
     return StringUtils.join(allowedMethods, ',');
   }
@@ -201,7 +200,7 @@ public class CrossOriginFilter implements Filter {
     return originsList != null;
   }
 
-  
+
   boolean areOriginsAllowed(String originsList) {
     if (allowAllOrigins) {
       return true;

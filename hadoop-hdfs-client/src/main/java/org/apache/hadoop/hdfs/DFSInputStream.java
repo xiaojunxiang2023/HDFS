@@ -20,7 +20,6 @@ import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.IdentityHashStore;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.StringUtils;
@@ -47,7 +46,7 @@ public class DFSInputStream extends FSInputStream
     implements ByteBufferReadable, CanSetDropBehind, CanSetReadahead,
     HasEnhancedByteBufferAccess, CanUnbuffer, StreamCapabilities,
     ByteBufferPositionedReadable {
-  
+
   public static boolean tcpReadsDisabledForTesting = false;
   private long hedgedReadOpsLoopNumForTesting = 0;
   protected final DFSClient dfsClient;
@@ -162,17 +161,17 @@ public class DFSInputStream extends FSInputStream
     openInfo(false);
   }
 
-  
+
   long getlastBlockBeingWrittenLengthForTesting() {
     return lastBlockBeingWrittenLength;
   }
 
-  
+
   boolean deadNodesContain(DatanodeInfo nodeInfo) {
     return deadNodes.containsKey(nodeInfo);
   }
 
-  
+
   void setReadTimeStampsForTesting(long timeStamp) {
     setLocatedBlocksTimeStamp(timeStamp);
   }
@@ -1329,7 +1328,7 @@ public class DFSInputStream extends FSInputStream
     }
   }
 
-  
+
   public long getHedgedReadOpsLoopNumForTesting() {
     return hedgedReadOpsLoopNumForTesting;
   }

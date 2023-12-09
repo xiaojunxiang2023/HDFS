@@ -7,7 +7,6 @@ import org.apache.hadoop.auth.util.AuthToken;
 import org.apache.hadoop.auth.util.HttpConstants;
 import org.apache.hadoop.auth.util.KerberosUtil;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.GSSName;
@@ -209,7 +208,7 @@ public class KerberosAuthenticator implements Authenticator {
     }
   }
 
-  
+
   static <T extends Exception> T wrapExceptionWithMessage(
       T exception, String msg) {
     Class<? extends Throwable> exceptionClass = exception.getClass();

@@ -22,7 +22,6 @@ import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.util.DataChecksum;
@@ -63,9 +62,9 @@ public class DFSOutputStream extends FSOutputSummer
    * Number of times to retry creating a file when there are transient
    * errors (typically related to encryption zones and KeyProvider operations).
    */
-  
+
   static final int CREATE_RETRY_COUNT = 10;
-  
+
   static CryptoProtocolVersion[] SUPPORTED_CRYPTO_VERSIONS =
       CryptoProtocolVersion.supported();
 
@@ -122,7 +121,7 @@ public class DFSOutputStream extends FSOutputSummer
   //
   // returns the list of targets, if any, that is being currently used.
   //
-  
+
   public synchronized DatanodeInfo[] getPipeline() {
     if (getStreamer().streamerClosed()) {
       return null;
@@ -486,7 +485,7 @@ public class DFSOutputStream extends FSOutputSummer
   /**
    * Used in test only.
    */
-  
+
   void setAppendChunk(final boolean appendChunk) {
     getStreamer().setAppendChunk(appendChunk);
   }
@@ -494,7 +493,7 @@ public class DFSOutputStream extends FSOutputSummer
   /**
    * Used in test only.
    */
-  
+
   void setBytesCurBlock(final long bytesCurBlock) {
     getStreamer().setBytesCurBlock(bytesCurBlock);
   }
@@ -937,12 +936,12 @@ public class DFSOutputStream extends FSOutputSummer
     }
   }
 
-  
+
   public void setArtificialSlowdown(long period) {
     getStreamer().setArtificialSlowdown(period);
   }
 
-  
+
   public synchronized void setChunksPerPacket(int value) {
     chunksPerPacket = Math.min(chunksPerPacket, value);
     packetSize = (bytesPerChecksum + getChecksumSize()) * chunksPerPacket;
@@ -1000,12 +999,12 @@ public class DFSOutputStream extends FSOutputSummer
     } while (!this.cachingStrategy.compareAndSet(prevStrategy, nextStrategy));
   }
 
-  
+
   ExtendedBlock getBlock() {
     return getStreamer().getBlock();
   }
 
-  
+
   public long getFileId() {
     return fileId;
   }

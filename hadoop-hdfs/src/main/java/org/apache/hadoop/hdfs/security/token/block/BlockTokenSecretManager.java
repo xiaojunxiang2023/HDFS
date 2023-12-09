@@ -9,7 +9,6 @@ import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultiset;
@@ -133,7 +132,7 @@ public class BlockTokenSecretManager extends
     generateKeys();
   }
 
-  
+
   public synchronized void setSerialNo(int nextNo) {
     // we mod the serial number by the range and then add that times the index
     this.serialNo = (nextNo % intRange) + (nnRangeStart);
@@ -538,23 +537,23 @@ public class BlockTokenSecretManager extends
     return currentKey;
   }
 
-  
+
   public synchronized void setKeyUpdateIntervalForTesting(long millis) {
     this.keyUpdateInterval = millis;
   }
 
-  
+
   public void clearAllKeysForTesting() {
     allKeys.clear();
   }
 
-  
+
   public synchronized boolean hasKey(int keyId) {
     BlockKey key = allKeys.get(keyId);
     return key != null;
   }
 
-  
+
   public synchronized int getSerialNoForTesting() {
     return serialNo;
   }

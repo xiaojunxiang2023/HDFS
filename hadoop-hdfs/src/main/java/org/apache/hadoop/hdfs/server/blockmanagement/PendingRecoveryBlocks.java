@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 
@@ -81,7 +80,7 @@ class PendingRecoveryBlocks {
     return Time.monotonicNow();
   }
 
-  
+
   synchronized void setRecoveryTimeoutInterval(long recoveryTimeoutInterval) {
     this.recoveryTimeoutInterval = recoveryTimeoutInterval;
   }

@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
@@ -154,7 +153,7 @@ public class DatanodeAdminManager {
    * Start decommissioning the specified datanode.
    * @param node
    */
-  
+
   public void startDecommission(DatanodeDescriptor node) {
     if (!node.isDecommissionInProgress() && !node.isDecommissioned()) {
       // Update DN stats maintained by HeartbeatManager
@@ -178,7 +177,7 @@ public class DatanodeAdminManager {
    * Stop decommissioning the specified datanode.
    * @param node
    */
-  
+
   public void stopDecommission(DatanodeDescriptor node) {
     if (node.isDecommissionInProgress() || node.isDecommissioned()) {
       // Update DN stats maintained by HeartbeatManager
@@ -200,7 +199,7 @@ public class DatanodeAdminManager {
    * Start maintenance of the specified datanode.
    * @param node
    */
-  
+
   public void startMaintenance(DatanodeDescriptor node,
                                long maintenanceExpireTimeInMS) {
     // Even if the node is already in maintenance, we still need to adjust
@@ -231,7 +230,7 @@ public class DatanodeAdminManager {
    * Stop maintenance of the specified datanode.
    * @param node
    */
-  
+
   public void stopMaintenance(DatanodeDescriptor node) {
     if (node.isMaintenance()) {
       // Update DN stats maintained by HeartbeatManager
@@ -370,27 +369,27 @@ public class DatanodeAdminManager {
             + srcNode.isEnteringMaintenance());
   }
 
-  
+
   public int getNumPendingNodes() {
     return monitor.getPendingNodeCount();
   }
 
-  
+
   public int getNumTrackedNodes() {
     return monitor.getTrackedNodeCount();
   }
 
-  
+
   public int getNumNodesChecked() {
     return monitor.getNumNodesChecked();
   }
 
-  
+
   public Queue<DatanodeDescriptor> getPendingNodes() {
     return monitor.getPendingNodes();
   }
 
-  
+
   void runMonitorForTest() throws ExecutionException, InterruptedException {
     executor.submit(monitor).get();
   }

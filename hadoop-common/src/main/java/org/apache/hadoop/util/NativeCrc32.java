@@ -1,7 +1,6 @@
 package org.apache.hadoop.util;
 
 import org.apache.hadoop.fs.ChecksumException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.nio.ByteBuffer;
 
@@ -100,7 +99,7 @@ class NativeCrc32 {
    *   ByteBuffer, int, int, String, long, boolean)} instead
    */
   @Deprecated
-  
+
   static native void nativeVerifyChunkedSums(
       int bytesPerSum, int checksumType,
       ByteBuffer sums, int sumsOffset,

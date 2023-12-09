@@ -7,7 +7,6 @@ import org.apache.curator.framework.api.ACLProvider;
 import org.apache.curator.framework.imps.DefaultACLProvider;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.hadoop.filter.AuthenticationFilter;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs.Perms;
 import org.apache.zookeeper.client.ZKClientConfig;
@@ -140,7 +139,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
    * is meant for testing.
    * @param seed the seed for the random number generator
    */
-  
+
   public ZKSignerSecretProvider(long seed) {
     super();
     rand = new Random(seed);
@@ -325,7 +324,7 @@ public class ZKSignerSecretProvider extends RolloverSignerSecretProvider {
     }
   }
 
-  
+
   protected byte[] generateRandomSecret() {
     byte[] secret = new byte[32]; // 32 bytes = 256 bits
     rand.nextBytes(secret);

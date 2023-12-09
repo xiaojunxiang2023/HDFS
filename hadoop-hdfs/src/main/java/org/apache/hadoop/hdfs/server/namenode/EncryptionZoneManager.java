@@ -21,7 +21,6 @@ import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -135,32 +134,32 @@ public class EncryptionZoneManager {
   public static final BatchedListEntries<ZoneReencryptionStatus> EMPTY_LIST =
       new BatchedListEntries<>(new ArrayList<ZoneReencryptionStatus>(), false);
 
-  
+
   public void pauseReencryptForTesting() {
     reencryptionHandler.pauseForTesting();
   }
 
-  
+
   public void resumeReencryptForTesting() {
     reencryptionHandler.resumeForTesting();
   }
 
-  
+
   public void pauseForTestingAfterNthSubmission(final int count) {
     reencryptionHandler.pauseForTestingAfterNthSubmission(count);
   }
 
-  
+
   public void pauseReencryptUpdaterForTesting() {
     reencryptionHandler.pauseUpdaterForTesting();
   }
 
-  
+
   public void resumeReencryptUpdaterForTesting() {
     reencryptionHandler.resumeUpdaterForTesting();
   }
 
-  
+
   public void pauseForTestingAfterNthCheckpoint(final String zone,
                                                 final int count) throws IOException {
     INodesInPath iip;
@@ -175,17 +174,17 @@ public class EncryptionZoneManager {
         .pauseForTestingAfterNthCheckpoint(iip.getLastINode().getId(), count);
   }
 
-  
+
   public void resetMetricsForTesting() {
     reencryptionStatus.resetMetrics();
   }
 
-  
+
   public ReencryptionStatus getReencryptionStatus() {
     return reencryptionStatus;
   }
 
-  
+
   public ZoneReencryptionStatus getZoneStatus(final String zone)
       throws IOException {
     final FSPermissionChecker pc = dir.getPermissionChecker();

@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.HostsFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +69,7 @@ public class HostFileManager extends HostConfigManager {
     return res;
   }
 
-  
+
   static InetSocketAddress parseEntry(String type, String fn, String line) {
     try {
       URI uri = new URI("dummy", line, null, null, null);
@@ -149,7 +148,7 @@ public class HostFileManager extends HostConfigManager {
    * @param newIncludes the new includes list
    * @param newExcludes the new excludes list
    */
-  
+
   void refresh(HostSet newIncludes, HostSet newExcludes) {
     synchronized (this) {
       includes = newIncludes;

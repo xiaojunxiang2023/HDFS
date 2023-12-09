@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogLoader;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.AutoCloseableLock;
 
 import java.io.*;
@@ -341,7 +340,7 @@ class JournaledEditsCache {
    * @param txnId Transaction ID whose containing buffer should be fetched.
    * @return The data buffer for the transaction
    */
-  
+
   byte[] getRawDataForTests(long txnId) {
     try (AutoCloseableLock l = readLock.acquire()) {
       return dataMap.floorEntry(txnId).getValue();

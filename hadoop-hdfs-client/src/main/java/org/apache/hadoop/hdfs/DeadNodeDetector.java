@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.protocol.ClientDatanodeProtocol;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.protocol.DatanodeLocalInfo;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -260,7 +259,7 @@ public class DeadNodeDetector extends Daemon {
     }
   }
 
-  
+
   boolean isThreadsShutdown() {
     return !this.isAlive() && !probeDeadNodesSchedulerThr.isAlive()
         && !probeSuspectNodesSchedulerThr.isAlive()
@@ -269,7 +268,7 @@ public class DeadNodeDetector extends Daemon {
         && rpcThreadPool.isShutdown();
   }
 
-  
+
   static void setDisabledProbeThreadForTest(
       boolean disabledProbeThreadForTest) {
     DeadNodeDetector.disabledProbeThreadForTest = disabledProbeThreadForTest;
@@ -278,7 +277,7 @@ public class DeadNodeDetector extends Daemon {
   /**
    * Start probe dead node and suspect node thread.
    */
-  
+
   void startProbeScheduler() {
     probeDeadNodesSchedulerThr =
         new Thread(new ProbeScheduler(this, ProbeType.CHECK_DEAD));
@@ -457,12 +456,12 @@ public class DeadNodeDetector extends Daemon {
     return suspectNodesProbeQueue;
   }
 
-  
+
   void setSuspectQueue(UniqueQueue<DatanodeInfo> queue) {
     this.suspectNodesProbeQueue = queue;
   }
 
-  
+
   void setDeadQueue(UniqueQueue<DatanodeInfo> queue) {
     this.deadNodesProbeQueue = queue;
   }

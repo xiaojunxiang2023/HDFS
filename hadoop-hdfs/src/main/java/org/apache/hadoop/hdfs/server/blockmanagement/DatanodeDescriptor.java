@@ -2,7 +2,9 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.net.DFSTopologyNodeImpl;
-import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocol.Block;
+import org.apache.hadoop.hdfs.protocol.DatanodeID;
+import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.CachedBlock;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
@@ -12,7 +14,6 @@ import org.apache.hadoop.hdfs.server.protocol.VolumeFailureSummary;
 import org.apache.hadoop.hdfs.util.EnumCounters;
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
 import org.apache.hadoop.hdfs.util.LightWeightLinkedSet;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.IntrusiveCollection;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
@@ -244,19 +245,19 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return leavingServiceStatus;
   }
 
-  
+
   public boolean isHeartbeatedSinceRegistration() {
     return heartbeatedSinceRegistration;
   }
 
-  
+
   public DatanodeStorageInfo getStorageInfo(String storageID) {
     synchronized (storageMap) {
       return storageMap.get(storageID);
     }
   }
 
-  
+
   public DatanodeStorageInfo[] getStorageInfos() {
     synchronized (storageMap) {
       final Collection<DatanodeStorageInfo> storages = storageMap.values();
@@ -594,12 +595,12 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return new BlockIterator(startBlock, getStorageInfos());
   }
 
-  
+
   public void incrementPendingReplicationWithoutTargets() {
     pendingReplicationWithoutTargets++;
   }
 
-  
+
   public void decrementPendingReplicationWithoutTargets() {
     pendingReplicationWithoutTargets--;
   }
@@ -607,7 +608,7 @@ public class DatanodeDescriptor extends DatanodeInfo {
   /**
    * Store block replication work.
    */
-  
+
   public void addBlockToBeReplicated(Block block,
                                      DatanodeStorageInfo[] targets) {
     assert (block != null && targets != null && targets.length > 0);
@@ -645,7 +646,7 @@ public class DatanodeDescriptor extends DatanodeInfo {
     return pendingReplicationWithoutTargets + replicateBlocks.size();
   }
 
-  
+
   public int getNumberOfReplicateBlocks() {
     return replicateBlocks.size();
   }
@@ -672,7 +673,7 @@ public class DatanodeDescriptor extends DatanodeInfo {
     }
   }
 
-  
+
   public boolean containsInvalidateBlock(Block block) {
     synchronized (invalidateBlocks) {
       return invalidateBlocks.contains(block);

@@ -1,7 +1,6 @@
 package org.apache.hadoop.fs;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell;
 
 import java.io.BufferedReader;
@@ -11,7 +10,7 @@ import java.io.IOException;
 public class DU extends CachingGetSpaceUsed {
   private final DUShell duShell;
 
-  
+
   public DU(File path, long interval, long jitter, long initialUsed)
       throws IOException {
     super(path, interval, jitter, initialUsed);

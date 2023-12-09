@@ -17,7 +17,6 @@
  */
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
 import java.util.concurrent.TimeUnit;
@@ -79,7 +78,7 @@ public class InstrumentedLock implements Lock {
         minLoggingGapMs, lockWarningThresholdMs, new Timer());
   }
 
-  
+
   InstrumentedLock(String name, Logger logger, Lock lock,
                    long minLoggingGapMs, long lockWarningThresholdMs, Timer clock) {
     this.name = name;
@@ -143,7 +142,7 @@ public class InstrumentedLock implements Lock {
     return lock.newCondition();
   }
 
-  
+
   void logWarning(long lockHeldTime, SuppressedSnapshot stats) {
     logger.warn(String.format("Lock held time above threshold(%d ms): " +
             "lock identifier: %s " +
@@ -155,7 +154,7 @@ public class InstrumentedLock implements Lock {
         StringUtils.getStackTrace(Thread.currentThread())));
   }
 
-  
+
   void logWaitWarning(long lockWaitTime, SuppressedSnapshot stats) {
     logger.warn(String.format("Waited above threshold(%d ms) to acquire lock: " +
             "lock identifier: %s " +

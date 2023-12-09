@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import java.util.concurrent.atomic.AtomicLong;
 
 /**

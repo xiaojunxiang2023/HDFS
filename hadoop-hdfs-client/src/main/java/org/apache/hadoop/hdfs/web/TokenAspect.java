@@ -13,7 +13,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenRenewer;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSelector;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +139,7 @@ final class TokenAspect<T extends FileSystem & Renewable> {
     }
   }
 
-  
+
   Token<DelegationTokenIdentifier> selectDelegationToken(
       UserGroupInformation ugi) {
     return dtSelector.selectToken(serviceName, ugi.getTokens());

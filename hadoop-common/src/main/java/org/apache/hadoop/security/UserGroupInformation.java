@@ -11,7 +11,6 @@ import org.apache.hadoop.metrics2.lib.*;
 import org.apache.hadoop.security.SaslRpcServer.AuthMethod;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
@@ -53,7 +52,7 @@ import static org.apache.hadoop.util.StringUtils.getTrimmedStringCollection;
  * login modules.
  */
 public class UserGroupInformation {
-  
+
   static final Logger LOG = LoggerFactory.getLogger(
       UserGroupInformation.class);
 
@@ -71,7 +70,7 @@ public class UserGroupInformation {
    * window (controlled by TICKET_RENEW_WINDOW).
    * @param immediate true if we should login without waiting for ticket window
    */
-  
+
   public static void setShouldRenewImmediatelyForTests(boolean immediate) {
     shouldRenewImmediatelyForTests = immediate;
   }
@@ -313,7 +312,7 @@ public class UserGroupInformation {
     initialize(conf, true);
   }
 
-  
+
   public static void reset() {
     authenticationMethod = null;
     conf = null;
@@ -340,13 +339,13 @@ public class UserGroupInformation {
     return (authenticationMethod == method);
   }
 
-  
+
   static boolean isKerberosKeyTabLoginRenewalEnabled() {
     ensureInitialized();
     return kerberosKeyTabLoginRenewalEnabled;
   }
 
-  
+
   static Optional<ExecutorService> getKerberosLoginRenewalExecutor() {
     ensureInitialized();
     return kerberosLoginRenewalExecutor;
@@ -720,7 +719,7 @@ public class UserGroupInformation {
     return loginUser;
   }
 
-  
+
   public static void setLoginUser(UserGroupInformation ugi) {
     // if this is to become stable, should probably logout the currently
     // logged in ugi if it's different
@@ -793,7 +792,7 @@ public class UserGroupInformation {
    *
    * @param force - used by tests to forcibly spawn thread
    */
-  
+
   void spawnAutoRenewalThreadForUserCreds(boolean force) {
     if (!force && (!shouldRelogin() || isFromKeytab())) {
       return;
@@ -860,7 +859,7 @@ public class UserGroupInformation {
    * TGT renewal (see {@code TicketCacheRenewalRunnable} and
    * {@code KeytabRenewalRunnable}).
    */
-  
+
   abstract class AutoRenewalForUserCredsRunnable implements Runnable {
     private KerberosTicket tgt;
     private RetryPolicy rp;
@@ -967,7 +966,7 @@ public class UserGroupInformation {
    * A concrete implementation of {@code AutoRenewalForUserCredsRunnable} class
    * which performs TGT renewal using kinit command.
    */
-  
+
   final class TicketCacheRenewalRunnable
       extends AutoRenewalForUserCredsRunnable {
     private String kinitCmd;
@@ -990,7 +989,7 @@ public class UserGroupInformation {
    * A concrete implementation of {@code AutoRenewalForUserCredsRunnable} class
    * which performs TGT renewal using specified keytab.
    */
-  
+
   final class KeytabRenewalRunnable extends AutoRenewalForUserCredsRunnable {
 
     KeytabRenewalRunnable(KerberosTicket tgt, long nextRefresh) {
@@ -1013,7 +1012,7 @@ public class UserGroupInformation {
    * @param rp The retry policy.
    * @return Time for next login retry.
    */
-  
+
   static long getNextTgtRenewalTime(final long tgtEndTime, final long now,
                                     final RetryPolicy rp) throws Exception {
     final long lastRetryTime = tgtEndTime - kerberosMinSecondsBeforeRelogin;
@@ -1103,7 +1102,7 @@ public class UserGroupInformation {
   // if the first kerberos ticket is not TGT, then remove and destroy it since
   // the kerberos library of jdk always use the first kerberos ticket as TGT.
   // See HADOOP-13433 for more details.
-  
+
   void fixKerberosTicketOrder() {
     Set<Object> creds = getSubject().getPrivateCredentials();
     synchronized (creds) {

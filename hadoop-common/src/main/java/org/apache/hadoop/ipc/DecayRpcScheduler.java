@@ -16,7 +16,6 @@ import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.metrics2.util.Metrics2Util.NameValuePair;
 import org.apache.hadoop.metrics2.util.Metrics2Util.TopN;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.AtomicDoubleArray;
 import org.slf4j.Logger;
@@ -587,14 +586,14 @@ public class DecayRpcScheduler implements RpcScheduler,
     return Math.max(0, cachedOrComputedPriorityLevel(identity));
   }
 
-  
+
   int getPriorityLevel(UserGroupInformation ugi) {
     String identity = getIdentity(newSchedulable(ugi));
     // returns true priority of the user.
     return cachedOrComputedPriorityLevel(identity);
   }
 
-  
+
   void setPriorityLevel(UserGroupInformation ugi, int priority) {
     String identity = getIdentity(newSchedulable(ugi));
     priority = Math.min(numLevels - 1, priority);
@@ -703,27 +702,27 @@ public class DecayRpcScheduler implements RpcScheduler,
   }
 
   // For testing
-  
+
   double getDecayFactor() {
     return decayFactor;
   }
 
-  
+
   long getDecayPeriodMillis() {
     return decayPeriodMillis;
   }
 
-  
+
   double[] getThresholds() {
     return thresholds;
   }
 
-  
+
   void forceDecay() {
     decayCurrentCosts();
   }
 
-  
+
   Map<Object, Long> getCallCostSnapshot() {
     HashMap<Object, Long> snapshot = new HashMap<Object, Long>();
 
@@ -734,7 +733,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     return Collections.unmodifiableMap(snapshot);
   }
 
-  
+
   long getTotalCallSnapshot() {
     return totalDecayedCallCost.get();
   }
@@ -1022,7 +1021,7 @@ public class DecayRpcScheduler implements RpcScheduler,
     return decayedCallCosts;
   }
 
-  
+
   public DecayRpcSchedulerDetailedMetrics
   getDecayRpcSchedulerDetailedMetrics() {
     return decayRpcSchedulerDetailedMetrics;

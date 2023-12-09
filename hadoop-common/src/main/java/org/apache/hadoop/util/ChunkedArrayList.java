@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Iterables;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -151,12 +150,12 @@ public class ChunkedArrayList<T> extends AbstractList<T> {
     return size;
   }
 
-  
+
   int getNumChunks() {
     return chunks.size();
   }
 
-  
+
   int getMaxChunkSize() {
     int size = 0;
     for (List<T> chunk : chunks) {

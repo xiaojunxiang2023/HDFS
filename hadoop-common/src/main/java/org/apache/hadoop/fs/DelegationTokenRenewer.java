@@ -2,7 +2,6 @@ package org.apache.hadoop.fs;
 
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,14 +142,14 @@ public class DelegationTokenRenewer
 
   /** assumes renew cycle for a token is 24 hours... */
   private static final long RENEW_CYCLE = 24 * 60 * 60 * 1000;
-  
+
   public static long renewCycle = RENEW_CYCLE;
 
   /** Queue to maintain the RenewActions to be processed by the {@link #run()} */
   private volatile DelayQueue<RenewAction<?>> queue = new DelayQueue<RenewAction<?>>();
 
   /** For testing purposes */
-  
+
   protected int getRenewQueueLength() {
     return queue.size();
   }
@@ -173,7 +172,7 @@ public class DelegationTokenRenewer
     return INSTANCE;
   }
 
-  
+
   static synchronized void reset() {
     if (INSTANCE != null) {
       INSTANCE.queue.clear();

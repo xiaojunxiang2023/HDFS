@@ -1,7 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 /**
  * Used for injecting call backs in {@link VolumeScanner}
  * and {@link BlockScanner} tests.

@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 
 import java.util.Map;
@@ -51,7 +50,7 @@ public class ReferenceCountMap<E extends ReferenceCountMap.ReferenceCounter> {
    *
    * @return
    */
-  
+
   public ImmutableList<E> getEntries() {
     return new ImmutableList.Builder<E>().addAll(referenceMap.keySet()).build();
   }
@@ -77,7 +76,7 @@ public class ReferenceCountMap<E extends ReferenceCountMap.ReferenceCounter> {
   /**
    * Clear the contents
    */
-  
+
   public void clear() {
     referenceMap.clear();
   }

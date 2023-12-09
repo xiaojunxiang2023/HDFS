@@ -6,7 +6,6 @@ import org.apache.hadoop.security.HadoopKerberosName;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -178,7 +177,7 @@ public abstract class AbstractDelegationTokenIdentifier
     masterKeyId = WritableUtils.readVInt(in);
   }
 
-  
+
   void writeImpl(DataOutput out) throws IOException {
     out.writeByte(VERSION);
     owner.write(out);

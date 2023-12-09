@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.server.common.blockaliasmap.impl.TextFileRegionAli
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage.State;
 import org.apache.hadoop.hdfs.util.RwLock;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
@@ -124,7 +123,7 @@ public class ProvidedStorageMap {
     }
   }
 
-  
+
   public DatanodeStorageInfo getProvidedStorageInfo() {
     return providedStorageInfo;
   }
@@ -183,7 +182,7 @@ public class ProvidedStorageMap {
     return providedDescriptor.chooseRandom();
   }
 
-  
+
   public BlockAliasMap getAliasMap() {
     return aliasMap;
   }

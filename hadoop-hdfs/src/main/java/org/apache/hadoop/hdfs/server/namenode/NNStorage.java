@@ -13,7 +13,6 @@ import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 import org.apache.hadoop.hdfs.util.PersistentLongFile;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.net.DNS;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.Time;
@@ -59,7 +58,7 @@ public class NNStorage extends Storage implements Closeable,
       this.fileName = name;
     }
 
-    
+
     public String getName() {
       return fileName;
     }
@@ -71,7 +70,7 @@ public class NNStorage extends Storage implements Closeable,
    * or of type EDITS which stores edits or of type IMAGE_AND_EDITS which
    * stores both fsimage and edits.
    */
-  
+
   public enum NameNodeDirType implements StorageDirType {
     UNDEFINED,
     IMAGE,
@@ -239,7 +238,7 @@ public class NNStorage extends Storage implements Closeable,
   /**
    * See {@link NNStorage#setStorageDirectories(Collection, Collection, Collection)}.
    */
-  
+
   synchronized void setStorageDirectories(Collection<URI> fsNameDirs,
                                           Collection<URI> fsEditsDirs)
       throws IOException {
@@ -259,7 +258,7 @@ public class NNStorage extends Storage implements Closeable,
    * @param fsEditsDirs Locations to store edit logs.
    * @throws IOException
    */
-  
+
   synchronized void setStorageDirectories(Collection<URI> fsNameDirs,
                                           Collection<URI> fsEditsDirs,
                                           Collection<URI> sharedEditsDirs)
@@ -715,17 +714,17 @@ public class NNStorage extends Storage implements Closeable,
     return new File(sd.getCurrentDir(), type.getName());
   }
 
-  
+
   public static String getCheckpointImageFileName(long txid) {
     return getNameNodeFileName(NameNodeFile.IMAGE_NEW, txid);
   }
 
-  
+
   public static String getImageFileName(long txid) {
     return getNameNodeFileName(NameNodeFile.IMAGE, txid);
   }
 
-  
+
   public static String getRollbackImageFileName(long txid) {
     return getNameNodeFileName(NameNodeFile.IMAGE_ROLLBACK, txid);
   }
@@ -738,7 +737,7 @@ public class NNStorage extends Storage implements Closeable,
     return String.format("%s_%019d", nnf.getName(), txid);
   }
 
-  
+
   public static String getInProgressEditsFileName(long startTxId) {
     return getNameNodeFileName(NameNodeFile.EDITS_INPROGRESS, startTxId);
   }
@@ -763,7 +762,7 @@ public class NNStorage extends Storage implements Closeable,
     return new File(sd.getCurrentDir(), getNameNodeFileName(nnf, txid));
   }
 
-  
+
   public static String getFinalizedEditsFileName(long startTxId, long endTxId) {
     return String.format("%s_%019d-%019d", NameNodeFile.EDITS.getName(),
         startTxId, endTxId);

@@ -15,7 +15,6 @@ import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectoryWithSnapshotFeat
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.FileNotFoundException;
@@ -888,7 +887,7 @@ public class INodeDirectory extends INodeWithAdditionalFields
   static final String DUMPTREE_EXCEPT_LAST_ITEM = "+-";
   static final String DUMPTREE_LAST_ITEM = "\\-";
 
-  
+
   @Override
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
                                   final int snapshot) {
@@ -950,7 +949,7 @@ public class INodeDirectory extends INodeWithAdditionalFields
    * @param prefix The prefix string that each line should print.
    * @param subs The subtrees.
    */
-  
+
   public static void dumpTreeRecursively(PrintWriter out,
                                          StringBuilder prefix, Iterable<SnapshotAndINode> subs) {
     if (subs != null) {

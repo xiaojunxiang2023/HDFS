@@ -6,7 +6,6 @@ import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -216,7 +215,7 @@ public class DiskChecker {
   private static final String DISK_IO_FILE_PREFIX =
       "DiskChecker.OK_TO_DELETE_.";
 
-  
+
   static final int DISK_IO_MAX_ITERATIONS = 3;
 
   /**
@@ -284,7 +283,7 @@ public class DiskChecker {
    *
    * @return file object.
    */
-  
+
   static File getFileNameForDiskIoCheck(File dir, int iterationCount) {
     if (iterationCount < DISK_IO_MAX_ITERATIONS) {
       // Use file names of the format prefix.001 by default.
@@ -335,7 +334,7 @@ public class DiskChecker {
    * @param newFosProvider
    * @return the old FileIoProvider.
    */
-  
+
   static FileIoProvider replaceFileOutputStreamProvider(
       FileIoProvider newFosProvider) {
     return fileIoProvider.getAndSet(newFosProvider);
@@ -347,7 +346,7 @@ public class DiskChecker {
    *
    * @return the current FileIoProvider.
    */
-  
+
   static FileIoProvider getFileOutputStreamProvider() {
     return fileIoProvider.get();
   }

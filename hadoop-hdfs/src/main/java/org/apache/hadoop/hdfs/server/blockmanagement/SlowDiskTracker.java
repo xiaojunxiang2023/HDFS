@@ -26,7 +26,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports;
 import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports.DiskOp;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.primitives.Doubles;
@@ -105,7 +104,7 @@ public class SlowDiskTracker {
     this.reportValidityMs = reportGenerationIntervalMs * 3;
   }
 
-  
+
   public static String getSlowDiskIDForReport(String datanodeID,
                                               String slowDisk) {
     return datanodeID + DATANODE_DISK_SEPARATOR + slowDisk;
@@ -140,7 +139,7 @@ public class SlowDiskTracker {
     }
   }
 
-  
+
   public void updateSlowDiskReportAsync(long now) {
     if (isUpdateInProgress.compareAndSet(false, true)) {
       lastUpdateTime = now;
@@ -276,17 +275,17 @@ public class SlowDiskTracker {
     oldSlowDisksCheck = null;
   }
 
-  
+
   ArrayList<DiskLatency> getSlowDisksReport() {
     return this.slowDisksReport;
   }
 
-  
+
   long getReportValidityMs() {
     return reportValidityMs;
   }
 
-  
+
   void setReportValidityMs(long reportValidityMs) {
     this.reportValidityMs = reportValidityMs;
   }

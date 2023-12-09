@@ -17,7 +17,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.ReadaheadPool.ReadaheadRequest;
 import org.apache.hadoop.net.SocketOutputStream;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.util.AutoCloseableLock;
@@ -147,7 +146,7 @@ class BlockSender implements java.io.Closeable {
   private long lastCacheDropOffset;
   private final FileIoProvider fileIoProvider;
 
-  
+
   static long CACHE_DROP_INTERVAL_BYTES = 1024 * 1024; // 1MB
 
   /**

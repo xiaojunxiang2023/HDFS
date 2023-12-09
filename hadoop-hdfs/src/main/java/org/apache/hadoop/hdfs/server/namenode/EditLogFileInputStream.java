@@ -11,7 +11,6 @@ import org.apache.hadoop.hdfs.web.URLConnectionFactory;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.base.Throwables;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
@@ -340,7 +339,7 @@ public class EditLogFileInputStream extends EditLogInputStream {
    * @return the edit log version number
    * @throws IOException if error occurs
    */
-  
+
   static int readLogVersion(DataInputStream in, boolean verifyLayoutVersion)
       throws IOException, LogHeaderCorruptException {
     int logVersion;

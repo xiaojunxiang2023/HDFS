@@ -1,7 +1,6 @@
 package org.apache.hadoop.conf;
 
 import org.apache.hadoop.conf.ReconfigurationUtil.PropertyChange;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.Time;
@@ -66,7 +65,7 @@ public abstract class ReconfigurableBase
     super((conf == null) ? new Configuration() : conf);
   }
 
-  
+
   public void setReconfigurationUtil(ReconfigurationUtil ru) {
     reconfigurationUtil = Preconditions.checkNotNull(ru);
   }
@@ -76,7 +75,7 @@ public abstract class ReconfigurableBase
    */
   protected abstract Configuration getNewConf();
 
-  
+
   public Collection<PropertyChange> getChangedProperties(
       Configuration newConf, Configuration oldConf) {
     return reconfigurationUtil.parseChangedProperties(newConf, oldConf);

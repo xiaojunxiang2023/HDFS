@@ -6,7 +6,6 @@ import org.apache.hadoop.fs.HardLink;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SecureIOUtils.AlreadyExistsException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.CleanerUtil;
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.apache.hadoop.util.PerformanceAdvisory;
@@ -254,7 +253,7 @@ public class NativeIO {
     /**
      * Used to manipulate the operating system cache.
      */
-    
+
     public static class CacheManipulator {
       public void mlock(String identifier, ByteBuffer buffer,
                         long len) throws IOException {
@@ -286,7 +285,7 @@ public class NativeIO {
      * This allows many tests to be run even when the operating system does not
      * allow mlock, or only allows limited mlocking.
      */
-    
+
     public static class NoMlockCacheManipulator extends CacheManipulator {
       public void mlock(String identifier, ByteBuffer buffer,
                         long len) throws IOException {

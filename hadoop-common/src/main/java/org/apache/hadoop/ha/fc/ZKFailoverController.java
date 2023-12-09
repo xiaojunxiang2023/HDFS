@@ -22,7 +22,6 @@ import org.apache.hadoop.security.ProviderUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.PolicyProvider;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.StringUtils;
@@ -141,7 +140,7 @@ public abstract class ZKFailoverController {
 
   protected abstract String getScopeInsideParentNode();
 
-  
+
   public HAServiceState getServiceState() {
     return serviceState;
   }

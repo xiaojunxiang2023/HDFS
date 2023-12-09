@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.Shell.ExitCodeException;
@@ -27,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class ShellBasedUnixGroupsMapping extends Configured
     implements GroupMappingServiceProvider {
 
-  
+
   protected static final Logger LOG =
       LoggerFactory.getLogger(ShellBasedUnixGroupsMapping.class);
 
@@ -308,7 +307,7 @@ public class ShellBasedUnixGroupsMapping extends Configured
    * @param groupNames a string representing the user's group names
    * @return a linked list of group names
    */
-  
+
   protected List<String> resolveFullGroupNames(String groupNames) {
     StringTokenizer tokenizer =
         new StringTokenizer(groupNames, Shell.TOKEN_SEPARATOR_REGEX);

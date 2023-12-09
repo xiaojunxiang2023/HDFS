@@ -12,7 +12,6 @@ import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.ShmId;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.net.unix.DomainSocketWatcher;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -404,7 +403,7 @@ public class DfsClientShmManager implements Closeable {
     }
   }
 
-  
+
   public static class PerDatanodeVisitorInfo {
     public final TreeMap<ShmId, DfsClientShm> full;
     public final TreeMap<ShmId, DfsClientShm> notFull;
@@ -418,13 +417,13 @@ public class DfsClientShmManager implements Closeable {
     }
   }
 
-  
+
   public interface Visitor {
     void visit(HashMap<DatanodeInfo, PerDatanodeVisitorInfo> info)
         throws IOException;
   }
 
-  
+
   public void visit(Visitor visitor) throws IOException {
     lock.lock();
     try {
@@ -467,12 +466,12 @@ public class DfsClientShmManager implements Closeable {
         System.identityHashCode(this));
   }
 
-  
+
   public DomainSocketWatcher getDomainSocketWatcher() {
     return domainSocketWatcher;
   }
 
-  
+
   public int getShmNum() {
     int segments = 0;
     for (EndpointShmManager endpointShmManager : datanodes.values()) {

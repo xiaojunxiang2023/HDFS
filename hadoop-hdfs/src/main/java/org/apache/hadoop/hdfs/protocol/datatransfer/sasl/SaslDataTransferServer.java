@@ -16,7 +16,6 @@ import org.apache.hadoop.security.SaslPropertiesResolver;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -315,7 +314,7 @@ public class SaslDataTransferServer {
     return identifier;
   }
 
-  
+
   public String getNegotiatedQOP() {
     return negotiatedQOP;
   }

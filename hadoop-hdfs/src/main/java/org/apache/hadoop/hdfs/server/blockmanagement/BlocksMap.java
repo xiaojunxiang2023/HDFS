@@ -214,5 +214,5 @@ class BlocksMap {
   long getReplicatedBlocks() {
     return totalReplicatedBlocks.longValue();
   }
-  
+
 }

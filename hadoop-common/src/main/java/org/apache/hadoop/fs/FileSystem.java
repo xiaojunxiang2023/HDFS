@@ -21,7 +21,6 @@ import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.DelegationTokenIssuer;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.tracing.TraceScope;
 import org.apache.hadoop.tracing.Tracer;
@@ -188,19 +187,19 @@ public abstract class FileSystem extends Configured
    * @param fs the FileSystem to store
    * @throws IOException if the current user cannot be determined.
    */
-  
+
   static void addFileSystemForTesting(URI uri, Configuration conf,
                                       FileSystem fs) throws IOException {
     CACHE.map.put(new Cache.Key(uri, conf), fs);
   }
 
-  
+
   static void removeFileSystemForTesting(URI uri, Configuration conf,
                                          FileSystem fs) throws IOException {
     CACHE.map.remove(new Cache.Key(uri, conf), fs);
   }
 
-  
+
   static int cacheSize() {
     return CACHE.map.size();
   }
@@ -641,7 +640,7 @@ public abstract class FileSystem extends Configured
    * @return FileSystems that are direct children of this FileSystem,
    *         or null for "no children"
    */
-  
+
   public FileSystem[] getChildFileSystems() {
     return null;
   }
@@ -3570,7 +3569,7 @@ public abstract class FileSystem extends Configured
      * Get the count of discarded instances.
      * @return the new instance.
      */
-    
+
     long getDiscardedInstances() {
       return discardedInstances.get();
     }
@@ -4311,7 +4310,7 @@ public abstract class FileSystem extends Configured
       return scheme;
     }
 
-    
+
     synchronized int getAllThreadLocalDataSize() {
       return allData.size();
     }
@@ -4388,12 +4387,12 @@ public abstract class FileSystem extends Configured
   // Symlinks are temporarily disabled - see HADOOP-10020 and HADOOP-10052
   private static boolean symlinksEnabled = false;
 
-  
+
   public static boolean areSymlinksEnabled() {
     return symlinksEnabled;
   }
 
-  
+
   public static void enableSymlinks() {
     symlinksEnabled = true;
   }

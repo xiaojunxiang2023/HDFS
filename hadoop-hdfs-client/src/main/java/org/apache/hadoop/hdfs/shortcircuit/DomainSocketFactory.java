@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.client.impl.DfsClientConf.ShortCircuitConf;
 import org.apache.hadoop.net.unix.DomainSocket;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
@@ -172,7 +171,7 @@ public class DomainSocketFactory {
     pathMap.put(path, PathState.UNUSABLE);
   }
 
-  
+
   public void clearPathMap() {
     pathMap.invalidateAll();
   }

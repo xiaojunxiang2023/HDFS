@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.web.resources;
 
 import org.apache.hadoop.fs.permission.AclEntry;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,12 +31,12 @@ public class AclPermissionParam extends StringParam {
     super(DOMAIN, parseAclSpec(acl).equals(DEFAULT) ? null : parseAclSpec(acl));
   }
 
-  
+
   public static Domain getAclPermissionPattern() {
     return DOMAIN;
   }
 
-  
+
   public static void setAclPermissionPattern(Domain dm) {
     DOMAIN = dm;
   }

@@ -17,7 +17,6 @@ import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.net.ConnectTimeoutException;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.eclipse.jetty.util.ajax.JSON;
 import org.slf4j.Logger;
@@ -766,7 +765,7 @@ public class RouterRpcClient {
    * @param src Path in the subcluster.
    * @return Message processed for federation.
    */
-  
+
   static String processExceptionMsg(
       final String msg, final String dst, final String src) {
     if (dst.equals(src) || !dst.startsWith("/") || !src.startsWith("/")) {

@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.client.HdfsClientConfigKeys;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.util.ByteArrayManager;
 import org.apache.hadoop.ipc.Client;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
@@ -317,7 +316,7 @@ public class DfsClientConf {
     return dataChecksum;
   }
 
-  
+
   public int getBlockWriteLocateFollowingInitialDelayMs() {
     return blockWriteLocateFollowingInitialDelayMs;
   }

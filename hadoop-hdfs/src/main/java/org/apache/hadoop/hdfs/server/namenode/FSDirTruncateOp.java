@@ -12,7 +12,6 @@ import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.BlockUCState;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.hdfs.server.namenode.FSNamesystem.RecoverLeaseOp;
 import org.apache.hadoop.hdfs.server.namenode.INode.BlocksMapUpdateInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
 
 import java.io.IOException;
@@ -187,7 +186,7 @@ final class FSDirTruncateOp {
    *         into this method upon loading.
    * @throws IOException
    */
-  
+
   static Block prepareFileForTruncate(FSNamesystem fsn, INodesInPath iip,
                                       String leaseHolder, String clientMachine, long lastBlockDelta,
                                       Block newBlock) throws IOException {

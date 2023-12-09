@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
 import org.apache.hadoop.thirdparty.com.google.common.cache.RemovalListener;
@@ -84,7 +83,7 @@ public class KeyProviderCache {
     return providerUri;
   }
 
-  
+
   public void setKeyProvider(Configuration conf, KeyProvider keyProvider) {
     URI uri = createKeyProviderURI(conf);
     assert uri != null;

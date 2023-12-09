@@ -1,7 +1,6 @@
 package org.apache.hadoop.auth.util;
 
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +74,7 @@ public class KerberosName {
 
   private static String defaultRealm = null;
 
-  
+
   public static void resetDefaultRealm() {
     try {
       defaultRealm = KerberosUtil.getDefaultRealm();

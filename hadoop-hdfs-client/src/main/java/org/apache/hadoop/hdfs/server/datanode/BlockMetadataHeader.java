@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.datanode;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.InvalidChecksumSizeException;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ public class BlockMetadataHeader {
   private final short version;
   private DataChecksum checksum = null;
 
-  
+
   public BlockMetadataHeader(short version, DataChecksum checksum) {
     this.checksum = checksum;
     this.version = version;
@@ -168,7 +167,7 @@ public class BlockMetadataHeader {
    * @param out DataOutputStream
    * @throws IOException
    */
-  
+
   public static void writeHeader(DataOutputStream out,
                                  BlockMetadataHeader header)
       throws IOException {

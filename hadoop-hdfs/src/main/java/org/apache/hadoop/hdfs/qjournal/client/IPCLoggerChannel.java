@@ -18,7 +18,6 @@ import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
 import org.apache.hadoop.ipc.ProtobufRpcEngine2;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.*;
@@ -218,7 +217,7 @@ public class IPCLoggerChannel implements AsyncLogger {
   /**
    * Separated out for easy overriding in tests.
    */
-  
+
   protected ExecutorService createSingleThreadExecutor() {
     return Executors.newSingleThreadExecutor(
         new ThreadFactoryBuilder()
@@ -233,7 +232,7 @@ public class IPCLoggerChannel implements AsyncLogger {
   /**
    * Separated out for easy overriding in tests.
    */
-  
+
   protected ExecutorService createParallelExecutor() {
     int numThreads =
         conf.getInt(DFSConfigKeys.DFS_QJOURNAL_PARALLEL_READ_NUM_THREADS_KEY,
@@ -268,7 +267,7 @@ public class IPCLoggerChannel implements AsyncLogger {
         epoch, ipcSerial++, committedTxId);
   }
 
-  
+
   synchronized long getNextIpcSerial() {
     return ipcSerial;
   }
@@ -290,7 +289,7 @@ public class IPCLoggerChannel implements AsyncLogger {
     return outOfSync;
   }
 
-  
+
   void waitForAllPendingCalls() throws InterruptedException {
     try {
       singleThreadExecutor.submit(new Runnable() {

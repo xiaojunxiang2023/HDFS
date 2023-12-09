@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.protocol.DatanodeAdminProperties;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo.AdminStates;
 import org.apache.hadoop.hdfs.util.CombinedHostsFileReader;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Multimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.UnmodifiableIterator;
@@ -177,7 +176,7 @@ public class CombinedHostFileManager extends HostConfigManager {
     refresh(hostProps);
   }
 
-  
+
   static InetSocketAddress parseEntry(final String fn, final String hostName,
                                       final int port) {
     InetSocketAddress addr = new InetSocketAddress(hostName, port);
@@ -217,7 +216,7 @@ public class CombinedHostFileManager extends HostConfigManager {
    * old instance is discarded.
    * @param hostProperties the new properties list
    */
-  
+
   private void refresh(final HostProperties hostProperties) {
     synchronized (this) {
       this.hostProperties = hostProperties;

@@ -3,7 +3,6 @@ package org.apache.hadoop.ipc;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.ObjectWritable;
 import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import javax.net.SocketFactory;
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public class ClientCache {
     }
   }
 
-  
+
   public void clearCache() {
     clients.values().forEach(c -> c.stop());
     clients.clear();

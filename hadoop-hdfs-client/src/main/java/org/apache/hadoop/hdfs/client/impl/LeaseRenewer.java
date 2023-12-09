@@ -4,7 +4,6 @@ import org.apache.hadoop.hdfs.DFSClient;
 import org.apache.hadoop.hdfs.DFSClientFaultInjector;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
@@ -207,7 +206,7 @@ public class LeaseRenewer {
   }
 
   /** Used for testing only. */
-  
+
   public synchronized void setRenewalTime(final long renewal) {
     this.renewal = renewal;
   }
@@ -266,7 +265,7 @@ public class LeaseRenewer {
         half : LEASE_RENEWER_SLEEP_DEFAULT;
   }
 
-  
+
   /** Is the daemon running? */
   public synchronized boolean isRunning() {
     return daemon != null && daemon.isAlive();
@@ -334,7 +333,7 @@ public class LeaseRenewer {
     return true;
   }
 
-  
+
   synchronized void setEmptyTime(long time) {
     emptyTime = time;
   }
@@ -491,7 +490,7 @@ public class LeaseRenewer {
     }
   }
 
-  
+
   public static void setLeaseRenewerGraceDefault(
       long leaseRenewerGraceDefault) {
     LeaseRenewer.leaseRenewerGraceDefault = leaseRenewerGraceDefault;

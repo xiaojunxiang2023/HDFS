@@ -21,7 +21,6 @@ import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,7 +184,7 @@ public class NameNodeProxiesClient {
   }
 
   /** Creates the Failover proxy provider instance*/
-  
+
   public static <T> AbstractNNFailoverProxyProvider<T> createFailoverProxyProvider(
       Configuration conf, URI nameNodeUri, Class<T> xface, boolean checkPort,
       AtomicBoolean fallbackToSimpleAuth) throws IOException {
@@ -248,7 +247,7 @@ public class NameNodeProxiesClient {
   }
 
   /** Gets the configured Failover proxy provider's class */
-  
+
   public static <T> Class<FailoverProxyProvider<T>> getFailoverProxyProviderClass(
       Configuration conf, URI nameNodeUri) throws IOException {
     if (nameNodeUri == null) {

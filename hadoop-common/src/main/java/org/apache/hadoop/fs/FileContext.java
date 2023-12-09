@@ -14,7 +14,6 @@ import org.apache.hadoop.ipc.UnexpectedServerException;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.util.ShutdownHookManager;
@@ -469,7 +468,7 @@ public class FileContext implements PathCapabilities {
     return getFileContext(FsConstants.LOCAL_FS_URI, aConf);
   }
 
-  
+
   public AbstractFileSystem getDefaultFileSystem() {
     return defaultFS;
   }

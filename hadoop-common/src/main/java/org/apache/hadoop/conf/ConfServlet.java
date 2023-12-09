@@ -1,7 +1,6 @@
 package org.apache.hadoop.conf;
 
 import org.apache.hadoop.http.HttpServer2;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,7 +59,7 @@ public class ConfServlet extends HttpServlet {
     out.close();
   }
 
-  
+
   static String parseAcceptHeader(HttpServletRequest request) {
     String format = request.getHeader(HttpHeaders.ACCEPT);
     return format != null && format.contains(FORMAT_JSON) ?

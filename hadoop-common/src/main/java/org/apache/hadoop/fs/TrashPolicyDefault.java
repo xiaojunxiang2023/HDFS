@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Options.Rename;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,7 +294,7 @@ public class TrashPolicyDefault extends TrashPolicy {
       return (time / interval) * interval;
     }
 
-    
+
     protected long getEmptierInterval() {
       return this.emptierInterval / MSECS_PER_MINUTE;
     }

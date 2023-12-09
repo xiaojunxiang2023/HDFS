@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
 
@@ -205,7 +204,7 @@ class InvalidateBlocks {
   /**
    * @return the remianing pending time
    */
-  
+
   long getInvalidationDelay() {
     return pendingPeriodInMs - (Time.monotonicNow() - startupTime);
   }

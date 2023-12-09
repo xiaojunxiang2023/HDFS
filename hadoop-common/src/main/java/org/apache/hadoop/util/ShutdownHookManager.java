@@ -2,7 +2,6 @@ package org.apache.hadoop.util;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.concurrent.HadoopExecutors;
 import org.slf4j.Logger;
@@ -87,7 +86,7 @@ public final class ShutdownHookManager {
    * This is exposed purely for testing: do not invoke it.
    * @return the number of shutdown hooks which timed out.
    */
-  
+
   int executeShutdown() {
     int timeouts = 0;
     for (HookEntry entry : getShutdownHooksInOrder()) {
@@ -148,7 +147,7 @@ public final class ShutdownHookManager {
    * @param conf configuration to use.
    * @return a timeout, always greater than or equal to {@link #TIMEOUT_MINIMUM}
    */
-  
+
   static long getShutdownTimeout(Configuration conf) {
     long duration = conf.getTimeDuration(
         SERVICE_SHUTDOWN_TIMEOUT,
@@ -164,7 +163,7 @@ public final class ShutdownHookManager {
    * Private structure to store ShutdownHook, its priority and timeout
    * settings.
    */
-  
+
   static class HookEntry {
     private final Runnable hook;
     private final int priority;
@@ -223,7 +222,7 @@ public final class ShutdownHookManager {
   private AtomicBoolean shutdownInProgress = new AtomicBoolean(false);
 
   //private to constructor to ensure singularity
-  
+
   ShutdownHookManager() {
   }
 
@@ -233,7 +232,7 @@ public final class ShutdownHookManager {
    *
    * @return the list of shutdownHooks in order of execution.
    */
-  
+
   List<HookEntry> getShutdownHooksInOrder() {
     List<HookEntry> list;
     synchronized (hooks) {

@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -421,7 +420,7 @@ public abstract class Shell {
    * @throws FileNotFoundException if the specified
    * path is not a reference to a valid directory.
    */
-  
+
   static File checkHadoopHomeInner(String home) throws FileNotFoundException {
     // couldn't find either setting for hadoop's home directory
     if (home == null) {
@@ -1153,7 +1152,7 @@ public abstract class Shell {
      * Returns the timeout value set for the executor's sub-commands.
      * @return The timeout value in milliseconds
      */
-    
+
     public long getTimeoutInterval() {
       return timeOutInterval;
     }

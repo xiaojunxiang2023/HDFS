@@ -154,7 +154,7 @@ public final class FederationUtil {
 
   // 给 hdfsFileStatus设置 children字段
   public static HdfsFileStatus updateMountPointStatus(HdfsFileStatus dirStatus, int children) {
-    EnumSet<HdfsFileStatus.Flags> flags = DFSUtil.getFlags(dirStatus.isEncrypted(), 
+    EnumSet<HdfsFileStatus.Flags> flags = DFSUtil.getFlags(dirStatus.isEncrypted(),
         dirStatus.isSnapshotEnabled(), dirStatus.hasAcl());
     EnumSet.noneOf(HdfsFileStatus.Flags.class);
     return new HdfsFileStatus.Builder().atime(dirStatus.getAccessTime())

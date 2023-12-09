@@ -1,7 +1,5 @@
 package org.apache.hadoop.fs.shell;
 
-import org.apache.hadoop.classification.VisibleForTesting;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -45,17 +43,17 @@ public abstract class CopyCommandWithMultiThread
     }
   }
 
-  
+
   protected int getThreadCount() {
     return this.threadCount;
   }
 
-  
+
   protected int getThreadPoolQueueSize() {
     return this.threadPoolQueueSize;
   }
 
-  
+
   protected ThreadPoolExecutor getExecutor() {
     return this.executor;
   }
@@ -77,7 +75,7 @@ public abstract class CopyCommandWithMultiThread
 
   // if thread count is 1 or the source is only one single file,
   // don't init executor to avoid threading overhead.
-  
+
   protected boolean isMultiThreadNecessary(LinkedList<PathData> args)
       throws IOException {
     return this.threadCount > 1 && hasMoreThanOneSourcePaths(args);

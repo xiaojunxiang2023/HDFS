@@ -22,7 +22,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.*;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
@@ -172,7 +171,7 @@ public class Balancer {
       new AtomicInteger(0);
   private static final AtomicInteger
       FAILED_TIMES_SINCE_LAST_SUCCESSFUL_BALANCE = new AtomicInteger(0);
-  
+
   private static volatile boolean serviceRunning = false;
   private final Dispatcher dispatcher;
   private final NameNodeConnector nnc;

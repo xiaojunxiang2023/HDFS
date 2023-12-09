@@ -3,7 +3,6 @@ package org.apache.hadoop.crypto.key;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.token.DelegationTokenIssuer;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 
@@ -41,7 +40,7 @@ public class KeyProviderDelegationTokenExtension extends
     Void cancelDelegationToken(final Token<?> token) throws IOException;
 
     // Do NOT call this. Only intended for internal use.
-    
+
     Token<?> selectDelegationToken(Credentials creds);
   }
 

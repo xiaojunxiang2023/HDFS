@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.namenode.sps.StoragePolicySatisfier.AttemptedItemInfo;
 import org.apache.hadoop.hdfs.server.namenode.sps.StoragePolicySatisfier.StorageTypeNodePair;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,7 +214,7 @@ public class BlockStorageMovementAttemptedItems {
     }
   }
 
-  
+
   void blocksStorageMovementUnReportedItemsCheck() {
     synchronized (storageMovementAttemptedItems) {
       Iterator<AttemptedItemInfo> iter = storageMovementAttemptedItems
@@ -237,7 +236,7 @@ public class BlockStorageMovementAttemptedItems {
     }
   }
 
-  
+
   void blockStorageMovementReportedItemsCheck() throws IOException {
     // Removes all available blocks from this queue and process it.
     Collection<Block> finishedBlks = new ArrayList<>();
@@ -262,12 +261,12 @@ public class BlockStorageMovementAttemptedItems {
     }
   }
 
-  
+
   public int getMovementFinishedBlocksCount() {
     return movementFinishedBlocks.size();
   }
 
-  
+
   public int getAttemptedItemsCount() {
     synchronized (storageMovementAttemptedItems) {
       return storageMovementAttemptedItems.size();

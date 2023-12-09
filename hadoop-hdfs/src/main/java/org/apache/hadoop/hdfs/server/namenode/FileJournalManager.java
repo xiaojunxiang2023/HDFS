@@ -14,7 +14,6 @@ import org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager.StorageP
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 import org.apache.hadoop.hdfs.server.protocol.RemoteEditLog;
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
@@ -54,7 +53,7 @@ public class FileJournalManager implements JournalManager {
   private static final Pattern EDITS_INPROGRESS_STALE_REGEX = Pattern.compile(
       NameNodeFile.EDITS_INPROGRESS.getName() + "_(\\d+).*(\\S+)");
 
-  
+
   File currentInProgress = null;
 
   /**
@@ -66,7 +65,7 @@ public class FileJournalManager implements JournalManager {
    */
   private long lastReadableTxId = Long.MAX_VALUE;
 
-  
+
   StoragePurger purger
       = new NNStorageRetentionManager.DeletionStoragePurger();
 
@@ -140,7 +139,7 @@ public class FileJournalManager implements JournalManager {
     }
   }
 
-  
+
   public StorageDirectory getStorageDirectory() {
     return sd;
   }

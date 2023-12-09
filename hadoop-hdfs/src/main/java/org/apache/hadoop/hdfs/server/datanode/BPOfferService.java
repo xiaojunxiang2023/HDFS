@@ -9,7 +9,6 @@ import org.apache.hadoop.hdfs.protocol.RollingUpgradeStatus;
 import org.apache.hadoop.hdfs.protocolPB.DatanodeProtocolClientSideTranslatorPB;
 import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -218,7 +216,7 @@ class BPOfferService {
     }
   }
 
-  
+
   NamespaceInfo setNamespaceInfo(NamespaceInfo nsInfo) throws IOException {
     writeLock();
     try {
@@ -511,7 +509,7 @@ class BPOfferService {
     }
   }
 
-  
+
   List<BPServiceActor> getBPServiceActors() {
     return Lists.newArrayList(bpServices);
   }
@@ -602,7 +600,7 @@ class BPOfferService {
     return false;
   }
 
-  
+
   int countNameNodes() {
     return bpServices.size();
   }
@@ -610,7 +608,7 @@ class BPOfferService {
   /**
    * Run an immediate block report on this thread. Used by tests.
    */
-  
+
   void triggerBlockReportForTests() throws IOException {
     for (BPServiceActor actor : bpServices) {
       actor.triggerBlockReportForTests();
@@ -620,7 +618,7 @@ class BPOfferService {
   /**
    * Run an immediate deletion report on this thread. Used by tests.
    */
-  
+
   void triggerDeletionReportForTests() throws IOException {
     for (BPServiceActor actor : bpServices) {
       actor.getIbrManager().triggerDeletionReportForTests();
@@ -630,7 +628,7 @@ class BPOfferService {
   /**
    * Run an immediate heartbeat from all actors. Used by tests.
    */
-  
+
   void triggerHeartbeatForTests() throws IOException {
     for (BPServiceActor actor : bpServices) {
       actor.triggerHeartbeatForTests();

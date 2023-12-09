@@ -6,7 +6,6 @@ import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.*;
 
@@ -81,7 +80,7 @@ public class ConnectionPoolId implements Comparable<ConnectionPoolId> {
     return ret;
   }
 
-  
+
   UserGroupInformation getUgi() {
     return this.ugi;
   }

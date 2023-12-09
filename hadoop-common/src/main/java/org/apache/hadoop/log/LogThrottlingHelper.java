@@ -1,7 +1,6 @@
 package org.apache.hadoop.log;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Timer;
 
 import java.util.HashMap;
@@ -142,7 +141,7 @@ public class LogThrottlingHelper {
     this(minLogPeriodMs, primaryRecorderName, new Timer());
   }
 
-  
+
   LogThrottlingHelper(long minLogPeriodMs, String primaryRecorderName,
                       Timer timer) {
     this.minLogPeriodMs = minLogPeriodMs;

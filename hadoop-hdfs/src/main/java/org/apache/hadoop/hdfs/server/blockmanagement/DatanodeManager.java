@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.net.DFSNetworkTopology;
 import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo.DatanodeInfoBuilder;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants.DatanodeReportType;
-import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.BlockTargetPair;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor.CachedBlocksList;
 import org.apache.hadoop.hdfs.server.common.Util;
@@ -22,8 +21,6 @@ import org.apache.hadoop.hdfs.server.protocol.BlockRecoveryCommand.RecoveringBlo
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.net.*;
 import org.apache.hadoop.net.NetworkTopology.InvalidTopologyException;
-import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
@@ -46,7 +43,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static org.apache.hadoop.hdfs.server.protocol.DatanodeProtocol.DNA_ERASURE_CODING_RECONSTRUCTION;
 import static org.apache.hadoop.util.Time.monotonicNow;
 
 /**
@@ -444,7 +440,7 @@ public class DatanodeManager {
     return heartbeatManager;
   }
 
-  
+
   public DatanodeAdminManager getDatanodeAdminManager() {
     return datanodeAdminManager;
   }
@@ -453,17 +449,17 @@ public class DatanodeManager {
     return hostConfigManager;
   }
 
-  
+
   public void setHeartbeatExpireInterval(long expiryMs) {
     this.heartbeatExpireInterval = expiryMs;
   }
 
-  
+
   public FSClusterStats getFSClusterStats() {
     return fsClusterStats;
   }
 
-  
+
   public int getBlockInvalidateLimit() {
     return blockInvalidateLimit;
   }
@@ -486,7 +482,7 @@ public class DatanodeManager {
     this.avoidSlowDataNodesForRead = enable;
   }
 
-  
+
   public boolean getEnableAvoidSlowDataNodesForRead() {
     return this.avoidSlowDataNodesForRead;
   }
@@ -495,7 +491,7 @@ public class DatanodeManager {
     this.maxSlowPeerReportNodes = maxNodes;
   }
 
-  
+
   public int getMaxSlowpeerCollectNodes() {
     return this.maxSlowPeerReportNodes;
   }
@@ -1460,7 +1456,7 @@ public class DatanodeManager {
    *
    * @param node DN which caused cluster to become multi-rack. Used for logging.
    */
-  
+
   void checkIfClusterIsNowMultiRack(DatanodeDescriptor node) {
     if (!hasClusterEverBeenMultiRack && networktopology.getNumOfRacks() > 1) {
       String message = "DN " + node + " joining cluster has expanded a formerly " +
@@ -2074,7 +2070,7 @@ public class DatanodeManager {
   /**
    * Use only for testing.
    */
-  
+
   public SlowPeerTracker getSlowPeerTracker() {
     return slowPeerTracker;
   }
@@ -2082,12 +2078,12 @@ public class DatanodeManager {
   /**
    * Use only for testing.
    */
-  
+
   public SlowDiskTracker getSlowDiskTracker() {
     return slowDiskTracker;
   }
 
-  
+
   public void addSlowPeers(String dnUuid) {
     slowNodesUuidSet.add(dnUuid);
   }

@@ -7,7 +7,6 @@ import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.net.ConnectTimeoutException;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -230,7 +229,7 @@ public class RetryPolicies {
       return constructReasonString(maxRetries);
     }
 
-    
+
     public static String constructReasonString(int retries) {
       return "retries get failed due to exceeded maximum allowed retries " +
           "number: " + retries;
@@ -291,7 +290,7 @@ public class RetryPolicies {
       return constructReasonString(this.maxTime, this.timeUnit);
     }
 
-    
+
     public static String constructReasonString(long maxTime,
                                                TimeUnit timeUnit) {
       return "retries get failed due to exceeded maximum allowed time (" +

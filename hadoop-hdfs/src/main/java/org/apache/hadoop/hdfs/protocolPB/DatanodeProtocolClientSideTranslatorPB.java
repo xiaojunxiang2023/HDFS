@@ -9,7 +9,6 @@ import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo.Capability;
 import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.RpcController;
 import org.apache.hadoop.thirdparty.protobuf.ServiceException;
 
@@ -33,7 +32,7 @@ public class DatanodeProtocolClientSideTranslatorPB implements
       VersionRequestProto.newBuilder().build();
   private final static RpcController NULL_CONTROLLER = null;
 
-  
+
   public DatanodeProtocolClientSideTranslatorPB(DatanodeProtocolPB rpcProxy) {
     this.rpcProxy = rpcProxy;
   }

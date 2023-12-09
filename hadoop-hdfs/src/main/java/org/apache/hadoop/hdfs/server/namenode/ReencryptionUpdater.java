@@ -25,7 +25,6 @@ import org.apache.hadoop.fs.XAttrSetFlag;
 import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionHandler.ReencryptionBatch;
 import org.apache.hadoop.ipc.RetriableException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.StopWatch;
@@ -179,28 +178,28 @@ public final class ReencryptionUpdater implements Runnable {
     }
   }
 
-  
+
   synchronized void pauseForTesting() {
     shouldPauseForTesting = true;
     LOG.info("Pausing re-encrypt updater for testing.");
     notify();
   }
 
-  
+
   synchronized void resumeForTesting() {
     shouldPauseForTesting = false;
     LOG.info("Resuming re-encrypt updater for testing.");
     notify();
   }
 
-  
+
   void pauseForTestingAfterNthCheckpoint(final long zoneId, final int count) {
     assert pauseAfterNthCheckpoint == 0;
     pauseAfterNthCheckpoint = count;
     pauseZoneId = zoneId;
   }
 
-  
+
   boolean isRunning() {
     return isRunning;
   }

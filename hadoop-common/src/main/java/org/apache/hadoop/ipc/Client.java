@@ -23,7 +23,6 @@ import org.apache.hadoop.net.ConnectTimeoutException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.*;
 import org.apache.hadoop.security.SaslRpcServer.AuthMethod;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.tracing.Span;
@@ -255,7 +254,7 @@ public class Client implements AutoCloseable {
     conf.setInt(CommonConfigurationKeys.IPC_CLIENT_CONNECT_TIMEOUT_KEY, timeout);
   }
 
-  
+
   public static final ExecutorService getClientExecutor() {
     return Client.clientExcecutorFactory.clientExecutor;
   }
@@ -1562,7 +1561,7 @@ public class Client implements AutoCloseable {
     asyncCallCounter.decrementAndGet();
   }
 
-  
+
   int getAsyncCallCount() {
     return asyncCallCounter.get();
   }
@@ -1756,7 +1755,7 @@ public class Client implements AutoCloseable {
       return pingInterval;
     }
 
-    
+
     String getSaslQop() {
       return saslQop;
     }

@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs;
 import org.apache.hadoop.hdfs.net.Peer;
 import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.util.IOUtilsClient;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.LinkedListMultimap;
 import org.apache.hadoop.util.Daemon;
@@ -242,7 +241,7 @@ public class PeerCache {
   /**
    * Empty the cache, and close all sockets.
    */
-  
+
   synchronized void clear() {
     for (Value value : multimap.values()) {
       IOUtilsClient.cleanupWithLogger(LOG, value.getPeer());
@@ -250,7 +249,7 @@ public class PeerCache {
     multimap.clear();
   }
 
-  
+
   void close() {
     clear();
     if (daemon != null) {

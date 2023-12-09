@@ -31,7 +31,6 @@ import org.apache.hadoop.hdfs.server.namenode.startupprogress.Step;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.StepType;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Multimap;
@@ -264,7 +263,7 @@ public class CacheManager {
     return Collections.unmodifiableCollection(directivesById.values());
   }
 
-  
+
   public GSet<CachedBlock, CachedBlock> getCachedBlocks() {
     assert namesystem.hasReadLock();
     return cachedBlocks;
@@ -1247,7 +1246,7 @@ public class CacheManager {
     }
   }
 
-  
+
   public Thread getCacheReplicationMonitor() {
     crmLock.lock();
     try {

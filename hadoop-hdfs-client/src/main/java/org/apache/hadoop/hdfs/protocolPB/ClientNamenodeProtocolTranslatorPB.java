@@ -23,7 +23,8 @@ import org.apache.hadoop.hdfs.protocol.proto.AclProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.*;
 import org.apache.hadoop.hdfs.protocol.proto.EncryptionZonesProtos;
 import org.apache.hadoop.hdfs.protocol.proto.EncryptionZonesProtos.*;
-import org.apache.hadoop.hdfs.protocol.proto.ErasureCodingProtos.*;
+import org.apache.hadoop.hdfs.protocol.proto.ErasureCodingProtos.GetErasureCodingCodecsRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.ErasureCodingProtos.GetErasureCodingPoliciesRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.BatchedDirectoryListingProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetXAttrsRequestProto;
@@ -50,7 +51,9 @@ import org.apache.hadoop.util.concurrent.AsyncGet;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**

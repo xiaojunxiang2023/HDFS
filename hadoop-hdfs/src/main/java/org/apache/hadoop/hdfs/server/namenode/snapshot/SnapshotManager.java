@@ -9,7 +9,6 @@ import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport.DiffReportEntry;
 import org.apache.hadoop.hdfs.server.namenode.*;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.metrics2.util.MBeans;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +99,7 @@ public class SnapshotManager implements SnapshotStatsMXBean {
     DirectoryDiffListFactory.init(skipInterval, maxLevels, LOG);
   }
 
-  
+
   void setCaptureOpenFiles(boolean captureOpenFiles) {
     this.captureOpenFiles = captureOpenFiles;
   }

@@ -68,7 +68,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
@@ -474,7 +473,7 @@ public class DataNode extends ReconfigurableBase
     return fileIoProvider;
   }
 
-  
+
   static class ChangedVolumes {
     // 新增的 data.dir
     List<StorageLocation> newLocations = Lists.newArrayList();
@@ -492,7 +491,7 @@ public class DataNode extends ReconfigurableBase
    * @throws IOException if none of the directories are specified in the
    * configuration, or the storage type of a directory is changed.
    */
-  
+
   ChangedVolumes parseChangedVolumes(String newVolumes) throws IOException {
     Configuration conf = new Configuration();
     conf.set(DFS_DATANODE_DATA_DIR_KEY, newVolumes);
@@ -1143,23 +1142,23 @@ public class DataNode extends ReconfigurableBase
   }
 
   // used only for testing
-  
+
   public void setHeartbeatsDisabledForTests(
       boolean heartbeatsDisabledForTests) {
     this.heartbeatsDisabledForTests = heartbeatsDisabledForTests;
   }
 
-  
+
   boolean areHeartbeatsDisabledForTests() {
     return this.heartbeatsDisabledForTests;
   }
 
-  
+
   void setIBRDisabledForTest(boolean disabled) {
     this.ibrDisabledForTests = disabled;
   }
 
-  
+
   boolean areIBRDisabledForTests() {
     return this.ibrDisabledForTests;
   }
@@ -1168,7 +1167,7 @@ public class DataNode extends ReconfigurableBase
     this.cacheReportsDisabledForTests = disabled;
   }
 
-  
+
   boolean areCacheReportsDisabledForTests() {
     return this.cacheReportsDisabledForTests;
   }
@@ -1552,17 +1551,17 @@ public class DataNode extends ReconfigurableBase
     dataNodeInfoBeanName = MBeans.register("DataNode", "DataNodeInfo", this);
   }
 
-  
+
   public DataXceiverServer getXferServer() {
     return xserver;
   }
 
-  
+
   public int getXferPort() {
     return streamingAddr.getPort();
   }
 
-  
+
   public SaslDataTransferServer getSaslServer() {
     return saslServer;
   }
@@ -1598,7 +1597,7 @@ public class DataNode extends ReconfigurableBase
    * @return BP registration object
    * @throws IOException on error
    */
-  
+
   public DatanodeRegistration getDNRegistrationForBP(String bpid)
       throws IOException {
     DataNodeFaultInjector.get().noRegistration();
@@ -2087,7 +2086,7 @@ public class DataNode extends ReconfigurableBase
     LOG.warn(msg);
   }
 
-  
+
   void transferBlock(ExtendedBlock block, DatanodeInfo[] xferTargets,
                      StorageType[] xferTargetStorageTypes, String[] xferTargetStorageIDs)
       throws IOException {
@@ -2519,7 +2518,7 @@ public class DataNode extends ReconfigurableBase
    * finish.
    *  If this thread is specifically interrupted, it will stop waiting.
    */
-  
+
   public static DataNode createDataNode(String args[],
                                         Configuration conf) throws IOException {
     return createDataNode(args, conf, null);
@@ -2529,7 +2528,7 @@ public class DataNode extends ReconfigurableBase
    * finish.
    *  If this thread is specifically interrupted, it will stop waiting.
    */
-  
+
   public static DataNode createDataNode(String args[], Configuration conf,
                                         SecureResources resources) throws IOException {
     DataNode dn = instantiateDataNode(args, conf, resources);
@@ -2590,7 +2589,7 @@ public class DataNode extends ReconfigurableBase
    *
    * @return false if passed argements are incorrect
    */
-  
+
   static boolean parseArguments(String args[], Configuration conf) {
     StartupOption startOpt = StartupOption.REGULAR;
     int i = 0;
@@ -2640,23 +2639,23 @@ public class DataNode extends ReconfigurableBase
    *
    * @return the fsdataset that stores the blocks
    */
-  
+
   public FsDatasetSpi<?> getFSDataset() {
     return data;
   }
 
-  
+
   /** @return the block scanner. */
   public BlockScanner getBlockScanner() {
     return blockScanner;
   }
 
-  
+
   DirectoryScanner getDirectoryScanner() {
     return directoryScanner;
   }
 
-  
+
   public BlockPoolTokenSecretManager getBlockPoolTokenSecretManager() {
     return blockPoolTokenSecretManager;
   }
@@ -3138,12 +3137,12 @@ public class DataNode extends ReconfigurableBase
     return true;
   }
 
-  
+
   public DatanodeID getDatanodeId() {
     return id;
   }
 
-  
+
   public void clearAllBlockSecretKeys() {
     blockPoolTokenSecretManager.clearAllKeysForTesting();
   }
@@ -3167,7 +3166,7 @@ public class DataNode extends ReconfigurableBase
     return shouldRun;
   }
 
-  
+
   DataStorage getStorage() {
     return storage;
   }
@@ -3179,7 +3178,7 @@ public class DataNode extends ReconfigurableBase
   /**
    * Check the disk error synchronously.
    */
-  
+
   public void checkDiskError() throws IOException {
     Set<FsVolumeSpi> unhealthyVolumes;
     try {
@@ -3262,7 +3261,7 @@ public class DataNode extends ReconfigurableBase
     }
   }
 
-  
+
   public long getLastDiskErrorCheck() {
     return lastDiskErrorCheck;
   }
@@ -3343,7 +3342,7 @@ public class DataNode extends ReconfigurableBase
     }
   }
 
-  
+
   ScheduledThreadPoolExecutor getMetricsLoggerTimer() {
     return metricsLoggerTimer;
   }
@@ -3424,7 +3423,7 @@ public class DataNode extends ReconfigurableBase
     }
   }
 
-  
+
   void setBlockScanner(BlockScanner blockScanner) {
     this.blockScanner = blockScanner;
   }

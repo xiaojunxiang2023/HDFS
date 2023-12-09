@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor;
 import org.apache.hadoop.net.InnerNode;
 import org.apache.hadoop.net.InnerNodeImpl;
 import org.apache.hadoop.net.Node;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -239,7 +238,7 @@ public class DFSTopologyNodeImpl extends InnerNodeImpl {
     }
   }
 
-  
+
   HashMap<String, EnumMap<StorageType, Integer>> getChildrenStorageInfo() {
     return childrenStorageInfo;
   }

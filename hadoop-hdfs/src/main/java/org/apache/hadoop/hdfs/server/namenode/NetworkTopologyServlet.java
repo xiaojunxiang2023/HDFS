@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.server.blockmanagement.BlockManager;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.Node;
 import org.apache.hadoop.net.NodeBase;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 
 import javax.servlet.ServletContext;
@@ -147,7 +146,7 @@ public class NetworkTopologyServlet extends DfsServlet {
     }
   }
 
-  
+
   protected static String parseAcceptHeader(HttpServletRequest request) {
     String format = request.getHeader(HttpHeaders.ACCEPT);
     return format != null && format.contains(FORMAT_JSON) ?

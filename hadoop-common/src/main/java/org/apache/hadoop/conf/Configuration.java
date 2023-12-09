@@ -18,7 +18,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.alias.CredentialProvider;
 import org.apache.hadoop.security.alias.CredentialProvider.CredentialEntry;
 import org.apache.hadoop.security.alias.CredentialProviderFactory;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.base.Strings;
@@ -1177,7 +1176,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
    *
    * @param val If true, will allow Configuration to store keys without values
    */
-  
+
   public void setAllowNullValueProperties(boolean val) {
     this.allowNullValueProperties = val;
   }
@@ -1194,7 +1193,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
    * @param name the property name
    * @return true if the property <code>name</code> exists without value
    */
-  
+
   public boolean onlyKeyExists(String name) {
     String[] names = handleDeprecation(deprecationContext.get(), name);
     for (String n : names) {
@@ -1357,7 +1356,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>>,
     }
   }
 
-  
+
   void logDeprecation(String message) {
     LOG_DEPRECATION.info(message);
   }

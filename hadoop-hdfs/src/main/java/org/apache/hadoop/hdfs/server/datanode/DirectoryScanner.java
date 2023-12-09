@@ -7,7 +7,6 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ArrayListMultimap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ListMultimap;
 import org.apache.hadoop.util.Daemon;
@@ -44,27 +43,27 @@ public class DirectoryScanner implements Runnable {
    * Total combined wall clock time (in milliseconds) spent by the report
    * compiler threads executing. Used for testing purposes.
    */
-  
+
   final AtomicLong timeRunningMs = new AtomicLong(0L);
 
   /**
    * Total combined wall clock time (in milliseconds) spent by the report
    * compiler threads blocked by the throttle. Used for testing purposes.
    */
-  
+
   final AtomicLong timeWaitingMs = new AtomicLong(0L);
 
   /**
    * The complete list of block differences indexed by block pool ID.
    */
-  
+
   final BlockPoolReport diffs = new BlockPoolReport();
 
   /**
    * Statistics about the block differences in each blockpool, indexed by block
    * pool ID.
    */
-  
+
   final Map<String, Stats> stats;
 
   /**
@@ -72,7 +71,7 @@ public class DirectoryScanner implements Runnable {
    *
    * @param b whether to retain diffs
    */
-  
+
   public void setRetainDiffs(boolean b) {
     retainDiffs = b;
   }
@@ -80,7 +79,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Stats tracked for reporting and testing, per blockpool
    */
-  
+
   static class Stats {
     final String bpid;
     long totalBlocks = 0;
@@ -116,7 +115,7 @@ public class DirectoryScanner implements Runnable {
    * objects. If a block pool exists but has no ScanInfo objects associated with
    * it, there will be no mapping for that particular block pool.
    */
-  
+
   public static class ScanInfoVolumeReport {
 
     @SuppressWarnings("unused")
@@ -174,7 +173,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Helper class for compiling block info reports per block pool.
    */
-  
+
   public static class BlockPoolReport {
 
     @SuppressWarnings("unused")
@@ -305,7 +304,7 @@ public class DirectoryScanner implements Runnable {
    *
    * @return whether the scanner has been started
    */
-  
+
   boolean getRunStatus() {
     return shouldRun.get();
   }
@@ -389,7 +388,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Reconcile differences between disk and in-memory blocks
    */
-  
+
   public void reconcile() throws IOException {
     LOG.debug("reconcile start DirectoryScanning");
     scan();
@@ -554,7 +553,7 @@ public class DirectoryScanner implements Runnable {
   /**
    * Get the lists of blocks on the disks in the data set.
    */
-  
+
   public Collection<ScanInfoVolumeReport> getVolumeReports() {
     List<ScanInfoVolumeReport> volReports = new ArrayList<>();
     List<Future<ScanInfoVolumeReport>> compilersInProgress = new ArrayList<>();

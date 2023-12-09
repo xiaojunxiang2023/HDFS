@@ -37,7 +37,6 @@ import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.StringUtils;
@@ -215,7 +214,7 @@ public class NamenodeWebHdfsMethods {
     namenode.queueExternalCall(call);
   }
 
-  
+
   static DatanodeInfo chooseDatanode(final NameNode namenode,
                                      final String path, final HttpOpParam.Op op, final long openOffset,
                                      final long blocksize, final String excludeDatanodes,

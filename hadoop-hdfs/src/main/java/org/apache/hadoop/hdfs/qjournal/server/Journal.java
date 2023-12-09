@@ -25,7 +25,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
@@ -752,7 +751,7 @@ public class Journal implements Closeable {
    * @return the current state of the given segment, or null if the
    * segment does not exist.
    */
-  
+
   SegmentStateProto getSegmentInfo(long segmentTxId)
       throws IOException {
     EditLogFile elf = fjm.getLogFile(segmentTxId);
@@ -1190,7 +1189,7 @@ public class Journal implements Closeable {
     return storage.getJournalManager().getJournalCTime();
   }
 
-  
+
   JournaledEditsCache getJournaledEditsCache() {
     return cache;
   }

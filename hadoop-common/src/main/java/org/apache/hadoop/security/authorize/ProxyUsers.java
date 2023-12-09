@@ -3,7 +3,6 @@ package org.apache.hadoop.security.authorize;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -115,7 +114,7 @@ public class ProxyUsers {
     authorize(user, remoteAddress);
   }
 
-  
+
   public static DefaultImpersonationProvider getDefaultImpersonationProvider() {
     return ((DefaultImpersonationProvider) getSip());
   }

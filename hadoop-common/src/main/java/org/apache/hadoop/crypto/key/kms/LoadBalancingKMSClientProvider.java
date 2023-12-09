@@ -14,7 +14,6 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.KMSUtil;
 import org.apache.hadoop.util.Time;
@@ -70,7 +69,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
     this(providerUri, providers, Time.monotonicNow(), conf);
   }
 
-  
+
   LoadBalancingKMSClientProvider(KMSClientProvider[] providers, long seed,
                                  Configuration conf) {
     this(URI.create("kms://testing"), providers, seed, conf);
@@ -118,7 +117,7 @@ public class LoadBalancingKMSClientProvider extends KeyProvider implements
         uri, providers.length, dtService, canonicalService);
   }
 
-  
+
   public KMSClientProvider[] getProviders() {
     return providers;
   }

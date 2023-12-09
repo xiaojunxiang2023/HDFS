@@ -15,7 +15,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.cache.*;
 import org.apache.hadoop.tracing.Span;
 import org.apache.hadoop.tracing.SpanContext;
@@ -1632,7 +1631,7 @@ class DataStreamer extends Daemon {
   }
 
   /** update pipeline at the namenode */
-  
+
   public void updatePipeline(long newGS) throws IOException {
     final ExtendedBlock oldBlock = block.getCurrentBlock();
     // the new GS has been propagated to all DN, it should be ok to update the
@@ -2100,7 +2099,7 @@ class DataStreamer extends Daemon {
   /**
    * @return The times have retried to recover pipeline, for the same packet.
    */
-  
+
   int getPipelineRecoveryCount() {
     return pipelineRecoveryCount;
   }

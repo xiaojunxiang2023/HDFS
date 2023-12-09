@@ -9,10 +9,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 // host -> node
 public class Host2NodesMap {
-  
+
   // hostname -> ipAddr
   private HashMap<String, String> mapHost = new HashMap<>();
-  
+
   // 保存总的节点数据, ipAddr -> node
   private final HashMap<String, DatanodeDescriptor[]> map = new HashMap<>();
   private final ReadWriteLock hostmapLock = new ReentrantReadWriteLock();

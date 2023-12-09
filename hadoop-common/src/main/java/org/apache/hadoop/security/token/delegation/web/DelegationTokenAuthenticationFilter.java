@@ -15,7 +15,6 @@ import org.apache.hadoop.security.authorize.AuthorizationException;
 import org.apache.hadoop.security.authorize.ProxyUsers;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
 import org.apache.hadoop.security.token.delegation.ZKDelegationTokenSecretManager;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.HttpExceptionUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -196,7 +195,7 @@ public class DelegationTokenAuthenticationFilter
     this.handlerAuthMethod = authMethod;
   }
 
-  
+
   static String getDoAs(HttpServletRequest request) {
     String queryString = request.getQueryString();
     if (queryString == null) {

@@ -15,7 +15,6 @@ import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,7 @@ public class RouterSecurityManager {
     }
   }
 
-  
+
   public RouterSecurityManager(AbstractDelegationTokenSecretManager
                                    <DelegationTokenIdentifier> dtSecretManager) {
     this.dtSecretManager = dtSecretManager;

@@ -7,7 +7,6 @@ import com.jcraft.jsch.SftpException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Progressable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -710,7 +709,7 @@ public class SFTPFileSystem extends FileSystem {
     }
   }
 
-  
+
   SFTPConnectionPool getConnectionPool() {
     return connectionPool;
   }

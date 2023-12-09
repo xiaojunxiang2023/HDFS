@@ -23,7 +23,6 @@ import org.apache.hadoop.ipc.ProtobufRpcEngine2;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.RPC.Server;
 import org.apache.hadoop.net.NetUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 import org.slf4j.Logger;
 
@@ -293,7 +292,7 @@ public class JournalNodeRpcServer implements QJournalProtocol,
   }
 
   /** Allow access to the RPC server for testing. */
-  
+
   Server getRpcServer() {
     return server;
   }

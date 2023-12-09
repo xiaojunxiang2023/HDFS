@@ -10,7 +10,6 @@ import org.apache.hadoop.ipc.protobuf.ProtobufRpcEngine2Protos.RequestHeaderProt
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 import org.apache.hadoop.thirdparty.protobuf.Descriptors.MethodDescriptor;
 import org.apache.hadoop.thirdparty.protobuf.Message;
@@ -330,7 +329,7 @@ public class ProtobufRpcEngine2 implements RpcEngine {
     }
   }
 
-  
+
   static Client getClient(Configuration conf) {
     return CLIENTS.getClient(conf, SocketFactory.getDefault(),
         RpcWritable.Buffer.class);
@@ -349,7 +348,7 @@ public class ProtobufRpcEngine2 implements RpcEngine {
         portRangeConfig, alignmentContext);
   }
 
-  
+
   public static void clearClientCache() {
     CLIENTS.clearCache();
   }

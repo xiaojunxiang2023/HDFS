@@ -17,7 +17,6 @@
  */
 package org.apache.hadoop.hdfs.server.datanode.metrics;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public class OutlierDetector {
    * low. The median multiplier introduces another safeguard to avoid
    * overaggressive outlier detection.
    */
-  
+
   static final int MEDIAN_MULTIPLIER = 3;
   /**
    * The multiplier is from Leys, C. et al.

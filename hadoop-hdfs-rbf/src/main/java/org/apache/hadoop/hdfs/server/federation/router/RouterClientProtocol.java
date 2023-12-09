@@ -26,7 +26,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.net.ConnectTimeoutException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1832,7 +1831,7 @@ public class RouterClientProtocol implements ClientProtocol {
    * @param date Map with the dates.
    * @return New HDFS file status representing a mount point.
    */
-  
+
   HdfsFileStatus getMountPointStatus(
       String name, int childrenNum, long date) {
     long modTime = date;
@@ -2029,7 +2028,7 @@ public class RouterClientProtocol implements ClientProtocol {
    *         subclusters else false in all other scenarios.
    * @throws IOException if unable to get the file status.
    */
-  
+
   boolean isMultiDestDirectory(String src) throws IOException {
     try {
       if (rpcServer.isPathAll(src)) {

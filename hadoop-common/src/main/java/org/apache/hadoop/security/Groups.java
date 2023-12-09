@@ -3,7 +3,6 @@ package org.apache.hadoop.security;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Ticker;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
@@ -35,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 // MapReduce也可见
 public class Groups {
-  
+
   static final Logger LOG = LoggerFactory.getLogger(Groups.class);
 
   private final GroupMappingServiceProvider impl;
@@ -115,7 +114,7 @@ public class Groups {
           warningDeltaMs);
   }
 
-  
+
   Set<String> getNegativeCache() {
     return negativeCache;
   }

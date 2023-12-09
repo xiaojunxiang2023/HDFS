@@ -7,7 +7,6 @@ import org.apache.hadoop.auth.util.KerberosUtil;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.filter.AuthenticationFilter;
 import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.ietf.jgss.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +83,7 @@ public class KerberosAuthenticationHandler implements AuthenticationHandler {
   /**
    * Constant for the list of endpoints that skips Kerberos authentication.
    */
-  
+
   static final String ENDPOINT_WHITELIST = TYPE + ".endpoint.whitelist";
   private static final Pattern ENDPOINT_PATTERN = Pattern.compile("^/[\\w]+");
 

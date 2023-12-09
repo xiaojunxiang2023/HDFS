@@ -26,7 +26,6 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.StringUtils;
@@ -331,7 +330,7 @@ public class Mover {
     }
   }
 
-  
+
   static class StorageTypeDiff {
     final List<StorageType> expected;
     final List<StorageType> existing;
@@ -471,7 +470,7 @@ public class Mover {
       return map;
     }
 
-    
+
     static Map<URI, List<Path>> getNameNodePathsToMove(Configuration conf,
                                                        String... args) throws Exception {
       final Options opts = buildCliOptions();
@@ -756,7 +755,7 @@ public class Mover {
       return false;
     }
 
-    
+
     boolean scheduleMoveReplica(DBlock db, MLocation ml,
                                 List<StorageType> targetTypes) {
       final Source source = storages.getSource(ml);

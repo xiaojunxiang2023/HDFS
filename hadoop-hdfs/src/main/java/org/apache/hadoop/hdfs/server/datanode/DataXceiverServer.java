@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.net.Peer;
 import org.apache.hadoop.hdfs.net.PeerServer;
 import org.apache.hadoop.hdfs.util.DataTransferThrottler;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
@@ -125,7 +124,7 @@ class DataXceiverServer implements Runnable {
       }
     }
 
-    
+
     int getMaxConcurrentMovers() {
       return this.maxThreads;
     }
@@ -434,7 +433,7 @@ class DataXceiverServer implements Runnable {
    *
    * @return the number of peers and DataXceivers.
    */
-  
+
   int getNumPeersXceiver() {
     lock.lock();
     try {
@@ -444,7 +443,7 @@ class DataXceiverServer implements Runnable {
     }
   }
 
-  
+
   PeerServer getPeerServer() {
     return peerServer;
   }
@@ -491,7 +490,7 @@ class DataXceiverServer implements Runnable {
    *
    * @param max The new maximum number of threads for block moving, in seconds
    */
-  
+
   void setMaxReconfigureWaitTime(int max) {
     this.maxReconfigureWaitTime = max;
   }

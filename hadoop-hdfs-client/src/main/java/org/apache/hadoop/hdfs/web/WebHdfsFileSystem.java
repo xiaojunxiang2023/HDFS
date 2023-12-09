@@ -39,7 +39,6 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.TokenSelector;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSelector;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -84,7 +83,7 @@ public class WebHdfsFileSystem extends FileSystem
    */
   protected URLConnectionFactory connectionFactory;
 
-  
+
   public static final String CANT_FALLBACK_TO_INSECURE_MSG =
       "The client is configured to only allow connecting to secure cluster";
 
@@ -311,7 +310,7 @@ public class WebHdfsFileSystem extends FileSystem
     return delegationToken;
   }
 
-  
+
   synchronized boolean replaceExpiredDelegationToken() throws IOException {
     boolean replaced = false;
     if (canRefreshDelegationToken) {
@@ -1957,12 +1956,12 @@ public class WebHdfsFileSystem extends FileSystem
     }.run();
   }
 
-  
+
   InetSocketAddress[] getResolvedNNAddr() {
     return nnAddrs;
   }
 
-  
+
   public void setRetryPolicy(RetryPolicy rp) {
     this.retryPolicy = rp;
   }
@@ -2002,7 +2001,7 @@ public class WebHdfsFileSystem extends FileSystem
     return KMSUtil.createKeyProviderFromUri(getConf(), keyProviderUri);
   }
 
-  
+
   public void setTestProvider(KeyProvider kp) {
     testProvider = kp;
   }
@@ -2036,7 +2035,7 @@ public class WebHdfsFileSystem extends FileSystem
    * WebHdfsFileSystem. This class will invoke the retry policy when performing
    * any of these actions.
    */
-  
+
   public class WebHdfsInputStream extends FSInputStream {
     private ReadRunner readRunner = null;
 
@@ -2093,12 +2092,12 @@ public class WebHdfsFileSystem extends FileSystem
       return readRunner.getFileLength();
     }
 
-    
+
     ReadRunner getReadRunner() {
       return readRunner;
     }
 
-    
+
     void setReadRunner(ReadRunner rr) {
       this.readRunner = rr;
     }
@@ -2140,7 +2139,7 @@ public class WebHdfsFileSystem extends FileSystem
    * already been initialized and read the requested data from the specified
    * input stream.
    */
-  
+
   protected class ReadRunner extends AbstractFsPathRunner<Integer> {
     private InputStream in = null;
     private HttpURLConnection cachedConnection = null;
@@ -2342,7 +2341,7 @@ public class WebHdfsFileSystem extends FileSystem
       }
     }
 
-    
+
     InputStream initializeInputStream(HttpURLConnection conn)
         throws IOException {
       // Cache the resolved URL so that it can be used in the event of
@@ -2369,7 +2368,7 @@ public class WebHdfsFileSystem extends FileSystem
     }
 
     // Close both the InputStream and the connection.
-    
+
     void closeInputStream(RunnerState rs) throws IOException {
       if (in != null) {
         in = null;
@@ -2383,12 +2382,12 @@ public class WebHdfsFileSystem extends FileSystem
 
     /* Getters and Setters */
 
-    
+
     protected InputStream getInputStream() {
       return in;
     }
 
-    
+
     protected void setInputStream(InputStream inStream) {
       in = inStream;
     }

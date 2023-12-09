@@ -9,7 +9,6 @@ import org.apache.hadoop.auth.util.CertificateUtil;
 import org.apache.hadoop.auth.util.micro.AuthenticationException;
 import org.apache.hadoop.filter.AuthenticationFilter;
 import org.apache.hadoop.filter.AuthenticationToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -202,7 +201,7 @@ public class JWTRedirectAuthenticationHandler extends
    * @param request for getting the original request URL
    * @return url to use as login url for redirect
    */
-  
+
   String constructLoginURL(HttpServletRequest request) {
     String delimiter = "?";
     if (authenticationProviderUrl.contains("?")) {

@@ -1,7 +1,6 @@
 package org.apache.hadoop.ha;
 
 import org.apache.hadoop.ha.micro.ServiceFailedException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.ZKUtil.ZKAuthInfo;
@@ -110,9 +109,9 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * Name of the lock znode used by the library. Protected for access in test
    * classes
    */
-  
+
   protected static final String LOCK_FILENAME = "ActiveStandbyElectorLock";
-  
+
   protected static final String BREADCRUMB_FILENAME = "ActiveBreadCrumb";
 
   public static final Logger LOG =
@@ -557,7 +556,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     fatalError(errorMessage);
   }
 
-  
+
   public boolean getWantToBeInElection() {
     return wantToBeInElection;
   }
@@ -761,7 +760,7 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
    * This is non-static, and separated out, so that unit tests
    * can override the behavior not to sleep.
    */
-  
+
   protected void sleepFor(int sleepMs) {
     if (sleepMs > 0) {
       try {
@@ -772,17 +771,17 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     }
   }
 
-  
+
   void preventSessionReestablishmentForTests() {
     sessionReestablishLockForTests.lock();
   }
 
-  
+
   void allowSessionReestablishmentForTests() {
     sessionReestablishLockForTests.unlock();
   }
 
-  
+
   synchronized long getZKSessionIdForTests() {
     if (zkClient != null) {
       return zkClient.getSessionId();
@@ -791,12 +790,12 @@ public class ActiveStandbyElector implements StatCallback, StringCallback {
     }
   }
 
-  
+
   synchronized State getStateForTests() {
     return state;
   }
 
-  
+
   synchronized boolean isMonitorLockNodePending() {
     return monitorLockNodePending;
   }

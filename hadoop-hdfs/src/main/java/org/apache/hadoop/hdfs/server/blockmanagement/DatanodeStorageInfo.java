@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage.State;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -168,7 +167,7 @@ public class DatanodeStorageInfo {
     blockReportCount++;
   }
 
-  
+
   public void setUtilizationForTesting(long capacity, long dfsUsed,
                                        long remaining, long blockPoolUsed) {
     this.capacity = capacity;
@@ -193,7 +192,7 @@ public class DatanodeStorageInfo {
     return getState() == State.FAILED && numBlocks != 0;
   }
 
-  
+
   public String getStorageID() {
     return storageID;
   }
@@ -287,7 +286,7 @@ public class DatanodeStorageInfo {
    * Used for testing only.
    * @return the head of the blockList
    */
-  
+
   BlockInfo getBlockListHeadForTesting() {
     return blockList;
   }
@@ -392,7 +391,7 @@ public class DatanodeStorageInfo {
     return null;
   }
 
-  
+
   void setRemainingForTests(int remaining) {
     this.remaining = remaining;
   }

@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.federation.resolver.order;
 
 import org.apache.hadoop.hdfs.server.federation.resolver.PathLocation;
 import org.apache.hadoop.hdfs.server.federation.utils.ConsistentHashRing;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,7 @@ public class HashResolver implements OrderedResolver {
   }
 
   // 获取处理后的值，例如 hosts._COPYING 返回 hosts
-  
+
   public static String extractTempFileName(final String input) {
     StringBuilder sb = new StringBuilder();
     Matcher matcher = TEMP_FILE_PATTERN.matcher(input);

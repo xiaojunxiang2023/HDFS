@@ -40,7 +40,6 @@ import org.apache.hadoop.hdfs.server.diskbalancer.datamodel.DiskBalancerVolumeSe
 import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.HostsFileReader;
@@ -461,7 +460,7 @@ public abstract class Command extends Configured implements Closeable {
    *
    * @return Cluster.
    */
-  
+
   DiskBalancerCluster getCluster() {
     return cluster;
   }
@@ -567,7 +566,7 @@ public abstract class Command extends Configured implements Closeable {
   /**
    * Set DiskBalancer cluster
    */
-  
+
   public void setCluster(DiskBalancerCluster newCluster) {
     this.cluster = newCluster;
   }

@@ -25,7 +25,6 @@ import org.apache.hadoop.security.token.TokenRenewer;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSelector;
 import org.apache.hadoop.security.token.delegation.web.DelegationTokenAuthenticatedURL;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.base.Strings;
 import org.apache.hadoop.util.HttpExceptionUtils;
@@ -916,7 +915,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     encKeyVersionQueue.drain(keyName);
   }
 
-  
+
   public int getEncKeyQueueSize(String keyName) {
     return encKeyVersionQueue.getSize(keyName);
   }
@@ -930,7 +929,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     clientTokenProvider = provider;
   }
 
-  
+
   DelegationTokenAuthenticatedURL createAuthenticatedURL() {
     return new DelegationTokenAuthenticatedURL(configurator) {
       @Override
@@ -1116,7 +1115,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     return false;
   }
 
-  
+
   UserGroupInformation getActualUgi() throws IOException {
     final UserGroupInformation currentUgi = UserGroupInformation
         .getCurrentUser();
@@ -1158,7 +1157,7 @@ public class KMSClientProvider extends KeyProvider implements CryptoExtension,
     }
   }
 
-  
+
   String getKMSUrl() {
     return kmsUrl.toString();
   }

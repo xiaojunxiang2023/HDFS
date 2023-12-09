@@ -1,7 +1,6 @@
 package org.apache.hadoop.io;
 
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ public class ReadaheadPool {
     }
   }
 
-  
+
   public static void resetInstance() {
     synchronized (ReadaheadPool.class) {
       if (instance != null) {

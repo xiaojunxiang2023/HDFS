@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.util.Canceler;
 import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -343,7 +342,7 @@ public class StandbyCheckpointer {
     }
   }
 
-  
+
   static int getCanceledCount() {
     return canceledCount;
   }
@@ -481,7 +480,7 @@ public class StandbyCheckpointer {
     }
   }
 
-  
+
   List<URL> getActiveNNAddresses() {
     return activeNNAddresses;
   }

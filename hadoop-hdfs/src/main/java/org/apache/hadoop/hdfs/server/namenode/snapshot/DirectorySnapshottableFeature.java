@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithCount;
 import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithName;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.Time;
@@ -527,7 +526,7 @@ public class DirectorySnapshottableFeature extends DirectoryWithSnapshotFeature 
     return "snapshotsByNames=" + snapshotsByNames;
   }
 
-  
+
   public void dumpTreeRecursively(INodeDirectory snapshotRoot, PrintWriter out,
                                   StringBuilder prefix, int snapshot) {
     if (snapshot == Snapshot.CURRENT_STATE_ID) {

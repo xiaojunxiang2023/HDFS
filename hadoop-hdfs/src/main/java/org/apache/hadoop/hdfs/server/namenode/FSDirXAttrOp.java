@@ -14,7 +14,6 @@ import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.server.namenode.FSDirectory.DirOp;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
@@ -204,7 +203,7 @@ class FSDirXAttrOp {
    * @param filtered Return parameter, XAttrs that were filtered
    * @return List of XAttrs that does not contain filtered XAttrs
    */
-  
+
   static List<XAttr> filterINodeXAttrs(
       final List<XAttr> existingXAttrs, final List<XAttr> toFilter,
       final List<XAttr> filtered)

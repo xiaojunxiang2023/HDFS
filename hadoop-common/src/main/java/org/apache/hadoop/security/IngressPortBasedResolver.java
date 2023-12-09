@@ -1,7 +1,6 @@
 package org.apache.hadoop.security;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +68,7 @@ public class IngressPortBasedResolver extends SaslPropertiesResolver {
    * @return the sasl properties to be used for the connection.
    */
   @Override
-  
+
   public Map<String, String> getServerProperties(InetAddress clientAddress,
                                                  int ingressPort) {
     LOG.debug("Resolving SASL properties for " + clientAddress + " "

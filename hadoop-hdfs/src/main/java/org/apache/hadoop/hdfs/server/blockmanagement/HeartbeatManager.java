@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 import org.apache.hadoop.hdfs.server.protocol.StorageReport;
 import org.apache.hadoop.hdfs.server.protocol.VolumeFailureSummary;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.Time;
@@ -309,12 +308,12 @@ class HeartbeatManager implements DatanodeStatistics {
     }
   }
 
-  
+
   void restartHeartbeatStopWatch() {
     heartbeatStopWatch.reset().start();
   }
 
-  
+
   boolean shouldAbortHeartbeatCheck(long offset) {
     long elapsed = heartbeatStopWatch.now(TimeUnit.MILLISECONDS);
     return elapsed + offset > heartbeatRecheckInterval;
@@ -399,7 +398,7 @@ class HeartbeatManager implements DatanodeStatistics {
    * B. Remove all blocks in PendingDataNodeMessages for the failed storage
    *    when we remove all blocks from BlocksMap for that storage.
    */
-  
+
   void heartbeatCheck() {
     final DatanodeManager dm = blockManager.getDatanodeManager();
     // It's OK to check safe mode w/o taking the lock here, we re-check

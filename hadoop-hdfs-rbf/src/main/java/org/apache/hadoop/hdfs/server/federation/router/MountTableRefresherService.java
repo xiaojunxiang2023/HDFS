@@ -10,7 +10,6 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.service.AbstractService;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.cache.*;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
@@ -105,7 +104,7 @@ public class MountTableRefresherService extends AbstractService {
     };
   }
 
-  
+
   protected void closeRouterClient(RouterClient client) {
     client.close();
   }
@@ -124,7 +123,7 @@ public class MountTableRefresherService extends AbstractService {
     };
   }
 
-  
+
   protected RouterClient createRouterClient(InetSocketAddress routerSocket,
                                             Configuration config) throws IOException {
     return SecurityUtil.doAsLoginUser(() -> {
@@ -200,7 +199,7 @@ public class MountTableRefresherService extends AbstractService {
     }
   }
 
-  
+
   protected MountTableRefresherThread getLocalRefresher(String adminAddress) {
     // RouterAdminServer是 MountTableManager的后代
     return new MountTableRefresherThread(router.getAdminServer(), adminAddress);

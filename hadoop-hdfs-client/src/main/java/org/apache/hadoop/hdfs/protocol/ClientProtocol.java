@@ -30,7 +30,6 @@ import org.apache.hadoop.security.token.TokenInfo;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 import static org.apache.hadoop.hdfs.client.HdfsClientConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY;
 

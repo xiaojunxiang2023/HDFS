@@ -20,7 +20,6 @@ package org.apache.hadoop.hdfs.protocol;
 import org.apache.hadoop.fs.BatchedRemoteIterator.BatchedListEntries;
 import org.apache.hadoop.hdfs.protocol.ZoneReencryptionStatus.State;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.ReencryptionInfoProto;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -57,7 +56,7 @@ public final class ReencryptionStatus {
     zoneStatuses = new TreeMap<>();
   }
 
-  
+
   public ReencryptionStatus(ReencryptionStatus rhs) {
     if (rhs != null) {
       this.zoneStatuses = new TreeMap<>(rhs.zoneStatuses);
@@ -67,7 +66,7 @@ public final class ReencryptionStatus {
     }
   }
 
-  
+
   public void resetMetrics() {
     zonesReencrypted = 0;
     for (Map.Entry<Long, ZoneReencryptionStatus> entry : zoneStatuses
@@ -171,7 +170,7 @@ public final class ReencryptionStatus {
     return zoneStatuses.remove(zoneId) != null;
   }
 
-  
+
   public int zonesQueued() {
     int ret = 0;
     for (Map.Entry<Long, ZoneReencryptionStatus> entry : zoneStatuses
@@ -183,12 +182,12 @@ public final class ReencryptionStatus {
     return ret;
   }
 
-  
+
   public int zonesTotal() {
     return zoneStatuses.size();
   }
 
-  
+
   public long getNumZonesReencrypted() {
     return zonesReencrypted;
   }

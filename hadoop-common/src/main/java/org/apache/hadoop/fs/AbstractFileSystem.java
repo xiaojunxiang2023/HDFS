@@ -15,7 +15,6 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.LambdaUtils;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.micro.HadoopIllegalArgumentException;
@@ -61,7 +60,7 @@ public abstract class AbstractFileSystem implements PathCapabilities {
   /** The statistics for this file system. */
   protected Statistics statistics;
 
-  
+
   static final String NO_ABSTRACT_FS_ERROR = "No AbstractFileSystem configured for scheme";
 
   private final URI myUri;

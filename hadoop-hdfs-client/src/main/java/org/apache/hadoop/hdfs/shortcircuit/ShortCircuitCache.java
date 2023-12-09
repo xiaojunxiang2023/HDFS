@@ -16,7 +16,6 @@ import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.net.unix.DomainSocketWatcher;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.StringUtils;
@@ -371,7 +370,7 @@ public class ShortCircuitCache implements Closeable {
     return staleThresholdMs;
   }
 
-  
+
   public void setMaxTotalSize(int maxTotalSize) {
     this.maxTotalSize = maxTotalSize;
   }
@@ -709,7 +708,7 @@ public class ShortCircuitCache implements Closeable {
    *
    * @throws RetriableException   If the caller needs to retry.
    */
-   // ONLY for testing
+  // ONLY for testing
   protected ShortCircuitReplicaInfo fetch(ExtendedBlockId key,
                                           Waitable<ShortCircuitReplicaInfo> waitable) throws RetriableException {
     // Another thread is already in the process of loading this
@@ -914,7 +913,7 @@ public class ShortCircuitCache implements Closeable {
     IOUtilsClient.cleanupWithLogger(LOG, shmManager);
   }
 
-   // ONLY for testing
+  // ONLY for testing
   public interface CacheVisitor {
     void visit(int numOutstandingMmaps,
                Map<ExtendedBlockId, ShortCircuitReplica> replicas,
@@ -923,7 +922,7 @@ public class ShortCircuitCache implements Closeable {
                LinkedMap evictableMmapped);
   }
 
-   // ONLY for testing
+  // ONLY for testing
   public void accept(CacheVisitor visitor) {
     lock.lock();
     try {
@@ -1012,7 +1011,7 @@ public class ShortCircuitCache implements Closeable {
     releaserExecutor.execute(new SlotReleaser(slot));
   }
 
-  
+
   public DfsClientShmManager getDfsClientShmManager() {
     return shmManager;
   }
@@ -1021,7 +1020,7 @@ public class ShortCircuitCache implements Closeable {
    * Can be used in testing to verify whether a read went through SCR, after
    * the read is done and before the stream is closed.
    */
-  
+
   public int getReplicaInfoMapSize() {
     return replicaInfoMap.size();
   }

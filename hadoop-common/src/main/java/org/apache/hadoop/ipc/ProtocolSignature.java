@@ -3,7 +3,6 @@ package org.apache.hadoop.ipc;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableFactories;
 import org.apache.hadoop.io.WritableFactory;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -155,7 +154,7 @@ public class ProtocolSignature implements Writable {
       PROTOCOL_FINGERPRINT_CACHE =
       new HashMap<String, ProtocolSigFingerprint>();
 
-  
+
   public static void resetCache() {
     PROTOCOL_FINGERPRINT_CACHE.clear();
   }

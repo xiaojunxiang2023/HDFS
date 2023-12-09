@@ -27,7 +27,6 @@ import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -86,7 +85,7 @@ public class FSEditLog implements LogsPurgeable {
   //initialize
   private JournalSet journalSet = null;
 
-  
+
   EditLogOutputStream editLogStream = null;
 
   // a monotonically increasing counter that represents transactionIds.
@@ -503,7 +502,7 @@ public class FSEditLog implements LogsPurgeable {
   /**
    * @return the first transaction ID in the current log segment
    */
-  
+
   public synchronized long getCurSegmentTxId() {
     Preconditions.checkState(isSegmentOpen(),
         "Bad state: %s", state);
@@ -1220,12 +1219,12 @@ public class FSEditLog implements LogsPurgeable {
   /**
    * Used only by tests.
    */
-  
+
   public JournalSet getJournalSet() {
     return journalSet;
   }
 
-  
+
   synchronized void setJournalSetForTesting(JournalSet js) {
     this.journalSet = js;
   }
@@ -1233,7 +1232,7 @@ public class FSEditLog implements LogsPurgeable {
   /**
    * Used only by tests.
    */
-  
+
   void setMetricsForTests(NameNodeMetrics metrics) {
     this.metrics = metrics;
   }
@@ -1750,7 +1749,7 @@ public class FSEditLog implements LogsPurgeable {
    * @return The constructed journal manager
    * @throws IllegalArgumentException if no class is configured for uri
    */
-  
+
   JournalManager createJournal(URI uri) {
     Class<? extends JournalManager> clazz
         = getJournalClass(conf, uri.getScheme());
@@ -1778,7 +1777,7 @@ public class FSEditLog implements LogsPurgeable {
     }
   }
 
-  
+
   // needed by async impl to restart thread when edit log is replaced by a
   // spy because a spy is a shallow copy
   public void restart() {

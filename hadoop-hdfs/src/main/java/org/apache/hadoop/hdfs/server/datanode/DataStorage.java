@@ -16,7 +16,6 @@ import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ComparisonChain;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
@@ -192,7 +191,7 @@ public class DataStorage extends Storage {
     private Map<String, List<StorageDirectory>> bpStorageDirMap =
         Maps.newHashMap();
 
-    
+
     public VolumeBuilder(DataStorage storage, StorageDirectory sd) {
       this.storage = storage;
       this.sd = sd;
@@ -339,7 +338,7 @@ public class DataStorage extends Storage {
    * @param startOpt startup option
    * @return a list of successfully loaded storage directories.
    */
-  
+
   synchronized List<StorageDirectory> addStorageLocations(DataNode datanode,
                                                           NamespaceInfo nsInfo, Collection<StorageLocation> dataDirs,
                                                           StartupOption startOpt) throws IOException {

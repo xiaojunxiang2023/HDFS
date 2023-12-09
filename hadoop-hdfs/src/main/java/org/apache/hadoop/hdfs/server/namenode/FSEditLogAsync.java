@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.namenode.metrics.NameNodeMetrics;
 import org.apache.hadoop.ipc.Server;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ExitUtil;
 import org.apache.hadoop.util.Time;
@@ -76,7 +75,7 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
     }
   }
 
-  
+
   @Override
   public void restart() {
     stopSyncThread();

@@ -7,7 +7,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.DataNodeVolumeMetrics;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsDatasetSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.protocol.SlowDiskReports.DiskOp;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.Daemon;
@@ -172,7 +171,7 @@ public class DataNodeDiskMetrics {
   /**
    * Use only for testing.
    */
-  
+
   public void addSlowDiskForTesting(String slowDiskPath,
                                     Map<DiskOp, Double> latencies) {
     overrideStatus = false;

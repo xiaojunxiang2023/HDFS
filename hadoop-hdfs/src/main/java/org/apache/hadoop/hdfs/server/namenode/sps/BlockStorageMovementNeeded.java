@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode.sps;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,7 @@ public class BlockStorageMovementNeeded {
    *          -Indicates whether the start id directory has no more elements to
    *          scan.
    */
-  
+
   public synchronized void addAll(long startPath, List<ItemInfo> itemInfoList,
                                   boolean scanCompleted) {
     storageMovementNeeded.addAll(itemInfoList);
@@ -88,7 +87,7 @@ public class BlockStorageMovementNeeded {
    *          -Indicates whether the ItemInfo start id directory has no more
    *          elements to scan.
    */
-  
+
   public synchronized void add(ItemInfo itemInfo, boolean scanCompleted) {
     storageMovementNeeded.add(itemInfo);
     // This represents sps start id is file, so no need to update pending dir
@@ -300,14 +299,14 @@ public class BlockStorageMovementNeeded {
     }
   }
 
-  
+
   public static void setStatusClearanceElapsedTimeMs(
       long statusClearanceElapsedTimeMs) {
     BlockStorageMovementNeeded.statusClearanceElapsedTimeMs =
         statusClearanceElapsedTimeMs;
   }
 
-  
+
   public static long getStatusClearanceElapsedTimeMs() {
     return statusClearanceElapsedTimeMs;
   }

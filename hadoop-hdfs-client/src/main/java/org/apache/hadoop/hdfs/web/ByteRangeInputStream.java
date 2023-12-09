@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.web;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.hadoop.fs.FSExceptionMessages;
 import org.apache.hadoop.fs.FSInputStream;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.net.HttpHeaders;
 
 import javax.annotation.Nonnull;
@@ -87,7 +86,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
   protected abstract URL getResolvedUrl(final HttpURLConnection connection
   ) throws IOException;
 
-  
+
   protected InputStream getInputStream() throws IOException {
     switch (status) {
       case NORMAL:
@@ -107,7 +106,7 @@ public abstract class ByteRangeInputStream extends FSInputStream {
     return in;
   }
 
-  
+
   protected InputStreamAndFileLength openInputStream(long startOffset)
       throws IOException {
     if (startOffset < 0) {

@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.web.resources;
 
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
@@ -18,12 +17,12 @@ public class UserParam extends StringParam {
   private static Domain domain = new Domain(NAME,
       Pattern.compile(DFS_WEBHDFS_USER_PATTERN_DEFAULT));
 
-  
+
   public static Domain getUserPatternDomain() {
     return domain;
   }
 
-  
+
   public static void setUserPatternDomain(Domain dm) {
     domain = dm;
   }

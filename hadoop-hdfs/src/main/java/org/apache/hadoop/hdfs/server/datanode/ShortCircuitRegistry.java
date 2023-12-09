@@ -12,7 +12,6 @@ import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
 import org.apache.hadoop.io.nativeio.SharedFileDescriptorFactory;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.net.unix.DomainSocketWatcher;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashMultimap;
@@ -379,12 +378,12 @@ public class ShortCircuitRegistry {
                    HashMultimap<ExtendedBlockId, Slot> slots);
   }
 
-  
+
   public synchronized boolean visit(Visitor visitor) {
     return visitor.accept(segments, slots);
   }
 
-  
+
   public int getShmNum() {
     return segments.size();
   }

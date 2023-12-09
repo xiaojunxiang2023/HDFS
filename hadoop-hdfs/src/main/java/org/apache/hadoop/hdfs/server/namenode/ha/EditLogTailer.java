@@ -9,7 +9,6 @@ import org.apache.hadoop.hdfs.server.namenode.*;
 import org.apache.hadoop.hdfs.server.protocol.NamenodeProtocol;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Iterators;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -244,12 +243,12 @@ public class EditLogTailer {
     }
   }
 
-  
+
   FSEditLog getEditLog() {
     return editLog;
   }
 
-  
+
   public void setEditLog(FSEditLog editLog) {
     this.editLog = editLog;
   }
@@ -286,7 +285,7 @@ public class EditLogTailer {
     });
   }
 
-  
+
   public long doTailEdits() throws IOException, InterruptedException {
     // Write lock needs to be interruptible here because the 
     // transitionToActive RPC takes the write lock before calling
@@ -368,7 +367,7 @@ public class EditLogTailer {
    * NameNodeProxy factory method.
    * @return a Callable to roll logs on remote NameNode.
    */
-  
+
   Callable<Void> getNameNodeProxy() {
     return new MultipleNameNodeProxy<Void>() {
       @Override
@@ -382,7 +381,7 @@ public class EditLogTailer {
   /**
    * Trigger the active node to roll its logs.
    */
-  
+
   void triggerActiveLogRoll() {
     LOG.info("Triggering log roll on remote NameNode");
     Future<Void> future = null;
@@ -404,7 +403,7 @@ public class EditLogTailer {
     }
   }
 
-  
+
   void sleep(long sleepTimeMillis) throws InterruptedException {
     Thread.sleep(sleepTimeMillis);
   }
@@ -520,7 +519,7 @@ public class EditLogTailer {
    * This mechanism is <b>very bad</b> for cases where we care about being <i>fast</i>; it just
    * blindly goes and tries namenodes.
    */
-  
+
   abstract class MultipleNameNodeProxy<T> implements Callable<T> {
 
     /**

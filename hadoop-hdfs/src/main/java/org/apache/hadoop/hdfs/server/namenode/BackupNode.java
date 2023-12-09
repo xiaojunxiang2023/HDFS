@@ -22,7 +22,6 @@ import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 
 import java.io.IOException;
@@ -159,7 +158,7 @@ public class BackupNode extends NameNode {
     stop(true);
   }
 
-  
+
   void stop(boolean reportError) {
 
     if (checkpointManager != null) {

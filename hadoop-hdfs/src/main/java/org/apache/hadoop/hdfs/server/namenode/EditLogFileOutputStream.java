@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.LayoutFlags;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,7 +111,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
    * @param out the output stream to write the header to.
    * @throws IOException in the event of error writing to the stream.
    */
-  
+
   public static void writeHeader(int layoutVersion, DataOutputStream out)
       throws IOException {
     out.writeInt(layoutVersion);
@@ -240,12 +239,12 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
     return fp != null;
   }
 
-  
+
   public void setFileChannelForTesting(FileChannel fc) {
     this.fc = fc;
   }
 
-  
+
   public FileChannel getFileChannelForTesting() {
     return fc;
   }
@@ -256,7 +255,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
    * for a speed improvement.
    * @param skip true if fsync should <em>not</em> be called
    */
-  
+
   public static void setShouldSkipFsyncForTesting(boolean skip) {
     shouldSkipFsyncForTests = skip;
   }

@@ -7,7 +7,6 @@ import org.apache.hadoop.hdfs.server.federation.store.protocol.RouterHeartbeatRe
 import org.apache.hadoop.hdfs.server.federation.store.records.BaseRecord;
 import org.apache.hadoop.hdfs.server.federation.store.records.RouterState;
 import org.apache.hadoop.hdfs.server.federation.store.records.StateStoreVersion;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class RouterHeartbeatService extends PeriodicService {
 
   // 被 periodicInvoke()定期性调用, 和 updateStateAsync() 异步调用
   // 更新 Router基本信息  [包含 (MembershipStore + MountTableStore) 的最后一次更新时间，还包含 adminAddress]
-  
+
   synchronized void updateStateStore() {
     String routerId = router.getRouterId();
     if (isStoreAvailable()) {

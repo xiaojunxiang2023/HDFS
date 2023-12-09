@@ -358,7 +358,7 @@ public class FSDirAttrOp {
 
     final BlockManager bm = fsd.getBlockManager();
     final INode inode = iip.getLastINode();
-    if (inode == null || !inode.isFile() ) {
+    if (inode == null || !inode.isFile()) {
       // TODO we do not support replication on stripe layout files yet
       return null;
     }

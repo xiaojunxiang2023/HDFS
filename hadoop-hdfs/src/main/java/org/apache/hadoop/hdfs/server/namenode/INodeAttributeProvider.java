@@ -7,7 +7,6 @@ import org.apache.hadoop.hdfs.DFSUtil;
 import org.apache.hadoop.ipc.CallerContext;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 
@@ -297,7 +296,7 @@ public abstract class INodeAttributeProvider {
       this.setCallerContext(builder.callerContext);
     }
 
-    
+
     @Override
     public boolean equals(Object obj) {
       if (obj == this) {

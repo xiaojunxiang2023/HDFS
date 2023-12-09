@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 
 import java.io.IOException;
@@ -134,7 +133,7 @@ class Ls extends FsCommand {
    * Should display only paths of files and directories.
    * @return true display paths only, false display all fields
    */
-  
+
   boolean isPathOnly() {
     return this.pathOnly;
   }
@@ -143,7 +142,7 @@ class Ls extends FsCommand {
    * Should the contents of the directory be shown or just the directory?
    * @return true if directory contents, false if just directory
    */
-  
+
   boolean isDirRecurse() {
     return this.dirRecurse;
   }
@@ -152,12 +151,12 @@ class Ls extends FsCommand {
    * Should file sizes be returned in human readable format rather than bytes?
    * @return true is human readable, false if bytes
    */
-  
+
   boolean isHumanReadable() {
     return this.humanReadable;
   }
 
-  
+
   private boolean isHideNonPrintable() {
     return hideNonPrintable;
   }
@@ -166,7 +165,7 @@ class Ls extends FsCommand {
    * Should directory contents be displayed in reverse order
    * @return true reverse order, false default order
    */
-  
+
   boolean isOrderReverse() {
     return this.orderReverse;
   }
@@ -175,7 +174,7 @@ class Ls extends FsCommand {
    * Should directory contents be displayed in mtime order.
    * @return true mtime order, false default order
    */
-  
+
   boolean isOrderTime() {
     return this.orderTime;
   }
@@ -184,7 +183,7 @@ class Ls extends FsCommand {
    * Should directory contents be displayed in size order.
    * @return true size order, false default order
    */
-  
+
   boolean isOrderSize() {
     return this.orderSize;
   }
@@ -193,7 +192,7 @@ class Ls extends FsCommand {
    * Should access time be used rather than modification time.
    * @return true use access time, false use modification time
    */
-  
+
   boolean isUseAtime() {
     return this.useAtime;
   }
@@ -202,7 +201,7 @@ class Ls extends FsCommand {
    * Should EC policies be displayed.
    * @return true display EC policies, false doesn't display EC policies
    */
-  
+
   boolean isDisplayECPolicy() {
     return this.displayECPolicy;
   }

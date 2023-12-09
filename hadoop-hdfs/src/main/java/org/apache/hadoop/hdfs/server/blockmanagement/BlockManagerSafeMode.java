@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.*;
 import org.apache.hadoop.hdfs.server.namenode.startupprogress.StartupProgress.Counter;
 import org.apache.hadoop.net.NetworkTopology;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
@@ -71,7 +70,7 @@ class BlockManagerSafeMode {
   private long blockReplQueueThreshold;
 
   /** How long (in ms) is the extension period. */
-  
+
   final long extension;
   /** Timestamp of the first time when thresholds are met. */
   private final AtomicLong reachedTime = new AtomicLong();

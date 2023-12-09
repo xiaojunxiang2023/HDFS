@@ -62,7 +62,6 @@ import org.apache.hadoop.security.protocolPB.RefreshUserMappingsProtocolPB;
 import org.apache.hadoop.security.protocolPB.RefreshUserMappingsProtocolServerSideTranslatorPB;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.protobuf.BlockingService;
 import org.apache.hadoop.tools.proto.GetUserMappingsProtocolProtos.GetUserMappingsProtocolService;
@@ -412,19 +411,19 @@ public class NameNodeRpcServer implements NamenodeProtocols {
   }
 
   /** Allow access to the lifeline RPC server for testing */
-  
+
   RPC.Server getLifelineRpcServer() {
     return lifelineRpcServer;
   }
 
   /** Allow access to the client RPC server for testing */
-  
+
   public RPC.Server getClientRpcServer() {
     return clientRpcServer;
   }
 
   /** Allow access to the service RPC server for testing */
-  
+
   RPC.Server getServiceRpcServer() {
     return serviceRpcServer;
   }
@@ -478,12 +477,12 @@ public class NameNodeRpcServer implements NamenodeProtocols {
     return serviceRPCAddress;
   }
 
-  
+
   public InetSocketAddress getRpcAddress() {
     return clientRpcAddress;
   }
 
-  
+
   public Set<InetSocketAddress> getAuxiliaryRpcAddresses() {
     return clientRpcServer.getAuxiliaryListenerAddresses();
   }

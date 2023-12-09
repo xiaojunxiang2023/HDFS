@@ -8,7 +8,6 @@ import org.apache.hadoop.metrics2.MetricsTag;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.*;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -333,7 +332,7 @@ public class RpcMetrics {
     return deferredRpcProcessingTime.lastStat().stddev();
   }
 
-  
+
   public MetricsTag getTag(String tagName) {
     return registry.getTag(tagName);
   }

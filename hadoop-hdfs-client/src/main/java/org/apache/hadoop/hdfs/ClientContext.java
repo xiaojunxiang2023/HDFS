@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.shortcircuit.DomainSocketFactory;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitCache;
 import org.apache.hadoop.hdfs.util.ByteArrayManager;
 import org.apache.hadoop.net.*;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
@@ -190,7 +189,7 @@ public class ClientContext {
    * This method is less efficient than the version which takes a DFSClient#Conf
    * object, and should be mostly used by tests.
    */
-  
+
   public static ClientContext getFromConf(Configuration conf) {
     return get(conf.get(HdfsClientConfigKeys.DFS_CLIENT_CONTEXT,
         HdfsClientConfigKeys.DFS_CLIENT_CONTEXT_DEFAULT), conf);

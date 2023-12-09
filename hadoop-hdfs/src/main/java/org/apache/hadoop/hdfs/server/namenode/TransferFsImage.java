@@ -18,7 +18,6 @@ import org.apache.hadoop.hdfs.util.DataTransferThrottler;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.Time;
 import org.apache.http.client.utils.URIBuilder;
@@ -70,7 +69,7 @@ public class TransferFsImage {
     }
   }
 
-  
+
   static int timeout = 0;
   private static final Logger LOG =
       LoggerFactory.getLogger(TransferFsImage.class);

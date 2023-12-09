@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.federation.store.records;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Time;
 
 import java.util.Map;
@@ -56,7 +55,7 @@ public abstract class BaseRecord implements Comparable<BaseRecord> {
     return generateMashupKey(getPrimaryKeys());
   }
 
-  
+
   public boolean hasOtherFields() {
     return true;
   }

@@ -1,7 +1,6 @@
 package org.apache.hadoop.fs;
 
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell;
 
 import java.io.BufferedReader;
@@ -60,7 +59,7 @@ public class Stat extends Shell {
     return false;
   }
 
-  
+
   FileStatus getFileStatusForTesting() {
     return stat;
   }

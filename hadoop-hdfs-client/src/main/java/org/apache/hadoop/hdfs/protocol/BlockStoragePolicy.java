@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.hadoop.fs.BlockStoragePolicySpi;
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,14 +35,14 @@ public class BlockStoragePolicy implements BlockStoragePolicySpi {
    */
   private boolean copyOnCreateFile;
 
-  
+
   public BlockStoragePolicy(byte id, String name, StorageType[] storageTypes,
                             StorageType[] creationFallbacks, StorageType[] replicationFallbacks) {
     this(id, name, storageTypes, creationFallbacks, replicationFallbacks,
         false);
   }
 
-  
+
   public BlockStoragePolicy(byte id, String name, StorageType[] storageTypes,
                             StorageType[] creationFallbacks, StorageType[] replicationFallbacks,
                             boolean copyOnCreateFile) {

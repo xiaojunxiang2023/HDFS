@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.hdfs.util.LightWeightHashSet;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -30,7 +29,7 @@ class ExcessRedundancyMap {
   /**
    * @return the number of redundancies corresponding to the given datanode.
    */
-  
+
   synchronized int getSize4Testing(String dnUuid) {
     final LightWeightHashSet<BlockInfo> set = map.get(dnUuid);
     return set == null ? 0 : set.size();

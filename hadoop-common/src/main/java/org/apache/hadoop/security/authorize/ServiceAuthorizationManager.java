@@ -5,7 +5,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.MachineList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,32 +185,32 @@ public class ServiceAuthorizationManager {
     return serviceKey;
   }
 
-  
+
   public Set<Class<?>> getProtocolsWithAcls() {
     return protocolToAcls.keySet();
   }
 
-  
+
   public AccessControlList getProtocolsAcls(Class<?> className) {
     return protocolToAcls.get(className)[0];
   }
 
-  
+
   public AccessControlList getProtocolsBlockedAcls(Class<?> className) {
     return protocolToAcls.get(className)[1];
   }
 
-  
+
   public Set<Class<?>> getProtocolsWithMachineLists() {
     return protocolToMachineLists.keySet();
   }
 
-  
+
   public MachineList getProtocolsMachineList(Class<?> className) {
     return protocolToMachineLists.get(className)[0];
   }
 
-  
+
   public MachineList getProtocolsBlockedMachineList(Class<?> className) {
     return protocolToMachineLists.get(className)[1];
   }

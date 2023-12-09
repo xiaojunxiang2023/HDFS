@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.metrics2.MetricsInfo;
 import org.apache.hadoop.metrics2.MetricsRecordBuilder;
 import org.apache.hadoop.metrics2.impl.MetricsCollectorImpl;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.Time;
@@ -35,7 +34,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
   private MutableRatesWithAggregation innerMetrics =
       new MutableRatesWithAggregation();
 
-  
+
   static final ScheduledExecutorService SCHEDULER = Executors
       .newScheduledThreadPool(1, new ThreadFactoryBuilder().setDaemon(true)
           .setNameFormat("MutableRollingAverages-%d").build());
@@ -129,7 +128,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
   /**
    * This method is for testing only to replace the scheduledTask.
    */
-  
+
   synchronized void replaceScheduledTask(int windows, long interval,
                                          TimeUnit timeUnit) {
     numWindows = windows;
@@ -284,7 +283,7 @@ public class MutableRollingAverages extends MutableMetric implements Closeable {
   /**
    * Use for test only.
    */
-  
+
   public synchronized void setRecordValidityMs(long value) {
     this.recordValidityMs = value;
   }

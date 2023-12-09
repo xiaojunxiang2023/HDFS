@@ -33,7 +33,6 @@ import org.apache.hadoop.security.authorize.ServiceAuthorizationManager;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.thirdparty.protobuf.CodedOutputStream;
 import org.apache.hadoop.thirdparty.protobuf.Message;
@@ -278,7 +277,7 @@ public abstract class Server {
   private static final ThreadLocal<Call> CurCall = new ThreadLocal<Call>();
 
   /** Get the current call */
-  
+
   public static ThreadLocal<Call> getCurCall() {
     return CurCall;
   }
@@ -440,7 +439,7 @@ public abstract class Server {
    * Sets slow RPC flag.
    * @param logSlowRPCFlag
    */
-  
+
   protected void setLogSlowRPC(boolean logSlowRPCFlag) {
     this.logSlowRPC = logSlowRPCFlag;
   }
@@ -455,7 +454,7 @@ public abstract class Server {
         tmpPurgeInterval, TimeUnit.MINUTES);
   }
 
-  
+
   public long getPurgeIntervalNanos() {
     return this.purgeIntervalNanos;
   }
@@ -588,17 +587,17 @@ public abstract class Server {
     }
   }
 
-  
+
   int getPriorityLevel(Schedulable e) {
     return callQueue.getPriorityLevel(e);
   }
 
-  
+
   int getPriorityLevel(UserGroupInformation ugi) {
     return callQueue.getPriorityLevel(ugi);
   }
 
-  
+
   void setPriorityLevel(UserGroupInformation ugi, int priority) {
     callQueue.setPriorityLevel(ugi, priority);
   }
@@ -607,22 +606,22 @@ public abstract class Server {
    * Returns a handle to the rpcMetrics (required in tests)
    * @return rpc metrics
    */
-  
+
   public RpcMetrics getRpcMetrics() {
     return rpcMetrics;
   }
 
-  
+
   public RpcDetailedMetrics getRpcDetailedMetrics() {
     return rpcDetailedMetrics;
   }
 
-  
+
   Iterable<? extends Thread> getHandlers() {
     return Arrays.asList(handlers);
   }
 
-  
+
   Connection[] getConnections() {
     return connectionManager.toArray();
   }
@@ -750,7 +749,7 @@ public abstract class Server {
       this(id, retryCount, kind, clientId, null, null);
     }
 
-     // primarily TestNamenodeRetryCache
+    // primarily TestNamenodeRetryCache
     public Call(int id, int retryCount, Void ignore1, Void ignore2,
                 RPC.RpcKind kind, byte[] clientId) {
       this(id, retryCount, kind, clientId, null, null);
@@ -2969,7 +2968,7 @@ public abstract class Server {
 
   }
 
-  
+
   void logException(Logger logger, Throwable e, Call call) {
     if (exceptionsHandler.isSuppressedLog(e.getClass())) {
       return; // Log nothing.

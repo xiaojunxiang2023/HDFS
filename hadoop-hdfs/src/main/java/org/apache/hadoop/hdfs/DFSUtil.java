@@ -32,7 +32,6 @@ import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.AccessControlList;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -983,7 +982,7 @@ public class DFSUtil {
    * @return the substituted address
    * @throws IOException if it is a wildcard address and security is enabled
    */
-  
+
   static String substituteForWildcardAddress(String configuredAddress,
                                              String defaultHost) {
     InetSocketAddress sockAddr = NetUtils.createSocketAddr(configuredAddress);

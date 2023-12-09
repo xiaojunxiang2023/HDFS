@@ -1,6 +1,5 @@
 package org.apache.hadoop.security.ssl;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +89,7 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
   /**
    * For testing only: reset the socket factory.
    */
-  
+
   public static synchronized void resetDefaultFactory() {
     LOG.info("Resetting default SSL Socket Factory");
     instance = null;

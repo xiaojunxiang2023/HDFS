@@ -21,7 +21,6 @@ import org.apache.hadoop.hdfs.server.federation.store.records.*;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.VersionInfo;
 import org.codehaus.jettison.json.JSONObject;
@@ -733,7 +732,7 @@ public class RBFMetrics implements RouterMBean, FederationMBean {
    * @param time Seconds since 1970.
    * @return String representing the date.
    */
-  
+
   static String getDateString(long time) {
     if (time <= 0) {
       return "-";

@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +13,7 @@ public class ShutdownThreadsHelper {
   private static final Logger LOG =
       LoggerFactory.getLogger(ShutdownThreadsHelper.class);
 
-  
+
   static final int SHUTDOWN_WAIT_MS = 3000;
 
   /**

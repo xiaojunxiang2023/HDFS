@@ -8,7 +8,6 @@ import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.apache.hadoop.io.nativeio.NativeIO.POSIX.Stat;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.*;
 
@@ -95,7 +94,7 @@ public class SecureIOUtils {
    * Same as openForRandomRead except that it will run even if security is off.
    * This is used by unit tests.
    */
-  
+
   protected static RandomAccessFile forceSecureOpenForRandomRead(File f,
                                                                  String mode, String expectedOwner, String expectedGroup)
       throws IOException {
@@ -136,7 +135,7 @@ public class SecureIOUtils {
    * Same as openFSDataInputStream except that it will run even if security is
    * off. This is used by unit tests.
    */
-  
+
   protected static FSDataInputStream forceSecureOpenFSDataInputStream(
       File file,
       String expectedOwner, String expectedGroup) throws IOException {
@@ -182,7 +181,7 @@ public class SecureIOUtils {
    * Same as openForRead() except that it will run even if security is off.
    * This is used by unit tests.
    */
-  
+
   protected static FileInputStream forceSecureOpenForRead(File f, String expectedOwner,
                                                           String expectedGroup) throws IOException {
 

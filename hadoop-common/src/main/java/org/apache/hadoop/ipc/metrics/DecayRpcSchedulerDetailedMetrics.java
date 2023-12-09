@@ -5,7 +5,6 @@ import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.MetricsRegistry;
 import org.apache.hadoop.metrics2.lib.MutableRatesWithAggregation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,12 +102,12 @@ public class DecayRpcSchedulerDetailedMetrics {
     return name;
   }
 
-  
+
   MutableRatesWithAggregation getRpcQueueRates() {
     return rpcQueueRates;
   }
 
-  
+
   MutableRatesWithAggregation getRpcProcessingRates() {
     return rpcProcessingRates;
   }

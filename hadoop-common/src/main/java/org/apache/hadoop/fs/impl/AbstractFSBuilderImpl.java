@@ -5,7 +5,6 @@ import org.apache.hadoop.fs.FSBuilder;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathHandle;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -42,7 +41,7 @@ AbstractFSBuilderImpl<S, B extends FSBuilder<S, B>>
 
   public static final String UNKNOWN_MANDATORY_KEY = "Unknown mandatory key";
 
-  
+
   static final String E_BOTH_A_PATH_AND_A_PATH_HANDLE
       = "Both a path and a pathHandle has been provided to the constructor";
 

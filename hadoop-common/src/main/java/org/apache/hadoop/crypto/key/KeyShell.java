@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.key.KeyProvider.Metadata;
 import org.apache.hadoop.crypto.key.KeyProvider.Options;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.tools.CommandShell;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -29,7 +28,7 @@ public class KeyShell extends CommandShell {
           "   [" + ListCommand.USAGE + "]\n" +
           "   [" + InvalidateCacheCommand.USAGE + "]\n";
   private static final String LIST_METADATA = "keyShell.list.metadata";
-  
+
   public static final String NO_VALID_PROVIDERS =
       "There are no valid (non-transient) providers configured.\n" +
           "No action has been taken. Use the -provider option to specify\n" +

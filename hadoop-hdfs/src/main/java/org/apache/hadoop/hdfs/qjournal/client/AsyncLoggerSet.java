@@ -4,7 +4,6 @@ import org.apache.hadoop.hdfs.qjournal.protocol.QJournalProtocolProtos.*;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 import org.apache.hadoop.hdfs.server.protocol.RemoteEditLogManifest;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
@@ -172,7 +171,7 @@ class AsyncLoggerSet {
    * @return the (mutable) list of loggers, for use in tests to
    * set up spies
    */
-  
+
   List<AsyncLogger> getLoggersForTests() {
     return loggers;
   }

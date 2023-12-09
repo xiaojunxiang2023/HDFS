@@ -8,7 +8,6 @@ import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.MetricsRegistry;
 import org.apache.hadoop.metrics2.lib.MutableGaugeInt;
 import org.apache.hadoop.metrics2.lib.MutableRate;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -119,7 +118,7 @@ public class StateStoreMetrics implements StateStoreMBean {
     counter.set(size);
   }
 
-  
+
   public void reset() {
     reads.resetMinMax();
     writes.resetMinMax();

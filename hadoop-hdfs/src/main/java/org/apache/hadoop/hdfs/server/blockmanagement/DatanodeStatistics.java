@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.fs.StorageType;
-import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 
 import java.util.Map;
 
@@ -40,5 +39,5 @@ public interface DatanodeStatistics {
   Map<StorageType, StorageTypeStats> getStorageTypeStats();
 
   long getProvidedCapacity();
-  
+
 }

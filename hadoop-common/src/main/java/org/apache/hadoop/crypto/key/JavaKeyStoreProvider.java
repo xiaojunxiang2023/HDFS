@@ -5,7 +5,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.security.ProviderUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
@@ -73,7 +72,7 @@ public class JavaKeyStoreProvider extends KeyProvider {
 
   private final Map<String, Metadata> cache = new HashMap<String, Metadata>();
 
-  
+
   JavaKeyStoreProvider(JavaKeyStoreProvider other) {
     super(new Configuration());
     uri = other.uri;

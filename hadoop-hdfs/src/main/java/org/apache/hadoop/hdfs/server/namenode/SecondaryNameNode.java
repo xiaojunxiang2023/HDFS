@@ -28,7 +28,6 @@ import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.util.Daemon;
@@ -113,32 +112,32 @@ public class SecondaryNameNode implements Runnable,
         + "\nCheckpoint Edits Dirs  : " + checkpointEditsDirs;
   }
 
-  
+
   FSImage getFSImage() {
     return checkpointImage;
   }
 
-  
+
   int getMergeErrorCount() {
     return checkpointImage.getMergeErrorCount();
   }
 
-  
+
   public FSNamesystem getFSNamesystem() {
     return namesystem;
   }
 
-  
+
   void setFSImage(CheckpointStorage image) {
     this.checkpointImage = image;
   }
 
-  
+
   NamenodeProtocol getNameNode() {
     return namenode;
   }
 
-  
+
   void setNameNode(NamenodeProtocol namenode) {
     this.namenode = namenode;
   }
@@ -436,7 +435,7 @@ public class SecondaryNameNode implements Runnable,
   /**
    * Start the web server.
    */
-  
+
   public void startInfoServer() throws IOException {
     final InetSocketAddress httpAddr = getHttpAddress(conf);
     final String httpsAddrString = conf.getTrimmed(
@@ -490,7 +489,7 @@ public class SecondaryNameNode implements Runnable,
    * Create a new checkpoint
    * @return if the image is fetched from primary or not
    */
-  
+
   @SuppressWarnings("deprecated")
   public boolean doCheckpoint() throws IOException {
     checkpointImage.ensureCurrentDirExists();

@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.Slot;
 import org.apache.hadoop.hdfs.util.IOUtilsClient;
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
@@ -187,7 +186,7 @@ public class ShortCircuitReplica {
    *
    * Must be called with the cache lock held.
    */
-  
+
   public boolean hasMmap() {
     return ((mmapData != null) && (mmapData instanceof MappedByteBuffer));
   }
@@ -292,7 +291,7 @@ public class ShortCircuitReplica {
     this.evictableTimeNs = evictableTimeNs;
   }
 
-  
+
   public Slot getSlot() {
     return slot;
   }

@@ -1,7 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.util.Queue;
@@ -76,7 +74,7 @@ public class DirectBufferPool {
    * Return the number of available buffers of a given size.
    * This is used only for tests.
    */
-  
+
   int countBuffersOfSize(int size) {
     Queue<WeakReference<ByteBuffer>> list = buffersBySize.get(size);
     if (list == null) {

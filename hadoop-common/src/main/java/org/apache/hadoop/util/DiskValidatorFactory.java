@@ -1,6 +1,5 @@
 package org.apache.hadoop.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * The factory class to create instance of {@link DiskValidator}.
  */
 public final class DiskValidatorFactory {
-  
+
   static final ConcurrentHashMap<Class<? extends DiskValidator>, DiskValidator>
       INSTANCES = new ConcurrentHashMap<>();
 

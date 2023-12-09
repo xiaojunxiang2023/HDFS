@@ -1,6 +1,5 @@
 package org.apache.hadoop.metrics2.util;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
@@ -238,7 +237,7 @@ public class SampleQuantiles implements QuantileEstimator {
    *
    * @return count current number of samples
    */
-  
+
   synchronized public int getSampleCount() {
     return samples.size();
   }

@@ -1,7 +1,6 @@
 package org.apache.hadoop.hdfs.server.datanode.fsdataset.impl;
 
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -107,7 +106,7 @@ class CacheStats {
   /**
    * Used to count operating system page size.
    */
-  
+
   static class PageRounder {
     private final long osPageSize = NativeIO.POSIX.getCacheManipulator()
         .getOperatingSystemPageSize();

@@ -10,7 +10,6 @@ import org.apache.hadoop.io.compress.zlib.ZlibFactory;
 import org.apache.hadoop.io.serializer.Deserializer;
 import org.apache.hadoop.io.serializer.SerializationFactory;
 import org.apache.hadoop.io.serializer.Serializer;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Options;
 import org.apache.hadoop.util.PriorityQueue;
 import org.apache.hadoop.util.*;
@@ -826,7 +825,7 @@ public class SequenceFile {
     // starts and ends by scanning for this value.
     long lastSyncPos;                     // position of last sync
     byte[] sync;                          // 16 random bytes
-    
+
     int syncInterval;
 
     {

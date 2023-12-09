@@ -1,7 +1,6 @@
 package org.apache.hadoop.security;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.BiMap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.HashBiMap;
 import org.apache.hadoop.util.Time;
@@ -83,7 +82,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
    *        true, otherwise initialize the maps to empty. This parameter is
    *        intended for testing only, its default is false.
    */
-  
+
   public ShellBasedIdMapping(Configuration conf,
                              boolean constructFullMapAtInit) throws IOException {
     this.constructFullMapAtInit = constructFullMapAtInit;
@@ -116,22 +115,22 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     this(conf, false);
   }
 
-  
+
   public long getTimeout() {
     return timeout;
   }
 
-  
+
   public BiMap<Integer, String> getUidNameMap() {
     return uidNameMap;
   }
 
-  
+
   public BiMap<Integer, String> getGidNameMap() {
     return gidNameMap;
   }
 
-  
+
   synchronized public void clearNameMaps() {
     uidNameMap.clear();
     gidNameMap.clear();
@@ -194,7 +193,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
    * and save them in the corresponding map.
    * @throws IOException
    */
-  
+
   public static boolean updateMapInternal(BiMap<Integer, String> map,
                                           String mapName, String command, String regex,
                                           Map<Integer, Integer> staticMapping) throws IOException {
@@ -537,7 +536,7 @@ public class ShellBasedIdMapping implements IdMappingServiceProvider {
     }
   }
 
-  
+
   static final class StaticMapping {
     final Map<Integer, Integer> uidMapping;
     final Map<Integer, Integer> gidMapping;

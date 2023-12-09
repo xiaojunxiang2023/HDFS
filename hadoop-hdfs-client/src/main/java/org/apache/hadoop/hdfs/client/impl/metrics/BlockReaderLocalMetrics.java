@@ -5,7 +5,6 @@ import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.MutableRollingAverages;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * This class maintains a metric of rolling average latency for short circuit
@@ -52,7 +51,7 @@ public class BlockReaderLocalMetrics {
    * Get the MutableRollingAverage metric for testing only.
    * @return
    */
-  
+
   public MutableRollingAverages getShortCircuitReadRollingAverages() {
     return shortCircuitReadRollingAverages;
   }

@@ -5,7 +5,6 @@ import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier.AccessMode;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -31,7 +30,7 @@ public class BlockPoolTokenSecretManager extends
     map.put(bpid, secretMgr);
   }
 
-  
+
   public BlockTokenSecretManager get(String bpid) {
     BlockTokenSecretManager secretMgr = map.get(bpid);
     if (secretMgr == null) {
@@ -139,7 +138,7 @@ public class BlockPoolTokenSecretManager extends
         storageIds);
   }
 
-  
+
   public void clearAllKeysForTesting() {
     for (BlockTokenSecretManager btsm : map.values()) {
       btsm.clearAllKeysForTesting();

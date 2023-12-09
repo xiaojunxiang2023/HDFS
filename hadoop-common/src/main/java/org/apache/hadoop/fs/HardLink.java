@@ -1,7 +1,6 @@
 package org.apache.hadoop.fs;
 
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.Shell.ExitCodeException;
 import org.apache.hadoop.util.Shell.ShellCommandExecutor;
@@ -96,7 +95,7 @@ public class HardLink {
   /**
    * Implementation of HardLinkCommandGetter class for Windows
    */
-  
+
   static class HardLinkCGWin extends HardLinkCommandGetter {
 
     /**

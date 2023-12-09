@@ -30,7 +30,6 @@ import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.FileEdekInfo;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.ReencryptionTask;
 import org.apache.hadoop.hdfs.server.namenode.ReencryptionUpdater.ZoneSubmissionTracker;
 import org.apache.hadoop.ipc.RetriableException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.hadoop.util.Daemon;
@@ -133,37 +132,37 @@ public class ReencryptionHandler implements Runnable {
     updaterExecutor.execute(reencryptionUpdater);
   }
 
-  
+
   synchronized void pauseForTesting() {
     shouldPauseForTesting = true;
     LOG.info("Pausing re-encrypt handler for testing.");
     notify();
   }
 
-  
+
   synchronized void resumeForTesting() {
     shouldPauseForTesting = false;
     LOG.info("Resuming re-encrypt handler for testing.");
     notify();
   }
 
-  
+
   void pauseForTestingAfterNthSubmission(final int count) {
     assert pauseAfterNthSubmission == 0;
     pauseAfterNthSubmission = count;
   }
 
-  
+
   void pauseUpdaterForTesting() {
     reencryptionUpdater.pauseForTesting();
   }
 
-  
+
   void resumeUpdaterForTesting() {
     reencryptionUpdater.resumeForTesting();
   }
 
-  
+
   void pauseForTestingAfterNthCheckpoint(final long zoneId, final int count) {
     reencryptionUpdater.pauseForTestingAfterNthCheckpoint(zoneId, count);
   }
@@ -725,7 +724,7 @@ public class ReencryptionHandler implements Runnable {
      *
      * @throws InterruptedException
      */
-    
+
     @Override
     protected void throttle() throws InterruptedException {
       assert !dir.hasReadLock();

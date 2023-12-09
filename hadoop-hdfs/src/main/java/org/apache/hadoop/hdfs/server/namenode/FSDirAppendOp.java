@@ -1,6 +1,5 @@
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.fs.CreateFlag;
 import org.apache.hadoop.fs.FileAlreadyExistsException;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.fs.permission.FsAction;

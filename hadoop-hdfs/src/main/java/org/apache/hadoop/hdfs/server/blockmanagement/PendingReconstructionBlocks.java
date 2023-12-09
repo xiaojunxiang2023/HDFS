@@ -2,7 +2,6 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Daemon;
 import org.slf4j.Logger;
 
@@ -270,7 +269,7 @@ class PendingReconstructionBlocks {
   /**
    * @return timer thread.
    */
-  
+
   public Daemon getTimerThread() {
     return timerThread;
   }

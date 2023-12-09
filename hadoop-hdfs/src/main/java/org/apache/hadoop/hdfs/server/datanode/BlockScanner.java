@@ -6,7 +6,6 @@ import org.apache.hadoop.hdfs.server.datanode.VolumeScanner.ScanResultHandler;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class BlockScanner {
    */
   private long joinVolumeScannersTimeOutMs;
 
-  
+
   void setConf(Conf conf) {
     this.conf = conf;
     for (Entry<String, VolumeScanner> entry : scanners.entrySet()) {
@@ -64,27 +63,27 @@ public class BlockScanner {
     // They can't be set unless the static boolean allowUnitTestSettings has
     // been set to true.
 
-    
+
     static final String INTERNAL_DFS_DATANODE_SCAN_PERIOD_MS =
         "internal.dfs.datanode.scan.period.ms.key";
 
-    
+
     static final String INTERNAL_VOLUME_SCANNER_SCAN_RESULT_HANDLER =
         "internal.volume.scanner.scan.result.handler";
 
-    
+
     static final String INTERNAL_DFS_BLOCK_SCANNER_MAX_STALENESS_MS =
         "internal.dfs.block.scanner.max_staleness.ms";
 
-    
+
     static final long INTERNAL_DFS_BLOCK_SCANNER_MAX_STALENESS_MS_DEFAULT =
         TimeUnit.MILLISECONDS.convert(15, TimeUnit.MINUTES);
 
-    
+
     static final String INTERNAL_DFS_BLOCK_SCANNER_CURSOR_SAVE_INTERVAL_MS =
         "dfs.block.scanner.cursor.save.interval.ms";
 
-    
+
     static final long
         INTERNAL_DFS_BLOCK_SCANNER_CURSOR_SAVE_INTERVAL_MS_DEFAULT =
         TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
@@ -298,7 +297,7 @@ public class BlockScanner {
     }
   }
 
-  
+
   synchronized VolumeScanner.Statistics getVolumeStats(String volumeId) {
     VolumeScanner scanner = scanners.get(volumeId);
     if (scanner == null) {

@@ -14,7 +14,6 @@ import org.apache.hadoop.metrics2.source.JvmMetrics;
 import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.base.Strings;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -95,7 +94,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     return journal;
   }
 
-  
+
   public boolean getJournalSyncerStatus(String jid) {
     if (journalSyncersById.get(jid) != null) {
       return journalSyncersById.get(jid).isJournalSyncerStarted();
@@ -113,7 +112,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     jSyncer.start(nameServiceId);
   }
 
-  
+
   public Journal getOrCreateJournal(String jid) throws IOException {
     return getOrCreateJournal(jid, null, StartupOption.REGULAR);
   }
@@ -452,7 +451,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     return getOrCreateJournal(journalId, nameServiceId).getJournalCTime();
   }
 
-  
+
   public Journal getJournal(String jid) {
     return journalsById.get(jid);
   }
@@ -480,7 +479,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
     return bindAddress;
   }
 
-  
+
   public JournalNodeRpcServer getRpcServer() {
     return rpcServer;
   }

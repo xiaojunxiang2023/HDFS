@@ -12,7 +12,6 @@ import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.ExitUtil;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.slf4j.Logger;
@@ -62,7 +61,7 @@ public class DelegationTokenFetcher {
    * @throws org.apache.hadoop.util.ExitUtil.ExitException if the command
    * failed and exiting was disabled.
    */
-  
+
   public static void main(Configuration conf, final String[] args)
       throws Exception {
     Options fetcherOptions = new Options();
@@ -145,7 +144,7 @@ public class DelegationTokenFetcher {
     return FileSystem.get(fsUri, conf);
   }
 
-  
+
   static void cancelTokens(final Configuration conf, final Path tokenFile)
       throws IOException, InterruptedException {
     for (Token<?> token : readTokens(tokenFile, conf)) {
@@ -158,7 +157,7 @@ public class DelegationTokenFetcher {
     }
   }
 
-  
+
   static void renewTokens(final Configuration conf, final Path tokenFile)
       throws IOException, InterruptedException {
     for (Token<?> token : readTokens(tokenFile, conf)) {
@@ -172,7 +171,7 @@ public class DelegationTokenFetcher {
     }
   }
 
-  
+
   static void saveDelegationToken(Configuration conf, FileSystem fs,
                                   final String renewer, final Path tokenFile)
       throws IOException {
@@ -193,7 +192,7 @@ public class DelegationTokenFetcher {
     }
   }
 
-  
+
   public static String printTokensToString(
       final Configuration conf,
       final Path tokenFile,

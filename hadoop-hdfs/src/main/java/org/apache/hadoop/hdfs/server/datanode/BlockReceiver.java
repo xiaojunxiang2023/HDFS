@@ -19,7 +19,6 @@ import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodePeerMetrics;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeRegistration;
 import org.apache.hadoop.hdfs.util.DataTransferThrottler;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.tracing.Span;
 import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.util.Daemon;
@@ -48,7 +47,7 @@ class BlockReceiver implements Closeable {
   public static final Logger LOG = DataNode.LOG;
   static final Log ClientTraceLog = DataNode.ClientTraceLog;
 
-  
+
   static long CACHE_DROP_LAG_BYTES = 8 * 1024 * 1024;
   private final long datanodeSlowLogThresholdMs;
   private DataInputStream in = null; // from where data are read

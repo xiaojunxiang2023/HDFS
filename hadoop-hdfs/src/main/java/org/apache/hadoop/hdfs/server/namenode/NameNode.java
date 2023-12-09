@@ -43,7 +43,6 @@ import org.apache.hadoop.security.RefreshUserMappingsProtocol;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authorize.RefreshAuthorizationPolicyProtocol;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
@@ -70,7 +69,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeys.*;
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.FS_PROTECTED_DIRECTORIES;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.HADOOP_USER_GROUP_METRICS_PERCENTILES_INTERVALS;
 import static org.apache.hadoop.hdfs.DFSConfigKeys.*;
@@ -342,7 +340,7 @@ public class NameNode extends ReconfigurableBase implements
     return rpcServer;
   }
 
-  
+
   public HttpServer2 getHttpServer() {
     return httpServer.getHttpServer();
   }
@@ -671,7 +669,7 @@ public class NameNode extends ReconfigurableBase implements
     startMetricsLogger(conf);
   }
 
-  
+
   public InMemoryLevelDBAliasMapServer getAliasMapServer() {
     return levelDBAliasMapServer;
   }
@@ -1000,7 +998,7 @@ public class NameNode extends ReconfigurableBase implements
   }
 
   /** get FSImage */
-  
+
   public FSImage getFSImage() {
     return namesystem.getFSImage();
   }
@@ -1036,7 +1034,7 @@ public class NameNode extends ReconfigurableBase implements
    * @return a string of format host:port that points to an auxiliary NameNode
    *         address, or null if there is no such address.
    */
-  
+
   public String getNNAuxiliaryRpcAddress() {
     Set<InetSocketAddress> auxiliaryAddrs = getAuxiliaryNameNodeAddresses();
     if (auxiliaryAddrs.isEmpty()) {
@@ -1077,7 +1075,7 @@ public class NameNode extends ReconfigurableBase implements
    * NameNodeHttpServer, used by unit tests to ensure a full shutdown,
    * so that no bind exception is thrown during restart.
    */
-  
+
   public void joinHttpServer() {
     if (httpServer != null) {
       try {
@@ -1180,12 +1178,12 @@ public class NameNode extends ReconfigurableBase implements
     }
   }
 
-  
+
   public static boolean initializeSharedEdits(Configuration conf) throws IOException {
     return initializeSharedEdits(conf, true);
   }
 
-  
+
   public static boolean initializeSharedEdits(Configuration conf,
                                               boolean force) throws IOException {
     return initializeSharedEdits(conf, force, false);
@@ -1359,7 +1357,7 @@ public class NameNode extends ReconfigurableBase implements
     }
   }
 
-  
+
   public static boolean doRollback(Configuration conf,
                                    boolean isConfirmationNeeded) throws IOException {
     String nsId = DFSUtil.getNamenodeNameServiceId(conf);
@@ -1387,7 +1385,7 @@ public class NameNode extends ReconfigurableBase implements
     out.println(USAGE + "\n");
   }
 
-  
+
   static StartupOption parseArguments(String args[]) {
     int argsLen = (args == null) ? 0 : args.length;
     StartupOption startOpt = StartupOption.REGULAR;

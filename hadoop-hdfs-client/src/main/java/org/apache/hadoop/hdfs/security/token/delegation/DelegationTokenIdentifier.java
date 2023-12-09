@@ -7,7 +7,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -27,7 +26,7 @@ public class DelegationTokenIdentifier
   private static Map<TokenIdentifier, UserGroupInformation> ugiCache =
       Collections.synchronizedMap(new LRUMap(64));
 
-  
+
   public void clearCache() {
     ugiCache.clear();
   }

@@ -23,7 +23,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.impl.RamDiskReplicaTracker.RamDiskReplica;
 import org.apache.hadoop.hdfs.server.protocol.DatanodeStorage;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -144,7 +143,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     this.fileIoProvider = fileIoProvider;
   }
 
-  
+
   public static String nextSorted(List<String> arr, String prev) {
     int res = 0;
     if (prev != null) {
@@ -259,7 +258,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     Preconditions.checkState(reference.getReferenceCount() > 0);
   }
 
-  
+
   public int getReferenceCount() {
     return this.reference.getReferenceCount();
   }
@@ -289,7 +288,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return true;
   }
 
-  
+
   File getCurrentDir() {
     return currentDir;
   }
@@ -346,7 +345,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     }
   }
 
-  
+
   public long getDfsUsed() throws IOException {
     long dfsUsed = 0;
     for (BlockPoolSlice s : bpSlices.values()) {
@@ -366,7 +365,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
    * @return the unreserved number of bytes left in this filesystem. May be
    *         zero.
    */
-  
+
   public long getCapacity() {
     if (configuredCapacity < 0L) {
       long remaining;
@@ -385,7 +384,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
    *
    * @param capacity
    */
-  
+
   public void setCapacityForTesting(long capacity) {
     this.configuredCapacity = capacity;
   }
@@ -434,17 +433,17 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return Math.max(nonDfsUsed, 0L);
   }
 
-  
+
   long getDfAvailable() {
     return usage.getAvailable();
   }
 
-  
+
   public long getReservedForReplicas() {
     return reservedForReplicas.get();
   }
 
-  
+
   long getRecentReserved() {
     return recentReserved;
   }
@@ -453,7 +452,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return reserved != null ? reserved.getReserved() : 0;
   }
 
-  
+
   BlockPoolSlice getBlockPoolSlice(String bpid) throws IOException {
     BlockPoolSlice bp = bpSlices.get(bpid);
     if (bp == null) {
@@ -489,7 +488,7 @@ public class FsVolumeImpl implements FsVolumeSpi {
     return storageType.isTransient();
   }
 
-  
+
   public File getFinalizedDir(String bpid) throws IOException {
     return getBlockPoolSlice(bpid).getFinalizedDir();
   }

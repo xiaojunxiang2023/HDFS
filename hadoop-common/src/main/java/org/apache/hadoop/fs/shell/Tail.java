@@ -3,7 +3,6 @@ package org.apache.hadoop.fs.shell;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -30,7 +29,7 @@ class Tail extends FsCommand {
   private boolean follow = false;
   private long followDelay = 5000; // milliseconds
 
-  
+
   public long getFollowDelay() {
     return followDelay;
   }

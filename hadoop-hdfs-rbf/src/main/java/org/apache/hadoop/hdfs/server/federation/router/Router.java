@@ -19,7 +19,6 @@ import org.apache.hadoop.metrics2.source.JvmMetrics;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.service.CompositeService;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.JvmPauseMonitor;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
@@ -455,17 +454,17 @@ public class Router extends CompositeService implements TokenVerifier<Delegation
     return this.quotaManager;
   }
 
-  
+
   RouterQuotaUpdateService getQuotaCacheUpdateService() {
     return this.quotaUpdateService;
   }
 
-  
+
   Collection<NamenodeHeartbeatService> getNamenodeHeartbeatServices() {
     return this.namenodeHeartbeatServices;
   }
 
-  
+
   RouterHeartbeatService getRouterHeartbeatService() {
     return this.routerHeartbeatService;
   }

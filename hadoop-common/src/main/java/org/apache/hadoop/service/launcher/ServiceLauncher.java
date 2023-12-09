@@ -8,7 +8,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.audit.CommonAuditContext;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.service.Service;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.ExitCodeProvider;
 import org.apache.hadoop.util.ExitUtil;
@@ -401,7 +400,7 @@ public class ServiceLauncher<S extends Service>
    * a subclass of {@link Configuration}.
    * @throws ExitUtil.ExitException if a loaded class is of the wrong type
    */
-  
+
   public int loadConfigurationClasses() {
     List<String> toCreate = getConfigurationsToCreate();
     int loaded = 0;

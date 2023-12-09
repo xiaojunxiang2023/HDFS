@@ -3,7 +3,6 @@ package org.apache.hadoop.fs.shell;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.fs.PathIsDirectoryException;
 import org.apache.hadoop.fs.PathNotFoundException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 
 import java.io.IOException;
@@ -102,7 +101,7 @@ public class TouchCommands extends FsCommand {
     private final SimpleDateFormat dateFormat =
         new SimpleDateFormat("yyyyMMdd:HHmmss");
 
-    
+
     public DateFormat getDateFormat() {
       return dateFormat;
     }

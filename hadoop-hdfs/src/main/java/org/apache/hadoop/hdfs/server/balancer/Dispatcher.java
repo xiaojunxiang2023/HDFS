@@ -22,7 +22,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
@@ -194,7 +193,7 @@ public class Dispatcher {
     return hasSuccess;
   }
 
-  
+
   public static void setDelayAfterErrors(long time) {
     delayAfterErrors = time;
   }

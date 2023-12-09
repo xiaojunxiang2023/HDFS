@@ -2,7 +2,6 @@ package org.apache.hadoop.ipc;
 
 
 import org.apache.hadoop.ipc.metrics.RetryCacheMetrics;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.LightWeightCache;
 import org.apache.hadoop.util.LightWeightGSet;
@@ -202,12 +201,12 @@ public class RetryCache {
     retryCacheMetrics.incrCacheCleared();
   }
 
-  
+
   public LightWeightGSet<CacheEntry, CacheEntry> getCacheSet() {
     return set;
   }
 
-  
+
   public RetryCacheMetrics getMetricsForTests() {
     return retryCacheMetrics;
   }

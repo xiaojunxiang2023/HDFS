@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.Server;
 import org.apache.hadoop.log.LogThrottlingHelper;
 import org.apache.hadoop.metrics2.lib.MutableRatesWithAggregation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
 import org.apache.hadoop.util.Timer;
@@ -37,7 +36,7 @@ import static org.apache.hadoop.log.LogThrottlingHelper.LogAction;
  * between operations this should not generally be an issue.
  */
 class FSNamesystemLock {
-  
+
   protected ReentrantReadWriteLock coarseLock;
 
   private final boolean metricsEnabled;
@@ -93,7 +92,7 @@ class FSNamesystemLock {
    */
   private final LongAdder numWriteLockLongHold = new LongAdder();
 
-  
+
   static final String OP_NAME_OTHER = "OTHER";
   private static final String READ_LOCK_METRIC_PREFIX = "FSNReadLock";
   private static final String WRITE_LOCK_METRIC_PREFIX = "FSNWriteLock";
@@ -106,7 +105,7 @@ class FSNamesystemLock {
     this(conf, detailedHoldTimeMetrics, new Timer());
   }
 
-  
+
   FSNamesystemLock(Configuration conf,
                    MutableRatesWithAggregation detailedHoldTimeMetrics, Timer timer) {
     boolean fair = conf.getBoolean(DFS_NAMENODE_FSLOCK_FAIR_KEY,

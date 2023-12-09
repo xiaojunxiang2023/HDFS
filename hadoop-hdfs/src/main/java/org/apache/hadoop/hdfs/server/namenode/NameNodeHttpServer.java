@@ -21,7 +21,6 @@ import org.apache.hadoop.http.HttpServer2;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.AuthenticationFilterInitializer;
 import org.apache.hadoop.security.http.RestCsrfPreventionFilter;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -291,7 +290,7 @@ public class NameNodeHttpServer {
    * Returns the httpServer.
    * @return HttpServer2
    */
-  
+
   public HttpServer2 getHttpServer() {
     return httpServer;
   }

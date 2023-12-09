@@ -32,7 +32,6 @@ import org.apache.hadoop.hdfs.server.diskbalancer.DiskBalancerException;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.NodePlan;
 import org.apache.hadoop.hdfs.server.diskbalancer.planner.Step;
 import org.apache.hadoop.hdfs.web.JsonUtil;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.util.AutoCloseableLock;
 import org.apache.hadoop.util.Time;
@@ -63,7 +62,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DiskBalancer {
 
-  
+
   public static final Logger LOG = LoggerFactory.getLogger(DiskBalancer
       .class);
   private final FsDatasetSpi<?> dataset;
@@ -850,7 +849,7 @@ public class DiskBalancer {
      * @param item        DiskBalancerWorkItem
      * @return sleep delay in Milliseconds.
      */
-    
+
     public long computeDelay(long bytesCopied, long timeUsed,
                              DiskBalancerWorkItem item) {
 

@@ -15,7 +15,6 @@ import org.apache.hadoop.security.authorize.ProxyUsers;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.HttpExceptionUtils;
 import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public abstract class DelegationTokenAuthenticationHandler
     authType = handler.getType();
   }
 
-  
+
   DelegationTokenManager getTokenManager() {
     return tokenManager;
   }
@@ -118,7 +117,7 @@ public abstract class DelegationTokenAuthenticationHandler
     tokenManager.setExternalDelegationTokenSecretManager(secretManager);
   }
 
-  
+
   @SuppressWarnings("unchecked")
   public void initTokenManager(Properties config) {
     Configuration conf = new Configuration(false);
@@ -135,7 +134,7 @@ public abstract class DelegationTokenAuthenticationHandler
     tokenManager.init();
   }
 
-  
+
   public void initJsonFactory(Properties config) {
     boolean hasFeature = false;
     JsonFactory tmpJsonFactory = new JsonFactory();

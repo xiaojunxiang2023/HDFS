@@ -10,7 +10,6 @@ import org.apache.hadoop.metrics2.MetricsSource;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.Interns;
 import org.apache.hadoop.metrics2.util.MBeans;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,7 +173,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    * @param priority - queue priority
    * @param e - element to add
    */
-  
+
   void putQueue(int priority, E e) throws InterruptedException {
     queues.get(priority).put(e);
     signalNotEmpty();
@@ -186,7 +185,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
    * @param e - element to add
    * @return boolean if added to the given queue
    */
-  
+
   boolean offerQueue(int priority, E e) {
     boolean ret = queues.get(priority).offer(e);
     if (ret) {
@@ -445,7 +444,7 @@ public class FairCallQueue<E extends Schedulable> extends AbstractQueue<E>
     return calls;
   }
 
-  
+
   public void setMultiplexer(RpcMultiplexer newMux) {
     this.multiplexer = newMux;
   }

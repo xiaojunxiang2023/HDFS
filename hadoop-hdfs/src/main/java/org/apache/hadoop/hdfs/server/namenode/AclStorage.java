@@ -4,7 +4,6 @@ import org.apache.hadoop.fs.permission.*;
 import org.apache.hadoop.hdfs.protocol.AclException;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
 import org.apache.hadoop.hdfs.util.ReferenceCountMap;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableList;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 
@@ -153,7 +152,7 @@ public final class AclStorage {
    * @param aclFeature AclFeature
    * @return List of entries
    */
-  
+
   static ImmutableList<AclEntry> getEntriesFromAclFeature(AclFeature aclFeature) {
     if (aclFeature == null) {
       return ImmutableList.<AclEntry>of();
@@ -351,7 +350,7 @@ public final class AclStorage {
         existingPerm.getStickyBit());
   }
 
-  
+
   public static ReferenceCountMap<AclFeature> getUniqueAclFeatures() {
     return UNIQUE_ACL_FEATURES;
   }

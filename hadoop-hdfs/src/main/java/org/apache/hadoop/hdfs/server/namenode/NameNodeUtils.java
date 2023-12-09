@@ -19,7 +19,6 @@ package org.apache.hadoop.hdfs.server.namenode;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSUtilClient;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +58,7 @@ public final class NameNodeUtils {
    * 6. If port number in the authority is missing or zero in step 6:
    *    - return null
    */
-  
+
   @Nullable
   static String getClientNamenodeAddress(
       Configuration conf, @Nullable String nsId) {

@@ -2,7 +2,6 @@ package org.apache.hadoop.io;
 
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -25,11 +24,11 @@ public abstract class AbstractMapWritable implements Writable, Configurable {
   private AtomicReference<Configuration> conf;
 
   /* Class to id mappings */
-  
+
   Map<Class<?>, Byte> classToIdMap = new ConcurrentHashMap<Class<?>, Byte>();
 
   /* Id to Class mappings */
-  
+
   Map<Byte, Class<?>> idToClassMap = new ConcurrentHashMap<Byte, Class<?>>();
 
   /* The number of new classes (those not established by the constructor) */

@@ -18,7 +18,6 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.RateLimiter;
 import org.slf4j.Logger;
@@ -173,12 +172,12 @@ public class NameNodeConnector implements Closeable {
     return connectors;
   }
 
-  
+
   public static void setWrite2IdFile(boolean write2IdFile) {
     NameNodeConnector.write2IdFile = write2IdFile;
   }
 
-  
+
   public static void checkOtherInstanceRunning(boolean toCheck) {
     NameNodeConnector.checkOtherInstanceRunning = toCheck;
   }

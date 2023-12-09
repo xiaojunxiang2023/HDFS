@@ -4,7 +4,6 @@ import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
 import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.hdfs.server.protocol.ReceivedDeletedBlockInfo.BlockStatus;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,7 +222,7 @@ class IncrementalBlockReportManager {
    * Add a block for notification to NameNode.
    * If another entry exists for the same block it is removed.
    */
-  
+
   synchronized void addRDBI(ReceivedDeletedBlockInfo rdbi,
                             DatanodeStorage storage) {
     // Make sure another entry for the same block is first removed.
@@ -260,7 +259,7 @@ class IncrementalBlockReportManager {
     }
   }
 
-  
+
   synchronized void triggerDeletionReportForTests() {
     triggerIBR(true);
 
@@ -277,7 +276,7 @@ class IncrementalBlockReportManager {
     pendingIBRs.clear();
   }
 
-  
+
   int getPendingIBRSize() {
     return pendingIBRs.size();
   }

@@ -4,7 +4,6 @@ import org.apache.hadoop.hdfs.protocol.DatanodeID;
 import org.apache.hadoop.hdfs.security.token.block.ExportedBlockKeys;
 import org.apache.hadoop.hdfs.server.common.Storage;
 import org.apache.hadoop.hdfs.server.common.StorageInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 /**
  * DatanodeRegistration class contains all information the name-node needs
@@ -19,7 +18,7 @@ public class DatanodeRegistration extends DatanodeID
   private final String softwareVersion;
   private NamespaceInfo nsInfo;
 
-  
+
   public DatanodeRegistration(String uuid, DatanodeRegistration dnr) {
     this(new DatanodeID(uuid, dnr),
         dnr.getStorageInfo(),

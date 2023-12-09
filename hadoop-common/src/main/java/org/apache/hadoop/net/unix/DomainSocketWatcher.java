@@ -2,7 +2,6 @@ package org.apache.hadoop.net.unix;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.hadoop.util.NativeCodeLoader;
@@ -261,7 +260,7 @@ public final class DomainSocketWatcher implements Closeable {
     Uninterruptibles.joinUninterruptibly(watcherThread);
   }
 
-  
+
   public boolean isClosed() {
     lock.lock();
     try {
@@ -417,7 +416,7 @@ public final class DomainSocketWatcher implements Closeable {
     }
   }
 
-  
+
   final Thread watcherThread = new Thread(new Runnable() {
     @Override
     public void run() {

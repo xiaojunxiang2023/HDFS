@@ -7,7 +7,6 @@ import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
 import org.apache.hadoop.metrics2.lib.*;
 import org.apache.hadoop.metrics2.util.MBeans;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Lists;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
 import org.apache.hadoop.util.StringUtils;
@@ -374,7 +373,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
    * Sample all the sources for a snapshot of metrics/tags
    * @return the metrics buffer containing the snapshot
    */
-  
+
   public synchronized MetricsBuffer sampleMetrics() {
     collector.clear();
     MetricsBufferBuilder bufferBuilder = new MetricsBufferBuilder();
@@ -592,12 +591,12 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     return allSources.get(name);
   }
 
-  
+
   MetricsSourceAdapter getSourceAdapter(String name) {
     return sources.get(name);
   }
 
-  
+
   public MetricsSinkAdapter getSinkAdapter(String name) {
     return sinks.get(name);
   }

@@ -9,7 +9,6 @@ import org.apache.hadoop.util.LightWeightGSet;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.hadoop.hdfs.server.namenode.INodeId.INVALID_INODE_ID;
@@ -392,6 +391,7 @@ public abstract class BlockInfo extends Block implements LightWeightGSet.LinkedE
   }
 
   private byte[] indices;
+
   public byte getStorageBlockIndex(DatanodeStorageInfo storage) {
     int i = this.findStorageInfo(storage);
     return i == -1 ? -1 : indices[i];

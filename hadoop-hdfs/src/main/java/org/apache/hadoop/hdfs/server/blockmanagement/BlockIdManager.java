@@ -7,12 +7,9 @@ import org.apache.hadoop.hdfs.server.common.GenerationStamp;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLog;
 import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 
 import java.io.IOException;
-
-import static org.apache.hadoop.hdfs.protocol.BlockType.STRIPED;
 
 /**
  * BlockIdManager allocates the generation stamps and the block ID. The
@@ -104,7 +101,7 @@ public class BlockIdManager {
     return legacyGenerationStampLimit;
   }
 
-  
+
   SequentialBlockIdGenerator getBlockIdGenerator() {
     return blockIdGenerator;
   }
@@ -178,7 +175,7 @@ public class BlockIdManager {
     setGenerationStampIfGreater(impendingGenerationStamp.getCurrentValue());
   }
 
-  
+
   public long getImpendingGenerationStamp() {
     return impendingGenerationStamp.getCurrentValue();
   }
@@ -203,7 +200,7 @@ public class BlockIdManager {
         getNextGenerationStamp();
   }
 
-  
+
   long getNextLegacyGenerationStamp() throws IOException {
     long legacyGenStamp = legacyGenerationStamp.nextValue();
 
@@ -218,7 +215,7 @@ public class BlockIdManager {
     return legacyGenStamp;
   }
 
-  
+
   long getNextGenerationStamp() {
     return generationStamp.nextValue();
   }

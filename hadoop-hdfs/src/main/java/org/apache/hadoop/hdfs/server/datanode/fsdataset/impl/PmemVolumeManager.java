@@ -6,7 +6,6 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,17 +74,17 @@ public final class PmemVolumeManager {
     return pmemVolumeManager;
   }
 
-  
+
   public static void reset() {
     pmemVolumeManager = null;
   }
 
-  
+
   public static void setMaxBytes(long maxBytes) {
     maxBytesPerPmem = maxBytes;
   }
 
-  
+
   static File verifyIfValidPmemVolume(File pmemDir)
       throws IOException {
     if (!pmemDir.exists()) {
@@ -329,7 +328,7 @@ public final class PmemVolumeManager {
         maxAvailableSpace + ", but " + bytesCount + "is required.");
   }
 
-  
+
   String getVolumeByIndex(Byte index) {
     return pmemVolumes.get(index);
   }
@@ -385,7 +384,7 @@ public final class PmemVolumeManager {
     return idToCacheFilePath(volumeIndex, key);
   }
 
-  
+
   Map<ExtendedBlockId, Byte> getBlockKeyToVolume() {
     return blockKeyToVolume;
   }

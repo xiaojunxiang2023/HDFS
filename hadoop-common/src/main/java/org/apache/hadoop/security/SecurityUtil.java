@@ -24,7 +24,6 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenInfo;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.net.InetAddresses;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.StringUtils;
@@ -63,9 +62,9 @@ public final class SecurityUtil {
 
   // controls whether buildTokenService will use an ip or host/ip as given
   // by the user
-  
+
   static boolean useIpForTokenService;
-  
+
   static HostResolver hostResolver;
 
   private static boolean logSlowLookups;
@@ -102,7 +101,7 @@ public final class SecurityUtil {
   /**
    * For use only by tests and initialization
    */
-  
+
   public static void setTokenServiceUseIp(boolean flag) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Setting "

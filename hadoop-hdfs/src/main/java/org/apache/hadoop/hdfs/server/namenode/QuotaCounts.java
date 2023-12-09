@@ -4,7 +4,6 @@ import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.util.ConstEnumCounters;
 import org.apache.hadoop.hdfs.util.EnumCounters;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.util.function.Consumer;
 
@@ -47,10 +46,10 @@ public class QuotaCounts {
 
   // Name space and storage space counts (HDFS-7775 refactors the original disk
   // space count to storage space counts)
-  
+
   EnumCounters<Quota> nsSsCounts;
   // Storage type space counts
-  
+
   EnumCounters<StorageType> tsCounts;
 
   public static class Builder {

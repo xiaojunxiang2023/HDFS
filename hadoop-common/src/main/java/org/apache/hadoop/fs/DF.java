@@ -1,7 +1,6 @@
 package org.apache.hadoop.fs;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.Shell;
 
 import java.io.BufferedReader;
@@ -129,7 +128,7 @@ public class DF extends Shell {
     }
   }
 
-  
+
   protected void parseOutput() throws IOException {
     if (output.size() < 2) {
       StringBuffer sb = new StringBuffer("Fewer lines of output than expected");

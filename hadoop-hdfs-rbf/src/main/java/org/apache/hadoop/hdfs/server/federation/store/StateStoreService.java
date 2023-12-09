@@ -18,7 +18,6 @@ import org.apache.hadoop.hdfs.server.federation.store.records.RouterState;
 import org.apache.hadoop.metrics2.MetricsException;
 import org.apache.hadoop.metrics2.util.MBeans;
 import org.apache.hadoop.service.CompositeService;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
@@ -206,7 +205,7 @@ public class StateStoreService extends CompositeService {
     return this.driver.isDriverReady();
   }
 
-  
+
   public void closeDriver() throws Exception {
     if (this.driver != null) {
       this.driver.close();
@@ -231,7 +230,7 @@ public class StateStoreService extends CompositeService {
     return this.cacheLastUpdateTime;
   }
 
-  
+
   public void stopCacheUpdateService() {
     if (this.cacheUpdater != null) {
       this.cacheUpdater.stop();

@@ -10,7 +10,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.BlockIterato
 import org.apache.hadoop.hdfs.server.datanode.metrics.DataNodeMetrics;
 import org.apache.hadoop.hdfs.util.DataTransferThrottler;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.cache.Cache;
 import org.apache.hadoop.thirdparty.com.google.common.cache.CacheBuilder;
@@ -58,7 +57,7 @@ public class VolumeScanner extends Thread {
    */
   private Conf conf;
 
-  
+
   void setConf(Conf conf) {
     this.conf = conf;
   }
@@ -439,7 +438,7 @@ public class VolumeScanner extends Thread {
     return -1;
   }
 
-  
+
   static boolean calculateShouldScan(String storageId, long targetBytesPerSec,
                                      long scannedBytesSum, long startMinute, long curMinute) {
     long runMinutes = curMinute - startMinute;
@@ -761,7 +760,7 @@ public class VolumeScanner extends Thread {
         "added.", this, bpid);
   }
 
-  
+
   Statistics getStatistics() {
     synchronized (stats) {
       return new Statistics(stats);

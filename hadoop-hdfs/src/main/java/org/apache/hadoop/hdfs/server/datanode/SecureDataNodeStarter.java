@@ -11,7 +11,6 @@ import org.apache.hadoop.hdfs.protocol.HdfsConstants;
 import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataTransferSaslUtil;
 import org.apache.hadoop.http.HttpConfig;
 import org.apache.hadoop.security.SecurityUtil;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 
 import java.net.BindException;
 import java.net.InetSocketAddress;
@@ -98,7 +97,7 @@ public class SecureDataNodeStarter implements Daemon {
    * node. The privileged resources consist of the port of the RPC server and
    * the port of HTTP (not HTTPS) server.
    */
-  
+
   public static SecureResources getSecureResources(Configuration conf)
       throws Exception {
     HttpConfig.Policy policy = DFSUtil.getHttpPolicy(conf);

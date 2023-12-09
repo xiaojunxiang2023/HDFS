@@ -3,7 +3,6 @@ package org.apache.hadoop.hdfs.server.federation.resolver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.server.federation.resolver.order.*;
 import org.apache.hadoop.hdfs.server.federation.router.Router;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +57,7 @@ public class MultipleDestinationMountTableResolver extends MountTableResolver {
     return mountTableResult;
   }
 
-  
+
   public void addResolver(DestinationOrder order, OrderedResolver resolver) {
     orderedResolvers.put(order, resolver);
   }

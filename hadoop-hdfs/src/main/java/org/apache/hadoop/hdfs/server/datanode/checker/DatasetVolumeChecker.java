@@ -25,7 +25,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeReference;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.VolumeCheckContext;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Sets;
 import org.apache.hadoop.thirdparty.com.google.common.util.concurrent.*;
@@ -303,7 +302,7 @@ public class DatasetVolumeChecker {
    *
    * @param testDelegate
    */
-  
+
   void setDelegateChecker(
       AsyncChecker<VolumeCheckContext, VolumeCheckResult> testDelegate) {
     delegateChecker = testDelegate;

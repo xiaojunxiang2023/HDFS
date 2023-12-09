@@ -83,7 +83,6 @@ import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
@@ -453,7 +452,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   }
 
   //This is for testing purposes only
-  
+
   boolean isImageLoaded() {
     return imageLoaded;
   }
@@ -476,7 +475,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     blockManager.clear();
   }
 
-  
+
   LeaseManager getLeaseManager() {
     return leaseManager;
   }
@@ -489,7 +488,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * @return the current {@link #lazyPersistFileScrubberTS} if {@link
    *         #lazyPersistFileScrubber} is not null.
    */
-  
+
   public long getLazyPersistFileScrubberTS() {
     return lazyPersistFileScrubber == null ? -1
         : lazyPersistFileScrubberTS.get();
@@ -813,22 +812,22 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  
+
   public List<AuditLogger> getAuditLoggers() {
     return auditLoggers;
   }
 
-  
+
   public RetryCache getRetryCache() {
     return retryCache;
   }
 
-  
+
   public long getLeaseRecheckIntervalMs() {
     return leaseRecheckIntervalMs;
   }
 
-  
+
   public long getMaxLockHoldToReleaseLeaseMs() {
     return maxLockHoldToReleaseLeaseMs;
   }
@@ -866,12 +865,12 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  
+
   public KeyProviderCryptoExtension getProvider() {
     return provider;
   }
 
-  
+
   static RetryCache initRetryCache(Configuration conf) {
     boolean enable = conf.getBoolean(DFS_NAMENODE_ENABLE_RETRY_CACHE_KEY,
         DFS_NAMENODE_ENABLE_RETRY_CACHE_DEFAULT);
@@ -1588,7 +1587,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * @return time in milliseconds.
    * See {@link org.apache.hadoop.util.Time#now()}.
    */
-  
+
   long getCTime() {
     return fsImage == null ? 0 : fsImage.getStorage().getCTime();
   }
@@ -1801,7 +1800,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     return sw.toString();
   }
 
-  
+
   public FsServerDefaults getServerDefaults() throws StandbyException {
     checkOperation(OperationCategory.READ);
     return serverDefaults;
@@ -2469,7 +2468,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
 
       if (shouldReplicate) {
         blockManager.verifyReplication(src, replication, clientMachine);
-      } 
+      }
 
       FileEncryptionInfo feInfo = null;
       if (!iip.isRaw() && provider != null) {
@@ -3573,7 +3572,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     blockManager.checkRedundancy(pendingFile);
   }
 
-  
+
   BlockInfo getStoredBlock(Block block) {
     return blockManager.getStoredBlock(block);
   }
@@ -3786,7 +3785,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * @param storedBlock last block
    * @throws IOException on error
    */
-  
+
   void closeFileCommitBlocks(String src, INodeFile pendingFile,
                              BlockInfo storedBlock) throws IOException {
     final INodesInPath iip = INodesInPath.fromINode(pendingFile);
@@ -6391,7 +6390,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     return blockManager;
   }
 
-  
+
   public void setBlockManagerForTesting(BlockManager bm) {
     this.blockManager = bm;
   }
@@ -6403,7 +6402,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   }
 
   /** Set the FSDirectory. */
-  
+
   public void setFSDirectory(FSDirectory dir) {
     this.dir = dir;
   }
@@ -6539,32 +6538,32 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  
+
   public EditLogTailer getEditLogTailer() {
     return editLogTailer;
   }
 
-  
+
   public void setEditLogTailerForTests(EditLogTailer tailer) {
     this.editLogTailer = tailer;
   }
 
-  
+
   void setFsLockForTests(ReentrantReadWriteLock lock) {
     this.fsLock.coarseLock = lock;
   }
 
-  
+
   public ReentrantReadWriteLock getFsLockForTests() {
     return fsLock.coarseLock;
   }
 
-  
+
   public ReentrantLock getCpLockForTests() {
     return cpLock;
   }
 
-  
+
   public void setNNResourceChecker(NameNodeResourceChecker nnResourceChecker) {
     this.nnResourceChecker = nnResourceChecker;
   }
@@ -7042,7 +7041,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
         NameNodeLayoutVersion.CURRENT_LAYOUT_VERSION);
   }
 
-  
+
   static int getEffectiveLayoutVersion(boolean isRollingUpgrade, int storageLV,
                                        int minCompatLV, int currentLV) {
     if (isRollingUpgrade) {
@@ -7816,7 +7815,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
    * is defined in the config file. It can also be explicitly listed in the
    * config file.
    */
-  
+
   static class FSNamesystemAuditLogger extends DefaultAuditLogger {
 
     @Override

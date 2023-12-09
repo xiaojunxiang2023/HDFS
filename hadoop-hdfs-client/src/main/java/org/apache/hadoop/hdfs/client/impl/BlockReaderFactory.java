@@ -30,7 +30,6 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.io.ByteArrayDataOutput;
 import org.apache.hadoop.thirdparty.com.google.common.io.ByteStreams;
@@ -66,7 +65,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     }
   }
 
-  
+
   static ShortCircuitReplicaCreator
       createShortCircuitReplicaInfoCallback = null;
 
@@ -262,7 +261,7 @@ public class BlockReaderFactory implements ShortCircuitReplicaCreator {
     return this;
   }
 
-  
+
   public static void setFailureInjectorForTesting(FailureInjector injector) {
     failureInjector = injector;
   }

@@ -10,7 +10,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.http.HttpServer2;
 import org.apache.hadoop.security.ssl.SSLFactory;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Charsets;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.ServletUtil;
@@ -71,7 +70,7 @@ public class LogLevel {
         protocol.equals(PROTOCOL_HTTPS)));
   }
 
-  
+
   static class CLI extends Configured implements Tool {
     private Operations operation = Operations.UNKNOWN;
     private String protocol;

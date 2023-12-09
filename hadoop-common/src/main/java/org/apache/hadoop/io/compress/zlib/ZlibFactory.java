@@ -6,7 +6,6 @@ import org.apache.hadoop.io.compress.Decompressor;
 import org.apache.hadoop.io.compress.DirectDecompressor;
 import org.apache.hadoop.io.compress.zlib.ZlibCompressor.CompressionLevel;
 import org.apache.hadoop.io.compress.zlib.ZlibCompressor.CompressionStrategy;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.NativeCodeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ public class ZlibFactory {
    * Load native library and set the flag whether to use native library. The
    * method is also used for reset the flag modified by setNativeZlibLoaded
    */
-  
+
   public static void loadNativeZLib() {
     if (NativeCodeLoader.isNativeCodeLoaded()) {
       nativeZlibLoaded = ZlibCompressor.isNativeZlibLoaded() &&
@@ -49,7 +48,7 @@ public class ZlibFactory {
    * libraries
    *
    */
-  
+
   public static void setNativeZlibLoaded(final boolean isLoaded) {
     ZlibFactory.nativeZlibLoaded = isLoaded;
   }

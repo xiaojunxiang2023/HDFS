@@ -16,7 +16,6 @@ import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithName;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.hdfs.util.Diff;
 import org.apache.hadoop.security.AccessControlException;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.thirdparty.com.google.common.collect.Maps;
@@ -631,14 +630,14 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     return getLocalName();
   }
 
-  
+
   public final String getObjectString() {
     return getClass().getSimpleName() + "@"
         + Integer.toHexString(super.hashCode());
   }
 
   /** @return a string description of the parent. */
-  
+
   public final String getParentString() {
     final INodeReference parentRef = getParentReference();
     if (parentRef != null) {
@@ -653,7 +652,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     }
   }
 
-  
+
   public String toDetailString() {
     return toString() + "(" + getObjectString() + "), " + getParentString();
   }
@@ -794,7 +793,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * @return array of byte arrays each of which represents
    * a single path component.
    */
-  
+
   public static byte[][] getPathComponents(String path) {
     checkAbsolutePath(path);
     return DFSUtil.getPathComponents(path);
@@ -852,7 +851,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Dump the subtree starting from this inode.
    * @return a text representation of the tree.
    */
-  
+
   public final StringBuffer dumpTreeRecursively() {
     final StringWriter out = new StringWriter();
     dumpTreeRecursively(new PrintWriter(out, true), new StringBuilder(),
@@ -860,7 +859,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
     return out.getBuffer();
   }
 
-  
+
   public final void dumpTreeRecursively(PrintStream out) {
     out.println(dumpTreeRecursively().toString());
   }
@@ -869,7 +868,7 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    * Dump tree recursively.
    * @param prefix The prefix string that each line should print.
    */
-  
+
   public void dumpTreeRecursively(PrintWriter out, StringBuilder prefix,
                                   int snapshotId) {
     out.print(prefix);

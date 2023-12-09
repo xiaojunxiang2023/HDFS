@@ -11,7 +11,6 @@ import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.hadoop.net.NetUtils;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.thirdparty.com.google.common.base.Joiner;
 import org.apache.hadoop.util.Time;
 import org.apache.hadoop.util.VersionInfo;
@@ -161,12 +160,12 @@ class BPServiceActor implements Runnable {
   /**
    * Used to inject a spy NN in the unit tests.
    */
-  
+
   void setNameNode(DatanodeProtocolClientSideTranslatorPB dnProtocol) {
     bpNamenode = dnProtocol;
   }
 
-  
+
   DatanodeProtocolClientSideTranslatorPB getNameNodeProxy() {
     return bpNamenode;
   }
@@ -174,13 +173,13 @@ class BPServiceActor implements Runnable {
   /**
    * Used to inject a spy NN in the unit tests.
    */
-  
+
   void setLifelineNameNode(
       DatanodeLifelineProtocolClientSideTranslatorPB dnLifelineProtocol) {
     lifelineSender.lifelineNamenode = dnLifelineProtocol;
   }
 
-  
+
   DatanodeLifelineProtocolClientSideTranslatorPB getLifelineNameNodeProxy() {
     return lifelineSender.lifelineNamenode;
   }
@@ -193,7 +192,7 @@ class BPServiceActor implements Runnable {
    *
    * @return the NamespaceInfo
    */
-  
+
   NamespaceInfo retrieveNamespaceInfo() throws IOException {
     NamespaceInfo nsInfo = null;
     while (shouldRun()) {
@@ -262,7 +261,7 @@ class BPServiceActor implements Runnable {
   /**
    * Run an immediate block report on this thread. Used by tests.
    */
-  
+
   void triggerBlockReportForTests() {
     synchronized (ibrManager) {
       scheduler.scheduleHeartbeat();
@@ -279,7 +278,7 @@ class BPServiceActor implements Runnable {
     }
   }
 
-  
+
   void triggerHeartbeatForTests() {
     synchronized (ibrManager) {
       final long nextHeartbeatTime = scheduler.scheduleHeartbeat();
@@ -517,7 +516,7 @@ class BPServiceActor implements Runnable {
     return response;
   }
 
-  
+
   void sendLifelineForTests() throws IOException {
     lifelineSender.sendLifeline();
   }
@@ -1070,25 +1069,25 @@ class BPServiceActor implements Runnable {
     // nextBlockReportTime and nextHeartbeatTime may be assigned/read
     // by testing threads (through BPServiceActor#triggerXXX), while also
     // assigned/read by the actor thread.
-    
+
     volatile long nextBlockReportTime = monotonicNow();
 
-    
+
     volatile long nextHeartbeatTime = monotonicNow();
 
-    
+
     volatile long nextLifelineTime;
 
-    
+
     volatile long lastBlockReportTime = monotonicNow();
 
-    
+
     volatile long lastHeartbeatTime = monotonicNow();
 
-    
+
     boolean resetBlockReportTime = true;
 
-    
+
     volatile long nextOutliersReportTime = monotonicNow();
 
     private final AtomicBoolean forceFullBlockReport =
@@ -1247,7 +1246,7 @@ class BPServiceActor implements Runnable {
      * Wrapped for testing.
      * @return
      */
-    
+
     public long monotonicNow() {
       return Time.monotonicNow();
     }
@@ -1365,7 +1364,7 @@ class BPServiceActor implements Runnable {
     }
   }
 
-  
+
   void stopCommandProcessingThread() {
     if (commandProcessingThread != null) {
       commandProcessingThread.interrupt();

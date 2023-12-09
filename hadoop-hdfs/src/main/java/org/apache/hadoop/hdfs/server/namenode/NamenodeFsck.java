@@ -21,7 +21,6 @@ import org.apache.hadoop.net.NodeBase;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.tracing.TraceUtils;
 import org.apache.hadoop.tracing.Tracer;
 import org.apache.hadoop.util.Time;
@@ -449,7 +448,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     out.println();
   }
 
-  
+
   void check(String parent, HdfsFileStatus file, Result replRes, Result ecRes)
       throws IOException {
     String path = file.getFullName(parent);
@@ -1111,7 +1110,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
   /**
    * FsckResult of checking, plus overall DFS statistics.
    */
-  
+
   static class Result {
     final List<String> missingIds = new ArrayList<String>();
     long missingSize = 0L;
@@ -1166,7 +1165,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     }
   }
 
-  
+
   static class ReplicationResult extends Result {
     final short replication;
     final short minReplication;
@@ -1287,7 +1286,7 @@ public class NamenodeFsck implements DataEncryptionKeyFactory {
     }
   }
 
-  
+
   static class ErasureCodingResult extends Result {
 
     ErasureCodingResult(Configuration conf) {

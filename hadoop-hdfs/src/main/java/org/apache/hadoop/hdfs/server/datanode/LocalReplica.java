@@ -9,7 +9,6 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi.ScanInfo;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.LengthInputStream;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIO;
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.util.DataChecksum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,7 @@ abstract public class LocalReplica extends ReplicaInfo {
    * Get the full path of this replica's data file.
    * @return the full path of this replica's data file
    */
-  
+
   public File getBlockFile() {
     return new File(getDir(), getBlockName());
   }
@@ -87,7 +86,7 @@ abstract public class LocalReplica extends ReplicaInfo {
    * Get the full path of this replica's meta file.
    * @return the full path of this replica's meta file
    */
-  
+
   public File getMetaFile() {
     return new File(getDir(),
         DatanodeUtil.getMetaName(getBlockName(), getGenerationStamp()));
@@ -126,7 +125,7 @@ abstract public class LocalReplica extends ReplicaInfo {
     }
   }
 
-  
+
   public static class ReplicaDirInfo {
     public String baseDirPath;
     public boolean hasSubidrs;
@@ -137,7 +136,7 @@ abstract public class LocalReplica extends ReplicaInfo {
     }
   }
 
-  
+
   public static ReplicaDirInfo parseBaseDir(File dir, long blockId) {
     File currentDir = dir;
     boolean hasSubdirs = false;

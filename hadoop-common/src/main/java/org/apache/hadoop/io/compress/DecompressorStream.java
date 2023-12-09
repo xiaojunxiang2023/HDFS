@@ -1,7 +1,5 @@
 package org.apache.hadoop.io.compress;
 
-import org.apache.hadoop.thirdparty.com.google.common.annotations.VisibleForTesting;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +24,7 @@ public class DecompressorStream extends CompressionInputStream {
   protected boolean closed = false;
   private int lastBytesSent = 0;
 
-  
+
   DecompressorStream(InputStream in, Decompressor decompressor,
                      int bufferSize, int skipBufferSize)
       throws IOException {
