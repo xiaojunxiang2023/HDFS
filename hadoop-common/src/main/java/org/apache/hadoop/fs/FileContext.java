@@ -1389,7 +1389,7 @@ public class FileContext implements PathCapabilities {
     return new FSLinkResolver<BlockLocation[]>() {
       @Override
       public BlockLocation[] next(final AbstractFileSystem fs, final Path p)
-          throws IOException, UnresolvedLinkException {
+          throws IOException {
         return fs.getFileBlockLocations(p, start, len);
       }
     }.resolve(this, absF);
