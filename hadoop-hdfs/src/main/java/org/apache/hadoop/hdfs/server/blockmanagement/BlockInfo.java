@@ -14,51 +14,25 @@ import java.util.List;
 
 import static org.apache.hadoop.hdfs.server.namenode.INodeId.INVALID_INODE_ID;
 
-/**
- * For a given block (or an erasure coding block group), BlockInfo class
- * maintains 1) the {@link BlockCollection} it is part of, and 2) datanodes
- * where the replicas of the block, or blocks belonging to the erasure coding
- * block group, are stored.
- */
-public abstract class BlockInfo extends Block
-    implements LightWeightGSet.LinkedElement {
+public abstract class BlockInfo extends Block implements LightWeightGSet.LinkedElement {
 
   public static final BlockInfo[] EMPTY_ARRAY = {};
 
-  /**
-   * Replication factor.
-   */
+  // 副本因子
   private short replication;
 
-  /**
-   * Block collection ID.
-   */
   private volatile long bcId;
 
-  /** For implementing {@link LightWeightGSet.LinkedElement} interface. */
+  // LightWeightGSet的一个元素 (next 结构)
   private LightWeightGSet.LinkedElement nextLinkedElement;
 
-  /**
-   * This array contains triplets of references. For each i-th storage, the
-   * block belongs to triplets[3*i] is the reference to the
-   * {@link DatanodeStorageInfo} and triplets[3*i+1] and triplets[3*i+2] are
-   * references to the previous and the next blocks, respectively, in the list
-   * of blocks belonging to this storage.
-   *
-   * Using previous and next in Object triplets is done instead of a
-   * {@link LinkedList} list to efficiently use memory. With LinkedList the cost
-   * per replica is 42 bytes (LinkedList#Entry object per replica) versus 16
-   * bytes using the triplets.
-   */
+  // 压缩字节存储的三元组，triplets[3*i+1] and triplets[3*i+2] 分别代表着前后的 Block
+  // triplets[3*i] 代表着存储着当前 block的其中一个 DatanodeStorageInfo
   protected Object[] triplets;
 
+  // 是否处于构建中状态，null代表着否
   private BlockUnderConstructionFeature uc;
 
-  /**
-   * Construct an entry for blocksmap
-   * @param size the block's replication factor, or the total number of blocks
-   *             in the block group
-   */
   public BlockInfo(short size) {
     this.triplets = new Object[3 * size];
     this.bcId = INVALID_INODE_ID;
@@ -374,9 +348,6 @@ public abstract class BlockInfo extends Block
         state.equals(BlockUCState.COMMITTED);
   }
 
-  /**
-   * Add/Update the under construction feature.
-   */
   public void convertToBlockUnderConstruction(BlockUCState s,
                                               DatanodeStorageInfo[] targets) {
     if (isComplete()) {
@@ -389,9 +360,6 @@ public abstract class BlockInfo extends Block
     }
   }
 
-  /**
-   * Convert an under construction block to complete.
-   */
   void convertToCompleteBlock() {
     assert getBlockUCState() != BlockUCState.COMPLETE :
         "Trying to convert a COMPLETE block";
@@ -413,13 +381,6 @@ public abstract class BlockInfo extends Block
     return uc.getStaleReplicas(genStamp);
   }
 
-  /**
-   * Commit block's length and generation stamp as reported by the client.
-   * Set block state to {@link BlockUCState#COMMITTED}.
-   * @param block - contains client reported block length and generation
-   * @return staleReplica's List.
-   * @throws IOException if block ids are inconsistent.
-   */
   List<ReplicaUnderConstruction> commitBlock(Block block) throws IOException {
     if (getBlockId() != block.getBlockId()) {
       throw new IOException("Trying to commit inconsistent block: id = "

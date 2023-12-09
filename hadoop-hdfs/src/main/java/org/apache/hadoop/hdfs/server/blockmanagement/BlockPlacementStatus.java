@@ -2,7 +2,7 @@ package org.apache.hadoop.hdfs.server.blockmanagement;
 
 public interface BlockPlacementStatus {
 
-  // 副本满足放置策略
+  // 是否副本满足放置策略
   boolean isPlacementPolicySatisfied();
 
   // 还需要的副本数
@@ -10,6 +10,5 @@ public interface BlockPlacementStatus {
 
   // 错误原因的描述
   String getErrorDescription();
-
 
 }

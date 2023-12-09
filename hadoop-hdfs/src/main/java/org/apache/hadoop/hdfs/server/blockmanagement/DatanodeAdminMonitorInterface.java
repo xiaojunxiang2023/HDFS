@@ -4,11 +4,7 @@ import org.apache.hadoop.hdfs.server.namenode.Namesystem;
 
 import java.util.Queue;
 
-/**
- * Interface used to implement a decommission and maintenance monitor class,
- * which is instantiated by the DatanodeAdminManager class.
- */
-
+// 对于 下线节点 和 维护模式节点 的监视器
 public interface DatanodeAdminMonitorInterface extends Runnable {
   void stopTrackingNode(DatanodeDescriptor dn);
 
