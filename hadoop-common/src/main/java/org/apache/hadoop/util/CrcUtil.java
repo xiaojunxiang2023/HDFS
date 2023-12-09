@@ -6,7 +6,6 @@ import java.util.Arrays;
 /**
  * This class provides utilities for working with CRCs.
  */
-// Yarn 和 MapReduce 也可见
 public final class CrcUtil {
   public static final int MULTIPLICATIVE_IDENTITY = 0x80000000;
   public static final int GZIP_POLYNOMIAL = 0xEDB88320;

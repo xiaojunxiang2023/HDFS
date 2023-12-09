@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /* Cache a client using its socket factory as the hash key */
-// MapReduce也可见
 public class ClientCache {
   private Map<SocketFactory, Client> clients =
       new HashMap<SocketFactory, Client>();

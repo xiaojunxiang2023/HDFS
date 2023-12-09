@@ -42,7 +42,6 @@ import java.io.IOException;
  *
  * @see Filter The general behavior of a filter
  */
-// MapReduce也可见
 public class Key implements WritableComparable<Key> {
   /** Byte value of key */
   byte[] bytes;

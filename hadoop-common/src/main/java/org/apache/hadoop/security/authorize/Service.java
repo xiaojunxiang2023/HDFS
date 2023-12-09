@@ -9,7 +9,6 @@ import java.security.Permission;
  * Each service defines it's configuration key and also the necessary
  * {@link Permission} required to access the service.
  */
-// MapReduce也可见
 public class Service {
   private String key;
   private Class<?> protocol;

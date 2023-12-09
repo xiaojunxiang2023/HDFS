@@ -23,7 +23,6 @@ import java.io.*;
  * </pre>
  *
  */
-// MapReduce也可见
 public class DataOutputBuffer extends DataOutputStream {
 
   private static class Buffer extends ByteArrayOutputStream {

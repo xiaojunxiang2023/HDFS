@@ -16,7 +16,6 @@ import java.io.OutputStream;
  * </p>
  * @param <T>
  */
-// MapReduce也可见
 public interface Serializer<T> {
   /**
    * <p>Prepare the serializer for writing.</p>

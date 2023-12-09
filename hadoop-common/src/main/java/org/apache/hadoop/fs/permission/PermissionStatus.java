@@ -12,7 +12,6 @@ import java.io.IOException;
 /**
  * Store permission related information.
  */
-// MapReduce也可见
 public class PermissionStatus implements Writable {
   static final WritableFactory FACTORY = new WritableFactory() {
     @Override

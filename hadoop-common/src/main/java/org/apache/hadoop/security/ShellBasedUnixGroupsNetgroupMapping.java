@@ -14,7 +14,6 @@ import java.util.List;
  * that exec's the <code>groups</code> shell command to fetch the group
  * memberships of a given user.
  */
-// MapReduce也可见
 public class ShellBasedUnixGroupsNetgroupMapping
     extends ShellBasedUnixGroupsMapping {
 

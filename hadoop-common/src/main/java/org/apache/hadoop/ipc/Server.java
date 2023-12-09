@@ -647,7 +647,6 @@ public abstract class Server {
    * Returns a handle to the serviceAuthorizationManager (required in tests)
    * @return instance of ServiceAuthorizationManager for this server
    */
-  // MapReduce也可见
   public ServiceAuthorizationManager getServiceAuthorizationManager() {
     return serviceAuthorizationManager;
   }

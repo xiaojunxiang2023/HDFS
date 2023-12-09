@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  * that exec's the <code>groups</code> shell command to fetch the group
  * memberships of a given user.
  */
-// MapReduce也可见
 public class ShellBasedUnixGroupsMapping extends Configured
     implements GroupMappingServiceProvider {
 

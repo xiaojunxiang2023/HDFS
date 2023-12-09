@@ -10,7 +10,6 @@ import java.security.Principal;
  * Save the full and short name of the user as a principal. This allows us to
  * have a single type that we always look for when picking up user names.
  */
-// MapReduce也可见
 class User implements Principal {
   private final String fullName;
   private final String shortName;

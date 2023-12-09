@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * netgroups (as returned by getent netgrgoup) which only returns
  * group to user mapping.
  */
-// MapReduce也可见
 public class NetgroupCache {
   private static ConcurrentHashMap<String, Set<String>> userToNetgroupsMap =
       new ConcurrentHashMap<String, Set<String>>();

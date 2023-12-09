@@ -41,7 +41,6 @@ import java.util.Map;
 /**
  * A utility class that encapsulates SASL logic for RPC client
  */
-// MapReduce也可见
 public class SaslRpcClient {
   // This log is public as it is referenced in tests
   public static final Logger LOG = LoggerFactory.getLogger(SaslRpcClient.class);

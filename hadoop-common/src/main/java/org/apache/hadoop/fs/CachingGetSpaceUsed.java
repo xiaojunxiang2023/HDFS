@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * The implementor is fee to cache space used. As such there
  * are methods to update the cached value with any known changes.
  */
-// MapReduce也可见
 public abstract class CachingGetSpaceUsed implements Closeable, GetSpaceUsed {
   static final Logger LOG = LoggerFactory.getLogger(CachingGetSpaceUsed.class);
 

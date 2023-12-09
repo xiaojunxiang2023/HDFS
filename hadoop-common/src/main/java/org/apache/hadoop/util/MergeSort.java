@@ -4,8 +4,6 @@ import org.apache.hadoop.io.IntWritable;
 
 import java.util.Comparator;
 
-/** An implementation of the core algorithm of MergeSort. */
-// 仅 MapReduce可见
 public class MergeSort {
   //Reusable IntWritables
   IntWritable I = new IntWritable(0);

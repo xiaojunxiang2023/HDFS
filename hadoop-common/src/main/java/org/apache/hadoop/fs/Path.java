@@ -516,7 +516,6 @@ public class Path
    * @return this path if it contains a scheme and authority and is absolute, or
    * a new path that includes a path and authority and is fully qualified
    */
-  // MapReduce也可见
   public Path makeQualified(URI defaultUri, Path workingDir) {
     Path path = this;
     if (!isAbsolute()) {

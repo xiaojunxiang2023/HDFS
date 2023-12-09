@@ -10,7 +10,6 @@ import org.apache.hadoop.security.proto.RefreshUserMappingsProtocolProtos.Refres
 @ProtocolInfo(
     protocolName = "org.apache.hadoop.security.RefreshUserMappingsProtocol",
     protocolVersion = 1)
-// MapReduce也可见
 public interface RefreshUserMappingsProtocolPB extends
     RefreshUserMappingsProtocolService.BlockingInterface {
 }

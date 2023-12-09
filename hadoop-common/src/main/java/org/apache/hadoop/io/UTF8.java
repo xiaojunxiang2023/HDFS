@@ -19,7 +19,6 @@ import java.io.UTFDataFormatException;
  * @deprecated replaced by Text
  */
 @Deprecated
-// MapReduce也可见
 public class UTF8 implements WritableComparable<UTF8> {
   private static final Logger LOG = LoggerFactory.getLogger(UTF8.class);
   private static final DataInputBuffer IBUF = new DataInputBuffer();

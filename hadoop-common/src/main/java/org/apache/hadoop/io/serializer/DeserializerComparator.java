@@ -19,7 +19,6 @@ import java.util.Comparator;
  * </p>
  * @param <T>
  */
-// MapReduce也可见
 public abstract class DeserializerComparator<T> implements RawComparator<T> {
 
   private InputBuffer buffer = new InputBuffer();

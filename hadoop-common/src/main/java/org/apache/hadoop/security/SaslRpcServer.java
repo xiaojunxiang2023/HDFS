@@ -23,7 +23,6 @@ import java.util.Map;
 /**
  * A utility class for dealing with SASL on RPC server
  */
-// MapReduce也可见
 public class SaslRpcServer {
   public static final Logger LOG = LoggerFactory.getLogger(SaslRpcServer.class);
   public static final String SASL_DEFAULT_REALM = "default";

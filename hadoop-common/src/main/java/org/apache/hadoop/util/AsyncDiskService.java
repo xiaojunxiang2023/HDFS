@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
  * We can move the files to a "TO_BE_DELETED" folder before asychronously
  * deleting it, to make sure the caller can run it faster.
  */
-// MapReduce也可见
 public class AsyncDiskService {
 
   public static final Logger LOG =

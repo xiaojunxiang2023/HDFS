@@ -22,7 +22,6 @@ import java.nio.channels.WritableByteChannel;
  * llegalBlockingModeException.
  * Please use {@link SocketInputStream} for reading.
  */
-// MapReduce也可见
 public class SocketOutputStream extends OutputStream
     implements WritableByteChannel {
 

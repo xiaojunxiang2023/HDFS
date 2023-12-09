@@ -10,7 +10,6 @@ import java.util.ArrayList;
  * execution.  The root is constructed with {@link #Progress()}.  Nodes for
  * sub-phases are created by calling {@link #addPhase()}.
  */
-// 仅 MapReduce可见
 public class Progress {
   private static final Logger LOG = LoggerFactory.getLogger(Progress.class);
   private String status = "";

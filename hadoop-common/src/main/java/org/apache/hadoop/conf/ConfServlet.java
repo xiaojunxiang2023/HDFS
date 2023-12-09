@@ -13,7 +13,6 @@ import java.io.Writer;
 /**
  * A servlet to print out the running configuration data.
  */
-// MapReduce也可见
 public class ConfServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 

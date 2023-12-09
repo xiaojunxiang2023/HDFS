@@ -10,7 +10,6 @@ import java.util.*;
 /**
  * Class for dealing with caching SASL server factories.
  */
-// MapReduce也可见
 public class FastSaslServerFactory implements SaslServerFactory {
   private final Map<String, List<SaslServerFactory>> factoryCache =
       new HashMap<String, List<SaslServerFactory>>();

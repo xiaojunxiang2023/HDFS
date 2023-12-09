@@ -7,7 +7,6 @@ import java.io.IOException;
  * cluster filesystem is exceeded. See also
  * https://issues.apache.org/jira/browse/MAPREDUCE-7148.
  */
-// MapReduce也可见
 public class ClusterStorageCapacityExceededException extends IOException {
   private static final long serialVersionUID = 1L;
 

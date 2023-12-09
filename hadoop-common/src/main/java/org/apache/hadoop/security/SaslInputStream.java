@@ -21,7 +21,6 @@ import java.nio.channels.ReadableByteChannel;
  * (or SaslClient) object. The SaslServer (or SaslClient) object must be fully
  * initialized before being used by a SaslInputStream.
  */
-// MapReduce也可见
 public class SaslInputStream extends InputStream implements ReadableByteChannel {
   public static final Logger LOG =
       LoggerFactory.getLogger(SaslInputStream.class);

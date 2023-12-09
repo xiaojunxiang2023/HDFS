@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentMap;
  * allocated at the same size. There is no attempt to reuse larger
  * buffers to satisfy smaller allocations.
  */
-// MapReduce也可见
 public class DirectBufferPool {
 
   // Essentially implement a multimap with weak values.

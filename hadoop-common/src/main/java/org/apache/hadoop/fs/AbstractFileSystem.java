@@ -1012,7 +1012,6 @@ public abstract class AbstractFileSystem implements PathCapabilities {
    *   If delegation tokens not supported then return a list of size zero.
    * @throws IOException
    */
-  // MapReduce 也可见
   public List<Token<?>> getDelegationTokens(String renewer) throws IOException {
     return new ArrayList<Token<?>>(0);
   }

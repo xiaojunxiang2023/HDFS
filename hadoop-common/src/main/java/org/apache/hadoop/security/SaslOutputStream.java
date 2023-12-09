@@ -12,7 +12,6 @@ import java.io.*;
  * them out to the underlying OutputStream. The SaslServer (or SaslClient)
  * object must be fully initialized before being used by a SaslOutputStream.
  */
-// MapReduce也可见
 public class SaslOutputStream extends OutputStream {
 
   private final OutputStream outStream;

@@ -4,7 +4,6 @@ package org.apache.hadoop.util;
  * Interface for collections capable of being sorted by {@link IndexedSorter}
  * algorithms.
  */
-// 仅 MapReduce可见
 public interface IndexedSortable {
 
   /**

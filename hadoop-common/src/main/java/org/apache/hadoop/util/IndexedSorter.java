@@ -7,7 +7,6 @@ package org.apache.hadoop.util;
  * {@link IndexedSortable#compare} and {@link IndexedSortable#swap} items
  * for a range of indices to effect a sort across that range.
  */
-// 仅 MapReduce可见
 public interface IndexedSorter {
 
   /**

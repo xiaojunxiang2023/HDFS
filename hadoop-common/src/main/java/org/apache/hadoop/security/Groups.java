@@ -32,7 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * a consistent user-to-groups mapping and protects against vagaries of 
  * different mappings on servers and clients in a Hadoop cluster. 
  */
-// MapReduce也可见
 public class Groups {
 
   static final Logger LOG = LoggerFactory.getLogger(Groups.class);

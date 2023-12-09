@@ -17,7 +17,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY
  * operating system names.
  */
 @SuppressWarnings("all")
-// MapReduce也可见
 public class HadoopKerberosName extends KerberosName {
   private static final Logger LOG =
       LoggerFactory.getLogger(HadoopKerberosName.class);

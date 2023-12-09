@@ -3,7 +3,6 @@ package org.apache.hadoop.util;
 import java.util.concurrent.ThreadFactory;
 
 /** A thread that has called {@link Thread#setDaemon(boolean) } with true.*/
-// MapReduce也可见
 public class Daemon extends Thread {
 
   {
@@ -14,7 +13,6 @@ public class Daemon extends Thread {
    * Provide a factory for named daemon threads,
    * for use in ExecutorServices constructors
    */
-  // MapReduce也可见
   public static class DaemonFactory extends Daemon implements ThreadFactory {
 
     @Override

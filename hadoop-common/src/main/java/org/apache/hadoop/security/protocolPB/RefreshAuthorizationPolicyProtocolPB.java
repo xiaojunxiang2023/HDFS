@@ -10,7 +10,6 @@ import org.apache.hadoop.security.proto.RefreshAuthorizationPolicyProtocolProtos
 @ProtocolInfo(
     protocolName = "org.apache.hadoop.security.authorize.RefreshAuthorizationPolicyProtocol",
     protocolVersion = 1)
-// MapReduce也可见
 public interface RefreshAuthorizationPolicyProtocolPB extends
     RefreshAuthorizationPolicyProtocolService.BlockingInterface {
 }

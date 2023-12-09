@@ -21,7 +21,6 @@ import java.io.DataInputStream;
  * </pre>
  *
  */
-// MapReduce也可见
 public class DataInputBuffer extends DataInputStream {
   private static class Buffer extends ByteArrayInputStream {
     public Buffer() {

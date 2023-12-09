@@ -10,7 +10,6 @@ import org.apache.hadoop.tools.proto.GetUserMappingsProtocolProtos.GetUserMappin
 @ProtocolInfo(
     protocolName = "org.apache.hadoop.tools.GetUserMappingsProtocol",
     protocolVersion = 1)
-// MapReduce也可见
 public interface GetUserMappingsProtocolPB extends
     GetUserMappingsProtocolService.BlockingInterface {
 }

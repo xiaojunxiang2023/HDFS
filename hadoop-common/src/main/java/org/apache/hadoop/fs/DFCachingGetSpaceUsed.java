@@ -11,7 +11,6 @@ import java.io.IOException;
  * to org.apache.hadoop.fs.DFCachingGetSpaceUsed in your core-site.xml
  *
  */
-// MapReduce也可见
 public class DFCachingGetSpaceUsed extends CachingGetSpaceUsed {
   private final DF df;
 

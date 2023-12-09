@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-// MapReduce也可见
 public @interface KerberosInfo {
   /** Key for getting server's Kerberos principal name from Configuration */
   String serverPrincipal();

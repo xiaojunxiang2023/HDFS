@@ -22,7 +22,6 @@ import java.util.*;
  *
  *
  */
-// MapReduce也可见
 public class DNS {
 
   private static final Logger LOG = LoggerFactory.getLogger(DNS.class);

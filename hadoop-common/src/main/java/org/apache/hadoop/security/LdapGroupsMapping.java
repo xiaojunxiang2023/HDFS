@@ -53,7 +53,6 @@ import java.util.*;
  * the user must be an explicit member in LDAP.  Otherwise, it will traverse the
  * group hierarchy n levels up.
  */
-// MapReduce也可见
 public class LdapGroupsMapping
     implements GroupMappingServiceProvider, Configurable {
 

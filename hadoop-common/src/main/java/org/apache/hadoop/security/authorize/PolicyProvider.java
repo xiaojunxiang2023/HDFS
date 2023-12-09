@@ -7,7 +7,6 @@ import java.security.Policy;
  * security {@link Policy} in effect for Hadoop.
  *
  */
-// MapReduce也可见
 public abstract class PolicyProvider {
 
   /**

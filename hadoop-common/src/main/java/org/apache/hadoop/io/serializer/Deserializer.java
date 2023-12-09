@@ -16,7 +16,6 @@ import java.io.InputStream;
  * </p>
  * @param <T>
  */
-// MapReduce也可见
 public interface Deserializer<T> {
   /**
    * <p>Prepare the deserializer for reading.</p>

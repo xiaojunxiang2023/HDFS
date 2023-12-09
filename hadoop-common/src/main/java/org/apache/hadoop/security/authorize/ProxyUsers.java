@@ -8,7 +8,6 @@ import org.apache.hadoop.util.ReflectionUtils;
 
 import java.net.InetAddress;
 
-// MapReduce 也可见
 public class ProxyUsers {
 
   public static final String CONF_HADOOP_PROXYUSER = "hadoop.proxyuser";

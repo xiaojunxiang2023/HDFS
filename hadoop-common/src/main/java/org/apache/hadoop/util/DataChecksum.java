@@ -18,7 +18,6 @@ import java.util.zip.Checksum;
  * This class provides interface and utilities for processing checksums for
  * DFS data transfers.
  */
-// MapReduce也可见
 public class DataChecksum implements Checksum {
 
   // checksum types

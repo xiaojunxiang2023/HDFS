@@ -19,7 +19,6 @@ import java.util.Set;
  * An authorization manager which handles service-level authorization
  * for incoming service requests.
  */
-// MapReduce也可见
 public class ServiceAuthorizationManager {
   static final String BLOCKED = ".blocked";
   static final String HOSTS = ".hosts";

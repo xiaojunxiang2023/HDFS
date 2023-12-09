@@ -13,7 +13,6 @@ import java.util.List;
  * that invokes libC calls to get the group
  * memberships of a given user.
  */
-// MapReduce也可见
 public class JniBasedUnixGroupsMapping implements GroupMappingServiceProvider {
 
   private static final Logger LOG =

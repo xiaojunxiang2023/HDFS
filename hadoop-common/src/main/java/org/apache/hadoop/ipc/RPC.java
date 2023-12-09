@@ -55,7 +55,6 @@ import java.util.regex.Pattern;
  * All methods in the protocol should throw only IOException.  No field data of
  * the protocol instance is transmitted.
  */
-// Yarn 和 MapReduce 也可见
 public class RPC {
   final static int RPC_SERVICE_CLASS_DEFAULT = 0;
 

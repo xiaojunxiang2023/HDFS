@@ -17,7 +17,6 @@ import java.util.List;
  * A factory for {@link Serialization}s.
  * </p>
  */
-// MapReduce也可见
 public class SerializationFactory extends Configured {
 
   static final Logger LOG =

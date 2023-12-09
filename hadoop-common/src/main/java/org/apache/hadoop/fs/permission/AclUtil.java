@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * AclUtil contains utility methods for manipulating ACLs.
  */
-// MapReduce也可见
 public final class AclUtil {
 
   /**

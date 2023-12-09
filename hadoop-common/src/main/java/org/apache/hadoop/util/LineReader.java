@@ -23,7 +23,6 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
  * In both cases, EOF also terminates an otherwise unterminated
  * line.
  */
-// 仅 MapReduce可见
 public class LineReader implements Closeable, IOStatisticsSource {
   private static final int DEFAULT_BUFFER_SIZE = 64 * 1024;
   private int bufferSize = DEFAULT_BUFFER_SIZE;

@@ -3,7 +3,6 @@ package org.apache.hadoop.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// Yarn 和 MapReduce 也可见
 public final class ExitUtil {
   private static final Logger
       LOG = LoggerFactory.getLogger(ExitUtil.class.getName());

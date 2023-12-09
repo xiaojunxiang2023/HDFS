@@ -13,7 +13,6 @@ import java.io.IOException;
  * a large number of CRCs that correspond to underlying chunks of data all of
  * same size.
  */
-// Yarn 和 MapReduce 也可见
 public class CrcComposer {
   private static final int CRC_SIZE_BYTES = 4;
   private static final Logger LOG = LoggerFactory.getLogger(CrcComposer.class);

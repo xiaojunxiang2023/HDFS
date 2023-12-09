@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 // Keeps track of which datanodes/nodemanagers are allowed to connect to the
 // namenode/resourcemanager.
-// MapReduce也可见
 public class HostsFileReader {
   private static final Logger LOG = LoggerFactory.getLogger(HostsFileReader
       .class);

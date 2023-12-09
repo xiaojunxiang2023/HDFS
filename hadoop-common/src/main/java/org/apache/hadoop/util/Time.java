@@ -7,7 +7,6 @@ import java.util.TimeZone;
 /**
  * Utility methods for getting the time and computing intervals.
  */
-// MapReduce也可见
 public final class Time {
 
   /**

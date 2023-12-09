@@ -1382,7 +1382,6 @@ public class FileContext implements PathCapabilities {
    * RuntimeExceptions:
    * @throws InvalidPathException If path <code>f</code> is invalid
    */
-  // MapReduce也可见
   public BlockLocation[] getFileBlockLocations(final Path f, final long start,
                                                final long len) throws AccessControlException, FileNotFoundException,
       UnsupportedFileSystemException, IOException {
@@ -2350,7 +2349,6 @@ public class FileContext implements PathCapabilities {
    * @return List of delegation tokens.
    * @throws IOException
    */
-  // MapReduce 也可见
   public List<Token<?>> getDelegationTokens(
       Path p, String renewer) throws IOException {
     Set<AbstractFileSystem> afsSet = resolveAbstractFileSystems(p);

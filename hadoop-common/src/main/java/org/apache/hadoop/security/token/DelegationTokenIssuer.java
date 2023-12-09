@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// Yarn 和 MapReduce 也可见
 public interface DelegationTokenIssuer {
 
   /**

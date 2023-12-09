@@ -3,8 +3,6 @@ package org.apache.hadoop.net;
 /** A base class that implements interface Node
  *
  */
-
-// MapReduce也可见
 public class NodeBase implements Node {
   /** Path separator {@value} */
   public final static char PATH_SEPARATOR = '/';

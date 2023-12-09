@@ -46,7 +46,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * actually points to the configured directory on the Disk which will be the
  * parent for all file write/read allocations.
  */
-// MapReduce也可见
 public class LocalDirAllocator {
 
   //A Map from the config item names like "mapred.local.dir"
@@ -212,7 +211,6 @@ public class LocalDirAllocator {
    * @param contextCfgItemName
    */
   @Deprecated
-  // 仅 MapReduce可见
   public static void removeContext(String contextCfgItemName) {
     synchronized (contexts) {
       contexts.remove(contextCfgItemName);

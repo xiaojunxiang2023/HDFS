@@ -15,7 +15,6 @@ import java.util.*;
  * This allows to combine existing provider implementations and composite 
  * a virtually new provider without customized development to deal with complex situation. 
  */
-// MapReduce也可见
 public class CompositeGroupsMapping
     implements GroupMappingServiceProvider, Configurable {
 

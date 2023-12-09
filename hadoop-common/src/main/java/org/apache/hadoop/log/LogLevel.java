@@ -293,7 +293,6 @@ public class LogLevel {
   /**
    * A servlet implementation
    */
-  // MapReduce也可见
   public static class Servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

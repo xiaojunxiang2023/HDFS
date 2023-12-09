@@ -11,7 +11,6 @@ import java.util.Collection;
  * Look through tokens to find the first delegation token that matches the
  * service and return it.
  */
-// MapReduce也可见
 public
 class AbstractDelegationTokenSelector<TokenIdent
     extends AbstractDelegationTokenIdentifier>

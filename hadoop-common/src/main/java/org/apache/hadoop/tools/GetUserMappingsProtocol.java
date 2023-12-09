@@ -8,7 +8,6 @@ import java.io.IOException;
  * Protocol implemented by the Name Node and Job Tracker which maps users to
  * groups.
  */
-// MapReduce也可见
 public interface GetUserMappingsProtocol {
 
   /**

@@ -56,7 +56,6 @@ import java.util.List;
  * @see Key The general behavior of a key
  * @see HashFunction A hash function
  */
-// MapReduce也可见
 public abstract class Filter implements Writable {
   private static final int VERSION = -1; // negative to accommodate for old format 
   /** The vector size of <i>this</i> filter. */

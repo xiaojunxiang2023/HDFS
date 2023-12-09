@@ -13,7 +13,6 @@ import java.util.Arrays;
 /**
  * Key used for generating and verifying delegation tokens
  */
-// MapReduce也可见
 public class DelegationKey implements Writable {
   private int keyId;
   private long expiryDate;

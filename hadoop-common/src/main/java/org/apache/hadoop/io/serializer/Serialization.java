@@ -6,7 +6,6 @@ package org.apache.hadoop.io.serializer;
  * </p>
  * @param <T>
  */
-// MapReduce也可见
 public interface Serialization<T> {
 
   /**

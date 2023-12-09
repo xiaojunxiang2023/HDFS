@@ -29,8 +29,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-// MapReduce也可见
 public class NetUtils {
   private static final Logger LOG = LoggerFactory.getLogger(NetUtils.class);
 

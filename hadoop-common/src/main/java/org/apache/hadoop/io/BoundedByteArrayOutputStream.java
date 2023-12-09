@@ -26,7 +26,6 @@ import java.io.OutputStream;
  * than the buffer capacity. The object can be reused through <code>reset</code>
  * API and choose different limits in each round.
  */
-// MapReduce也可见
 public class BoundedByteArrayOutputStream extends OutputStream {
   private byte[] buffer;
   private int startOffset;

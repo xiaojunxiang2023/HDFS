@@ -11,7 +11,6 @@ import java.io.IOException;
  */
 @KerberosInfo(
     serverPrincipal = CommonConfigurationKeys.HADOOP_SECURITY_SERVICE_USER_NAME_KEY)
-// MapReduce也可见
 public interface RefreshAuthorizationPolicyProtocol {
 
   /**

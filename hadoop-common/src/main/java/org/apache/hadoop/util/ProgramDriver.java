@@ -7,7 +7,6 @@ import java.util.TreeMap;
 
 /** A driver that is used to run programs added to it
  */
-// MapReduce也可见
 public class ProgramDriver {
 
   /**

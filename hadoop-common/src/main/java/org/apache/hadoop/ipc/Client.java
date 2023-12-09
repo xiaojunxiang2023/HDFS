@@ -1656,7 +1656,6 @@ public class Client implements AutoCloseable {
    * to servers are uniquely identified by {@literal <}remoteAddress, protocol,
    * ticket{@literal >}
    */
-  // MapReduce也可见
   public static class ConnectionId {
     InetSocketAddress address;
     UserGroupInformation ticket;

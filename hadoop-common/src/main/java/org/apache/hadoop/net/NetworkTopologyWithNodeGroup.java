@@ -9,7 +9,6 @@ package org.apache.hadoop.net;
  *
  * @see NetworkTopology
  */
-// MapReduce也可见
 public class NetworkTopologyWithNodeGroup extends NetworkTopology {
 
   public final static String DEFAULT_NODEGROUP = "/default-nodegroup";
